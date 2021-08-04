@@ -9,6 +9,7 @@ import arc.struct.ObjectMap.Entry;
 import arc.util.*;
 import arc.util.io.Streams;
 import com.google.gson.*;
+import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -18,6 +19,7 @@ import mindustry.mod.Plugin;
 import mindustry.net.*;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
+import mindustry.type.UnitType;
 import mindustry.world.*;
 import mindustry.world.blocks.logic.LogicBlock;
 import pandorum.comp.*;
@@ -199,7 +201,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         Events.on(PlayerJoin.class, event -> {
-            forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale)))); 
+            forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale))));
             sendToChat("server.player-join", colorizedName(event.player));
             Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
         });
@@ -532,7 +534,7 @@ public final class PandorumPlugin extends Plugin{
 
             UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
             if (unit == null) bundled(player, "commands.units.unit-not-found");
-            else {            
+            else {
                 for (int i = 0; count > i; i++) {
                     unit.spawn(team, player.x, player.y);
                 }
