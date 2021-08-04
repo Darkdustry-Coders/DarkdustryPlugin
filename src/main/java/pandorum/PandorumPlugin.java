@@ -302,6 +302,21 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void registerClientCommands(CommandHandler handler){
+        handler.removeCommand("a");
+        handler.removeCommand("t");
+
+        //TODO локализовать
+        handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
+            if (!adminCheck(player)) return;
+            String playerName = colorName(player);
+            Groups.player.each(Player::admin, otherPlayer -> otherPlayer.sendMessage("[scarlet][Админам][gold] > [white]" + playerName + " [gold]>[#ff4449] " + args[0]));
+        });
+
+        //TODO локализовать
+        handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
+            String playerName = colorName(player);
+            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> otherPlayer.sendMessage("[#" + player.team().color + "][Команде][gold] > [white]" + playerName + " [gold]>[white] " + args[0]));
+        });
 
         handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру", (args, player) -> {
             if(alertIgnores.contains(player.uuid())){
