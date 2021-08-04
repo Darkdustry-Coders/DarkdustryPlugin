@@ -57,13 +57,6 @@ public final class PandorumPlugin extends Plugin{
 
     private Seq<IpInfo> forbiddenIps;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
-            .withLocale(Locale.forLanguageTag("ru"))
-            .withZone(ZoneId.systemDefault());
-
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
-
     ObjectMap<Unit, Float> timer;
     String despawnDelayText;
     float defDelay;
@@ -103,8 +96,6 @@ public final class PandorumPlugin extends Plugin{
             }
             return true;
         });
-
-        // история
 
         Events.on(WorldLoadEvent.class, event -> {
             if(config.type == PluginType.sand) this.timer.clear();
@@ -266,7 +257,6 @@ public final class PandorumPlugin extends Plugin{
                 Log.info("Игрок не найден!");
                 return;
             }
-
             target.sendMessage("[scarlet][[Server]:[] " + args[1]);
             Log.info("Сервер ---> " + target.name() + ": " + args[1]);
         });
@@ -274,16 +264,6 @@ public final class PandorumPlugin extends Plugin{
         handler.register("despw", "убить всех юнитов на карте", args -> {
             Groups.unit.each(Unit::kill);
             Log.info("Все юниты убиты!");
-        });
-
-        handler.register("kicks", "отобразить выгнанных игроков", args -> {
-            Log.info("Kicks: @", netServer.admins.kickedIPs.isEmpty() ? "<none>" : "");
-            for(Entry<String, Long> e : netServer.admins.kickedIPs){
-                PlayerInfo info = netServer.admins.findByIPs(e.key).first();
-                Log.info("  @ / ID: '@' / IP: '@' / END: @",
-                         info.lastName, info.id, info.lastIP,
-                         formatter.format(Instant.ofEpochMilli(e.value).atZone(ZoneId.systemDefault())));
-            }
         });
 
         if(config.type == PluginType.sand) {
