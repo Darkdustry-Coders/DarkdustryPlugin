@@ -1,7 +1,6 @@
 package pandorum;
 
-import arc.Events;
-import arc.Core;
+import arc.*;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.*;
@@ -35,6 +34,7 @@ import java.io.IOException;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.awt.*;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
@@ -272,7 +272,7 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
+        arc.util.Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
             int hue = r.hue;
             if(hue < 360){
                 hue++;
@@ -454,9 +454,7 @@ public final class PandorumPlugin extends Plugin{
                 uuids.add(uuid);
                 int cur = uuids.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
-                sendToChat("commands.surrender.ok",
-                                               Misc.colorizedTeam(team),
-                                               Misc.colorizedName(player), cur, req);
+                sendToChat("commands.surrender.ok", colorizedTeam(team), colorizedName(player), cur, req);
 
                 if(cur < req){
                     return;
@@ -770,7 +768,6 @@ public final class PandorumPlugin extends Plugin{
             if(old != null){
                 rainbow.remove(old);
                 player.name = Vars.netServer.admins.getInfo(player.uuid()).lastName;
-                setPrefix(player);
                 bundled(player, "commands.rainbow.off");
                 return;
             }
