@@ -203,13 +203,13 @@ public final class PandorumPlugin extends Plugin{
             if(votesRTV.contains(event.player.uuid())) {
                 votesRTV.remove(event.player.uuid());
                 int curRTV = votesRTV.size;
-                int reqRTV = (int) Math.ceil(ratio * Groups.player.size());
+                int reqRTV = (int) Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.rtv.left", Misc.colorizedName(event.player), curRTV, reqRTV);
             }
             if(votesVNW.contains(event.player.uuid())) {
                 votesVNW.remove(event.player.uuid());
                 int curVNW = votesVNW.size;
-                int reqVNW = (int) Math.ceil(ratio * Groups.player.size());
+                int reqVNW = (int) Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.vnw.left", Misc.colorizedName(event.player), curVNW, reqVNW);
             }
         });
@@ -451,7 +451,7 @@ public final class PandorumPlugin extends Plugin{
 
             sendToChat("commands.vnw.successful");
             votesVNW.clear();
-            Vars.logic.runWave();
+            logic.runWave();
         });
 
         handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
