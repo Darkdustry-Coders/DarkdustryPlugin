@@ -15,7 +15,7 @@ import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
-import mindustry.net.Administration;
+import mindustry.net.*;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 import mindustry.world.*;
@@ -85,6 +85,8 @@ public final class PandorumPlugin extends Plugin{
         }catch(Throwable t){
             throw new ArcRuntimeException(t);
         }
+
+        Administration.Config.showConnectMessages.set(false);
 
         netServer.admins.addActionFilter(action -> {
             if(action.type == Administration.ActionType.rotate){
@@ -169,10 +171,6 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        Events.on(PlayerLeave.class, event -> activeHistoryPlayers.remove(event.player.uuid()));
-
-        Events.on(PlayerJoin.class, event -> forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale)))));
-
         Events.on(PlayerConnect.class, event -> {
             Player player = event.player;
             if(config.bannedNames.contains(player.name())){
@@ -200,7 +198,17 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
+        Events.on(PlayerJoin.class, event -> {
+            forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale)))); 
+            sendToChat("server.player-join", colorizedName(event.player));
+            Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+        });
+
         Events.on(PlayerLeave.class, event -> {
+            activeHistoryPlayers.remove(event.player.uuid()));
+            sendToChat("server.player-leave", colorizedName(event.player));
+            Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+
             if(votesRTV.contains(event.player.uuid())) {
                 votesRTV.remove(event.player.uuid());
                 int curRTV = votesRTV.size;
