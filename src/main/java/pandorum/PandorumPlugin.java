@@ -428,7 +428,7 @@ public final class PandorumPlugin extends Plugin{
                 StringBuilder result = new StringBuilder();
                 result.append(bundle.format("commands.history.page", findLocale(player.locale), mouseX, mouseY, page + 1, pages)).append("\n");
                 if(entries.isEmpty()){
-                    result.append("events.history.empty");
+                    result.append(bundle.format("events.history.empty", findLocale(player.locale)));
                 }
 
                 for(int i = 6 * page; i < Math.min(6 * (page + 1), entries.size); i++){
@@ -527,6 +527,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
             if(!adminCheck(player)) return;
             Events.fire(new GameOverEvent(Team.crux));
+            sendToChat("commands.artv.info");
         });
 
         handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
