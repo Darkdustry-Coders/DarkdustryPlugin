@@ -7,7 +7,7 @@ import arc.math.Mathf;
 import arc.struct.*;
 import arc.struct.ObjectMap.Entry;
 import arc.util.*;
-import arc.util.io.Streams;
+
 import com.google.gson.*;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
@@ -15,6 +15,7 @@ import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
+import mindustry.type.*;
 import mindustry.net.*;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
@@ -530,7 +531,7 @@ public final class PandorumPlugin extends Plugin{
             	return;
             }
 
-            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
+            UnitType unit = content.units().find(b -> b.name.equals(args[0]));
             if (unit == null) bundled(player, "commands.units.unit-not-found");
             else {            
                 for (int i = 0; count > i; i++) {
