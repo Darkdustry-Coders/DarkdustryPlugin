@@ -23,7 +23,7 @@ public class BlockEntry implements HistoryEntry{
 
     public BlockEntry(BlockBuildEndEvent event){
         this.unit = event.unit;
-        this.name = unit.isPlayer() ? Misc.colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? Misc.colorizedName(unit.getPlayer()) : null;
+        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
         if (event.tile.build != null) {
             this.block = event.tile.build.block;
             this.rotation = event.tile.build.rotation;
