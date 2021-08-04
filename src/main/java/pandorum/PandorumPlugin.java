@@ -202,19 +202,22 @@ public final class PandorumPlugin extends Plugin{
         Events.on(PlayerLeave.class, event -> {
             if(votesRTV.contains(event.player.uuid())) {
                 votesRTV.remove(event.player.uuid());
-                int curRTV = votesRTV.size();
+                int curRTV = votesRTV.size;
                 int reqRTV = (int) Math.ceil(ratio * Groups.player.size());
                 sendToChat("commands.rtv.left", Misc.colorizedName(event.player), curRTV, reqRTV);
             }
             if(votesVNW.contains(event.player.uuid())) {
                 votesVNW.remove(event.player.uuid());
-                int curVNW = votesVNW.size();
+                int curVNW = votesVNW.size;
                 int reqVNW = (int) Math.ceil(ratio * Groups.player.size());
                 sendToChat("commands.vnw.left", Misc.colorizedName(event.player), curVNW, reqVNW);
             }
         });
 
-        Events.on(GameOverEvent.class, __ -> votes.clear());
+        Events.on(GameOverEvent.class, e -> {
+            votesRTV.clear();
+            votesVNW.clear();
+        });
 
         if(config.type == PluginType.pvp){
             Events.on(PlayerLeave.class, event -> {
@@ -225,7 +228,7 @@ public final class PandorumPlugin extends Plugin{
                 }
             });
 
-            Events.on(GameOverEvent.class, __ -> surrendered.clear());
+            Events.on(GameOverEvent.class, e -> surrendered.clear());
         }
 
         if(config.type == PluginType.sand) {
@@ -273,7 +276,7 @@ public final class PandorumPlugin extends Plugin{
         if(config.type == PluginType.sand) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
-                    Log.info("DespawnDelay сейчас: @", new Object[] { Core.settings.getFloat(this.despawnDelayText, this.defDelay) });
+                    Log.info("DespawnDelay сейчас: @", new Object[] { Core.settings.getFloat("despawndelay", this.defDelay) });
                     return;
                 }
                 final String value = args[0];
