@@ -205,7 +205,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         Events.on(PlayerLeave.class, event -> {
-            activeHistoryPlayers.remove(event.player.uuid()));
+            activeHistoryPlayers.remove(event.player.uuid());
             sendToChat("server.player-leave", colorizedName(event.player));
             Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
