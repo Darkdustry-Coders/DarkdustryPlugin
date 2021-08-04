@@ -184,6 +184,9 @@ public final class PandorumPlugin extends Plugin{
             if(config.bannedNames.contains(player.name())){
                 player.con.kick(bundle.get("events.unofficial-mindustry", findLocale(player.locale)), 60000);
             }
+            if(config.type == PluginType.anarchy) {
+                event.player.admin = true;
+            }
         });
 
         Events.on(DepositEvent.class, event -> {
@@ -269,6 +272,22 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void registerServerCommands(CommandHandler handler){
+        handler.register("config-m", "[anarchy/def/pvp/sand]", "Изменить режим плагина", args -> {
+            switch(args.toString()) {
+                case("anarchy"): {
+                    config.type = PluginType.anarchy;
+                }
+                case("def"): {
+                    config.type = PluginType.def;
+                }
+                case("pvp"): {
+                    config.type = PluginType.pvp;
+                }
+                case("sand"): {
+                    config.type = PluginType.sand;
+                }
+            }
+        });
 
         handler.register("reload-config", "reload configuration", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
@@ -324,7 +343,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
-                String desc = L10NBundle.format("commands." + command.text + ".description", findLocale(player.locale));
+                String desc = bundle.format("commands." + command.text + ".description", findLocale(player.locale));
                 if(desc.startsWith("?")) {
                     desc = command.description;
                 }
@@ -549,10 +568,10 @@ public final class PandorumPlugin extends Plugin{
             bundled(target, "commands.admin.team.success", team.name);
             target.team(team);
         });
-        
+
         handler.<Player>register("admins", "Admins list", (arg, player) -> {
             Seq<Administration.PlayerInfo> admins = netServer.admins.getAdmins();
-            
+
             if (admins.size == 0) {
                 bundled(player, "commands.admins.no-admins");
                 return;
@@ -600,7 +619,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("tp", "<x> <y>", "Teleport", (args, player) -> {
-            
+
             float x, y;
             if (!Strings.canParseFloat(args[0]) || !Strings.canParseFloat(args[1])) {
                 bundled(player, "commands.tp.non-int");
@@ -613,7 +632,7 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.tp.over-world-border");
                 return;
             }
-            
+
             player.set(x*8, y*8);
             Call.setPosition(player.con, x*8, y*8);
             player.snapSync();
