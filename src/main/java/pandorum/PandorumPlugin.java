@@ -525,35 +525,24 @@ public final class PandorumPlugin extends Plugin{
             target.team(team);
         });
         
-        handler.<Player>register("playerinfo", "<name/ip/id...>", "Информация о игроке.", (args, player) -> {
-            if(!adminCheck(player)) return;
-
-            ObjectSet<Administration.PlayerInfo> infos = netServer.admins.findByName(args[0]);
-            if (infos.size > 0) {
-                Log.info("Players found: @", infos.size);
-                int i = 0;
-                for(PlayerInfo playerInfo : infos){
-                    StringBuilder result = new StringBuilder();
-                    result.append(Strings.format("[@] @ '@' / UUID @", i++, bundle.get("commands.playerinfo.header", findLocale(player.locale)), playerInfo.lastName, playerInfo.id));
-                    result.append(Strings.format("  @: @", bundle.get("commands.playerinfo.names", findLocale(player.locale)), playerInfo.names));
-                    if(player.admin){
-                        result.append("  IP: ").append(playerInfo.lastIP);
-                        result.append(Strings.format("  IPs : @", playerInfo.ips));
-                    }
-                    result.append("  ").append(bundle.get("commands.playerinfo.joined", findLocale(player.locale))).append(": ").append(playerInfo.timesJoined);
-                    result.append("  ").append(bundle.get("commands.playerinfo.kicked", findLocale(player.locale))).append(": ").append(playerInfo.timesKicked);
-                    Call.infoMessage(player.con(), result.toString());
-                }
-            } else {
-                bundled(player, "commands.player-not-found");
+        handler.<Player>register("admins", "Admins list", (arg, player) -> {
+            Seq<Administration.PlayerInfo> admins = netServer.admins.getAdmins();
+            
+            if (admins.size == 0) {
+                bundled(player, "commands.admins.no-admins");
+                return;
             }
+            bundled(player, "commands.admins");
+            admins.each((admin) -> player.sendMessage(admin.lastName));
         });
 
-        handler.<Player>register("spectate", "Секрет админов.", (args, player) -> {
+        handler.<Player>register("spectate", "Admins secret.", (args, player) -> {
             if(!adminCheck(player)) return;
             player.clearUnit();
             player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
         });
+
+        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
 
         handler.<Player>register("spawn", "<unit> [count] [team]", "Spawn units.", (args, player) -> {
             if (!adminCheck(player)) return;
