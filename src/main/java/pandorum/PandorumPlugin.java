@@ -524,6 +524,30 @@ public final class PandorumPlugin extends Plugin{
             bundled(target, "commands.admin.team.success", team.name);
             target.team(team);
         });
+        
+        handler.<Player>register("playerinfo", "<name/ip/id...>", "Информация о игроке.", (args, player) -> {
+            if(!adminCheck(player)) return;
+
+            ObjectSet<Administration.PlayerInfo> infos = netServer.admins.findByName(args[0]);
+            if (infos.size > 0) {
+                Log.info("Players found: @", infos.size);
+                int i = 0;
+                for(PlayerInfo playerInfo : infos){
+                    StringBuilder result = new StringBuilder();
+                    result.append(Strings.format("[@] @ '@' / UUID @", i++, bundle.get("commands.playerinfo.header", findLocale(player.locale)), playerInfo.lastName, playerInfo.id));
+                    result.append(Strings.format("  @: @", bundle.get("commands.playerinfo.names", findLocale(player.locale)), playerInfo.names));
+                    if(player.admin){
+                        result.append("  IP: ").append(playerInfo.lastIP);
+                        result.append(Strings.format("  IPs : @", playerInfo.ips));
+                    }
+                    result.append("  ").append(bundle.get("commands.playerinfo.joined", findLocale(player.locale))).append(": ").append(playerInfo.timesJoined);
+                    result.append("  ").append(bundle.get("commands.playerinfo.kicked", findLocale(player.locale))).append(": ").append(playerInfo.timesKicked);
+                    Call.infoMessage(player.con(), result.toString());
+                }
+            } else {
+                bundled(player, "commands.player-not-found");
+            }
+        });
 
         handler.<Player>register("spectate", "Секрет админов.", (args, player) -> {
             if(!adminCheck(player)) return;
