@@ -4,8 +4,8 @@ import arc.files.Fi;
 import arc.struct.*;
 import arc.util.*;
 import mindustry.core.NetClient;
-import mindustry.game.Team;
-import mindustry.gen.Player;
+import mindustry.game.*;
+import mindustry.gen.*;
 import mindustry.maps.Map;
 
 import java.util.Objects;
