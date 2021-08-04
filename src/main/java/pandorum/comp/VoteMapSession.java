@@ -10,6 +10,7 @@ import mindustry.net.WorldReloader;
 import static mindustry.Vars.*;
 import pandorum.comp.*;
 import static pandorum.PandorumPlugin.*;
+import static pandorum.Misc.*;
 
 import java.util.Locale;
 
@@ -76,13 +77,5 @@ public class VoteMapSession extends VoteSession{
             return true;
         }
         return false;
-    }
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
-    }
-    private static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
     }
 }
