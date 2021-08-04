@@ -86,4 +86,8 @@ public abstract class Misc{
     public static void sendToChat(String key, Object... values) {
         Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
     }
+
+    public static Player find(int id) {
+        return Groups.player.find(p -> p.id == id);
+    }
 }

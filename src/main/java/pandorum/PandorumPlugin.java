@@ -7,6 +7,7 @@ import arc.math.Mathf;
 import arc.struct.*;
 import arc.struct.ObjectMap.Entry;
 import arc.util.*;
+import arc.util.io.*;
 
 import arc.util.io.Streams;
 import com.google.gson.*;
