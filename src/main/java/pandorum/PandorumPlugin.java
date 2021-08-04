@@ -620,9 +620,9 @@ public final class PandorumPlugin extends Plugin{
                 try { bundled(player, "commands.unit-name", player.unit().type().name); }
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
-                final String[] text = {""};
-                Vars.content.units().each(unitType -> text[0] = String.format("%s%s[green]%s, ", text[0], unitType.name));
-                bundled(player, "commands.units.all", text[0]);
+                StringBuilder builder = new StringBuilder();
+                Vars.content.units().each(unit -> builder.append("\n[#78ebb3]" + unit.name));
+                bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
                 if (!adminCheck(player)) return;
                 if(args.length == 1) {
