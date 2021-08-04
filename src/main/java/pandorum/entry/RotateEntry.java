@@ -7,9 +7,9 @@ import mindustry.gen.*;
 import pandorum.struct.Tuple2;
 
 import java.util.concurrent.TimeUnit;
-import java.util.Locale;
 
-import pandorum.comp.*;;
+import pandorum.comp.*;
+import static pandorum.Misc.*;
 
 public class RotateEntry implements HistoryEntry{
     protected static final String[] sides;
@@ -37,11 +37,5 @@ public class RotateEntry implements HistoryEntry{
     @Override
     public long getLastAccessTime(TimeUnit unit){
         return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
-    }
-
-    private static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
     }
 }
