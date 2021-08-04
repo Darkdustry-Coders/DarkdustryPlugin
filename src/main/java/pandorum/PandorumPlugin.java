@@ -542,7 +542,7 @@ public final class PandorumPlugin extends Plugin{
             player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
         });
 
-        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
+        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
 
         handler.<Player>register("spawn", "<unit> [count] [team]", "Spawn units.", (args, player) -> {
             if (!adminCheck(player)) return;
@@ -572,6 +572,34 @@ public final class PandorumPlugin extends Plugin{
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, colorizedTeam(team));
             }
+        });
+
+        handler.<Player>register("tp", "<x> <y>", "Teleport", (args, player) -> {
+            
+            float x, y;
+            if (!Strings.canParseFloat(args[0]) || !Strings.canParseFloat(args[1])) {
+                bundled(player, "commands.tp.non-int");
+                return;
+            } else {
+                x = Float.parseFloat(args[0]);
+                y = Float.parseFloat(args[1]);
+            }
+            if (x < 0 || x > world.width() || y < 0 || y > world.width()) {
+                bundled(player, "commands.tp.over-world-border");
+                return;
+            }
+            if (!player.unit().isFlying() && Vars.world.tileWorld(x, y).block() != Blocks.air) {
+                bundled(player, "commands.tp.inblock");
+                return;
+            }
+            if (Config.strict.bool()) {
+            	Config.strict.set(false);
+            }
+            player.set(x*8, y*8);
+            Call.setPosition(player.con, x*8, y*8);
+            player.snapSync();
+
+            bundled(player, "commands.tp.success", args[0], args[1]);
         });
 
         handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
