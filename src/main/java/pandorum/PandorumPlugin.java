@@ -84,7 +84,7 @@ public final class PandorumPlugin extends Plugin{
     }
 
     @Override
-    public void init(){
+    public void init() {
 
         try{
             forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
@@ -268,35 +268,49 @@ public final class PandorumPlugin extends Plugin{
                 }
             });
         }
+
+        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
+            int hue = r.hue;
+            if(hue < 360){
+                hue++;
+            }else{
+                hue = 0;
+            }
+
+            String hex = "[#" + Integer.toHexString(Color.getHSBColor(hue / 360f, 1f, 1f).getRGB()).substring(2) + "]";
+            r.player.name = hex + r.stripedName;
+            r.hue = hue;
+        }), 0f, 0.05f);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        handler.register("config-m", "[anarchy/def/pvp/sand]", "Изменить режим плагина", args -> {
-            switch(args.toString()) {
-                case("anarchy"): {
-                    config.type = PluginType.anarchy;
-                }
-                case("def"): {
-                    config.type = PluginType.def;
-                }
-                case("pvp"): {
-                    config.type = PluginType.pvp;
-                }
-                case("sand"): {
-                    config.type = PluginType.sand;
-                }
-            }
-        });
 
-        handler.register("reload-config", "reload configuration", args -> {
+        handler.register("reload-config", "Перезапустить файл конфигов.", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
             Log.info("Reloaded");
         });
 
-        handler.register("despw", "убить всех юнитов на карте", args -> {
+        handler.register("despw", "Убить всех юнитов на карте", args -> {
             Groups.unit.each(Unit::kill);
             Log.info("Все юниты убиты!");
+        });
+
+        handler.register("unban-all", "Разбанить всех", arg -> {
+            netServer.admins.getBanned().each(unban -> netServer.admins.unbanPlayerID(unban.id));
+            netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
+            Log.info("Все игроки разбанены!");
+        });
+
+        handler.register("rr", "Перезапустить сервер", args -> {
+            Log.info("Перезапуск сервера...");
+            System.exit(2);
+        });
+
+        handler.removeCommand("say");
+        handler.register("say", "<Сообщение...>", "Сказать от имени сервера.", arg -> {
+            Call.sendMessage("[lime]Server[white]: " + arg[0]);
+            Log.info("Server: " + arg[0]);
         });
 
         if(config.type == PluginType.sand) {
@@ -331,7 +345,7 @@ public final class PandorumPlugin extends Plugin{
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
             int pages = Mathf.ceil((float)Vars.netServer.clientCommands.getCommandList().size / commandsPerPage);
 
-            page --;
+            --page;
 
             if(page >= pages || page < 0){
                 bundled(player, "commands.under-page", String.valueOf(pages));
@@ -771,5 +785,12 @@ public final class PandorumPlugin extends Plugin{
             }
             current[0].vote(player, -1);
         });
+    }
+
+    //TODO впихнуть радугу в отдельный класс
+    public static class RainbowPlayerEntry {
+        public Player player;
+        public int hue;
+        public String stripedName;
     }
 }
