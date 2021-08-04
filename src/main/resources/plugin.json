@@ -1,7 +1,7 @@
 {
-  "name": "PandorumPlugin",
-  "author": "OceanPandorum",
+  "name": "DarkdustryPlugin",
+  "author": "Darkdustry coders",
   "main": "pandorum.PandorumPlugin",
-  "description": "Core plugin for pandorum servers",
-  "version": "1.4"
+  "description": "Core plugin for Darkdustry servers",
+  "version": "1.0"
 }
