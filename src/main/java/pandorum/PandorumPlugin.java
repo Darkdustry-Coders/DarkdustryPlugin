@@ -464,18 +464,13 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
-            if(!player.admin){
-                bundled(player, "commands.permission-denied");
-            }else{
-                Events.fire(new GameOverEvent(Team.crux));
-            }
+            if(!adminCheck(player)) return;
+            Events.fire(new GameOverEvent(Team.crux));
+            //TODO сообщение в чат
         });
 
         handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
-            if(!player.admin){
-                bundled(player, "commands.permission-denied");
-                return;
-            }
+            if(!adminCheck(player)) return;
 
             Block core = switch(args[0].toLowerCase()){
                 case "medium" -> Blocks.coreFoundation;
@@ -491,10 +486,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
 
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
-            if(!player.admin){
-                bundled(player, "commands.permission-denied");
-                return;
-            }
+            if(!adminCheck(player)) return;
 
             Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
             if(team == null){
@@ -513,11 +505,38 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("spectate", "Секрет админов.", (args, player) -> {
-            if(!player.admin){
-                bundled(player, "commands.permission-denied");
-            }else{
-                player.clearUnit();
-                player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
+            if(!adminCheck(player)) return;
+            player.clearUnit();
+            player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
+        });
+
+        handler.<Player>register("spawn", "<unit> [count] [team]", "Spawn units.", (args, player) -> {
+            if (!adminCheck(player)) return;
+
+            if(args.length > 1 && !Strings.canParseInt(args[1])){
+                bundled(player, "commands.spawn.non-int");
+                return;
+            }
+
+            int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            if (count > 25) {
+                bundled(player, "commands.spawn.limit");
+                return;
+            }
+
+            Team team = args.length > 2 ? Structs.find(Team.baseTeams, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
+            if (team == null) {
+            	bundled(player, "commands.admin.team.teams");
+            	return;
+            }
+
+            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
+            if (unit == null) bundled(player, "commands.units.unit-not-found");
+            else {            
+                for (int i = 0; count > i; i++) {
+                    unit.spawn(team, player.x, player.y);
+                }
+                bundled(player, "commands.spawn.success", count, unit.name, colorizedTeam(team));
             }
         });
 
@@ -590,7 +609,7 @@ public final class PandorumPlugin extends Plugin{
                         return;
                     }
 
-                    Map map = Misc.findMap(args[1]);
+                    Map map = findMap(args[1]);
                     if(map == null){
                         bundled(player, "commands.nominate.map.not-found");
                         return;
@@ -616,7 +635,7 @@ public final class PandorumPlugin extends Plugin{
                         return;
                     }
 
-                    Fi save = Misc.findSave(args[1]);
+                    Fi save = findSave(args[1]);
                     if(save == null){
                         player.sendMessage("commands.nominate.load.not-found");
                         return;
@@ -630,10 +649,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("playerinfo", "<name/ip/id...>", "Информация о игроке.", (args, player) -> {
-            if(!player.admin){
-                bundled(player, "commands.permission-denied");
-                return;
-            }
+            if(!adminCheck(player)) return;
 
             ObjectSet<Administration.PlayerInfo> infos = netServer.admins.findByName(args[0]);
             if (infos.size > 0) {
