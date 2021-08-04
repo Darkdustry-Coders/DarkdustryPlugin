@@ -308,13 +308,13 @@ public final class PandorumPlugin extends Plugin{
         //TODO локализовать
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
             if (!adminCheck(player)) return;
-            String playerName = colorName(player);
+            String playerName = colorizedName(player);
             Groups.player.each(Player::admin, otherPlayer -> otherPlayer.sendMessage("[scarlet][Админам][gold] > [white]" + playerName + " [gold]>[#ff4449] " + args[0]));
         });
 
         //TODO локализовать
         handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
-            String playerName = colorName(player);
+            String playerName = colorizedName(player);
             Groups.player.each(o -> o.team() == player.team(), otherPlayer -> otherPlayer.sendMessage("[#" + player.team().color + "][Команде][gold] > [white]" + playerName + " [gold]>[white] " + args[0]));
         });
 
