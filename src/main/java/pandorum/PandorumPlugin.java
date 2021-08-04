@@ -452,36 +452,6 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        if(config.type == PluginType.pvp){
-            handler.<Player>register("surrender", "Сдаться", (args, player) -> {
-                String uuid = player.uuid();
-                Team team = player.team();
-                ObjectSet<String> uuids = surrendered.get(team, ObjectSet::new);
-                if(uuids.contains(uuid)){
-                    bundled(player, "commands.already-voted");
-                    return;
-                }
-
-                uuids.add(uuid);
-                int cur = uuids.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
-                sendToChat("commands.surrender.ok", colorizedTeam(team), colorizedName(player), cur, req);
-
-                if(cur < req){
-                    return;
-                }
-
-                surrendered.remove(team);
-                sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
-                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
-                for(Tile tile : world.tiles){
-                    if(tile.build != null && tile.team() == team){
-                        Time.run(Mathf.random(360), tile.build::kill);
-                    }
-                }
-            });
-        }
-
         handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID", (args, player) -> {
             if(args.length > 0 && !Strings.canParseInt(args[0])){
                 bundled(player, "commands.page-not-int");
@@ -641,6 +611,34 @@ public final class PandorumPlugin extends Plugin{
                     unit.spawn(team, player.x, player.y);
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, colorizedTeam(team));
+            }
+        });
+
+        handler.<Player>register("units", "<all/change/name> [unit]", "Actions with units.", (args, player) -> {
+            if(args[0].equals("name")) {
+                try { bundled(player, "commands.unit-name", player.unit().type().name); }
+                catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
+            } else if (args[0].equals("all")) {
+                final String[] text = {""};
+                Vars.content.units().each(unitType -> text[0] = String.format("%s%s[green]%s, ", text[0], unitType.name));
+                info(player, "commands.units.all", text[0]);
+            } else if (args[0].equals("change")) {
+                if (!adminCheck(player)) return;
+                if(args.length == 1) {
+                    bundled(player, "commands.units.incorrect");
+                    return;
+                }
+                UnitType founded = Vars.content.units().find(b -> b.name.equals(args[1]));
+                if (founded == null) {
+                    err(player, "commands.units.unit-not-found");
+                    return;
+                }
+                final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
+                spawn.spawnedByCore(true);
+                player.unit(spawn);
+                bundled(player, "commands.units.change.success");
+            } else {
+                bundled(player, "commands.units.incorrect");
             }
         });
 
@@ -812,6 +810,36 @@ public final class PandorumPlugin extends Plugin{
             }
             current[0].vote(player, -1);
         });
+
+        if(config.type == PluginType.pvp){
+            handler.<Player>register("surrender", "Сдаться", (args, player) -> {
+                String uuid = player.uuid();
+                Team team = player.team();
+                ObjectSet<String> uuids = surrendered.get(team, ObjectSet::new);
+                if(uuids.contains(uuid)){
+                    bundled(player, "commands.already-voted");
+                    return;
+                }
+
+                uuids.add(uuid);
+                int cur = uuids.size;
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
+                sendToChat("commands.surrender.ok", colorizedTeam(team), colorizedName(player), cur, req);
+
+                if(cur < req){
+                    return;
+                }
+
+                surrendered.remove(team);
+                sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
+                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
+                for(Tile tile : world.tiles){
+                    if(tile.build != null && tile.team() == team){
+                        Time.run(Mathf.random(360), tile.build::kill);
+                    }
+                }
+            });
+        }
     }
 
     //TODO впихнуть радугу в отдельный класс
