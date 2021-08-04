@@ -8,9 +8,9 @@ import mindustry.world.Block;
 import pandorum.Misc;
 
 import java.util.concurrent.TimeUnit;
-import java.util.Locale;
 
 import pandorum.comp.*;
+import static pandorum.Misc.*;
 
 public class BlockEntry implements HistoryEntry{
     public final long lastAccessTime = Time.millis();
@@ -53,11 +53,5 @@ public class BlockEntry implements HistoryEntry{
     @Override
     public long getLastAccessTime(TimeUnit unit){
         return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
-    }
-
-    private static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
     }
 }
