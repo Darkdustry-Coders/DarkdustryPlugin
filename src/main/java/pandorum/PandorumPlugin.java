@@ -671,22 +671,4 @@ public final class PandorumPlugin extends Plugin{
             current[0].vote(player, -1);
         });
     }
-
-    public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(bundle.format(key, findLocale(player.locale), values));
-    }
-
-    public static String bundleGet(Player player, String key, Object... values) {
-        return bundle.format(key, findLocale(player.locale), values);
-    }
-
-    private static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
-    }
-
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
-    }
 }
