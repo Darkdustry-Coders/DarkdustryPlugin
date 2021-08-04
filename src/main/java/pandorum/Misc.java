@@ -78,4 +78,12 @@ public abstract class Misc{
         }
         return true;
     }
+
+    public static void bundled(Player player, String key, Object... values) {
+        player.sendMessage(bundle.format(key, findLocale(player.locale), values));
+    }
+
+    public static void sendToChat(String key, Object... values) {
+        Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
+    }
 }
