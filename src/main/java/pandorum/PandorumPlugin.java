@@ -324,7 +324,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
-                String desc = L10NBundle.format("commands." + command.text + ".description", findLocale(player.locale));
+                String desc = bundle.format("commands." + command.text + ".description", findLocale(player.locale));
                 if(desc.startsWith("?")) {
                     desc = command.description;
                 }
