@@ -9,7 +9,7 @@ import mindustry.gen.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.blocks.units.*;
-import static pandorum.Misc;
+import static pandorum.Misc.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.*;
@@ -260,7 +260,7 @@ public class ConfigEntry implements HistoryEntry{
     public final Building build;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
-        this.name = Groups.player.contains(p -> event.player == p) ? Misc.colorizedName(event.player) : bundle.get("events.unknown");
+        this.name = Groups.player.contains(p -> event.player == p) ? colorizedName(event.player) : bundle.get("events.unknown");
         this.block = event.tile.block();
         this.value = event.value;
         this.connect = connect;
