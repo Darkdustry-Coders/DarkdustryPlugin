@@ -27,7 +27,6 @@ import pandorum.struct.*;
 
 import java.io.IOException;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -48,9 +47,10 @@ public final class PandorumPlugin extends Plugin{
     public static Config config;
 
     private final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
-    private final ObjectSet<String> votes = new ObjectSet<>();                //
-    private final ObjectSet<String> alertIgnores = new ObjectSet<>();         // Соединить
-    private final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>(); //
+    private final ObjectSet<String> votesRTV = new ObjectSet<>();
+    private final ObjectSet<String> votesVNW = new ObjectSet<>();
+    private final ObjectSet<String> alertIgnores = new ObjectSet<>();
+    private final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
     private final Interval interval = new Interval(2);
 
     private CacheSeq<HistoryEntry>[][] history;
@@ -58,7 +58,6 @@ public final class PandorumPlugin extends Plugin{
     private Seq<IpInfo> forbiddenIps;
 
     ObjectMap<Unit, Float> timer;
-    String despawnDelayText;
     float defDelay;
 
     public PandorumPlugin(){
@@ -73,7 +72,6 @@ public final class PandorumPlugin extends Plugin{
 
         if(config.type == PluginType.sand) {
             this.timer = (ObjectMap<Unit, Float>)new ObjectMap();
-            this.despawnDelayText = "Darkdustry.UnitDespawn.despawnDelay";
             this.defDelay = 36000.0f;
         }
     }
@@ -191,8 +189,8 @@ public final class PandorumPlugin extends Plugin{
 
         Events.on(BuildSelectEvent.class, event -> {
             if(!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
-               event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
-               event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
+                event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
+                event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
                 Player target = event.builder.getPlayer();
 
                 if(interval.get(300)){
@@ -202,11 +200,17 @@ public final class PandorumPlugin extends Plugin{
         });
 
         Events.on(PlayerLeave.class, event -> {
-            int cur = votes.size;
-            int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
-            if(votes.contains(event.player.uuid())){
-                votes.remove(event.player.uuid());
-                sendToChat("commands.rtv.left", Misc.colorizedName(event.player), cur - 1, req);
+            if(votesRTV.contains(event.player.uuid())) {
+                votesRTV.remove(event.player.uuid());
+                int curRTV = votesRTV.size();
+                int reqRTV = (int) Math.ceil(ratio * Groups.player.size());
+                sendToChat("commands.rtv.left", Misc.colorizedName(event.player), curRTV, reqRTV);
+            }
+            if(votesVNW.contains(event.player.uuid())) {
+                votesVNW.remove(event.player.uuid());
+                int curVNW = votesVNW.size();
+                int reqVNW = (int) Math.ceil(ratio * Groups.player.size());
+                sendToChat("commands.vnw.left", Misc.colorizedName(event.player), curVNW, reqVNW);
             }
         });
 
@@ -227,7 +231,7 @@ public final class PandorumPlugin extends Plugin{
         if(config.type == PluginType.sand) {
             Events.on(Trigger.class, e -> {
                 if (e == Trigger.update) {
-                    final float despawnDelay = Core.settings.getFloat(this.despawnDelayText, this.defDelay);
+                    final float despawnDelay = Core.settings.getFloat("despawndelay", this.defDelay);
                     Groups.unit.each(unit -> {
                         if (Time.globalTime - (float)this.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
                             unit.spawnedByCore(true);
@@ -277,7 +281,7 @@ public final class PandorumPlugin extends Plugin{
                     Log.err("Новое значение должно быть положительным целым числом.", new Object[0]);
                     return;
                 }
-                Core.settings.put(this.despawnDelayText, (Object)Strings.parseFloat(value));
+                Core.settings.put("despawndelay", (Object)Strings.parseFloat(value));
             });
         }
     }
@@ -344,8 +348,6 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        //TODO: сделать /unban
-
         if(config.type == PluginType.pvp){
             handler.<Player>register("surrender", "Сдаться", (args, player) -> {
                 String uuid = player.uuid();
@@ -410,13 +412,13 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("rtv", "Проголосовать за смену карты.", (args, player) -> {
-            if(votes.contains(player.uuid())){
+            if(votesRTV.contains(player.uuid())){
                 bundled(player, "commands.already-voted");
                 return;
             }
 
-            votes.add(player.uuid());
-            int cur = votes.size;
+            votesRTV.add(player.uuid());
+            int cur = votesRTV.size;
             int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
             sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
 
@@ -425,7 +427,28 @@ public final class PandorumPlugin extends Plugin{
             }
 
             sendToChat("commands.rtv.successful");
+            votesRTV.clear();
             Events.fire(new GameOverEvent(Team.crux));
+        });
+
+        handler.<Player>register("vnw", "Проголосовать за пропуск волны.", (args, player) -> {
+            if(votesVNW.contains(player.uuid())){
+                bundled(player, "commands.already-voted");
+                return;
+            }
+
+            votesVNW.add(player.uuid());
+            int cur = votesVNW.size;
+            int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
+            sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
+
+            if(cur < req){
+                return;
+            }
+
+            sendToChat("commands.vnw.successful");
+            votesVNW.clear();
+            Vars.logic.runWave();
         });
 
         handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
