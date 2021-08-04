@@ -20,11 +20,12 @@ import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.type.*;
 import mindustry.net.*;
-import mindustry.net.Administration.PlayerInfo;
+import mindustry.net.Administration.*;
 import mindustry.net.Packets.KickReason;
 import mindustry.type.UnitType;
 import mindustry.world.*;
-import mindustry.world.blocks.logic.LogicBlock;
+import mindustry.world.blocks.logic.*;
+
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
 import pandorum.entry.*;
@@ -92,6 +93,8 @@ public final class PandorumPlugin extends Plugin{
         }
 
         Administration.Config.showConnectMessages.set(false);
+        Administration.Config.strict.set(false);
+        //TODO сделать мотд через бандлы -> Administration.Config.motd.set("off");
 
         netServer.admins.addActionFilter(action -> {
             if(action.type == Administration.ActionType.rotate){
@@ -270,16 +273,6 @@ public final class PandorumPlugin extends Plugin{
         handler.register("reload-config", "reload configuration", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
             Log.info("Reloaded");
-        });
-
-        handler.register("tell", "<ID/Никнейм> <Сообщение...>", "отправить сообщение игроку", args -> {
-            Player target = Groups.player.find(p -> p.name().equalsIgnoreCase(args[0]) || p.uuid().equalsIgnoreCase(args[0]));
-            if(target == null){
-                Log.info("Игрок не найден!");
-                return;
-            }
-            target.sendMessage("[scarlet][[Server]:[] " + args[1]);
-            Log.info("Сервер ---> " + target.name() + ": " + args[1]);
         });
 
         handler.register("despw", "убить всех юнитов на карте", args -> {
@@ -588,13 +581,7 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.tp.over-world-border");
                 return;
             }
-            if (!player.unit().isFlying() && Vars.world.tileWorld(x, y).block() != Blocks.air) {
-                bundled(player, "commands.tp.inblock");
-                return;
-            }
-            if (Config.strict.bool()) {
-            	Config.strict.set(false);
-            }
+            
             player.set(x*8, y*8);
             Call.setPosition(player.con, x*8, y*8);
             player.snapSync();
