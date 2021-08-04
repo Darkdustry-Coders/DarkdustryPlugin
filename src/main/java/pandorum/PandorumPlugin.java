@@ -20,7 +20,7 @@ import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.type.*;
 import mindustry.net.*;
-import mindustry.net.Administration.*;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 import mindustry.type.UnitType;
 import mindustry.world.*;
@@ -300,6 +300,38 @@ public final class PandorumPlugin extends Plugin{
     public void registerClientCommands(CommandHandler handler){
         handler.removeCommand("a");
         handler.removeCommand("t");
+
+        handler.removeCommand("help");
+
+        handler.<Player>register("help", "[page]", "Lists all commands.", (args, player) -> {
+            if(args.length > 0 && !Strings.canParseInt(args[0])) {
+                bundled(player, "commands.page-not-int");
+                return;
+            }
+            int commandsPerPage = 6;
+            int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
+            int pages = Mathf.ceil((float)Vars.netServer.clientCommands.getCommandList().size / commandsPerPage);
+
+            page --;
+
+            if(page >= pages || page < 0){
+                bundled(player, "commands.under-page", String.valueOf(pages));
+                return;
+            }
+
+            StringBuilder result = new StringBuilder();
+            result.append(Strings.format("[orange]-- Commands Page[lightgray] @[gray]/[lightgray]@[orange] --\n\n", (page + 1), pages));
+
+            for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
+                CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
+                String desc = L10NBundle.format("commands." + command.text + ".description", findLocale(player.locale));
+                if(desc.startsWith("?")) {
+                    desc = command.description;
+                }
+                result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
+            }
+            player.sendMessage(result.toString());
+        });
 
         //TODO локализовать
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
