@@ -1,0 +1,32 @@
+import groovy.json.*
+
+apply plugin: "java"
+
+repositories{
+    mavenCentral()
+    maven{ url 'https://www.jitpack.io' }
+}
+
+def json = new JsonSlurper()
+
+ext{
+    mod = json.parseText(file("src/main/resources/plugin.json").text)
+
+    project.version = mod['version']
+
+    mindustryVersion = 'v128.1'
+    gsonVersion      = '2.8.6'
+}
+
+dependencies{
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+
+    implementation "com.google.code.gson:gson:$gsonVersion"
+}
+
+jar{
+    from{
+        configurations.runtimeClasspath.collect{it.isDirectory() ? it : zipTree(it)}
+    }
+}
