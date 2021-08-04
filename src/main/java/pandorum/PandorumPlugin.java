@@ -305,6 +305,21 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void registerClientCommands(CommandHandler handler){
+        handler.removeCommand("a");
+        handler.removeCommand("t");
+
+        //TODO локализовать
+        handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
+            if (!adminCheck(player)) return;
+            String playerName = colorizedName(player);
+            Groups.player.each(Player::admin, otherPlayer -> otherPlayer.sendMessage("[scarlet][Админам][gold] > [white]" + playerName + " [gold]>[#ff4449] " + args[0]));
+        });
+
+        //TODO локализовать
+        handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
+            String playerName = colorizedName(player);
+            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> otherPlayer.sendMessage("[#" + player.team().color + "][Команде][gold] > [white]" + playerName + " [gold]>[white] " + args[0]));
+        });
 
         handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру", (args, player) -> {
             if(alertIgnores.contains(player.uuid())){
@@ -468,10 +483,10 @@ public final class PandorumPlugin extends Plugin{
             logic.runWave();
         });
 
+        //TODO сообщение в чат
         handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
             if(!adminCheck(player)) return;
             Events.fire(new GameOverEvent(Team.crux));
-            //TODO сообщение в чат
         });
 
         handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
@@ -490,6 +505,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
 
+        //TODO поиск по ID, а не имени
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
             if(!adminCheck(player)) return;
 
@@ -650,30 +666,6 @@ public final class PandorumPlugin extends Plugin{
                     current[0] = session;
                     session.vote(player, 1);
                 }
-            }
-        });
-
-        handler.<Player>register("playerinfo", "<name/ip/id...>", "Информация о игроке.", (args, player) -> {
-            if(!adminCheck(player)) return;
-
-            ObjectSet<Administration.PlayerInfo> infos = netServer.admins.findByName(args[0]);
-            if (infos.size > 0) {
-                Log.info("Players found: @", infos.size);
-                int i = 0;
-                for(PlayerInfo playerInfo : infos){
-                    StringBuilder result = new StringBuilder();
-                    result.append(Strings.format("[@] @ '@' / UUID @", i++, bundle.get("commands.playerinfo.header", findLocale(player.locale)), playerInfo.lastName, playerInfo.id));
-                    result.append(Strings.format("  @: @", bundle.get("commands.playerinfo.names", findLocale(player.locale)), playerInfo.names));
-                    if(player.admin){
-                        result.append("  IP: ").append(playerInfo.lastIP);
-                        result.append(Strings.format("  IPs : @", playerInfo.ips));
-                    }
-                    result.append("  ").append(bundle.get("commands.playerinfo.joined", findLocale(player.locale))).append(": ").append(playerInfo.timesJoined);
-                    result.append("  ").append(bundle.get("commands.playerinfo.kicked", findLocale(player.locale))).append(": ").append(playerInfo.timesKicked);
-                    Call.infoMessage(player.con(), result.toString());
-                }
-            } else {
-                bundled(player, "commands.player-not-found");
             }
         });
 
