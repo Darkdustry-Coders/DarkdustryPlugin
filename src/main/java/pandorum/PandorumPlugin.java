@@ -62,6 +62,7 @@ public final class PandorumPlugin extends Plugin{
 
     private CacheSeq<HistoryEntry>[][] history;
 
+    private final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
     private Seq<IpInfo> forbiddenIps;
 
     ObjectMap<Unit, Float> timer;
@@ -219,6 +220,8 @@ public final class PandorumPlugin extends Plugin{
             activeHistoryPlayers.remove(event.player.uuid());
             sendToChat("server.player-leave", colorizedName(event.player));
             Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+
+            rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
             if(votesRTV.contains(event.player.uuid())) {
                 votesRTV.remove(event.player.uuid());
@@ -702,7 +705,7 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage(result.toString());
         });
 
-        handler.<Player>register("nominate", "<map/save/load> [название...]", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
+        handler.<Player>register("nominate", "<map/save/load> [name...]", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
             VoteMode mode;
             try{
                 mode = VoteMode.valueOf(args[0].toLowerCase());
@@ -760,6 +763,22 @@ public final class PandorumPlugin extends Plugin{
                     session.vote(player, 1);
                 }
             }
+        });
+
+        handler.<Player>register("rainbow", "RAINBOW!", (args, player) -> {          
+            RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
+            if(old != null){
+                rainbow.remove(old);
+                player.name = Vars.netServer.admins.getInfo(player.uuid()).lastName;
+                setPrefix(player);
+                bundled(player, "commands.rainbow.off");
+                return;
+            }
+            bundled(player, "commands.rainbow.on");
+            RainbowPlayerEntry entry = new RainbowPlayerEntry();
+            entry.player = player;
+            entry.stripedName = Strings.stripColors(player.name);
+            rainbow.add(entry);
         });
 
         handler.<Player>register("y", "Проголосовать [lime]за", (args, player) -> {
