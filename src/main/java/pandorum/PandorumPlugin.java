@@ -68,6 +68,10 @@ public final class PandorumPlugin extends Plugin{
     ObjectMap<Unit, Float> timer;
     float defDelay;
 
+    private static final EffectData moveEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "freezing");
+    private static final EffectData leaveEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "greenLaserCharge");
+    private static final EffectData joinEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "greenBomb");
+
     public PandorumPlugin(){
 
         Fi cfg = dataDirectory.child("config.json");
@@ -185,9 +189,6 @@ public final class PandorumPlugin extends Plugin{
             if(config.bannedNames.contains(player.name())){
                 player.con.kick(bundle.get("events.unofficial-mindustry", findLocale(player.locale)), 60000);
             }
-            if(config.type == PluginType.anarchy) {
-                event.player.admin = true;
-            }
         });
 
         Events.on(DepositEvent.class, event -> {
@@ -214,12 +215,20 @@ public final class PandorumPlugin extends Plugin{
             forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale))));
             sendToChat("server.player-join", colorizedName(event.player));
             Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+
+            try { joinEffect.spawn(event.player.x, event.player.y); }
+            catch (NullPointerException e) {}
+
+            if(config.type == PluginType.anarchy) event.player.admin = true;
         });
 
         Events.on(PlayerLeave.class, event -> {
             activeHistoryPlayers.remove(event.player.uuid());
             sendToChat("server.player-leave", colorizedName(event.player));
             Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+
+            try { leaveEffect.spawn(event.player.x, event.player.y); }
+            catch (NullPointerException e) {}
 
             rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
@@ -242,6 +251,10 @@ public final class PandorumPlugin extends Plugin{
             votesVNW.clear();
         });
 
+        Events.run(Trigger.update, () -> Groups.player.each(p -> p.unit().moving(), p -> {
+            moveEffect.spawn(p.x(), p.y());
+        }));
+
         if(config.type == PluginType.pvp){
             Events.on(PlayerLeave.class, event -> {
                 String uuid = event.player.uuid();
@@ -255,19 +268,17 @@ public final class PandorumPlugin extends Plugin{
         }
 
         if(config.type == PluginType.sand) {
-            Events.on(Trigger.class, e -> {
-                if (e == Trigger.update) {
-                    final float despawnDelay = Core.settings.getFloat("despawndelay", this.defDelay);
-                    Groups.unit.each(unit -> {
-                        if (Time.globalTime - (float)this.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
-                            unit.spawnedByCore(true);
-                        }
-                    });
-                    for (final Unit key : this.timer.keys()) {
-                        if (key == null) return;
-                        if (key.isValid()) continue;
-                        this.timer.remove(key);
+            Events.run(Trigger.update, () -> {
+                final float despawnDelay = Core.settings.getFloat("despawndelay", this.defDelay);
+                Groups.unit.each(unit -> {
+                    if (Time.globalTime - (float)this.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
+                        unit.spawnedByCore(true);
                     }
+                });
+                for (final Unit key : this.timer.keys()) {
+                    if (key == null) return;
+                    if (key.isValid()) continue;
+                    this.timer.remove(key);
                 }
             });
         }
