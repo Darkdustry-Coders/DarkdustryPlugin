@@ -621,7 +621,7 @@ public final class PandorumPlugin extends Plugin{
             } else if (args[0].equals("all")) {
                 final String[] text = {""};
                 Vars.content.units().each(unitType -> text[0] = String.format("%s%s[green]%s, ", text[0], unitType.name));
-                info(player, "commands.units.all", text[0]);
+                bundled(player, "commands.units.all", text[0]);
             } else if (args[0].equals("change")) {
                 if (!adminCheck(player)) return;
                 if(args.length == 1) {
@@ -630,7 +630,7 @@ public final class PandorumPlugin extends Plugin{
                 }
                 UnitType founded = Vars.content.units().find(b -> b.name.equals(args[1]));
                 if (founded == null) {
-                    err(player, "commands.units.unit-not-found");
+                    bundled(player, "commands.units.unit-not-found");
                     return;
                 }
                 final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
