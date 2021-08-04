@@ -9,7 +9,7 @@ import mindustry.gen.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.blocks.units.*;
-import pandorum.Misc;
+import static pandorum.Misc;
 
 import java.util.concurrent.TimeUnit;
 import java.util.*;
@@ -329,11 +329,5 @@ public class ConfigEntry implements HistoryEntry{
     @Override
     public long getLastAccessTime(TimeUnit unit){
         return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
-    }
-
-    private static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
     }
 }
