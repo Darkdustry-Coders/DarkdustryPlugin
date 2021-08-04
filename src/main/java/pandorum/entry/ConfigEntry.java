@@ -316,12 +316,8 @@ public class ConfigEntry implements HistoryEntry{
 
             return bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name));
         }
-        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory){
-            UnitType unit = ((UnitFactory.UnitFactoryBuild)build).unit();
-            if(unit == null){
-                return bundle.format("events.history.config.default", findLocale(player.locale), name);
-            }
-            return bundle.format("events.history.config", findLocale(player.locale), name, icons.get(unit.name));
+        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory || block == Blocks.blockForge){
+            return bundle.format("events.history.config.changed", findLocale(player.locale), name);
         }
         return bundle.get("events.history.unknown", findLocale(player.locale)); // ага да
     }
