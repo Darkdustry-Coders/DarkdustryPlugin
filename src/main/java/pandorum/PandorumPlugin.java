@@ -383,20 +383,17 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage(result.toString());
         });
 
-        //TODO локализовать
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
             if (!adminCheck(player)) return;
-            String playerName = colorizedName(player);
-            Groups.player.each(Player::admin, otherPlayer -> otherPlayer.sendMessage("[scarlet][Админам][gold] > [white]" + playerName + " [gold]>[#ff4449] " + args[0]));
+            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", colorizedName(player), args[0]);
         });
 
-        //TODO локализовать
         handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
-            String playerName = colorizedName(player);
-            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> otherPlayer.sendMessage("[#" + player.team().color + "][Команде][gold] > [white]" + playerName + " [gold]>[white] " + args[0]));
+            String teamColor = "[#" + player.team().color + "]"
+            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, colorizedName(player), args[0]);
         });
 
-        handler.<Player>register("history", "[page] [advanced_mode]", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
+        handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
             String uuid = player.uuid();
             if(activeHistoryPlayers.contains(uuid)){
                 activeHistoryPlayers.remove(uuid);
