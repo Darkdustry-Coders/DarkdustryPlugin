@@ -99,7 +99,7 @@ public final class PandorumPlugin extends Plugin{
 
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(false);
-        //TODO сделать мотд через бандлы -> Administration.Config.motd.set("off");
+        Administration.Config.motd.set("off");
 
         netServer.admins.addActionFilter(action -> {
             if(action.type == Administration.ActionType.rotate){
@@ -221,6 +221,7 @@ public final class PandorumPlugin extends Plugin{
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
             Call.infoMessage(event.player.con, bundle.format("server.hellomsg", findLocale(event.player.locale)));
+            event.player.sendMessage(bundle.format("server.motd", findLocale(event.player.locale)));
         });
 
         Events.on(PlayerLeave.class, event -> {
@@ -530,20 +531,24 @@ public final class PandorumPlugin extends Plugin{
                 }
             });
         }
-        
+
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
 
-        //TODO поиск по ID, а не имени
-        handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
-            if(!adminCheck(player)) return;
 
-            Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
+        handler.<Player>register("team", "<team-id> [player-id]", "Смена команды для [scarlet]Админов", (args, player) -> {
+            if(!adminCheck(player)) return;
+            if(!Strings.canParseInt(args[0]) || Strings.canParseInt(args[1])) {
+                Misc.bundled(player, "commands.id-not-int");
+                return;
+            }
+            int playerID = Strings.parseInt(args[1]);
+            Team team = Team.get(Strings.parseInt(args[0]));
             if(team == null){
                 bundled(player, "commands.admin.team.teams");
                 return;
             }
 
-            Player target = args.length > 1 ? Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(args[1])) : player;
+            Player target = args.length > 1 ? Groups.player.find(p -> p.id == playerID) : player;
             if(target == null){
                 bundled(player, "commands.player-not-found");
                 return;
@@ -794,7 +799,7 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        handler.<Player>register("rainbow", "RAINBOW!", (args, player) -> {          
+        handler.<Player>register("rainbow", "RAINBOW!", (args, player) -> {
             RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
             if(old != null){
                 rainbow.remove(old);
