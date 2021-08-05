@@ -535,20 +535,16 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
 
 
-        handler.<Player>register("team", "<team-id> [player-id]", "Смена команды для [scarlet]Админов", (args, player) -> {
+        handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
             if(!adminCheck(player)) return;
-            if(!Strings.canParseInt(args[0]) || Strings.canParseInt(args[1])) {
-                Misc.bundled(player, "commands.id-not-int");
-                return;
-            }
-            int playerID = Strings.parseInt(args[1]);
-            Team team = Team.get(Strings.parseInt(args[0]));
+
+            Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));         
             if(team == null){
                 bundled(player, "commands.admin.team.teams");
                 return;
             }
 
-            Player target = args.length > 1 ? Groups.player.find(p -> p.id == playerID) : player;
+            Player target = args.length > 1 ? Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(args[1])) : player;
             if(target == null){
                 bundled(player, "commands.player-not-found");
                 return;
