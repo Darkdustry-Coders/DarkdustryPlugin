@@ -405,45 +405,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("history", "[page] [advanced_mode]", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
             String uuid = player.uuid();
-            if(args.length > 0 && activeHistoryPlayers.contains(uuid)){
-                if(!Strings.canParseInt(args[0]) && !Misc.bool(args[0])){
-                    bundled(player, "commands.page-not-int");
-                    return;
-                }
-
-                boolean forward = !Strings.canParseInt(args[0]) ? Misc.bool(args[0]) : args.length > 1 && Misc.bool(args[1]);
-                int mouseX = Mathf.clamp(Mathf.round(player.mouseX / 8), 1, world.width());
-                int mouseY = Mathf.clamp(Mathf.round(player.mouseY / 8), 1, world.height());
-                CacheSeq<HistoryEntry> entries = history[mouseX][mouseY];
-                int page = Strings.canParseInt(args[0]) ? Strings.parseInt(args[0]) : 1;
-                int pages = Mathf.ceil((float)entries.size / 6);
-
-                page--;
-
-                if((page >= pages || page < 0) && !entries.isEmpty()){
-                    bundled(player, "commands.under-page", pages);
-                    return;
-                }
-
-                StringBuilder result = new StringBuilder();
-                result.append(bundle.format("commands.history.page", findLocale(player.locale), mouseX, mouseY, page + 1, pages)).append("\n");
-                if(entries.isEmpty()){
-                    result.append(bundle.format("events.history.empty", findLocale(player.locale)));
-                }
-
-                for(int i = 6 * page; i < Math.min(6 * (page + 1), entries.size); i++){
-                    HistoryEntry entry = entries.get(i);
-
-                    result.append(entry.getMessage(player));
-                    if(forward){
-                        result.append(bundle.format("events.history.last-access-time", findLocale(player.locale), entry.getLastAccessTime(TimeUnit.SECONDS)));
-                    }
-
-                    result.append("\n");
-                }
-
-                player.sendMessage(result.toString());
-            }else if(activeHistoryPlayers.contains(uuid)){
+            if(activeHistoryPlayers.contains(uuid)){
                 activeHistoryPlayers.remove(uuid);
                 bundled(player, "commands.history.off");
             }else{
