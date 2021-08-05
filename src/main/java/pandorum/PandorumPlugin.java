@@ -220,7 +220,7 @@ public final class PandorumPlugin extends Plugin{
             catch (NullPointerException e) {}
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
-            Call.infoMessage(event.player.con, L10NBundle.format("server.hellomsg", findLocale(event.player.locale)));
+            Call.infoMessage(event.player.con, bundle.format("server.hellomsg", findLocale(event.player.locale)));
         });
 
         Events.on(PlayerLeave.class, event -> {
