@@ -6,6 +6,6 @@ import mindustry.gen.*;
 public interface HistoryEntry{
 
     String getMessage(Player player);
-
-    long getLastAccessTime(TimeUnit unit);
+ 
+    //TODO сделать отображение времени, когда был изменён блок
 }
