@@ -426,7 +426,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++){
                 Player t = Groups.player.index(i);
-                result.append("[lightgray]* ").append(t.name).append(" [lightgray]/ ID: ").append(t.id());
+                result.append("[#9c88ee]* ").append(t.name).append(" [accent]/ ID: ").append(t.id());
 
                 if(player.admin){
                     result.append(" / raw: ").append(t.name.replaceAll("\\[", "[["));
