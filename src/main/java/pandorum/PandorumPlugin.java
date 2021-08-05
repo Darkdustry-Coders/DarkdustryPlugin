@@ -385,12 +385,12 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
             if (!adminCheck(player)) return;
-            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", colorizedName(player), args[0]);
+            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", colorizedName(player), args[0]));
         });
 
         handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
-            String teamColor = "[#" + player.team().color + "]"
-            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, colorizedName(player), args[0]);
+            String teamColor = "[#" + player.team().color + "]";
+            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, colorizedName(player), args[0]));
         });
 
         handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
