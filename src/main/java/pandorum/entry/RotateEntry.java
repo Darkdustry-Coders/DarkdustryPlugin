@@ -6,8 +6,6 @@ import mindustry.world.Block;
 import mindustry.gen.*;
 import pandorum.struct.Tuple2;
 
-import java.util.concurrent.TimeUnit;
-
 import pandorum.comp.*;
 import static pandorum.Misc.*;
 
@@ -21,7 +19,6 @@ public class RotateEntry implements HistoryEntry{
     public final String name;
     public final Block block;
     public final int rotation;
-    public long lastAccessTime = Time.millis();
 
     public RotateEntry(String name, Block block, int rotation){
         this.name = name;
@@ -32,10 +29,5 @@ public class RotateEntry implements HistoryEntry{
     @Override
     public String getMessage(Player player){
         return bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation]);
-    }
-
-    @Override
-    public long getLastAccessTime(TimeUnit unit){
-        return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
     }
 }
