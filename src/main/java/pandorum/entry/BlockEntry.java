@@ -7,13 +7,10 @@ import mindustry.gen.*;
 import mindustry.world.Block;
 import pandorum.Misc;
 
-import java.util.concurrent.TimeUnit;
-
 import pandorum.comp.*;
 import static pandorum.Misc.*;
 
 public class BlockEntry implements HistoryEntry{
-    public final long lastAccessTime = Time.millis();
     @Nullable
     public final String name;
     public final Unit unit;
@@ -48,10 +45,5 @@ public class BlockEntry implements HistoryEntry{
             base += bundle.format("events.history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
         return base;
-    }
-
-    @Override
-    public long getLastAccessTime(TimeUnit unit){
-        return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
     }
 }
