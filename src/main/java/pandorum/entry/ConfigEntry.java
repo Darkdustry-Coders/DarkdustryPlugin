@@ -11,7 +11,6 @@ import mindustry.world.*;
 import mindustry.world.blocks.units.*;
 import static pandorum.Misc.*;
 
-import java.util.concurrent.TimeUnit;
 import java.util.*;
 
 import static mindustry.Vars.world;
@@ -252,7 +251,6 @@ public class ConfigEntry implements HistoryEntry{
         commands = bundle.get("events.history.config.command-center.all").split(", ");
     }
 
-    public final long lastAccessTime = Time.millis();
     public final String name;
     public final Block block;
     public final Object value;
@@ -320,10 +318,5 @@ public class ConfigEntry implements HistoryEntry{
             return bundle.format("events.history.config.changed", findLocale(player.locale), name);
         }
         return bundle.get("events.history.unknown", findLocale(player.locale)); // ага да
-    }
-
-    @Override
-    public long getLastAccessTime(TimeUnit unit){
-        return unit.convert(Time.timeSinceMillis(lastAccessTime), TimeUnit.MILLISECONDS);
     }
 }
