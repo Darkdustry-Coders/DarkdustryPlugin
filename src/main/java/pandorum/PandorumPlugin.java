@@ -82,7 +82,7 @@ public final class PandorumPlugin extends Plugin{
             config = gson.fromJson(cfg.reader(), Config.class);
         }
 
-        if(config.type == PluginType.sand) {
+        if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             this.timer = (ObjectMap<Unit, Float>)new ObjectMap();
             this.defDelay = 36000.0f;
         }
@@ -220,6 +220,7 @@ public final class PandorumPlugin extends Plugin{
             catch (NullPointerException e) {}
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
+            Call.infoMessage(event.player.con, L10NBundle.format("server.hellomsg", findLocale(event.player.locale)));
         });
 
         Events.on(PlayerLeave.class, event -> {
