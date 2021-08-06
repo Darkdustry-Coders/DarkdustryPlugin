@@ -221,7 +221,7 @@ public final class PandorumPlugin extends Plugin{
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
             Call.infoMessage(event.player.con, bundle.format("server.hellomsg", findLocale(event.player.locale)));
-            event.player.sendMessage(bundle.format("server.motd", findLocale(event.player.locale)));
+            bundled(event.player, "server.motd");
         });
 
         Events.on(PlayerLeave.class, event -> {
