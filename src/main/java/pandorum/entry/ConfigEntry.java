@@ -1,20 +1,21 @@
 package pandorum.entry;
 
-import arc.util.*;
-import arc.struct.*;
+import static mindustry.Vars.world;
+import static pandorum.Misc.colorizedName;
+import static pandorum.Misc.findLocale;
+
+import arc.struct.StringMap;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
-import mindustry.gen.*;
-import mindustry.type.*;
-import mindustry.world.*;
-import mindustry.world.blocks.units.*;
-
-import java.util.*;
-
-import static mindustry.Vars.world;
-import static pandorum.Misc.*;
-import pandorum.comp.*;
+import mindustry.gen.Building;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.type.Item;
+import mindustry.type.Liquid;
+import mindustry.world.Block;
+import mindustry.world.Tile;
+import pandorum.comp.Bundle;
 
 public class ConfigEntry implements HistoryEntry{
     private static final StringMap icons = StringMap.of(

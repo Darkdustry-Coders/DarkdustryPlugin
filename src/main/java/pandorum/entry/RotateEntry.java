@@ -1,13 +1,10 @@
 package pandorum.entry;
 
-import arc.util.*;
-import arc.struct.*;
-import mindustry.world.Block;
-import mindustry.gen.*;
+import static pandorum.Misc.findLocale;
 
-import pandorum.struct.Tuple2;
-import pandorum.comp.*;
-import static pandorum.Misc.*;
+import mindustry.gen.Player;
+import mindustry.world.Block;
+import pandorum.comp.Bundle;
 
 public class RotateEntry implements HistoryEntry{
     protected static final String[] sides;

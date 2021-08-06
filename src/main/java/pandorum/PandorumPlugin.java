@@ -1,42 +1,94 @@
 package pandorum;
 
-import arc.*;
+import static mindustry.Vars.content;
+import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.logic;
+import static mindustry.Vars.maps;
+import static mindustry.Vars.mods;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.saveDirectory;
+import static mindustry.Vars.saveExtension;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
+import static pandorum.Misc.adminCheck;
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.colorizedName;
+import static pandorum.Misc.colorizedTeam;
+import static pandorum.Misc.findByName;
+import static pandorum.Misc.findLocale;
+import static pandorum.Misc.findMap;
+import static pandorum.Misc.findSave;
+import static pandorum.Misc.isError;
+import static pandorum.Misc.sendToChat;
+import static pandorum.effects.Effects.onJoin;
+import static pandorum.effects.Effects.onLeave;
+import static pandorum.effects.Effects.onMove;
+
+import java.awt.Color;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Objects;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import arc.Core;
+import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
-import arc.struct.*;
-import arc.struct.ObjectMap.Entry;
-import arc.util.*;
-import arc.util.io.*;
-
-import com.google.gson.*;
-import mindustry.content.*;
-import mindustry.game.EventType.*;
+import arc.struct.ObjectMap;
+import arc.struct.ObjectSet;
+import arc.struct.Seq;
+import arc.util.ArcRuntimeException;
+import arc.util.CommandHandler;
+import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Strings;
+import arc.util.Structs;
+import arc.util.Time;
+import arc.util.io.Streams;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
+import mindustry.game.EventType.BlockBuildEndEvent;
+import mindustry.game.EventType.BuildSelectEvent;
+import mindustry.game.EventType.ConfigEvent;
+import mindustry.game.EventType.DepositEvent;
+import mindustry.game.EventType.GameOverEvent;
+import mindustry.game.EventType.PlayerJoin;
+import mindustry.game.EventType.PlayerLeave;
+import mindustry.game.EventType.TapEvent;
+import mindustry.game.EventType.Trigger;
+import mindustry.game.EventType.WorldLoadEvent;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Building;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
-import mindustry.type.*;
-import mindustry.net.*;
-import mindustry.net.Administration.PlayerInfo;
-import mindustry.net.Packets.KickReason;
+import mindustry.net.Administration;
 import mindustry.type.UnitType;
-import mindustry.world.*;
-import mindustry.world.blocks.logic.*;
-
-import pandorum.comp.*;
+import mindustry.world.Block;
+import mindustry.world.Tile;
+import mindustry.world.blocks.logic.LogicBlock;
+import pandorum.comp.Bundle;
+import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
-import pandorum.entry.*;
-import pandorum.struct.*;
-import pandorum.vote.*;
-
-import java.io.*;
-import java.time.*;
-import java.util.*;
-import java.awt.*;
-
-import static mindustry.Vars.*;
-import static pandorum.Misc.*;
-import static pandorum.effects.Effects.*;
+import pandorum.comp.InstantTypeAdapter;
+import pandorum.comp.IpInfo;
+import pandorum.entry.BlockEntry;
+import pandorum.entry.ConfigEntry;
+import pandorum.entry.HistoryEntry;
+import pandorum.entry.RotateEntry;
+import pandorum.struct.CacheSeq;
+import pandorum.struct.Seqs;
+import pandorum.vote.VoteLoadSession;
+import pandorum.vote.VoteMapSession;
+import pandorum.vote.VoteMode;
+import pandorum.vote.VoteSaveSession;
+import pandorum.vote.VoteSession;
 
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
@@ -64,7 +116,7 @@ public final class PandorumPlugin extends Plugin{
     private final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
     private Seq<IpInfo> forbiddenIps;
 
-    ObjectMap<Unit, Float> timer = (ObjectMap<Unit, Float>)new ObjectMap();
+    ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
     float defDelay = 36000f;
 
     public PandorumPlugin(){

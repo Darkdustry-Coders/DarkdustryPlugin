@@ -1,15 +1,15 @@
 package pandorum.vote;
 
-import arc.util.*;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.saveDirectory;
+import static mindustry.Vars.saveExtension;
+import static pandorum.Misc.sendToChat;
+import static pandorum.PandorumPlugin.config;
+
+import arc.util.Timer;
 import arc.util.Timer.Task;
-import mindustry.gen.*;
+import mindustry.gen.Player;
 import mindustry.io.SaveIO;
-
-import static mindustry.Vars.*;
-import pandorum.comp.*;
-
-import static pandorum.PandorumPlugin.*;
-import static pandorum.Misc.*;
 
 public class VoteSaveSession extends VoteSession{
     private final String target;

@@ -1,12 +1,11 @@
 package pandorum.vote;
 
-import arc.struct.ObjectSet;
-import arc.util.*;
-import arc.util.Timer.Task;
-import mindustry.gen.*;
-
-import static mindustry.Vars.netServer;
 import static pandorum.PandorumPlugin.config;
+
+import arc.struct.ObjectSet;
+import arc.util.Timer.Task;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 
 public abstract class VoteSession{
     protected ObjectSet<String> voted = new ObjectSet<>();

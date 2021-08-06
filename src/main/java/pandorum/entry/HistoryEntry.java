@@ -1,7 +1,6 @@
 package pandorum.entry;
 
-import java.util.concurrent.TimeUnit;
-import mindustry.gen.*;
+import mindustry.gen.Player;
 
 public interface HistoryEntry{
 
