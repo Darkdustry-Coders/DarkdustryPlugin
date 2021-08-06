@@ -4,8 +4,8 @@ import arc.util.*;
 import arc.struct.*;
 import mindustry.world.Block;
 import mindustry.gen.*;
-import pandorum.struct.Tuple2;
 
+import pandorum.struct.Tuple2;
 import pandorum.comp.*;
 import static pandorum.Misc.*;
 
@@ -13,7 +13,7 @@ public class RotateEntry implements HistoryEntry{
     protected static final String[] sides;
 
     static{
-        sides = bundle.get("events.history.rotate.all").split(", ");
+        sides = Bundle.get("events.history.rotate.all").split(", ");
     }
 
     public final String name;
@@ -28,6 +28,6 @@ public class RotateEntry implements HistoryEntry{
 
     @Override
     public String getMessage(Player player){
-        return bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation]);
+        return Bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation]);
     }
 }
