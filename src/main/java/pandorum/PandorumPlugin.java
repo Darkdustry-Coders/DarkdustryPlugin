@@ -9,7 +9,6 @@ import arc.util.*;
 import arc.util.io.*;
 
 import com.google.gson.*;
-import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -30,15 +29,14 @@ import pandorum.entry.*;
 import pandorum.struct.*;
 import pandorum.vote.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.time.*;
 import java.util.*;
-import java.util.concurrent.*;
 import java.awt.*;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
-import static pandorum.effects.Effects*;
+import static pandorum.effects.Effects *;
 
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
