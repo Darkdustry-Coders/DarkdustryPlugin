@@ -29,6 +29,7 @@ import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
 import pandorum.entry.*;
 import pandorum.struct.*;
+import pandorum.vote.*;
 
 import java.io.IOException;
 import java.time.*;
