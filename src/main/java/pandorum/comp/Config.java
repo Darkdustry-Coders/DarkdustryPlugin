@@ -1,6 +1,10 @@
 package pandorum.comp;
 
-import java.util.Set;
+import arc.util.*;
+import pandorum.struct.*;
+import mindustry.Vars;
+
+import java.util.*;
 
 public class Config{
 
@@ -18,9 +22,7 @@ public class Config{
     /** Время голосования. В секундах */
     public float voteDuration = 150f;
 
-    public String hubIp = "darkdustry.ml";
-
-    public int hubPort = 6567;
+    public String hubIp = "darkdustry.ml:6567";
 
     public PluginType type = PluginType.def;
 
@@ -31,6 +33,17 @@ public class Config{
             "tuttop",
             "IgruhaOrg"
     );
+
+    public Tuple2<String, Integer> parseIp(){
+        String ip = hubIp;
+        int port = 6567;
+        String[] parts = ip.split(":");
+        if(ip.contains(":") && Strings.canParsePositiveInt(parts[1])){
+            ip = parts[0];
+            port = Strings.parseInt(parts[1]);
+        }
+        return Tuples.of(ip, port);
+    }
 
     public enum PluginType{
 
