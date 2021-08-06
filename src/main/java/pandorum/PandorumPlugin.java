@@ -806,6 +806,13 @@ public final class PandorumPlugin extends Plugin{
             entry.stripedName = Strings.stripColors(player.name);
             rainbow.add(entry);
         });
+
+        handler.<Player>register("js", "<script...>", "Load JavaScript script.", (args, player) -> {
+            if (!adminCheck(player)) return;
+
+            String output = mods.getScripts().runConsole(args[0]);
+            player.sendMessage("> " + (isError(output) ? "[#ff341c]" + output : output));
+        });
     }
 
     //TODO впихнуть радугу в отдельный класс
