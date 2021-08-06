@@ -258,7 +258,7 @@ public class ConfigEntry implements HistoryEntry{
     public final Building build;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
-        this.name = Groups.player.contains(p -> event.player == p) ? colorizedName(event.player) : bundle.get("events.unknown");
+        this.name = Groups.player.contains(p -> event.player == p) ? colorizedName(event.player) : Bundle.get("events.unknown");
         this.block = event.tile.block();
         this.value = event.value;
         this.connect = connect;
