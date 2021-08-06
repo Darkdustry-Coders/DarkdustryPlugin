@@ -19,7 +19,7 @@ public abstract class Misc{
 
     private Misc(){}
 
-    private static final Seq<String> bools = Seq.with(bundle.get("misc.bools", findLocale("ru")).split(", "));
+    private static final Seq<String> bools = Seq.with(Bundle.get("misc.bools", findLocale("ru")).split(", "));
 
     public static boolean bool(String text){
         Objects.requireNonNull(text, "text");
@@ -56,9 +56,9 @@ public abstract class Misc{
         return null;
     }
     public static Locale findLocale(String code) {
-        Locale locale = Structs.find(bundle.supportedLocales, l -> l.toString().equals(code) ||
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(code) ||
                 code.startsWith(l.toString()));
-        return locale != null ? locale : bundle.defaultLocale();
+        return locale != null ? locale : Bundle.defaultLocale();
     }
 
     public static boolean isError(String output) {
