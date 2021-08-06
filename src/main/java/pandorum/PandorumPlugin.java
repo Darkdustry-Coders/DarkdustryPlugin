@@ -76,7 +76,6 @@ import mindustry.world.blocks.logic.LogicBlock;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
-import pandorum.comp.InstantTypeAdapter;
 import pandorum.comp.IpInfo;
 import pandorum.entry.BlockEntry;
 import pandorum.entry.ConfigEntry;
