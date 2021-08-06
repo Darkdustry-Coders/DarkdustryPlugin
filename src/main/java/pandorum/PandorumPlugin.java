@@ -541,7 +541,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            Player target = args.length > 1 ? Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(args[1])) : player;
+            Player target = args.length > 1 ? findByName(args[1]) : player;
             if(target == null){
                 bundled(player, "commands.player-not-found");
                 return;
