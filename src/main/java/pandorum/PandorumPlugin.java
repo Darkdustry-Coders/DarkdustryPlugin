@@ -93,12 +93,11 @@ import pandorum.vote.VoteSession;
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
 
-    public static final Gson gson = new GsonBuilder()
+    public final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
-            .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
-            .disableHtmlEscaping()
-            .serializeNulls()
             .setPrettyPrinting()
+            .serializeNulls()
+            .disableHtmlEscaping()
             .create();
 
     public static VoteSession[] current = {null};
