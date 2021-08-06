@@ -5,7 +5,6 @@ import arc.struct.*;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.*;
 import mindustry.world.Block;
-import pandorum.Misc;
 
 import pandorum.comp.*;
 import static pandorum.Misc.*;
@@ -35,14 +34,14 @@ public class BlockEntry implements HistoryEntry{
     @Override
     public String getMessage(Player player){
         if(breaking){
-            return name != null ? bundle.format("events.history.block.destroy.player", findLocale(player.locale), name) :
-            bundle.format("events.history.block.destroy.unit", findLocale(player.locale), unit.type);
+            return name != null ? Bundle.format("events.history.block.destroy.player", findLocale(player.locale), name) :
+            Bundle.format("events.history.block.destroy.unit", findLocale(player.locale), unit.type);
         }
 
-        String base = name != null ? bundle.format("events.history.block.construct.player", findLocale(player.locale), name, block) :
-                      bundle.format("events.history.block.construct.unit", findLocale(player.locale), unit.type, block);
+        String base = name != null ? Bundle.format("events.history.block.construct.player", findLocale(player.locale), name, block) :
+                      Bundle.format("events.history.block.construct.unit", findLocale(player.locale), unit.type, block);
         if(block.rotate){
-            base += bundle.format("events.history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
+            base += Bundle.format("events.history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
         return base;
     }
