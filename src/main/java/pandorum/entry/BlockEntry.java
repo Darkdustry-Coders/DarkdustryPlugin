@@ -1,7 +1,6 @@
 package pandorum.entry;
 
 import arc.util.*;
-import arc.struct.*;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.*;
 import mindustry.world.Block;
