@@ -80,11 +80,11 @@ public abstract class Misc{
     }
 
     public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(bundle.format(key, findLocale(player.locale), values));
+        player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
     }
 
     public static void sendToChat(String key, Object... values) {
-        Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
+        Groups.player.each(p -> p.sendMessage(Bundle.format(key, findLocale(p.locale), values)));
     }
 
     public static Player findByName(String name) {
