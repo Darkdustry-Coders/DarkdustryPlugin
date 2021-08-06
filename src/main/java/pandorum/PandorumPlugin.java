@@ -536,7 +536,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
             if(!adminCheck(player)) return;
 
-            Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));         
+            Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
             if(team == null){
                 bundled(player, "commands.admin.team.teams");
                 return;
@@ -626,6 +626,15 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.units.change.success");
             } else {
                 bundled(player, "commands.units.incorrect");
+            }
+        });
+
+        handler.<Player>register("unban", "<ip/ID>", "Completely unban a person by IP or ID.", (arg,player) -> {
+            if(!Misc.adminCheck(player)) return;
+            if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
+                Misc.bundled(player, "commands.player-unban.succecfuly", netServer.admins.getInfo(arg[0]).lastName);
+            }else{
+                Misc.bundled(player, "commands.player-unban.not-banned");
             }
         });
 
