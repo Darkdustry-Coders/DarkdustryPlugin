@@ -604,7 +604,7 @@ public final class PandorumPlugin extends Plugin{
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
                 StringBuilder builder = new StringBuilder();
-                Vars.content.units().each(unit -> builder.append("[sky] > [#78ebb3]" + unit.name));
+                Vars.content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
                 bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
                 if (!adminCheck(player)) return;
