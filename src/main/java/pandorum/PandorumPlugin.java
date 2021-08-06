@@ -345,7 +345,7 @@ public final class PandorumPlugin extends Plugin{
             }
             int commandsPerPage = 6;
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-            int pages = Mathf.ceil((float)Vars.netServer.clientCommands.getCommandList().size / commandsPerPage);
+            int pages = Mathf.ceil((float)netServer.clientCommands.getCommandList().size / commandsPerPage);
 
             --page;
 
@@ -357,8 +357,8 @@ public final class PandorumPlugin extends Plugin{
             StringBuilder result = new StringBuilder();
             result.append(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
-            for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
-                CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
+            for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), netServer.clientCommands.getCommandList().size); i++){
+                CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
                 String desc = Bundle.format("commands." + command.text + ".description", findLocale(player.locale));
                 if(desc.startsWith("?")) {
                     desc = command.description;
@@ -591,7 +591,7 @@ public final class PandorumPlugin extends Plugin{
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
                 StringBuilder builder = new StringBuilder();
-                Vars.content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
+                content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
                 bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
                 if (!adminCheck(player)) return;
@@ -790,7 +790,7 @@ public final class PandorumPlugin extends Plugin{
             RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
             if(old != null){
                 rainbow.remove(old);
-                player.name = Vars.netServer.admins.getInfo(player.uuid()).lastName;
+                player.name = netServer.admins.getInfo(player.uuid()).lastName;
                 bundled(player, "commands.rainbow.off");
                 return;
             }
