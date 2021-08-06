@@ -87,7 +87,11 @@ public abstract class Misc{
         Groups.player.each(p -> p.sendMessage(bundle.format(key, findLocale(p.locale), values)));
     }
 
-    public static Player find(int id) {
+    public static Player findByName(String name) {
+        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(name));
+    }
+
+    public static Player findById(String id) {
         return Groups.player.find(p -> p.id == id);
     }
 }
