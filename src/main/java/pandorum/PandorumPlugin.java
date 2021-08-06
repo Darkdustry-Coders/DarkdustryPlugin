@@ -185,42 +185,39 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        Events.on(PlayerConnect.class, event -> {
-            Player player = event.player;
-            if(config.bannedNames.contains(player.name())){
-                player.con.kick(Bundle.get("events.unofficial-mindustry", findLocale(player.locale)), 60000);
-            }
-        });
-
-        Events.on(DepositEvent.class, event -> {
-            Building building = event.tile;
-            Player target = event.player;
-            if(building.block() == Blocks.thoriumReactor && event.item == Items.thorium && target.team().cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
-                Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.withdraw-thorium", Misc.colorizedName(target), building.tileX(), building.tileY()));
-            }
-        });
-
-        Events.on(BuildSelectEvent.class, event -> {
-            if(!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
-                event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
-                event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
-                Player target = event.builder.getPlayer();
-
-                if(interval.get(300)){
-                    Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", target.name, event.tile.x, event.tile.y));
+        if(config.type != PluginType.other) {
+            Events.on(DepositEvent.class, event -> {
+                Building building = event.tile;
+                Player target = event.player;
+                if(building.block() == Blocks.thoriumReactor && event.item == Items.thorium && target.team().cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
+                    Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.withdraw-thorium", Misc.colorizedName(target), building.tileX(), building.tileY()));
                 }
-            }
-        });
+            });
+
+            Events.on(BuildSelectEvent.class, event -> {
+                if(!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
+                    event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
+                    event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
+                    Player target = event.builder.getPlayer();
+
+                    if(interval.get(300)){
+                        Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", target.name, event.tile.x, event.tile.y));
+                    }
+                }
+            });
+        }
 
         Events.on(PlayerJoin.class, event -> {
             forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
+            if(config.bannedNames.contains(event.player.name())) event.player.con.kick(Bundle.get("events.unofficial-mindustry", findLocale(event.player.locale)), 60000);
+
             sendToChat("server.player-join", colorizedName(event.player));
             Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
             try { joinEffect.spawn(event.player.x, event.player.y); }
             catch (NullPointerException e) {}
 
-            if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
+            if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true; //TODO добавить uuid главных админов
             Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
             bundled(event.player, "server.motd");
         });
@@ -632,7 +629,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("unban", "<ip/ID>", "Completely unban a person by IP or ID.", (arg,player) -> {
             if(!Misc.adminCheck(player)) return;
             if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                Misc.bundled(player, "commands.unban.succesfuly", netServer.admins.getInfo(arg[0]).lastName);
+                Misc.bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
             }else{
                 Misc.bundled(player, "commands.unban.not-banned");
             }
