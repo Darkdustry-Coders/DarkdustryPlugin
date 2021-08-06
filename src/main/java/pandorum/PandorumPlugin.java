@@ -161,7 +161,7 @@ public final class PandorumPlugin extends Plugin{
             if(activeHistoryPlayers.contains(event.player.uuid())){
                 CacheSeq<HistoryEntry> entries = history[event.tile.x][event.tile.y];
 
-                StringBuilder message = new StringBuilder(bundle.format("events.history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
+                StringBuilder message = new StringBuilder(Bundle.format("events.history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
 
                 entries.cleanUp();
                 if(entries.isOverflown()){
