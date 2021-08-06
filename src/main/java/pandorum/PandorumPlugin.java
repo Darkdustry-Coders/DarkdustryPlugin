@@ -516,7 +516,6 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
 
-
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
             if(!adminCheck(player)) return;
 
@@ -599,7 +598,7 @@ public final class PandorumPlugin extends Plugin{
                     bundled(player, "commands.units.incorrect");
                     return;
                 }
-                UnitType founded = Vars.content.units().find(b -> b.name.equals(args[1]));
+                UnitType founded = content.units().find(b -> b.name.equals(args[1]));
                 if (founded == null) {
                     bundled(player, "commands.units.unit-not-found");
                     return;
