@@ -21,7 +21,6 @@ public class EffectObject {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
-        this.periodMillis = periodMillis;
         this.color = color;
         this.effect = effect;
     }
