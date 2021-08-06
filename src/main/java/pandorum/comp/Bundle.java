@@ -41,7 +41,7 @@ public class Bundle {
         Log.debug("Loaded locales: @", Arrays.toString(supportedLocales));
     }
 
-    private bundle(){
+    private Bundle(){
     }
 
     public static String get(String key, Locale locale){
