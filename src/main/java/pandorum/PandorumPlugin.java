@@ -632,9 +632,9 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("unban", "<ip/ID>", "Completely unban a person by IP or ID.", (arg,player) -> {
             if(!Misc.adminCheck(player)) return;
             if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                Misc.bundled(player, "commands.player-unban.succecfuly", netServer.admins.getInfo(arg[0]).lastName);
+                Misc.bundled(player, "commands.unban.succesfuly", netServer.admins.getInfo(arg[0]).lastName);
             }else{
-                Misc.bundled(player, "commands.player-unban.not-banned");
+                Misc.bundled(player, "commands.unban.not-banned");
             }
         });
 
