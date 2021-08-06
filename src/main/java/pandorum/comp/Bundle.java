@@ -10,7 +10,7 @@ import java.util.*;
 
 import pandorum.PandorumPlugin;
 
-public class bundle{
+public class Bundle {
 
     private static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
 
