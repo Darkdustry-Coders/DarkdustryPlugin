@@ -165,7 +165,7 @@ public final class PandorumPlugin extends Plugin{
 
                 entries.cleanUp();
                 if(entries.isOverflown()){
-                    message.append(bundle.get("events.history.overflow", findLocale(event.player.locale)));
+                    message.append(Bundle.get("events.history.overflow", findLocale(event.player.locale)));
                 }
 
                 int i = 0;
@@ -177,7 +177,7 @@ public final class PandorumPlugin extends Plugin{
                 }
 
                 if(entries.isEmpty()){
-                    message.append(bundle.get("events.history.empty", findLocale(event.player.locale)));
+                    message.append(Bundle.get("events.history.empty", findLocale(event.player.locale)));
                 }
 
                 event.player.sendMessage(message.toString());
@@ -187,7 +187,7 @@ public final class PandorumPlugin extends Plugin{
         Events.on(PlayerConnect.class, event -> {
             Player player = event.player;
             if(config.bannedNames.contains(player.name())){
-                player.con.kick(bundle.get("events.unofficial-mindustry", findLocale(player.locale)), 60000);
+                player.con.kick(Bundle.get("events.unofficial-mindustry", findLocale(player.locale)), 60000);
             }
         });
 
@@ -421,7 +421,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             StringBuilder result = new StringBuilder();
-            result.append(bundle.format("commands.pl.page", findLocale(player.locale), page + 1, pages)).append("\n");
+            result.append(Bundle.format("commands.pl.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
             for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++){
                 Player t = Groups.player.index(i);
@@ -610,7 +610,7 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
                 if (!adminCheck(player)) return;
-                if(args.length == 1) {
+                if(args.length == 1 || args[1].equals("block")) {
                     bundled(player, "commands.units.incorrect");
                     return;
                 }
@@ -645,7 +645,7 @@ public final class PandorumPlugin extends Plugin{
                 }
 
                 StringBuilder result = new StringBuilder();
-                result.append(bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
+                result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
                 for(int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++){
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
                 }
@@ -669,7 +669,7 @@ public final class PandorumPlugin extends Plugin{
                 }
 
                 StringBuilder result = new StringBuilder();
-                result.append(bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
+                result.append(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
                 for(int i = 6 * page; i < Math.min(6 * (page + 1), saves.size); i++){
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(saves.get(i).nameWithoutExtension()).append("[white] ").append("\n");
                 }
