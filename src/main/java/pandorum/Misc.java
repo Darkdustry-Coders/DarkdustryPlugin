@@ -75,7 +75,6 @@ public abstract class Misc{
             bundled(player, "commands.permission-denied");
             return false;
         }
-        System.out.println("ффф");
         return true;
     }
 
