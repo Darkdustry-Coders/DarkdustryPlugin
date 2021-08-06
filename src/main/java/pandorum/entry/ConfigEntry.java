@@ -9,11 +9,11 @@ import mindustry.gen.*;
 import mindustry.type.*;
 import mindustry.world.*;
 import mindustry.world.blocks.units.*;
-import static pandorum.Misc.*;
 
 import java.util.*;
 
 import static mindustry.Vars.world;
+import static pandorum.Misc.*;
 import pandorum.comp.*;
 
 public class ConfigEntry implements HistoryEntry{
@@ -248,7 +248,7 @@ public class ConfigEntry implements HistoryEntry{
     private static final String[] commands;
 
     static{
-        commands = bundle.get("events.history.config.command-center.all").split(", ");
+        commands = Bundle.get("events.history.config.command-center.all").split(", ");
     }
 
     public final String name;
@@ -273,50 +273,50 @@ public class ConfigEntry implements HistoryEntry{
             int data = (int)value;
             Tile tile = world.tile(data);
             if(tile == null){
-                return bundle.get("events.history.unknown", findLocale(player.locale));
+                return Bundle.get("events.history.unknown", findLocale(player.locale));
             }
 
             if(connect){
-                return bundle.format("events.history.config.power-node.connect", findLocale(player.locale), name, block, tile.x, tile.y);
+                return Bundle.format("events.history.config.power-node.connect", findLocale(player.locale), name, block, tile.x, tile.y);
             }
 
-            return bundle.format("events.history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y);
+            return Bundle.format("events.history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y);
         }
 
         if(block == Blocks.door || block == Blocks.doorLarge){
             boolean data = (boolean)value;
-            return data ? bundle.format("events.history.config.door.on", findLocale(player.locale), name, block) : bundle.format("events.history.config.door.off", findLocale(player.locale), name, block);
+            return data ? Bundle.format("events.history.config.door.on", findLocale(player.locale), name, block) : Bundle.format("events.history.config.door.off", findLocale(player.locale), name, block);
         }
 
         if(block == Blocks.switchBlock){
             boolean data = (boolean)value;
-            return data ? bundle.format("events.history.config.switch.on", findLocale(player.locale), name) : bundle.format("events.history.config.switch.off", findLocale(player.locale), name);
+            return data ? Bundle.format("events.history.config.switch.on", findLocale(player.locale), name) : Bundle.format("events.history.config.switch.off", findLocale(player.locale), name);
         }
 
         if(block == Blocks.commandCenter){
-            return bundle.format("events.history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()]);
+            return Bundle.format("events.history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()]);
         }
 
         if(block == Blocks.liquidSource){
             Liquid liquid = (Liquid)value;
             if(liquid == null){
-                return bundle.format("events.history.config.default", findLocale(player.locale), name);
+                return Bundle.format("events.history.config.default", findLocale(player.locale), name);
             }
 
-            return bundle.format("events.history.config", findLocale(player.locale), name, icons.get(liquid.name));
+            return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(liquid.name));
         }
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
             Item item = (Item)value;
             if(item == null){
-                return bundle.format("events.history.config.default", findLocale(player.locale), name);
+                return Bundle.format("events.history.config.default", findLocale(player.locale), name);
             }
 
-            return bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name));
+            return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name));
         }
         if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory || block == Blocks.blockForge){
-            return bundle.format("events.history.config.changed", findLocale(player.locale), name);
+            return Bundle.format("events.history.config.changed", findLocale(player.locale), name);
         }
-        return bundle.get("events.history.unknown", findLocale(player.locale)); // ага да
+        return Bundle.get("events.history.unknown", findLocale(player.locale)); // не ну а че
     }
 }
