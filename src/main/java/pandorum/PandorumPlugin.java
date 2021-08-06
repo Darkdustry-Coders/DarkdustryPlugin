@@ -212,7 +212,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         Events.on(PlayerJoin.class, event -> {
-            forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(bundle.get("events.vpn-ip", findLocale(event.player.locale))));
+            forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
             sendToChat("server.player-join", colorizedName(event.player));
             Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
@@ -370,7 +370,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             StringBuilder result = new StringBuilder();
-            result.append(Strings.format("[orange]-- Commands Page[lightgray] @[gray]/[lightgray]@[orange] --\n\n", (page + 1), pages));
+            result.append(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
             for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
