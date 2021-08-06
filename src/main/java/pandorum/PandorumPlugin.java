@@ -38,6 +38,7 @@ import java.awt.*;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
+import static pandorum.effects.Effects*;
 
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
@@ -65,12 +66,8 @@ public final class PandorumPlugin extends Plugin{
     private final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
     private Seq<IpInfo> forbiddenIps;
 
-    ObjectMap<Unit, Float> timer;
-    float defDelay;
-
-    private static final EffectData moveEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "freezing");
-    private static final EffectData leaveEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "greenLaserCharge");
-    private static final EffectData joinEffect = new EffectData(0, 0, 30, 0, "#4169e1ff", "greenBomb");
+    ObjectMap<Unit, Float> timer = (ObjectMap<Unit, Float>)new ObjectMap();
+    float defDelay = 36000f;
 
     public PandorumPlugin(){
 
@@ -80,11 +77,6 @@ public final class PandorumPlugin extends Plugin{
             Log.info("Config created...");
         }else{
             config = gson.fromJson(cfg.reader(), Config.class);
-        }
-
-        if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
-            this.timer = (ObjectMap<Unit, Float>)new ObjectMap();
-            this.defDelay = 36000.0f;
         }
     }
 
@@ -213,8 +205,7 @@ public final class PandorumPlugin extends Plugin{
             sendToChat("server.player-join", colorizedName(event.player));
             Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-            try { joinEffect.spawn(event.player.x, event.player.y); }
-            catch (NullPointerException e) {}
+            onJoin(event.player);
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true; //TODO добавить uuid главных админов
             Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
@@ -226,8 +217,7 @@ public final class PandorumPlugin extends Plugin{
             sendToChat("server.player-leave", colorizedName(event.player));
             Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-            try { leaveEffect.spawn(event.player.x, event.player.y); }
-            catch (NullPointerException e) {}
+            onLeave(event.player);
 
             rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
@@ -252,7 +242,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(p -> p.unit().moving(), p -> {
-            moveEffect.spawn(p.x(), p.y());
+            onMove(p);
         }));
 
         if(config.type == PluginType.pvp){
