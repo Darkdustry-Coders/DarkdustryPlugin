@@ -564,7 +564,10 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Call.connect(player.con, config.hubIp, config.hubPort));
+        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
+            Tuple2<String, Integer> hub = config.parseIp();
+            Call.connect(player.con, hub.t1, hub.t2);
+        }
 
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
             if(!adminCheck(player)) return;
