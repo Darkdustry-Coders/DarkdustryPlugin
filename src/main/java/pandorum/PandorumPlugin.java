@@ -36,7 +36,7 @@ import java.awt.*;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
-import static pandorum.effects.Effects *;
+import static pandorum.effects.Effects.*;
 
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
