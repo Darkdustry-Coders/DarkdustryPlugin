@@ -220,7 +220,7 @@ public final class PandorumPlugin extends Plugin{
             catch (NullPointerException e) {}
 
             if(config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;    //Выдача админки Дарку (не ну а че) TODO добавить uuid главных админов
-            Call.infoMessage(event.player.con, bundle.format("server.hellomsg", findLocale(event.player.locale)));
+            Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
             bundled(event.player, "server.motd");
         });
 
@@ -374,7 +374,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), Vars.netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = Vars.netServer.clientCommands.getCommandList().get(i);
-                String desc = bundle.format("commands." + command.text + ".description", findLocale(player.locale));
+                String desc = Bundle.format("commands." + command.text + ".description", findLocale(player.locale));
                 if(desc.startsWith("?")) {
                     desc = command.description;
                 }
@@ -425,10 +425,10 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++){
                 Player t = Groups.player.index(i);
-                result.append("[#9c88ee]* ").append(t.name).append(" [accent]/ ID: ").append(t.id());
+                result.append("[#9c88ee]* ").append(t.name).append(" [accent]/ [cyan]ID: ").append(t.id());
 
                 if(player.admin){
-                    result.append(" / raw: ").append(t.name.replaceAll("\\[", "[["));
+                    result.append(" [accent]/ [cyan]raw: ").append(t.name.replaceAll("\\[", "[["));
                 }
                 result.append("\n");
             }
