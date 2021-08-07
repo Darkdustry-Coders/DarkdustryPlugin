@@ -90,19 +90,19 @@ public final class PandorumPlugin extends Plugin{
     public static Config config;
     public static Seq<IpInfo> forbiddenIps;
 
-    public final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
-    public final ObjectSet<String> votesRTV = new ObjectSet<>();
-    public final ObjectSet<String> votesVNW = new ObjectSet<>();
-    public final ObjectSet<String> alertIgnores = new ObjectSet<>();
-    public final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
-    public final Interval interval = new Interval(2);
+    public static final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
+    public static final ObjectSet<String> votesRTV = new ObjectSet<>();
+    public static final ObjectSet<String> votesVNW = new ObjectSet<>();
+    public static final ObjectSet<String> alertIgnores = new ObjectSet<>();
+    public static final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
+    public static final Interval interval = new Interval(2);
 
     public CacheSeq<HistoryEntry>[][] history;
 
-    public final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
+    public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
 
-    public ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
-    public float defDelay = 36000f;
+    public static ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
+    public static float defDelay = 36000f;
 
     public PandorumPlugin(){
 
