@@ -233,7 +233,7 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        Events.on(PlayerJoin.class, event -> PlayerJoinEvent.call(event));
+        Events.on(PlayerJoin.class, event -> call(event));
 
         Events.on(PlayerLeave.class, event -> {
             activeHistoryPlayers.remove(event.player.uuid());
