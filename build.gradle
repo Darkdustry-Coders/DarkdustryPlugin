@@ -4,7 +4,13 @@ apply plugin: "java"
 
 repositories{
     mavenCentral()
-    maven{ url 'https://www.jitpack.io' }
+    maven{
+        credentials {
+            username = "DarkDustryBot"
+            password = "DarkDustryBot2000"
+        }
+        url 'https://www.jitpack.io'
+    }
 }
 
 def json = new JsonSlurper()
