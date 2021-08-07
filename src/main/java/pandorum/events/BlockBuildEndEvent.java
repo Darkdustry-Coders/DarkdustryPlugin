@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.struct.*;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
 import mindustry.content.Blocks;
