@@ -7,7 +7,7 @@ import mindustry.content.Blocks;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
-import static pandorum.Misc.bundled;
+import static pandorum.Misc.*;
 
 public class BuildSelectEvent {
     public static void call(final EventType.BuildSelectEvent event) {
@@ -18,7 +18,7 @@ public class BuildSelectEvent {
             Player target = event.builder.getPlayer();
 
             if(PandorumPlugin.interval.get(300)){
-                Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", target.name, event.tile.x, event.tile.y));
+                Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target.name), event.tile.x, event.tile.y));
             }
         }
     }
