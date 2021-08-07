@@ -1,6 +1,5 @@
 package pandorum.events;
 
-import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -18,7 +17,7 @@ public class BuildSelectEvent {
             event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)){
             Player target = event.builder.getPlayer();
 
-            if(interval.get(300)){
+            if(PandorumPlugin.interval.get(300)){
                 Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", target.name, event.tile.x, event.tile.y));
             }
         }
