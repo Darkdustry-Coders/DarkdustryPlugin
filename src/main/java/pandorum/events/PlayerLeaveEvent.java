@@ -16,25 +16,25 @@ import pandorum.comp.Config.PluginType;
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
-        sendToChat("server.player-leave", Misc.colorizedName(event.player));
+        sendToChat("server.player-leave", colorizedName(event.player));
         Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-        Effects.onLeave(event.player);
+        onLeave(event.player);
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
-        if(config.type == PluginType.other) return;
+        if(PandorumPlugin.config.type == PluginType.other) return;
         if(PandorumPlugin.votesRTV.contains(event.player.uuid())) {
             PandorumPlugin.votesRTV.remove(event.player.uuid());
             int curRTV = PandorumPlugin.votesRTV.size;
             int reqRTV = (int) Math.ceil(config.voteRatio * Groups.player.size());
-            sendToChat("commands.rtv.left", Misc.colorizedName(event.player), curRTV, reqRTV);
+            sendToChat("commands.rtv.left", colorizedName(event.player), curRTV, reqRTV);
         }
         if(PandorumPlugin.votesVNW.contains(event.player.uuid())) {
             PandorumPlugin.votesVNW.remove(event.player.uuid());
             int curVNW = PandorumPlugin.votesVNW.size;
             int reqVNW = (int) Math.ceil(config.voteRatio * Groups.player.size());
-            sendToChat("commands.vnw.left", Misc.colorizedName(event.player), curVNW, reqVNW);
+            sendToChat("commands.vnw.left", colorizedName(event.player), curVNW, reqVNW);
         }
     }
 }
