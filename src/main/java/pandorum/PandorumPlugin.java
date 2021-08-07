@@ -9,6 +9,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.effects.Effects.onMove;
 import static pandorum.events.PlayerJoinEvent.call;
 import static pandorum.events.PlayerLeaveEvent.call;
+import static pandorum.events.GameOverEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -234,21 +235,12 @@ public final class PandorumPlugin extends Plugin{
         }
 
         Events.on(PlayerJoin.class, event -> call(event));
-
         Events.on(PlayerLeave.class, event -> call(event));
-
-        Events.on(GameOverEvent.class, e -> {
-            votesRTV.clear();
-            votesVNW.clear();
-        });
+        Events.on(GameOverEvent.class, e -> call(event));
 
         Events.run(Trigger.update, () -> Groups.player.each(p -> p.unit().moving(), p -> {
             onMove(p);
         }));
-
-        if(config.type == PluginType.pvp){
-            Events.on(GameOverEvent.class, e -> surrendered.clear());
-        }
 
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             Events.run(Trigger.update, () -> {
