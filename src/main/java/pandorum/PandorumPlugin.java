@@ -111,6 +111,7 @@ public final class PandorumPlugin extends Plugin{
     public final Interval interval = new Interval(2);
 
     public CacheSeq<HistoryEntry>[][] history;
+    public Seq<IpInfo> forbiddenIps;
 
     public final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
 
@@ -130,6 +131,11 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void init() {
+        try{
+            forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
+        }catch(Throwable t){
+            throw new ArcRuntimeException(t);
+        }
 
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(false);
