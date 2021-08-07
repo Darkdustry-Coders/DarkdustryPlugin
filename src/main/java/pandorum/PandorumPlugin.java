@@ -26,7 +26,6 @@ import static pandorum.effects.Effects.onMove;
 
 import java.awt.Color;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Objects;
 
 import com.google.gson.FieldNamingPolicy;
@@ -102,6 +101,7 @@ public final class PandorumPlugin extends Plugin{
 
     public static VoteSession[] current = {null};
     public static Config config;
+    public static Seq<IpInfo> forbiddenIps;
 
     public final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
     public final ObjectSet<String> votesRTV = new ObjectSet<>();
@@ -111,7 +111,6 @@ public final class PandorumPlugin extends Plugin{
     public final Interval interval = new Interval(2);
 
     public CacheSeq<HistoryEntry>[][] history;
-    public Seq<IpInfo> forbiddenIps;
 
     public final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
 
