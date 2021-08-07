@@ -6,10 +6,10 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 import static pandorum.Misc.sendToChat;
-import static pandorum.effects.Effects.onMove;
 import static pandorum.events.PlayerJoinEvent.call;
 import static pandorum.events.PlayerLeaveEvent.call;
 import static pandorum.events.GameOverEvent.call;
+import static pandorum.events.TriggerUpdate.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -237,26 +237,7 @@ public final class PandorumPlugin extends Plugin{
         Events.on(PlayerJoin.class, event -> call(event));
         Events.on(PlayerLeave.class, event -> call(event));
         Events.on(GameOverEvent.class, event -> call(event));
-
-        Events.run(Trigger.update, () -> Groups.player.each(p -> p.unit().moving(), p -> {
-            onMove(p);
-        }));
-
-        if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
-            Events.run(Trigger.update, () -> {
-                final float despawnDelay = Core.settings.getFloat("despawndelay", this.defDelay);
-                Groups.unit.each(unit -> {
-                    if (Time.globalTime - (float)this.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
-                        unit.spawnedByCore(true);
-                    }
-                });
-                for (final Unit key : this.timer.keys()) {
-                    if (key == null) return;
-                    if (key.isValid()) continue;
-                    this.timer.remove(key);
-                }
-            });
-        }
+        Events.run(Trigger.update, () -> call());
 
         arc.util.Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
             int hue = r.hue;
