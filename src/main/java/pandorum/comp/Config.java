@@ -1,10 +1,9 @@
 package pandorum.comp;
 
-import arc.util.*;
-import pandorum.struct.*;
-import mindustry.Vars;
+import java.util.Set;
 
-import java.util.*;
+import arc.util.Strings;
+import pandorum.struct.Tuple2;
 
 public class Config{
 
