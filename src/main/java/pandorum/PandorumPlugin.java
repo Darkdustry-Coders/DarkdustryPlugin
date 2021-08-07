@@ -1,27 +1,11 @@
 package pandorum;
 
-import static mindustry.Vars.content;
 import static mindustry.Vars.dataDirectory;
-import static mindustry.Vars.logic;
-import static mindustry.Vars.maps;
-import static mindustry.Vars.mods;
 import static mindustry.Vars.netServer;
-import static mindustry.Vars.saveDirectory;
-import static mindustry.Vars.saveExtension;
-import static mindustry.Vars.state;
 import static mindustry.Vars.world;
-import static pandorum.Misc.adminCheck;
 import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedName;
-import static pandorum.Misc.colorizedTeam;
-import static pandorum.Misc.findByName;
 import static pandorum.Misc.findLocale;
-import static pandorum.Misc.findMap;
-import static pandorum.Misc.findSave;
-import static pandorum.Misc.isError;
 import static pandorum.Misc.sendToChat;
-import static pandorum.effects.Effects.onJoin;
-import static pandorum.effects.Effects.onLeave;
 import static pandorum.effects.Effects.onMove;
 import static pandorum.events.PlayerJoinEvent.call;
 
@@ -48,6 +32,7 @@ import arc.util.Strings;
 import arc.util.Structs;
 import arc.util.Time;
 import arc.util.io.Streams;
+import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.game.EventType.BlockBuildEndEvent;
@@ -76,11 +61,13 @@ import mindustry.world.blocks.logic.LogicBlock;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
+import pandorum.effects.Effects;
 import pandorum.comp.IpInfo;
 import pandorum.entry.BlockEntry;
 import pandorum.entry.ConfigEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.RotateEntry;
+import pandorum.events.PlayerJoinEvent;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 import pandorum.struct.Tuple2;
@@ -246,14 +233,14 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        Events.on(PlayerJoin.class, event -> call(event));
+        Events.on(PlayerJoin.class, event -> PlayerJoinEvent.call(event));
 
         Events.on(PlayerLeave.class, event -> {
             activeHistoryPlayers.remove(event.player.uuid());
-            sendToChat("server.player-leave", colorizedName(event.player));
+            sendToChat("server.player-leave", Misc.colorizedName(event.player));
             Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-            onLeave(event.player);
+            Effects.onLeave(event.player);
 
             rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
@@ -407,13 +394,13 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
-            if (!adminCheck(player)) return;
-            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", colorizedName(player), args[0]));
+            if (!Misc.adminCheck(player)) return;
+            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
             String teamColor = "[#" + player.team().color + "]";
-            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, colorizedName(player), args[0]));
+            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
@@ -500,13 +487,13 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
-                if(!adminCheck(player)) return;
+                if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
                 sendToChat("commands.artv.info");
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
-                if(!adminCheck(player)) return;
+                if(!Misc.adminCheck(player)) return;
 
                 Block core = switch(args[0].toLowerCase()){
                     case "medium" -> Blocks.coreFoundation;
@@ -558,21 +545,21 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
-            if(!adminCheck(player)) return;
+            if(!Misc.adminCheck(player)) return;
 
             Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
             if(team == null){
                 bundled(player, "commands.admin.team.teams");
                 return;
             }
-
-            Player target = args.length > 1 ? findByName(args[1]) : player;
+            
+            Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
             if(target == null){
                 bundled(player, "commands.player-not-found");
                 return;
             }
 
-            bundled(target, "commands.admin.team.success", colorizedTeam(team));
+            bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
         });
 
@@ -588,15 +575,15 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("spectate", "Admins secret.", (args, player) -> {
-            if(!adminCheck(player)) return;
+            if(!Misc.adminCheck(player)) return;
             player.clearUnit();
             player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
         });
 
-        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
+        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
 
         handler.<Player>register("spawn", "<unit> [count] [team]", "Spawn units.", (args, player) -> {
-            if (!adminCheck(player)) return;
+            if (!Misc.adminCheck(player)) return;
 
             if(args.length > 1 && !Strings.canParseInt(args[1])){
                 bundled(player, "commands.spawn.non-int");
@@ -615,13 +602,13 @@ public final class PandorumPlugin extends Plugin{
             	return;
             }
 
-            UnitType unit = content.units().find(b -> b.name.equals(args[0]));
+            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
             if (unit == null) bundled(player, "commands.units.unit-not-found");
             else {
                 for (int i = 0; count > i; i++) {
                     unit.spawn(team, player.x, player.y);
                 }
-                bundled(player, "commands.spawn.success", count, unit.name, colorizedTeam(team));
+                bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
             }
         });
 
@@ -631,15 +618,15 @@ public final class PandorumPlugin extends Plugin{
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
                 StringBuilder builder = new StringBuilder();
-                content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
+                Vars.content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
                 bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
-                if (!adminCheck(player)) return;
+                if (!Misc.adminCheck(player)) return;
                 if(args.length == 1 || args[1].equals("block")) {
                     bundled(player, "commands.units.incorrect");
                     return;
                 }
-                UnitType founded = content.units().find(b -> b.name.equals(args[1]));
+                UnitType founded = Vars.content.units().find(b -> b.name.equals(args[1]));
                 if (founded == null) {
                     bundled(player, "commands.units.unit-not-found");
                     return;
@@ -669,7 +656,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                Seq<Map> mapList = maps.all();
+                Seq<Map> mapList = Vars.maps.all();
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                 int pages = Mathf.ceil(mapList.size / 6f);
 
@@ -733,7 +720,7 @@ public final class PandorumPlugin extends Plugin{
                 switch(mode){
                     case map -> {
 
-                        Map map = findMap(args[1]);
+                        Map map = Misc.findMap(args[1]);
                         if(map == null){
                             bundled(player, "commands.nominate.map.not-found");
                             return;
@@ -751,7 +738,7 @@ public final class PandorumPlugin extends Plugin{
                     }
                     case load -> {
 
-                        Fi save = findSave(args[1]);
+                        Fi save = Misc.findSave(args[1]);
                         if(save == null){
                             player.sendMessage("commands.nominate.load.not-found");
                             return;
@@ -802,7 +789,7 @@ public final class PandorumPlugin extends Plugin{
                 uuids.add(uuid);
                 int cur = uuids.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
-                sendToChat("commands.surrender.ok", colorizedTeam(team), colorizedName(player), cur, req);
+                sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
 
                 if(cur < req){
                     return;
@@ -835,10 +822,10 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("js", "<script...>", "Load JavaScript script.", (args, player) -> {
-            if (!adminCheck(player)) return;
+            if (!Misc.adminCheck(player)) return;
 
-            String output = mods.getScripts().runConsole(args[0]);
-            player.sendMessage("> " + (isError(output) ? "[#ff341c]" + output : output));
+            String output = Vars.mods.getScripts().runConsole(args[0]);
+            player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
         });
     }
 
