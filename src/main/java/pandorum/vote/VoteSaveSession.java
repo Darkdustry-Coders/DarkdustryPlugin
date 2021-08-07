@@ -16,7 +16,6 @@ public class VoteSaveSession extends VoteSession{
 
     public VoteSaveSession(VoteSession[] map, String target){
         super(map);
-
         this.target = target;
     }
 
