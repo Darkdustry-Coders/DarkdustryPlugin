@@ -83,6 +83,7 @@ import pandorum.entry.HistoryEntry;
 import pandorum.entry.RotateEntry;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
+import pandorum.struct.Tuple2;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteMode;
