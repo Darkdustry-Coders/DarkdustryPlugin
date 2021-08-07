@@ -14,6 +14,7 @@ import static pandorum.events.BuildSelectEvent.call;
 import static pandorum.events.DepositEvent.call;
 import static pandorum.events.TapEvent.call;
 import static pandorum.events.ConfigEvent.call;
+import static pandorum.events.BlockBuildEndEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -135,14 +136,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        Events.on(BlockBuildEndEvent.class, event -> {
-            HistoryEntry historyEntry = new BlockEntry(event);
-
-            Seq<Tile> linkedTile = event.tile.getLinkedTiles(new Seq<>());
-            for(Tile tile : linkedTile){
-                history[tile.x][tile.y].add(historyEntry);
-            }
-        });
+        Events.on(BlockBuildEndEvent.class, event -> call(event));
 
         Events.on(ConfigEvent.class, event -> call(event));
         Events.on(TapEvent.class, event -> call(event));
