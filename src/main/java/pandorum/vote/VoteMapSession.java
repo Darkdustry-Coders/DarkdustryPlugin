@@ -22,7 +22,6 @@ public class VoteMapSession extends VoteSession{
 
     public VoteMapSession(VoteSession[] map, Map target){
         super(map);
-
         this.target = target;
     }
 
