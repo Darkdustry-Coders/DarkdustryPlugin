@@ -12,6 +12,7 @@ import static pandorum.events.GameOverEvent.call;
 import static pandorum.events.TriggerUpdate.call;
 import static pandorum.events.BuildSelectEvent.call;
 import static pandorum.events.DepositEvent.call;
+import static pandorum.events.TapEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -53,18 +54,11 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.logic.LogicBlock;
-import pandorum.comp.Bundle;
-import pandorum.comp.Config;
+import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
-import pandorum.comp.IpInfo;
 import pandorum.effects.Effects;
-import pandorum.entry.BlockEntry;
-import pandorum.entry.ConfigEntry;
-import pandorum.entry.HistoryEntry;
-import pandorum.entry.RotateEntry;
-import pandorum.struct.CacheSeq;
-import pandorum.struct.Seqs;
-import pandorum.struct.Tuple2;
+import pandorum.entry.*;
+import pandorum.struct.*;
 import pandorum.vote.*;
 
 @SuppressWarnings("unchecked")
@@ -88,7 +82,7 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
     public static final Interval interval = new Interval(2);
 
-    public CacheSeq<HistoryEntry>[][] history;
+    public static CacheSeq<HistoryEntry>[][] history;
 
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
 
@@ -174,33 +168,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        Events.on(TapEvent.class, event -> {
-            if(activeHistoryPlayers.contains(event.player.uuid())){
-                CacheSeq<HistoryEntry> entries = history[event.tile.x][event.tile.y];
-
-                StringBuilder message = new StringBuilder(Bundle.format("events.history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
-
-                entries.cleanUp();
-                if(entries.isOverflown()){
-                    message.append(Bundle.get("events.history.overflow", findLocale(event.player.locale)));
-                }
-
-                int i = 0;
-                for(HistoryEntry entry : entries){
-                    message.append("\n").append(entry.getMessage(event.player));
-                    if(++i > 6){
-                        break;
-                    }
-                }
-
-                if(entries.isEmpty()){
-                    message.append(Bundle.get("events.history.empty", findLocale(event.player.locale)));
-                }
-
-                event.player.sendMessage(message.toString());
-            }
-        });
-  
+        Events.on(TapEvent.class, event -> call(event));
         Events.on(DepositEvent.class, event -> call(event));
         Events.on(BuildSelectEvent.class, event -> call(event));
         Events.on(PlayerJoin.class, event -> call(event));
