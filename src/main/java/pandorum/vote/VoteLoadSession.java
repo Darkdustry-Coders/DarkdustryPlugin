@@ -22,7 +22,6 @@ public class VoteLoadSession extends VoteSession{
 
     public VoteLoadSession(VoteSession[] map, Fi target){
         super(map);
-
         this.target = target;
     }
 
