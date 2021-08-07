@@ -738,12 +738,13 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
+                if(args.length == 1){
+                    bundled(player, "commands.nominate.required-second-arg");
+                    return;
+                }
+
                 switch(mode){
                     case map -> {
-                        if(args.length == 1){
-                            bundled(player, "commands.nominate.required-second-arg");
-                            return;
-                        }
 
                         Map map = findMap(args[1]);
                         if(map == null){
@@ -756,20 +757,12 @@ public final class PandorumPlugin extends Plugin{
                         session.vote(player, 1);
                     }
                     case save -> {
-                        if(args.length == 1){
-                            bundled(player, "commands.nominate.required-second-arg");
-                            return;
-                        }
-
+                        
                         VoteSession session = new VoteSaveSession(current, args[1]);
                         current[0] = session;
                         session.vote(player, 1);
                     }
                     case load -> {
-                        if(args.length == 1){
-                            bundled(player, "commands.nominate.required-second-arg");
-                            return;
-                        }
 
                         Fi save = findSave(args[1]);
                         if(save == null){
