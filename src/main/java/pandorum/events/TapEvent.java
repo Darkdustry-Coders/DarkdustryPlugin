@@ -7,12 +7,13 @@ import mindustry.world.Tile;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
+import pandorum.entry.*;
 import pandorum.struct.*;
 import pandorum.comp.Config.PluginType;
 import static pandorum.Misc.*;
 
-public class BuildSelectEvent {
-    public static void call(final EventType.BuildSelectEvent event) {
+public class TapEvent {
+    public static void call(final EventType.TapEvent event) {
         if(PandorumPlugin.activeHistoryPlayers.contains(event.player.uuid())){
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.x][event.tile.y];
             StringBuilder message = new StringBuilder(Bundle.format("events.history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
