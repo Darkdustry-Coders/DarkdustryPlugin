@@ -13,6 +13,7 @@ import static pandorum.events.TriggerUpdate.call;
 import static pandorum.events.BuildSelectEvent.call;
 import static pandorum.events.DepositEvent.call;
 import static pandorum.events.TapEvent.call;
+import static pandorum.events.ConfigEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -143,31 +144,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        Events.on(ConfigEvent.class, event -> {
-            if(event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > world.width() || event.tile.tileX() > world.height()){
-                return;
-            }
-
-            CacheSeq<HistoryEntry> entries = history[event.tile.tileX()][event.tile.tileY()];
-            boolean connect = true;
-
-            HistoryEntry last = entries.peek();
-            if(!entries.isEmpty() && last instanceof ConfigEntry){
-                ConfigEntry lastConfigEntry = (ConfigEntry)last;
-
-                connect = !event.tile.getPowerConnections(new Seq<>()).isEmpty() &&
-                          !(lastConfigEntry.value instanceof Integer && event.value instanceof Integer &&
-                          (int)lastConfigEntry.value == (int)event.value && lastConfigEntry.connect);
-            }
-
-            HistoryEntry entry = new ConfigEntry(event, connect);
-
-            Seq<Tile> linkedTile = event.tile.tile.getLinkedTiles(new Seq<>());
-            for(Tile tile : linkedTile){
-                history[tile.x][tile.y].add(entry);
-            }
-        });
-
+        Events.on(ConfigEvent.class, event -> call(event));
         Events.on(TapEvent.class, event -> call(event));
         Events.on(DepositEvent.class, event -> call(event));
         Events.on(BuildSelectEvent.class, event -> call(event));
