@@ -483,7 +483,7 @@ public final class PandorumPlugin extends Plugin{
 
                 sendToChat("commands.vnw.successful");
                 votesVNW.clear();
-                logic.runWave();
+                Vars.logic.runWave();
             });
 
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
@@ -680,7 +680,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                Seq<Fi> saves = Seq.with(saveDirectory.list()).filter(f -> Objects.equals(f.extension(), saveExtension));
+                Seq<Fi> saves = Seq.with(Vars.saveDirectory.list()).filter(f -> Objects.equals(f.extension(), Vars.saveExtension));
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                 int pages = Mathf.ceil(saves.size / 6.0F);
 
