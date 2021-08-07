@@ -1,6 +1,6 @@
 package pandorum.events;
 
-import arc.util.Interval;
+import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
