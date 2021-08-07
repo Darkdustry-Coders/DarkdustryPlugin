@@ -42,7 +42,7 @@ public class Config{
             ip = parts[0];
             port = Strings.parseInt(parts[1]);
         }
-        return Tuples.of(ip, port);
+        return Tuple2.of(ip, port);
     }
 
     public enum PluginType{
