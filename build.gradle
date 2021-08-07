@@ -4,13 +4,7 @@ apply plugin: "java"
 
 repositories{
     mavenCentral()
-    maven{
-        credentials {
-            username = "DarkDustryBot"
-            password = "DarkDustryBot2000"
-        }
-        url 'https://www.jitpack.io'
-    }
+    maven{ url 'https://www.jitpack.io' }
 }
 
 def json = new JsonSlurper()
@@ -29,7 +23,6 @@ dependencies{
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
 
     implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation 'com.github.Darkdustry:MindustryUtils:1.0'
 }
 
 jar{
