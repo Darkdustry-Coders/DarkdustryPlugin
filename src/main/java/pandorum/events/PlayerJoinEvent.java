@@ -14,7 +14,7 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Config.PluginType;
 
 public class PlayerJoinEvent {
-    public void call(final EventType.PlayerJoin event) {
+    public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
         if(PandorumPlugin.config.bannedNames.contains(event.player.name())) event.player.con.kick(Bundle.get("events.unofficial-mindustry", findLocale(event.player.locale)), 60000);
 
