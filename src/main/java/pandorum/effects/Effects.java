@@ -14,12 +14,12 @@ public class Effects {
     }
 
     public static void onJoin(Player p) {        
-        try { moveEffect.spawn(p.x, p.y); }
+        try { joinEffect.spawn(p.x, p.y); }
         catch (NullPointerException e) {}
     }
 
     public static void onLeave(Player p) {
-        try { moveEffect.spawn(p.x, p.y); }
+        try { leaveEffect.spawn(p.x, p.y); }
         catch (NullPointerException e) {}
     }
 }
