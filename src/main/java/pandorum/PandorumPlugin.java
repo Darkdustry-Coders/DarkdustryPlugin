@@ -10,6 +10,7 @@ import static pandorum.events.PlayerJoinEvent.call;
 import static pandorum.events.PlayerLeaveEvent.call;
 import static pandorum.events.GameOverEvent.call;
 import static pandorum.events.TriggerUpdate.call;
+import static pandorum.events.BuildSelectEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -37,16 +38,7 @@ import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
-import mindustry.game.EventType.BlockBuildEndEvent;
-import mindustry.game.EventType.BuildSelectEvent;
-import mindustry.game.EventType.ConfigEvent;
-import mindustry.game.EventType.DepositEvent;
-import mindustry.game.EventType.GameOverEvent;
-import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.PlayerLeave;
-import mindustry.game.EventType.TapEvent;
-import mindustry.game.EventType.Trigger;
-import mindustry.game.EventType.WorldLoadEvent;
+import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Call;
@@ -72,11 +64,7 @@ import pandorum.entry.RotateEntry;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 import pandorum.struct.Tuple2;
-import pandorum.vote.VoteLoadSession;
-import pandorum.vote.VoteMapSession;
-import pandorum.vote.VoteMode;
-import pandorum.vote.VoteSaveSession;
-import pandorum.vote.VoteSession;
+import pandorum.vote.*;
 
 @SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
@@ -220,20 +208,9 @@ public final class PandorumPlugin extends Plugin{
                     Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.withdraw-thorium", Misc.colorizedName(target), building.tileX(), building.tileY()));
                 }
             });
-
-            Events.on(BuildSelectEvent.class, event -> {
-                if(!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
-                    event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
-                    event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
-                    Player target = event.builder.getPlayer();
-
-                    if(interval.get(300)){
-                        Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", target.name, event.tile.x, event.tile.y));
-                    }
-                }
-            });
         }
 
+        Events.on(BuildSelectEvent.class, event -> call(event));
         Events.on(PlayerJoin.class, event -> call(event));
         Events.on(PlayerLeave.class, event -> call(event));
         Events.on(GameOverEvent.class, event -> call(event));
