@@ -11,6 +11,7 @@ import static pandorum.events.PlayerLeaveEvent.call;
 import static pandorum.events.GameOverEvent.call;
 import static pandorum.events.TriggerUpdate.call;
 import static pandorum.events.BuildSelectEvent.call;
+import static pandorum.events.DepositEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -199,17 +200,8 @@ public final class PandorumPlugin extends Plugin{
                 event.player.sendMessage(message.toString());
             }
         });
-
-        if(config.type != PluginType.other) {
-            Events.on(DepositEvent.class, event -> {
-                Building building = event.tile;
-                Player target = event.player;
-                if(building.block() == Blocks.thoriumReactor && event.item == Items.thorium && target.team().cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertDistance)){
-                    Groups.player.each(p -> !alertIgnores.contains(p.uuid()), p -> bundled(p, "events.withdraw-thorium", Misc.colorizedName(target), building.tileX(), building.tileY()));
-                }
-            });
-        }
-
+  
+        Events.on(DepositEvent.class, event -> call(event));
         Events.on(BuildSelectEvent.class, event -> call(event));
         Events.on(PlayerJoin.class, event -> call(event));
         Events.on(PlayerLeave.class, event -> call(event));
