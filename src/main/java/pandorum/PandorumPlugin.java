@@ -236,7 +236,7 @@ public final class PandorumPlugin extends Plugin{
 
         Events.on(PlayerJoin.class, event -> call(event));
         Events.on(PlayerLeave.class, event -> call(event));
-        Events.on(GameOverEvent.class, e -> call(event));
+        Events.on(GameOverEvent.class, event -> call(event));
 
         Events.run(Trigger.update, () -> Groups.player.each(p -> p.unit().moving(), p -> {
             onMove(p);
