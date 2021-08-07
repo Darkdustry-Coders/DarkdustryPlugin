@@ -8,6 +8,7 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.sendToChat;
 import static pandorum.effects.Effects.onMove;
 import static pandorum.events.PlayerJoinEvent.call;
+import static pandorum.events.PlayerLeaveEvent.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -234,29 +235,7 @@ public final class PandorumPlugin extends Plugin{
 
         Events.on(PlayerJoin.class, event -> call(event));
 
-        Events.on(PlayerLeave.class, event -> {
-            activeHistoryPlayers.remove(event.player.uuid());
-            sendToChat("server.player-leave", Misc.colorizedName(event.player));
-            Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
-
-            Effects.onLeave(event.player);
-
-            rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
-
-            if(config.type == PluginType.other) return;
-            if(votesRTV.contains(event.player.uuid())) {
-                votesRTV.remove(event.player.uuid());
-                int curRTV = votesRTV.size;
-                int reqRTV = (int) Math.ceil(config.voteRatio * Groups.player.size());
-                sendToChat("commands.rtv.left", Misc.colorizedName(event.player), curRTV, reqRTV);
-            }
-            if(votesVNW.contains(event.player.uuid())) {
-                votesVNW.remove(event.player.uuid());
-                int curVNW = votesVNW.size;
-                int reqVNW = (int) Math.ceil(config.voteRatio * Groups.player.size());
-                sendToChat("commands.vnw.left", Misc.colorizedName(event.player), curVNW, reqVNW);
-            }
-        });
+        Events.on(PlayerLeave.class, event -> call(event));
 
         Events.on(GameOverEvent.class, e -> {
             votesRTV.clear();
@@ -268,14 +247,6 @@ public final class PandorumPlugin extends Plugin{
         }));
 
         if(config.type == PluginType.pvp){
-            Events.on(PlayerLeave.class, event -> {
-                String uuid = event.player.uuid();
-                ObjectSet<String> uuids = surrendered.get(event.player.team(), ObjectSet::new);
-                if(uuids.contains(uuid)){
-                    uuids.remove(uuid);
-                }
-            });
-
             Events.on(GameOverEvent.class, e -> surrendered.clear());
         }
 
