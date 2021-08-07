@@ -5,6 +5,8 @@ import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.content.Blocks;
+import mindustry.world.Tile;
+import mindustry.Vars;
 import mindustry.world.blocks.logic.LogicBlock;
 
 import pandorum.PandorumPlugin;
@@ -14,7 +16,7 @@ import static pandorum.Misc.*;
 
 public class ConfigEvent {
     public static void call(final EventType.ConfigEvent event) {
-        if(event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > world.width() || event.tile.tileX() > world.height()) return;
+        if(event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > Vars.world.width() || event.tile.tileX() > Vars.world.height()) return;
 
         CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
         boolean connect = true;
