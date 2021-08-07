@@ -1,12 +1,13 @@
 package pandorum.events;
 
-import pandorum.PandorumPlugin;
 import static pandorum.Misc.*;
 import static pandorum.effects.Effects.onJoin;
+
 import pandorum.comp.Config.PluginType;
+import pandorum.comp.*;
+import pandorum.PandorumPlugin;
 
 import arc.util.Log;
-
 import mindustry.game.*;
 import mindustry.gen.*;
 
