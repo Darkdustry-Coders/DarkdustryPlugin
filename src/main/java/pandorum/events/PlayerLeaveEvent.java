@@ -25,6 +25,11 @@ public class PlayerLeaveEvent {
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
         if(PandorumPlugin.config.type == PluginType.other) return;
+        else if(PandorumPlugin.config.type == PluginType.pvp) {
+            ObjectSet<String> uuids = PandorumPlugin.surrendered.get(event.player.team(), ObjectSet::new);
+            if(uuids.contains(event.player.uuid())) uuids.remove(event.player.uuid());
+        }
+
         if(PandorumPlugin.votesRTV.contains(event.player.uuid())) {
             PandorumPlugin.votesRTV.remove(event.player.uuid());
             int curRTV = PandorumPlugin.votesRTV.size;
