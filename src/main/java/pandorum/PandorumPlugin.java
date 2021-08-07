@@ -1,11 +1,7 @@
 package pandorum;
 
-import static mindustry.Vars.dataDirectory;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.world;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.sendToChat;
+import static mindustry.Vars.*;
+import static pandorum.Misc.*;
 import static pandorum.events.PlayerJoinEvent.call;
 import static pandorum.events.PlayerLeaveEvent.call;
 import static pandorum.events.GameOverEvent.call;
@@ -15,6 +11,8 @@ import static pandorum.events.DepositEvent.call;
 import static pandorum.events.TapEvent.call;
 import static pandorum.events.ConfigEvent.call;
 import static pandorum.events.BlockBuildEndEvent.call;
+import static pandorum.events.WorldLoadEvent.call;
+import static pandorum.events.ActionFilter.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -31,24 +29,14 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.ObjectSet;
 import arc.struct.Seq;
-import arc.util.ArcRuntimeException;
-import arc.util.CommandHandler;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.Strings;
-import arc.util.Structs;
-import arc.util.Time;
+import arc.util.*;
 import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
-import mindustry.gen.Building;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
@@ -104,6 +92,7 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void init() {
+
         try{
             forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
         }catch(Throwable t){
@@ -114,30 +103,10 @@ public final class PandorumPlugin extends Plugin{
         Administration.Config.strict.set(false);
         Administration.Config.motd.set("off");
 
-        netServer.admins.addActionFilter(action -> {
-            if(action.type == Administration.ActionType.rotate){
-                Building building = action.tile.build;
-                CacheSeq<HistoryEntry> entries = history[action.tile.x][action.tile.y];
-                HistoryEntry entry = new RotateEntry(Misc.colorizedName(action.player), building.block, action.rotation);
-                entries.add(entry);
-            }
-            return true;
-        });
+        netServer.admins.addActionFilter(action -> call(action));
 
-        Events.on(WorldLoadEvent.class, event -> {
-            if(config.type == PluginType.sand) this.timer.clear();
-            history = new CacheSeq[world.width()][world.height()];
-
-            for(Tile tile : world.tiles){
-                history[tile.x][tile.y] = Seqs.newBuilder()
-                        .maximumSize(config.historyLimit)
-                        .expireAfterWrite(Duration.ofMillis(config.expireDelay))
-                        .build();
-            }
-        });
-
+        Events.on(WorldLoadEvent.class, event -> call(event));
         Events.on(BlockBuildEndEvent.class, event -> call(event));
-
         Events.on(ConfigEvent.class, event -> call(event));
         Events.on(TapEvent.class, event -> call(event));
         Events.on(DepositEvent.class, event -> call(event));
