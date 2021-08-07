@@ -1,17 +1,18 @@
 package pandorum.events;
 
-import static pandorum.PandorumPlugin.*;
+import pandorum.PandorumPlugin;
 import static pandorum.Misc.*;
 import static pandorum.effects.Effects.onJoin;
+import pandorum.comp.Config.PluginType;
 
-import pandorum.comp.*;
+import arc.util.Log;
 
 import mindustry.game.*;
 import mindustry.gen.*;
 
 public class PlayerJoinEvent {
     public void call(final EventType.PlayerJoin event) {
-        forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
+        PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
         if(config.bannedNames.contains(event.player.name())) event.player.con.kick(Bundle.get("events.unofficial-mindustry", findLocale(event.player.locale)), 60000);
 
         sendToChat("server.player-join", colorizedName(event.player));
