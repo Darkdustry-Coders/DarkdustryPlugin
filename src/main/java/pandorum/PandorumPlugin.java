@@ -103,27 +103,27 @@ public final class PandorumPlugin extends Plugin{
     public static VoteSession[] current = {null};
     public static Config config;
 
-    private final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
-    private final ObjectSet<String> votesRTV = new ObjectSet<>();
-    private final ObjectSet<String> votesVNW = new ObjectSet<>();
-    private final ObjectSet<String> alertIgnores = new ObjectSet<>();
-    private final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
-    private final Interval interval = new Interval(2);
+    public final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
+    public final ObjectSet<String> votesRTV = new ObjectSet<>();
+    public final ObjectSet<String> votesVNW = new ObjectSet<>();
+    public final ObjectSet<String> alertIgnores = new ObjectSet<>();
+    public final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
+    public final Interval interval = new Interval(2);
 
-    private CacheSeq<HistoryEntry>[][] history;
+    public CacheSeq<HistoryEntry>[][] history;
 
-    private final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
-    private Seq<IpInfo> forbiddenIps;
+    public final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
+    public Seq<IpInfo> forbiddenIps;
 
-    ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
-    float defDelay = 36000f;
+    public ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
+    public float defDelay = 36000f;
 
     public PandorumPlugin(){
 
         Fi cfg = dataDirectory.child("config.json");
         if(!cfg.exists()){
             cfg.writeString(gson.toJson(config = new Config()));
-            Log.info("Config created...");
+            Log.info("Файл config.json успешно сгенерирован!");
         }else{
             config = gson.fromJson(cfg.reader(), Config.class);
         }
