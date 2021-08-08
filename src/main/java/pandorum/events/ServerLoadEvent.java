@@ -2,6 +2,7 @@ package pandorum.events;
 
 import mindustry.game.EventType;
 import pandorum.comp.*;
+import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 import java.awt.Color;
