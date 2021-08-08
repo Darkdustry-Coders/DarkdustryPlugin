@@ -29,6 +29,7 @@ public class ChatFilter {
                 }
                 return;
              }).start();
+        }
         return null;
     }
 }
