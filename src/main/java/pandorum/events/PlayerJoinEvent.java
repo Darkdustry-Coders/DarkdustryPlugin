@@ -36,19 +36,22 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        if (!PandorumPlugin.config.hasWebhookLink()) return;
-
-        Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-        wh.setUsername(event.player.name);
-        wh.addEmbed(new Webhook.EmbedObject()
-                .setTitle("Зашёл на сервер :)")         
-                .setColor(new Color(110, 237, 139)));
-        try {
-            wh.execute();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
-            wh=null;
+        if (PandorumPlugin.config.hasWebhookLink()) {
+            new Thread(() -> {
+                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
+                wh.setUsername(event.player.name);
+                wh.addEmbed(new Webhook.EmbedObject()
+                         .setTitle("Зашёл на сервер :)")         
+                         .setColor(new Color(110, 237, 139)));
+                try {
+                    wh.execute();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } finally {
+                    Thread.currentThread().interrupt();
+                }
+                return;
+            }).start();
         }
     }
 }
