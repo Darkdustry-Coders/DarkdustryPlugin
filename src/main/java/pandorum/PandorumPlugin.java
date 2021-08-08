@@ -12,6 +12,7 @@ import static pandorum.events.TapEvent.call;
 import static pandorum.events.ConfigEvent.call;
 import static pandorum.events.BlockBuildEndEvent.call;
 import static pandorum.events.WorldLoadEvent.call;
+import static pandorum.events.ServerLoadEvent.call;
 import static pandorum.events.ActionFilter.call;
 import static pandorum.events.ChatFilter.call;
 
@@ -27,9 +28,7 @@ import arc.Core;
 import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
-import arc.struct.ObjectSet;
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.*;
 import arc.util.io.Streams;
 import mindustry.Vars;
@@ -107,6 +106,7 @@ public final class PandorumPlugin extends Plugin{
         netServer.admins.addActionFilter(action -> call(action));
         netServer.admins.addChatFilter((player, text) -> call(player, text));
 
+        Events.on(ServerLoadEvent.class, event -> call(event));
         Events.on(WorldLoadEvent.class, event -> call(event));
         Events.on(BlockBuildEndEvent.class, event -> call(event));
         Events.on(ConfigEvent.class, event -> call(event));
