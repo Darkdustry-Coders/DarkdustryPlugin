@@ -10,7 +10,7 @@ import java.awt.Color;
 public class PlayerUnbanEvent {
     public static void call(final EventType.PlayerUnbanEvent event) {
         if (PandorumPlugin.config.hasWebhookLink()) {
-            if (player == null) return;
+            if (event.player == null) return;
             new Thread(() -> {
                 Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
                 wh.setUsername("Сервер");
