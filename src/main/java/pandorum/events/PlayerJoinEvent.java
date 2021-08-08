@@ -10,7 +10,7 @@ import arc.util.Log;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Bundle;
+import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
 
 public class PlayerJoinEvent {
@@ -32,5 +32,20 @@ public class PlayerJoinEvent {
         if(PandorumPlugin.config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
+
+        if (!PandorumPlugin.config.hasWebhookLink()) return;
+
+        Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
+        wh.setUsername(event.player.name);
+        wh.addEmbed(new Webhook.EmbedObject()
+                .setTitle("Зашёл на сервер!")         
+                .setColor(new Color(110, 237, 139)));
+        try {
+            wh.execute();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            wh=null;
+        }
     }
 }
