@@ -13,6 +13,8 @@ import static pandorum.events.ConfigEvent.call;
 import static pandorum.events.BlockBuildEndEvent.call;
 import static pandorum.events.WorldLoadEvent.call;
 import static pandorum.events.ServerLoadEvent.call;
+import static pandorum.events.PlayerBanEvent.call;
+import static pandorum.events.PlayerUnbanEvent.call;
 import static pandorum.events.ActionFilter.call;
 import static pandorum.events.ChatFilter.call;
 
@@ -106,6 +108,8 @@ public final class PandorumPlugin extends Plugin{
         netServer.admins.addActionFilter(action -> call(action));
         netServer.admins.addChatFilter((player, text) -> call(player, text));
 
+        Events.on(PlayerUnbanEvent.class, event -> call(event));
+        Events.on(PlayerBanEvent.class, event -> call(event));
         Events.on(ServerLoadEvent.class, event -> call(event));
         Events.on(WorldLoadEvent.class, event -> call(event));
         Events.on(BlockBuildEndEvent.class, event -> call(event));
