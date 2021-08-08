@@ -10,6 +10,7 @@ import java.awt.Color;
 public class PlayerBanEvent {
     public static void call(final EventType.PlayerBanEvent event) {
         if (PandorumPlugin.config.hasWebhookLink()) {
+            if (event.player == null) return;
             new Thread(() -> {
                 Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
                 wh.setUsername("Сервер");
