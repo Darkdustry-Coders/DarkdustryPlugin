@@ -12,8 +12,11 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Bundle;
+import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
+
+import java.io.IOException;
+import java.awt.Color;
 
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerLeave event) {
@@ -42,6 +45,21 @@ public class PlayerLeaveEvent {
             int curVNW = PandorumPlugin.votesVNW.size;
             int reqVNW = (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size());
             sendToChat("commands.vnw.left", colorizedName(event.player), curVNW, reqVNW);
+        }
+
+        if (!PandorumPlugin.config.hasWebhookLink()) return;
+
+        Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
+        wh.setUsername(event.player.name);
+        wh.addEmbed(new Webhook.EmbedObject()
+                .setTitle("Вышел с сервера :(")         
+                .setColor(new Color(214, 92, 92)));
+        try {
+            wh.execute();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            wh=null;
         }
     }
 }
