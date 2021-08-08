@@ -41,7 +41,7 @@ public class PlayerJoinEvent {
         Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
         wh.setUsername(event.player.name);
         wh.addEmbed(new Webhook.EmbedObject()
-                .setTitle("Зашёл на сервер!")         
+                .setTitle("Зашёл на сервер :)")         
                 .setColor(new Color(110, 237, 139)));
         try {
             wh.execute();
