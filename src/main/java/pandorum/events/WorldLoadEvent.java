@@ -25,20 +25,23 @@ public class WorldLoadEvent {
                     .build();
         }
 
-        if (!PandorumPlugin.config.hasWebhookLink()) return;
-
-        Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-        wh.setUsername("Сервер");
-        wh.addEmbed(new Webhook.EmbedObject()
-                .setTitle("Загружена новая карта!")
-                .addField("Название:", Vars.state.map.name(), false)
-                .setColor(new Color(0, 222, 222)));
-        try {
-            wh.execute();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
-            wh=null;
+        if (PandorumPlugin.config.hasWebhookLink()) {
+            new Thread(() -> {
+                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
+                wh.setUsername("Сервер");
+                wh.addEmbed(new Webhook.EmbedObject()
+                        .setTitle("Загружена новая карта!")
+                        .addField("Название:", Vars.state.map.name(), false)
+                        .setColor(new Color(0, 222, 222)));
+                try {
+                    wh.execute();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } finally {
+                    Thread.currentThread().interrupt();
+                }
+                return;
+            }).start();
         }
     }
 }
