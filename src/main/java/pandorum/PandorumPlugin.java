@@ -13,6 +13,7 @@ import static pandorum.events.ConfigEvent.call;
 import static pandorum.events.BlockBuildEndEvent.call;
 import static pandorum.events.WorldLoadEvent.call;
 import static pandorum.events.ActionFilter.call;
+import static pandorum.events.ChatFilter.call;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -104,6 +105,7 @@ public final class PandorumPlugin extends Plugin{
         Administration.Config.motd.set("off");
 
         netServer.admins.addActionFilter(action -> call(action));
+        netServer.admins.addChatFilter(player, text -> call(player, text));
 
         Events.on(WorldLoadEvent.class, event -> call(event));
         Events.on(BlockBuildEndEvent.class, event -> call(event));
