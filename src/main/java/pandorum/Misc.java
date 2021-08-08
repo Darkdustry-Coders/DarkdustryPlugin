@@ -89,8 +89,4 @@ public abstract class Misc{
     public static Player findByName(String name) {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(name));
     }
-
-    public static Player findById(int id) {
-        return Groups.player.find(p -> p.id == id);
-    }
 }
