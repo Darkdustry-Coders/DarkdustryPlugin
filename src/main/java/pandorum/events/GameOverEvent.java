@@ -21,7 +21,7 @@ public class GameOverEvent {
         wh.setUsername("Сервер");
         wh.addEmbed(new Webhook.EmbedObject()
                 .setTitle("Игра окончена!")         
-                .setColor(new Color(200, 150, 255)));
+                .setColor(new Color(0, 222, 222)));
         try {
             wh.execute();
         } catch (IOException ioException) {
