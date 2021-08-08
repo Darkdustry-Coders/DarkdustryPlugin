@@ -2,11 +2,9 @@ package pandorum.events;
 
 import arc.Core;
 import arc.util.Time;
-import mindustry.gen.Player;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 
-import static pandorum.effects.Effects.onJoin;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import static pandorum.effects.Effects.onMove;

@@ -1,6 +1,5 @@
 package pandorum.events;
 
-import mindustry.gen.Player;
 import mindustry.gen.Building;
 import mindustry.net.Administration;
 

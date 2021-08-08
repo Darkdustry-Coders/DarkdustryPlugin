@@ -1,15 +1,11 @@
 package pandorum.events;
 
 import mindustry.game.EventType;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.world.Tile;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
 import pandorum.entry.*;
 import pandorum.struct.*;
-import pandorum.comp.Config.PluginType;
 import static pandorum.Misc.*;
 
 public class TapEvent {

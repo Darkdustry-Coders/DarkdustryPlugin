@@ -2,9 +2,6 @@ package pandorum.events;
 
 import arc.struct.*;
 import mindustry.game.EventType;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.content.Blocks;
 import mindustry.world.Tile;
 import mindustry.Vars;
 import mindustry.world.blocks.logic.LogicBlock;
@@ -12,7 +9,6 @@ import mindustry.world.blocks.logic.LogicBlock;
 import pandorum.PandorumPlugin;
 import pandorum.entry.*;
 import pandorum.struct.*;
-import static pandorum.Misc.*;
 
 public class ConfigEvent {
     public static void call(final EventType.ConfigEvent event) {
