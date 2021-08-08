@@ -14,7 +14,7 @@ public class ServerLoadEvent {
                 wh.setUsername("Сервер");
                 wh.addEmbed(new Webhook.EmbedObject()
                         .setTitle("Сервер запущен!")         
-                        .setColor(new Color(0, 255, 0));
+                        .setColor(new Color(0, 255, 0)));
                 try {
                     wh.execute();
                 } catch (IOException ioException) {
