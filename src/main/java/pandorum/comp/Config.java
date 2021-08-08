@@ -46,7 +46,7 @@ public class Config{
         return Tuple2.of(ip, port);
     }
 
-    public boolean DiscordWebhook() {
+    public boolean hasWebhookLink() {
         return DiscordWebhookLink != null;
     }
 
