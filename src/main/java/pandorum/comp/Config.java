@@ -23,7 +23,9 @@ public class Config{
 
     public String hubIp = "darkdustry.ml:6567";
 
-    public PluginType type = PluginType.def;
+    public PluginType type = PluginType.def;  
+
+    public String DiscordWebhookLink = null;
 
     public Set<String> bannedNames = Set.of(
             "IGGGAMES",
