@@ -105,7 +105,7 @@ public final class PandorumPlugin extends Plugin{
         Administration.Config.motd.set("off");
 
         netServer.admins.addActionFilter(action -> call(action));
-        netServer.admins.addChatFilter(player, text -> call(player, text));
+        netServer.admins.addChatFilter((player, text) -> call(player, text));
 
         Events.on(WorldLoadEvent.class, event -> call(event));
         Events.on(BlockBuildEndEvent.class, event -> call(event));
