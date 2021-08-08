@@ -6,12 +6,13 @@ import mindustry.gen.Call;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
+import pandorum.Misc;
 
 import java.io.IOException;
 
 public class ChatFilter {
     public static String call(final Player player, final String text) {
-        Call.sendMessage(player.name + " [lightgray]>>[white] " + text);
+        Call.sendMessage(Misc.colorizedName(player) + " [lightgray]>>[white] " + text);
         Log.info(player.name + "&ly > " + text);
 
         if (PandorumPlugin.config.hasWebhookLink()) {
