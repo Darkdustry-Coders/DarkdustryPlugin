@@ -70,7 +70,6 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectSet<String> votesVNW = new ObjectSet<>();
     public static final ObjectSet<String> alertIgnores = new ObjectSet<>();
     public static final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
-    public static final ObjectSet<Player> lastPlayers = new ObjectSet<>();
     public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
