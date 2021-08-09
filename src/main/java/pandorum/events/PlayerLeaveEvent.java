@@ -29,7 +29,7 @@ public class PlayerLeaveEvent {
                 wh.setUsername(event.player.name);
                 wh.addEmbed(new Webhook.EmbedObject()
                         .setTitle("Вышел с сервера :(")
-                        .addField("IP:", event.player.ip, false)
+                        .addField("IP:", event.player.ip(), false)
                         .setColor(new Color(214, 92, 92)));
                 try {
                     wh.execute();
