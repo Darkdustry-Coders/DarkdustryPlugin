@@ -40,6 +40,7 @@ import mindustry.gen.*;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -69,6 +70,7 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectSet<String> votesVNW = new ObjectSet<>();
     public static final ObjectSet<String> alertIgnores = new ObjectSet<>();
     public static final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
+    public static final ObjectSet<Player> lastPlayers = new ObjectSet<>();
     public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
@@ -676,6 +678,82 @@ public final class PandorumPlugin extends Plugin{
                 if(netServer.admins.isIDBanned(player.uuid())){
                     Call.sendMessage("[scarlet]" + player.name + " has been banned.");
                     player1.con.kick(KickReason.banned);
+                }
+            }
+        });
+
+        handler.<Player>register("info", "<type-name/last/ip/admins> [part-of-name/ip]", "Information about players.", (args, player) -> {
+            if(!Misc.adminCheck(player)) return;
+            if(args[0].equals("last")) {
+                String var[] = new String[10];
+                int i = 0;
+                for(Player player1 : lastPlayers) {
+                    var[i] = "[white]" + player1.name + "[white]/" + player1.ip() + "/" + player1.uuid() + "\n";
+                    i++;
+                }
+                player.sendMessage("[cyan]Last players:[] \n" + var.toString());
+            }
+            else if(args[0].equals("name")) {
+                if(args.length < 1) {
+                    player.sendMessage("[scarlet]Name is null.");
+                    return;
+                }
+                ObjectSet<PlayerInfo> infos = netServer.admins.searchNames(args[1]);
+                if(infos.size > 0){
+                    if(infos.size > 20) {
+                        player.sendMessage("[scarlet]Too many players found. Try it better.");
+                        return;
+                    }
+                    String var[] = new String[20];
+                    int i = 0;
+                    for(PlayerInfo info : infos) {
+                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
+                        i++;
+                    }
+                    player.sendMessage("[cyan]Found players:[] \n" + var.toString());
+                }else{
+                    player.sendMessage("[scarlet]Nobody with that name could be found.");
+                }
+            }
+            else if(args[0].equals("ip")) {
+                if(args.length < 1) {
+                    player.sendMessage("[scarlet]IP is null.");
+                    return;
+                }
+                Seq<PlayerInfo> infos = netServer.admins.findByIPs(args[1]);
+                if(infos.size > 0){
+                    if(infos.size > 10) {
+                        player.sendMessage("[scarlet]Too many players found. Try it better.");
+                        return;
+                    }
+                    String var[] = new String[10];
+                    int i = 0;
+                    for(PlayerInfo info : infos) {
+                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
+                        i++;
+                    }
+                    player.sendMessage("[cyan]Found players:[] \n" + var.toString());
+                }else{
+                    player.sendMessage("[scarlet]Nobody with that name could be found.");
+                }
+            }
+            else if(args[0].equals("admins")) {
+                Seq<Administration.PlayerInfo> infos = netServer.admins.getAdmins();
+                if(infos.size > 0) {
+                    if(infos.size > 30) {
+                        player.sendMessage("[scarlet]Too many players found.Oh no.");
+                        return;
+                    }
+                    String var[] = new String[30];
+                    int i = 0;
+                    for(PlayerInfo info : infos) {
+                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
+                        i++;
+                    }
+                    player.sendMessage("[cyan]Admins:[] \n" + var.toString());
+                }
+                else {
+                    player.sendMessage("[scarlet]Admins not found.");
                 }
             }
         });

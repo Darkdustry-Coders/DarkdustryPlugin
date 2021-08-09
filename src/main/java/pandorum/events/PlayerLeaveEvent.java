@@ -61,5 +61,9 @@ public class PlayerLeaveEvent {
             int reqVNW = (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size());
             sendToChat("commands.vnw.left", colorizedName(event.player), curVNW, reqVNW);
         }
+        PandorumPlugin.lastPlayers.add(event.player);
+        if(PandorumPlugin.lastPlayers.size > 7) {
+            PandorumPlugin.lastPlayers.remove(PandorumPlugin.lastPlayers.first());
+        }
     }
 }
