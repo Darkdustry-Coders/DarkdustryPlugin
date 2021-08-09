@@ -544,7 +544,6 @@ public final class PandorumPlugin extends Plugin{
 
                 switch(mode){
                     case map -> {
-
                         Map map = Misc.findMap(args[1]);
                         if(map == null){
                             bundled(player, "commands.nominate.map.not-found");
@@ -555,14 +554,12 @@ public final class PandorumPlugin extends Plugin{
                         current[0] = session;
                         session.vote(player, 1);
                     }
-                    case save -> {
-                        
+                    case save -> {                    
                         VoteSession session = new VoteSaveSession(current, args[1]);
                         current[0] = session;
                         session.vote(player, 1);
                     }
                     case load -> {
-
                         Fi save = Misc.findSave(args[1]);
                         if(save == null){
                             player.sendMessage("commands.nominate.load.not-found");
@@ -651,35 +648,6 @@ public final class PandorumPlugin extends Plugin{
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
             player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
-        });
-
-        handler.<Player>register("ban", "<uuid/name/ip> <username/IP/ID...>", "Ban a player.", (arg,player) -> {
-            if(arg[0].equals("id")){
-                netServer.admins.banPlayerID(arg[1]);   
-                player.sendMessage("[green]Banned."); 
-            }
-            else if(arg[0].equals("name")){
-                Player target = Groups.player.find(p -> p.name().equalsIgnoreCase(arg[1]));
-                if(target != null){
-                    netServer.admins.banPlayer(target.uuid());
-                    player.sendMessage("[green]Banned.");
-                }
-                else{
-                    player.sendMessage("[scarlet]Not Found");
-                }
-            }else if(arg[0].equals("ip")){
-                netServer.admins.banPlayerIP(arg[1]);
-                player.sendMessage("[green]Banned.");
-            }else{
-                player.sendMessage("[scarlet]Unacceptable parameter.");
-            }
-
-            for(Player pl : Groups.player){
-                if(netServer.admins.isIDBanned(pl.uuid())){
-                    Call.sendMessage("[scarlet]" + pl.name + " has been banned.");
-                    pl.con.kick(KickReason.banned);
-                }
-            }
         });
     }
 
