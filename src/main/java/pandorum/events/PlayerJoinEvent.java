@@ -42,7 +42,7 @@ public class PlayerJoinEvent {
                 wh.setUsername(event.player.name);
                 wh.addEmbed(new Webhook.EmbedObject()
                          .setTitle("Зашёл на сервер :)")
-                         .addField("IP:", event.player.ip, false)
+                         .addField("IP:", event.player.ip(), false)
                          .setColor(new Color(110, 237, 139)));
                 try {
                     wh.execute();
