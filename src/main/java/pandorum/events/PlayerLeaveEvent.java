@@ -28,7 +28,8 @@ public class PlayerLeaveEvent {
                 Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
                 wh.setUsername(event.player.name);
                 wh.addEmbed(new Webhook.EmbedObject()
-                        .setTitle("Вышел с сервера :(")         
+                        .setTitle("Вышел с сервера :(")
+                        .addField("IP:", event.player.ip, false)
                         .setColor(new Color(214, 92, 92)));
                 try {
                     wh.execute();
@@ -60,10 +61,6 @@ public class PlayerLeaveEvent {
             int curVNW = PandorumPlugin.votesVNW.size;
             int reqVNW = (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size());
             sendToChat("commands.vnw.left", colorizedName(event.player), curVNW, reqVNW);
-        }
-        PandorumPlugin.lastPlayers.add(event.player);
-        if(PandorumPlugin.lastPlayers.size > 7) {
-            PandorumPlugin.lastPlayers.remove(PandorumPlugin.lastPlayers.first());
         }
     }
 }
