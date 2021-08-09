@@ -20,7 +20,7 @@ public class PlayerBanEvent {
                 wh.addEmbed(new Webhook.EmbedObject()
                         .setTitle("Игрок получил бан!")
                         .addField("Никнейм:", info.lastName, false)
-                        .addField("IP:", info.lastIp, false)
+                        .addField("IP:", info.lastIP, false)
                         .setColor(new Color(255, 0, 0)));
                 try {
                     wh.execute();
