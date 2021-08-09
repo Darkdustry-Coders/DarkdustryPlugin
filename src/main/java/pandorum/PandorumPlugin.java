@@ -653,7 +653,7 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
         });
 
-        handler.<Player>register("ban", "<type-id/name/ip> <username/IP/ID...>", "Ban a player.", (arg,player) -> {
+        handler.<Player>register("ban", "<uuid/name/ip> <username/IP/ID...>", "Ban a player.", (arg,player) -> {
             if(arg[0].equals("id")){
                 netServer.admins.banPlayerID(arg[1]);   
                 player.sendMessage("[green]Banned."); 
@@ -674,86 +674,10 @@ public final class PandorumPlugin extends Plugin{
                 player.sendMessage("[scarlet]Unacceptable parameter.");
             }
 
-            for(Player player1 : Groups.player){
-                if(netServer.admins.isIDBanned(player.uuid())){
-                    Call.sendMessage("[scarlet]" + player.name + " has been banned.");
-                    player1.con.kick(KickReason.banned);
-                }
-            }
-        });
-
-        handler.<Player>register("info", "<type-name/last/ip/admins> [part-of-name/ip]", "Information about players.", (args, player) -> {
-            if(!Misc.adminCheck(player)) return;
-            if(args[0].equals("last")) {
-                String var[] = new String[10];
-                int i = 0;
-                for(Player player1 : lastPlayers) {
-                    var[i] = "[white]" + player1.name + "[white]/" + player1.ip() + "/" + player1.uuid() + "\n";
-                    i++;
-                }
-                player.sendMessage("[cyan]Last players:[] \n" + var.toString());
-            }
-            else if(args[0].equals("name")) {
-                if(args.length < 1) {
-                    player.sendMessage("[scarlet]Name is null.");
-                    return;
-                }
-                ObjectSet<PlayerInfo> infos = netServer.admins.searchNames(args[1]);
-                if(infos.size > 0){
-                    if(infos.size > 20) {
-                        player.sendMessage("[scarlet]Too many players found. Try it better.");
-                        return;
-                    }
-                    String var[] = new String[20];
-                    int i = 0;
-                    for(PlayerInfo info : infos) {
-                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
-                        i++;
-                    }
-                    player.sendMessage("[cyan]Found players:[] \n" + var.toString());
-                }else{
-                    player.sendMessage("[scarlet]Nobody with that name could be found.");
-                }
-            }
-            else if(args[0].equals("ip")) {
-                if(args.length < 1) {
-                    player.sendMessage("[scarlet]IP is null.");
-                    return;
-                }
-                Seq<PlayerInfo> infos = netServer.admins.findByIPs(args[1]);
-                if(infos.size > 0){
-                    if(infos.size > 10) {
-                        player.sendMessage("[scarlet]Too many players found. Try it better.");
-                        return;
-                    }
-                    String var[] = new String[10];
-                    int i = 0;
-                    for(PlayerInfo info : infos) {
-                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
-                        i++;
-                    }
-                    player.sendMessage("[cyan]Found players:[] \n" + var.toString());
-                }else{
-                    player.sendMessage("[scarlet]Nobody with that name could be found.");
-                }
-            }
-            else if(args[0].equals("admins")) {
-                Seq<Administration.PlayerInfo> infos = netServer.admins.getAdmins();
-                if(infos.size > 0) {
-                    if(infos.size > 30) {
-                        player.sendMessage("[scarlet]Too many players found.Oh no.");
-                        return;
-                    }
-                    String var[] = new String[30];
-                    int i = 0;
-                    for(PlayerInfo info : infos) {
-                        var[i] = "[white]" + info.lastName + "[white]/" + info.lastIP + "/" + info.id + "\n";
-                        i++;
-                    }
-                    player.sendMessage("[cyan]Admins:[] \n" + var.toString());
-                }
-                else {
-                    player.sendMessage("[scarlet]Admins not found.");
+            for(Player pl : Groups.player){
+                if(netServer.admins.isIDBanned(pl.uuid())){
+                    Call.sendMessage("[scarlet]" + pl.name + " has been banned.");
+                    pl.con.kick(KickReason.banned);
                 }
             }
         });
