@@ -19,7 +19,6 @@ import static pandorum.events.ActionFilter.call;
 import static pandorum.events.ChatFilter.call;
 
 import java.awt.Color;
-import java.time.Duration;
 import java.util.Objects;
 
 import com.google.gson.FieldNamingPolicy;
@@ -35,20 +34,18 @@ import arc.util.*;
 import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
+import mindustry.net.Packets.KickReason;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.blocks.logic.LogicBlock;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
-import pandorum.effects.Effects;
 import pandorum.entry.*;
 import pandorum.struct.*;
 import pandorum.vote.*;
@@ -169,7 +166,7 @@ public final class PandorumPlugin extends Plugin{
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
-                    Log.info("DespawnDelay сейчас: @", new Object[] { Core.settings.getFloat("despawndelay", this.defDelay) });
+                    Log.info("DespawnDelay сейчас: @", new Object[] { Core.settings.getFloat("despawndelay", defDelay) });
                     return;
                 }
                 final String value = args[0];
@@ -652,6 +649,35 @@ public final class PandorumPlugin extends Plugin{
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
             player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
+        });
+
+        handler.<Player>register("ban", "<type-id/name/ip> <username/IP/ID...>", "Ban a player.", (arg,player) -> {
+            if(arg[0].equals("id")){
+                netServer.admins.banPlayerID(arg[1]);   
+                player.sendMessage("[green]Banned."); 
+            }
+            else if(arg[0].equals("name")){
+                Player target = Groups.player.find(p -> p.name().equalsIgnoreCase(arg[1]));
+                if(target != null){
+                    netServer.admins.banPlayer(target.uuid());
+                    player.sendMessage("[green]Banned.");
+                }
+                else{
+                    player.sendMessage("[scarlet]Not Found");
+                }
+            }else if(arg[0].equals("ip")){
+                netServer.admins.banPlayerIP(arg[1]);
+                player.sendMessage("[green]Banned.");
+            }else{
+                player.sendMessage("[scarlet]Unacceptable parameter.");
+            }
+
+            for(Player player1 : Groups.player){
+                if(netServer.admins.isIDBanned(player.uuid())){
+                    Call.sendMessage("[scarlet]" + player.name + " has been banned.");
+                    player1.con.kick(KickReason.banned);
+                }
+            }
         });
     }
 
