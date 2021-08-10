@@ -7,7 +7,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
-import pandorum.comp.Config.PluginType;
+import pandorum.effects.Effects;
 
 import java.awt.Color;
 
@@ -31,6 +31,6 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        sendToDiscord(event.player.name, "Зашёл на сервер :)", new Color(110, 237, 139));
+        DiscordSender.send(event.player.name, "Зашёл на сервер :)", new Color(110, 237, 139));
     }
 }
