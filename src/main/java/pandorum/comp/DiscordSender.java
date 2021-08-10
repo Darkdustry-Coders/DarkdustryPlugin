@@ -6,7 +6,7 @@ import java.io.*;
 import pandorum.PandorumPlugin;
 
 public class DiscordSender {
-    public static void sendToDiscord(String name, String title, Color color) {
+    public static void send(String name, String title, Color color) {
         if (PandorumPlugin.config.hasWebhookLink()) {
             new Thread(() -> {
                 Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
