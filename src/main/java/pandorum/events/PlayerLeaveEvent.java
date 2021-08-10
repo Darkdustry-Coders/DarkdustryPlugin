@@ -1,9 +1,6 @@
 package pandorum.events;
 
-import static pandorum.Misc.colorizedName;
-import static pandorum.Misc.sendToChat;
-import static pandorum.effects.Effects.onLeave;
-
+import static pandorum.Misc.*;
 import arc.util.Log;
 import arc.struct.ObjectSet;
 import mindustry.game.EventType;
@@ -11,6 +8,7 @@ import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
+import pandorum.effects.Effects
 
 import java.io.IOException;
 import java.awt.Color;
@@ -21,26 +19,9 @@ public class PlayerLeaveEvent {
         sendToChat("server.player-leave", colorizedName(event.player));
         Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-        onLeave(event.player);
+        Effects.onLeave(event.player);
 
-        if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(event.player.name);
-                wh.addEmbed(new Webhook.EmbedObject()
-                        .setTitle("Вышел с сервера :(")
-                        .addField("IP:", event.player.ip(), false)
-                        .setColor(new Color(214, 92, 92)));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
-        }
+        DiscordSender.send(event.player.name, "Вышел с сервера :(", new Color(214, 92, 92));
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
