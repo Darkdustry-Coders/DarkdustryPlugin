@@ -8,9 +8,8 @@ import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
-import pandorum.effects.Effects
+import pandorum.effects.Effects;
 
-import java.io.IOException;
 import java.awt.Color;
 
 public class PlayerLeaveEvent {
