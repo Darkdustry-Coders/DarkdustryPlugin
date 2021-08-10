@@ -1,10 +1,6 @@
 package pandorum.events;
 
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedName;
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.sendToChat;
-import static pandorum.effects.Effects.onJoin;
+import static pandorum.Misc.*;
 
 import arc.util.Log;
 import mindustry.game.EventType;
@@ -13,7 +9,6 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
 
-import java.io.IOException;
 import java.awt.Color;
 
 public class PlayerJoinEvent {
@@ -36,23 +31,6 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(event.player.name);
-                wh.addEmbed(new Webhook.EmbedObject()
-                         .setTitle("Зашёл на сервер :)")
-                         .addField("IP:", event.player.ip(), false)
-                         .setColor(new Color(110, 237, 139)));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
-        }
+        sendToDiscord(event.player.name, "Зашёл на сервер :)", new Color(110, 237, 139));
     }
 }
