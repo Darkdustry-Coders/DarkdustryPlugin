@@ -75,22 +75,6 @@ public class Bundle {
         return format.format(values);
     }
 
-    public static String format(String key, Object... values){
-        Locale locale = defaultLocale();
-        String pattern = get(key, locale);
-        MessageFormat format = formats.get(locale);
-        if(!Structs.contains(supportedLocales, locale)){
-            format = formats.get(defaultLocale(), () -> new MessageFormat(pattern, defaultLocale()));
-            format.applyPattern(pattern);
-        }else if(format == null){
-            format = new MessageFormat(pattern, locale);
-            formats.put(locale, format);
-        }else{
-            format.applyPattern(pattern);
-        }
-        return format.format(values);
-    }
-
     private static StringMap getOrLoad(Locale locale){
         StringMap bundle = bundles.get(locale);
         if(bundle == null && locale.getDisplayName().equals("router")){ // router
