@@ -7,6 +7,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
 import pandorum.comp.*;
+import pandorum.comp.Config.PluginType;
 import pandorum.effects.Effects;
 
 import java.awt.Color;
@@ -25,7 +26,7 @@ public class PlayerJoinEvent {
         sendToChat("server.player-join", colorizedName(event.player));
         Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
-        onJoin(event.player);
+        Effects.onJoin(event.player);
 
         if(PandorumPlugin.config.type == PluginType.anarchy || event.player.uuid().equals("GYmJmGDY2McAAAAAN8z4Bg==")) event.player.admin = true;
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
