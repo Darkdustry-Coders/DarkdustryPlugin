@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.util.*;
 import mindustry.game.EventType;
 import mindustry.Vars;
 import mindustry.world.Tile;
@@ -10,7 +11,6 @@ import pandorum.comp.Config.PluginType;
 import pandorum.comp.*;
 
 import java.time.Duration;
-import java.io.IOException;
 import java.awt.Color;
 
 public class WorldLoadEvent {
@@ -24,24 +24,7 @@ public class WorldLoadEvent {
                     .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
                     .build();
         }
-
-        if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername("Сервер");
-                wh.addEmbed(new Webhook.EmbedObject()
-                        .setTitle("Загружена новая карта!")
-                        .addField("Название:", Vars.state.map.name(), false)
-                        .setColor(new Color(0, 222, 222)));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
-        }
+        String mapname = "Загружена новая карта под названием " + Strings.stripColors(Vars.state.map.name()) + "!"
+        DiscordSender.send("Сервер", mapname, new Color(0, 222, 222));
     }
 }
