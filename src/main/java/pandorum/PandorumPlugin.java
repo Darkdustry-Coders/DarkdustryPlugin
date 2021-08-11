@@ -162,7 +162,7 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("say");
         handler.register("say", "<Сообщение...>", "Сказать от имени сервера.", arg -> {
             Call.sendMessage("[lime]Server[white]: " + arg[0]);
-            Log.info("Server: " + arg[0]);
+            Log.info("Server: &ly" + arg[0]);
             DiscordSender.send("Сервер ---> игрокам", arg[0]);
         });
 
