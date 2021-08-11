@@ -2,6 +2,7 @@ package pandorum.events;
 
 import static pandorum.Misc.*;
 import arc.util.Log;
+import arc.util.Strings;
 import arc.struct.ObjectSet;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -20,7 +21,7 @@ public class PlayerLeaveEvent {
 
         Effects.onLeave(event.player);
 
-        DiscordSender.send(event.player.name, "Вышел с сервера :(", new Color(214, 92, 92));
+        DiscordSender.send(Strings.stripColors(event.player.name), "Вышел с сервера :(", new Color(214, 92, 92));
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
