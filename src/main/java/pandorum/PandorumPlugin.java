@@ -389,6 +389,8 @@ public final class PandorumPlugin extends Plugin{
 
             bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
+            String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team.name() + "." : "Изменил свою команду на " + team.name() + ".";
+            DiscordSender.send(player.name, text, new Color(253, 14, 53));
         });
 
         handler.<Player>register("admins", "Admins list", (arg, player) -> {
