@@ -391,7 +391,7 @@ public final class PandorumPlugin extends Plugin{
             bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
             String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team + "." : "Изменил свою команду на " + team + ".";
-            DiscordSender.send(player.name, text, new Color(253, 14, 53));
+            DiscordSender.send(player.name, text, new Color(204, 82, 27));
         });
 
         handler.<Player>register("admins", "Admins list", (arg, player) -> {
@@ -440,7 +440,7 @@ public final class PandorumPlugin extends Plugin{
                     unit.spawn(team, player.x, player.y);
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                DiscordSender.send(player.name, "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", count, new Color(253, 14, 53));
+                DiscordSender.send(player.name, "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", count, new Color(204, 82, 27));
             }
         });
 
