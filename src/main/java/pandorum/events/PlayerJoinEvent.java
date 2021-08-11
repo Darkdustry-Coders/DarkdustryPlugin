@@ -3,6 +3,7 @@ package pandorum.events;
 import static pandorum.Misc.*;
 
 import arc.util.Log;
+import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
@@ -32,6 +33,6 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        DiscordSender.send(event.player.name, "Зашёл на сервер :)", new Color(110, 237, 139));
+        DiscordSender.send(Strings.stripColors(event.player.name), "Зашёл на сервер :)", new Color(110, 237, 139));
     }
 }
