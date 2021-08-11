@@ -7,6 +7,7 @@ import mindustry.content.Blocks;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
+import pandorum.comp.*;
 import static pandorum.Misc.*;
 
 import java.awt.Color;
