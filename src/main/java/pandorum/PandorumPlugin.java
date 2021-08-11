@@ -281,7 +281,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesRTV.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
-                DiscordSender.send(player.name, "Проголосовал за смену карты.");
+                DiscordSender.send(player.name, "Проголосовал за смену карты.", new Color(110, 237, 139));
 
                 if(cur < req){
                     return;
@@ -302,7 +302,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesVNW.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
-                DiscordSender.send(player.name, "Проголосовал за пропуск волны.");
+                DiscordSender.send(player.name, "Проголосовал за пропуск волны.", new Color(110, 237, 139));
 
                 if(cur < req){
                     return;
@@ -317,7 +317,7 @@ public final class PandorumPlugin extends Plugin{
                 if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
                 sendToChat("commands.artv.info");
-                DiscordSender.send(player.name, "Принудительно завершил игру.");
+                DiscordSender.send(player.name, "Принудительно завершил игру.", new Color(110, 237, 139));
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
