@@ -10,7 +10,7 @@ import pandorum.Misc;
 
 public class ChatFilter {
     public static String call(final Player player, final String text) {
-        DiscordSender.send(player.name, text);
+        DiscordSender.send(Strings.stripColors(player.name), text);
         return text;
     }
 }
