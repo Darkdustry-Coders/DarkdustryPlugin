@@ -162,6 +162,7 @@ public final class PandorumPlugin extends Plugin{
         handler.register("say", "<Сообщение...>", "Сказать от имени сервера.", arg -> {
             Call.sendMessage("[lime]Server[white]: " + arg[0]);
             Log.info("Server: " + arg[0]);
+            DiscordSender.send("Сервер ---> игрокам", arg[0]);
         });
 
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
@@ -489,7 +490,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                StringBuilder result = new StringBuilder();
+                StringBuilder resulсt = new StringBuilder();
                 result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
                 for(int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++){
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
