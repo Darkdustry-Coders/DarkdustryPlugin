@@ -22,7 +22,7 @@ public class BuildSelectEvent {
 
             if(PandorumPlugin.interval.get(300)){
                 Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target), event.tile.x, event.tile.y));
-                DiscordSender.send(colorizedName(target), "ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", "X:", event.tile.x, "Y:", event.tile.y, new Color(204, 82, 27));
+                DiscordSender.send(colorizedName(target), "ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", "X:", Short.toString(event.tile.x), "Y:", Short.toString(event.tile.y), new Color(204, 82, 27));
             }
         }
     }
