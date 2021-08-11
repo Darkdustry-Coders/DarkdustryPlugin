@@ -440,7 +440,7 @@ public final class PandorumPlugin extends Plugin{
                     unit.spawn(team, player.x, player.y);
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                DiscordSender.send(player.name, "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", count, new Color(204, 82, 27));
+                DiscordSender.send(player.name, "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", Integer.toString(count), new Color(204, 82, 27));
             }
         });
 
