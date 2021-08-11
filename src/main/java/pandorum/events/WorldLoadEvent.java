@@ -24,7 +24,7 @@ public class WorldLoadEvent {
                     .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
                     .build();
         }
-        String mapname = "Загружена новая карта под названием " + Strings.stripColors(Vars.state.map.name()) + "!"
+        String mapname = "Загружена новая карта под названием " + Strings.stripColors(Vars.state.map.name()) + "!";
         DiscordSender.send("Сервер", mapname, new Color(0, 222, 222));
     }
 }
