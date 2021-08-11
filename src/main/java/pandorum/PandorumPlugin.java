@@ -282,7 +282,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesRTV.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
-                DiscordSender.send(player.name, "Проголосовал за смену карты.", new Color(110, 237, 139));
+                DiscordSender.send(Strings.stripColors(player.name), "Проголосовал за смену карты.", new Color(110, 237, 139));
 
                 if(cur < req){
                     return;
@@ -303,7 +303,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesVNW.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
-                DiscordSender.send(player.name, "Проголосовал за пропуск волны.", new Color(110, 237, 139));
+                DiscordSender.send(Strings.stripColors(player.name), "Проголосовал за пропуск волны.", new Color(110, 237, 139));
 
                 if(cur < req){
                     return;
@@ -318,7 +318,7 @@ public final class PandorumPlugin extends Plugin{
                 if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
                 sendToChat("commands.artv.info");
-                DiscordSender.send(player.name, "Принудительно завершил игру.", new Color(110, 237, 139));
+                DiscordSender.send(Strings.stripColors(player.name), "Принудительно завершил игру.", new Color(110, 237, 139));
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
@@ -391,7 +391,7 @@ public final class PandorumPlugin extends Plugin{
             bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
             String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team + "." : "Изменил свою команду на " + team + ".";
-            DiscordSender.send(player.name, text, new Color(204, 82, 27));
+            DiscordSender.send(Strings.stripColors(player.name), text, new Color(204, 82, 27));
         });
 
         handler.<Player>register("admins", "Admins list", (arg, player) -> {
@@ -440,7 +440,7 @@ public final class PandorumPlugin extends Plugin{
                     unit.spawn(team, player.x, player.y);
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                DiscordSender.send(player.name, "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", Integer.toString(count), new Color(204, 82, 27));
+                DiscordSender.send(Strings.stripColors(player.name), "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", Integer.toString(count), new Color(204, 82, 27));
             }
         });
 
