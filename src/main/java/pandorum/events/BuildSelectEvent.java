@@ -9,6 +9,8 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import static pandorum.Misc.*;
 
+import java.awt.Color;
+
 public class BuildSelectEvent {
     public static void call(final EventType.BuildSelectEvent event) {
         if(PandorumPlugin.config.type == PluginType.other) return;
@@ -19,6 +21,7 @@ public class BuildSelectEvent {
 
             if(PandorumPlugin.interval.get(300)){
                 Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target), event.tile.x, event.tile.y));
+                DiscordSender.send(colorizedName(target), "ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", "X:", event.tile.x, "Y:", event.tile.y, new Color(204, 82, 27));
             }
         }
     }
