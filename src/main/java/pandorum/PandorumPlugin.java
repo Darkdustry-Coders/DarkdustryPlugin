@@ -281,6 +281,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesRTV.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
+                DiscordSender.send(player.name, "Проголосовал за смену карты.");
 
                 if(cur < req){
                     return;
@@ -301,6 +302,7 @@ public final class PandorumPlugin extends Plugin{
                 int cur = votesVNW.size;
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
+                DiscordSender.send(player.name, "Проголосовал за пропуск волны.");
 
                 if(cur < req){
                     return;
@@ -315,6 +317,7 @@ public final class PandorumPlugin extends Plugin{
                 if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
                 sendToChat("commands.artv.info");
+                DiscordSender.send(player.name, "Принудительно завершил игру.");
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
@@ -490,7 +493,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                StringBuilder resulсt = new StringBuilder();
+                StringBuilder result = new StringBuilder();
                 result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
                 for(int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++){
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
