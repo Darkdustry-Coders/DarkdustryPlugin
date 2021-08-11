@@ -145,6 +145,7 @@ public final class PandorumPlugin extends Plugin{
         handler.register("despw", "Убить всех юнитов на карте", args -> {
             Groups.unit.each(Unit::kill);
             Log.info("Все юниты убиты!");
+            DiscordSender.send("Сервер", "Все юниты убиты!", new Color(253, 14, 53));
         });
 
         handler.register("unban-all", "Разбанить всех", arg -> {
@@ -389,7 +390,7 @@ public final class PandorumPlugin extends Plugin{
 
             bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
-            String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team + "." : "Изменил свою команду на " + team.name() + ".";
+            String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team + "." : "Изменил свою команду на " + team + ".";
             DiscordSender.send(player.name, text, new Color(253, 14, 53));
         });
 
