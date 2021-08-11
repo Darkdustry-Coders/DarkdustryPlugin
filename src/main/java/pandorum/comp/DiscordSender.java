@@ -73,7 +73,7 @@ public class DiscordSender {
         }
     }
 
-    public static void send(String name, String text, Color color) {
+    public static void send(String name, String text) {
         if (PandorumPlugin.config.hasWebhookLink()) {
             new Thread(() -> {
                 Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
