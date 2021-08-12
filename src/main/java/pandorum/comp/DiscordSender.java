@@ -1,93 +1,66 @@
 package pandorum.comp;
 
 import java.awt.*;
-import java.io.*;
 
+import arc.struct.Queue;
+import arc.util.Timer;
 import pandorum.PandorumPlugin;
+import webhook.Webhook;
+import webhook.embed.Embed;
 
 public class DiscordSender {
 
-    //Эмбед без полей. Только название.
+    private static final Queue<Webhook> webhooks = new Queue<>();
+
+    static {
+        Timer.schedule(() -> {
+            if (!webhooks.isEmpty()) {
+                webhooks.removeFirst().execute();
+            }
+        }, 0, 1);
+    }
+
+    // Эмбед без полей. Только название.
     public static void send(String name, String title, Color color) {
         if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(name);
-                wh.addEmbed(new Webhook.EmbedObject()
-                         .setTitle(title)
-                         .setColor(color));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
+            webhooks.add(new Webhook(PandorumPlugin.config.DiscordWebhookLink)
+                    .setUsername(name)
+                    .addEmbed(new Embed()
+                            .setTitle(title)
+                            .setColor(color)));
         }
     }
 
-    //Эмбед с одним полем.
-    public static void send(String name, String title, String fieldname, String fieldcontent, Color color) {
+    // Эмбед с одним полем.
+    public static void send(String name, String title, String fieldName, String fieldContent, Color color) {
         if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(name);
-                wh.addEmbed(new Webhook.EmbedObject()
-                         .setTitle(title)
-                         .addField(fieldname, fieldcontent, false)
-                         .setColor(color));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
+            webhooks.add(new Webhook(PandorumPlugin.config.DiscordWebhookLink)
+                    .setUsername(name)
+                    .addEmbed(new Embed()
+                            .setTitle(title)
+                            .addField(fieldName, fieldContent)
+                            .setColor(color)));
         }
     }
 
-    //Эмбед с двумя полями. 
-    public static void send(String name, String title, String fieldname1, String fieldcontent1, String fieldname2, String fieldcontent2, Color color) {
+    // Эмбед с двумя полями.
+    public static void send(String name, String title, String fieldName1, String fieldContent1, String fieldName2, String fieldContent2, Color color) {
         if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(name);
-                wh.addEmbed(new Webhook.EmbedObject()
-                         .setTitle(title)
-                         .addField(fieldname1, fieldcontent1, false)
-                         .addField(fieldname2, fieldcontent2, false)
-                         .setColor(color));
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
+            webhooks.add(new Webhook(PandorumPlugin.config.DiscordWebhookLink)
+                    .setUsername(name)
+                    .addEmbed(new Embed()
+                            .setTitle(title)
+                            .addField(fieldName1, fieldContent1)
+                            .addField(fieldName2, fieldContent2)
+                            .setColor(color)));
         }
     }
 
     public static void send(String name, String text) {
         if (PandorumPlugin.config.hasWebhookLink()) {
-            new Thread(() -> {
-                Webhook wh = new Webhook(PandorumPlugin.config.DiscordWebhookLink);
-                wh.setUsername(name);
-                wh.setContent(text);
-                try {
-                    wh.execute();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } finally {
-                    Thread.currentThread().interrupt();
-                }
-                return;
-            }).start();
+            webhooks.add(new Webhook(PandorumPlugin.config.DiscordWebhookLink)
+                    .setUsername(name)
+                    .setContent(text));
         }
     }
 }

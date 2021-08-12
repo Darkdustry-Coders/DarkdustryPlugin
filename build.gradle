@@ -23,6 +23,7 @@ dependencies{
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
 
     implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.github.thedimasNetwork:DiscordWebhook:v1.6"
 }
 
 jar{
