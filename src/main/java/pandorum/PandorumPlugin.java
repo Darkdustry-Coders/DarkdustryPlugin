@@ -333,28 +333,6 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
             });
 
-            handler.<Player>register("tp", "<x> <y>", "Teleport", (args, player) -> {
-
-                float x, y;
-                if (!Strings.canParseFloat(args[0]) || !Strings.canParseFloat(args[1])) {
-                    bundled(player, "commands.tp.non-int");
-                    return;
-                }
-                x = Float.parseFloat(args[0]);
-                y = Float.parseFloat(args[1]);
-
-                if (x < 0 || x > world.width() || y < 0 || y > world.width()) {
-                    bundled(player, "commands.tp.over-world-border");
-                    return;
-                }
-
-                player.set(x*8, y*8);
-                Call.setPosition(player.con, x*8, y*8);
-                player.snapSync();
-
-                bundled(player, "commands.tp.success", args[0], args[1]);
-            });
-
             handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру", (args, player) -> {
                 if(alertIgnores.contains(player.uuid())){
                     alertIgnores.remove(player.uuid());
