@@ -315,7 +315,7 @@ public class ConfigEntry implements HistoryEntry{
 
             return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name));
         }
-        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory || block == Blocks.blockForge){
+        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory || block == Blocks.blockForge || block == Blocks.payloadSource){
             return Bundle.format("events.history.config.changed", findLocale(player.locale), name);
         }
         return Bundle.get("events.history.unknown", findLocale(player.locale)); // не ну а че
