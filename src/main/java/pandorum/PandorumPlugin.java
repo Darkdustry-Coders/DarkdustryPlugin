@@ -271,6 +271,13 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage(result.toString());
         });
 
+        handler.<Player>register("despw", "Убить всех юнитов на карте", (args, player) -> {
+            if(!Misc.adminCheck(player)) return;
+            Groups.unit.each(u -> !u.spawnedByCore(), unit -> unit.kill());
+            bundled(player, "commands.despw.success");
+            DiscordSender.send(Strings.stripColors(player.name), "Убил всех юнитов!", new Color(253, 14, 53));
+        });
+
         if(config.type != PluginType.other) {
             handler.<Player>register("rtv", "Проголосовать за смену карты.", (args, player) -> {
                 if(votesRTV.contains(player.uuid())){
