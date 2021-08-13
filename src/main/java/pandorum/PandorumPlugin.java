@@ -273,6 +273,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("despw", "Убить всех юнитов на карте", (args, player) -> {
+            int amount = Groups.unit.size();
             if(!Misc.adminCheck(player)) return;
             Groups.unit.each(unit -> unit.kill());
             bundled(player, "commands.despw.success", amount);
