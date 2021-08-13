@@ -145,7 +145,7 @@ public final class PandorumPlugin extends Plugin{
         handler.register("despw", "Убить всех юнитов на карте", args -> {
             int amount = Groups.unit.size();
             Groups.unit.each(unit -> unit.kill());
-            Log.info("Ты убил " + amount + " юнитов"!);
+            Log.info("Ты убил " + amount + " юнитов!");
             DiscordSender.send("Сервер", "Все юниты убиты!", new Color(253, 14, 53));
         });
 
