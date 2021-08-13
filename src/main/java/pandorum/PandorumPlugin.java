@@ -100,7 +100,7 @@ public final class PandorumPlugin extends Plugin{
         }
 
         Administration.Config.showConnectMessages.set(false);
-        Administration.Config.strict.set(false);
+        Administration.Config.strict.set(true);
         Administration.Config.motd.set("off");
 
         netServer.admins.addActionFilter(action -> call(action));
