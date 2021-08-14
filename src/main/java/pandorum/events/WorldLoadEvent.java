@@ -1,5 +1,7 @@
 package pandorum.events;
 
+import java.time.Duration;
+
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.Vars;
@@ -7,12 +9,9 @@ import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
-import pandorum.entry.HistoryEntry;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
-
-import java.time.Duration;
 
 public class WorldLoadEvent {
     @SuppressWarnings("unchecked")
