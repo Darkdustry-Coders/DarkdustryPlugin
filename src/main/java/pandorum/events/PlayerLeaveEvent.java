@@ -1,17 +1,16 @@
 package pandorum.events;
 
-import static pandorum.Misc.*;
-import arc.util.Log;
-import arc.util.Strings;
 import arc.struct.ObjectSet;
+import arc.util.Log;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
-import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
+import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
 
-import java.awt.Color;
+import static pandorum.Misc.colorizedName;
+import static pandorum.Misc.sendToChat;
 
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerLeave event) {
@@ -21,7 +20,7 @@ public class PlayerLeaveEvent {
 
         Effects.onLeave(event.player);
 
-        DiscordSender.send(Strings.stripColors(event.player.name), "Вышел с сервера :(", new Color(214, 92, 92));
+        DiscordWebhookManager.client.send(String.format("**%s покинуд(ла/ло) сервер!**", event.player.name()));
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 

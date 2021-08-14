@@ -1,16 +1,12 @@
 package pandorum.events;
 
-import arc.util.*;
+import arc.util.Strings;
 import mindustry.gen.Player;
-import mindustry.gen.Call;
-
-import pandorum.PandorumPlugin;
-import pandorum.comp.*;
-import pandorum.Misc;
+import pandorum.comp.DiscordWebhookManager;
 
 public class ChatFilter {
     public static String call(final Player player, final String text) {
-        DiscordSender.send(Strings.stripColors(player.name), text.replaceAll("@", "").replaceAll("https://", ""));
+        DiscordWebhookManager.client.send(String.format("**[%s]:** %s", Strings.stripColors(player.name), text.replaceAll("https?://|@", "")));
         return text;
     }
 }

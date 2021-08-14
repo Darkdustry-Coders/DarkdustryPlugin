@@ -1,12 +1,15 @@
 package pandorum.events;
 
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.game.EventType;
-import pandorum.comp.*;
-
-import java.awt.Color;
+import pandorum.comp.DiscordWebhookManager;
 
 public class ServerLoadEvent {
     public static void call(final EventType.ServerLoadEvent event) {
-        DiscordSender.send("Сервер", "Сервер запущен!", new Color(191, 255, 0));
+        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0x05DDF5)
+                .setTitle(new WebhookEmbed.EmbedTitle("Сервер был запущен!", null));
+        DiscordWebhookManager.client.send(banEmbedBuilder.build());
     }
 }

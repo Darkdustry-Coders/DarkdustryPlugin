@@ -4,18 +4,17 @@ import arc.Core;
 import arc.util.Time;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
-
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
-import static pandorum.effects.Effects.onMove;
+import pandorum.effects.Effects;
 
 public class TriggerUpdate {
     public static void call() {
-        Groups.player.each(p -> p.unit().moving(), p -> onMove(p));
+        Groups.player.each(p -> p.unit().moving(), Effects::onMove);
         if(PandorumPlugin.config.type == PluginType.sand || PandorumPlugin.config.type == PluginType.anarchy) {          
             final float despawnDelay = Core.settings.getFloat("despawndelay", PandorumPlugin.defDelay);
             Groups.unit.each(unit -> {
-                if (Time.globalTime - (float)PandorumPlugin.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
+                if (Time.globalTime - PandorumPlugin.timer.get(unit, () -> Time.globalTime) >= despawnDelay) {
                     unit.spawnedByCore(true);
                 }
             });

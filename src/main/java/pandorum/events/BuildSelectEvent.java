@@ -1,17 +1,18 @@
 package pandorum.events;
 
 import arc.util.Strings;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.content.Blocks;
-
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
-import pandorum.comp.*;
-import static pandorum.Misc.*;
+import pandorum.comp.DiscordWebhookManager;
 
-import java.awt.Color;
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.colorizedName;
 
 public class BuildSelectEvent {
     public static void call(final EventType.BuildSelectEvent event) {
@@ -23,7 +24,12 @@ public class BuildSelectEvent {
 
             if(PandorumPlugin.interval.get(300)){
                 Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target), event.tile.x, event.tile.y));
-                DiscordSender.send(Strings.stripColors(target.name), "ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", "X:", Short.toString(event.tile.x), "Y:", Short.toString(event.tile.y), new Color(204, 82, 27));
+                WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+                        .setColor(0xE81CFF)
+                        .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", null))
+                        .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %dY: %d", event.tile.x, event.tile.y)))
+                        .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(target.name())));
+                DiscordWebhookManager.client.send(banEmbedBuilder.build());
             }
         }
     }

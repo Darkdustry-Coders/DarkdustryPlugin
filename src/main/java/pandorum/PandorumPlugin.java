@@ -1,22 +1,26 @@
 package pandorum;
 
-import static mindustry.Vars.*;
-import static pandorum.Misc.*;
+import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.world;
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.findLocale;
+import static pandorum.Misc.sendToChat;
+import static pandorum.events.ActionFilter.call;
+import static pandorum.events.BlockBuildEndEvent.call;
+import static pandorum.events.BuildSelectEvent.call;
+import static pandorum.events.ChatFilter.call;
+import static pandorum.events.ConfigEvent.call;
+import static pandorum.events.DepositEvent.call;
+import static pandorum.events.GameOverEvent.call;
+import static pandorum.events.PlayerBanEvent.call;
 import static pandorum.events.PlayerJoinEvent.call;
 import static pandorum.events.PlayerLeaveEvent.call;
-import static pandorum.events.GameOverEvent.call;
-import static pandorum.events.TriggerUpdate.call;
-import static pandorum.events.BuildSelectEvent.call;
-import static pandorum.events.DepositEvent.call;
-import static pandorum.events.TapEvent.call;
-import static pandorum.events.ConfigEvent.call;
-import static pandorum.events.BlockBuildEndEvent.call;
-import static pandorum.events.WorldLoadEvent.call;
-import static pandorum.events.ServerLoadEvent.call;
-import static pandorum.events.PlayerBanEvent.call;
 import static pandorum.events.PlayerUnbanEvent.call;
-import static pandorum.events.ActionFilter.call;
-import static pandorum.events.ChatFilter.call;
+import static pandorum.events.ServerLoadEvent.call;
+import static pandorum.events.TapEvent.call;
+import static pandorum.events.TriggerUpdate.call;
+import static pandorum.events.WorldLoadEvent.call;
 
 import java.awt.Color;
 import java.util.Objects;
@@ -29,29 +33,59 @@ import arc.Core;
 import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
-import arc.struct.*;
-import arc.util.*;
+import arc.struct.ObjectMap;
+import arc.struct.ObjectSet;
+import arc.struct.Seq;
+import arc.util.ArcRuntimeException;
+import arc.util.CommandHandler;
+import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Strings;
+import arc.util.Structs;
+import arc.util.Time;
 import arc.util.io.Streams;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.Vars;
 import mindustry.content.Blocks;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.BlockBuildEndEvent;
+import mindustry.game.EventType.BuildSelectEvent;
+import mindustry.game.EventType.ConfigEvent;
+import mindustry.game.EventType.DepositEvent;
+import mindustry.game.EventType.GameOverEvent;
+import mindustry.game.EventType.PlayerBanEvent;
+import mindustry.game.EventType.PlayerJoin;
+import mindustry.game.EventType.PlayerLeave;
+import mindustry.game.EventType.PlayerUnbanEvent;
+import mindustry.game.EventType.ServerLoadEvent;
+import mindustry.game.EventType.TapEvent;
+import mindustry.game.EventType.Trigger;
+import mindustry.game.EventType.WorldLoadEvent;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
-import mindustry.net.Administration.PlayerInfo;
-import mindustry.net.Packets.KickReason;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import pandorum.comp.*;
+import pandorum.comp.Bundle;
+import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
-import pandorum.entry.*;
-import pandorum.struct.*;
-import pandorum.vote.*;
+import pandorum.comp.DiscordWebhookManager;
+import pandorum.comp.IpInfo;
+import pandorum.entry.HistoryEntry;
+import pandorum.struct.CacheSeq;
+import pandorum.struct.Tuple2;
+import pandorum.vote.VoteLoadSession;
+import pandorum.vote.VoteMapSession;
+import pandorum.vote.VoteMode;
+import pandorum.vote.VoteSaveSession;
+import pandorum.vote.VoteSession;
 
-@SuppressWarnings("unchecked")
 public final class PandorumPlugin extends Plugin{
 
     public final Gson gson = new GsonBuilder()
@@ -146,7 +180,10 @@ public final class PandorumPlugin extends Plugin{
             int amount = Groups.unit.size();
             Groups.unit.each(unit -> unit.kill());
             Log.info("Ты убил " + amount + " юнитов!");
-            DiscordSender.send("Сервер", "Все юниты убиты!", new Color(253, 14, 53));
+            WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0xFF0000)
+                .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null));
+            DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
         handler.register("unban-all", "Разбанить всех", arg -> {
@@ -164,7 +201,7 @@ public final class PandorumPlugin extends Plugin{
         handler.register("say", "<Сообщение...>", "Сказать от имени сервера.", arg -> {
             Call.sendMessage("[lime]Server[white]: " + arg[0]);
             Log.info("Server: &ly" + arg[0]);
-            DiscordSender.send("Сервер ---> игрокам", arg[0]);
+            DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", arg[0].replaceAll("https?://|@", "")));
         });
 
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
@@ -277,7 +314,11 @@ public final class PandorumPlugin extends Plugin{
             if(!Misc.adminCheck(player)) return;
             Groups.unit.each(unit -> unit.kill());
             bundled(player, "commands.despw.success", amount);
-            DiscordSender.send(Strings.stripColors(player.name), "Убил всех юнитов!", new Color(253, 14, 53));
+            WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0xFF0000)
+                .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null))
+                .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
+            DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
         if(config.type != PluginType.other) {
@@ -325,7 +366,11 @@ public final class PandorumPlugin extends Plugin{
                 if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
                 sendToChat("commands.artv.info");
-                DiscordSender.send(Strings.stripColors(player.name), "Принудительно завершил игру.", new Color(110, 237, 139));
+                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
+                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
@@ -375,8 +420,12 @@ public final class PandorumPlugin extends Plugin{
 
             bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
             target.team(team);
-            String text = args.length > 1 ? "Изменил команду игрока " + target.name() + " на " + team + "." : "Изменил свою команду на " + team + ".";
-            DiscordSender.send(Strings.stripColors(player.name), text, new Color(204, 82, 27));
+            String text = args.length > 1 ? "Команда игрока " + target.name() + " изменена на " + team + "." : "Команда изменена на " + team + ".";
+            WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0xFF0000)
+                .setTitle(new WebhookEmbed.EmbedTitle(text, null))
+                .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
+            DiscordWebhookManager.client.send(artvEmbedBuilder.build());
         });
 
         handler.<Player>register("admins", "Admins list", (arg, player) -> {
@@ -425,7 +474,13 @@ public final class PandorumPlugin extends Plugin{
                     unit.spawn(team, player.x, player.y);
                 }
                 bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                DiscordSender.send(Strings.stripColors(player.name), "Заспавнил юнитов для команды " + team + ".", "Название:", unit.name, "Количество:", Integer.toString(count), new Color(204, 82, 27));
+                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
+                    .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
+                    .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
+                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
             }
         });
 
