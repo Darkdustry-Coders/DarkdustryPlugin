@@ -7,6 +7,7 @@ import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
+import pandorum.entry.HistoryEntry;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
@@ -16,7 +17,7 @@ import java.time.Duration;
 public class WorldLoadEvent {
     public static void call(final EventType.WorldLoadEvent event) {
         if(PandorumPlugin.config.type == PluginType.sand) PandorumPlugin.timer.clear();
-        PandorumPlugin.history = new CacheSeq[Vars.world.width()][Vars.world.height()];
+        PandorumPlugin.history = new CacheSeq<HistoryEntry>[Vars.world.width()][Vars.world.height()];
 
         for(Tile tile : Vars.world.tiles){
             PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
