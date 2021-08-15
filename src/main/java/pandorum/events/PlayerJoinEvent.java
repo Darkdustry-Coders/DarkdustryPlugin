@@ -6,6 +6,7 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.sendToChat;
 
 import arc.util.Log;
+import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
@@ -29,6 +30,6 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        DiscordWebhookManager.client.send(String.format("**%s зашел на сервер!**", event.player.name()));
+        DiscordWebhookManager.client.send(String.format("**%s зашел на сервер!**", Strings.stripColors(event.player.name())));
     }
 }
