@@ -20,7 +20,7 @@ public class PlayerLeaveEvent {
 
         Effects.onLeave(event.player);
 
-        DiscordWebhookManager.client.send(String.format("**%s покинуд(ла/ло) сервер!**", event.player.name()));
+        DiscordWebhookManager.client.send(String.format("**%s вышел с сервера!**", Strings.stripColors(event.player.name())));
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
