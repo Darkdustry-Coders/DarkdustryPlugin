@@ -2,6 +2,9 @@ import groovy.json.*
 
 apply plugin: "java"
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 repositories{
     mavenCentral()
     maven{ url 'https://www.jitpack.io' }
@@ -25,10 +28,15 @@ dependencies{
 
     implementation "club.minnced:discord-webhooks:0.1.6"
     implementation fileTree(dir: 'src/libs', include: '*.jar')
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha4'
 }
 
 jar{
     from{
         configurations.runtimeClasspath.collect{it.isDirectory() ? it : zipTree(it)}
     }
+}
+
+rootProject.tasks.named("jar") {
+    duplicatesStrategy = 'include'
 }
