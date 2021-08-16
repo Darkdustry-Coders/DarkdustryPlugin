@@ -27,7 +27,7 @@ public class WorldLoadEvent {
         }
         WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x05DDF5)
-                .setTitle(new WebhookEmbed.EmbedTitle(String.format("Загружена новая карта %s!", Vars.state.map.tags.get("mapname")), null));
+                .setTitle(new WebhookEmbed.EmbedTitle(String.format("Загружена новая карта %s!", Vars.state.map.tags.get("name")), null));
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
     }
 }
