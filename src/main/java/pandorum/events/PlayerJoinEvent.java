@@ -9,6 +9,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
+import mindustry.Vars;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.PluginType;
@@ -22,7 +23,7 @@ public class PlayerJoinEvent {
             return;
         });
 
-        if (Groups.player.size() >= 1) state.serverPaused = false;
+        if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
         sendToChat("server.player-join", colorizedName(event.player));
         Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
