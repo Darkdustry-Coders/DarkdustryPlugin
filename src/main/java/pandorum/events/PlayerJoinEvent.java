@@ -10,6 +10,7 @@ import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import mindustry.Vars;
+import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.PluginType;
