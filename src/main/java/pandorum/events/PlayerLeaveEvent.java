@@ -5,6 +5,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
+import mindustry.Vars;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
@@ -16,6 +17,9 @@ import static pandorum.Misc.sendToChat;
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerLeave event) {
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
+
+        if (Groups.player.size()-1 < 1) Vars.state.serverPaused = true;
+
         sendToChat("server.player-leave", colorizedName(event.player));
         Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
