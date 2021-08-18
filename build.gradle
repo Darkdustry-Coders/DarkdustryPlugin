@@ -27,7 +27,6 @@ dependencies{
     compileOnly "com.google.code.gson:gson:$gsonVersion"
 
     implementation "club.minnced:discord-webhooks:0.1.6"
-    implementation fileTree(dir: 'src/libs', include: '*.jar')
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha4'
 }
 
