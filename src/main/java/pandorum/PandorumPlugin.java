@@ -428,17 +428,6 @@ public final class PandorumPlugin extends Plugin{
             DiscordWebhookManager.client.send(artvEmbedBuilder.build());
         });
 
-        handler.<Player>register("admins", "Admins list", (arg, player) -> {
-            Seq<Administration.PlayerInfo> admins = netServer.admins.getAdmins();
-
-            if (admins.size == 0) {
-                bundled(player, "commands.admins.no-admins");
-                return;
-            }
-            bundled(player, "commands.admins");
-            admins.each((admin) -> player.sendMessage(admin.lastName));
-        });
-
         handler.<Player>register("spectate", "Admins secret.", (args, player) -> {
             if(!Misc.adminCheck(player)) return;
             player.clearUnit();
