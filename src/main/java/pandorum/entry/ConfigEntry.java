@@ -18,7 +18,6 @@ import mindustry.world.Tile;
 import pandorum.comp.Bundle;
 
 public class ConfigEntry implements HistoryEntry{
-
     public final String name;
     public final Block block;
     public final Object value;
@@ -62,7 +61,7 @@ public class ConfigEntry implements HistoryEntry{
         }
 
         if(block == Blocks.commandCenter){
-            private static final String[] commands = Bundle.get("events.history.config.command-center.all", findLocale(player.locale)).split(", ");
+            final String[] commands = Bundle.get("events.history.config.command-center.all", findLocale(player.locale)).split(", ");
             return Bundle.format("events.history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()]);
         }
 
