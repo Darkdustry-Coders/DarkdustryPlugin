@@ -49,12 +49,6 @@ public class Bundle {
         return bundle != null && bundle.containsKey(key) ? bundle.get(key) : "???" + key + "???";
     }
 
-    public static String get(String key){
-        Locale locale = defaultLocale();
-        StringMap bundle = getOrLoad(locale);
-        return bundle != null && bundle.containsKey(key) ? bundle.get(key) : "???" + key + "???";
-    }
-
     public static boolean has(String key, Locale locale){
         StringMap props = getOrLoad(locale);
         return props != null && props.containsKey(key);
