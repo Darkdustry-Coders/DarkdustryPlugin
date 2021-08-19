@@ -7,6 +7,11 @@ import mindustry.world.Block;
 import pandorum.comp.Bundle;
 
 public class RotateEntry implements HistoryEntry{
+    protected static final String[] sides;
+
+    static{
+        sides = Bundle.get("events.history.rotate.all", Bundle.defaultLocale()).split(", ");
+    }
 
     public final String name;
     public final Block block;
@@ -20,7 +25,6 @@ public class RotateEntry implements HistoryEntry{
 
     @Override
     public String getMessage(Player player){
-        final String[] sides = Bundle.get("events.history.rotate.all", findLocale(player.locale)).split(", ");
         return Bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation]);
     }
 }
