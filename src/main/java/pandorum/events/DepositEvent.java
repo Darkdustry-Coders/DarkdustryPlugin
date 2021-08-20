@@ -22,7 +22,7 @@ public class DepositEvent {
             WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xE81CFF)
                     .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок положил торий в реактор возле ядра!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %dY: %d", event.tile.tileX(), event.tile.tileY())))
+                    .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.tileX(), event.tile.tileY())))
                     .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(event.player.name)));
             DiscordWebhookManager.client.send(banEmbedBuilder.build());
         }
