@@ -396,42 +396,42 @@ public final class PandorumPlugin extends Plugin{
                     bundled(player, "commands.alert.off");
                 }
             });
+
+            handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
+                if(!Misc.adminCheck(player)) return;
+
+                Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
+                if(team == null){
+                    bundled(player, "commands.admin.team.teams");
+                    return;
+                }
+            
+                Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
+                if(target == null){
+                    bundled(player, "commands.player-not-found");
+                    return;
+                }
+
+                bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
+                target.team(team);
+                String text = args.length > 1 ? "Команда игрока " + target.name() + " изменена на " + team + "." : "Команда изменена на " + team + ".";
+                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle(text, null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
+                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+            });
+
+            handler.<Player>register("spectate", "Oh no", (args, player) -> {
+                if(!Misc.adminCheck(player)) return;
+                player.clearUnit();
+                player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
+            });
         }
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
             Tuple2<String, Integer> hub = config.parseIp();
             Call.connect(player.con, hub.t1, hub.t2);
-        });
-
-        handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
-            if(!Misc.adminCheck(player)) return;
-
-            Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
-            if(team == null){
-                bundled(player, "commands.admin.team.teams");
-                return;
-            }
-            
-            Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
-            if(target == null){
-                bundled(player, "commands.player-not-found");
-                return;
-            }
-
-            bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
-            target.team(team);
-            String text = args.length > 1 ? "Команда игрока " + target.name() + " изменена на " + team + "." : "Команда изменена на " + team + ".";
-            WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                .setColor(0xFF0000)
-                .setTitle(new WebhookEmbed.EmbedTitle(text, null))
-                .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
-            DiscordWebhookManager.client.send(artvEmbedBuilder.build());
-        });
-
-        handler.<Player>register("spectate", "Admins secret.", (args, player) -> {
-            if(!Misc.adminCheck(player)) return;
-            player.clearUnit();
-            player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
         });
 
         handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
