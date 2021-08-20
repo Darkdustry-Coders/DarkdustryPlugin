@@ -27,7 +27,7 @@ public class BuildSelectEvent {
                 WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                         .setColor(0xE81CFF)
                         .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", null))
-                        .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %dY: %d", event.tile.x, event.tile.y)))
+                        .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.x, event.tile.y)))
                         .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(target.name())));
                 DiscordWebhookManager.client.send(banEmbedBuilder.build());
             }
