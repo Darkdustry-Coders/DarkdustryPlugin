@@ -8,6 +8,11 @@ import mindustry.world.Block;
 import pandorum.comp.*;
 import static pandorum.Misc.*;
 
+import java.util.TimeZone;
+import java.time.ZoneId;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class BlockEntry implements HistoryEntry{
     @Nullable
     public final String name;
@@ -15,6 +20,7 @@ public class BlockEntry implements HistoryEntry{
     public final Block block;
     public final boolean breaking;
     public final int rotation;
+    public Date time;
 
     public BlockEntry(BlockBuildEndEvent event){
         this.unit = event.unit;
@@ -27,18 +33,22 @@ public class BlockEntry implements HistoryEntry{
             this.rotation = -1;
         }
         this.breaking = event.breaking;
-        
+        this.time = new Date();
     }
 
     @Override
     public String getMessage(Player player){
+        final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
+        final String ftime = df.format(this.time);
+
         if(breaking){
-            return name != null ? Bundle.format("events.history.block.destroy.player", findLocale(player.locale), name) :
-            Bundle.format("events.history.block.destroy.unit", findLocale(player.locale), unit.type);
+            return name != null ? Bundle.format("events.history.block.destroy.player", findLocale(player.locale), name, ftime) :
+            Bundle.format("events.history.block.destroy.unit", findLocale(player.locale), unit.type, ftime);
         }
 
-        String base = name != null ? Bundle.format("events.history.block.construct.player", findLocale(player.locale), name, block) :
-                      Bundle.format("events.history.block.construct.unit", findLocale(player.locale), unit.type, block);
+        String base = name != null ? Bundle.format("events.history.block.construct.player", findLocale(player.locale), name, block, ftime) :
+                      Bundle.format("events.history.block.construct.unit", findLocale(player.locale), unit.type, block, ftime);
         if(block.rotate){
             base += Bundle.format("events.history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
