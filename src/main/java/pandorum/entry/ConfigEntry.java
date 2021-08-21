@@ -5,6 +5,7 @@ import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
 
 import arc.struct.StringMap;
+import arc.math.geom.Point2;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
@@ -45,16 +46,14 @@ public class ConfigEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        if(block == Blocks.powerNode || block == Blocks.powerNodeLarge || block == Blocks.powerSource ||
-           block == Blocks.powerVoid || block == Blocks.surgeTower || block == Blocks.phaseConduit || block == Blocks.phaseConveyor ||
-           block == Blocks.bridgeConduit || block == Blocks.itemBridge || block == Blocks.massDriver || block == Blocks.ductBridge || block == Blocks.payloadPropulsionTower){
-            int data = (int)value;
+        if (block.configurations.containsKey(Integer.class) && block.configurations.containsKey(Point2[].class)) {
+            int data = (int) value;
             Tile tile = world.tile(data);
-            if(tile == null){
+            if (tile == null) {
                 return Bundle.get("events.history.unknown", findLocale(player.locale));
             }
 
-            if(connect){
+            if (connect) {
                 return Bundle.format("events.history.config.power-node.connect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
             }
 
