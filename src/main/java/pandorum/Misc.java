@@ -18,13 +18,6 @@ public abstract class Misc{
 
     private Misc(){}
 
-    private static final Seq<String> bools = Seq.with(Bundle.get("misc.bools", findLocale("ru")).split(", "));
-
-    public static boolean bool(String text){
-        Objects.requireNonNull(text, "text");
-        return bools.contains(text.toLowerCase());
-    }
-
     public static String colorizedTeam(Team team){
         Objects.requireNonNull(team, "team");
         return Strings.format("[#@]@", team.color, team);
