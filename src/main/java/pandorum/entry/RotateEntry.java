@@ -6,25 +6,37 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
 
+import java.util.TimeZone;
+import java.time.ZoneId;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class RotateEntry implements HistoryEntry{
+
+    public String name;
+    public Block block;
+    public int rotation;
+    public Date time;
+    
     protected static final String[] sides;
 
     static{
         sides = Bundle.get("events.history.rotate.all", Bundle.defaultLocale()).split(", ");
     }
 
-    public final String name;
-    public final Block block;
-    public final int rotation;
-
     public RotateEntry(String name, Block block, int rotation){
         this.name = name;
         this.block = block;
         this.rotation = rotation;
+        this.time = new Date();
     }
 
     @Override
     public String getMessage(Player player){
-        return Bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation]);
+        final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
+        final String ftime = df.format(this.time);
+
+        return Bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
     }
 }
