@@ -28,8 +28,7 @@ public class ConfigEvent {
             connect = lastConfigEntry.value instanceof Long &&
                     (conns.any() && event.tile.block instanceof PowerNode &&
                     conns.size > Pack.leftInt((Long) lastConfigEntry.value) ||
-                    event.value instanceof Integer && (int) event.value >= 0 &&
-                    Pack.leftInt((Long) lastConfigEntry.value) < 0);
+                    event.value instanceof Integer && (int) event.value >= 0);
         }
 
         HistoryEntry entry = new ConfigEntry(event, connect);
