@@ -414,11 +414,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                CoreBuild core = team.cores.first();
-
-                for(int i = 0; i < count; i++){
-                    core.items.set(item, count);
-                }
+                team.core().items.add(item, count);
 
                 bundled(player, "commands.admin.give.success");
             });
