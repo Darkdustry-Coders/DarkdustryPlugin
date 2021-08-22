@@ -70,7 +70,7 @@ public class ConfigEntry implements HistoryEntry{
                 (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);
             if (data < 0) {
-                return Bundle.get("events.history.config.default", findLocale(player.locale));
+                return Bundle.get("events.history.config.disconnect", findLocale(player.locale), name, block, ftime);
             }
 
             Tile tile = world.tile(data);
