@@ -387,6 +387,37 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
             });
 
+            handler.<Player>register("give", "<item> [count]", "Выдать ресурсы в ядро.", (args, player) -> {
+                if(!Misc.adminCheck(player)) return;
+
+                if(args.length > 1 && !Strings.canParseInt(args[1])){
+                    bundled(player, "commands.non-int");
+                    return;
+                }
+
+                int count = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
+
+                Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
+                if(item == null){
+                    bundled(player, "commands.admin.give.item-not-found");
+                    return;
+                }
+
+                TeamData team = state.teams.get(player.team());
+                if(!team.hasCore()){
+                    bundled(player, "commands.admin.give.core-not-found");
+                    return;
+                }
+
+                CoreBuild core = team.cores.first();
+
+                for(int i = 0; i < count; i++){
+                    core.items.set(item, count);
+                }
+
+                bundled(player, "commands.admin.give.success");
+            });
+
             handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру", (args, player) -> {
                 if(alertIgnores.contains(player.uuid())){
                     alertIgnores.remove(player.uuid());
@@ -434,13 +465,11 @@ public final class PandorumPlugin extends Plugin{
             Call.connect(player.con, hub.t1, hub.t2);
         });
 
-        handler.<Player>register("map", "Info about the map", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
-
-        handler.<Player>register("spawn", "<unit> [count] [team]", "Spawn units.", (args, player) -> {
+        handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
             if (!Misc.adminCheck(player)) return;
 
             if(args.length > 1 && !Strings.canParseInt(args[1])){
-                bundled(player, "commands.spawn.non-int");
+                bundled(player, "commands.non-int");
                 return;
             }
 
@@ -473,7 +502,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("units", "<all/change/name> [unit]", "Actions with units.", (args, player) -> {
+        handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
             if(args[0].equals("name")) {
                 try { bundled(player, "commands.unit-name", player.unit().type().name); }
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
@@ -501,7 +530,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("unban", "<ip/ID>", "Completely unban a person by IP or ID.", (arg,player) -> {
+        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
             if(!Misc.adminCheck(player)) return;
             if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
                 Misc.bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
@@ -511,6 +540,9 @@ public final class PandorumPlugin extends Plugin{
         });
 
         if(config.type != PluginType.other) {
+
+            handler.<Player>register("map", "Информация о карте", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
+
             handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
                 if(args.length > 0 && !Strings.canParseInt(args[0])){
                     bundled(player, "commands.page-not-int");
