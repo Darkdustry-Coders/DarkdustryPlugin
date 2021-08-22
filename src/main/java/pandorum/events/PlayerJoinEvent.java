@@ -35,6 +35,6 @@ public class PlayerJoinEvent {
         Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
         bundled(event.player, "server.motd");
 
-        DiscordWebhookManager.client.send(String.format("**%s зашел на сервер!**", Strings.stripColors(event.player.name())));
+        DiscordWebhookManager.client.send(String.format("**%s зашел на сервер!**", Strings.stripColors(event.player.name()).replaceAll("@", "")));
     }
 }
