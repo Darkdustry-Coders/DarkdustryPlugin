@@ -4,8 +4,11 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
 
+import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.math.geom.Point2;
+import arc.util.Nullable;
+import arc.util.Pack;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
@@ -16,6 +19,7 @@ import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.power.PowerNode;
 import pandorum.comp.Bundle;
 
 import java.util.TimeZone;
@@ -28,16 +32,32 @@ public class ConfigEntry implements HistoryEntry{
     public Block block;
     public Object value;
     public boolean connect;
+    @Nullable
     public Building build;
     public Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
         this.name = Groups.player.contains(p -> event.player == p) ? colorizedName(event.player) : Bundle.get("events.unknown", Bundle.defaultLocale());
         this.block = event.tile.block();
-        this.value = event.value;
+        this.value = getConfig(event);
         this.connect = connect;
         this.build = event.tile;
         this.time = new Date();
+    }
+
+    private Object getConfig(ConfigEvent event) {
+        if (block.configurations.containsKey(Integer.class) &&
+                (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+            int count;
+            if (block instanceof PowerNode) {
+                count = build != null ? build.getPowerConnections(new Seq<>()).size : 0;
+            } else {
+                count = build != null ? (int) event.value : -1;
+            }
+
+            return Pack.longInt(count, (int) event.value);
+        }
+        return event.value;
     }
 
     @Override
@@ -46,8 +66,13 @@ public class ConfigEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        if (block.configurations.containsKey(Integer.class) && block.configurations.containsKey(Point2[].class)) {
-            int data = (int) value;
+        if (block.configurations.containsKey(Integer.class) &&
+                (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+            int data = Pack.rightInt((long) value);
+            if (data < 0) {
+                return Bundle.get("events.history.config.default", findLocale(player.locale));
+            }
+
             Tile tile = world.tile(data);
             if (tile == null) {
                 return Bundle.get("events.history.unknown", findLocale(player.locale));

@@ -1,11 +1,14 @@
 package pandorum.events;
 
 import arc.struct.*;
+import arc.util.Pack;
 import mindustry.game.EventType;
+import mindustry.gen.Building;
 import mindustry.world.Tile;
 import mindustry.Vars;
 import mindustry.world.blocks.logic.LogicBlock;
 
+import mindustry.world.blocks.power.PowerNode;
 import pandorum.PandorumPlugin;
 import pandorum.entry.*;
 import pandorum.struct.*;
@@ -21,10 +24,13 @@ public class ConfigEvent {
         if(!entries.isEmpty() && last instanceof ConfigEntry){
             ConfigEntry lastConfigEntry = (ConfigEntry)last;
 
-            connect = !event.tile.getPowerConnections(new Seq<>()).isEmpty() &&
-                    !(lastConfigEntry.value instanceof Integer && event.value instanceof Integer &&
-                    (int)lastConfigEntry.value == (int)event.value && lastConfigEntry.connect);
-        } 
+            Seq<Building> conns = event.tile.getPowerConnections(new Seq<>());
+            connect = lastConfigEntry.value instanceof Long &&
+                    (conns.any() && event.tile.block instanceof PowerNode &&
+                    conns.size > Pack.leftInt((Long) lastConfigEntry.value) ||
+                    event.value instanceof Integer && (int) event.value >= 0 &&
+                    Pack.leftInt((Long) lastConfigEntry.value) < 0);
+        }
 
         HistoryEntry entry = new ConfigEntry(event, connect);
 
