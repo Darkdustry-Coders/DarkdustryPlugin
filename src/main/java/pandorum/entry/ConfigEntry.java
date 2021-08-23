@@ -20,6 +20,7 @@ import mindustry.type.Liquid;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.units.UnitFactory;
 import pandorum.comp.Bundle;
 
 import java.util.TimeZone;
@@ -34,6 +35,8 @@ public class ConfigEntry implements HistoryEntry{
     public boolean connect;
     @Nullable
     public Building build;
+    @Nullable
+    public UnitType unit;
     public Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
@@ -42,6 +45,7 @@ public class ConfigEntry implements HistoryEntry{
         this.value = getConfig(event);
         this.connect = connect;
         this.build = event.tile;
+        this.unit = build != null ? build instanceof UnitFactory ? ((UnitFactory.UnitFactoryBuild)build).unit() : null : null;
         this.time = new Date();
     }
 
@@ -79,7 +83,7 @@ public class ConfigEntry implements HistoryEntry{
             }
 
             if (connect) {
-                return Bundle.format("events.history.config.power-node.connect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
+                return Bundle.format("events.history.config.connect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
             }
 
             return Bundle.format("events.history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
