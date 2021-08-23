@@ -1,5 +1,7 @@
 package pandorum.events;
 
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
