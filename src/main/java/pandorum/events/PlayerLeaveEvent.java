@@ -30,7 +30,7 @@ public class PlayerLeaveEvent {
 
         WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
-                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null))
+                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null));
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
