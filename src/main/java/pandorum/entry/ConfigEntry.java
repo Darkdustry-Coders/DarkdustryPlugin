@@ -35,9 +35,7 @@ public class ConfigEntry implements HistoryEntry{
     public Block block;
     public Object value;
     public boolean connect;
-    @Nullable
-    public Building build
-    @Nullable
+    public Building build;
     public UnitType unit;
     public Date time;
 
