@@ -37,7 +37,7 @@ public class PlayerJoinEvent {
 
         WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x00FF00)
-                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s зашёл на сервер!", Strings.stripColors(event.player.name())), null))
+                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s зашёл на сервер!", Strings.stripColors(event.player.name())), null));
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
     }
 }
