@@ -17,6 +17,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
@@ -45,7 +46,7 @@ public class ConfigEntry implements HistoryEntry{
         this.value = getConfig(event);
         this.connect = connect;
         this.build = event.tile;
-        this.unit = build != null ? build instanceof UnitFactory ? ((UnitFactory.UnitFactoryBuild)build).unit() : null : null;
+        this.unit = build != null ? build instanceof UnitFactory.UnitFactoryBuild ? ((UnitFactory.UnitFactoryBuild)build).unit() : null : null;
         this.time = new Date();
     }
 
@@ -122,8 +123,8 @@ public class ConfigEntry implements HistoryEntry{
             return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name), ftime);
         }
 
-        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory || block == Blocks.blockForge || block == Blocks.payloadSource){
-            return Bundle.format("events.history.config.changed", findLocale(player.locale), name, ftime);
+        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory){
+            return Bundle.format("events.history.config.unit", findLocale(player.locale), name, ftime);
         }
         return Bundle.get("events.history.unknown", findLocale(player.locale)); // не ну а че
     }
