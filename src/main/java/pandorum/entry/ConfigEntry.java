@@ -22,6 +22,7 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.units.UnitFactory;
+import mindustry.world.blocks.defense.walls.Door;
 import pandorum.comp.Bundle;
 
 import java.util.TimeZone;
@@ -90,7 +91,7 @@ public class ConfigEntry implements HistoryEntry{
             return Bundle.format("events.history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
         }
 
-        if(block == Blocks.door || block == Blocks.doorLarge){
+        if(block instanceof Door){
             boolean data = (boolean)value;
             return data ? Bundle.format("events.history.config.door.on", findLocale(player.locale), name, block, ftime) : Bundle.format("events.history.config.door.off", findLocale(player.locale), name, block, ftime);
         }
@@ -123,10 +124,10 @@ public class ConfigEntry implements HistoryEntry{
             return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name), ftime);
         }
 
-        if(block == Blocks.navalFactory || block == Blocks.airFactory || block == Blocks.groundFactory){
-            return Bundle.format("events.history.config.unit", findLocale(player.locale), name, ftime);
+        if(block instanceof UnitFactory){
+            return Bundle.format("events.history.config.unit", findLocale(player.locale), name, icons.get(unit.name), ftime);
         }
-        return Bundle.get("events.history.unknown", findLocale(player.locale)); // не ну а че
+        return Bundle.get("events.history.unknown", findLocale(player.locale));
     }
 
     private static final StringMap icons = StringMap.of(
