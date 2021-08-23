@@ -22,7 +22,7 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.units.UnitFactory;
-import mindustry.world.blocks.defense.walls.Door;
+import mindustry.world.blocks.defense.Door;
 import pandorum.comp.Bundle;
 
 import java.util.TimeZone;
@@ -36,7 +36,7 @@ public class ConfigEntry implements HistoryEntry{
     public Object value;
     public boolean connect;
     @Nullable
-    public Building build;
+    public Building build
     @Nullable
     public UnitType unit;
     public Date time;
@@ -81,7 +81,7 @@ public class ConfigEntry implements HistoryEntry{
 
             Tile tile = world.tile(data);
             if (tile == null) {
-                return Bundle.get("events.history.unknown", findLocale(player.locale));
+                return Bundle.get("events.history.config.changed", findLocale(player.locale));
             }
 
             if (connect) {
@@ -125,9 +125,12 @@ public class ConfigEntry implements HistoryEntry{
         }
 
         if(block instanceof UnitFactory){
+            if(unit == null){
+                return Bundle.format("events.history.config.default", findLocale(player.locale), name, ftime);
+            }
             return Bundle.format("events.history.config.unit", findLocale(player.locale), name, icons.get(unit.name), ftime);
         }
-        return Bundle.get("events.history.unknown", findLocale(player.locale));
+        return Bundle.format("events.history.config.changed", findLocale(player.locale), name, ftime);
     }
 
     private static final StringMap icons = StringMap.of(
