@@ -1,5 +1,8 @@
 package pandorum.events;
 
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+
 import arc.struct.ObjectSet;
 import arc.util.Log;
 import arc.util.Strings;
@@ -25,7 +28,10 @@ public class PlayerLeaveEvent {
 
         Effects.onLeave(event.player);
 
-        DiscordWebhookManager.client.send(String.format("**%s вышел с сервера!**", Strings.stripColors(event.player.name()).replaceAll("@", "")));
+        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0xFF0000)
+                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null))
+        DiscordWebhookManager.client.send(banEmbedBuilder.build());
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
