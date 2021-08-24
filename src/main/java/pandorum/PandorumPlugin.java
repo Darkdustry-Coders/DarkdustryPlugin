@@ -204,7 +204,7 @@ public final class PandorumPlugin extends Plugin{
                 .setTitle(new WebhookEmbed.EmbedTitle("Сервер выключился для перезапуска!", null));
             DiscordWebhookManager.client.send(banEmbedBuilder.build());
             
-            Time.runTask(60f * 5f, System.exit(2));
+            Timer.schedule(() -> System.exit(2), 5f);
         });
 
         handler.removeCommand("say");
