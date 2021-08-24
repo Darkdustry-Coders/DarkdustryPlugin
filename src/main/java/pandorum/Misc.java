@@ -89,7 +89,6 @@ public abstract class Misc{
             player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
             return true;
         }
-        //TODO кикать матерные ники
         if (name.contains("@")) {
             player.con.kick(Bundle.format("events.bad-name", findLocale(player.locale)), 0);
             return true;
