@@ -82,4 +82,18 @@ public abstract class Misc{
     public static Player findByName(String name) {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(name));
     }
+
+    public static boolean nameCheck(Player player) {
+        String name = Strings.stripColors(player.name);
+        if (name.length() < 2 || name.length() > 25) {
+            player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
+            return true;
+        }
+        //TODO кикать матерные ники
+        if (name.contains("@")) {
+            player.con.kick(Bundle.format("events.bad-name", findLocale(player.locale)), 0);
+            return true;
+        }
+        return false;
+    }
 }
