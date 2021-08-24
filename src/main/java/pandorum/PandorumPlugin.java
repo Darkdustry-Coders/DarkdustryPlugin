@@ -199,7 +199,12 @@ public final class PandorumPlugin extends Plugin{
 
         handler.register("rr", "Перезапустить сервер", args -> {
             Log.info("Перезапуск сервера...");
-            System.exit(2);
+            WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+                .setColor(0xFF0000)
+                .setTitle(new WebhookEmbed.EmbedTitle("Сервер выключился для перезапуска!", null));
+            DiscordWebhookManager.client.send(banEmbedBuilder.build());
+            
+            Time.runTask(60f * 5f, System.exit(2));
         });
 
         handler.removeCommand("say");
@@ -241,7 +246,7 @@ public final class PandorumPlugin extends Plugin{
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
             int pages = Mathf.ceil((float)netServer.clientCommands.getCommandList().size / commandsPerPage);
 
-            --page;
+            page--;
 
             if(page >= pages || page < 0){
                 bundled(player, "commands.under-page", String.valueOf(pages));
@@ -534,9 +539,9 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
             if(!Misc.adminCheck(player)) return;
             if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                Misc.bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
+                bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
             }else{
-                Misc.bundled(player, "commands.unban.not-banned");
+                bundled(player, "commands.unban.not-banned");
             }
         });
 
