@@ -6,6 +6,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
 import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.nameCheck;
 
 import arc.util.Log;
 import arc.util.Strings;
@@ -25,6 +26,7 @@ public class PlayerJoinEvent {
             event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale)));
             return;
         });
+        nameCheck(event.player);
 
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
