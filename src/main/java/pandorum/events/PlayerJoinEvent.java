@@ -26,7 +26,7 @@ public class PlayerJoinEvent {
             event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale)));
             return;
         });
-        nameCheck(event.player);
+        if (nameCheck(event.player)) return;
 
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
