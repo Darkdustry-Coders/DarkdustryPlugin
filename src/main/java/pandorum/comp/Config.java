@@ -46,10 +46,6 @@ public class Config{
         return Tuple2.of(ip, port);
     }
 
-    public boolean hasWebhookLink() {
-        return DiscordWebhookLink != null;
-    }
-
     public enum PluginType{
 
         /** Тип для серверов с режимом выживания или атаки */
