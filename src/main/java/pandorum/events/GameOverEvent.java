@@ -3,6 +3,7 @@ package pandorum.events;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
