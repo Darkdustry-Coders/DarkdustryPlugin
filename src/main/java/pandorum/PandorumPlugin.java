@@ -84,6 +84,7 @@ import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.IpInfo;
 import pandorum.entry.HistoryEntry;
+import pandorum.entry.ConfigEntry;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Tuple2;
 import pandorum.vote.VoteLoadSession;
@@ -514,9 +515,10 @@ public final class PandorumPlugin extends Plugin{
                 try { bundled(player, "commands.unit-name", player.unit().type().name); }
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
-                //TODO доделать иконки юнитов
                 StringBuilder builder = new StringBuilder();
-                Vars.content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
+                content.units().each(unit ->
+                    if (!unit.name.equals("block") builder.append(" " + ConfigEntry.icons.get(unit.name) + unit.name);
+                });
                 bundled(player, "commands.units.all", builder.toString());
             } else if (args[0].equals("change")) {
                 if (!Misc.adminCheck(player)) return;
@@ -524,7 +526,7 @@ public final class PandorumPlugin extends Plugin{
                     bundled(player, "commands.units.incorrect");
                     return;
                 }
-                UnitType founded = Vars.content.units().find(b -> b.name.equals(args[1]));
+                UnitType founded = Vars.content.units().find(u -> u.name.equals(args[1]));
                 if (founded == null) {
                     bundled(player, "commands.units.unit-not-found");
                     return;
