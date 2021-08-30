@@ -131,7 +131,7 @@ public class ConfigEntry implements HistoryEntry{
         return Bundle.format("events.history.config.changed", findLocale(player.locale), name, ftime);
     }
 
-    private static final StringMap icons = StringMap.of(
+    public static final StringMap icons = StringMap.of(
             "copper", "\uF838",
             "lead", "\uF837",
             "metaglass", "\uF836",
