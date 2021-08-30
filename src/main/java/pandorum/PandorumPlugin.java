@@ -481,7 +481,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-            if (count > 25) {
+            if (count > 25 || count < 1) {
                 bundled(player, "commands.spawn.limit");
                 return;
             }
@@ -514,6 +514,7 @@ public final class PandorumPlugin extends Plugin{
                 try { bundled(player, "commands.unit-name", player.unit().type().name); }
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
+                //TODO доделать иконки юнитов
                 StringBuilder builder = new StringBuilder();
                 Vars.content.units().each(unit -> builder.append("[sky] > [white]" + unit.name));
                 bundled(player, "commands.units.all", builder.toString());
