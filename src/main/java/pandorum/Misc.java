@@ -53,16 +53,6 @@ public abstract class Misc{
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
-    public static boolean isError(String output) {
-        try {
-            String errorName = output.substring(0, output.indexOf(' ') - 1);
-            Class.forName("org.mozilla.javascript." + errorName);
-            return true;
-        } catch (Throwable e) {
-            return false;
-        }
-    }
-
     public static boolean adminCheck(Player player) {
         if (!player.admin()) {
             bundled(player, "commands.permission-denied");
