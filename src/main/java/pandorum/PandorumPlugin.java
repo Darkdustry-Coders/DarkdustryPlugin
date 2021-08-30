@@ -161,13 +161,10 @@ public final class PandorumPlugin extends Plugin{
         Events.on(GameOverEvent.class, event -> call(event));
         Events.run(Trigger.update, () -> call());
 
-        arc.util.Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
+        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
             int hue = r.hue;
-            if(hue < 360){
-                hue++;
-            }else{
-                hue = 0;
-            }
+            if(hue < 360) hue++;
+            else hue = 0;
 
             String hex = "[#" + Integer.toHexString(Color.getHSBColor(hue / 360f, 1f, 1f).getRGB()).substring(2) + "]";
             r.player.name = hex + r.stripedName;
