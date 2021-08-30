@@ -466,90 +466,6 @@ public final class PandorumPlugin extends Plugin{
                 player.clearUnit();
                 player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
             });
-        }
-
-        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
-            Tuple2<String, Integer> hub = config.parseIp();
-            Call.connect(player.con, hub.t1, hub.t2);
-        });
-
-        handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
-            if (!Misc.adminCheck(player)) return;
-
-            if(args.length > 1 && !Strings.canParseInt(args[1])){
-                bundled(player, "commands.non-int");
-                return;
-            }
-
-            int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-            if (count > 25 || count < 1) {
-                bundled(player, "commands.spawn.limit");
-                return;
-            }
-
-            Team team = args.length > 2 ? Structs.find(Team.baseTeams, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
-            if (team == null) {
-            	bundled(player, "commands.admin.team.teams");
-            	return;
-            }
-
-            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
-            if (unit == null) bundled(player, "commands.units.unit-not-found");
-            else {
-                for (int i = 0; count > i; i++) {
-                    unit.spawn(team, player.x, player.y);
-                }
-                bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
-                    .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
-                    .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
-            }
-        });
-
-        handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
-            if(args[0].equals("name")) {
-                try { bundled(player, "commands.unit-name", player.unit().type().name); }
-                catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
-            } else if (args[0].equals("all")) {
-                StringBuilder builder = new StringBuilder();
-                content.units().each(unit ->
-                    if (!unit.name.equals("block") builder.append(" " + ConfigEntry.icons.get(unit.name) + unit.name);
-                });
-                bundled(player, "commands.units.all", builder.toString());
-            } else if (args[0].equals("change")) {
-                if (!Misc.adminCheck(player)) return;
-                if(args.length == 1 || args[1].equals("block")) {
-                    bundled(player, "commands.units.incorrect");
-                    return;
-                }
-                UnitType founded = Vars.content.units().find(u -> u.name.equals(args[1]));
-                if (founded == null) {
-                    bundled(player, "commands.units.unit-not-found");
-                    return;
-                }
-                final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
-                spawn.spawnedByCore(true);
-                player.unit(spawn);
-                bundled(player, "commands.units.change.success");
-            } else {
-                bundled(player, "commands.units.incorrect");
-            }
-        });
-
-        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
-            if(!Misc.adminCheck(player)) return;
-            if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
-            }else{
-                bundled(player, "commands.unban.not-banned");
-            }
-        });
-
-        if(config.type != PluginType.other) {
 
             handler.<Player>register("map", "Информация о карте", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
 
@@ -726,6 +642,87 @@ public final class PandorumPlugin extends Plugin{
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
             player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
+        });
+
+        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
+            Tuple2<String, Integer> hub = config.parseIp();
+            Call.connect(player.con, hub.t1, hub.t2);
+        });
+
+        handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
+            if (!Misc.adminCheck(player)) return;
+
+            if(args.length > 1 && !Strings.canParseInt(args[1])){
+                bundled(player, "commands.non-int");
+                return;
+            }
+
+            int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            if (count > 25 || count < 1) {
+                bundled(player, "commands.spawn.limit");
+                return;
+            }
+
+            Team team = args.length > 2 ? Structs.find(Team.baseTeams, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
+            if (team == null) {
+            	bundled(player, "commands.admin.team.teams");
+            	return;
+            }
+
+            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
+            if (unit == null) bundled(player, "commands.units.unit-not-found");
+            else {
+                for (int i = 0; count > i; i++) {
+                    unit.spawn(team, player.x, player.y);
+                }
+                bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
+                    .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
+                    .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
+                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+            }
+        });
+
+        handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
+            if(args[0].equals("name")) {
+                try { bundled(player, "commands.unit-name", player.unit().type().name); }
+                catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
+            } else if (args[0].equals("all")) {
+                StringBuilder builder = new StringBuilder();
+                content.units().each(unit ->
+                    if (!unit.name.equals("block")) builder.append(" " + ConfigEntry.icons.get(unit.name) + unit.name);
+                });
+                bundled(player, "commands.units.all", builder.toString());
+            } else if (args[0].equals("change")) {
+                if (!Misc.adminCheck(player)) return;
+                if(args.length == 1 || args[1].equals("block")) {
+                    bundled(player, "commands.units.incorrect");
+                    return;
+                }
+                UnitType founded = Vars.content.units().find(u -> u.name.equals(args[1]));
+                if (founded == null) {
+                    bundled(player, "commands.units.unit-not-found");
+                    return;
+                }
+                final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
+                spawn.spawnedByCore(true);
+                player.unit(spawn);
+                bundled(player, "commands.units.change.success");
+            } else {
+                bundled(player, "commands.units.incorrect");
+            }
+        });
+
+        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
+            if(!Misc.adminCheck(player)) return;
+            if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
+                bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
+            }else{
+                bundled(player, "commands.unban.not-banned");
+            }
         });
     }
 
