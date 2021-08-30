@@ -268,7 +268,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
             if (!Misc.adminCheck(player)) return;
-            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.a.chat", Misc.colorizedName(player), args[0]));
+            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.admin.a.chat", Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
@@ -322,7 +322,7 @@ public final class PandorumPlugin extends Plugin{
             int amount = Groups.unit.size();
             if(!Misc.adminCheck(player)) return;
             Groups.unit.each(unit -> unit.kill());
-            bundled(player, "commands.despw.success", amount);
+            bundled(player, "commands.admin.despw.success", amount);
             WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null))
@@ -374,7 +374,7 @@ public final class PandorumPlugin extends Plugin{
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
                 if(!Misc.adminCheck(player)) return;
                 Events.fire(new GameOverEvent(Team.crux));
-                sendToChat("commands.artv.info");
+                sendToChat("commands.admin.artv.info");
                 WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xFF0000)
                     .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
@@ -438,7 +438,7 @@ public final class PandorumPlugin extends Plugin{
 
                 Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
                 if(team == null){
-                    bundled(player, "commands.admin.team.teams");
+                    bundled(player, "commands.teams");
                     return;
                 }
             
@@ -638,7 +638,7 @@ public final class PandorumPlugin extends Plugin{
             if (!Misc.adminCheck(player)) return;
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
-            player.sendMessage("> " + (Misc.isError(output) ? "[#ff341c]" + output : output));
+            player.sendMessage("[orange] > [accent]" + output);
         });
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
@@ -656,23 +656,23 @@ public final class PandorumPlugin extends Plugin{
 
             int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
             if (count > 25 || count < 1) {
-                bundled(player, "commands.spawn.limit");
+                bundled(player, "commands.admin.spawn.limit");
                 return;
             }
 
             Team team = args.length > 2 ? Structs.find(Team.baseTeams, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
             if (team == null) {
-            	bundled(player, "commands.admin.team.teams");
+            	bundled(player, "commands.teams");
             	return;
             }
 
             UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
-            if (unit == null) bundled(player, "commands.units.unit-not-found");
+            if (unit == null) bundled(player, "commands.unit-not-found");
             else {
                 for (int i = 0; count > i; i++) {
                     unit.spawn(team, player.x, player.y);
                 }
-                bundled(player, "commands.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+                bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
                 WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xFF0000)
                     .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
@@ -701,7 +701,7 @@ public final class PandorumPlugin extends Plugin{
                 }
                 UnitType founded = Vars.content.units().find(u -> u.name.equals(args[1]));
                 if (founded == null) {
-                    bundled(player, "commands.units.unit-not-found");
+                    bundled(player, "commands.unit-not-found");
                     return;
                 }
                 final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
@@ -716,9 +716,9 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
             if(!Misc.adminCheck(player)) return;
             if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                bundled(player, "commands.unban.success", netServer.admins.getInfo(arg[0]).lastName);
+                bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(arg[0]).lastName);
             }else{
-                bundled(player, "commands.unban.not-banned");
+                bundled(player, "commands.admin.unban.not-banned");
             }
         });
     }
