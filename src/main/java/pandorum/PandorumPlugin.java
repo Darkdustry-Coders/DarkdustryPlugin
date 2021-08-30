@@ -692,7 +692,7 @@ public final class PandorumPlugin extends Plugin{
                 catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
             } else if (args[0].equals("all")) {
                 StringBuilder builder = new StringBuilder();
-                content.units().each(unit ->
+                content.units().each(unit -> {
                     if (!unit.name.equals("block")) builder.append(" " + ConfigEntry.icons.get(unit.name) + unit.name);
                 });
                 bundled(player, "commands.units.all", builder.toString());
