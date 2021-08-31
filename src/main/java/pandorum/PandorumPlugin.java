@@ -764,7 +764,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if((currentlyKicking[0].voted().contains(player.uuid()) || currentlyKicking[0].voted.contains(netServer.admins.getInfo(player.uuid()).lastIP))){
+            if((currentlyKicking[0].voted().contains(player.uuid()) || currentlyKicking[0].voted().contains(netServer.admins.getInfo(player.uuid()).lastIP))){
                 bundled(player, "commands.already-voted");
                 return;
             }
