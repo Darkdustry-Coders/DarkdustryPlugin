@@ -92,6 +92,7 @@ import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteMode;
 import pandorum.vote.VoteSaveSession;
 import pandorum.vote.VoteSession;
+import pandorum.vote.VoteKickSession;
 
 public final class PandorumPlugin extends Plugin{
 
@@ -103,6 +104,7 @@ public final class PandorumPlugin extends Plugin{
             .create();
 
     public static VoteSession[] current = {null};
+    public static VoteKickSession[] currentlyKicking = {null};
     public static Config config;
     public static Seq<IpInfo> forbiddenIps;
 
@@ -235,6 +237,8 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("t");
 
         handler.removeCommand("help");
+        handler.removeCommand("votekick");
+        handler.removeCommand("vote");
 
         handler.<Player>register("help", "[page]", "Lists all commands.", (args, player) -> {
             if(args.length > 0 && !Strings.canParseInt(args[0])) {
@@ -524,7 +528,7 @@ public final class PandorumPlugin extends Plugin{
                 }
 
                 if(current[0] != null){
-                    bundled(player, "commands.nominate.already-started");
+                    bundled(player, "commands.vote-already-started");
                     return;
                 }
 
@@ -540,7 +544,6 @@ public final class PandorumPlugin extends Plugin{
                             bundled(player, "commands.nominate.map.not-found");
                             return;
                         }
-
                         VoteSession session = new VoteMapSession(current, map);
                         current[0] = session;
                         session.vote(player, 1);
@@ -556,7 +559,6 @@ public final class PandorumPlugin extends Plugin{
                             player.sendMessage("commands.nominate.load.not-found");
                             return;
                         }
-
                         VoteSession session = new VoteLoadSession(current, save);
                         current[0] = session;
                         session.vote(player, 1);
@@ -713,12 +715,46 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (arg,player) -> {
+        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (args, player) -> {
             if(!Misc.adminCheck(player)) return;
-            if(netServer.admins.unbanPlayerIP(arg[0]) || netServer.admins.unbanPlayerID(arg[0])) {
-                bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(arg[0]).lastName);
+            if(netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
+                bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(args[0]).lastName);
             }else{
                 bundled(player, "commands.admin.unban.not-banned");
+            }
+        });
+
+        handler.<Player>register("votekick", "<player...>", "Проголосовать за кик игрока.", (args, player) -> {
+
+            if(!Administration.Config.enableVotekick.bool()){
+                bundled(player, "commands.votekick.disabled");
+                return;
+            }
+
+            if(Groups.player.size() < 3){
+                bundled(player, "commands.votekick.not-enough-players");
+                return;
+            }
+
+            if(currentlyKicking[0] != null){
+                bundled(player, "commands.vote-already-started");
+                return;
+            }
+
+            Player found = Groups.player.find(p -> netServer.admins.getInfo(p.uuid()).lastName.equalsIgnoreCase(args[0]));
+
+            if(found != null){
+                if(found.admin){
+                    bundled(player, "commands.votekick.cannot-kick-admin");
+                } else if(found.team() != player.team()) {
+                    bundled(player, "commands.votekick.cannot-kick-another-team");
+                } else {
+                    VoteSession session = new VoteSession(currentlyKicking, found);
+                    session.vote(player, 1);
+                    currentlyKicking[0] = session;
+                }
+            } else {
+                bundled(player, "commands.player-not-found");
             }
         });
     }
