@@ -1,0 +1,62 @@
+package pandorum.vote;
+
+import static pandorum.PandorumPlugin.config;
+import static pandorum.Misc.sendToChat;
+
+import arc.struct.ObjectSet;
+import arc.util.Timer;
+import arc.util.Timer.Task;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+
+public class VoteKickSession{
+    protected Player target;
+    protected ObjectSet<String> voted = new ObjectSet<>();
+    protected VoteSession[] map;
+    protected Task task;
+    protected int votes;
+
+    protected int kickDuration = 60 * 60;
+
+    public VoteKickSession(VoteKickSession[] map, Player target) {         
+        this.target = target;
+        this.map = map;
+        this.task = start();
+    }
+
+    public ObjectSet<String> voted() {
+        return voted;
+    }
+
+    protected Task start() {
+        Timer.schedule(() -> {
+            if(!checkPass()) {
+                sendToChat("commands.votekick.vote-failed", target.name);
+                map[0] = null;
+                task.cancel();
+            }
+        }, config.voteDuration);
+    }
+
+    public void vote(Player player, int d){
+        votes += d;
+        voted.addAll(player.uuid(), admins.getInfo(player.uuid()).lastIP);
+        sendToChat("commands.votekick.vote", player.name, target.name, votes, votesRequired());
+        checkPass();
+    }
+
+    protected boolean checkPass(){
+        if(votes >= votesRequired()){
+            sendToChat("commands.votekick.vote-passed", target.name, (kickDuration / 60));
+            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000));
+            map[0] = null;
+            task.cancel();
+            return true;
+        }
+        return false;
+    }
+
+    protected int votesRequired(){
+        return 2 + (Groups.player.size() > 4 ? 1 : 0);
+    }
+}
