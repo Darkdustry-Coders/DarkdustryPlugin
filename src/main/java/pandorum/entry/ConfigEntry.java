@@ -40,7 +40,7 @@ public class ConfigEntry implements HistoryEntry{
     public Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
-        this.name = Groups.player.contains(p -> event.player == p) ? colorizedName(event.player) : Bundle.get("events.unknown", Bundle.defaultLocale());
+        this.name = colorizedName(event.player);
         this.block = event.tile.block();
         this.value = getConfig(event);
         this.connect = connect;
