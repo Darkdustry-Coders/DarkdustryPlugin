@@ -31,7 +31,7 @@ public class VoteKickSession{
     }
 
     protected Task start() {
-        Timer.schedule(() -> {
+        return Timer.schedule(() -> {
             if(!checkPass()) {
                 sendToChat("commands.votekick.vote-failed", target.name);
                 map[0] = null;
