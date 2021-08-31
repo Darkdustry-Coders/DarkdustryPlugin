@@ -757,6 +757,41 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.player-not-found");
             }
         });
+
+        handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (arg, player) -> {
+            if(currentlyKicking[0] == null) {
+                bundled(player, "commands.no-voting");
+                return;
+            }
+
+            if((currentlyKicking[0].voted.contains(player.uuid()) || currentlyKicking[0].voted.contains(admins.getInfo(player.uuid()).lastIP))){
+                bundled(player, "commands.already-voted");
+                return;
+            }
+
+            if(currentlyKicking[0].target == player){
+                bundled(player, "commands.vote.cannot-vote-for-yourself");
+                return;
+            }
+
+            if(currentlyKicking[0].target.team() != player.team()){
+                bundled(player, "commands.vote.cannot-vote-another-team");
+                return;
+            }
+
+            int sign = switch(arg[0].toLowerCase()){
+                case "y", "yes" ->  1;
+                case "n", "no" -> -1;
+                default -> 0;
+            };
+
+            if(sign == 0){
+                bundled(player, "commands.vote.incorrect-args");
+                return;
+            }
+
+            currentlyKicking[0].vote(player, sign);
+        });
     }
 
     //TODO впихнуть радугу в отдельный класс
