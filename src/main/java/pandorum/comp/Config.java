@@ -16,8 +16,11 @@ public class Config{
     /** Время, через которое запись в истории тайла будет удалена. По умолчанию 30 минут. Записывается в миллисекундах */
     public long expireDelay = 1800000;
 
-    /** Время голосования. В секундах */
+    /** Время голосования через /nominate. В секундах */
     public float voteDuration = 150f;
+
+    /** Время голосования через /votekick. В секундах */
+    public float votekickDuration = 40f;
 
     public String hubIp = "darkdustry.ml:6567";
 
