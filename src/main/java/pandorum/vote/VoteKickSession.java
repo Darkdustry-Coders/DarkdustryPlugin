@@ -30,6 +30,10 @@ public class VoteKickSession{
         return voted;
     }
 
+    public Player target() {
+        return target;
+    }
+
     protected Task start() {
         return Timer.schedule(() -> {
             if(!checkPass()) {
