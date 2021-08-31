@@ -41,7 +41,7 @@ public class VoteKickSession{
                 map[0] = null;
                 task.cancel();
             }
-        }, config.voteDuration);
+        }, config.votekickDuration);
     }
 
     public void vote(Player player, int d){
