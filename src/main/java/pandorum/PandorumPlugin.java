@@ -741,7 +741,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            Player found = Groups.player.find(p -> netServer.admins.getInfo(p.uuid()).lastName.equalsIgnoreCase(args[0]));
+            Player found = Groups.player.find(p -> Strings.stripColors(p.name).equals(Strings.stripColors(args[0])));
 
             if(found != null){
                 if(found.admin){
@@ -764,17 +764,17 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if((currentlyKicking[0].voted.contains(player.uuid()) || currentlyKicking[0].voted.contains(netServer.admins.getInfo(player.uuid()).lastIP))){
+            if((currentlyKicking[0].voted().contains(player.uuid()) || currentlyKicking[0].voted.contains(netServer.admins.getInfo(player.uuid()).lastIP))){
                 bundled(player, "commands.already-voted");
                 return;
             }
 
-            if(currentlyKicking[0].target == player){
+            if(currentlyKicking[0].target() == player){
                 bundled(player, "commands.vote.cannot-vote-for-yourself");
                 return;
             }
 
-            if(currentlyKicking[0].target.team() != player.team()){
+            if(currentlyKicking[0].target().team() != player.team()){
                 bundled(player, "commands.vote.cannot-vote-another-team");
                 return;
             }
