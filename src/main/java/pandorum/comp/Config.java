@@ -1,7 +1,5 @@
 package pandorum.comp;
 
-import java.util.Set;
-
 import arc.util.Strings;
 import pandorum.struct.Tuple2;
 
@@ -26,14 +24,6 @@ public class Config{
     public PluginType type = PluginType.def;  
 
     public String DiscordWebhookLink = null;
-
-    public Set<String> bannedNames = Set.of(
-            "IGGGAMES",
-            "CODEX",
-            "VALVE",
-            "tuttop",
-            "IgruhaOrg"
-    );
 
     public Tuple2<String, Integer> parseIp(){
         String ip = hubIp;
