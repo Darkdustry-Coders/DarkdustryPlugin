@@ -749,7 +749,7 @@ public final class PandorumPlugin extends Plugin{
                 } else if(found.team() != player.team()) {
                     bundled(player, "commands.votekick.cannot-kick-another-team");
                 } else {
-                    VoteSession session = new VoteSession(currentlyKicking, found);
+                    VoteKickSession session = new VoteKickSession(currentlyKicking, found);
                     session.vote(player, 1);
                     currentlyKicking[0] = session;
                 }
@@ -764,7 +764,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if((currentlyKicking[0].voted.contains(player.uuid()) || currentlyKicking[0].voted.contains(admins.getInfo(player.uuid()).lastIP))){
+            if((currentlyKicking[0].voted.contains(player.uuid()) || currentlyKicking[0].voted.contains(netServer.admins.getInfo(player.uuid()).lastIP))){
                 bundled(player, "commands.already-voted");
                 return;
             }
