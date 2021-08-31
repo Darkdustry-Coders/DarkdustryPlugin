@@ -8,11 +8,13 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.Vars;
+import mindustry.net.Packets.KickReason;
 
 public class VoteKickSession{
     protected Player target;
     protected ObjectSet<String> voted = new ObjectSet<>();
-    protected VoteSession[] map;
+    protected VoteKickSession[] map;
     protected Task task;
     protected int votes;
 
@@ -40,7 +42,7 @@ public class VoteKickSession{
 
     public void vote(Player player, int d){
         votes += d;
-        voted.addAll(player.uuid(), admins.getInfo(player.uuid()).lastIP);
+        voted.addAll(player.uuid(), Vars.netServer.admins.getInfo(player.uuid()).lastIP);
         sendToChat("commands.votekick.vote", player.name, target.name, votes, votesRequired());
         checkPass();
     }
