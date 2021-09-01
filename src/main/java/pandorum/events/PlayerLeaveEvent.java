@@ -37,7 +37,7 @@ public class PlayerLeaveEvent {
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
 
-        if (PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
+        if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
             event.player.getInfo().lastKicked = Time.millis() + VoteKickSession.kickDuration * 1000;
             sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration / 60);
