@@ -10,6 +10,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.Vars;
 import pandorum.PandorumPlugin;
+import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
@@ -34,6 +35,12 @@ public class PlayerLeaveEvent {
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
+
+        if (PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
+            PandorumPlugin.currentlyKicking[0].stop();
+            event.player.getInfo().lastKicked = Time.millis() + VoteKickSession.kickDuration * 1000;
+            sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration);
+        }
 
         if(PandorumPlugin.config.type == PluginType.other) return;
         else if(PandorumPlugin.config.type == PluginType.pvp) {
