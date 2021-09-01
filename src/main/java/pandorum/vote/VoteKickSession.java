@@ -63,6 +63,12 @@ public class VoteKickSession{
         return false;
     }
 
+    public void stop() {
+        map[0] = null;
+        task.cancel();
+        voted.clear();
+    }
+
     protected int votesRequired(){
         return 2 + (Groups.player.size() > 4 ? 1 : 0);
     }
