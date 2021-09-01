@@ -18,7 +18,7 @@ public class VoteKickSession{
     protected Task task;
     protected int votes;
 
-    protected int kickDuration = 30 * 60;
+    public int kickDuration = 30 * 60;
 
     public VoteKickSession(VoteKickSession[] map, Player target) {         
         this.target = target;
