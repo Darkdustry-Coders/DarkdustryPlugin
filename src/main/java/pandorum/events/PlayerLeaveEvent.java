@@ -40,7 +40,7 @@ public class PlayerLeaveEvent {
         if (PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
             event.player.getInfo().lastKicked = Time.millis() + VoteKickSession.kickDuration * 1000;
-            sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration);
+            sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration / 60);
         }
 
         if(PandorumPlugin.config.type == PluginType.other) return;
