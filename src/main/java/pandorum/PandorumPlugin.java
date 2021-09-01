@@ -179,7 +179,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.register("reload-config", "Перезапустить файл конфигов.", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
-            Log.info("Reloaded");
+            Log.info("Перезагружено.");
         });
 
         handler.register("despw", "Убить всех юнитов на карте", args -> {
@@ -687,8 +687,8 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
             if(args[0].equals("name")) {
-                try { bundled(player, "commands.unit-name", player.unit().type().name); }
-                catch (NullPointerException e) { bundled(player, "commands.unit-name.null"); }
+                if (!player.dead()) bundled(player, "commands.unit-name", player.unit().type().name);
+                else bundled(player, "commands.unit-name.null");
             } else if (args[0].equals("all")) {
                 StringBuilder builder = new StringBuilder();
                 content.units().each(unit -> {
@@ -725,7 +725,6 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("votekick", "<player...>", "Проголосовать за кик игрока.", (args, player) -> {
-
             if(!Administration.Config.enableVotekick.bool()){
                 bundled(player, "commands.votekick.disabled");
                 return;
@@ -792,9 +791,19 @@ public final class PandorumPlugin extends Plugin{
 
             currentlyKicking[0].vote(player, sign);
         });
+
+        handler.<Player>register("sync", "Синхронизация с сервером.", (args, player) -> {
+            if(Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * 15) {
+                bundled(player, "commands.sync.time");
+                return;
+            }
+
+            player.getInfo().lastSyncTime = Time.millis();
+            Call.worldDataBegin(player.con);
+            netServer.sendWorldData(player);
+        });
     }
 
-    //TODO впихнуть радугу в отдельный класс
     public static class RainbowPlayerEntry {
         public Player player;
         public int hue;
