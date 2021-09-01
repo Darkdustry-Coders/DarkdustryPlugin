@@ -38,9 +38,7 @@ public class VoteKickSession{
         return Timer.schedule(() -> {
             if(!checkPass()) {
                 sendToChat("commands.votekick.vote-failed", target.name);
-                voted.clear();
-                map[0] = null;
-                task.cancel();
+                stop();
             }
         }, config.votekickDuration);
     }
@@ -56,8 +54,7 @@ public class VoteKickSession{
         if(votes >= votesRequired()){
             sendToChat("commands.votekick.vote-passed", target.name, (kickDuration / 60));
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000));
-            map[0] = null;
-            task.cancel();
+            stop();
             return true;
         }
         return false;
