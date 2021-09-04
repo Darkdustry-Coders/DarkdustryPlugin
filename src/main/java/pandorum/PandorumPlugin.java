@@ -114,7 +114,7 @@ public final class PandorumPlugin extends Plugin{
     public static Seq<IpInfo> forbiddenIps;
 
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
-    public static final Seq<String> votesRTV = new ObjectSet<>();
+    public static final Seq<String> votesRTV = new Seq<>();
     public static final Seq<String> votesVNW = new Seq<>();
     public static final Seq<String> alertIgnores = new Seq<>();
     public static final Seq<String> activeHistoryPlayers = new Seq<>();
@@ -145,7 +145,6 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void init() {
-
         try {
             forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
         } catch(Exception e) {
@@ -602,7 +601,8 @@ public final class PandorumPlugin extends Plugin{
 
         if(config.type == PluginType.pvp){
             handler.<Player>register("surrender", "Сдаться", (args, player) -> {
-                Seq<String> teamVotes = surrendered.get(player.team(), Seq::new);
+                Team team = player.team();
+                Seq<String> teamVotes = surrendered.get(team, Seq::new);
                 if(teamVotes.contains(player.uuid())){
                     bundled(player, "commands.already-voted");
                     return;
@@ -610,7 +610,7 @@ public final class PandorumPlugin extends Plugin{
 
                 teamVotes.add(player.uuid());
                 int cur = teamVotes.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
                 sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
 
                 if(cur < req){
@@ -619,7 +619,7 @@ public final class PandorumPlugin extends Plugin{
 
                 surrendered.remove(player.team());
                 sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
-                Groups.unit.each(u -> u.team == player.team(), u -> Time.run(Mathf.random(360), u::kill));
+                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
                 for(Tile tile : world.tiles){
                     if(tile.build != null && tile.team() == team){
                         Time.run(Mathf.random(360), tile.build::kill);
