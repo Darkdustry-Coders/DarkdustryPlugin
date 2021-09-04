@@ -11,7 +11,7 @@ import pandorum.PandorumPlugin;
 
 public class Translator {
 
-    public JSONObject translate(String text, String dest_lang) throws IOException, InterruptedException {
+    public static JSONObject translate(String text, String dest_lang) throws IOException, InterruptedException {
         String destAlphaLang = PandorumPlugin.codeLanguages.get("ru");
 
         if (PandorumPlugin.codeLanguages.containsKey(dest_lang)) destAlphaLang = PandorumPlugin.codeLanguages.get(dest_lang);
@@ -41,7 +41,7 @@ public class Translator {
         return new JSONObject(responseBody.string());
     }
 
-    public JSONArray getAllLanguages() throws IOException {
+    public static JSONArray getAllLanguages() throws IOException {
         Request request = new Request.Builder()
                 .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
                 .get()
