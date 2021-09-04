@@ -25,7 +25,7 @@ public class PlayerLeaveEvent {
 
         if (Groups.player.size()-1 < 1) Vars.state.serverPaused = true;
 
-        sendToChat("server.player-leave", colorizedName(event.player));
+        sendToChat("events.player-leave", colorizedName(event.player));
         Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
         Effects.onLeave(event.player);
