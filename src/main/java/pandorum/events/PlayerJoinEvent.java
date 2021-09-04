@@ -30,7 +30,7 @@ public class PlayerJoinEvent {
 
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
-        sendToChat("server.player-join", colorizedName(event.player));
+        sendToChat("events.player-join", colorizedName(event.player));
         Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
 
         Effects.onJoin(event.player);
