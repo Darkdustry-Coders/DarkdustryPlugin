@@ -87,7 +87,7 @@ import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.IpInfo;
-import pandorum.comp.Translator
+import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.ConfigEntry;
 import pandorum.struct.CacheSeq;
@@ -128,12 +128,12 @@ public final class PandorumPlugin extends Plugin{
     private static final OkHttpClient client = new OkHttpClient();
 
     public PandorumPlugin() {
-        Fi cfg = dataDirectory.child("config.json");
-        if(!cfg.exists()){
-            cfg.writeString(gson.toJson(config = new Config()));
+        Fi file = dataDirectory.child("config.json");
+        if(!file.exists()){
+            file.writeString(gson.toJson(config = new Config()));
             Log.info("Файл config.json успешно сгенерирован!");
         } else {
-            config = gson.fromJson(cfg.reader(), Config.class);
+            config = gson.fromJson(file.reader(), Config.class);
         }
         JSONArray languages = Translator.getAllLanguages();
         for (int i = 0; i < languages.length(); i++) {
