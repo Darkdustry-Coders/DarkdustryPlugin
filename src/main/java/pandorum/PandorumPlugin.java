@@ -41,7 +41,6 @@ import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
-import arc.struct.ObjectSet;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
 import arc.util.CommandHandler;
@@ -114,11 +113,11 @@ public final class PandorumPlugin extends Plugin{
     public static Config config;
     public static Seq<IpInfo> forbiddenIps;
 
-    public static final ObjectMap<Team, ObjectSet<String>> surrendered = new ObjectMap<>();
-    public static final ObjectSet<String> votesRTV = new ObjectSet<>();
-    public static final ObjectSet<String> votesVNW = new ObjectSet<>();
-    public static final ObjectSet<String> alertIgnores = new ObjectSet<>();
-    public static final ObjectSet<String> activeHistoryPlayers = new ObjectSet<>();
+    public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
+    public static final Seq<String> votesRTV = new ObjectSet<>();
+    public static final Seq<String> votesVNW = new Seq<>();
+    public static final Seq<String> alertIgnores = new Seq<>();
+    public static final Seq<String> activeHistoryPlayers = new Seq<>();
     public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
@@ -603,26 +602,24 @@ public final class PandorumPlugin extends Plugin{
 
         if(config.type == PluginType.pvp){
             handler.<Player>register("surrender", "Сдаться", (args, player) -> {
-                String uuid = player.uuid();
-                Team team = player.team();
-                ObjectSet<String> uuids = surrendered.get(team, ObjectSet::new);
-                if(uuids.contains(uuid)){
+                Seq<String> teamVotes = surrendered.get(player.team(), Seq::new);
+                if(teamVotes.contains(player.uuid())){
                     bundled(player, "commands.already-voted");
                     return;
                 }
 
-                uuids.add(uuid);
-                int cur = uuids.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
+                teamVotes.add(player.uuid());
+                int cur = teamVotes.size;
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
                 sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
 
                 if(cur < req){
                     return;
                 }
 
-                surrendered.remove(team);
+                surrendered.remove(player.team());
                 sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
-                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
+                Groups.unit.each(u -> u.team == player.team(), u -> Time.run(Mathf.random(360), u::kill));
                 for(Tile tile : world.tiles){
                     if(tile.build != null && tile.team() == team){
                         Time.run(Mathf.random(360), tile.build::kill);
