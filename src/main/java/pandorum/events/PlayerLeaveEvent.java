@@ -3,7 +3,7 @@ package pandorum.events;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 
-import arc.struct.ObjectSet;
+import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
@@ -45,8 +45,13 @@ public class PlayerLeaveEvent {
 
         if(PandorumPlugin.config.type == PluginType.other) return;
         else if(PandorumPlugin.config.type == PluginType.pvp) {
-            ObjectSet<String> uuids = PandorumPlugin.surrendered.get(event.player.team(), ObjectSet::new);
-            if(uuids.contains(event.player.uuid())) uuids.remove(event.player.uuid());
+            Seq<String> teamVotes = PandorumPlugin.surrendered.get(event.player.team(), Seq::new);
+            if(teamVotes.contains(event.player.uuid())) {
+                teamVotes.remove(event.player.uuid());
+                int curSurrender = teamVotes.size;
+                int reqSurrender = (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team()));
+                sendToChat("commands.surrender.left", Misc.colorizedTeam(event.player.team()), Misc.colorizedName(event.player), curSurrender, reqSurrender);
+            }
         }
 
         if(PandorumPlugin.votesRTV.contains(event.player.uuid())) {
