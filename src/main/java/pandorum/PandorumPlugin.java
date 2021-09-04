@@ -31,6 +31,10 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import arc.Core;
 import arc.Events;
 import arc.files.Fi;
@@ -83,6 +87,7 @@ import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.IpInfo;
+import pandorum.comp.Translator
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.ConfigEntry;
 import pandorum.struct.CacheSeq;
@@ -144,7 +149,7 @@ public final class PandorumPlugin extends Plugin{
         try {
             forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
         } catch(Exception e) {
-            throw new ArcRuntimeException(t);
+            throw new ArcRuntimeException(e);
         }
 
         Administration.Config.showConnectMessages.set(false);
@@ -223,15 +228,14 @@ public final class PandorumPlugin extends Plugin{
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
-                    Log.info("DespawnDelay сейчас: @", new Object[] { Core.settings.getFloat("despawndelay", defDelay) });
+                    Log.info("DespawnDelay сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
                     return;
                 }
-                final String value = args[0];
-                if (!Strings.canParsePositiveInt(value)) {
-                    Log.err("Новое значение должно быть положительным целым числом.", new Object[0]);
+                if (!Strings.canParsePositiveInt(args[0])) {
+                    Log.err("Новое значение должно быть положительным целым числом.");
                     return;
                 }
-                Core.settings.put("despawndelay", (Object)Strings.parseFloat(value));
+                Core.settings.put("despawndelay", Strings.parseFloat(args[0]));
             });
         }
     }
