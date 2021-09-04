@@ -1,11 +1,12 @@
 package pandorum.comp;
 
-import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
+
+import pandorum.PandorumPlugin;
 
 public class Translator {
 
