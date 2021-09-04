@@ -1,7 +1,5 @@
 package pandorium.comp;
 
-import java.util.Set;
-
 import arc.util.Strings;
 import pandorium.struct.Tuple2;
 

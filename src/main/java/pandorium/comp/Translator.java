@@ -1,4 +1,4 @@
-package pandorium.comp;
+package pandorum.comp;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -7,11 +7,11 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.*;
 
-import pandorium.PandorumPlugin;
+import pandorum.PandorumPlugin;
 
 public class Translator {
 
-    public static JSONObject translate(String text, String dest_lang) throws IOException {
+    public static JSONObject translate(String text, String dest_lang) throws IOException, InterruptedException {
         String destAlphaLang = PandorumPlugin.codeLanguages.get("ru");
 
         if (PandorumPlugin.codeLanguages.containsKey(dest_lang)) destAlphaLang = PandorumPlugin.codeLanguages.get(dest_lang);

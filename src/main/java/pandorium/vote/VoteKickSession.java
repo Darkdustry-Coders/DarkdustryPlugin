@@ -1,7 +1,7 @@
-package pandorium.vote;
+package pandorum.vote;
 
-import static pandorium.PandorumPlugin.config;
-import static pandorium.Misc.sendToChat;
+import static pandorum.PandorumPlugin.config;
+import static pandorum.Misc.sendToChat;
 
 import arc.struct.ObjectSet;
 import arc.util.Timer;
@@ -53,7 +53,7 @@ public class VoteKickSession{
     protected boolean checkPass(){
         if(votes >= votesRequired()){
             sendToChat("commands.votekick.vote-passed", target.name, (kickDuration / 60));
-            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
+            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000));
             stop();
             return true;
         }
