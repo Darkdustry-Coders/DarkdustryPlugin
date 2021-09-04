@@ -17,7 +17,7 @@ ext{
 
     project.version = mod['version']
 
-    mindustryVersion = 'v129.2'
+    mindustryVersion = 'v130.1'
     gsonVersion      = '2.8.6'
 }
 
@@ -28,6 +28,8 @@ dependencies{
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "club.minnced:discord-webhooks:0.1.6"
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha4'
+    implementation 'org.json:json:20180130'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }
 
 jar{
