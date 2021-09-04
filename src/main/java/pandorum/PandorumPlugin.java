@@ -116,29 +116,34 @@ public final class PandorumPlugin extends Plugin{
     public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
-
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
+    public static final ObjectMap<Unit, Float> timer = new ObjectMap<>();
 
-    public static ObjectMap<Unit, Float> timer = new ObjectMap<Unit, Float>();
-    public static float defDelay = 36000f;
+    private static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
+    private static final OkHttpClient client = new OkHttpClient();
 
-    public PandorumPlugin(){
-
+    public PandorumPlugin() {
         Fi cfg = dataDirectory.child("config.json");
         if(!cfg.exists()){
             cfg.writeString(gson.toJson(config = new Config()));
             Log.info("Файл config.json успешно сгенерирован!");
-        }else{
+        } else {
             config = gson.fromJson(cfg.reader(), Config.class);
+        }
+        JSONArray languages = Translator.getAllLanguages();
+        for (int i = 0; i < languages.length(); i++) {
+            String codeAlpha = languages.getJSONObject(i).getString("code_alpha_1");
+            String fullCode = languages.getJSONObject(i).getString("full_code");
+            codeLanguages.put(codeAlpha, fullCode);
         }
     }
 
     @Override
     public void init() {
 
-        try{
+        try {
             forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
-        }catch(Throwable t){
+        } catch(Exception e) {
             throw new ArcRuntimeException(t);
         }
 
@@ -175,7 +180,7 @@ public final class PandorumPlugin extends Plugin{
     }
 
     @Override
-    public void registerServerCommands(CommandHandler handler){
+    public void registerServerCommands(CommandHandler handler) {
 
         handler.register("reload-config", "Перезапустить файл конфигов.", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
