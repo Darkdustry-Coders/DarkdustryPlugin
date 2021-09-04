@@ -124,8 +124,8 @@ public final class PandorumPlugin extends Plugin{
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
     public static final ObjectMap<Unit, Float> timer = new ObjectMap<>();
 
-    private static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
-    private static final OkHttpClient client = new OkHttpClient();
+    public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
+    public static final OkHttpClient client = new OkHttpClient();
 
     public PandorumPlugin() {
         Fi file = dataDirectory.child("config.json");
