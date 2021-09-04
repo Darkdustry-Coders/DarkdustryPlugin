@@ -12,7 +12,7 @@ public class Effects {
         if(!p.dead()) moveEffect.spawn(p.x, p.y);
     }
 
-    public static void onJoin(Player p) {        
+    public static void onJoin(Player p) {
         if(!p.dead()) joinEffect.spawn(p.x, p.y);
     }
 

@@ -1,4 +1,4 @@
-name: Java CI
+name: Компиляция плагина
 
 on: [push]
 
@@ -12,23 +12,23 @@ jobs:
 
     - uses: actions/checkout@v1
 
-    - name: Set up JDK 14
+    - name: Подключение Java 16
 
       uses: actions/setup-java@v1
 
       with:
 
-        java-version: 14
+        java-version: 16
 
-    - name: Make gradlew executable
+    - name: Настройка доступа к gradlew
 
       run: chmod +x ./gradlew
 
-    - name: Build plugin jar
+    - name: Сборка плагина в jar
 
       run: ./gradlew jar
 
-    - name: Upload built jar file
+    - name: Выгрузка jar
 
       uses: actions/upload-artifact@v2
 
