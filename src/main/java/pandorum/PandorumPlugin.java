@@ -25,6 +25,7 @@ import static pandorum.events.TriggerUpdate.call;
 import static pandorum.events.WorldLoadEvent.call;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.Objects;
 
 import com.google.gson.FieldNamingPolicy;
@@ -127,7 +128,7 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
 
-    public PandorumPlugin() {
+    public PandorumPlugin() throws IOException {
         Fi file = dataDirectory.child("config.json");
         if(!file.exists()){
             file.writeString(gson.toJson(config = new Config()));
