@@ -18,6 +18,7 @@ import pandorum.effects.Effects;
 
 import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.colorizedTeam;
 
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerLeave event) {
@@ -50,7 +51,7 @@ public class PlayerLeaveEvent {
                 teamVotes.remove(event.player.uuid());
                 int curSurrender = teamVotes.size;
                 int reqSurrender = (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team()));
-                sendToChat("commands.surrender.left", Misc.colorizedTeam(event.player.team()), Misc.colorizedName(event.player), curSurrender, reqSurrender);
+                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), colorizedName(event.player), curSurrender, reqSurrender);
             }
         }
 
