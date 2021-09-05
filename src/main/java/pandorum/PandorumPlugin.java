@@ -860,7 +860,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
             Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
             if (playerInfo == null) {
-                playerInfo = playerInfoSchema.create(player.uuid(), "IDK", false, "off");
+                playerInfo = playerInfoSchema.create(player.uuid(), "IDK", false);
                 playersInfo.add(playerInfo);
             }
 

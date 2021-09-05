@@ -18,7 +18,7 @@ public class PlayerInfo extends MongoSchema<String, Object> {
             new Required<>("uuid", String.class),
             new Required<>("token", String.class),
             new Required<>("banned", Boolean.class),
-            new NonRequired<>("locale", String.class, "off")
+            new NonRequired<>("locale", String.class)
         );
     }
 
