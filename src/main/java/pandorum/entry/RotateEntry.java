@@ -21,7 +21,7 @@ public class RotateEntry implements HistoryEntry{
     protected static final String[] sides;
 
     static{
-        sides = Bundle.get("events.history.rotate.all", Bundle.defaultLocale()).split(", ");
+        sides = Bundle.get("history.rotate.all", Bundle.defaultLocale()).split(", ");
     }
 
     public RotateEntry(String name, Block block, int rotation){
@@ -37,6 +37,6 @@ public class RotateEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        return Bundle.format("events.history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
+        return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
     }
 }
