@@ -869,13 +869,18 @@ public final class PandorumPlugin extends Plugin{
                     String locale = playerInfo.getString("locale");
                     bundled(player, "commands.tr.current", locale == null ? "off" : locale);
                 }
+                case "list" -> {
+                    StringBuilder builder = new StringBuilder();
+                    // В builder надо запихнуть все доступные языки
+                    bundled(player, "commands.tr.list", builder.toString());
+                }
                 case "off" -> {
                     playerInfo.remove("locale");
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
                     playerInfo.replace("locale", "auto");
-                    bundled(player, "commands.tr.changed", args[0]);
+                    bundled(player, "commands.tr.auto");
                 }
                 default -> {
                     if (!codeLanguages.containsKey(args[0])) {
