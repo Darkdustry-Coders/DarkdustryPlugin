@@ -9,6 +9,8 @@ import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.Translator;
 import pandorum.PandorumPlugin;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -35,7 +37,7 @@ public class ChatFilter {
 
             String translatedText = null;
             try {
-                JSONObject translatorRes = translate(text, language);
+                JSONObject translatorRes = Translator.translate(text, language);
                 if (!translatorRes.isNull("err") && translatorRes.optString("err").equals("")) {
                     player.sendMessage(text, author);
                     translationsCache.put(language, text);
