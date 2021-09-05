@@ -221,7 +221,7 @@ public final class PandorumPlugin extends Plugin{
             Log.info("Перезагружено.");
         });
 
-        handler.register("despw", "Убить всех юнитов на карте", args -> {
+        handler.register("despw", "Убить всех юнитов на карте.", args -> {
             int amount = Groups.unit.size();
             Groups.unit.each(Unitc::kill);
             Log.info("Ты убил " + amount + " юнитов!");
@@ -231,13 +231,13 @@ public final class PandorumPlugin extends Plugin{
             DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
-        handler.register("unban-all", "Разбанить всех", arg -> {
+        handler.register("unban-all", "Разбанить всех.", args -> {
             netServer.admins.getBanned().each(unban -> netServer.admins.unbanPlayerID(unban.id));
             netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
             Log.info("Все игроки разбанены!");
         });
 
-        handler.register("rr", "Перезапустить сервер", args -> {
+        handler.register("rr", "Перезапустить сервер.", args -> {
             Log.info("Перезапуск сервера...");
             WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
@@ -248,16 +248,16 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.removeCommand("say");
-        handler.register("say", "<Сообщение...>", "Сказать от имени сервера.", arg -> {
-            Call.sendMessage("[lime]Server[white]: " + arg[0]);
-            Log.info("Server: &ly" + arg[0]);
-            DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", arg[0].replaceAll("https?://|@", "")));
+        handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
+            Call.sendMessage("[lime]Server[white]: " + args[0]);
+            Log.info("Server: &ly@" + args[0]);
+            DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", args[0].replaceAll("https?://|@", "")));
         });
 
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
-                    Log.info("DespawnDelay сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
+                    Log.info("Задержка деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
                     return;
                 }
                 if (!Strings.canParsePositiveInt(args[0])) {
@@ -278,7 +278,7 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("votekick");
         handler.removeCommand("vote");
 
-        handler.<Player>register("help", "[page]", "Lists all commands.", (args, player) -> {
+        handler.<Player>register("help", "[page]", "Список всех команд.", (args, player) -> {
             if(args.length > 0 && !Strings.canParseInt(args[0])) {
                 bundled(player, "commands.page-not-int");
                 return;
@@ -308,17 +308,17 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage(result.toString());
         });
 
-        handler.<Player>register("a", "<message...>", "Send a message to admins.", (args, player) -> {
+        handler.<Player>register("a", "<message...>", "Отправить сообщение админам.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
             Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.admin.a.chat", Misc.colorizedName(player), args[0]));
         });
 
-        handler.<Player>register("t", "<message...>", "Send a message to teammates.", (args, player) -> {
+        handler.<Player>register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", (args, player) -> {
             String teamColor = "[#" + player.team().color + "]";
             Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
         });
 
-        handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл", (args, player) -> {
+        handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
             String uuid = player.uuid();
             if(activeHistoryPlayers.contains(uuid)){
                 activeHistoryPlayers.remove(uuid);
@@ -329,7 +329,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID", (args, player) -> {
+        handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID.", (args, player) -> {
             if(args.length > 0 && !Strings.canParseInt(args[0])){
                 bundled(player, "commands.page-not-int");
                 return;
@@ -350,7 +350,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++){
                 Player t = Groups.player.index(i);
-                result.append("[#9c88ee]* ").append(t.name).append(" [accent]/ [cyan]ID: ").append(t.id());
+                result.append("[#9c88ee]* []").append(t.name).append(" [accent]/ [cyan]ID: ").append(t.id());
 
                 if(player.admin){
                     result.append(" [accent]/ [cyan]raw: ").append(t.name.replaceAll("\\[", "[["));
@@ -360,7 +360,7 @@ public final class PandorumPlugin extends Plugin{
             player.sendMessage(result.toString());
         });
 
-        handler.<Player>register("despw", "Убить всех юнитов на карте", (args, player) -> {
+        handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             int amount = Groups.unit.size();
             if(Misc.adminCheck(player)) return;
             Groups.unit.each(Unitc::kill);
@@ -465,7 +465,7 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.admin.give.success");
             });
 
-            handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру", (args, player) -> {
+            handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
                 if(alertIgnores.contains(player.uuid())){
                     alertIgnores.remove(player.uuid());
                     bundled(player, "commands.alert.on");
@@ -475,7 +475,7 @@ public final class PandorumPlugin extends Plugin{
                 }
             });
 
-            handler.<Player>register("team", "<team> [name]", "Смена команды для [scarlet]Админов", (args, player) -> {
+            handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
                 if(Misc.adminCheck(player)) return;
 
                 Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
@@ -500,13 +500,13 @@ public final class PandorumPlugin extends Plugin{
                 DiscordWebhookManager.client.send(artvEmbedBuilder.build());
             });
 
-            handler.<Player>register("spectate", "Oh no", (args, player) -> {
+            handler.<Player>register("spectate", "Режим наблюдателя.", (args, player) -> {
                 if(Misc.adminCheck(player)) return;
                 player.clearUnit();
                 player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
             });
 
-            handler.<Player>register("map", "Информация о карте", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
+            handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
 
             handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
                 if(args.length > 0 && !Strings.canParseInt(args[0])){
@@ -604,7 +604,7 @@ public final class PandorumPlugin extends Plugin{
                 }
             });
 
-            handler.<Player>register("y", "Проголосовать [lime]за", (args, player) -> {
+            handler.<Player>register("y", "Проголосовать.", (args, player) -> {
                  if(current[0] == null) {
                      bundled(player, "commands.no-voting");
                      return;
@@ -616,7 +616,7 @@ public final class PandorumPlugin extends Plugin{
                  current[0].vote(player, 1);
              });
 
-            handler.<Player>register("n", "Проголосовать [scarlet]против", (args, player) -> {
+            handler.<Player>register("n", "Проголосовать.", (args, player) -> {
                 if(current[0] == null) {
                     bundled(player, "commands.no-voting");
                     return;
@@ -630,7 +630,7 @@ public final class PandorumPlugin extends Plugin{
         }
 
         if(config.type == PluginType.pvp){
-            handler.<Player>register("surrender", "Сдаться", (args, player) -> {
+            handler.<Player>register("surrender", "Сдаться.", (args, player) -> {
                 Team team = player.team();
                 Seq<String> teamVotes = surrendered.get(team, Seq::new);
                 if(teamVotes.contains(player.uuid())){
@@ -658,7 +658,7 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        handler.<Player>register("rainbow", "RAINBOW!", (args, player) -> {
+        handler.<Player>register("rainbow", "РАДУГА!", (args, player) -> {
             RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
             if(old != null){
                 rainbow.remove(old);
@@ -673,7 +673,7 @@ public final class PandorumPlugin extends Plugin{
             rainbow.add(entry);
         });
 
-        handler.<Player>register("js", "<script...>", "Load JavaScript script.", (args, player) -> {
+        handler.<Player>register("js", "<script...>", "Запустить JS скрипт.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
@@ -845,6 +845,22 @@ public final class PandorumPlugin extends Plugin{
             Call.worldDataBegin(player.con);
             netServer.sendWorldData(player);
         });
+
+        handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
+            // TODO создаём данные о игроке в БД если их там нет.
+            if (args[0].equals("current")) {
+                // TODO отправляем игроку его локаль в настройках
+                // bundled(player, "commands.tr.current");
+                return;
+            }
+            if (!codeLanguages.containsKey(args[0]) && !args[0].equals("off") && !args[0].equals("auto")) {
+                bundled(player, "commands.tr.incorrect");
+                return;
+            }
+            if (args[0].equals("off")) bundled(player, "commands.tr.disabled");
+            else bundled(player, "commands.tr.changed", args[0]);
+            // TODO сохраняем локаль в БД.
+        });
     }
 
     public void savePlayerStats(String uuid) {
@@ -859,7 +875,7 @@ public final class PandorumPlugin extends Plugin{
         this.playersInfoCollection.updateOne(filter, player).subscribe(new ArrowSubscriber<>());
     }
 
-    //TODO впихнуть радугу в отдельный класс
+    // TODO впихнуть радугу в отдельный класс
     public static class RainbowPlayerEntry {
         public Player player;
         public int hue;
