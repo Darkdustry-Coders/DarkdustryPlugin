@@ -103,7 +103,7 @@ public final class PandorumPlugin extends Plugin{
     public MongoClient mongoClient;
     public MongoCollection<Document> playersInfoCollection;
     public Seq<Document> playersInfo = new Seq<>();
-    public PlayerInfo playerInfo;
+    public PlayerInfo playerInfoSchema;
 
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
@@ -136,7 +136,7 @@ public final class PandorumPlugin extends Plugin{
 
         playersInfoCollection.find().subscribe(new ArrowSubscriber<>(
                 next -> {
-                    Document player = playerInfo.tryApplySchema(next);
+                    Document player = playerInfoSchema.tryApplySchema(next);
 
                     if (player == null) {
                         playersInfoCollection
@@ -163,12 +163,23 @@ public final class PandorumPlugin extends Plugin{
                             .equals(changedDocumentKey.getObjectId("_id"))
                     );
 
-                    switch (operation) {
-                        case DELETE -> playersInfo.remove(playerInfoIndex);
-                        case INSERT -> playersInfo.add(changedDocument);
-                        case UPDATE, REPLACE -> playersInfo.set(playerInfoIndex, changedDocument);
+                    try {
+                        switch (operation) {
+                            case DELETE -> playersInfo.remove(playerInfoIndex);
+                            case INSERT -> {
+                                assert changedDocument != null;
+                                Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(changedDocument);
+                                playersInfo.add(SCHPlayerInfoDocument);
+                            }
+                            case UPDATE, REPLACE -> {
+                                assert changedDocument != null;
+                                Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(changedDocument);
+                                playersInfo.set(playerInfoIndex, SCHPlayerInfoDocument);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.err(e);
                     }
-
                 }
         ));
     }
@@ -847,19 +858,37 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
-            // TODO создаём данные о игроке в БД если их там нет.
-            if (args[0].equals("current")) {
-                // TODO отправляем игроку его локаль в настройках
-                // bundled(player, "commands.tr.current");
-                return;
+            Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
+            if (playerInfo == null) {
+                playerInfo = playerInfoSchema.create(player.uuid(), "IDK", false, "off");
+                playersInfo.add(playerInfo);
             }
-            if (!codeLanguages.containsKey(args[0]) && !args[0].equals("off") && !args[0].equals("auto")) {
-                bundled(player, "commands.tr.incorrect");
-                return;
+
+            switch (args[0]) {
+                case "current" -> {
+                    String locale = playerInfo.getString("locale");
+                    bundled(player, "commands.tr.current", locale == null ? "off" : locale);
+                }
+                case "off" -> {
+                    playerInfo.remove("locale");
+                    bundled(player, "commands.tr.disabled");
+                }
+                case "auto" -> {
+                    playerInfo.replace("locale", "auto");
+                    bundled(player, "commands.tr.changed", args[0]);
+                }
+                default -> {
+                    if (!codeLanguages.containsKey(args[0])) {
+                        bundled(player, "commands.tr.incorrect");
+                        break;
+                    }
+
+                    playerInfo.replace("locale", args[0]);
+                    bundled(player, "commands.tr.changed", args[0]);
+                }
             }
-            if (args[0].equals("off")) bundled(player, "commands.tr.disabled");
-            else bundled(player, "commands.tr.changed", args[0]);
-            // TODO сохраняем локаль в БД.
+
+            savePlayerStats(player.uuid());
         });
     }
 
@@ -868,11 +897,16 @@ public final class PandorumPlugin extends Plugin{
         BasicDBObject filter = new BasicDBObject("uuid", uuid);
 
         if (player == null) {
-            this.playersInfoCollection.deleteOne(filter).subscribe(new ArrowSubscriber<>());
+            playersInfoCollection.deleteOne(filter).subscribe(new ArrowSubscriber<>());
             return;
         }
 
-        this.playersInfoCollection.updateOne(filter, player).subscribe(new ArrowSubscriber<>());
+        try {
+            Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(player);
+            playersInfoCollection.updateOne(filter, SCHPlayerInfoDocument).subscribe(new ArrowSubscriber<>());
+        } catch(Exception e) {
+            Log.err(e);
+        }
     }
 
     // TODO впихнуть радугу в отдельный класс
