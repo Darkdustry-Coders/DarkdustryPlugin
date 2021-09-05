@@ -72,61 +72,61 @@ public class ConfigEntry implements HistoryEntry{
                 (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);
             if (data < 0) {
-                return Bundle.format("events.history.config.disconnect", findLocale(player.locale), name, block, ftime);
+                return Bundle.format("history.config.disconnect", findLocale(player.locale), name, block, ftime);
             }
 
             Tile tile = world.tile(data);
             if (tile == null) {
-                return Bundle.get("events.history.config.changed", findLocale(player.locale));
+                return Bundle.format("history.config.changed", findLocale(player.locale));
             }
 
             if (connect) {
-                return Bundle.format("events.history.config.connect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
+                return Bundle.format("history.config.connect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
             }
 
-            return Bundle.format("events.history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
+            return Bundle.format("history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
         }
 
         if(block instanceof Door){
             boolean data = (boolean)value;
-            return data ? Bundle.format("events.history.config.door.on", findLocale(player.locale), name, block, ftime) : Bundle.format("events.history.config.door.off", findLocale(player.locale), name, block, ftime);
+            return data ? Bundle.format("history.config.door.on", findLocale(player.locale), name, block, ftime) : Bundle.format("history.config.door.off", findLocale(player.locale), name, block, ftime);
         }
 
         if(block == Blocks.switchBlock){
             boolean data = (boolean)value;
-            return data ? Bundle.format("events.history.config.switch.on", findLocale(player.locale), name, ftime) : Bundle.format("events.history.config.switch.off", findLocale(player.locale), name, ftime);
+            return data ? Bundle.format("history.config.switch.on", findLocale(player.locale), name, ftime) : Bundle.format("history.config.switch.off", findLocale(player.locale), name, ftime);
         }
 
         if(block == Blocks.commandCenter){
-            final String[] commands = Bundle.get("events.history.config.command-center.all", findLocale(player.locale)).split(", ");
-            return Bundle.format("events.history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()], ftime);
+            final String[] commands = Bundle.get("history.config.command-center.all", findLocale(player.locale)).split(", ");
+            return Bundle.format("history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()], ftime);
         }
 
         if(block == Blocks.liquidSource){
             Liquid liquid = (Liquid)value;
             if(liquid == null){
-                return Bundle.format("events.history.config.default", findLocale(player.locale), name, ftime);
+                return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(liquid.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, icons.get(liquid.name), ftime);
         }
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
             Item item = (Item)value;
             if(item == null){
-                return Bundle.format("events.history.config.default", findLocale(player.locale), name, ftime);
+                return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("events.history.config", findLocale(player.locale), name, icons.get(item.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, icons.get(item.name), ftime);
         }
 
         if(block instanceof UnitFactory){
             if(unit == null){
-                return Bundle.format("events.history.config.default", findLocale(player.locale), name, ftime);
+                return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
-            return Bundle.format("events.history.config.unit", findLocale(player.locale), name, icons.get(unit.name), ftime);
+            return Bundle.format("history.config.unit", findLocale(player.locale), name, icons.get(unit.name), ftime);
         }
-        return Bundle.format("events.history.config.changed", findLocale(player.locale), name, ftime);
+        return Bundle.format("history.config.changed", findLocale(player.locale), name, ftime);
     }
 
     public static final StringMap icons = StringMap.of(
