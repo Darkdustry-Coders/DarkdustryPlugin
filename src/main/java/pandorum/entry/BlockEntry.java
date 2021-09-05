@@ -43,14 +43,14 @@ public class BlockEntry implements HistoryEntry{
         final String ftime = df.format(this.time);
 
         if(breaking){
-            return name != null ? Bundle.format("events.history.block.destroy.player", findLocale(player.locale), name, ftime) :
-            Bundle.format("events.history.block.destroy.unit", findLocale(player.locale), unit.type, ftime);
+            return name != null ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :
+            Bundle.format("history.block.destroy.unit", findLocale(player.locale), unit.type, ftime);
         }
 
-        String base = name != null ? Bundle.format("events.history.block.construct.player", findLocale(player.locale), name, block, ftime) :
-                      Bundle.format("events.history.block.construct.unit", findLocale(player.locale), unit.type, block, ftime);
+        String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) :
+                      Bundle.format("history.block.construct.unit", findLocale(player.locale), unit.type, block, ftime);
         if(block.rotate){
-            base += Bundle.format("events.history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
+            base += Bundle.format("history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
         return base;
     }
