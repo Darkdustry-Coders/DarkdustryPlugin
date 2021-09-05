@@ -39,7 +39,7 @@ public class ChatFilter {
                 if (!translatorRes.isNull("err") && translatorRes.optString("err").equals("")) {
                     player.sendMessage(text, author);
                     translationsCache.put(language, text);
-                    Log.info("Translator error: ", translatorRes.get("err"));
+                    Log.info("Ошибка перевода: ", translatorRes.get("err"));
                     return;
                 }
                 translatedText = translatorRes.getString("result");
@@ -49,7 +49,7 @@ public class ChatFilter {
 
             translationsCache.put(language, translatedText);
             player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
-        }
+        });
         return null;
     }
 }
