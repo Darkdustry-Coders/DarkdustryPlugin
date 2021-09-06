@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.changestream.OperationType;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -55,6 +56,7 @@ import mindustry.world.Tile;
 import okhttp3.OkHttpClient;
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
@@ -107,7 +109,6 @@ public final class PandorumPlugin extends Plugin{
 
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
-
     public PandorumPlugin() throws IOException {
         ConnectionString connString = new ConnectionString("mongodb+srv://host:BmnP4NEpht8wQFqv@darkdustry.aztzv.mongodb.net");
 
@@ -139,6 +140,7 @@ public final class PandorumPlugin extends Plugin{
                 next -> {
                     Document player = playerInfoSchema.tryApplySchema(next);
 
+                    if (next == null) return;
                     if (player == null) {
                         playersInfoCollection
                                 .deleteOne(new BasicDBObject("id", next.getObjectId("_id")))
@@ -907,7 +909,12 @@ public final class PandorumPlugin extends Plugin{
 
         try {
             Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(player);
-            playersInfoCollection.updateOne(filter, SCHPlayerInfoDocument).subscribe(new ArrowSubscriber<>());
+            SCHPlayerInfoDocument.remove("_id");
+            SCHPlayerInfoDocument.remove("__v");
+            playersInfoCollection.replaceOne(
+                    Filters.eq("_id", player.getObjectId("_id")),
+                    SCHPlayerInfoDocument
+            ).subscribe(new ArrowSubscriber<>());
         } catch(Exception e) {
             Log.err(e);
         }

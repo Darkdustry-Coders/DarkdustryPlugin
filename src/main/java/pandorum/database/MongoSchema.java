@@ -3,6 +3,8 @@ package pandorum.database;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pandorum.database.events.OnComplete;
 import pandorum.database.events.OnError;
 import pandorum.database.events.OnNext;
@@ -24,7 +26,7 @@ public class MongoSchema<R, N> extends MongoEvents {
         this.<OnSubscribe>addListener(OnSubscribe.class, (subscriber) -> subscriber.subscription.request(1));
     }
 
-    public Document create(Map<String, Object> data) {
+    public Document create(@NotNull Map<String, Object> data) {
         data.forEach((key, value) -> {
             Iterator<MongoAccessor<?>> iterableSchema = schema.iterator();
             MongoAccessor<?> accessor = null;
@@ -38,13 +40,17 @@ public class MongoSchema<R, N> extends MongoEvents {
             
             if (accessor == null)
                 throw new IllegalArgumentException("Схема не содержит ключа \"" + key + "\"");
+            if (value == null && accessor.isValidData(Nullable.class))
+                return;
+            if (value == null)
+                throw new IllegalArgumentException("Значение \"null\" равно \"Null\", ожидалось " + accessor.getDataClass().getName());
             if (value.getClass() != accessor.getDataClass())
                 throw new IllegalArgumentException("Значение \"" + value + "\" равно " + value.getClass().getName() + ", ожидалось " + accessor.getDataClass().getName());
         });
 
         this.schema.forEach((accessor) -> {
             String accessorKey = accessor.getKey();
-            Class<?> checkClass = !data.containsKey(accessorKey) ? null : data.get(accessorKey).getClass();
+            Class<?> checkClass = !data.containsKey(accessorKey) || data.get(accessorKey) == null ? null : data.get(accessorKey).getClass();
             if (!accessor.isValidData(checkClass))
                 throw new IllegalArgumentException("Ключ \"" + accessorKey + "\" был объявлен, как обязательный, но не был инициализирован в документе!");
         });
@@ -68,7 +74,7 @@ public class MongoSchema<R, N> extends MongoEvents {
         return insertDocument;
     }
 
-    public Document applySchema(Document document) throws IllegalArgumentException {
+    public Document applySchema(@NotNull Document document) throws IllegalArgumentException {
         Document newDocument = new Document()
             .append("_id", document.get("_id"))
             .append("__v", document.get("__v"));
