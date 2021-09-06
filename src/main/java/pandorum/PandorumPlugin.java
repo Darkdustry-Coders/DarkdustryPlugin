@@ -262,7 +262,7 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("say");
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
             Call.sendMessage("[lime]Server[white]: " + args[0]);
-            Log.info("Server: &ly@" + args[0]);
+            Log.info("Server: &ly@", args[0]);
             DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", args[0].replaceAll("https?://|@", "")));
         });
 
@@ -689,7 +689,7 @@ public final class PandorumPlugin extends Plugin{
             if (Misc.adminCheck(player)) return;
 
             String output = Vars.mods.getScripts().runConsole(args[0]);
-            player.sendMessage("[orange] > [accent]" + output);
+            player.sendMessage("[lightgray] [accent]" + output);
         });
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
@@ -736,19 +736,19 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
             switch (args[0]) {
-                case "name":
+                case "name" -> {
                     if (!player.dead()) bundled(player, "commands.unit-name", player.unit().type().name);
                     else bundled(player, "commands.unit-name.null");
-                    break;
-                case "all":
+                }
+                case "all" -> {
                     StringBuilder builder = new StringBuilder();
                     content.units().each(unit -> {
                         if (!unit.name.equals("block"))
                             builder.append(" ").append(ConfigEntry.icons.get(unit.name)).append(unit.name);
                     });
                     bundled(player, "commands.units.all", builder.toString());
-                    break;
-                case "change":
+                }
+                case "change" -> {
                     if (Misc.adminCheck(player)) return;
                     if (args.length == 1 || args[1].equals("block")) {
                         bundled(player, "commands.units.incorrect");
@@ -763,10 +763,8 @@ public final class PandorumPlugin extends Plugin{
                     spawn.spawnedByCore(true);
                     player.unit(spawn);
                     bundled(player, "commands.units.change.success");
-                    break;
-                default:
-                    bundled(player, "commands.units.incorrect");
-                    break;
+                }
+                default -> bundled(player, "commands.units.incorrect");
             }
         });
 
@@ -795,7 +793,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            Player found = Groups.player.find(p -> Strings.stripColors(p.name).equals(Strings.stripColors(args[0])));
+            Player found = Misc.findByName(Strings.stripColors(args[0]));
 
             if(found != null){
                 if(found.admin){
@@ -872,7 +870,7 @@ public final class PandorumPlugin extends Plugin{
                 }
                 case "list" -> {
                     StringBuilder builder = new StringBuilder();
-                    codeLanguages.keys().forEach(builder::append);
+                    codeLanguages.keys().forEach(locale -> builder.append(" " + locale));
                     bundled(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {
