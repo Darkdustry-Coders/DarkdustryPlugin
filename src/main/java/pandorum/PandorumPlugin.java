@@ -100,10 +100,10 @@ public final class PandorumPlugin extends Plugin{
 
     public static ObjectMap<Unit, Float> timer = new ObjectMap<>();
 
-    public MongoClient mongoClient;
-    public MongoCollection<Document> playersInfoCollection;
-    public Seq<Document> playersInfo = new Seq<>();
-    public PlayerInfo playerInfoSchema;
+    public static MongoClient mongoClient;
+    public static MongoCollection<Document> playersInfoCollection;
+    public static Seq<Document> playersInfo = new Seq<>();
+    public static PlayerInfo playerInfoSchema;
 
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();

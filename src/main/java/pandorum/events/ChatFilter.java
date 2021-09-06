@@ -8,8 +8,10 @@ import mindustry.gen.Groups;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.Translator;
 import pandorum.PandorumPlugin;
+import pandorum.models.PlayerInfo;
 
 import org.json.JSONObject;
+import org.bson.Document;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,13 +24,19 @@ public class ChatFilter {
         Map<String, String> translationsCache = new HashMap<>();
         Groups.player.each(player -> !player.equals(author), player -> {
 
-            String setting;
-            //setting = получаем инфу из БД.
-            if (setting.equals("off")) {
+            Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
+            if (playerInfo == null) {
+                playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), "IDK", false, "off");
+                PandorumPlugin.playersInfo.add(playerInfo);
+            }
+            String locale = playerInfo.getString("locale");
+
+            if (locale == null) { 
                 player.sendMessage(text, author);
                 return;
             }
-            String language = setting.equals("auto") ? player.locale() : setting;
+
+            String language = locale.equals("auto") ? player.locale() : locale;
 
             if (translationsCache.containsKey(language)) {
                 player.sendMessage(text + " [white]([gray]" + translationsCache.get(language) + "[white])", author);
