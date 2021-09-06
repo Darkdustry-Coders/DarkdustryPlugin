@@ -869,7 +869,7 @@ public final class PandorumPlugin extends Plugin{
                 }
                 case "list" -> {
                     StringBuilder builder = new StringBuilder();
-                    // В builder надо запихнуть все доступные языки
+                    codeLanguages.keys().forEach(locale -> builder.append(" " + locale));
                     bundled(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {
