@@ -18,7 +18,6 @@ public class WorldLoadEvent {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
         if(PandorumPlugin.config.type == PluginType.sand) PandorumPlugin.timer.clear();
-        if (Groups.player.size() == 0) Vars.state.serverPaused = true;
         PandorumPlugin.history = new CacheSeq[Vars.world.width()][Vars.world.height()];
 
         for(Tile tile : Vars.world.tiles){
