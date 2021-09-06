@@ -14,6 +14,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import mindustry.Vars;
 import mindustry.gen.Groups;
+import mindustry.net.Packets.KickReason;
 
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
@@ -31,14 +32,14 @@ public class PlayerJoinEvent {
         });
 
         if (nameCheck(event.player)) return;
-        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.uuid));
+        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.player.uuid()));
         if (playerInfo == null) {
-            playerInfo = PandorumPlugin.playerInfoSchema.create(event.uuid, "IDK", false);
+            playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), "IDK", false);
             PandorumPlugin.playersInfo.add(playerInfo);
         } else {
             if (playerInfo.getBoolean("banned")) event.player.con.kick(KickReason.banned);
         }
-        PandorumPlugin.savePlayerStats(event.uuid);
+        PandorumPlugin.savePlayerStats(event.player.uuid());
 
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
