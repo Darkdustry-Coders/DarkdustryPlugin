@@ -6,6 +6,10 @@ import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.net.Administration.PlayerInfo;
 import pandorum.comp.DiscordWebhookManager;
+import pandorum.PandorumPlugin;
+import pandorum.models.PlayerInfo;
+
+import org.bson.Document;
 
 public class PlayerBanEvent {
     public static void call(final EventType.PlayerBanEvent event) {
@@ -18,5 +22,12 @@ public class PlayerBanEvent {
                 .addField(new WebhookEmbed.EmbedField(true, "UUID", event.uuid))
                 .addField(new WebhookEmbed.EmbedField(true, "IP", info.lastIP));
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
+
+        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.uuid));
+        if (playerInfo == null) {
+            playerInfo = PandorumPlugin.playerInfoSchema.create(event.uuid, "IDK", true);
+            PandorumPlugin.playersInfo.add(playerInfo);
+        }
+        playerInfo.replace("banned", true);
     }
 }
