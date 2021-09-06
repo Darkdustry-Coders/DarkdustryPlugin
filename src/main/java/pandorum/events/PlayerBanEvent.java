@@ -4,7 +4,7 @@ import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.Vars;
 import mindustry.game.EventType;
-import mindustry.net.Administration.PlayerInfo;
+import mindustry.net.Administration;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.PandorumPlugin;
 import pandorum.models.PlayerInfo;
@@ -13,7 +13,7 @@ import org.bson.Document;
 
 public class PlayerBanEvent {
     public static void call(final EventType.PlayerBanEvent event) {
-        PlayerInfo info = Vars.netServer.admins.getInfo(event.uuid);
+        Administration.PlayerInfo info = Vars.netServer.admins.getInfo(event.uuid);
         if (info == null) return;
         WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
