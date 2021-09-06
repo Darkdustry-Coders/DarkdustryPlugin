@@ -14,11 +14,16 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import mindustry.Vars;
 import mindustry.gen.Groups;
+import mindustry.net.Packets.KickReason;
+
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
+import pandorum.models.PlayerInfo;
+
+import org.bson.Document;
 
 public class PlayerJoinEvent {
     public static void call(final EventType.PlayerJoin event) {
@@ -27,6 +32,15 @@ public class PlayerJoinEvent {
         });
 
         if (nameCheck(event.player)) return;
+        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.player.uuid()));
+        if (playerInfo == null) {
+            playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), "IDK", false);
+            PandorumPlugin.playersInfo.add(playerInfo);
+        } else {
+            if (playerInfo.getBoolean("banned")) event.player.con.kick(KickReason.banned);
+        }
+        PandorumPlugin.savePlayerStats(event.player.uuid());
+
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
         sendToChat("events.player-join", colorizedName(event.player));

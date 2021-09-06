@@ -899,7 +899,7 @@ public final class PandorumPlugin extends Plugin{
         });
     }
 
-    public void savePlayerStats(String uuid) {
+    public static void savePlayerStats(String uuid) {
         Document player = playersInfo.find((docPlayer) -> docPlayer.getString("uuid").equals(uuid));
         BasicDBObject filter = new BasicDBObject("uuid", uuid);
 
