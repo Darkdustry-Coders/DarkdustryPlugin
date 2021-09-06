@@ -24,6 +24,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.OperationType;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -152,7 +153,7 @@ public final class PandorumPlugin extends Plugin{
                 }
         ));
 
-        playersInfoCollection.watch().subscribe(new ArrowSubscriber<>(
+        playersInfoCollection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).subscribe(new ArrowSubscriber<>(
                 changeStreamDocument -> {
                     OperationType operation = changeStreamDocument.getOperationType();
                     BsonDocument changedDocumentKey = changeStreamDocument.getDocumentKey();
