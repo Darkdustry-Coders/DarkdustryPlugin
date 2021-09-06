@@ -12,7 +12,7 @@ import pandorum.database.NonRequired;
 import pandorum.database.Required;
 
 public class PlayerInfo extends MongoSchema<String, Object> {
-    public PlayerInfo(MongoCollection<Document> collection) {
+    public static PlayerInfo(MongoCollection<Document> collection) {
         super(
             collection,
             new Required<>("uuid", String.class),
@@ -22,7 +22,7 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         );
     }
 
-    public Document create(String uuid, String token, Boolean banned, String locale) {
+    public static Document create(String uuid, String token, Boolean banned, String locale) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
                 "token", token,
@@ -33,7 +33,7 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         return this.create(schema);
     }
 
-    public Document create(String uuid, String token, Boolean banned) {
+    public static Document create(String uuid, String token, Boolean banned) {
         return this.create(uuid, token, banned, null);
     }
 }
