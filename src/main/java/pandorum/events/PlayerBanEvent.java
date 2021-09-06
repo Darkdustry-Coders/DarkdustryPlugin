@@ -29,6 +29,6 @@ public class PlayerBanEvent {
             PandorumPlugin.playersInfo.add(playerInfo);
         }
         playerInfo.replace("banned", true);
-        savePlayerStats(event.uuid);
+        PandorumPlugin.savePlayerStats(event.uuid);
     }
 }
