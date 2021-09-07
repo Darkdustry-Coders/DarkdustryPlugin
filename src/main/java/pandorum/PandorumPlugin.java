@@ -862,7 +862,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
             Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
             if (playerInfo == null) {
-                playerInfo = playerInfoSchema.create(player.uuid(), "IDK", false);
+                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off");
                 playersInfo.add(playerInfo);
             }
 
@@ -877,7 +877,7 @@ public final class PandorumPlugin extends Plugin{
                     bundled(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {
-                    playerInfo.remove("locale");
+                    playerInfo.replace("locale", "off");
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
