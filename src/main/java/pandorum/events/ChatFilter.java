@@ -26,7 +26,7 @@ public class ChatFilter {
 
             Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
             if (playerInfo == null) {
-                playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), "IDK", false, "off");
+                playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, false, "off");
                 PandorumPlugin.playersInfo.add(playerInfo);
             }
             String locale = playerInfo.getString("locale");
