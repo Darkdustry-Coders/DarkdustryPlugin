@@ -31,7 +31,7 @@ public class ChatFilter {
             }
             String locale = playerInfo.getString("locale");
 
-            if (locale == null) { 
+            if (locale == null || locale.equals("off")) { 
                 player.sendMessage(text, author);
                 return;
             }
