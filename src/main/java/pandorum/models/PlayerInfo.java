@@ -16,16 +16,16 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         super(
             collection,
             new Required<>("uuid", String.class),
-            new Required<>("token", String.class),
+            new Required<>("hellomsg", Boolean.class),
             new Required<>("banned", Boolean.class),
             new NonRequired<>("locale", String.class)
         );
     }
 
-    public Document create(String uuid, String token, Boolean banned, String locale) {
+    public Document create(String uuid, Boolean hellomsg, Boolean banned, String locale) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
-                "token", token,
+                "hellomsg", hellomsg,
                 "banned", banned
         ));
 
@@ -33,7 +33,7 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         return this.create(schema);
     }
 
-    public Document create(String uuid, String token, Boolean banned) {
-        return this.create(uuid, token, banned, null);
+    public Document create(String uuid, Boolean hellomsg, Boolean banned) {
+        return this.create(uuid, hellomsg, banned, null);
     }
 }
