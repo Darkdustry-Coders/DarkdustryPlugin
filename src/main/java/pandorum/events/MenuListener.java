@@ -12,6 +12,7 @@ public class MenuListener {
             if (selection == 1) {
                 Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
                 playerInfo.replace("hellomsg", false);
+                PandorumPlugin.savePlayerStats(player.uuid());
             }
         });
     }
