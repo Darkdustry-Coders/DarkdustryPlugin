@@ -35,7 +35,7 @@ public class PlayerJoinEvent {
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
         sendToChat("events.player-join", colorizedName(event.player));
-        Log.info(event.player.name + " зашёл на сервер, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+        Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
 
         Effects.onJoin(event.player);
 
@@ -43,6 +43,7 @@ public class PlayerJoinEvent {
         if (playerInfo == null) {
             playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), true, false, "off");
             PandorumPlugin.playersInfo.add(playerInfo);
+            PandorumPlugin.savePlayerStats(event.player.uuid());
         }
 
         if(playerInfo.getBoolean("hellomsg")) {
