@@ -41,7 +41,7 @@ public class PlayerJoinEvent {
 
         Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.player.uuid()));
         if (playerInfo == null) {
-            playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, false, "off");
+            playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), true, false, "off");
             PandorumPlugin.playersInfo.add(playerInfo);
         }
 
