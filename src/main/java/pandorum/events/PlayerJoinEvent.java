@@ -38,8 +38,13 @@ public class PlayerJoinEvent {
         Effects.onJoin(event.player);
 
         if (PandorumPlugin.config.type == PluginType.anarchy) event.player.admin(true);
-        Call.infoMessage(event.player.con, Bundle.format("server.hellomsg", findLocale(event.player.locale)));
-        bundled(event.player, "server.motd");
+
+        String[][] options = {
+            {Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))},
+            {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}
+        };
+        Call.menu(event.player.con, 1, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
+        bundled(event.player, "events.motd");
 
         WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x00FF00)
