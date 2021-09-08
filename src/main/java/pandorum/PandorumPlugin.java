@@ -215,6 +215,7 @@ public final class PandorumPlugin extends Plugin{
         Events.on(PlayerJoin.class, PlayerJoinEvent::call);
         Events.on(PlayerLeave.class, PlayerLeaveEvent::call);
         Events.on(GameOverEvent.class, pandorum.events.GameOverEvent::call);
+        Events.on(MenuOptionChooseEvent.class, pandorum.events.MenuOptionChooseEvent::call);
         Events.run(Trigger.update, TriggerUpdate::call);
 
         Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
