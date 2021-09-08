@@ -45,6 +45,7 @@ import mindustry.game.EventType.ServerLoadEvent;
 import mindustry.game.EventType.TapEvent;
 import mindustry.game.EventType.Trigger;
 import mindustry.game.EventType.WorldLoadEvent;
+import mindustry.game.EventType.MenuOptionChooseEvent;
 import mindustry.game.Team;
 import mindustry.game.Teams.TeamData;
 import mindustry.gen.*;
