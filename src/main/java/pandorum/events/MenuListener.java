@@ -3,6 +3,7 @@ package pandorum.events;
 import mindustry.ui.Menus;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
+import static pandorum.Misc.bundled;
 
 public class MenuListener {
 
@@ -13,6 +14,7 @@ public class MenuListener {
                 Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
                 playerInfo.replace("hellomsg", false);
                 PandorumPlugin.savePlayerStats(player.uuid());
+                bundled(player, "events.hellomsg.disabled");
             }
         });
     }
