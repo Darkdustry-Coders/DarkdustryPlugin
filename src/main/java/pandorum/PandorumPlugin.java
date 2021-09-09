@@ -338,10 +338,7 @@ public final class PandorumPlugin extends Plugin{
 
             for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
-                String desc = Bundle.format("commands." + command.text + ".description", findLocale(player.locale));
-                if(desc.startsWith("?")) {
-                    desc = command.description;
-                }
+                String desc = Bundle.has("commands." + command.text + ".description", findLocale(player.locale)) ? Bundle.format("commands." + command.text + ".description", findLocale(player.locale)) : command.description;
                 result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
             }
             player.sendMessage(result.toString());
