@@ -2,8 +2,9 @@ package pandorum.vote;
 
 import static pandorum.PandorumPlugin.config;
 import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.colorizedName;
 
-import arc.struct.ObjectSet;
+import arc.struct.Seq;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
@@ -13,20 +14,20 @@ import mindustry.net.Packets.KickReason;
 
 public class VoteKickSession{
     protected Player target;
-    protected ObjectSet<String> voted = new ObjectSet<>();
-    protected VoteKickSession[] map;
+    protected Seq<String> voted = new Seq<>();
+    protected VoteKickSession[] kickSession;
     protected Task task;
     protected int votes;
 
     public static int kickDuration = 30 * 60;
 
-    public VoteKickSession(VoteKickSession[] map, Player target) {
+    public VoteKickSession(VoteKickSession[] kickSession, Player target) {
         this.target = target;
-        this.map = map;
+        this.kickSession = kickSession;
         this.task = start();
     }
 
-    public ObjectSet<String> voted() {
+    public Seq<String> voted() {
         return voted;
     }
 
@@ -43,16 +44,16 @@ public class VoteKickSession{
         }, config.votekickDuration);
     }
 
-    public void vote(Player player, int d){
-        votes += d;
-        voted.addAll(player.uuid(), Vars.netServer.admins.getInfo(player.uuid()).lastIP);
-        sendToChat("commands.votekick.vote", player.name, target.name, votes, votesRequired());
+    public void vote(Player player, int sign) {
+        votes += sign;
+        voted.add(player.uuid());
+        sendToChat("commands.votekick.vote", colorizedName(player), colorizedName(target), votes, votesRequired());
         checkPass();
     }
 
-    protected boolean checkPass(){
-        if(votes >= votesRequired()){
-            sendToChat("commands.votekick.vote-passed", target.name, (kickDuration / 60));
+    protected boolean checkPass() {
+        if(votes >= votesRequired()) {
+            sendToChat("commands.votekick.vote-passed", colorizedName(target), (kickDuration / 60));
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000));
             stop();
             return true;
@@ -61,7 +62,7 @@ public class VoteKickSession{
     }
 
     public void stop() {
-        map[0] = null;
+        kickSession[0] = null;
         task.cancel();
         voted.clear();
     }
