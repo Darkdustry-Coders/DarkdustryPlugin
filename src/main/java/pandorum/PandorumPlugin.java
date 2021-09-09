@@ -149,10 +149,8 @@ public final class PandorumPlugin extends Plugin{
                                 .subscribe(new ArrowSubscriber<>());
                         return;
                     }
-
                     playersInfo.add(player);
-                Т
-Р
+                }
         ));
 
         playersInfoCollection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).subscribe(new ArrowSubscriber<>(
@@ -599,7 +597,7 @@ public final class PandorumPlugin extends Plugin{
                 VoteMode mode;
                 try {
                     mode = VoteMode.valueOf(args[0].toLowerCase());
-                } catch(Throwable t) {
+                } catch(Exception e) {
                     bundled(player, "commands.nominate.incorrect-mode");
                     return;
                 }
