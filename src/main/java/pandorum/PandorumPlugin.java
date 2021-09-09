@@ -642,7 +642,7 @@ public final class PandorumPlugin extends Plugin{
                      bundled(player, "commands.no-voting");
                      return;
                  }
-                 if(current[0].voted().contains(player.uuid()) || current[0].voted().contains(netServer.admins.getInfo(player.uuid()).lastIP)){
+                 if(current[0].voted().contains(player.uuid())){
                      bundled(player, "commands.already-voted");
                      return;
                  }
@@ -654,7 +654,7 @@ public final class PandorumPlugin extends Plugin{
                     bundled(player, "commands.no-voting");
                     return;
                 }
-                if(current[0].voted().contains(player.uuid()) || current[0].voted().contains(netServer.admins.getInfo(player.uuid()).lastIP)){
+                if(current[0].voted().contains(player.uuid())){
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -837,7 +837,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if((currentlyKicking[0].voted().contains(player.uuid()) || currentlyKicking[0].voted().contains(netServer.admins.getInfo(player.uuid()).lastIP))){
+            if(currentlyKicking[0].voted().contains(player.uuid())) {
                 bundled(player, "commands.already-voted");
                 return;
             }
