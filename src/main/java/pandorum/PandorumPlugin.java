@@ -403,10 +403,9 @@ public final class PandorumPlugin extends Plugin{
             if(Misc.adminCheck(player)) return;
             int amount = Groups.unit.size();
             String[][] options = {
-                {Bundle.format("events.menu.yes", findLocale(player.locale))},
-                {Bundle.format("events.menu.no", findLocale(player.locale))}
+                {Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))},
             };
-            Call.menu(2, Bundle.format("commands.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.despw.menu.content", findLocale(player.locale), amount), options);
+            Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), amount), options);
         });
 
         if(config.type != PluginType.other) {
