@@ -11,6 +11,7 @@ public abstract class VoteSession{
     protected Seq<String> voted = new Seq<>();
     protected VoteSession[] session;
     protected Task task;
+    protected int votes;
 
     public VoteSession(VoteSession[] session){
         this.session = session;
