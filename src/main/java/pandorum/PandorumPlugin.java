@@ -151,7 +151,8 @@ public final class PandorumPlugin extends Plugin{
                     }
 
                     playersInfo.add(player);
-                }
+                Т
+Р
         ));
 
         playersInfoCollection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).subscribe(new ArrowSubscriber<>(
@@ -228,12 +229,27 @@ public final class PandorumPlugin extends Plugin{
             r.hue = hue;
         }), 0f, 0.05f);
 
+        // TODO (Дарк) вынести все меню в отдельный класс
+        // Приветственное сообщение
         Menus.registerMenu(1, (player, option) -> {
             if (option == 1) {
                 Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
                 playerInfo.replace("hellomsg", false);
                 savePlayerStats(player.uuid());
                 bundled(player, "events.hellomsg.disabled");
+            }
+        });
+
+        // Команда /despw
+        Menus.registerMenu(2, (player, option) -> {
+            if (option == 0) {
+                Groups.unit.each(Unitc::kill);
+                bundled(player, "commands.admin.despw.success", Groups.unit.size());
+                WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
+                DiscordWebhookManager.client.send(despwEmbedBuilder.build());
             }
         });
     }
@@ -386,15 +402,13 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
-            int amount = Groups.unit.size();
             if(Misc.adminCheck(player)) return;
-            Groups.unit.each(Unitc::kill);
-            bundled(player, "commands.admin.despw.success", amount);
-            WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
-                .setColor(0xFF0000)
-                .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null))
-                .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-            DiscordWebhookManager.client.send(despwEmbedBuilder.build());
+            int amount = Groups.unit.size();
+            String[][] options = {
+                {Bundle.format("events.menu.yes", findLocale(player.locale))},
+                {Bundle.format("events.menu.no", findLocale(player.locale))}
+            };
+            Call.menu(2, Bundle.format("commands.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.despw.menu.content", findLocale(player.locale), amount), options);
         });
 
         if(config.type != PluginType.other) {
