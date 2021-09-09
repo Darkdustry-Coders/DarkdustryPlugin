@@ -81,13 +81,6 @@ public class VoteMapSession extends VoteSession{
     }
 
     @Override
-    public void stop() {
-        voted.clear();
-        session[0] = null;
-        task.cancel();
-    }
-
-    @Override
     public int votesRequired() {
         return (int)Math.ceil(config.voteRatio * Groups.player.size());
     }
