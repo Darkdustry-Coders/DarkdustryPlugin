@@ -583,19 +583,19 @@ public final class PandorumPlugin extends Plugin{
 
             handler.<Player>register("nominate", "<map/save/load> [name...]", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
                 VoteMode mode;
-                try{
+                try {
                     mode = VoteMode.valueOf(args[0].toLowerCase());
-                }catch(Throwable t){
+                } catch(Throwable t) {
                     bundled(player, "commands.nominate.incorrect-mode");
                     return;
                 }
 
-                if(current[0] != null){
+                if (current[0] != null) {
                     bundled(player, "commands.vote-already-started");
                     return;
                 }
 
-                if(args.length == 1){
+                if (args.length == 1) {
                     bundled(player, "commands.nominate.required-second-arg");
                     return;
                 }
@@ -619,7 +619,7 @@ public final class PandorumPlugin extends Plugin{
                     case load -> {
                         Fi save = Misc.findSave(args[1]);
                         if(save == null){
-                            player.sendMessage("commands.nominate.load.not-found");
+                            bundled(player, "commands.nominate.load.not-found");
                             return;
                         }
                         VoteSession session = new VoteLoadSession(current, save);
