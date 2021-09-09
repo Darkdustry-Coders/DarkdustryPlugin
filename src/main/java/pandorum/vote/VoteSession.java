@@ -2,13 +2,13 @@ package pandorum.vote;
 
 import static pandorum.PandorumPlugin.config;
 
-import arc.struct.ObjectSet;
+import arc.struct.Seq;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 public abstract class VoteSession{
-    protected Seq<String> voted = new ObjectSet<>();
+    protected Seq<String> voted = new Seq<>();
     protected VoteSession[] session;
     protected Task task;
     protected int votes;
