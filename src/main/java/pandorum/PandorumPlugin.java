@@ -250,6 +250,19 @@ public final class PandorumPlugin extends Plugin{
                 DiscordWebhookManager.client.send(despwEmbedBuilder.build());
             }
         });
+
+        // Команда /artv
+        Menus.registerMenu(3, (player, option) -> {
+            if (option == 0) {
+                Events.fire(new GameOverEvent(Team.crux));
+                sendToChat("commands.admin.artv.info");
+                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
+                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+            }
+        });
     }
    
     @Override
@@ -399,9 +412,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if(Misc.adminCheck(player)) return;
             int amount = Groups.unit.size();
-            String[][] options = {
-                {Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))},
-            };
+            String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
             Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), amount), options);
         });
 
@@ -448,13 +459,8 @@ public final class PandorumPlugin extends Plugin{
 
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
                 if(Misc.adminCheck(player)) return;
-                Events.fire(new GameOverEvent(Team.crux));
-                sendToChat("commands.admin.artv.info");
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+                String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
+                Call.menu(3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
