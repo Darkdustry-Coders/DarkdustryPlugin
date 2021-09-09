@@ -49,6 +49,7 @@ import mindustry.game.EventType.MenuOptionChooseEvent;
 import mindustry.game.Team;
 import mindustry.game.Teams.TeamData;
 import mindustry.gen.*;
+import mindustry.ui.Menus;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
@@ -228,8 +229,17 @@ public final class PandorumPlugin extends Plugin{
             r.player.name = hex + r.stripedName;
             r.hue = hue;
         }), 0f, 0.05f);
-    }
 
+        Menus.registerMenu(1, (player, option) -> {
+            if (option == 1) {
+                Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
+                playerInfo.replace("hellomsg", false);
+                savePlayerStats(player.uuid());
+                bundled(player, "events.hellomsg.disabled");
+            }
+        });
+    }
+   
     @Override
     public void registerServerCommands(CommandHandler handler) {
 
