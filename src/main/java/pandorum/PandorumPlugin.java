@@ -329,6 +329,7 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("help");
         handler.removeCommand("votekick");
         handler.removeCommand("vote");
+        handler.removeCommand("js");
 
         handler.<Player>register("help", "[page]", "Список всех команд.", (args, player) -> {
             if(args.length > 0 && !Strings.canParseInt(args[0])) {
@@ -710,13 +711,6 @@ public final class PandorumPlugin extends Plugin{
             entry.player = player;
             entry.stripedName = Strings.stripColors(player.name);
             rainbow.add(entry);
-        });
-
-        handler.<Player>register("js", "<script...>", "Запустить JS скрипт.", (args, player) -> {
-            if (Misc.adminCheck(player)) return;
-
-            String output = Vars.mods.getScripts().runConsole(args[0]);
-            player.sendMessage("[lightgray] [accent]" + output);
         });
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
