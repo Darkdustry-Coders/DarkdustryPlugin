@@ -369,12 +369,11 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
-            String uuid = player.uuid();
-            if(activeHistoryPlayers.contains(uuid)){
-                activeHistoryPlayers.remove(uuid);
+            if(activeHistoryPlayers.contains(player.uuid())) {
+                activeHistoryPlayers.remove(player.uuid());
                 bundled(player, "commands.history.off");
             }else{
-                activeHistoryPlayers.add(uuid);
+                activeHistoryPlayers.add(player.uuid());
                 bundled(player, "commands.history.on");
             }
         });
@@ -390,7 +389,7 @@ public final class PandorumPlugin extends Plugin{
 
             page--;
 
-            if(page >= pages || page < 0){
+            if(page >= pages || page < 0) {
                 bundled(player, "commands.under-page", pages);
                 return;
             }
@@ -398,12 +397,12 @@ public final class PandorumPlugin extends Plugin{
             StringBuilder result = new StringBuilder();
             result.append(Bundle.format("commands.pl.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
-            for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++){
-                Player t = Groups.player.index(i);
-                result.append("[#9c88ee]* []").append(t.name).append(" [accent]/ [cyan]ID: ").append(t.id());
+            for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
+                Player p = Groups.player.index(i);
+                result.append("[#9c88ee]* []").append(p.name).append(" [accent]/ [cyan]ID: ").append(p.id());
 
                 if(player.admin){
-                    result.append(" [accent]/ [cyan]raw: ").append(t.name.replaceAll("\\[", "[["));
+                    result.append(" [accent]/ [cyan]raw: ").append(p.name.replaceAll("\\[", "[["));
                 }
                 result.append("\n");
             }
@@ -412,9 +411,8 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if(Misc.adminCheck(player)) return;
-            int amount = Groups.unit.size();
             String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-            Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), amount), options);
+            Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
 
         if(config.type != PluginType.other) {
@@ -455,7 +453,7 @@ public final class PandorumPlugin extends Plugin{
 
                 sendToChat("commands.vnw.successful");
                 votesVNW.clear();
-                Vars.logic.runWave();
+                state.wavetime = 0f;
             });
 
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
