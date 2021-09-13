@@ -468,11 +468,15 @@ public final class PandorumPlugin extends Plugin{
                 Block core = switch(args[0].toLowerCase()){
                     case "medium" -> Blocks.coreFoundation;
                     case "big" -> Blocks.coreNucleus;
-                    default -> Blocks.coreShard;
+                    case "small" -> Blocks.coreShard;
+                    default -> null;
                 };
 
+                if(core == null) {
+                    bundled(player, "commands.admin.core.core-not-found");
+                    return;
+                }
                 Call.constructFinish(player.tileOn(), core, player.unit(), (byte)0, player.team(), false);
-
                 bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
             });
 
@@ -554,7 +558,7 @@ public final class PandorumPlugin extends Plugin{
 
                 Seq<Map> mapList = Vars.maps.all();
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-                int pages = Mathf.ceil(mapList.size / 6f);
+                int pages = Mathf.ceil(mapList.size / 6.0f);
 
                 if(--page >= pages || page < 0){
                     bundled(player, "commands.under-page", pages);
@@ -578,7 +582,7 @@ public final class PandorumPlugin extends Plugin{
 
                 Seq<Fi> saves = Seq.with(Vars.saveDirectory.list()).filter(f -> Objects.equals(f.extension(), Vars.saveExtension));
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-                int pages = Mathf.ceil(saves.size / 6.0F);
+                int pages = Mathf.ceil(saves.size / 6.0f);
 
                 if(--page >= pages || page < 0){
                     bundled(player, "commands.under-page", pages);
@@ -594,7 +598,7 @@ public final class PandorumPlugin extends Plugin{
                 player.sendMessage(result.toString());
             });
 
-            handler.<Player>register("nominate", "<map/save/load> [name...]", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
+            handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
                 VoteMode mode;
                 try {
                     mode = VoteMode.valueOf(args[0].toLowerCase());
@@ -605,11 +609,6 @@ public final class PandorumPlugin extends Plugin{
 
                 if (current[0] != null) {
                     bundled(player, "commands.vote-already-started");
-                    return;
-                }
-
-                if (args.length == 1) {
-                    bundled(player, "commands.nominate.required-second-arg");
                     return;
                 }
 
@@ -685,7 +684,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                surrendered.remove(player.team());
+                surrendered.remove(team);
                 sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
                 Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
                 for(Tile tile : world.tiles){
