@@ -772,12 +772,12 @@ public final class PandorumPlugin extends Plugin{
                         bundled(player, "commands.units.incorrect");
                         return;
                     }
-                    UnitType founded = Vars.content.units().find(u -> u.name.equals(args[1]));
-                    if (founded == null) {
+                    UnitType found = content.units().find(u -> u.name.equals(args[1]));
+                    if (found == null) {
                         bundled(player, "commands.unit-not-found");
                         return;
                     }
-                    final Unit spawn = founded.spawn(player.team(), player.x(), player.y());
+                    final Unit spawn = found.spawn(player.team(), player.x(), player.y());
                     spawn.spawnedByCore(true);
                     player.unit(spawn);
                     bundled(player, "commands.units.change.success");
@@ -801,23 +801,25 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if(Groups.player.size() < 3){
+            if(Groups.player.size() < 3) {
                 bundled(player, "commands.votekick.not-enough-players");
                 return;
             }
 
-            if(currentlyKicking[0] != null){
+            if(currentlyKicking[0] != null) {
                 bundled(player, "commands.vote-already-started");
                 return;
             }
 
             Player found = Misc.findByName(Strings.stripColors(args[0]));
 
-            if(found != null){
-                if(found.admin){
+            if(found != null) {
+                if (found.admin) {
                     bundled(player, "commands.votekick.cannot-kick-admin");
-                } else if(found.team() != player.team()) {
+                } else if (found.team() != player.team()) {
                     bundled(player, "commands.votekick.cannot-kick-another-team");
+                } else if (found == player) {
+                    bundled(player, "commands.vote.cannot-vote-for-yourself");
                 } else {
                     VoteKickSession session = new VoteKickSession(currentlyKicking, found);
                     session.vote(player, 1);
