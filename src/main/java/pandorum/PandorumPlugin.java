@@ -376,7 +376,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID.", (args, player) -> {
-            if(args.length > 0 && !Strings.canParseInt(args[0])){
+            if(args.length > 0 && !Strings.canParseInt(args[0])) {
                 bundled(player, "commands.page-not-int");
                 return;
             }
@@ -391,12 +391,11 @@ public final class PandorumPlugin extends Plugin{
             StringBuilder result = new StringBuilder();
             result.append(Bundle.format("commands.pl.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
-            for(int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
+            for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
                 Player p = Groups.player.index(i);
                 result.append("[#9c88ee]* []").append(p.name).append(" [accent]/ [cyan]ID: ").append(p.id());
-
-                if(player.admin){
-                    result.append(" [accent]/ [cyan]raw: ").append(p.name.replaceAll("\\[", "[["));
+                if (player.admin) {
+                    result.append(Bundle.format("commands.pl.raw", findLocale(player.locale), p.name.replaceAll("\\[", "[[")));
                 }
                 result.append("\n");
             }
@@ -411,7 +410,7 @@ public final class PandorumPlugin extends Plugin{
 
         if(config.type != PluginType.other) {
             handler.<Player>register("rtv", "Проголосовать за смену карты.", (args, player) -> {
-                if(votesRTV.contains(player.uuid())){
+                if (votesRTV.contains(player.uuid())) {
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -421,7 +420,7 @@ public final class PandorumPlugin extends Plugin{
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
 
-                if(cur < req){
+                if (cur < req) {
                     return;
                 }
 
@@ -431,7 +430,7 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("vnw", "Проголосовать за пропуск волны.", (args, player) -> {
-                if(votesVNW.contains(player.uuid())){
+                if (votesVNW.contains(player.uuid())) {
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -441,7 +440,7 @@ public final class PandorumPlugin extends Plugin{
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
                 sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
 
-                if(cur < req){
+                if (cur < req) {
                     return;
                 }
 
@@ -485,13 +484,13 @@ public final class PandorumPlugin extends Plugin{
                 int count = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
 
                 Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
-                if(item == null){
+                if (item == null) {
                     bundled(player, "commands.admin.give.item-not-found");
                     return;
                 }
 
                 TeamData team = state.teams.get(player.team());
-                if(!team.hasCore()){
+                if (!team.hasCore()) {
                     bundled(player, "commands.admin.give.core-not-found");
                     return;
                 }
@@ -502,10 +501,10 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
-                if(alertIgnores.contains(player.uuid())){
+                if (alertIgnores.contains(player.uuid())) {
                     alertIgnores.remove(player.uuid());
                     bundled(player, "commands.alert.on");
-                }else{
+                } else {
                     alertIgnores.add(player.uuid());
                     bundled(player, "commands.alert.off");
                 }
@@ -515,20 +514,20 @@ public final class PandorumPlugin extends Plugin{
                 if(Misc.adminCheck(player)) return;
 
                 Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
-                if(team == null){
+                if (team == null) {
                     bundled(player, "commands.teams");
                     return;
                 }
             
                 Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
-                if(target == null){
+                if (target == null) {
                     bundled(player, "commands.player-not-found");
                     return;
                 }
 
                 bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
                 target.team(team);
-                String text = args.length > 1 ? "Команда игрока " + target.name() + " изменена на " + team + "." : "Команда изменена на " + team + ".";
+                String text = args.length > 1 ? "Команда игрока " + Strings.stripColors(target.name()) + " изменена на " + team + "." : "Команда изменена на " + team + ".";
                 WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xFF0000)
                     .setTitle(new WebhookEmbed.EmbedTitle(text, null))
