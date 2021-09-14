@@ -313,7 +313,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
                 if (!Strings.canParsePositiveInt(args[0])) {
-                    Log.err("Новое значение должно быть положительным целым числом.");
+                    Log.err("Новое значение должно быть положительным целым числом!");
                     return;
                 }
                 Core.settings.put("despawndelay", Strings.parseFloat(args[0]));
@@ -336,13 +336,10 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.page-not-int");
                 return;
             }
-            int commandsPerPage = 6;
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-            int pages = Mathf.ceil((float)netServer.clientCommands.getCommandList().size / commandsPerPage);
+            int pages = Mathf.ceil((float)netServer.clientCommands.getCommandList().size / 6.0f);
 
-            page--;
-
-            if(page >= pages || page < 0){
+            if(--page >= pages || page < 0){
                 bundled(player, "commands.under-page", String.valueOf(pages));
                 return;
             }
@@ -350,7 +347,7 @@ public final class PandorumPlugin extends Plugin{
             StringBuilder result = new StringBuilder();
             result.append(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
-            for(int i = commandsPerPage * page; i < Math.min(commandsPerPage * (page + 1), netServer.clientCommands.getCommandList().size); i++){
+            for(int i = 6 * page; i < Math.min(6 * (page + 1), netServer.clientCommands.getCommandList().size); i++){
                 CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
                 String desc = Bundle.has("commands." + command.text + ".description", findLocale(player.locale)) ? Bundle.format("commands." + command.text + ".description", findLocale(player.locale)) : command.description;
                 result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
@@ -383,13 +380,10 @@ public final class PandorumPlugin extends Plugin{
                 bundled(player, "commands.page-not-int");
                 return;
             }
-
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-            int pages = Mathf.ceil((float)Groups.player.size() / 6);
+            int pages = Mathf.ceil((float)Groups.player.size() / 6.0f);
 
-            page--;
-
-            if(page >= pages || page < 0) {
+            if (--page >= pages || page < 0) {
                 bundled(player, "commands.under-page", pages);
                 return;
             }
@@ -813,20 +807,21 @@ public final class PandorumPlugin extends Plugin{
 
             Player found = Misc.findByName(Strings.stripColors(args[0]));
 
-            if(found != null) {
-                if (found.admin) {
-                    bundled(player, "commands.votekick.cannot-kick-admin");
-                } else if (found.team() != player.team()) {
-                    bundled(player, "commands.votekick.cannot-kick-another-team");
-                } else if (found == player) {
-                    bundled(player, "commands.vote.cannot-vote-for-yourself");
-                } else {
-                    VoteKickSession session = new VoteKickSession(currentlyKicking, found);
-                    session.vote(player, 1);
-                    currentlyKicking[0] = session;
-                }
-            } else {
+            if(found == null) {
                 bundled(player, "commands.player-not-found");
+                return;
+            }
+
+            if (found.admin) {
+                bundled(player, "commands.votekick.cannot-kick-admin");
+            } else if (found.team() != player.team()) {
+                bundled(player, "commands.votekick.cannot-kick-another-team");
+            } else if (found == player) {
+                bundled(player, "commands.vote.cannot-vote-for-yourself");
+            } else {
+                VoteKickSession session = new VoteKickSession(currentlyKicking, found);
+                session.vote(player, 1);
+                currentlyKicking[0] = session;
             }
         });
 
