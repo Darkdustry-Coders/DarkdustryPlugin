@@ -34,16 +34,14 @@ public class ConfigEntry implements HistoryEntry{
     public Object value;
     public boolean connect;
     public Building build;
-    public UnitType unit;
     public Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect){
         this.name = colorizedName(event.player);
         this.block = event.tile.block();
-        this.value = getConfig(event);
-        this.connect = connect;
         this.build = event.tile;
-        this.unit = build instanceof UnitFactory.UnitFactoryBuild ? ((UnitFactory.UnitFactoryBuild)build).unit() : null;
+        this.value = build instanceof UnitFactory.UnitFactoryBuild ? ((UnitFactory.UnitFactoryBuild)build).unit() : getConfig(event);
+        this.connect = connect;
         this.time = new Date();
     }
 
@@ -121,6 +119,7 @@ public class ConfigEntry implements HistoryEntry{
         }
 
         if(block instanceof UnitFactory){
+            UnitType unit = (UnitType)value;
             if(unit == null){
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
