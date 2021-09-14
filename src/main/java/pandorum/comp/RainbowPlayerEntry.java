@@ -8,7 +8,7 @@ public class RainbowPlayerEntry {
     public int hue;
     public String stripedName;
 
-    public void changeEntryColor(RainbowPlayerEntry entry) {
+    public static void changeEntryColor(RainbowPlayerEntry entry) {
         int hue = entry.hue;
         if (hue < 360) hue++;
         else hue = 0;
