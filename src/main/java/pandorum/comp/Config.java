@@ -11,7 +11,7 @@ public class Config{
     public float voteRatio = 0.6f;
 
     /** Ёмкость массива, хранящего информацию о действиях с тайлом. Может сильно влиять на трату ОЗУ */
-    public int historyLimit = 8;
+    public int historyLimit = 6;
 
     /** Время, через которое запись в истории тайла будет удалена. По умолчанию 30 минут. Записывается в миллисекундах */
     public long expireDelay = 1800000;
