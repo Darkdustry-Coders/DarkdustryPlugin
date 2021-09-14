@@ -217,15 +217,7 @@ public final class PandorumPlugin extends Plugin{
         Events.on(GameOverEvent.class, pandorum.events.GameOverEvent::call);
         Events.run(Trigger.update, TriggerUpdate::call);
 
-        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), entry -> {
-            int hue = entry.hue;
-            if (hue < 360) hue++;
-            else hue = 0;
-
-            String color = "[#" + Color.HSVtoRGB(hue / 360f, 1f, 1f) + "]";
-            entry.player.name = color + entry.stripedName;
-            entry.hue = hue;
-        }), 0f, 0.05f);
+        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), entry -> RainbowPlayerEntry.changeEntryColor(entry)), 0f, 0.05f);
 
         // TODO (Дарк) вынести все меню в отдельный класс
         // Приветственное сообщение
@@ -690,7 +682,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("rainbow", "РАДУГА!", (args, player) -> {
             RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
-            if(old != null){
+            if(old != null) {
                 rainbow.remove(old);
                 player.name = netServer.admins.getInfo(player.uuid()).lastName;
                 bundled(player, "commands.rainbow.off");
@@ -930,12 +922,5 @@ public final class PandorumPlugin extends Plugin{
         } catch(Exception e) {
             Log.err(e);
         }
-    }
-
-    // TODO впихнуть радугу в отдельный класс
-    public static class RainbowPlayerEntry {
-        public Player player;
-        public int hue;
-        public String stripedName;
     }
 }
