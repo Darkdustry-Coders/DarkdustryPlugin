@@ -15,6 +15,7 @@ import arc.util.Structs;
 import arc.util.Timer;
 import arc.util.Time;
 import arc.util.io.Streams;
+import arc.graphics.Color;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import com.google.gson.FieldNamingPolicy;
@@ -71,7 +72,6 @@ import pandorum.struct.CacheSeq;
 import pandorum.struct.Tuple2;
 import pandorum.vote.*;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -217,14 +217,14 @@ public final class PandorumPlugin extends Plugin{
         Events.on(GameOverEvent.class, pandorum.events.GameOverEvent::call);
         Events.run(Trigger.update, TriggerUpdate::call);
 
-        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), r -> {
-            int hue = r.hue;
-            if(hue < 360) hue++;
+        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), entry -> {
+            int hue = entry.hue;
+            if (hue < 360) hue++;
             else hue = 0;
 
-            String hex = "[#" + Integer.toHexString(Color.getHSBColor(hue / 360f, 1f, 1f).getRGB()).substring(2) + "]";
-            r.player.name = hex + r.stripedName;
-            r.hue = hue;
+            String color = "[#" + Color.HSVtoRGB(hue / 360f, 1f, 1f) + "]";
+            entry.player.name = color + entry.stripedName;
+            entry.hue = hue;
         }), 0f, 0.05f);
 
         // TODO (Дарк) вынести все меню в отдельный класс
