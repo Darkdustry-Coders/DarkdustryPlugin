@@ -301,7 +301,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.removeCommand("say");
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
-            Call.sendMessage("[lime]Server[white]: " + args[0]);
+            sendToChat("commands.say.chat", args[0]);
             Log.info("Server: &ly@", args[0]);
             DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", args[0].replaceAll("https?://|@", "")));
         });
