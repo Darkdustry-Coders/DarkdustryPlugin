@@ -1,10 +1,10 @@
 package pandorum.events;
 
 import java.time.Duration;
+import static mindustry.Vars.world;
 
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import mindustry.Vars;
 import mindustry.gen.Groups;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
@@ -18,9 +18,9 @@ public class WorldLoadEvent {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
         if(PandorumPlugin.config.type == PluginType.sand) PandorumPlugin.timer.clear();
-        PandorumPlugin.history = new CacheSeq[Vars.world.width()][Vars.world.height()];
+        PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
-        for(Tile tile : Vars.world.tiles){
+        for(Tile tile : world.tiles){
             PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
                     .maximumSize(PandorumPlugin.config.historyLimit)
                     .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
