@@ -17,7 +17,7 @@ ext{
 
     project.version = mod['version']
 
-    mindustryVersion = 'v130.1'
+    mindustryVersion = 'v131'
     gsonVersion      = '2.8.6'
 }
 
