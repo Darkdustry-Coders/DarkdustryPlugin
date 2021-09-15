@@ -7,7 +7,7 @@ compileTestJava.options.encoding = 'UTF-8'
 
 repositories{
     mavenCentral()
-    maven{ url 'https://www.jitpack.io' }
+    maven{ url 'https://jitpack.io' }
 }
 
 def json = new JsonSlurper()
