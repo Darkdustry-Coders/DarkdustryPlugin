@@ -27,8 +27,8 @@ public class BlockEntry implements HistoryEntry{
         this.time = new Date();
         this.unit = event.unit;
         this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
-        this.block = this.breaking ? event.tile.build.block : null;
-        this.rotation = this.breaking ? event.tile.build.rotation : -1;
+        this.block = this.breaking ? null : event.tile.build.block;
+        this.rotation = this.breaking ? -1 : event.tile.build.rotation;
     }
 
     @Override
