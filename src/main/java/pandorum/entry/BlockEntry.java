@@ -23,12 +23,12 @@ public class BlockEntry implements HistoryEntry{
     public Date time;
 
     public BlockEntry(BlockBuildEndEvent event){
-        this.unit = event.unit;
-        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
-        this.block = event.tile.build != null ? event.tile.build.block : null;
-        this.rotation = event.tile.build != null ? event.tile.build.rotation : -1;
         this.breaking = event.breaking;
         this.time = new Date();
+        this.unit = event.unit;
+        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
+        this.block = this.breaking ? event.tile.build.block : null;
+        this.rotation = this.breaking ? event.tile.build.rotation : -1;
     }
 
     @Override
