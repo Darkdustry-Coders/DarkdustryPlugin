@@ -25,8 +25,8 @@ public class BlockEntry implements HistoryEntry{
     public BlockEntry(BlockBuildEndEvent event){
         this.breaking = event.breaking;
         this.time = new Date();
-        this.unit = event.unit;
-        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
+        this.name = event.unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
+        this.unit = this.name == null ? event.unit : null;
         this.block = this.breaking ? event.tile.build.block : null;
         this.rotation = this.breaking ? event.tile.build.rotation : -1;
     }
@@ -42,8 +42,7 @@ public class BlockEntry implements HistoryEntry{
             Bundle.format("history.block.destroy.unit", findLocale(player.locale), unit.type.name, ftime);
         }
 
-        String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) :
-                      Bundle.format("history.block.construct.unit", findLocale(player.locale), unit.type.name, block, ftime);
+        String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) : Bundle.format("history.block.construct.unit", findLocale(player.locale), unit.type.name, block, ftime);
         if(block.rotate){
             base += Bundle.format("history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
