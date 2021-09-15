@@ -60,7 +60,7 @@ public class ChatFilter {
             player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
         });
 
-        DiscordWebhookManager.client.send(String.format("**[%s]:** %s", Strings.stripColors(player.name), text.replaceAll("https?://|@", " ")));
+        DiscordWebhookManager.client.send(String.format("**[%s]:** %s", Strings.stripColors(author.name), text.replaceAll("https?://|@", " ")));
         return null;
     }
 }
