@@ -23,17 +23,12 @@ public class BlockEntry implements HistoryEntry{
     public Date time;
 
     public BlockEntry(BlockBuildEndEvent event){
-        this.unit = event.unit;
-        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
-        if (event.tile.build != null) {
-            this.block = event.tile.build.block;
-            this.rotation = event.tile.build.rotation;
-        } else {
-            this.block = null;
-            this.rotation = -1;
-        }
         this.breaking = event.breaking;
         this.time = new Date();
+        this.unit = event.unit;
+        this.name = unit.isPlayer() ? colorizedName(unit.getPlayer()) : unit.controller() instanceof Player ? colorizedName(unit.getPlayer()) : null;
+        this.block = this.breaking ? null : event.tile.build.block;
+        this.rotation = this.breaking ? -1 : event.tile.build.rotation;
     }
 
     @Override
@@ -44,11 +39,10 @@ public class BlockEntry implements HistoryEntry{
 
         if(breaking){
             return name != null ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :
-            Bundle.format("history.block.destroy.unit", findLocale(player.locale), unit.type, ftime);
+            Bundle.format("history.block.destroy.unit", findLocale(player.locale), ConfigEntry.icons.get(unit.type.name) + "[orange]" + unit.type.name, ftime);
         }
 
-        String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) :
-                      Bundle.format("history.block.construct.unit", findLocale(player.locale), unit.type, block, ftime);
+        String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) : Bundle.format("history.block.construct.unit", findLocale(player.locale), ConfigEntry.icons.get(unit.type.name) + "[orange]" + unit.type.name, block, ftime);
         if(block.rotate){
             base += Bundle.format("history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }

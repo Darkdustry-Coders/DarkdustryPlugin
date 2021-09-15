@@ -6,8 +6,6 @@ import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.net.Administration;
 import pandorum.comp.DiscordWebhookManager;
-import pandorum.PandorumPlugin;
-import pandorum.models.PlayerInfo;
 
 import org.bson.Document;
 
@@ -23,12 +21,5 @@ public class PlayerUnbanEvent {
                     .addField(new WebhookEmbed.EmbedField(true, "IP", info.lastIP));
             DiscordWebhookManager.client.send(banEmbedBuilder.build());
         }
-        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.uuid));
-        if (playerInfo == null) {
-            playerInfo = PandorumPlugin.playerInfoSchema.create(event.uuid, "IDK", false);
-            PandorumPlugin.playersInfo.add(playerInfo);
-        }
-        playerInfo.replace("banned", true);
-        PandorumPlugin.savePlayerStats(event.uuid);
     }
 }

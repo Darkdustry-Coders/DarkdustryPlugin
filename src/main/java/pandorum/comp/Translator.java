@@ -1,5 +1,7 @@
 package pandorum.comp;
 
+import arc.util.Log;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import okhttp3.*;
@@ -11,7 +13,7 @@ import pandorum.PandorumPlugin;
 
 public class Translator {
 
-    public static JSONObject translate(String text, String dest_lang) throws IOException, InterruptedException {
+    public static void translate(String text, String dest_lang, pandorum.database.Callback<JSONObject> callback) throws IOException, InterruptedException {
         String destAlphaLang = PandorumPlugin.codeLanguages.get("ru");
 
         if (PandorumPlugin.codeLanguages.containsKey(dest_lang)) destAlphaLang = PandorumPlugin.codeLanguages.get(dest_lang);
@@ -34,11 +36,24 @@ public class Translator {
                 .addHeader("sec-fetch-mode", "cors")
                 .addHeader("sec-fetch-site", "cross-site")
                 .build();
-        Response response = PandorumPlugin.client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
+        PandorumPlugin.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.err(e);
+            }
 
-        if (Objects.isNull(responseBody)) return new JSONObject("{}");
-        return new JSONObject(responseBody.string());
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                JSONObject body = response.isSuccessful() ?
+                        new JSONObject(Objects.requireNonNull(response.body()).string()) :
+                        new JSONObject("{}");
+                try {
+                    callback.call(body);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static JSONArray getAllLanguages() throws IOException {
@@ -57,13 +72,9 @@ public class Translator {
                 .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"")
                 .build();
         Response response = PandorumPlugin.client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
-
-        if (Objects.isNull(responseBody)) {
-            return new JSONArray("[]");
-        }
-
-        String bodyString = responseBody.string();
-        return new JSONObject(bodyString).getJSONArray("result");
+        JSONArray body = response.isSuccessful() ?
+                new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") :
+                new JSONArray("[]");
+        return body;
     }
 }

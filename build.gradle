@@ -7,7 +7,7 @@ compileTestJava.options.encoding = 'UTF-8'
 
 repositories{
     mavenCentral()
-    maven{ url 'https://www.jitpack.io' }
+    maven{ url 'https://jitpack.io' }
 }
 
 def json = new JsonSlurper()
@@ -17,7 +17,7 @@ ext{
 
     project.version = mod['version']
 
-    mindustryVersion = 'v130.1'
+    mindustryVersion = 'v131'
     gsonVersion      = '2.8.6'
 }
 

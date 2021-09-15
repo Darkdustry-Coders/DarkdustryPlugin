@@ -74,7 +74,7 @@ public abstract class Misc{
 
     public static boolean nameCheck(Player player) {
         String name = Strings.stripColors(player.name);
-        if (name.length() < 2 || name.length() > 25) {
+        if (name.length() < 1 || name.length() > 25) {
             player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
             return true;
         }
