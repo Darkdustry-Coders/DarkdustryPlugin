@@ -9,7 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import static pandorum.struct.CacheSeq.UNSET_INT;
 
+@SuppressWarnings("unchecked")
 public abstract class Seqs{
+
+    public static final Queue<?> EMPTY_QUEUE = new EmptyQueue<>();
 
     private Seqs(){}
 
@@ -28,7 +31,7 @@ public abstract class Seqs{
     }
 
     public static <T> EmptyQueue<T> emptyQueue(){
-        return new EmptyQueue<>();
+        return (EmptyQueue<T>)EMPTY_QUEUE;
     }
 
     private static class SafeQueue<T> extends Queue<T>{
