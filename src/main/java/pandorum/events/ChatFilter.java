@@ -20,7 +20,6 @@ public class ChatFilter {
     public static String call(final Player author, final String text) {
         author.sendMessage(text, author);
         Log.info("&fi&lc@: &lw@", author.name, text);
-
         Map<String, String> translationsCache = new HashMap<>();
         Groups.player.each(player -> !player.equals(author), player -> {
 
@@ -60,6 +59,8 @@ public class ChatFilter {
             translationsCache.put(language, translatedText);
             player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
         });
+
+        DiscordWebhookManager.client.send(String.format("**[%s]:** %s", Strings.stripColors(player.name), text.replaceAll("https?://|@", " ")));
         return null;
     }
 }
