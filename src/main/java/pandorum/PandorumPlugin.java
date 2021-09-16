@@ -397,7 +397,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if(Misc.adminCheck(player)) return;
             String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-            Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
+            Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
 
         if(config.type != PluginType.other) {
@@ -444,7 +444,7 @@ public final class PandorumPlugin extends Plugin{
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
                 if(Misc.adminCheck(player)) return;
                 String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-                Call.menu(3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
+                Call.menu(player.con, 3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
