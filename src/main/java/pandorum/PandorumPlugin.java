@@ -112,7 +112,7 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
     public PandorumPlugin() throws IOException {
-        ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@185.238.0.13:27017");
+        ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017");
 
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connString)
