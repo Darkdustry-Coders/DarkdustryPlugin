@@ -199,6 +199,7 @@ public final class PandorumPlugin extends Plugin{
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(true);
         Administration.Config.motd.set("off");
+        Administration.Config.messageRateLimit.set(2);
 
         netServer.admins.addActionFilter(ActionFilter::call);
         netServer.admins.addChatFilter(ChatFilter::call);
