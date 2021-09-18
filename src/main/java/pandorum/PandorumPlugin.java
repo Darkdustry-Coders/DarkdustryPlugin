@@ -585,6 +585,11 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
+                if(Groups.player.size() < 3) {
+                    bundled(player, "commands.not-enough-players");
+                    return;
+                }
+
                 VoteMode mode;
                 try {
                     mode = VoteMode.valueOf(args[0].toLowerCase());
@@ -598,7 +603,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                switch(mode){
+                switch (mode) {
                     case map -> {
                         Map map = Misc.findMap(args[1]);
                         if(map == null){
@@ -628,11 +633,11 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("y", "Проголосовать.", (args, player) -> {
-                 if(current[0] == null) {
+                 if (current[0] == null) {
                      bundled(player, "commands.no-voting");
                      return;
                  }
-                 if(current[0].voted().contains(player.uuid())){
+                 if (current[0].voted().contains(player.uuid())) {
                      bundled(player, "commands.already-voted");
                      return;
                  }
@@ -640,11 +645,11 @@ public final class PandorumPlugin extends Plugin{
              });
 
             handler.<Player>register("n", "Проголосовать.", (args, player) -> {
-                if(current[0] == null) {
+                if (current[0] == null) {
                     bundled(player, "commands.no-voting");
                     return;
                 }
-                if(current[0].voted().contains(player.uuid())){
+                if (current[0].voted().contains(player.uuid())) {
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -788,7 +793,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             if(Groups.player.size() < 3) {
-                bundled(player, "commands.votekick.not-enough-players");
+                bundled(player, "commands.not-enough-players");
                 return;
             }
 
@@ -818,33 +823,33 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (arg, player) -> {
-            if(currentlyKicking[0] == null) {
+            if (currentlyKicking[0] == null) {
                 bundled(player, "commands.no-voting");
                 return;
             }
 
-            if(currentlyKicking[0].voted().contains(player.uuid())) {
+            if (currentlyKicking[0].voted().contains(player.uuid())) {
                 bundled(player, "commands.already-voted");
                 return;
             }
 
-            if(currentlyKicking[0].target() == player){
+            if (currentlyKicking[0].target() == player) {
                 bundled(player, "commands.vote.cannot-vote-for-yourself");
                 return;
             }
 
-            if(currentlyKicking[0].target().team() != player.team()){
+            if (currentlyKicking[0].target().team() != player.team()) {
                 bundled(player, "commands.vote.cannot-vote-another-team");
                 return;
             }
 
-            int sign = switch(arg[0].toLowerCase()){
+            int sign = switch(arg[0].toLowerCase()) {
                 case "y", "yes" ->  1;
                 case "n", "no" -> -1;
                 default -> 0;
             };
 
-            if(sign == 0){
+            if (sign == 0) {
                 bundled(player, "commands.vote.incorrect-args");
                 return;
             }
