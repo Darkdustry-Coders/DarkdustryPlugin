@@ -23,7 +23,7 @@ public class ActionFilter {
                 entry = new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
                 entries.add(entry);
             }
-            case ActionType.depositItem -> 
+            case ActionType.depositItem -> {
                 entry = new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
                 entries.add(entry);
             }
