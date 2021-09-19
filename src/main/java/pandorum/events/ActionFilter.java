@@ -11,16 +11,22 @@ import pandorum.Misc;
 
 public class ActionFilter {
     public static boolean call(final PlayerAction action) {
-        HistoryEntry entry = switch(action.type) {
-            case ActionType.rotate -> new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
-            case ActionType.withdrawItem -> new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
-            case ActionType.depositItem -> new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
-            default -> null;
-        };
+        HistoryEntry entry;
+        CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
 
-        if (entry != null) {
-            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
-            entries.add(entry);
+        switch(action.type) {
+            case ActionType.rotate -> {
+                entry = new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
+                entries.add(entry);
+            }                
+            case ActionType.withdrawItem -> {
+                entry = new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+                entries.add(entry);
+            }
+            case ActionType.depositItem -> 
+                entry = new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+                entries.add(entry);
+            }
         }
         return true;
     }
