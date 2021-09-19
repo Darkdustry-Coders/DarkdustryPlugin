@@ -15,15 +15,15 @@ public class ActionFilter {
         CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
 
         switch(action.type) {
-            case ActionType.rotate -> {
+            case rotate -> {
                 entry = new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
                 entries.add(entry);
             }                
-            case ActionType.withdrawItem -> {
+            case withdrawItem -> {
                 entry = new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
                 entries.add(entry);
             }
-            case ActionType.depositItem -> {
+            case depositItem -> {
                 entry = new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
                 entries.add(entry);
             }
