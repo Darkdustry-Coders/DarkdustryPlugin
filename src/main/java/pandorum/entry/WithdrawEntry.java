@@ -16,14 +16,14 @@ public class WithdrawEntry implements HistoryEntry{
 
     public String name;
     public Block block;
-    public Item item
+    public Item item;
     public int count;
     public Date time;
 
     public WithdrawEntry(String name, Block block, Item item, int count){
         this.name = name;
         this.block = block;
-        this.item = item
+        this.item = item;
         this.count = count;
         this.time = new Date();
     }
