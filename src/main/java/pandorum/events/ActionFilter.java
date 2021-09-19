@@ -9,7 +9,7 @@ import pandorum.PandorumPlugin;
 import pandorum.Misc;
 
 public class ActionFilter {
-    public static boolean call(final Administration.PlayerAction action) {
+    public static boolean call(final PlayerAction action) {
         HistoryEntry entry = switch(action.type) {
             case ActionType.rotate -> new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
             case ActionType.withdrawItem -> new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
