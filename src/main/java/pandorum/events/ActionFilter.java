@@ -16,9 +16,15 @@ public class ActionFilter {
             HistoryEntry entry = new RotateEntry(Misc.colorizedName(action.player), building.block, action.rotation);
             entries.add(entry);
         } else if (action.type == Administration.ActionType.withdrawItem) {
-            // TODO
+            Building building = action.tile.build;
+            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
+            HistoryEntry entry = new WithdrawEntry(Misc.colorizedName(action.player), building.block, action.item, action.itemAmount);
+            entries.add(entry);
         } else if (action.type == Administration.ActionType.depositItem) {
-            // TODO
+            Building building = action.tile.build;
+            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
+            HistoryEntry entry = new DepositEntry(Misc.colorizedName(action.player), building.block, action.item, action.itemAmount);
+            entries.add(entry);
         }
         return true;
     }
