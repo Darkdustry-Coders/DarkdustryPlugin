@@ -13,7 +13,7 @@ public class RainbowPlayerEntry {
         if (hue < 360) hue++;
         else hue = 0;
 
-        String color = "[#" + Color.HSVtoRGB(hue / 360f, 1f, 1f) + "]";
+        String color = "[#" + Color.HSVtoRGB(hue, 100f, 100f) + "]";
         entry.player.name = color + entry.stripedName;
         entry.hue = hue;
     }

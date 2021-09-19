@@ -110,7 +110,7 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
     public PandorumPlugin() throws IOException {
-        ConnectionString connString = new ConnectionString("mongodb+srv://host:BmnP4NEpht8wQFqv@darkdustry.aztzv.mongodb.net");
+        ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
 
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connString)
@@ -197,6 +197,7 @@ public final class PandorumPlugin extends Plugin{
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(true);
         Administration.Config.motd.set("off");
+        Administration.Config.messageRateLimit.set(2);
 
         netServer.admins.addActionFilter(ActionFilter::call);
         netServer.admins.addChatFilter(ChatFilter::call);
@@ -395,7 +396,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if(Misc.adminCheck(player)) return;
             String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-            Call.menu(2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
+            Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
 
         if(config.type != PluginType.other) {
@@ -442,7 +443,7 @@ public final class PandorumPlugin extends Plugin{
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
                 if(Misc.adminCheck(player)) return;
                 String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-                Call.menu(3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
+                Call.menu(player.con, 3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
@@ -582,6 +583,11 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
+                if(Groups.player.size() < 3) {
+                    bundled(player, "commands.not-enough-players");
+                    return;
+                }
+
                 VoteMode mode;
                 try {
                     mode = VoteMode.valueOf(args[0].toLowerCase());
@@ -595,7 +601,7 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                switch(mode){
+                switch (mode) {
                     case map -> {
                         Map map = Misc.findMap(args[1]);
                         if(map == null){
@@ -625,11 +631,11 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("y", "Проголосовать.", (args, player) -> {
-                 if(current[0] == null) {
+                 if (current[0] == null) {
                      bundled(player, "commands.no-voting");
                      return;
                  }
-                 if(current[0].voted().contains(player.uuid())){
+                 if (current[0].voted().contains(player.uuid())) {
                      bundled(player, "commands.already-voted");
                      return;
                  }
@@ -637,11 +643,11 @@ public final class PandorumPlugin extends Plugin{
              });
 
             handler.<Player>register("n", "Проголосовать.", (args, player) -> {
-                if(current[0] == null) {
+                if (current[0] == null) {
                     bundled(player, "commands.no-voting");
                     return;
                 }
-                if(current[0].voted().contains(player.uuid())){
+                if (current[0].voted().contains(player.uuid())) {
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -785,7 +791,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             if(Groups.player.size() < 3) {
-                bundled(player, "commands.votekick.not-enough-players");
+                bundled(player, "commands.not-enough-players");
                 return;
             }
 
@@ -815,33 +821,33 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (arg, player) -> {
-            if(currentlyKicking[0] == null) {
+            if (currentlyKicking[0] == null) {
                 bundled(player, "commands.no-voting");
                 return;
             }
 
-            if(currentlyKicking[0].voted().contains(player.uuid())) {
+            if (currentlyKicking[0].voted().contains(player.uuid())) {
                 bundled(player, "commands.already-voted");
                 return;
             }
 
-            if(currentlyKicking[0].target() == player){
+            if (currentlyKicking[0].target() == player) {
                 bundled(player, "commands.vote.cannot-vote-for-yourself");
                 return;
             }
 
-            if(currentlyKicking[0].target().team() != player.team()){
+            if (currentlyKicking[0].target().team() != player.team()) {
                 bundled(player, "commands.vote.cannot-vote-another-team");
                 return;
             }
 
-            int sign = switch(arg[0].toLowerCase()){
+            int sign = switch(arg[0].toLowerCase()) {
                 case "y", "yes" ->  1;
                 case "n", "no" -> -1;
                 default -> 0;
             };
 
-            if(sign == 0){
+            if (sign == 0) {
                 bundled(player, "commands.vote.incorrect-args");
                 return;
             }
