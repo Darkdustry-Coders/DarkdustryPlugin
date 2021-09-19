@@ -34,6 +34,6 @@ public class WithdrawEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        return Bundle.format("history.withdraw", findLocale(player.locale), name, block.name, count, ConfigEntry.icons.get(item.name), ftime);
+        return Bundle.format("history.withdraw", findLocale(player.locale), name, count, ConfigEntry.icons.get(item.name), block.name, ftime);
     }
 }
