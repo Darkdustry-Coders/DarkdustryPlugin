@@ -15,7 +15,6 @@ import arc.util.Structs;
 import arc.util.Timer;
 import arc.util.Time;
 import arc.util.io.Streams;
-import arc.graphics.Color;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import com.google.gson.FieldNamingPolicy;
@@ -59,7 +58,6 @@ import mindustry.world.Tile;
 import okhttp3.OkHttpClient;
 import org.bson.BsonDocument;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
@@ -217,7 +215,7 @@ public final class PandorumPlugin extends Plugin{
         Events.on(GameOverEvent.class, pandorum.events.GameOverEvent::call);
         Events.run(Trigger.update, TriggerUpdate::call);
 
-        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), entry -> RainbowPlayerEntry.changeEntryColor(entry)), 0f, 0.05f);
+        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
         // TODO (Дарк) вынести все меню в отдельный класс
         // Приветственное сообщение
@@ -876,7 +874,7 @@ public final class PandorumPlugin extends Plugin{
                 }
                 case "list" -> {
                     StringBuilder builder = new StringBuilder();
-                    codeLanguages.keys().forEach(locale -> builder.append(" " + locale));
+                    codeLanguages.keys().forEach(locale -> builder.append(" ").append(locale));
                     bundled(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {

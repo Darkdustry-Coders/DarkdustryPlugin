@@ -48,7 +48,7 @@ public class ChatFilter {
                         return;
                     }
 
-                    String translatedText = translatorRes.getString("result");
+                    String translatedText = translatorRes.optString("result", "The translation failed!");
                     translationsCache.put(language, translatedText);
                     player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
                 });
