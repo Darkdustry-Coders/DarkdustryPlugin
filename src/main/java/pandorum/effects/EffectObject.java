@@ -33,10 +33,6 @@ public class EffectObject {
         return Reflect.get(Fx.class, effect);
     }
 
-    public void spawn() {
-        Call.effect(getEffect(), x, y, rotation, getColor());
-    }
-
     public void spawn(float x, float y) {
         Call.effect(getEffect(), x, y, rotation, getColor());
     }

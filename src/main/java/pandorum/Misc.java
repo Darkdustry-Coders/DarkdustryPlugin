@@ -13,7 +13,7 @@ import java.util.Locale;
 import static mindustry.Vars.*;
 import pandorum.comp.*;
 
-public abstract class Misc{
+public abstract class Misc {
 
     private Misc(){}
 

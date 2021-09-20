@@ -7,8 +7,6 @@ import mindustry.game.EventType;
 import mindustry.net.Administration;
 import pandorum.comp.DiscordWebhookManager;
 
-import org.bson.Document;
-
 public class PlayerUnbanEvent {
     public static void call(final EventType.PlayerUnbanEvent event) {
         Administration.PlayerInfo info = Vars.netServer.admins.getInfo(event.uuid);

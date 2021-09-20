@@ -1,23 +1,19 @@
 package pandorum.vote;
 
-import static mindustry.Vars.logic;
-import static mindustry.Vars.net;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.state;
-import static mindustry.Vars.world;
-import static pandorum.Misc.sendToChat;
-import static pandorum.Misc.colorizedName;
-import static pandorum.PandorumPlugin.config;
-
 import arc.util.Log;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.game.Gamemode;
-import mindustry.gen.Player;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
+
+import static mindustry.Vars.*;
+import static pandorum.Misc.colorizedName;
+import static pandorum.Misc.sendToChat;
+import static pandorum.PandorumPlugin.config;
 
 public class VoteMapSession extends VoteSession{
     private final Map target;

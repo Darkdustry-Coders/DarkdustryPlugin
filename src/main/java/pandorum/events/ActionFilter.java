@@ -1,20 +1,32 @@
 package pandorum.events;
 
-import mindustry.gen.Building;
-import mindustry.net.Administration;
-
-import pandorum.struct.*;
-import pandorum.entry.*;
-import pandorum.PandorumPlugin;
+import mindustry.net.Administration.PlayerAction;
 import pandorum.Misc;
+import pandorum.PandorumPlugin;
+import pandorum.entry.DepositEntry;
+import pandorum.entry.HistoryEntry;
+import pandorum.entry.RotateEntry;
+import pandorum.entry.WithdrawEntry;
+import pandorum.struct.CacheSeq;
 
 public class ActionFilter {
-    public static boolean call(final Administration.PlayerAction action) {
-        if(action.type == Administration.ActionType.rotate){
-            Building building = action.tile.build;
-            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
-            HistoryEntry entry = new RotateEntry(Misc.colorizedName(action.player), building.block, action.rotation);
-            entries.add(entry);
+    public static boolean call(final PlayerAction action) {
+        HistoryEntry entry;
+        CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
+
+        switch(action.type) {
+            case rotate -> {
+                entry = new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
+                entries.add(entry);
+            }                
+            case withdrawItem -> {
+                entry = new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+                entries.add(entry);
+            }
+            case depositItem -> {
+                entry = new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+                entries.add(entry);
+            }
         }
         return true;
     }

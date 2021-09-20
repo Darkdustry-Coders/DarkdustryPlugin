@@ -1,16 +1,15 @@
 package pandorum.vote;
 
-import static pandorum.PandorumPlugin.config;
-import static pandorum.Misc.sendToChat;
-import static pandorum.Misc.colorizedName;
-
 import arc.struct.Seq;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.Vars;
 import mindustry.net.Packets.KickReason;
+
+import static pandorum.Misc.colorizedName;
+import static pandorum.Misc.sendToChat;
+import static pandorum.PandorumPlugin.config;
 
 public class VoteKickSession{
     protected Player target;
@@ -54,7 +53,7 @@ public class VoteKickSession{
     protected boolean checkPass() {
         if(votes >= votesRequired()) {
             sendToChat("commands.votekick.vote-passed", colorizedName(target), (kickDuration / 60));
-            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000));
+            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
             stop();
             return true;
         }

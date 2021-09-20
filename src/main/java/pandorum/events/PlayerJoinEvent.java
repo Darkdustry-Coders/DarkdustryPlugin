@@ -1,34 +1,25 @@
 package pandorum.events;
 
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedName;
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.sendToChat;
-import static pandorum.Misc.nameCheck;
-
 import arc.util.Log;
 import arc.util.Strings;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
-import mindustry.Vars;
 import mindustry.gen.Groups;
-import mindustry.net.Packets.KickReason;
-
+import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
-import pandorum.models.PlayerInfo;
-import org.bson.Document;
+
+import static pandorum.Misc.*;
 
 public class PlayerJoinEvent {
     public static void call(final EventType.PlayerJoin event) {
-        PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> {
-            event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale)));
-        });
+        PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
         if (nameCheck(event.player)) return;
 
