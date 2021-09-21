@@ -11,22 +11,15 @@ import pandorum.struct.CacheSeq;
 
 public class ActionFilter {
     public static boolean call(final PlayerAction action) {
-        HistoryEntry entry;
-        CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
-
-        switch(action.type) {
-            case rotate -> {
-                entry = new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);
-                entries.add(entry);
-            }                
-            case withdrawItem -> {
-                entry = new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
-                entries.add(entry);
-            }
-            case depositItem -> {
-                entry = new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
-                entries.add(entry);
-            }
+        HistoryEntry entry = switch(action.type) {
+            case rotate -> new RotateEntry(Misc.colorizedName(action.player), action.tile.build.block, action.rotation);              
+            case withdrawItem -> new WithdrawEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+            case depositItem -> new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
+            default -> null;
+        };
+        if (entry != null) {
+            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
+            entries.add(entry);
         }
         return true;
     }
