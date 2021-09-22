@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.struct.Seq;
 import mindustry.net.Administration.PlayerAction;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
@@ -7,7 +8,6 @@ import pandorum.entry.DepositEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.RotateEntry;
 import pandorum.entry.WithdrawEntry;
-import pandorum.struct.CacheSeq;
 
 public class ActionFilter {
     public static boolean call(final PlayerAction action) {
@@ -18,8 +18,10 @@ public class ActionFilter {
             default -> null;
         };
         if (entry != null) {
-            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[action.tile.x][action.tile.y];
-            entries.add(entry);
+            Seq<Tile> linkedTile = event.tile.getLinkedTiles(new Seq<>());
+            for (Tile tile : linkedTile) {
+                PandorumPlugin.history[tile.x][tile.y].add(entry);
+            }
         }
         return true;
     }
