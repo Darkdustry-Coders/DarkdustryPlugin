@@ -2,6 +2,7 @@ package pandorum.events;
 
 import arc.struct.Seq;
 import mindustry.net.Administration.PlayerAction;
+import mindustry.world.Tile;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.entry.DepositEntry;
@@ -17,10 +18,10 @@ public class ActionFilter {
             case depositItem -> new DepositEntry(Misc.colorizedName(action.player), action.tile.build.block, action.item, action.itemAmount);
             default -> null;
         };
-        if (entry != null) {
-            Seq<Tile> linkedTile = event.tile.getLinkedTiles(new Seq<>());
-            for (Tile tile : linkedTile) {
-                PandorumPlugin.history[tile.x][tile.y].add(entry);
+        if (entry != null || action.tile != null) {
+            Seq<Tile> linkedTiles = action.tile.getLinkedTiles(new Seq<>());
+            for (Tile tile : linkedTiles) {
+                PandorumPlugin.history[action.tile.x][action.tile.y].add(entry);
             }
         }
         return true;
