@@ -35,6 +35,10 @@ public class ChatFilter {
             String language = locale.equals("auto") ? player.locale() : locale;
 
             if (translationsCache.containsKey(language)) {
+                if (translationsCache.get(language).equals("err")) {
+                    player.sendMessage(text, author);
+                    return;
+                }
                 player.sendMessage(text + " [white]([gray]" + translationsCache.get(language) + "[white])", author);
                 return;
             }
@@ -48,8 +52,12 @@ public class ChatFilter {
                         return;
                     }
 
-                    String translatedText = translatorRes.optString("result", "The translation failed!");
+                    String translatedText = translatorRes.optString("result", "err");
                     translationsCache.put(language, translatedText);
+                    if (translatedText.equals("err")) {
+                        player.sendMessage(text, author);
+                        return;
+                    }
                     player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
                 });
             } catch (IOException | InterruptedException e) {
