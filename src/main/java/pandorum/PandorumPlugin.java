@@ -725,7 +725,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
-            if (unit == null) bundled(player, "commands.unit-not-found");
+            if (unit == null || unit == UnitTypes.block) bundled(player, "commands.unit-not-found");
             else {
                 for (int i = 0; count > i; i++) {
                     unit.spawn(team, player.x, player.y);
