@@ -73,7 +73,11 @@ import pandorum.vote.*;
 import java.io.IOException;
 import java.util.Objects;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.content;
+import static mindustry.Vars.world;
 import static pandorum.Misc.*;
 
 public final class PandorumPlugin extends Plugin{
@@ -807,13 +811,10 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            if (found.admin) {
-                bundled(player, "commands.votekick.cannot-kick-admin");
-            } else if (found.team() != player.team()) {
-                bundled(player, "commands.votekick.cannot-kick-another-team");
-            } else if (found == player) {
-                bundled(player, "commands.vote.cannot-vote-for-yourself");
-            } else {
+            if (found.admin) bundled(player, "commands.votekick.cannot-kick-admin");
+            else if (found.team() != player.team()) bundled(player, "commands.votekick.cannot-kick-another-team");
+            else if (found == player) bundled(player, "commands.vote.cannot-vote-for-yourself");
+            else {
                 VoteKickSession session = new VoteKickSession(currentlyKicking, found);
                 session.vote(player, 1);
                 currentlyKicking[0] = session;

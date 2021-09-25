@@ -25,6 +25,7 @@ public class ChatFilter {
                 playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, false, "off");
                 PandorumPlugin.playersInfo.add(playerInfo);
             }
+
             String locale = playerInfo.getString("locale");
 
             if (locale == null || locale.equals("off")) { 
@@ -35,10 +36,6 @@ public class ChatFilter {
             String language = locale.equals("auto") ? player.locale() : locale;
 
             if (translationsCache.containsKey(language)) {
-                if (translationsCache.get(language).equals("err")) {
-                    player.sendMessage(text, author);
-                    return;
-                }
                 player.sendMessage(text + " [white]([gray]" + translationsCache.get(language) + "[white])", author);
                 return;
             }
@@ -53,11 +50,12 @@ public class ChatFilter {
                     }
 
                     String translatedText = translatorRes.optString("result", "err");
-                    translationsCache.put(language, translatedText);
                     if (translatedText.equals("err")) {
+                        translationsCache.put(language, text);
                         player.sendMessage(text, author);
                         return;
                     }
+                    translationsCache.put(language, translatedText);
                     player.sendMessage(text + " [white]([gray]" + translatedText + "[white])", author);
                 });
             } catch (IOException | InterruptedException e) {

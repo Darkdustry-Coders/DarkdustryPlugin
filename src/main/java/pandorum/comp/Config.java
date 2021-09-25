@@ -3,7 +3,7 @@ package pandorum.comp;
 import arc.util.Strings;
 import pandorum.struct.Tuple2;
 
-public class Config{
+public class Config {
 
     public int alertDistance = 300;
 
@@ -39,7 +39,7 @@ public class Config{
         return Tuple2.of(ip, port);
     }
 
-    public enum PluginType{
+    public enum PluginType {
 
         /** Тип для серверов с режимом выживания или атаки */
         def,

@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
 import static pandorum.struct.CacheSeq.UNSET_INT;
 
 @SuppressWarnings("unchecked")
-public abstract class Seqs{
+public abstract class Seqs {
 
     public static final Queue<?> EMPTY_QUEUE = new EmptyQueue<>();
 
-    private Seqs(){}
+    private Seqs() {}
 
-    static void requireArgument(boolean expression, String template, @Nullable Object... args){
-        if(!expression){
+    static void requireArgument(boolean expression, String template, @Nullable Object... args) {
+        if (!expression) {
             throw new IllegalArgumentException(Strings.format(template, args));
         }
     }
@@ -70,17 +70,17 @@ public abstract class Seqs{
     private static class EmptyQueue<T> extends Queue<T>{
 
         @Override
-        public void add(T object){
+        public void add(T object) {
 
         }
 
         @Override
-        public void addFirst(T object){
+        public void addFirst(T object) {
 
         }
 
         @Override
-        public void addLast(T object){
+        public void addLast(T object) {
 
         }
 
@@ -140,32 +140,32 @@ public abstract class Seqs{
         }
     }
 
-    public static class SeqBuilder<T>{
+    public static class SeqBuilder<T> {
         protected long expireAfterWriteNanos = UNSET_INT;
         protected int maximumSize = UNSET_INT;
 
-        private SeqBuilder(){}
+        private SeqBuilder() {}
 
-        public SeqBuilder<T> maximumSize(int maximumSize){
+        public SeqBuilder<T> maximumSize(int maximumSize) {
             requireArgument(maximumSize >= 0, "maximum size must not be negative");
             this.maximumSize = maximumSize;
             return this;
         }
 
-        public SeqBuilder<T> expireAfterWrite(Duration duration){
+        public SeqBuilder<T> expireAfterWrite(Duration duration) {
             return expireAfterWrite(toNanosSaturated(duration), TimeUnit.NANOSECONDS);
         }
 
-        public SeqBuilder<T> expireAfterWrite(long duration, TimeUnit unit){
+        public SeqBuilder<T> expireAfterWrite(long duration, TimeUnit unit) {
             requireArgument(duration >= 0, "duration cannot be negative: @ @", duration, unit);
             this.expireAfterWriteNanos = unit.toNanos(duration);
             return this;
         }
 
-        private long toNanosSaturated(Duration duration){
-            try{
+        private long toNanosSaturated(Duration duration) {
+            try {
                 return duration.toNanos();
-            }catch(ArithmeticException tooBig){
+            } catch(ArithmeticException tooBig) {
                 return duration.isNegative() ? Long.MIN_VALUE : Long.MAX_VALUE;
             }
         }

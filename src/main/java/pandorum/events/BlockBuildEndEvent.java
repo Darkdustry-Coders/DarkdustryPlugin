@@ -12,7 +12,7 @@ public class BlockBuildEndEvent {
         HistoryEntry historyEntry = new BlockEntry(event);
 
         Seq<Tile> linkedTile = event.tile.getLinkedTiles(new Seq<>());
-        for(Tile tile : linkedTile){
+        for (Tile tile : linkedTile) {
             PandorumPlugin.history[tile.x][tile.y].add(historyEntry);
         }
     }

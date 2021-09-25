@@ -15,32 +15,32 @@ import pandorum.comp.*;
 
 public abstract class Misc {
 
-    private Misc(){}
+    private Misc() {}
 
-    public static String colorizedTeam(Team team){
+    public static String colorizedTeam(Team team) {
         Objects.requireNonNull(team, "team");
         return Strings.format("[#@]@", team.color, team);
     }
 
-    public static String colorizedName(Player player){
+    public static String colorizedName(Player player) {
         Objects.requireNonNull(player, "player");
         return NetClient.colorizeName(player.id, player.name);
     }
 
-    public static Map findMap(String text){
-        for(int i = 0; i < maps.all().size; i++){
+    public static Map findMap(String text) {
+        for (int i = 0; i < maps.all().size; i++) {
             Map map = maps.all().get(i);
-            if((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || map.name().equals(text)){
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || map.name().equals(text)) {
                 return map;
             }
         }
         return null;
     }
 
-    public static Fi findSave(String text){
-        for(int i = 0; i < saveDirectory.list().length; i++){
+    public static Fi findSave(String text) {
+        for (int i = 0; i < saveDirectory.list().length; i++) {
             Fi save = saveDirectory.list()[i];
-            if((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Objects.equals(save.nameWithoutExtension(), text)){
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Objects.equals(save.nameWithoutExtension(), text)) {
                 return save;
             }
         }

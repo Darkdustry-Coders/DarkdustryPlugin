@@ -21,7 +21,7 @@ public class ActionFilter {
         if (entry != null || action.tile != null) {
             Seq<Tile> linkedTiles = action.tile.getLinkedTiles(new Seq<>());
             for (Tile tile : linkedTiles) {
-                PandorumPlugin.history[action.tile.x][action.tile.y].add(entry);
+                PandorumPlugin.history[tile.x][tile.y].add(entry);
             }
         }
         return true;

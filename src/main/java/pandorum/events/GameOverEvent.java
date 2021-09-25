@@ -16,7 +16,7 @@ public class GameOverEvent {
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
 
         if(PandorumPlugin.config.type == PluginType.other) return;
-        else if(PandorumPlugin.config.type == PluginType.pvp) PandorumPlugin.surrendered.clear();
+        if (PandorumPlugin.config.type == PluginType.pvp) PandorumPlugin.surrendered.clear();
         PandorumPlugin.votesRTV.clear();
         PandorumPlugin.votesVNW.clear();
     }
