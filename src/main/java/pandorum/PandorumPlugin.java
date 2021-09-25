@@ -558,7 +558,7 @@ public final class PandorumPlugin extends Plugin{
                 player.sendMessage(result.toString());
             });
 
-            handler.<Player>register("saves", "[page]", "Вывести список сохранений.", (args, player) -> {
+            handler.<Player>register("saves", "[page]", "Вывести список сохранений на сервере.", (args, player) -> {
                 if(args.length > 0 && !Strings.canParseInt(args[0])){
                     bundled(player, "commands.page-not-int");
                     return;
