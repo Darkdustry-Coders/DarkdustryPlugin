@@ -78,7 +78,7 @@ public abstract class Misc {
             player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
             return true;
         }
-        if (name.contains("@")) {
+        if (name.contains("@") ) {
             player.con.kick(Bundle.format("events.bad-name", findLocale(player.locale)), 0);
             return true;
         }

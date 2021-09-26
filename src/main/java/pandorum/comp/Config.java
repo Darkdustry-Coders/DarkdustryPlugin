@@ -5,7 +5,7 @@ import pandorum.struct.Tuple2;
 
 public class Config {
 
-    public int alertDistance = 300;
+    public int alertDistance = 150;
 
     /** Необходимое количество игроков для успешного завершения голосования. */
     public float voteRatio = 0.6f;

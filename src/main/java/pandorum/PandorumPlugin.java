@@ -6,14 +6,7 @@ import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.ArcRuntimeException;
-import arc.util.CommandHandler;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.Strings;
-import arc.util.Structs;
-import arc.util.Timer;
-import arc.util.Time;
+import arc.util.*;
 import arc.util.io.Streams;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
@@ -38,21 +31,19 @@ import mindustry.game.EventType.ConfigEvent;
 import mindustry.game.EventType.DepositEvent;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.game.EventType.PlayerBanEvent;
-import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.PlayerLeave;
 import mindustry.game.EventType.PlayerUnbanEvent;
 import mindustry.game.EventType.ServerLoadEvent;
 import mindustry.game.EventType.TapEvent;
-import mindustry.game.EventType.Trigger;
 import mindustry.game.EventType.WorldLoadEvent;
+import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.game.Teams.TeamData;
 import mindustry.gen.*;
-import mindustry.ui.Menus;
 import mindustry.maps.Map;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
-import mindustry.type.*;
+import mindustry.type.Item;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import okhttp3.OkHttpClient;
@@ -73,11 +64,7 @@ import pandorum.vote.*;
 import java.io.IOException;
 import java.util.Objects;
 
-import static mindustry.Vars.state;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.dataDirectory;
-import static mindustry.Vars.content;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 import static pandorum.Misc.*;
 
 public final class PandorumPlugin extends Plugin{
@@ -222,46 +209,13 @@ public final class PandorumPlugin extends Plugin{
 
         Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
-        // TODO (Дарк) вынести все меню в отдельный класс
-        // Приветственное сообщение
-        Menus.registerMenu(1, (player, option) -> {
-            if (option == 1) {
-                Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
-                playerInfo.replace("hellomsg", false);
-                savePlayerStats(player.uuid());
-                bundled(player, "events.hellomsg.disabled");
-            }
-        });
-
-        // Команда /despw
-        Menus.registerMenu(2, (player, option) -> {
-            if (option == 0) {
-                Groups.unit.each(Unitc::kill);
-                bundled(player, "commands.admin.despw.success", Groups.unit.size());
-                WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(despwEmbedBuilder.build());
-            }
-        });
-
-        // Команда /artv
-        Menus.registerMenu(3, (player, option) -> {
-            if (option == 0) {
-                Events.fire(new GameOverEvent(Team.crux));
-                sendToChat("commands.admin.artv.info");
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
-            }
-        });
+        MenuListener.init();
     }
    
     @Override
     public void registerServerCommands(CommandHandler handler) {
+
+        handler.removeCommand("say");
 
         handler.register("reload-config", "Перезапустить файл конфигов.", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
@@ -271,7 +225,7 @@ public final class PandorumPlugin extends Plugin{
         handler.register("despw", "Убить всех юнитов на карте.", args -> {
             int amount = Groups.unit.size();
             Groups.unit.each(Unitc::kill);
-            Log.info("Ты убил " + amount + " юнитов!");
+            Log.info("Ты убил @ юнитов!", amount);
             WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle("Все юниты убиты!", null));
@@ -286,15 +240,14 @@ public final class PandorumPlugin extends Plugin{
 
         handler.register("rr", "Перезапустить сервер.", args -> {
             Log.info("Перезапуск сервера...");
-            WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+            WebhookEmbedBuilder restartEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle("Сервер выключился для перезапуска!", null));
-            DiscordWebhookManager.client.send(banEmbedBuilder.build());
+            DiscordWebhookManager.client.send(restartEmbedBuilder.build());
             
             Timer.schedule(() -> System.exit(2), 5f);
         });
 
-        handler.removeCommand("say");
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
             sendToChat("commands.say.chat", args[0]);
             Log.info("Server: &ly@", args[0]);
@@ -304,7 +257,7 @@ public final class PandorumPlugin extends Plugin{
         if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
-                    Log.info("Задержка деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
+                    Log.info("Время деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
                     return;
                 }
                 if (!Strings.canParsePositiveInt(args[0])) {
@@ -327,14 +280,14 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("js");
 
         handler.<Player>register("help", "[page]", "Список всех команд.", (args, player) -> {
-            if(args.length > 0 && !Strings.canParseInt(args[0])) {
+            if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 bundled(player, "commands.page-not-int");
                 return;
             }
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
             int pages = Mathf.ceil((float)netServer.clientCommands.getCommandList().size / 6.0f);
 
-            if(--page >= pages || page < 0){
+            if (--page >= pages || page < 0) {
                 bundled(player, "commands.under-page", String.valueOf(pages));
                 return;
             }
@@ -342,7 +295,7 @@ public final class PandorumPlugin extends Plugin{
             StringBuilder result = new StringBuilder();
             result.append(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
-            for(int i = 6 * page; i < Math.min(6 * (page + 1), netServer.clientCommands.getCommandList().size); i++){
+            for (int i = 6 * page; i < Math.min(6 * (page + 1), netServer.clientCommands.getCommandList().size); i++) {
                 CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
                 String desc = Bundle.has("commands." + command.text + ".description", findLocale(player.locale)) ? Bundle.format("commands." + command.text + ".description", findLocale(player.locale)) : command.description;
                 result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
@@ -361,10 +314,10 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
-            if(activeHistoryPlayers.contains(player.uuid())) {
+            if (activeHistoryPlayers.contains(player.uuid())) {
                 activeHistoryPlayers.remove(player.uuid());
                 bundled(player, "commands.history.off");
-            }else{
+            } else {
                 activeHistoryPlayers.add(player.uuid());
                 bundled(player, "commands.history.on");
             }
@@ -399,7 +352,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if(Misc.adminCheck(player)) return;
-            String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
+            String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}};
             Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
 
@@ -445,13 +398,13 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
+                if (Misc.adminCheck(player)) return;
                 String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
                 Call.menu(player.con, 3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
             });
 
             handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
+                if (Misc.adminCheck(player)) return;
 
                 Block core = switch(args[0].toLowerCase()){
                     case "medium" -> Blocks.coreFoundation;
@@ -460,7 +413,7 @@ public final class PandorumPlugin extends Plugin{
                     default -> null;
                 };
 
-                if(core == null) {
+                if (core == null) {
                     bundled(player, "commands.admin.core.core-not-found");
                     return;
                 }
@@ -469,9 +422,9 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("give", "<item> [count]", "Выдать ресурсы в ядро.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
+                if (Misc.adminCheck(player)) return;
 
-                if(args.length > 1 && !Strings.canParseInt(args[1])){
+                if (args.length > 1 && !Strings.canParseInt(args[1])) {
                     bundled(player, "commands.non-int");
                     return;
                 }
@@ -491,7 +444,6 @@ public final class PandorumPlugin extends Plugin{
                 }
 
                 team.core().items.add(item, count);
-
                 bundled(player, "commands.admin.give.success");
             });
 
@@ -536,10 +488,10 @@ public final class PandorumPlugin extends Plugin{
                 player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
             });
 
-            handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", Vars.state.map.name(), Vars.state.map.author()));
+            handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
 
             handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
-                if(args.length > 0 && !Strings.canParseInt(args[0])){
+                if (args.length > 0 && !Strings.canParseInt(args[0])) {
                     bundled(player, "commands.page-not-int");
                     return;
                 }
@@ -548,14 +500,14 @@ public final class PandorumPlugin extends Plugin{
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                 int pages = Mathf.ceil(mapList.size / 6.0f);
 
-                if(--page >= pages || page < 0){
+                if (--page >= pages || page < 0) {
                     bundled(player, "commands.under-page", pages);
                     return;
                 }
 
                 StringBuilder result = new StringBuilder();
                 result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
-                for(int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++){
+                for (int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++) {
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
                 }
 
@@ -563,7 +515,7 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("saves", "[page]", "Вывести список сохранений на сервере.", (args, player) -> {
-                if(args.length > 0 && !Strings.canParseInt(args[0])){
+                if (args.length > 0 && !Strings.canParseInt(args[0])) {
                     bundled(player, "commands.page-not-int");
                     return;
                 }
@@ -572,14 +524,14 @@ public final class PandorumPlugin extends Plugin{
                 int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                 int pages = Mathf.ceil(saves.size / 6.0f);
 
-                if(--page >= pages || page < 0){
+                if (--page >= pages || page < 0) {
                     bundled(player, "commands.under-page", pages);
                     return;
                 }
 
                 StringBuilder result = new StringBuilder();
                 result.append(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
-                for(int i = 6 * page; i < Math.min(6 * (page + 1), saves.size); i++){
+                for (int i = 6 * page; i < Math.min(6 * (page + 1), saves.size); i++) {
                     result.append("[lightgray] ").append(i + 1).append("[orange] ").append(saves.get(i).nameWithoutExtension()).append("[white] ").append("\n");
                 }
 
@@ -587,7 +539,7 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
-                if(Groups.player.size() < 3) {
+                if (Groups.player.size() < 3) {
                     bundled(player, "commands.not-enough-players");
                     return;
                 }
@@ -608,7 +560,7 @@ public final class PandorumPlugin extends Plugin{
                 switch (mode) {
                     case map -> {
                         Map map = Misc.findMap(args[1]);
-                        if(map == null){
+                        if (map == null) {
                             bundled(player, "commands.nominate.map.not-found");
                             return;
                         }
@@ -623,7 +575,7 @@ public final class PandorumPlugin extends Plugin{
                     }
                     case load -> {
                         Fi save = Misc.findSave(args[1]);
-                        if(save == null){
+                        if (save == null) {
                             bundled(player, "commands.nominate.load.not-found");
                             return;
                         }
@@ -659,11 +611,11 @@ public final class PandorumPlugin extends Plugin{
             });
         }
 
-        if(config.type == PluginType.pvp){
+        if (config.type == PluginType.pvp) {
             handler.<Player>register("surrender", "Сдаться.", (args, player) -> {
                 Team team = player.team();
                 Seq<String> teamVotes = surrendered.get(team, Seq::new);
-                if(teamVotes.contains(player.uuid())){
+                if (teamVotes.contains(player.uuid())) {
                     bundled(player, "commands.already-voted");
                     return;
                 }
@@ -673,15 +625,15 @@ public final class PandorumPlugin extends Plugin{
                 int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
                 sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
 
-                if(cur < req){
+                if (cur < req) {
                     return;
                 }
 
                 surrendered.remove(team);
                 sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
                 Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
-                for(Tile tile : world.tiles){
-                    if(tile.build != null && tile.team() == team){
+                for (Tile tile : world.tiles) {
+                    if (tile.build != null && tile.team() == team) {
                         Time.run(Mathf.random(360), tile.build::kill);
                     }
                 }
@@ -722,27 +674,28 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            Team team = args.length > 2 ? Structs.find(Team.baseTeams, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
+            Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
             if (team == null) {
                 bundled(player, "commands.teams");
                 return;
             }
 
             UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
-            if (unit == null || args[0].equals("block")) bundled(player, "commands.unit-not-found");
-            else {
-                for (int i = 0; count > i; i++) {
-                    unit.spawn(team, player.x, player.y);
-                }
-                bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                        .setColor(0xFF0000)
-                        .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
-                        .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
-                        .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
-                        .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+            if (unit == null || args[0].equals("block")) {
+                bundled(player, "commands.unit-not-found");
+                return;
             }
+
+            for (int i = 0; count > i; i++) unit.spawn(team, player.x, player.y);
+            bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+
+            WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
+                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
+                    .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
+                    .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
+            DiscordWebhookManager.client.send(artvEmbedBuilder.build());
         });
 
         handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
@@ -780,33 +733,33 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (args, player) -> {
-            if(Misc.adminCheck(player)) return;
-            if(netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
+            if (Misc.adminCheck(player)) return;
+            if (netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
                 bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(args[0]).lastName);
-            }else{
+            } else {
                 bundled(player, "commands.admin.unban.not-banned");
             }
         });
 
         handler.<Player>register("votekick", "<player...>", "Проголосовать за кик игрока.", (args, player) -> {
-            if(!Administration.Config.enableVotekick.bool()){
+            if (!Administration.Config.enableVotekick.bool()) {
                 bundled(player, "commands.votekick.disabled");
                 return;
             }
 
-            if(Groups.player.size() < 3) {
+            if (Groups.player.size() < 3) {
                 bundled(player, "commands.not-enough-players");
                 return;
             }
 
-            if(currentlyKicking[0] != null) {
+            if (currentlyKicking[0] != null) {
                 bundled(player, "commands.vote-already-started");
                 return;
             }
 
             Player found = Misc.findByName(Strings.stripColors(args[0]));
 
-            if(found == null) {
+            if (found == null) {
                 bundled(player, "commands.player-not-found");
                 return;
             }
