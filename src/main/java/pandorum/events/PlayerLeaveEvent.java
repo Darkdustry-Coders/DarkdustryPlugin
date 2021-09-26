@@ -22,12 +22,11 @@ import static pandorum.Misc.colorizedTeam;
 
 public class PlayerLeaveEvent {
     public static void call(final EventType.PlayerLeave event) {
-        PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
-        if (Groups.player.size()-1 < 1) Vars.state.serverPaused = true;
+        if (Groups.player.size() - 1 < 1) Vars.state.serverPaused = true;
 
         sendToChat("events.player-leave", colorizedName(event.player));
-        Log.info(event.player.name + " вышел с сервера, IP: " + event.player.ip() + ", ID: " + event.player.uuid());
+        Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
 
         Effects.onLeave(event.player);
 
@@ -37,6 +36,7 @@ public class PlayerLeaveEvent {
         DiscordWebhookManager.client.send(banEmbedBuilder.build());
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
+        PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
         if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
@@ -44,28 +44,22 @@ public class PlayerLeaveEvent {
             sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration / 60);
         }
 
-        if(PandorumPlugin.config.type == PluginType.other) return;
-        else if(PandorumPlugin.config.type == PluginType.pvp) {
+        if (PandorumPlugin.config.type == PluginType.other) return;
+        if (PandorumPlugin.config.type == PluginType.pvp) {
             Seq<String> teamVotes = PandorumPlugin.surrendered.get(event.player.team(), Seq::new);
-            if(teamVotes.contains(event.player.uuid())) {
+            if (teamVotes.contains(event.player.uuid())) {
                 teamVotes.remove(event.player.uuid());
-                int curSurrender = teamVotes.size;
-                int reqSurrender = (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team()));
-                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), colorizedName(event.player), curSurrender, reqSurrender);
+                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), colorizedName(event.player), teamVotes.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 
-        if(PandorumPlugin.votesRTV.contains(event.player.uuid())) {
+        if (PandorumPlugin.votesRTV.contains(event.player.uuid())) {
             PandorumPlugin.votesRTV.remove(event.player.uuid());
-            int curRTV = PandorumPlugin.votesRTV.size;
-            int reqRTV = (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size());
-            sendToChat("commands.rtv.left", colorizedName(event.player), curRTV, reqRTV);
+            sendToChat("commands.rtv.left", colorizedName(event.player), PandorumPlugin.votesRTV.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
-        if(PandorumPlugin.votesVNW.contains(event.player.uuid())) {
+        if (PandorumPlugin.votesVNW.contains(event.player.uuid())) {
             PandorumPlugin.votesVNW.remove(event.player.uuid());
-            int curVNW = PandorumPlugin.votesVNW.size;
-            int reqVNW = (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size());
-            sendToChat("commands.vnw.left", colorizedName(event.player), curVNW, reqVNW);
+            sendToChat("commands.vnw.left", colorizedName(event.player), PandorumPlugin.votesVNW.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
     }
 }

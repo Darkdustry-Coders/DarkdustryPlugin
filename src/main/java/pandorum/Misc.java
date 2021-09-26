@@ -10,7 +10,10 @@ import mindustry.maps.Map;
 import java.util.Objects;
 import java.util.Locale;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.maps;
+import static mindustry.Vars.saveDirectory;
+
+import mindustry.net.Packets;
 import pandorum.comp.*;
 
 public abstract class Misc {
@@ -46,9 +49,8 @@ public abstract class Misc {
         }
         return null;
     }
-    public static Locale findLocale(String code) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(code) ||
-                code.startsWith(l.toString()));
+    public static Locale findLocale(String lang) {
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(lang) || lang.startsWith(l.toString()));
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
@@ -72,14 +74,13 @@ public abstract class Misc {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(name));
     }
 
-    public static boolean nameCheck(Player player) {
-        String name = Strings.stripColors(player.name);
-        if (name.length() < 1 || name.length() > 25) {
+    public static boolean nameCheck(Player player, String name) {
+        if (name.length() < 1 || name.length() > 30) {
             player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
             return true;
         }
-        if (name.contains("@") ) {
-            player.con.kick(Bundle.format("events.bad-name", findLocale(player.locale)), 0);
+        if (name.contains("@")) {
+            player.con.kick(Packets.KickReason.kick, 0);
             return true;
         }
         return false;

@@ -21,7 +21,7 @@ public class PlayerJoinEvent {
     public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
-        if (nameCheck(event.player)) return;
+        if (nameCheck(event.player, Strings.stripColors(event.player.name))) return;
 
         if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
@@ -37,11 +37,8 @@ public class PlayerJoinEvent {
             PandorumPlugin.savePlayerStats(event.player.uuid());
         }
 
-        if(playerInfo.getBoolean("hellomsg")) {
-            String[][] options = {
-                {Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))},
-                {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}
-            };
+        if (playerInfo.getBoolean("hellomsg")) {
+            String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
             Call.menu(event.player.con, 1, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
         }
         

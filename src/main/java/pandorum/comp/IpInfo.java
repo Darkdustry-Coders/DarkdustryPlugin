@@ -6,7 +6,7 @@ import arc.util.ArcRuntimeException;
 import java.net.InetAddress;
 import java.util.Objects;
 
-public class IpInfo{
+public class IpInfo {
     private final int mask;
     private final InetAddress required;
 
