@@ -14,7 +14,7 @@ import pandorum.comp.DiscordWebhookManager;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
 
-public class DepositEvent {
+public class DepositListener {
     public static void call(final EventType.DepositEvent event) {
         if (PandorumPlugin.config.type == PluginType.other) return;
         if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {

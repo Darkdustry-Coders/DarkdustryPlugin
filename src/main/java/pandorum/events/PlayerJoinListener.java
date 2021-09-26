@@ -17,7 +17,7 @@ import pandorum.effects.Effects;
 
 import static pandorum.Misc.*;
 
-public class PlayerJoinEvent {
+public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
@@ -44,9 +44,9 @@ public class PlayerJoinEvent {
         
         bundled(event.player, "events.motd");
         if (PandorumPlugin.config.type == PluginType.anarchy) event.player.admin(true);
-        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+        WebhookEmbedBuilder joinEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x00FF00)
                 .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s зашёл на сервер!", Strings.stripColors(event.player.name())), null));
-        DiscordWebhookManager.client.send(banEmbedBuilder.build());
+        DiscordWebhookManager.client.send(joinEmbedBuilder.build());
     }
 }

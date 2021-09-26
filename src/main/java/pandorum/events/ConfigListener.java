@@ -14,7 +14,7 @@ import pandorum.entry.HistoryEntry;
 import pandorum.entry.ConfigEntry;
 import pandorum.struct.CacheSeq;
 
-public class ConfigEvent {
+public class ConfigListener {
     public static void call(final EventType.ConfigEvent event) {
         if (event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > Vars.world.width() || event.tile.tileX() > Vars.world.height()) return;
 

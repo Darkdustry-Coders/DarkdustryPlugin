@@ -14,7 +14,7 @@ import pandorum.comp.DiscordWebhookManager;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
 
-public class BuildSelectEvent {
+public class BuildSelectListener {
     public static void call(final EventType.BuildSelectEvent event) {
         if (PandorumPlugin.config.type == PluginType.other) return;
         if (!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
@@ -24,12 +24,12 @@ public class BuildSelectEvent {
 
             if (PandorumPlugin.interval.get(300)) {
                 Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target), event.tile.x, event.tile.y));
-                WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+                WebhookEmbedBuilder alertEmbedBuilder = new WebhookEmbedBuilder()
                         .setColor(0xE81CFF)
                         .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", null))
                         .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.x, event.tile.y)))
                         .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(target.name())));
-                DiscordWebhookManager.client.send(banEmbedBuilder.build());
+                DiscordWebhookManager.client.send(alertEmbedBuilder.build());
             }
         }
     }

@@ -7,7 +7,7 @@ import mindustry.game.EventType;
 import mindustry.net.Administration;
 import pandorum.comp.DiscordWebhookManager;
 
-public class PlayerBanEvent {
+public class PlayerBanListener {
     public static void call(final EventType.PlayerBanEvent event) {
         Administration.PlayerInfo info = Vars.netServer.admins.getInfo(event.uuid);
         if (info != null) {

@@ -8,7 +8,7 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.effects.Effects;
 
-public class TriggerUpdate {
+public class TriggerUpdateListener {
     public static void call() {
         Groups.player.each(p -> p.unit().moving(), Effects::onMove);
         if(PandorumPlugin.config.type == PluginType.sand || PandorumPlugin.config.type == PluginType.anarchy) {          

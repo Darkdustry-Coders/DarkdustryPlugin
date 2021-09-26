@@ -20,7 +20,7 @@ import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.Misc.colorizedTeam;
 
-public class PlayerLeaveEvent {
+public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
 
         if (Groups.player.size() - 1 < 1) Vars.state.serverPaused = true;
@@ -30,10 +30,10 @@ public class PlayerLeaveEvent {
 
         Effects.onLeave(event.player);
 
-        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+        WebhookEmbedBuilder leaveEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null));
-        DiscordWebhookManager.client.send(banEmbedBuilder.build());
+        DiscordWebhookManager.client.send(leaveEmbedBuilder.build());
 
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());

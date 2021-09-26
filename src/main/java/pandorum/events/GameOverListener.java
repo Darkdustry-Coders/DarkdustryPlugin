@@ -8,12 +8,12 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 
-public class GameOverEvent {
+public class GameOverListener {
     public static void call(final EventType.GameOverEvent event) {
-        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+        WebhookEmbedBuilder gameoverEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x05DDF5)
                 .setTitle(new WebhookEmbed.EmbedTitle("Игра окончена!" + (event.winner == Team.derelict ? "" : " Победила команда " + event.winner.name + "!"), null));
-        DiscordWebhookManager.client.send(banEmbedBuilder.build());
+        DiscordWebhookManager.client.send(gameoverEmbedBuilder.build());
 
         if(PandorumPlugin.config.type == PluginType.other) return;
         if (PandorumPlugin.config.type == PluginType.pvp) PandorumPlugin.surrendered.clear();

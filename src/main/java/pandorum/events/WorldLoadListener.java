@@ -14,7 +14,7 @@ import java.time.Duration;
 
 import static mindustry.Vars.world;
 
-public class WorldLoadEvent {
+public class WorldLoadListener {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
         if (PandorumPlugin.config.type == PluginType.sand) PandorumPlugin.timer.clear();
