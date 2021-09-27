@@ -104,7 +104,7 @@ public final class PandorumPlugin extends Plugin{
         playerInfoSchema = new PlayerInfo(playersInfoCollection);
 
         Fi file = dataDirectory.child("config.json");
-        if(!file.exists()){
+        if (!file.exists()) {
             file.writeString(gson.toJson(config = new Config()));
             Log.info("Файл config.json успешно сгенерирован!");
         } else {
@@ -171,7 +171,9 @@ public final class PandorumPlugin extends Plugin{
     @Override
     public void init() {
         try {
-            forbiddenIps = Seq.with(Streams.copyString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt"))).split(System.lineSeparator())).map(IpInfo::new);
+            InputStream stream = getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt");
+            Objects.requireNonNull(stream, "stream");
+            forbiddenIps = Seq.with(Streams.copyString(stream).split(System.lineSeparator())).map(IpInfo::new);
         } catch(Exception e) {
             throw new ArcRuntimeException(e);
         }
