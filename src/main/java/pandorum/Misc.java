@@ -27,7 +27,7 @@ public abstract class Misc {
 
     public static String colorizedName(Player player) {
         Objects.requireNonNull(player, "player");
-        return NetClient.colorizeName(player.id, player.name);
+        return "[#" + player.color().toString().toUpperCase() + "]" + player.name;
     }
 
     public static Map findMap(String text) {
