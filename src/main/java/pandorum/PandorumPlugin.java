@@ -52,6 +52,7 @@ import pandorum.struct.Tuple2;
 import pandorum.vote.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 import static mindustry.Vars.*;
