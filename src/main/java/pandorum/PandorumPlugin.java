@@ -750,7 +750,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            Player found = Misc.findByName(Strings.stripColors(args[0]));
+            Player found = Misc.findByName(args[0]);
 
             if (found == null) {
                 bundled(player, "commands.player-not-found");
