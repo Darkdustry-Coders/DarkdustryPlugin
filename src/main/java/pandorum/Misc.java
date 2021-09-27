@@ -1,20 +1,20 @@
 package pandorum;
 
 import arc.files.Fi;
-import arc.util.*;
-import mindustry.core.NetClient;
-import mindustry.game.*;
-import mindustry.gen.*;
+import arc.util.Strings;
+import arc.util.Structs;
+import mindustry.game.Team;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.net.Packets;
+import pandorum.comp.Bundle;
 
-import java.util.Objects;
 import java.util.Locale;
+import java.util.Objects;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.saveDirectory;
-
-import mindustry.net.Packets;
-import pandorum.comp.*;
 
 public abstract class Misc {
 
@@ -71,7 +71,7 @@ public abstract class Misc {
     }
 
     public static Player findByName(String name) {
-        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(name));
+        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)));
     }
 
     public static boolean nameCheck(Player player, String name) {

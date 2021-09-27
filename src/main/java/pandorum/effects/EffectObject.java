@@ -7,14 +7,11 @@ import mindustry.entities.Effect;
 import mindustry.gen.Call;
 
 public class EffectObject {
+
     public float x;
-
     public float y;
-
     public float rotation;
-
     private final String color;
-
     private final String effect;
 
     public EffectObject(float x, float y, float rotation, String color, String effect) {

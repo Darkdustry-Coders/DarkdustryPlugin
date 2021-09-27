@@ -269,6 +269,7 @@ public final class PandorumPlugin extends Plugin{
         handler.removeCommand("votekick");
         handler.removeCommand("vote");
         handler.removeCommand("js");
+        handler.removeCommand("sync");
 
         handler.<Player>register("help", "[page]", "Список всех команд.", (args, player) -> {
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
@@ -296,12 +297,12 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("a", "<message...>", "Отправить сообщение админам.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
-            Groups.player.each(Player::admin, otherPlayer -> bundled(otherPlayer, "commands.admin.a.chat", Misc.colorizedName(player), args[0]));
+            Groups.player.each(Player::admin, admin -> bundled(admin, "commands.admin.a.chat", Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", (args, player) -> {
             String teamColor = "[#" + player.team().color + "]";
-            Groups.player.each(o -> o.team() == player.team(), otherPlayer -> bundled(otherPlayer, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
+            Groups.player.each(p -> p.team() == player.team(), teammate -> bundled(teammate, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
@@ -342,7 +343,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
-            if(Misc.adminCheck(player)) return;
+            if (Misc.adminCheck(player)) return;
             String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}};
             Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
@@ -465,16 +466,17 @@ public final class PandorumPlugin extends Plugin{
 
                 bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
                 target.team(team);
+
                 String text = args.length > 1 ? "Команда игрока " + Strings.stripColors(target.name()) + " изменена на " + team + "." : "Команда изменена на " + team + ".";
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+                WebhookEmbedBuilder teamEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xFF0000)
                     .setTitle(new WebhookEmbed.EmbedTitle(text, null))
                     .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+                DiscordWebhookManager.client.send(teamEmbedBuilder.build());
             });
 
             handler.<Player>register("spectate", "Режим наблюдателя.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
+                if (Misc.adminCheck(player)) return;
                 player.clearUnit();
                 player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
             });
@@ -680,13 +682,13 @@ public final class PandorumPlugin extends Plugin{
             for (int i = 0; count > i; i++) unit.spawn(team, player.x, player.y);
             bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
 
-            WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
+            WebhookEmbedBuilder spawnEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xFF0000)
                     .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
                     .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
                     .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
                     .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
-            DiscordWebhookManager.client.send(artvEmbedBuilder.build());
+            DiscordWebhookManager.client.send(spawnEmbedBuilder.build());
         });
 
         handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
@@ -757,7 +759,7 @@ public final class PandorumPlugin extends Plugin{
 
             if (found.admin) bundled(player, "commands.votekick.cannot-kick-admin");
             else if (found.team() != player.team()) bundled(player, "commands.votekick.cannot-kick-another-team");
-            else if (found == player) bundled(player, "commands.vote.cannot-vote-for-yourself");
+            else if (found == player) bundled(player, "commands.votekick.cannot-vote-for-yourself");
             else {
                 VoteKickSession session = new VoteKickSession(currentlyKicking, found);
                 session.vote(player, 1);
