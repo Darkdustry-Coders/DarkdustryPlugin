@@ -28,11 +28,11 @@ public class Config {
 
     public String DiscordWebhookLink = null;
 
-    public Tuple2<String, Integer> parseIp(){
+    public Tuple2<String, Integer> parseIp() {
         String ip = hubIp;
         int port = 6567;
         String[] parts = ip.split(":");
-        if(ip.contains(":") && Strings.canParsePositiveInt(parts[1])){
+        if (ip.contains(":") && Strings.canParsePositiveInt(parts[1])) {
             ip = parts[0];
             port = Strings.parseInt(parts[1]);
         }

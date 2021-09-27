@@ -37,13 +37,13 @@ public class BlockEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        if(breaking){
+        if (breaking) {
             return name != null ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :
             Bundle.format("history.block.destroy.unit", findLocale(player.locale), ConfigEntry.icons.get(unit.type.name) + "[orange]" + unit.type.name, ftime);
         }
 
         String base = name != null ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) : Bundle.format("history.block.construct.unit", findLocale(player.locale), ConfigEntry.icons.get(unit.type.name) + "[orange]" + unit.type.name, block, ftime);
-        if(block.rotate){
+        if (block.rotate) {
             base += Bundle.format("history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]);
         }
         return base;

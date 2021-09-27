@@ -481,7 +481,8 @@ public final class PandorumPlugin extends Plugin{
             handler.<Player>register("spectate", "Режим наблюдателя.", (args, player) -> {
                 if (Misc.adminCheck(player)) return;
                 player.clearUnit();
-                player.team(player.team() == Team.derelict ? Team.sharded : Team.derelict);
+                bundled(player, player.team() == Team.derelict ? "commands.admin.spectate.disabled" : "commands.admin.spectate.enabled");
+                player.team(player.team() == Team.derelict ? state.rules.defaultTeam : Team.derelict);
             });
 
             handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
