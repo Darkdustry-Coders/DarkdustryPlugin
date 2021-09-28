@@ -18,7 +18,7 @@ public class Effects {
 
     public static void onJoin(Player p) {
         try {
-            on(joinEffect, p.x, p.y);
+            on(joinEffect, p.team().core().x, p.team().core().y);
         } catch (NullPointerException ignored) {}
     }
 
