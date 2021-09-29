@@ -23,6 +23,8 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
@@ -42,6 +44,7 @@ import org.bson.Document;
 import org.json.JSONArray;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
+import pandorum.comp.admin.Authme;
 import pandorum.database.ArrowSubscriber;
 import pandorum.entry.ConfigEntry;
 import pandorum.entry.HistoryEntry;
@@ -53,6 +56,8 @@ import pandorum.vote.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.Objects;
 
 import static mindustry.Vars.*;
@@ -92,7 +97,13 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
 
-    public PandorumPlugin() throws IOException {
+    public static Socket socket;
+    public static final ObjectMap<String, Long> loginCooldowns = new ObjectMap<>();
+    public static final Seq<String> waiting = new Seq<>();
+
+    public PandorumPlugin() throws IOException, URISyntaxException {
+        socket = IO.socket("ws://127.0.0.1:9189");
+
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
 
         MongoClientSettings settings = MongoClientSettings.builder()
@@ -204,6 +215,11 @@ public final class PandorumPlugin extends Plugin{
         Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
         MenuListener.init();
+
+        Authme.init();
+        socket.connect();
+
+        Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
     }
    
     @Override
@@ -226,10 +242,16 @@ public final class PandorumPlugin extends Plugin{
             DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
-        handler.register("unban-all", "Разбанить всех.", args -> {
+        handler.register("clear-bans", "Разбанить всех.", args -> {
             netServer.admins.getBanned().each(unban -> netServer.admins.unbanPlayerID(unban.id));
             netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
             Log.info("Все игроки разбанены!");
+        });
+
+        handler.register("clear-admins", "Снять все админки.", arg -> {
+            netServer.admins.getAdmins().each(admin -> netServer.admins.unAdminPlayer(admin.id));
+            Groups.player.each(player -> player.admin(false));
+            Log.info("Админов больше нет!");
         });
 
         handler.register("rr", "Перезапустить сервер.", args -> {
@@ -854,6 +876,29 @@ public final class PandorumPlugin extends Plugin{
             }
 
             savePlayerStats(player.uuid());
+        });
+
+        handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
+
+            if (waiting.contains(player.uuid())) {
+                bundled(player, "commands.login.waiting");
+                return;
+            }
+
+            if (player.admin()) {
+                bundled(player, "commands.admin.already");
+                return;
+            }
+
+            if (loginCooldowns.containsKey(player.uuid())) {
+                long muteEndTime = loginCooldowns.get(player.uuid());
+                if (new Date().getTime() < muteEndTime) return;
+                loginCooldowns.remove(player.uuid());
+            }
+
+            waiting.add(player.uuid());
+            socket.emit("registerAsAdmin", player.uuid(), player.name());
+            bundled(player, "commands.login.sent");
         });
     }
 
