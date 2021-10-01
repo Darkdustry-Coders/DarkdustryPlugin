@@ -886,7 +886,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             if (player.admin()) {
-                bundled(player, "commands.admin.already");
+                bundled(player, "commands.login.already");
                 return;
             }
 
