@@ -4,11 +4,13 @@ import arc.files.Fi;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
+import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Packets;
 import pandorum.comp.Bundle;
+import pandorum.struct.Tuple2;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -84,5 +86,10 @@ public abstract class Misc {
             return true;
         }
         return false;
+    }
+
+    public static void connectToHub(Player player) {
+        Tuple2<String, Integer> hub = PandorumPlugin.config.parseIp();
+        Call.connect(player.con, hub.t1, hub.t2);
     }
 }

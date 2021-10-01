@@ -51,7 +51,6 @@ import pandorum.entry.HistoryEntry;
 import pandorum.events.*;
 import pandorum.models.PlayerInfo;
 import pandorum.struct.CacheSeq;
-import pandorum.struct.Tuple2;
 import pandorum.vote.*;
 
 import java.io.IOException;
@@ -261,8 +260,9 @@ public final class PandorumPlugin extends Plugin{
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle("Сервер выключился для перезапуска!", null));
             DiscordWebhookManager.client.send(restartEmbedBuilder.build());
-            
-            Timer.schedule(() -> System.exit(2), 5f);
+
+            Groups.player.each(Misc::connectToHub);
+            Timer.schedule(() -> System.exit(2), 10f);
         });
 
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
@@ -675,10 +675,7 @@ public final class PandorumPlugin extends Plugin{
             rainbow.add(entry);
         });
 
-        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> {
-            Tuple2<String, Integer> hub = config.parseIp();
-            Call.connect(player.con, hub.t1, hub.t2);
-        });
+        handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Misc.connectToHub(player));
 
         handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
@@ -700,7 +697,7 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            UnitType unit = Vars.content.units().find(b -> b.name.equals(args[0]));
+            UnitType unit = content.units().find(b -> b.name.equals(args[0]));
             if (unit == null || args[0].equals("block")) {
                 bundled(player, "commands.unit-not-found");
                 return;
@@ -890,7 +887,6 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
-
             if (waiting.contains(player.uuid())) {
                 bundled(player, "commands.login.waiting");
                 return;
