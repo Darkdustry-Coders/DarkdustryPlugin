@@ -59,6 +59,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
@@ -842,7 +843,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
             Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
             if (playerInfo == null) {
-                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off");
+                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off", 0);
                 playersInfo.add(playerInfo);
             }
 
@@ -878,6 +879,16 @@ public final class PandorumPlugin extends Plugin{
             savePlayerStats(player.uuid());
         });
 
+        handler.<Player>register("playtime", "Посмотреть общее время игры на серверах.", (args, player) -> {
+            Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
+            if (playerInfo == null) {
+                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off", 0);
+                playersInfo.add(playerInfo);
+            }
+            bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
+            savePlayerStats(player.uuid());
+        });
+
         handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
 
             if (waiting.contains(player.uuid())) {
@@ -886,7 +897,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             if (player.admin()) {
-                bundled(player, "commands.admin.already");
+                bundled(player, "commands.login.already");
                 return;
             }
 

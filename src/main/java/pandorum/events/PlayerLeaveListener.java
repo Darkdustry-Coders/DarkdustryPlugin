@@ -10,6 +10,7 @@ import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.Vars;
+import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.PluginType;
@@ -30,6 +31,17 @@ public class PlayerLeaveListener {
 
         Effects.onLeave(event.player);
 
+        if (event.player.con != null) {
+            Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.player.uuid()));
+            if (playerInfo == null) {
+                playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), true, false, "off", 0);
+                PandorumPlugin.playersInfo.add(playerInfo);
+                PandorumPlugin.savePlayerStats(event.player.uuid());
+            }
+            long time = Time.timeSinceMillis(event.player.con.connectTime) + playerInfo.getLong("playtime");
+            playerInfo.replace("playtime", time);
+            PandorumPlugin.savePlayerStats(event.player.uuid());
+        }
         WebhookEmbedBuilder leaveEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null));

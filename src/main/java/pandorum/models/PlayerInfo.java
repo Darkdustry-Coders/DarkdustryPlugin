@@ -18,22 +18,20 @@ public class PlayerInfo extends MongoSchema<String, Object> {
             new Required<>("uuid", String.class),
             new Required<>("hellomsg", Boolean.class),
             new Required<>("banned", Boolean.class),
+            new Required<>("playtime", Long.class),
             new NonRequired<>("locale", String.class)
         );
     }
 
-    public Document create(String uuid, Boolean hellomsg, Boolean banned, String locale) {
+    public Document create(String uuid, Boolean hellomsg, Boolean banned, String locale, long playtime) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
                 "hellomsg", hellomsg,
-                "banned", banned
+                "banned", banned,
+                "playtime", playtime
         ));
 
         schema.put("locale", locale);
         return this.create(schema);
-    }
-
-    public Document create(String uuid, Boolean hellomsg, Boolean banned) {
-        return this.create(uuid, hellomsg, banned, null);
     }
 }
