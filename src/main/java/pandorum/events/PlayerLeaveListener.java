@@ -9,7 +9,6 @@ import arc.util.Strings;
 import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
-import mindustry.Vars;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.vote.VoteKickSession;
@@ -23,8 +22,6 @@ import static pandorum.Misc.colorizedTeam;
 
 public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
-
-        if (Groups.player.size() - 1 < 1) Vars.state.serverPaused = true;
 
         sendToChat("events.player-leave", colorizedName(event.player));
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());

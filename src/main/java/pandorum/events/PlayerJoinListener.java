@@ -4,10 +4,8 @@ import arc.util.Log;
 import arc.util.Strings;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
-import mindustry.gen.Groups;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
@@ -22,8 +20,6 @@ public class PlayerJoinListener {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
         if (nameCheck(event.player, Strings.stripColors(event.player.name))) return;
-
-        if (Groups.player.size() >= 1) Vars.state.serverPaused = false;
 
         sendToChat("events.player-join", colorizedName(event.player));
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());

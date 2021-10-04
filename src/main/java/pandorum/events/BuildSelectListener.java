@@ -17,18 +17,17 @@ import static pandorum.Misc.colorizedName;
 public class BuildSelectListener {
     public static void call(final EventType.BuildSelectEvent event) {
         if (PandorumPlugin.config.type == PluginType.other) return;
-        if (!event.breaking && event.builder != null && event.builder.buildPlan() != null &&
-            event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() &&
-            event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
-            Player target = event.builder.getPlayer();
+
+        if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() && event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
+            Player builder = event.builder.getPlayer();
 
             if (PandorumPlugin.interval.get(1000)) {
-                Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(target), event.tile.x, event.tile.y));
+                Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(builder), event.tile.x, event.tile.y));
                 WebhookEmbedBuilder alertEmbedBuilder = new WebhookEmbedBuilder()
                         .setColor(0xE81CFF)
                         .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", null))
                         .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.x, event.tile.y)))
-                        .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(target.name())));
+                        .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(builder.name())));
                 DiscordWebhookManager.client.send(alertEmbedBuilder.build());
             }
         }

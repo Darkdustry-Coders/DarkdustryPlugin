@@ -11,7 +11,7 @@ import pandorum.effects.Effects;
 public class TriggerUpdateListener {
     public static void call() {
         Groups.player.each(p -> p.unit().moving(), Effects::onMove);
-        if(PandorumPlugin.config.type == PluginType.sand || PandorumPlugin.config.type == PluginType.anarchy) {          
+        if (PandorumPlugin.config.type == PluginType.sand || PandorumPlugin.config.type == PluginType.anarchy) {
             final float despawnDelay = Core.settings.getFloat("despawndelay", 36000f);
             Groups.unit.each(unit -> {
                 if (Time.globalTime - PandorumPlugin.timer.get(unit, () -> Time.globalTime) >= despawnDelay) unit.spawnedByCore(true);

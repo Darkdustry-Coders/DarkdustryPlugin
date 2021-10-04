@@ -277,8 +277,8 @@ public final class PandorumPlugin extends Plugin{
                     Log.info("Время деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
                     return;
                 }
-                if (!Strings.canParsePositiveInt(args[0])) {
-                    Log.err("Новое значение должно быть положительным целым числом!");
+                if (!Strings.canParsePositiveFloat(args[0])) {
+                    Log.err("Новое значение должно быть положительным числом!");
                     return;
                 }
                 Core.settings.put("despawndelay", Strings.parseFloat(args[0]));
@@ -331,16 +331,6 @@ public final class PandorumPlugin extends Plugin{
             Groups.player.each(p -> p.team() == player.team(), teammate -> bundled(teammate, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
         });
 
-        handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
-            if (activeHistoryPlayers.contains(player.uuid())) {
-                activeHistoryPlayers.remove(player.uuid());
-                bundled(player, "commands.history.off");
-            } else {
-                activeHistoryPlayers.add(player.uuid());
-                bundled(player, "commands.history.on");
-            }
-        });
-
         handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID.", (args, player) -> {
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 bundled(player, "commands.page-not-int");
@@ -359,7 +349,7 @@ public final class PandorumPlugin extends Plugin{
 
             for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
                 Player p = Groups.player.index(i);
-                result.append("[#9c88ee]* [white]").append(p.admin ? Iconc.admin : "").append(Misc.colorizedName(p)).append(" [accent]/ [cyan]ID: ").append(p.id()).append(Bundle.format("commands.pl.locale", findLocale(player.locale), p.locale)).append("\n");
+                result.append("[#9c88ee]* [white]").append(p.admin ? Iconc.admin  + " " : "").append(Misc.colorizedName(p)).append(" [accent]/ [cyan]ID: ").append(p.id()).append(Bundle.format("commands.pl.locale", findLocale(player.locale), p.locale)).append("\n");
             }
             player.sendMessage(result.toString());
         });
@@ -369,292 +359,6 @@ public final class PandorumPlugin extends Plugin{
             String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}};
             Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
-
-        if(config.type != PluginType.other) {
-            handler.<Player>register("rtv", "Проголосовать за смену карты.", (args, player) -> {
-                if (votesRTV.contains(player.uuid())) {
-                    bundled(player, "commands.already-voted");
-                    return;
-                }
-
-                votesRTV.add(player.uuid());
-                int cur = votesRTV.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
-                sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
-
-                if (cur < req) {
-                    return;
-                }
-
-                sendToChat("commands.rtv.successful");
-                votesRTV.clear();
-                Events.fire(new GameOverEvent(Team.crux));
-            });
-
-            handler.<Player>register("vnw", "Проголосовать за пропуск волны.", (args, player) -> {
-                if (votesVNW.contains(player.uuid())) {
-                    bundled(player, "commands.already-voted");
-                    return;
-                }
-
-                votesVNW.add(player.uuid());
-                int cur = votesVNW.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
-                sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
-
-                if (cur < req) {
-                    return;
-                }
-
-                sendToChat("commands.vnw.successful");
-                votesVNW.clear();
-                state.wavetime = 0f;
-            });
-
-            handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
-                if (Misc.adminCheck(player)) return;
-                String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-                Call.menu(player.con, 3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
-            });
-
-            handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
-                if (Misc.adminCheck(player)) return;
-
-                Block core = switch(args[0].toLowerCase()){
-                    case "medium" -> Blocks.coreFoundation;
-                    case "big" -> Blocks.coreNucleus;
-                    case "small" -> Blocks.coreShard;
-                    default -> null;
-                };
-
-                if (core == null) {
-                    bundled(player, "commands.admin.core.core-not-found");
-                    return;
-                }
-                Call.constructFinish(player.tileOn(), core, player.unit(), (byte)0, player.team(), false);
-                bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
-            });
-
-            handler.<Player>register("give", "<item> [count]", "Выдать ресурсы в ядро.", (args, player) -> {
-                if (Misc.adminCheck(player)) return;
-
-                if (args.length > 1 && !Strings.canParseInt(args[1])) {
-                    bundled(player, "commands.non-int");
-                    return;
-                }
-
-                int count = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
-
-                Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
-                if (item == null) {
-                    bundled(player, "commands.admin.give.item-not-found");
-                    return;
-                }
-
-                TeamData team = state.teams.get(player.team());
-                if (!team.hasCore()) {
-                    bundled(player, "commands.admin.give.core-not-found");
-                    return;
-                }
-
-                team.core().items.add(item, count);
-                bundled(player, "commands.admin.give.success");
-            });
-
-            handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
-                if (alertIgnores.contains(player.uuid())) {
-                    alertIgnores.remove(player.uuid());
-                    bundled(player, "commands.alert.on");
-                } else {
-                    alertIgnores.add(player.uuid());
-                    bundled(player, "commands.alert.off");
-                }
-            });
-
-            handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
-
-                Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
-                if (team == null) {
-                    bundled(player, "commands.teams");
-                    return;
-                }
-            
-                Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
-                if (target == null) {
-                    bundled(player, "commands.player-not-found");
-                    return;
-                }
-
-                bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
-                target.team(team);
-
-                String text = args.length > 1 ? "Команда игрока " + Strings.stripColors(target.name()) + " изменена на " + team + "." : "Команда изменена на " + team + ".";
-                WebhookEmbedBuilder teamEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle(text, null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(teamEmbedBuilder.build());
-            });
-
-            handler.<Player>register("spectate", "Режим наблюдателя.", (args, player) -> {
-                if (Misc.adminCheck(player)) return;
-                player.clearUnit();
-                bundled(player, player.team() == Team.derelict ? "commands.admin.spectate.disabled" : "commands.admin.spectate.enabled");
-                player.team(player.team() == Team.derelict ? state.rules.defaultTeam : Team.derelict);
-            });
-
-            handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
-
-            handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
-                if (args.length > 0 && !Strings.canParseInt(args[0])) {
-                    bundled(player, "commands.page-not-int");
-                    return;
-                }
-
-                Seq<Map> mapList = Vars.maps.all();
-                int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-                int pages = Mathf.ceil(mapList.size / 6.0f);
-
-                if (--page >= pages || page < 0) {
-                    bundled(player, "commands.under-page", pages);
-                    return;
-                }
-
-                StringBuilder result = new StringBuilder();
-                result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
-                for (int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++) {
-                    result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
-                }
-
-                player.sendMessage(result.toString());
-            });
-
-            handler.<Player>register("saves", "[page]", "Вывести список сохранений на сервере.", (args, player) -> {
-                if (args.length > 0 && !Strings.canParseInt(args[0])) {
-                    bundled(player, "commands.page-not-int");
-                    return;
-                }
-
-                Seq<Fi> saves = Seq.with(Vars.saveDirectory.list()).filter(f -> Objects.equals(f.extension(), Vars.saveExtension));
-                int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-                int pages = Mathf.ceil(saves.size / 6.0f);
-
-                if (--page >= pages || page < 0) {
-                    bundled(player, "commands.under-page", pages);
-                    return;
-                }
-
-                StringBuilder result = new StringBuilder();
-                result.append(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
-                for (int i = 6 * page; i < Math.min(6 * (page + 1), saves.size); i++) {
-                    result.append("[lightgray] ").append(i + 1).append("[orange] ").append(saves.get(i).nameWithoutExtension()).append("[white] ").append("\n");
-                }
-
-                player.sendMessage(result.toString());
-            });
-
-            handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
-                if (Groups.player.size() < 3) {
-                    bundled(player, "commands.not-enough-players");
-                    return;
-                }
-
-                VoteMode mode;
-                try {
-                    mode = VoteMode.valueOf(args[0].toLowerCase());
-                } catch(Exception e) {
-                    bundled(player, "commands.nominate.incorrect-mode");
-                    return;
-                }
-
-                if (current[0] != null) {
-                    bundled(player, "commands.vote-already-started");
-                    return;
-                }
-
-                switch (mode) {
-                    case map -> {
-                        Map map = Misc.findMap(args[1]);
-                        if (map == null) {
-                            bundled(player, "commands.nominate.map.not-found");
-                            return;
-                        }
-                        VoteSession session = new VoteMapSession(current, map);
-                        current[0] = session;
-                        session.vote(player, 1);
-                    }
-                    case save -> {                    
-                        VoteSession session = new VoteSaveSession(current, args[1]);
-                        current[0] = session;
-                        session.vote(player, 1);
-                    }
-                    case load -> {
-                        Fi save = Misc.findSave(args[1]);
-                        if (save == null) {
-                            bundled(player, "commands.nominate.load.not-found");
-                            return;
-                        }
-                        VoteSession session = new VoteLoadSession(current, save);
-                        current[0] = session;
-                        session.vote(player, 1);
-                    }
-                }
-            });
-
-            handler.<Player>register("y", "Проголосовать.", (args, player) -> {
-                 if (current[0] == null) {
-                     bundled(player, "commands.no-voting");
-                     return;
-                 }
-                 if (current[0].voted().contains(player.uuid())) {
-                     bundled(player, "commands.already-voted");
-                     return;
-                 }
-                 current[0].vote(player, 1);
-             });
-
-            handler.<Player>register("n", "Проголосовать.", (args, player) -> {
-                if (current[0] == null) {
-                    bundled(player, "commands.no-voting");
-                    return;
-                }
-                if (current[0].voted().contains(player.uuid())) {
-                    bundled(player, "commands.already-voted");
-                    return;
-                }
-                current[0].vote(player, -1);
-            });
-        }
-
-        if (config.type == PluginType.pvp) {
-            handler.<Player>register("surrender", "Сдаться.", (args, player) -> {
-                Team team = player.team();
-                Seq<String> teamVotes = surrendered.get(team, Seq::new);
-                if (teamVotes.contains(player.uuid())) {
-                    bundled(player, "commands.already-voted");
-                    return;
-                }
-
-                teamVotes.add(player.uuid());
-                int cur = teamVotes.size;
-                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
-                sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
-
-                if (cur < req) {
-                    return;
-                }
-
-                surrendered.remove(team);
-                sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
-                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
-                for (Tile tile : world.tiles) {
-                    if (tile.build != null && tile.team() == team) {
-                        Time.run(Mathf.random(360), tile.build::kill);
-                    }
-                }
-            });
-        }
 
         handler.<Player>register("rainbow", "РАДУГА!", (args, player) -> {
             RainbowPlayerEntry old = rainbow.find(r -> r.player.uuid().equals(player.uuid()));
@@ -787,7 +491,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (arg, player) -> {
+        handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (args, player) -> {
             if (currentlyKicking[0] == null) {
                 bundled(player, "commands.no-voting");
                 return;
@@ -808,14 +512,14 @@ public final class PandorumPlugin extends Plugin{
                 return;
             }
 
-            int sign = switch(arg[0].toLowerCase()) {
-                case "y", "yes" ->  1;
-                case "n", "no" -> -1;
+            int sign = switch(args[0].toLowerCase()) {
+                case "y", "yes", "да" ->  1;
+                case "n", "no", "нет" -> -1;
                 default -> 0;
             };
 
             if (sign == 0) {
-                bundled(player, "commands.vote.incorrect-args");
+                bundled(player, "commands.vote.incorrect-sign");
                 return;
             }
 
@@ -903,6 +607,305 @@ public final class PandorumPlugin extends Plugin{
             socket.emit("registerAsAdmin", player.uuid(), player.name());
             bundled(player, "commands.login.sent");
         });
+
+        // Все команды ниже не используются в PluginType.other
+        if (config.type != PluginType.other) {
+            handler.<Player>register("history", "Переключение отображения истории при нажатии на тайл.", (args, player) -> {
+                if (activeHistoryPlayers.contains(player.uuid())) {
+                    activeHistoryPlayers.remove(player.uuid());
+                    bundled(player, "commands.history.off");
+                    return;
+                }
+                activeHistoryPlayers.add(player.uuid());
+                bundled(player, "commands.history.on");
+            });
+
+            handler.<Player>register("rtv", "Проголосовать за смену карты.", (args, player) -> {
+                if (votesRTV.contains(player.uuid())) {
+                    bundled(player, "commands.already-voted");
+                    return;
+                }
+
+                votesRTV.add(player.uuid());
+                int cur = votesRTV.size;
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
+                sendToChat("commands.rtv.ok", Misc.colorizedName(player), cur, req);
+
+                if (cur < req) {
+                    return;
+                }
+
+                sendToChat("commands.rtv.successful");
+                votesRTV.clear();
+                Events.fire(new GameOverEvent(Team.crux));
+            });
+
+            handler.<Player>register("vnw", "Проголосовать за пропуск волны.", (args, player) -> {
+                if (votesVNW.contains(player.uuid())) {
+                    bundled(player, "commands.already-voted");
+                    return;
+                }
+
+                votesVNW.add(player.uuid());
+                int cur = votesVNW.size;
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
+                sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
+
+                if (cur < req) {
+                    return;
+                }
+
+                sendToChat("commands.vnw.successful");
+                votesVNW.clear();
+                state.wavetime = 0f;
+            });
+
+            handler.<Player>register("artv", "Принудительно завершить игру.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
+                String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
+                Call.menu(player.con, 3, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
+            });
+
+            handler.<Player>register("core", "<small/medium/big>", "Заспавнить ядро.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
+
+                Block core = switch(args[0].toLowerCase()){
+                    case "medium" -> Blocks.coreFoundation;
+                    case "big" -> Blocks.coreNucleus;
+                    case "small" -> Blocks.coreShard;
+                    default -> null;
+                };
+
+                if (core == null) {
+                    bundled(player, "commands.admin.core.core-not-found");
+                    return;
+                }
+                Call.constructFinish(player.tileOn(), core, player.unit(), (byte)0, player.team(), false);
+                bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
+            });
+
+            handler.<Player>register("give", "<item> [count]", "Выдать ресурсы в ядро.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
+
+                if (args.length > 1 && !Strings.canParseInt(args[1])) {
+                    bundled(player, "commands.non-int");
+                    return;
+                }
+
+                int count = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
+
+                Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
+                if (item == null) {
+                    bundled(player, "commands.admin.give.item-not-found");
+                    return;
+                }
+
+                TeamData team = state.teams.get(player.team());
+                if (!team.hasCore()) {
+                    bundled(player, "commands.admin.give.core-not-found");
+                    return;
+                }
+
+                team.core().items.add(item, count);
+                bundled(player, "commands.admin.give.success");
+            });
+
+            handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
+                if (alertIgnores.contains(player.uuid())) {
+                    alertIgnores.remove(player.uuid());
+                    bundled(player, "commands.alert.on");
+                } else {
+                    alertIgnores.add(player.uuid());
+                    bundled(player, "commands.alert.off");
+                }
+            });
+
+            handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
+                if(Misc.adminCheck(player)) return;
+
+                Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
+                if (team == null) {
+                    bundled(player, "commands.teams");
+                    return;
+                }
+
+                Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
+                if (target == null) {
+                    bundled(player, "commands.player-not-found");
+                    return;
+                }
+
+                bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
+                target.team(team);
+
+                String text = args.length > 1 ? "Команда игрока " + Strings.stripColors(target.name()) + " изменена на " + team + "." : "Команда изменена на " + team + ".";
+                WebhookEmbedBuilder teamEmbedBuilder = new WebhookEmbedBuilder()
+                        .setColor(0xFF0000)
+                        .setTitle(new WebhookEmbed.EmbedTitle(text, null))
+                        .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)));
+                DiscordWebhookManager.client.send(teamEmbedBuilder.build());
+            });
+
+            handler.<Player>register("spectate", "Режим наблюдателя.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
+                player.clearUnit();
+                bundled(player, player.team() == Team.derelict ? "commands.admin.spectate.disabled" : "commands.admin.spectate.enabled");
+                player.team(player.team() == Team.derelict ? state.rules.defaultTeam : Team.derelict);
+            });
+
+            handler.<Player>register("map", "Информация о карте.", (args, player) -> bundled(player, "commands.mapname", state.map.name(), state.map.author()));
+
+            handler.<Player>register("maps", "[page]", "Вывести список карт.", (args, player) -> {
+                if (args.length > 0 && !Strings.canParseInt(args[0])) {
+                    bundled(player, "commands.page-not-int");
+                    return;
+                }
+
+                Seq<Map> mapList = Vars.maps.all();
+                int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
+                int pages = Mathf.ceil(mapList.size / 6.0f);
+
+                if (--page >= pages || page < 0) {
+                    bundled(player, "commands.under-page", pages);
+                    return;
+                }
+
+                StringBuilder result = new StringBuilder();
+                result.append(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages)).append("\n");
+                for (int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++) {
+                    result.append("[lightgray] ").append(i + 1).append("[orange] ").append(mapList.get(i).name()).append("[white] ").append("\n");
+                }
+
+                player.sendMessage(result.toString());
+            });
+
+            handler.<Player>register("saves", "[page]", "Вывести список сохранений на сервере.", (args, player) -> {
+                if (args.length > 0 && !Strings.canParseInt(args[0])) {
+                    bundled(player, "commands.page-not-int");
+                    return;
+                }
+
+                Seq<Fi> saves = Seq.with(Vars.saveDirectory.list()).filter(f -> Objects.equals(f.extension(), Vars.saveExtension));
+                int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
+                int pages = Mathf.ceil(saves.size / 6.0f);
+
+                if (--page >= pages || page < 0) {
+                    bundled(player, "commands.under-page", pages);
+                    return;
+                }
+
+                StringBuilder result = new StringBuilder();
+                result.append(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
+                for (int i = 6 * page; i < Math.min(6 * (page + 1), saves.size); i++) {
+                    result.append("[lightgray] ").append(i + 1).append("[orange] ").append(saves.get(i).nameWithoutExtension()).append("[white] ").append("\n");
+                }
+
+                player.sendMessage(result.toString());
+            });
+
+            handler.<Player>register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", (args, player) -> {
+                if (Groups.player.size() < 3) {
+                    bundled(player, "commands.not-enough-players");
+                    return;
+                }
+
+                VoteMode mode;
+                try {
+                    mode = VoteMode.valueOf(args[0].toLowerCase());
+                } catch(Exception e) {
+                    bundled(player, "commands.nominate.incorrect-mode");
+                    return;
+                }
+
+                if (current[0] != null) {
+                    bundled(player, "commands.vote-already-started");
+                    return;
+                }
+
+                switch (mode) {
+                    case map -> {
+                        Map map = Misc.findMap(args[1]);
+                        if (map == null) {
+                            bundled(player, "commands.nominate.map.not-found");
+                            return;
+                        }
+                        VoteSession session = new VoteMapSession(current, map);
+                        current[0] = session;
+                        session.vote(player, 1);
+                    }
+                    case save -> {
+                        VoteSession session = new VoteSaveSession(current, args[1]);
+                        current[0] = session;
+                        session.vote(player, 1);
+                    }
+                    case load -> {
+                        Fi save = Misc.findSave(args[1]);
+                        if (save == null) {
+                            bundled(player, "commands.nominate.load.not-found");
+                            return;
+                        }
+                        VoteSession session = new VoteLoadSession(current, save);
+                        current[0] = session;
+                        session.vote(player, 1);
+                    }
+                }
+            });
+
+            handler.<Player>register("voting", "<y/n>", "Проголосовать.", (args, player) -> {
+                if (current[0] == null) {
+                    bundled(player, "commands.no-voting");
+                    return;
+                }
+
+                if (current[0].voted().contains(player.uuid())) {
+                    bundled(player, "commands.already-voted");
+                    return;
+                }
+
+                int sign = switch(args[0].toLowerCase()) {
+                    case "y", "yes", "да" ->  1;
+                    case "n", "no", "нет" -> -1;
+                    default -> 0;
+                };
+
+                if (sign == 0) {
+                    bundled(player, "commands.voting.incorrect-sign");
+                    return;
+                }
+
+                current[0].vote(player, sign);
+            });
+        }
+
+        // Команды ниже используются в PluginType.pvp
+        if (config.type == PluginType.pvp) {
+            handler.<Player>register("surrender", "Сдаться.", (args, player) -> {
+                Team team = player.team();
+                Seq<String> teamVotes = surrendered.get(team, Seq::new);
+                if (teamVotes.contains(player.uuid())) {
+                    bundled(player, "commands.already-voted");
+                    return;
+                }
+
+                teamVotes.add(player.uuid());
+                int cur = teamVotes.size;
+                int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == team));
+                sendToChat("commands.surrender.ok", Misc.colorizedTeam(team), Misc.colorizedName(player), cur, req);
+
+                if (cur < req) {
+                    return;
+                }
+
+                surrendered.remove(team);
+                sendToChat("commands.surrender.successful", Misc.colorizedTeam(team));
+                Groups.unit.each(u -> u.team == team, u -> Time.run(Mathf.random(360), u::kill));
+                for (Tile tile : world.tiles) {
+                    if (tile.build != null && tile.team() == team) {
+                        Time.run(Mathf.random(360), tile.build::kill);
+                    }
+                }
+            });
+        }
     }
 
     public static void savePlayerStats(String uuid) {
