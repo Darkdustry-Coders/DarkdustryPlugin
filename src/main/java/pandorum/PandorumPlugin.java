@@ -342,7 +342,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID.", (args, player) -> {
-            if(args.length > 0 && !Strings.canParseInt(args[0])) {
+            if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 bundled(player, "commands.page-not-int");
                 return;
             }
@@ -359,11 +359,7 @@ public final class PandorumPlugin extends Plugin{
 
             for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
                 Player p = Groups.player.index(i);
-                result.append("[#9c88ee]* []").append(p.name).append(" [accent]/ [cyan]ID: ").append(p.id());
-                if (player.admin) {
-                    result.append(Bundle.format("commands.pl.raw", findLocale(player.locale), p.name.replaceAll("\\[", "[[")));
-                }
-                result.append("\n");
+                result.append("[#9c88ee]* [white]").append(p.admin ? Iconc.admin : "").append(Misc.colorizedName(p)).append(" [accent]/ [cyan]ID: ").append(p.id()).append(Bundle.format("commands.pl.locale", findLocale(player.locale), p.locale)).append("\n");
             }
             player.sendMessage(result.toString());
         });
