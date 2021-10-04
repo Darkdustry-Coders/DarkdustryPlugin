@@ -12,6 +12,7 @@ import pandorum.comp.Translator;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChatFilter {
     public static String call(final Player author, final String text) {
@@ -20,24 +21,21 @@ public class ChatFilter {
         Map<String, String> translationsCache = new HashMap<>();
         Groups.player.each(player -> !player.equals(author), player -> {
 
-            Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
-            if (playerInfo == null) {
-                playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, false, "off", 0);
-                PandorumPlugin.playersInfo.add(playerInfo);
-            }
+            Document playerInfo = PandorumPlugin.createInfo(player);
 
             String locale = playerInfo.getString("locale");
 
-            if (locale == null || locale.equals("off")) { 
+            if (locale.equals("off")) {
                 player.sendMessage(text, author);
                 return;
             }
 
-            String language = locale.equals("auto") ? player.locale() : locale;
+            String language = Objects.equals(locale, "auto") ? player.locale() : locale;
 
             if (translationsCache.containsKey(language)) {
                 if (translationsCache.get(language).equalsIgnoreCase(text)) {
                     player.sendMessage(text, author);
+                    return;
                 }
                 player.sendMessage(text + " [white]([gray]" + translationsCache.get(language) + "[white])", author);
                 return;

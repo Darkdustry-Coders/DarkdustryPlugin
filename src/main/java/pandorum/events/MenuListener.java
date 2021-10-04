@@ -21,7 +21,7 @@ public class MenuListener {
         // Приветственное сообщение
         Menus.registerMenu(1, (player, option) -> {
             if (option == 1) {
-                Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
+                Document playerInfo = PandorumPlugin.createInfo(player);
                 playerInfo.replace("hellomsg", false);
                 PandorumPlugin.savePlayerStats(player.uuid());
                 bundled(player, "events.hellomsg.disabled");

@@ -377,57 +377,18 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("hub", "Выйти в Хаб.", (args, player) -> Misc.connectToHub(player));
 
-        handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
-            if (Misc.adminCheck(player)) return;
-
-            if(args.length > 1 && !Strings.canParseInt(args[1])){
-                bundled(player, "commands.non-int");
-                return;
-            }
-
-            int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-            if (count > 25 || count < 1) {
-                bundled(player, "commands.admin.spawn.limit");
-                return;
-            }
-
-            Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
-            if (team == null) {
-                bundled(player, "commands.teams");
-                return;
-            }
-
-            UnitType unit = content.units().find(b -> b.name.equals(args[0]));
-            if (unit == null || args[0].equals("block")) {
-                bundled(player, "commands.unit-not-found");
-                return;
-            }
-
-            for (int i = 0; count > i; i++) unit.spawn(team, player.x, player.y);
-            bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
-
-            WebhookEmbedBuilder spawnEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
-                    .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
-                    .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
-            DiscordWebhookManager.client.send(spawnEmbedBuilder.build());
-        });
-
-        handler.<Player>register("units", "<all/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
+        handler.<Player>register("units", "<list/change/name> [unit]", "Действия с юнитами.", (args, player) -> {
             switch (args[0]) {
                 case "name" -> {
                     if (!player.dead()) bundled(player, "commands.unit-name", player.unit().type().name);
                     else bundled(player, "commands.unit-name.null");
                 }
-                case "all" -> {
-                    StringBuilder builder = new StringBuilder();
+                case "list" -> {
+                    StringBuilder units = new StringBuilder();
                     content.units().each(unit -> {
-                        if (!unit.name.equals("block"))
-                            builder.append(" ").append(ConfigEntry.icons.get(unit.name)).append(unit.name);
+                        if (!unit.name.equals("block")) units.append(" ").append(ConfigEntry.icons.get(unit.name)).append(unit.name);
                     });
-                    bundled(player, "commands.units.all", builder.toString());
+                    bundled(player, "commands.units.list", units.toString());
                 }
                 case "change" -> {
                     if (Misc.adminCheck(player)) return;
@@ -538,12 +499,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
-            Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
-            if (playerInfo == null) {
-                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off", 0);
-                playersInfo.add(playerInfo);
-            }
-
+            Document playerInfo = createInfo(player);
             switch (args[0]) {
                 case "current" -> {
                     String locale = playerInfo.getString("locale");
@@ -576,14 +532,15 @@ public final class PandorumPlugin extends Plugin{
             savePlayerStats(player.uuid());
         });
 
-        handler.<Player>register("playtime", "Посмотреть общее время игры на серверах.", (args, player) -> {
-            Document playerInfo = playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(player.uuid()));
-            if (playerInfo == null) {
-                playerInfo = playerInfoSchema.create(player.uuid(), true, false, "off", 0);
-                playersInfo.add(playerInfo);
+        handler.<Player>register("playtime", "[update]", "Посмотреть общее время игры на серверах.", (args, player) -> {
+            Document playerInfo = createInfo(player);
+            if (args.length == 0) {
+                bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
+                savePlayerStats(player.uuid());
+                return;
             }
-            bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
-            savePlayerStats(player.uuid());
+            if (args[0].equals("update")) Call.connect(player.con, "darkdustry.ml", Administration.Config.port.num());
+            else bundled(player, "commands.playtime.incorrect");
         });
 
         handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
@@ -711,13 +668,16 @@ public final class PandorumPlugin extends Plugin{
             });
 
             handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
-                if (alertIgnores.contains(player.uuid())) {
-                    alertIgnores.remove(player.uuid());
-                    bundled(player, "commands.alert.on");
-                } else {
-                    alertIgnores.add(player.uuid());
+                Document playerInfo = createInfo(player);
+
+                if (playerInfo.getBoolean("alerts")) {
+                    playerInfo.replace("alerts", false);
                     bundled(player, "commands.alert.off");
+                    return;
                 }
+
+                playerInfo.replace("alerts", true);
+                bundled(player, "commands.alert.on");
             });
 
             handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
@@ -875,6 +835,44 @@ public final class PandorumPlugin extends Plugin{
 
                 current[0].vote(player, sign);
             });
+
+            handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
+
+                if(args.length > 1 && !Strings.canParseInt(args[1])){
+                    bundled(player, "commands.non-int");
+                    return;
+                }
+
+                int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+                if (count > 25 || count < 1) {
+                    bundled(player, "commands.admin.spawn.limit");
+                    return;
+                }
+
+                Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
+                if (team == null) {
+                    bundled(player, "commands.teams");
+                    return;
+                }
+
+                UnitType unit = content.units().find(b -> b.name.equals(args[0]));
+                if (unit == null || args[0].equals("block")) {
+                    bundled(player, "commands.unit-not-found");
+                    return;
+                }
+
+                for (int i = 0; count > i; i++) unit.spawn(team, player.x, player.y);
+                bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+
+                WebhookEmbedBuilder spawnEmbedBuilder = new WebhookEmbedBuilder()
+                        .setColor(0xFF0000)
+                        .setTitle(new WebhookEmbed.EmbedTitle("Юниты заспавнены для команды " + team + ".", null))
+                        .addField(new WebhookEmbed.EmbedField(true, "Администратором", Strings.stripColors(player.name)))
+                        .addField(new WebhookEmbed.EmbedField(true, "Название", unit.name))
+                        .addField(new WebhookEmbed.EmbedField(true, "Количетво", Integer.toString(count)));
+                DiscordWebhookManager.client.send(spawnEmbedBuilder.build());
+            });
         }
 
         // Команды ниже используются в PluginType.pvp
@@ -928,5 +926,15 @@ public final class PandorumPlugin extends Plugin{
         } catch(Exception e) {
             Log.err(e);
         }
+    }
+
+    public static Document createInfo(Player player) {
+        Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
+        if (playerInfo == null) {
+            playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, true, "off", 0);
+            PandorumPlugin.playersInfo.add(playerInfo);
+            PandorumPlugin.savePlayerStats(player.uuid());
+        }
+        return playerInfo;
     }
 }

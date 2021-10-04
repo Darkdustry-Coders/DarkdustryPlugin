@@ -7,12 +7,13 @@ import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
+import pandorum.Misc;
 
 import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedName;
 
 public class BuildSelectListener {
     public static void call(final EventType.BuildSelectEvent event) {
@@ -22,7 +23,11 @@ public class BuildSelectListener {
             Player builder = event.builder.getPlayer();
 
             if (PandorumPlugin.interval.get(1000)) {
-                Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.alert", colorizedName(builder), event.tile.x, event.tile.y));
+                Groups.player.each(p -> {
+                    Document playerInfo = PandorumPlugin.createInfo(p);
+                    if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", Misc.colorizedName(builder), event.tile.x, event.tile.y);
+                });
+
                 WebhookEmbedBuilder alertEmbedBuilder = new WebhookEmbedBuilder()
                         .setColor(0xE81CFF)
                         .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок начал строить ториевый реактор возле ядра!", null))

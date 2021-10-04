@@ -26,12 +26,7 @@ public class PlayerJoinListener {
 
         Effects.onJoin(event.player);
 
-        Document playerInfo = PandorumPlugin.playersInfo.find((playerInfo2) -> playerInfo2.getString("uuid").equals(event.player.uuid()));
-        if (playerInfo == null) {
-            playerInfo = PandorumPlugin.playerInfoSchema.create(event.player.uuid(), true, false, "off", 0);
-            PandorumPlugin.playersInfo.add(playerInfo);
-            PandorumPlugin.savePlayerStats(event.player.uuid());
-        }
+        Document playerInfo = PandorumPlugin.createInfo(event.player);
 
         if (playerInfo.getBoolean("hellomsg")) {
             String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
