@@ -21,7 +21,7 @@ public class DepositListener {
         if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
             Groups.player.each(p -> {
                 Document playerInfo = PandorumPlugin.createInfo(p);
-                if (playerInfo.getBoolean("alerts")) bundled(p, "events.withdraw-thorium", colorizedName(event.player), event.tile.tileX(), event.tile.tileY()));
+                if (playerInfo.getBoolean("alerts")) bundled(p, "events.withdraw-thorium", colorizedName(event.player), event.tile.tileX(), event.tile.tileY());
             });
 
             WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
