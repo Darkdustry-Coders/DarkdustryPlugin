@@ -10,6 +10,7 @@ import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
+import org.bson.Document;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
@@ -18,7 +19,11 @@ public class DepositListener {
     public static void call(final EventType.DepositEvent event) {
         if (PandorumPlugin.config.type == PluginType.other) return;
         if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
-            Groups.player.each(p -> !PandorumPlugin.alertIgnores.contains(p.uuid()), p -> bundled(p, "events.withdraw-thorium", colorizedName(event.player), event.tile.tileX(), event.tile.tileY()));
+            Groups.player.each(p -> {
+                Document playerInfo = PandorumPlugin.createInfo(p);
+                if (playerInfo.getBoolean("alerts")) bundled(p, "events.withdraw-thorium", colorizedName(event.player), event.tile.tileX(), event.tile.tileY()));
+            });
+
             WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xE81CFF)
                     .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок положил торий в реактор возле ядра!", null))
