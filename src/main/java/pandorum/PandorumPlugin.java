@@ -80,9 +80,8 @@ public final class PandorumPlugin extends Plugin{
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
     public static final Seq<String> votesRTV = new Seq<>();
     public static final Seq<String> votesVNW = new Seq<>();
-    public static final Seq<String> alertIgnores = new Seq<>();
     public static final Seq<String> activeHistoryPlayers = new Seq<>();
-    public static final Interval interval = new Interval(2);
+    public static final Interval interval = new Interval();
 
     public static CacheSeq<HistoryEntry>[][] history;
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
