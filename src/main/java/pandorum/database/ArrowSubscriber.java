@@ -35,7 +35,7 @@ public class ArrowSubscriber<T> implements Subscriber<T> {
     }
 
     @Override
-    public void onSubscribe(Subscription s) {
+    public synchronized void onSubscribe(Subscription s) {
         try {
             if (this.subscribe == null) return;
             this.subscribe.call(s);
@@ -45,7 +45,7 @@ public class ArrowSubscriber<T> implements Subscriber<T> {
     }
 
     @Override
-    public void onNext(T t) {
+    public synchronized void onNext(T t) {
         try {
             isReturnedValue = true;
             if (this.next == null) return;
@@ -56,7 +56,7 @@ public class ArrowSubscriber<T> implements Subscriber<T> {
     }
 
     @Override
-    public void onComplete() {
+    public synchronized void onComplete() {
         try {
             if (!isReturnedValue) this.onNext(null);
             if (this.complete == null) return;
@@ -67,7 +67,7 @@ public class ArrowSubscriber<T> implements Subscriber<T> {
     }
 
     @Override
-    public void onError(Throwable t) {
+    public synchronized void onError(Throwable t) {
         try {
             if (this.error == null) throw t;
             this.error.call(t);
