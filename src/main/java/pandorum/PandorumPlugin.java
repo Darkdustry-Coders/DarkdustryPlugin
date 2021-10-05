@@ -46,7 +46,6 @@ import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.admin.Authme;
 import pandorum.database.ArrowSubscriber;
-import pandorum.entry.ConfigEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.events.*;
 import pandorum.models.PlayerInfo;
@@ -218,7 +217,7 @@ public final class PandorumPlugin extends Plugin{
         Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
         MenuListener.init();
-
+        Icons.init();
         Authme.init();
         socket.connect();
 
@@ -389,7 +388,7 @@ public final class PandorumPlugin extends Plugin{
                 case "list" -> {
                     StringBuilder units = new StringBuilder();
                     content.units().each(unit -> {
-                        if (!unit.name.equals("block")) units.append(" ").append(ConfigEntry.icons.get(unit.name)).append(unit.name);
+                        if (!unit.name.equals("block")) units.append(" ").append(Icons.icons.get(unit.name)).append(unit.name);
                     });
                     bundled(player, "commands.units.list", units.toString());
                 }

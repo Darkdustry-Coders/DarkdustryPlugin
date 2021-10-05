@@ -2,7 +2,6 @@ package pandorum.entry;
 
 import arc.math.geom.Point2;
 import arc.struct.Seq;
-import arc.struct.StringMap;
 import arc.util.Pack;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
@@ -18,6 +17,7 @@ import mindustry.world.blocks.defense.Door;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.units.UnitFactory;
 import pandorum.comp.Bundle;
+import pandorum.comp.Icons;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -106,7 +106,7 @@ public class ConfigEntry implements HistoryEntry{
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("history.config", findLocale(player.locale), name, icons.get(liquid.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, Icons.icons.get(liquid.name), ftime);
         }
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
@@ -115,86 +115,16 @@ public class ConfigEntry implements HistoryEntry{
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("history.config", findLocale(player.locale), name, icons.get(item.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, Icons.icons.get(item.name), ftime);
         }
 
-        if(block instanceof UnitFactory){
+        if (block instanceof UnitFactory) {
             UnitType unit = (UnitType)value;
-            if(unit == null){
+            if (unit == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
-            return Bundle.format("history.config.unit", findLocale(player.locale), name, icons.get(unit.name), ftime);
+            return Bundle.format("history.config.unit", findLocale(player.locale), name, Icons.icons.get(unit.name), ftime);
         }
         return Bundle.format("history.config.changed", findLocale(player.locale), name, ftime);
     }
-
-    public static final StringMap icons = StringMap.of(
-            "copper", "\uF838",
-            "lead", "\uF837",
-            "metaglass", "\uF836",
-            "graphite", "\uF835",
-            "sand", "\uF834",
-            "coal", "\uF833",
-            "titanium", "\uF832",
-            "thorium", "\uF831",
-            "scrap", "\uF830",
-            "silicon", "\uF82F",
-            "plastanium", "\uF82E",
-            "phase-fabric", "\uF82D",
-            "surge-alloy", "\uF82C",
-            "spore-pod", "\uF82B",
-            "blast-compound", "\uF82A",
-            "pyratite", "\uF829",
-
-            "water", "\uF828",
-            "slag", "\uF827",
-            "oil", "\uF826",
-            "cryofluid", "\uF825",
-
-            "dagger", "",
-            "mace", "",
-            "fortress", "",
-            "scepter", "",
-            "reign", "",
-
-            "nova", "",
-            "pulsar", "",
-            "quasar", "",
-            "vela", "",
-            "corvus", "",
-
-            "crawler", "",
-            "atrax", "",
-            "spiroct", "",
-            "arkyid", "",
-            "toxopid", "",
-
-            "flare", "",
-            "horizon", "",
-            "zenith", "",
-            "antumbra", "",
-            "eclipse", "",
-
-            "mono", "",
-            "poly", "",
-            "mega", "",
-            "quad", "",
-            "oct", "",
-
-            "risso", "",
-            "minke", "",
-            "bryde", "",
-            "sei", "",
-            "omura", "",
-
-            "retusa", "",
-            "oxynoe", "",
-            "cyerce", "",
-            "aegires", "",
-            "navanax", "",
-
-            "alpha", "",
-            "beta", "",
-            "gamma", ""
-    );
 }

@@ -6,6 +6,7 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.type.Item;
 import pandorum.comp.Bundle;
+import pandorum.comp.Icons;
 
 import java.util.TimeZone;
 import java.time.ZoneId;
@@ -34,6 +35,6 @@ public class DepositEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        return Bundle.format("history.deposit", findLocale(player.locale), name, count, ConfigEntry.icons.get(item.name), block.name, ftime);
+        return Bundle.format("history.deposit", findLocale(player.locale), name, count, Icons.icons.get(item.name), block.name, ftime);
     }
 }
