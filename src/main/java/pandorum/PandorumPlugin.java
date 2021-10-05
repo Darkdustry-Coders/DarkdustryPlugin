@@ -160,7 +160,11 @@ public final class PandorumPlugin extends Plugin{
 
                     try {
                         switch (operation) {
-                            case DELETE -> playersInfo.remove(playerInfoIndex);
+                            case DELETE -> playersInfo.remove(document -> document
+                                .toBsonDocument()
+                                .getObjectId("_id")
+                                .equals(changedDocumentKey.getObjectId("_id"))
+                            );
                             case INSERT -> {
                                 assert changedDocument != null;
                                 Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(changedDocument);
