@@ -270,7 +270,7 @@ public final class PandorumPlugin extends Plugin{
             DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", args[0].replaceAll("https?://|@", "")));
         });
 
-        if(config.type == PluginType.sand || config.type == PluginType.anarchy) {
+        if (config.type == PluginType.sand || config.type == PluginType.anarchy) {
             handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
                 if (args.length == 0) {
                     Log.info("Время деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
@@ -533,9 +533,9 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("playtime", "[update]", "Посмотреть общее время игры на серверах.", (args, player) -> {
             Document playerInfo = createInfo(player);
+            savePlayerStats(player.uuid());
             if (args.length == 0) {
                 bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
-                savePlayerStats(player.uuid());
                 return;
             }
             if (args[0].equals("update")) Call.connect(player.con, "darkdustry.ml", Administration.Config.port.num());
@@ -668,15 +668,16 @@ public final class PandorumPlugin extends Plugin{
 
             handler.<Player>register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", (args, player) -> {
                 Document playerInfo = createInfo(player);
-
                 if (playerInfo.getBoolean("alerts")) {
                     playerInfo.replace("alerts", false);
                     bundled(player, "commands.alert.off");
+                    savePlayerStats(player.uuid());
                     return;
                 }
 
                 playerInfo.replace("alerts", true);
                 bundled(player, "commands.alert.on");
+                savePlayerStats(player.uuid());
             });
 
             handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
