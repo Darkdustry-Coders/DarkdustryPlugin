@@ -537,12 +537,7 @@ public final class PandorumPlugin extends Plugin{
         handler.<Player>register("playtime", "[update]", "Посмотреть общее время игры на серверах.", (args, player) -> {
             Document playerInfo = createInfo(player);
             savePlayerStats(player.uuid());
-            if (args.length == 0) {
-                bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
-                return;
-            }
-            if (args[0].equals("update")) Call.connect(player.con, "darkdustry.ml", Administration.Config.port.num());
-            else bundled(player, "commands.playtime.incorrect");
+            bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
         });
 
         handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
