@@ -1,13 +1,11 @@
 package pandorum;
 
-import arc.Core;
 import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
-import arc.util.io.Streams;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import com.google.gson.FieldNamingPolicy;
@@ -38,31 +36,28 @@ import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.environment.Floor;
 import okhttp3.OkHttpClient;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.json.JSONArray;
 import pandorum.comp.*;
 import pandorum.comp.Config.PluginType;
-import pandorum.comp.admin.Authme;
 import pandorum.database.ArrowSubscriber;
 import pandorum.entry.HistoryEntry;
-import pandorum.events.*;
 import pandorum.models.PlayerInfo;
 import pandorum.struct.CacheSeq;
 import pandorum.vote.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.*;
 
-public final class PandorumPlugin extends Plugin{
+public final class PandorumPlugin extends Plugin {
 
     public final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
@@ -84,8 +79,6 @@ public final class PandorumPlugin extends Plugin{
 
     public static CacheSeq<HistoryEntry>[][] history;
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
-
-    public static ObjectMap<Unit, Float> timer = new ObjectMap<>();
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
@@ -184,44 +177,7 @@ public final class PandorumPlugin extends Plugin{
 
     @Override
     public void init() {
-        try {
-            InputStream stream = getClass().getClassLoader().getResourceAsStream("vpn-ipv4.txt");
-            Objects.requireNonNull(stream, "stream");
-            forbiddenIps = Seq.with(Streams.copyString(stream).split(System.lineSeparator())).map(IpInfo::new);
-        } catch(Exception e) {
-            throw new ArcRuntimeException(e);
-        }
-
-        Administration.Config.showConnectMessages.set(false);
-        Administration.Config.strict.set(true);
-        Administration.Config.motd.set("off");
-        Administration.Config.messageRateLimit.set(2);
-
-        netServer.admins.addActionFilter(ActionFilter::call);
-        netServer.admins.addChatFilter(ChatFilter::call);
-
-        Events.on(PlayerUnbanEvent.class, PlayerUnbanListener::call);
-        Events.on(PlayerBanEvent.class, PlayerBanListener::call);
-        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
-        Events.on(WorldLoadEvent.class, WorldLoadListener::call);
-        Events.on(BlockBuildEndEvent.class, BlockBuildEndListener::call);
-        Events.on(ConfigEvent.class, ConfigListener::call);
-        Events.on(TapEvent.class, TapListener::call);
-        Events.on(DepositEvent.class, DepositListener::call);
-        Events.on(BuildSelectEvent.class, BuildSelectListener::call);
-        Events.on(PlayerJoin.class, PlayerJoinListener::call);
-        Events.on(PlayerLeave.class, PlayerLeaveListener::call);
-        Events.on(GameOverEvent.class, GameOverListener::call);
-        Events.run(Trigger.update, TriggerUpdateListener::call);
-
-        Timer.schedule(() -> rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
-
-        MenuListener.init();
-        Icons.init();
-        Authme.init();
-        socket.connect();
-
-        Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
+        Loader.init();
     }
    
     @Override
@@ -272,20 +228,6 @@ public final class PandorumPlugin extends Plugin{
             Log.info("Server: &ly@", args[0]);
             DiscordWebhookManager.client.send(String.format("**[Сервер]:** %s", args[0].replaceAll("https?://|@", "")));
         });
-
-        if (config.type == PluginType.sand || config.type == PluginType.anarchy) {
-            handler.register("despawndelay", "[новое_значение]", "Изменить/показать текущую продолжительность жизни юнитов.", args -> {
-                if (args.length == 0) {
-                    Log.info("Время деспавна юнитов сейчас: @", Core.settings.getFloat("despawndelay", 36000f));
-                    return;
-                }
-                if (!Strings.canParsePositiveFloat(args[0])) {
-                    Log.err("Новое значение должно быть положительным числом!");
-                    return;
-                }
-                Core.settings.put("despawndelay", Strings.parseFloat(args[0]));
-            });
-        }
     }
 
     @Override
@@ -317,7 +259,7 @@ public final class PandorumPlugin extends Plugin{
 
             for (int i = 6 * page; i < Math.min(6 * (page + 1), netServer.clientCommands.getCommandList().size); i++) {
                 CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
-                String desc = Bundle.has("commands." + command.text + ".description", findLocale(player.locale)) ? Bundle.format("commands." + command.text + ".description", findLocale(player.locale)) : command.description;
+                String desc = Bundle.has(Strings.format("commands.@.description", command.text), findLocale(player.locale)) ? Bundle.format(Strings.format("commands.@.description", command.text), findLocale(player.locale)) : command.description;
                 result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
             }
             player.sendMessage(result.toString());
@@ -398,12 +340,12 @@ public final class PandorumPlugin extends Plugin{
                         bundled(player, "commands.units.incorrect");
                         return;
                     }
-                    UnitType found = content.units().find(u -> u.name.equals(args[1]));
+                    UnitType found = content.units().find(u -> u.name.equalsIgnoreCase(args[1]));
                     if (found == null) {
                         bundled(player, "commands.unit-not-found");
                         return;
                     }
-                    final Unit spawn = found.spawn(player.team(), player.x(), player.y());
+                    Unit spawn = found.spawn(player.team(), player.x(), player.y());
                     spawn.spawnedByCore(true);
                     player.unit(spawn);
                     bundled(player, "commands.units.change.success");
@@ -412,7 +354,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("unban", "<ip/ID>", "Разбанить игрока.", (args, player) -> {
+        handler.<Player>register("unban", "<ip/uuid...>", "Разбанить игрока.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
             if (netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
                 bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(args[0]).lastName);
@@ -421,7 +363,7 @@ public final class PandorumPlugin extends Plugin{
             }
         });
 
-        handler.<Player>register("votekick", "<player...>", "Проголосовать за кик игрока.", (args, player) -> {
+        handler.<Player>register("votekick", "<name...>", "Проголосовать за кик игрока.", (args, player) -> {
             if (!Administration.Config.enableVotekick.bool()) {
                 bundled(player, "commands.votekick.disabled");
                 return;
@@ -438,20 +380,29 @@ public final class PandorumPlugin extends Plugin{
             }
 
             Player found = Misc.findByName(args[0]);
-
             if (found == null) {
                 bundled(player, "commands.player-not-found");
                 return;
             }
 
-            if (found.admin) bundled(player, "commands.votekick.cannot-kick-admin");
-            else if (found.team() != player.team()) bundled(player, "commands.votekick.cannot-kick-another-team");
-            else if (found == player) bundled(player, "commands.votekick.cannot-vote-for-yourself");
-            else {
-                VoteKickSession session = new VoteKickSession(currentlyKicking, found);
-                session.vote(player, 1);
-                currentlyKicking[0] = session;
+            if (found.admin) {
+                bundled(player, "commands.votekick.cannot-kick-admin");
+                return;
             }
+
+            if (found.team() != player.team()) {
+                bundled(player, "commands.votekick.cannot-kick-another-team");
+                return;
+            }
+
+            if (found == player) {
+                bundled(player, "commands.votekick.cannot-vote-for-yourself");
+                return;
+            }
+
+            VoteKickSession session = new VoteKickSession(currentlyKicking, found);
+            session.vote(player, 1);
+            currentlyKicking[0] = session;
         });
 
         handler.<Player>register("vote", "<y/n>", "Решить судьбу игрока.", (args, player) -> {
@@ -490,7 +441,7 @@ public final class PandorumPlugin extends Plugin{
         });
 
         handler.<Player>register("sync", "Синхронизация с сервером.", (args, player) -> {
-            if(Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * 15) {
+            if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * 15) {
                 bundled(player, "commands.sync.time");
                 return;
             }
@@ -502,7 +453,7 @@ public final class PandorumPlugin extends Plugin{
 
         handler.<Player>register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", (args, player) -> {
             Document playerInfo = createInfo(player);
-            switch (args[0]) {
+            switch (args[0].toLowerCase()) {
                 case "current" -> {
                     String locale = playerInfo.getString("locale");
                     bundled(player, "commands.tr.current", locale == null ? "off" : locale);
@@ -552,8 +503,7 @@ public final class PandorumPlugin extends Plugin{
             }
 
             if (loginCooldowns.containsKey(player.uuid())) {
-                long muteEndTime = loginCooldowns.get(player.uuid());
-                if (new Date().getTime() < muteEndTime) return;
+                if (Time.timeSinceMillis(loginCooldowns.get(player.uuid())) < 1000 * 60 * 15L) return;
                 loginCooldowns.remove(player.uuid());
             }
 
@@ -678,8 +628,8 @@ public final class PandorumPlugin extends Plugin{
                 savePlayerStats(player.uuid());
             });
 
-            handler.<Player>register("team", "<team> [name]", "Смена команды для админов.", (args, player) -> {
-                if(Misc.adminCheck(player)) return;
+            handler.<Player>register("team", "<team> [name...]", "Смена команды для админов.", (args, player) -> {
+                if (Misc.adminCheck(player)) return;
 
                 Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
                 if (team == null) {
@@ -767,21 +717,13 @@ public final class PandorumPlugin extends Plugin{
                     return;
                 }
 
-                VoteMode mode;
-                try {
-                    mode = VoteMode.valueOf(args[0].toLowerCase());
-                } catch(Exception e) {
-                    bundled(player, "commands.nominate.incorrect-mode");
-                    return;
-                }
-
                 if (current[0] != null) {
                     bundled(player, "commands.vote-already-started");
                     return;
                 }
 
-                switch (mode) {
-                    case map -> {
+                switch (args[0].toLowerCase()) {
+                    case "map" -> {
                         Map map = Misc.findMap(args[1]);
                         if (map == null) {
                             bundled(player, "commands.nominate.map.not-found");
@@ -791,12 +733,12 @@ public final class PandorumPlugin extends Plugin{
                         current[0] = session;
                         session.vote(player, 1);
                     }
-                    case save -> {
+                    case "save" -> {
                         VoteSession session = new VoteSaveSession(current, args[1]);
                         current[0] = session;
                         session.vote(player, 1);
                     }
-                    case load -> {
+                    case "load" -> {
                         Fi save = Misc.findSave(args[1]);
                         if (save == null) {
                             bundled(player, "commands.nominate.load.not-found");
@@ -806,6 +748,7 @@ public final class PandorumPlugin extends Plugin{
                         current[0] = session;
                         session.vote(player, 1);
                     }
+                    default -> bundled(player, "commands.nominate.incorrect-mode");
                 }
             });
 
@@ -837,7 +780,7 @@ public final class PandorumPlugin extends Plugin{
             handler.<Player>register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", (args, player) -> {
                 if (Misc.adminCheck(player)) return;
 
-                if(args.length > 1 && !Strings.canParseInt(args[1])){
+                if (args.length > 1 && !Strings.canParseInt(args[1])){
                     bundled(player, "commands.non-int");
                     return;
                 }
@@ -900,6 +843,38 @@ public final class PandorumPlugin extends Plugin{
                         Time.run(Mathf.random(360), tile.build::kill);
                     }
                 }
+            });
+        }
+
+        if (config.type == PluginType.sand) {
+            handler.<Player>register("fill", "<width> <height> <floor>", "Заполнить область данным типом блока.", (args, player) -> {
+                if (adminCheck(player)) return;
+
+                if (!Strings.canParsePositiveInt(args[0])) {
+                    bundled(player, "commands.admin.fill.incorrect-width");
+                    return;
+                }
+
+                if (!Strings.canParsePositiveInt(args[1])) {
+                    bundled(player, "commands.admin.fill.incorrect-height");
+                    return;
+                }
+
+                int w = Mathf.clamp(Strings.parseInt(args[0]), 0, 5) + player.tileX();
+                int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 5) + player.tileY();
+
+                Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
+                if (floor == null) {
+                    bundled(player, "commands.admin.fill.incorrect-floor");
+                    return;
+                }
+
+                for (int x = player.tileX(); x < w; x++) {
+                    for (int y = player.tileY(); y < h; y++) {
+                        world.tile(x, y).setFloorNet(floor);
+                    }
+                }
+                bundled(player, "commands.admin.fill.success", floor);
             });
         }
     }

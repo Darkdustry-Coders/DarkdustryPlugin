@@ -10,6 +10,7 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Packets;
 import pandorum.comp.Bundle;
+import pandorum.comp.Config;
 import pandorum.struct.Tuple2;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ public abstract class Misc {
     public static Map findMap(String text) {
         for (int i = 0; i < maps.all().size; i++) {
             Map map = maps.all().get(i);
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || map.name().equals(text)) {
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || map.name().equalsIgnoreCase(text)) {
                 return map;
             }
         }
@@ -57,7 +58,7 @@ public abstract class Misc {
     }
 
     public static boolean adminCheck(Player player) {
-        if (!player.admin()) {
+        if (!player.admin() && !(PandorumPlugin.config.type == Config.PluginType.anarchy)) {
             bundled(player, "commands.permission-denied");
             return true;
         }

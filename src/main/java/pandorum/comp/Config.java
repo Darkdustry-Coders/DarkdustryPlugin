@@ -31,8 +31,8 @@ public class Config {
     public Tuple2<String, Integer> parseIp() {
         String ip = hubIp;
         int port = 6567;
-        String[] parts = ip.split(":");
-        if (ip.contains(":") && Strings.canParsePositiveInt(parts[1])) {
+        if (ip.contains(":") && Strings.canParsePositiveInt(ip.split(":")[1])) {
+            String[] parts = ip.split(":");
             ip = parts[0];
             port = Strings.parseInt(parts[1]);
         }

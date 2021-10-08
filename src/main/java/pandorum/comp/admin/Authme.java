@@ -1,12 +1,12 @@
 package pandorum.comp.admin;
 import arc.util.Log;
+import arc.util.Time;
 import io.socket.client.Socket;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 
-import java.util.Date;
 import java.util.Objects;
 
 import static mindustry.Vars.netServer;
@@ -44,8 +44,7 @@ public class Authme {
 
     private static void ignoreRequest(String uuid) {
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
-        long cooldownEndTime = new Date().getTime() + (60 * 1000L * 60);
-        PandorumPlugin.loginCooldowns.put(uuid, cooldownEndTime);
+        PandorumPlugin.loginCooldowns.put(uuid, Time.millis());
         if (Objects.isNull(player)) return;
         bundled(player, "commands.login.ignore");
     }

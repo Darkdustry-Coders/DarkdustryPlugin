@@ -18,7 +18,7 @@ public class VoteKickSession{
     protected Task task;
     protected int votes;
 
-    public static int kickDuration = 30 * 60;
+    public static int kickDuration = 45 * 60;
 
     public VoteKickSession(VoteKickSession[] kickSession, Player target) {
         this.target = target;
@@ -66,7 +66,7 @@ public class VoteKickSession{
         voted.clear();
     }
 
-    protected int votesRequired(){
+    protected int votesRequired() {
         return 2 + (Groups.player.size() > 4 ? 1 : 0);
     }
 }

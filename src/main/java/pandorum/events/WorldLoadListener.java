@@ -17,7 +17,6 @@ import static mindustry.Vars.world;
 public class WorldLoadListener {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
-        if (PandorumPlugin.config.type == PluginType.sand) PandorumPlugin.timer.clear();
 
         if (PandorumPlugin.config.type != PluginType.other) {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
