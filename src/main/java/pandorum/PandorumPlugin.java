@@ -534,7 +534,7 @@ public final class PandorumPlugin extends Plugin{
             savePlayerStats(player.uuid());
         });
 
-        handler.<Player>register("playtime", "[update]", "Посмотреть общее время игры на серверах.", (args, player) -> {
+        handler.<Player>register("playtime", "Посмотреть общее время игры на серверах.", (args, player) -> {
             Document playerInfo = createInfo(player);
             savePlayerStats(player.uuid());
             bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
