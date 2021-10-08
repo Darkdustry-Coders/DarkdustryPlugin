@@ -44,6 +44,7 @@ public class Loader {
         Events.on(EventType.ConfigEvent.class, ConfigListener::call);
         Events.on(EventType.TapEvent.class, TapListener::call);
         Events.on(EventType.DepositEvent.class, DepositListener::call);
+        Events.on(EventType.WithdrawEvent.class, WithdrawListener::call);
         Events.on(EventType.BuildSelectEvent.class, BuildSelectListener::call);
         Events.on(EventType.PlayerJoin.class, PlayerJoinListener::call);
         Events.on(EventType.PlayerLeave.class, PlayerLeaveListener::call);

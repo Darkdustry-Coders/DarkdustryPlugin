@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.struct.Seq;
 import arc.util.Strings;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
@@ -7,10 +8,14 @@ import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
+import mindustry.world.Tile;
+import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import org.bson.Document;
+import pandorum.entry.DepositEntry;
+import pandorum.entry.HistoryEntry;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.colorizedName;
@@ -30,6 +35,12 @@ public class DepositListener {
                     .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.tileX(), event.tile.tileY())))
                     .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(event.player.name)));
             DiscordWebhookManager.client.send(banEmbedBuilder.build());
+        }
+
+        HistoryEntry entry = new DepositEntry(Misc.colorizedName(event.player), event.tile.block, event.item, event.amount);
+        Seq<Tile> linkedTiles = event.tile.tile.getLinkedTiles(new Seq<>());
+        for (Tile tile : linkedTiles) {
+            PandorumPlugin.history[tile.x][tile.y].add(entry);
         }
     }
 }

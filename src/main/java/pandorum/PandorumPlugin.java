@@ -485,10 +485,10 @@ public final class PandorumPlugin extends Plugin {
             savePlayerStats(player.uuid());
         });
 
-        handler.<Player>register("playtime", "Посмотреть общее время игры на серверах.", (args, player) -> {
+        handler.<Player>register("status", "Посмотреть информацию о себе.", (args, player) -> {
             Document playerInfo = createInfo(player);
             savePlayerStats(player.uuid());
-            bundled(player, "commands.playtime.time", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")));
+            bundled(player, "commands.status.info", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")), playerInfo.getLong("buildings"));
         });
 
         handler.<Player>register("login", "Зайти на сервер как администратор.", (args, player) -> {
@@ -904,9 +904,9 @@ public final class PandorumPlugin extends Plugin {
     public static Document createInfo(Player player) {
         Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
         if (playerInfo == null) {
-            playerInfo = PandorumPlugin.playerInfoSchema.create(player.uuid(), true, true, "off", 0);
-            PandorumPlugin.playersInfo.add(playerInfo);
-            PandorumPlugin.savePlayerStats(player.uuid());
+            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0);
+            playersInfo.add(playerInfo);
+            savePlayerStats(player.uuid());
         }
         return playerInfo;
     }

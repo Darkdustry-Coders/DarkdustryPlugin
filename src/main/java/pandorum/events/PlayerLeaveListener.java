@@ -28,12 +28,11 @@ public class PlayerLeaveListener {
 
         Effects.onLeave(event.player);
 
-        if (event.player.con != null) {
-            Document playerInfo = PandorumPlugin.createInfo(event.player);
-            long time = Time.timeSinceMillis(event.player.con.connectTime) + playerInfo.getLong("playtime");
-            playerInfo.replace("playtime", time);
-            PandorumPlugin.savePlayerStats(event.player.uuid());
-        }
+        Document playerInfo = PandorumPlugin.createInfo(event.player);
+        long time = Time.timeSinceMillis(event.player.con.connectTime) + playerInfo.getLong("playtime");
+        playerInfo.replace("playtime", time);
+        PandorumPlugin.savePlayerStats(event.player.uuid());
+
 
         WebhookEmbedBuilder leaveEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
