@@ -36,7 +36,7 @@ import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.*;
 import okhttp3.OkHttpClient;
 import org.bson.BsonDocument;
 import org.bson.Document;
@@ -847,7 +847,7 @@ public final class PandorumPlugin extends Plugin {
         }
 
         if (config.type == PluginType.sand) {
-            handler.<Player>register("fill", "<width> <height> <floor> [overlay]", "Заполнить область данным типом блока.", (args, player) -> {
+            handler.<Player>register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", (args, player) -> {
                 if (adminCheck(player)) return;
 
                 if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 50 || Strings.parseInt(args[1]) > 50) {
@@ -859,7 +859,7 @@ public final class PandorumPlugin extends Plugin {
                 int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 50) + player.tileY();
 
                 Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
-                Block overlay = args.length > 3 ? content.blocks().find(o -> o.isOverlay() && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
+                Block overlay = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanseof OreBlock || o instanseof StaticWall || o instanseof Prop) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
                 if (floor == null || overlay == null) {
                     bundled(player, "commands.admin.fill.incorrect-type");
                     return;
