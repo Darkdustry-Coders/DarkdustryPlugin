@@ -50,6 +50,11 @@ public class MenuListener {
                     amount = Groups.unit.count(u -> u.team == Team.crux);
                     Groups.unit.each(u -> u.team == Team.crux, Unitc::kill);
                 }
+                case 5 -> {
+                    player.clearUnit();
+                    bundled(player, "commands.despw.suicide");
+                    return;
+                }
             }
 
             bundled(player, "commands.admin.despw.success", amount);
