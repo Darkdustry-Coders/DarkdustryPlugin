@@ -182,10 +182,9 @@ public final class PandorumPlugin extends Plugin {
    
     @Override
     public void registerServerCommands(CommandHandler handler) {
-
         handler.removeCommand("say");
 
-        handler.register("reload-config", "Перезапустить файл конфигов.", args -> {
+        handler.register("reload-config", "Перезапустить файл конфигурации.", args -> {
             config = gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
             Log.info("Перезагружено.");
         });
@@ -220,7 +219,7 @@ public final class PandorumPlugin extends Plugin {
             DiscordWebhookManager.client.send(restartEmbedBuilder.build());
 
             Groups.player.each(Misc::connectToHub);
-            Timer.schedule(() -> System.exit(2), 10f);
+            Timer.schedule(() -> System.exit(2), 5f);
         });
 
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", args -> {
@@ -271,8 +270,7 @@ public final class PandorumPlugin extends Plugin {
         });
 
         handler.<Player>register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", (args, player) -> {
-            String teamColor = "[#" + player.team().color + "]";
-            Groups.player.each(p -> p.team() == player.team(), teammate -> bundled(teammate, "commands.t.chat", teamColor, Misc.colorizedName(player), args[0]));
+            Groups.player.each(p -> p.team() == player.team(), teammate -> bundled(teammate, "commands.t.chat", player.team().color, Misc.colorizedName(player), args[0]));
         });
 
         handler.<Player>register("pl", "[page]", "Вывести список игроков и их ID.", (args, player) -> {
@@ -300,7 +298,7 @@ public final class PandorumPlugin extends Plugin {
 
         handler.<Player>register("despw", "Убить всех юнитов на карте.", (args, player) -> {
             if (Misc.adminCheck(player)) return;
-            String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}};
+            String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.suicide", findLocale(player.locale))}};
             Call.menu(player.con, 2, Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.despw.menu.content", findLocale(player.locale), Groups.unit.size()), options);
         });
 
