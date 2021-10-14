@@ -12,16 +12,16 @@ import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
-public class VoteSaveSession extends VoteSession{
+public class VoteSaveSession extends VoteSession {
     private final String target;
 
-    public VoteSaveSession(VoteSession[] session, String target){
+    public VoteSaveSession(VoteSession[] session, String target) {
         super(session);
         this.target = target;
     }
 
     @Override
-    protected Task start(){
+    protected Task start() {
         return Timer.schedule(() -> {
             if(!checkPass()){
                 sendToChat("commands.nominate.save.failed", target);

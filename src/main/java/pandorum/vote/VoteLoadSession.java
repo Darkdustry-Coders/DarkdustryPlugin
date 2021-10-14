@@ -16,16 +16,16 @@ import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
-public class VoteLoadSession extends VoteSession{
+public class VoteLoadSession extends VoteSession {
     private final Fi target;
 
-    public VoteLoadSession(VoteSession[] session, Fi target){
+    public VoteLoadSession(VoteSession[] session, Fi target) {
         super(session);
         this.target = target;
     }
 
     @Override
-    protected Task start(){
+    protected Task start() {
         return Timer.schedule(() -> {
             if(!checkPass()) {
                 sendToChat("commands.nominate.load.failed", target.nameWithoutExtension());

@@ -22,7 +22,7 @@ public class BuildSelectListener {
         if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() && event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
             Player builder = event.builder.getPlayer();
 
-            if (PandorumPlugin.interval.get(1000)) {
+            if (PandorumPlugin.interval.get(750f)) {
                 Groups.player.each(p -> {
                     Document playerInfo = PandorumPlugin.createInfo(p);
                     if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", Misc.colorizedName(builder), event.tile.x, event.tile.y);

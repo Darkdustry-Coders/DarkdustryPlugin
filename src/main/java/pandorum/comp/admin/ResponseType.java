@@ -12,7 +12,6 @@ public enum ResponseType {
         this.value = value;
     }
 
-
     public static ResponseType getByValue(int value) {
         for (ResponseType status : values()) {
             if (status.value == value) return status;

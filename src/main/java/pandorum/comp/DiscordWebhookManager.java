@@ -5,7 +5,5 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import pandorum.PandorumPlugin;
 
 public class DiscordWebhookManager {
-    public static WebhookClient client = new WebhookClientBuilder(PandorumPlugin.config.DiscordWebhookLink.replace("discord", "discordapp"))
-        .setWait(false)
-        .build();
+    public static WebhookClient client = new WebhookClientBuilder(PandorumPlugin.config.DiscordWebhookLink.replace("discord", "discordapp")).setWait(false).build();
 }

@@ -13,7 +13,7 @@ import java.time.ZoneId;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DepositEntry implements HistoryEntry{
+public class DepositEntry implements HistoryEntry {
 
     public String name;
     public Block block;
@@ -21,7 +21,7 @@ public class DepositEntry implements HistoryEntry{
     public int count;
     public Date time;
 
-    public DepositEntry(String name, Block block, Item item, int count){
+    public DepositEntry(String name, Block block, Item item, int count) {
         this.name = name;
         this.block = block;
         this.item = item;

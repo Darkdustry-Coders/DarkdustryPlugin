@@ -33,7 +33,6 @@ public class PlayerLeaveListener {
         playerInfo.replace("playtime", time);
         PandorumPlugin.savePlayerStats(event.player.uuid());
 
-
         WebhookEmbedBuilder leaveEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0xFF0000)
                 .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null));
@@ -45,7 +44,7 @@ public class PlayerLeaveListener {
         if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
             event.player.getInfo().lastKicked = Time.millis() + VoteKickSession.kickDuration * 1000L;
-            sendToChat("commands.votekick.left", event.player.name(), VoteKickSession.kickDuration / 60f);
+            sendToChat("commands.votekick.left", colorizedName(event.player), VoteKickSession.kickDuration / 60f);
         }
 
         if (PandorumPlugin.config.type == PluginType.other) return;

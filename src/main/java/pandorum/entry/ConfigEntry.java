@@ -28,7 +28,7 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
 
-public class ConfigEntry implements HistoryEntry{
+public class ConfigEntry implements HistoryEntry {
     public String name;
     public Block block;
     public Object value;
@@ -36,7 +36,7 @@ public class ConfigEntry implements HistoryEntry{
     public Building build;
     public Date time;
 
-    public ConfigEntry(ConfigEvent event, boolean connect){
+    public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = colorizedName(event.player);
         this.block = event.tile.block();
         this.build = event.tile;
@@ -46,8 +46,7 @@ public class ConfigEntry implements HistoryEntry{
     }
 
     private Object getConfig(ConfigEvent event) {
-        if (block.configurations.containsKey(Integer.class) &&
-                (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+        if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int count;
             if (block instanceof PowerNode) {
                 count = build != null ? build.getPowerConnections(new Seq<>()).size : 0;
@@ -66,8 +65,7 @@ public class ConfigEntry implements HistoryEntry{
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        if (block.configurations.containsKey(Integer.class) &&
-                (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+        if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);
             if (data < 0) {
                 return Bundle.format("history.config.disconnect", findLocale(player.locale), name, block, ftime);
@@ -85,24 +83,24 @@ public class ConfigEntry implements HistoryEntry{
             return Bundle.format("history.config.power-node.disconnect", findLocale(player.locale), name, block, tile.x, tile.y, ftime);
         }
 
-        if(block instanceof Door){
+        if (block instanceof Door) {
             boolean data = (boolean)value;
             return data ? Bundle.format("history.config.door.on", findLocale(player.locale), name, block, ftime) : Bundle.format("history.config.door.off", findLocale(player.locale), name, block, ftime);
         }
 
-        if(block == Blocks.switchBlock){
+        if (block == Blocks.switchBlock) {
             boolean data = (boolean)value;
             return data ? Bundle.format("history.config.switch.on", findLocale(player.locale), name, ftime) : Bundle.format("history.config.switch.off", findLocale(player.locale), name, ftime);
         }
 
-        if(block == Blocks.commandCenter){
+        if (block == Blocks.commandCenter) {
             final String[] commands = Bundle.get("history.config.command-center.all", findLocale(player.locale)).split(", ");
             return Bundle.format("history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()], ftime);
         }
 
-        if(block == Blocks.liquidSource){
+        if (block == Blocks.liquidSource) {
             Liquid liquid = (Liquid)value;
-            if(liquid == null){
+            if (liquid == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
@@ -111,7 +109,7 @@ public class ConfigEntry implements HistoryEntry{
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
             Item item = (Item)value;
-            if(item == null){
+            if (item == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 

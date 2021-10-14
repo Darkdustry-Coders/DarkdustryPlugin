@@ -13,7 +13,7 @@ import java.time.ZoneId;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WithdrawEntry implements HistoryEntry{
+public class WithdrawEntry implements HistoryEntry {
 
     public String name;
     public Block block;
@@ -21,7 +21,7 @@ public class WithdrawEntry implements HistoryEntry{
     public int count;
     public Date time;
 
-    public WithdrawEntry(String name, Block block, Item item, int count){
+    public WithdrawEntry(String name, Block block, Item item, int count) {
         this.name = name;
         this.block = block;
         this.item = item;
@@ -30,7 +30,7 @@ public class WithdrawEntry implements HistoryEntry{
     }
 
     @Override
-    public String getMessage(Player player){
+    public String getMessage(Player player) {
         final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);

@@ -9,7 +9,6 @@ import mindustry.gen.Call;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
-import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
 
@@ -34,7 +33,7 @@ public class PlayerJoinListener {
         }
         
         bundled(event.player, "events.motd");
-        if (PandorumPlugin.config.type == PluginType.anarchy) event.player.admin(true);
+
         WebhookEmbedBuilder joinEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x00FF00)
                 .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s зашёл на сервер!", Strings.stripColors(event.player.name())), null));

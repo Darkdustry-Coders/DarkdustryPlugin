@@ -28,9 +28,9 @@ public class WorldLoadListener {
             }
         }
 
-        WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+        WebhookEmbedBuilder loadEmbedBuilder = new WebhookEmbedBuilder()
                 .setColor(0x05DDF5)
                 .setTitle(new WebhookEmbed.EmbedTitle("Загружена новая карта!", null));
-        DiscordWebhookManager.client.send(banEmbedBuilder.build());
+        DiscordWebhookManager.client.send(loadEmbedBuilder.build());
     }
 }

@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class RotateEntry implements HistoryEntry{
+public class RotateEntry implements HistoryEntry {
 
     public String name;
     public Block block;
@@ -20,11 +20,11 @@ public class RotateEntry implements HistoryEntry{
     
     protected static final String[] sides;
 
-    static{
+    static {
         sides = Bundle.get("history.rotate.all", Bundle.defaultLocale()).split(", ");
     }
 
-    public RotateEntry(String name, Block block, int rotation){
+    public RotateEntry(String name, Block block, int rotation) {
         this.name = name;
         this.block = block;
         this.rotation = rotation;
@@ -32,7 +32,7 @@ public class RotateEntry implements HistoryEntry{
     }
 
     @Override
-    public String getMessage(Player player){
+    public String getMessage(Player player) {
         final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);

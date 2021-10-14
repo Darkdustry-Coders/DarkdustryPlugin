@@ -859,18 +859,21 @@ public final class PandorumPlugin extends Plugin {
                 int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 50) + player.tileY();
 
                 Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
-                Block overlay = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanceof OreBlock || o instanceof Prop || o instanceof  TreeBlock) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
-                if (floor == null || overlay == null) {
+                Block block = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanceof OreBlock || o instanceof Prop || o instanceof  TreeBlock) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
+                if (floor == null || block == null) {
                     bundled(player, "commands.admin.fill.incorrect-type");
                     return;
                 }
 
                 for (int x = player.tileX(); x < w; x++) {
                     for (int y = player.tileY(); y < h; y++) {
-                        if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor, overlay);
+                        if (world.tile(x, y) != null) {
+                            world.tile(x, y).setFloorNet(floor);
+                            world.tile(x, y).setNet(block);
+                        }
                     }
                 }
-                bundled(player, "commands.admin.fill.success", floor, overlay);
+                bundled(player, "commands.admin.fill.success", floor, block);
             });
         }
     }

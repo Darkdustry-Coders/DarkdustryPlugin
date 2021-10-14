@@ -11,7 +11,7 @@ import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
-public class VoteKickSession{
+public class VoteKickSession {
     protected Player target;
     protected Seq<String> voted = new Seq<>();
     protected VoteKickSession[] kickSession;
@@ -36,8 +36,8 @@ public class VoteKickSession{
 
     protected Task start() {
         return Timer.schedule(() -> {
-            if(!checkPass()) {
-                sendToChat("commands.votekick.vote-failed", target.name);
+            if (!checkPass()) {
+                sendToChat("commands.votekick.vote-failed", colorizedName(target));
                 stop();
             }
         }, config.votekickDuration);

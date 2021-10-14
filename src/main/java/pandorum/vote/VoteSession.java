@@ -4,18 +4,18 @@ import arc.struct.Seq;
 import arc.util.Timer.Task;
 import mindustry.gen.Player;
 
-public abstract class VoteSession{
+public abstract class VoteSession {
     protected Seq<String> voted = new Seq<>();
     protected VoteSession[] session;
     protected Task task;
     protected int votes;
 
-    public VoteSession(VoteSession[] session){
+    public VoteSession(VoteSession[] session) {
         this.session = session;
         this.task = start();
     }
 
-    public Seq<String> voted(){
+    public Seq<String> voted() {
         return voted;
     }
 

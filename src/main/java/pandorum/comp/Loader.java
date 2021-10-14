@@ -32,6 +32,7 @@ public class Loader {
         Administration.Config.strict.set(true);
         Administration.Config.motd.set("off");
         Administration.Config.messageRateLimit.set(1);
+        Administration.Config.enableVotekick.set(true);
 
         netServer.admins.addActionFilter(ActionFilter::call);
         netServer.admins.addChatFilter(ChatFilter::call);
