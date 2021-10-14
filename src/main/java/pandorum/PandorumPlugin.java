@@ -847,7 +847,7 @@ public final class PandorumPlugin extends Plugin {
         }
 
         if (config.type == PluginType.sand) {
-            handler.<Player>register("fill", "<width> <height> <floor>", "Заполнить область данным типом блока.", (args, player) -> {
+            handler.<Player>register("fill", "<width> <height> <floor> [overlay]", "Заполнить область данным типом блока.", (args, player) -> {
                 if (adminCheck(player)) return;
 
                 if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 50 || Strings.parseInt(args[1]) > 50) {
@@ -859,17 +859,18 @@ public final class PandorumPlugin extends Plugin {
                 int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 50) + player.tileY();
 
                 Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
-                if (floor == null) {
-                    bundled(player, "commands.admin.fill.incorrect-floor");
+                Block overlay = args.length > 3 ? content.blocks().find(o -> o.isOverlay() && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
+                if (floor == null || overlay == null) {
+                    bundled(player, "commands.admin.fill.incorrect-type");
                     return;
                 }
 
                 for (int x = player.tileX(); x < w; x++) {
                     for (int y = player.tileY(); y < h; y++) {
-                        if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor);
+                        if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor, overlay);
                     }
                 }
-                bundled(player, "commands.admin.fill.success", floor);
+                bundled(player, "commands.admin.fill.success", floor, overlay);
             });
         }
     }
