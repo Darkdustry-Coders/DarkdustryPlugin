@@ -850,18 +850,13 @@ public final class PandorumPlugin extends Plugin {
             handler.<Player>register("fill", "<width> <height> <floor>", "Заполнить область данным типом блока.", (args, player) -> {
                 if (adminCheck(player)) return;
 
-                if (!Strings.canParsePositiveInt(args[0])) {
-                    bundled(player, "commands.admin.fill.incorrect-width");
+                if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 50 || Strings.parseInt(args[1]) > 50) {
+                    bundled(player, "commands.admin.fill.incorrect-number-format");
                     return;
                 }
 
-                if (!Strings.canParsePositiveInt(args[1])) {
-                    bundled(player, "commands.admin.fill.incorrect-height");
-                    return;
-                }
-
-                int w = Mathf.clamp(Strings.parseInt(args[0]), 0, 5) + player.tileX();
-                int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 5) + player.tileY();
+                int w = Mathf.clamp(Strings.parseInt(args[0]), 0, 50) + player.tileX();
+                int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 50) + player.tileY();
 
                 Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
                 if (floor == null) {
@@ -871,7 +866,7 @@ public final class PandorumPlugin extends Plugin {
 
                 for (int x = player.tileX(); x < w; x++) {
                     for (int y = player.tileY(); y < h; y++) {
-                        world.tile(x, y).setFloorNet(floor);
+                        if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor);
                     }
                 }
                 bundled(player, "commands.admin.fill.success", floor);
