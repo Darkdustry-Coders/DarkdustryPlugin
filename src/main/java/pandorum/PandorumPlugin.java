@@ -628,7 +628,7 @@ public final class PandorumPlugin extends Plugin {
                 savePlayerStats(player.uuid());
             });
 
-            handler.<Player>register("team", "<team> [name...]", "Смена команды для админов.", (args, player) -> {
+            handler.<Player>register("team", "<team> [player...]", "Смена команды для админов.", (args, player) -> {
                 if (Misc.adminCheck(player)) return;
 
                 Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
@@ -859,7 +859,7 @@ public final class PandorumPlugin extends Plugin {
                 int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 50) + player.tileY();
 
                 Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
-                Block overlay = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanseof OreBlock || o instanseof StaticWall || o instanseof Prop) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
+                Block overlay = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanceof OreBlock || o instanceof Prop || o instanceof  TreeBlock) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
                 if (floor == null || overlay == null) {
                     bundled(player, "commands.admin.fill.incorrect-type");
                     return;

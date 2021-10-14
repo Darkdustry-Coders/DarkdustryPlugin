@@ -16,7 +16,7 @@ import static pandorum.PandorumPlugin.socket;
 
 public class Authme {
     public static void init() {
-        socket.on(Socket.EVENT_CONNECT, (connection_args) -> {
+        socket.on(Socket.EVENT_CONNECT, connect -> {
             Log.info("Подключено к сокету.");
 
             socket.on("registerResponse", args -> {

@@ -70,7 +70,7 @@ public abstract class Misc {
     }
 
     public static void sendToChat(String key, Object... values) {
-        Groups.player.each(p -> p.sendMessage(Bundle.format(key, findLocale(p.locale), values)));
+        Groups.player.each(p -> bundled(p, key, values));
     }
 
     public static Player findByName(String name) {

@@ -17,7 +17,6 @@ public enum ResponseType {
         for (ResponseType status : values()) {
             if (status.value == value) return status;
         }
-
         throw new IllegalArgumentException("Invalid code: " + value);
     }
 }
