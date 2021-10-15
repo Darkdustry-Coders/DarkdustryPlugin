@@ -52,7 +52,7 @@ public class MenuListener {
                 }
                 case 5 -> {
                     player.clearUnit();
-                    bundled(player, "commands.despw.suicide");
+                    bundled(player, "commands.admin.despw.suicide");
                     return;
                 }
             }
