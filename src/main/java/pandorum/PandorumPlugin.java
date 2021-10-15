@@ -262,7 +262,7 @@ public final class PandorumPlugin extends Plugin {
     public static Document createInfo(Player player) {
         Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
         if (playerInfo == null) {
-            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0);
+            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0, 0);
             playersInfo.add(playerInfo);
             savePlayerStats(player.uuid());
         }

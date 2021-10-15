@@ -13,6 +13,6 @@ public class StatusCommand {
     public static void run(final String[] args, final Player player) {
         Document playerInfo = createInfo(player);
         savePlayerStats(player.uuid());
-        bundled(player, "commands.status.info", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")), playerInfo.getLong("buildings"));
+        bundled(player, "commands.status.info", TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")), playerInfo.getLong("buildings"), playerInfo.getInteger("waves"));
     }
 }

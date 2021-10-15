@@ -50,6 +50,7 @@ public class Loader {
         Events.on(EventType.PlayerJoin.class, PlayerJoinListener::call);
         Events.on(EventType.PlayerLeave.class, PlayerLeaveListener::call);
         Events.on(EventType.GameOverEvent.class, GameOverListener::call);
+        Events.on(EventType.WaveEvent.class, WaveEventListener::call);
         Events.run(EventType.Trigger.update, TriggerUpdateListener::call);
 
         Timer.schedule(() -> PandorumPlugin.rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);

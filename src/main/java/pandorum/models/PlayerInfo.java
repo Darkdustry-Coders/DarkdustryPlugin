@@ -20,17 +20,19 @@ public class PlayerInfo extends MongoSchema<String, Object> {
             new Required<>("alerts", Boolean.class),
             new Required<>("playtime", Long.class),
             new Required<>("buildings", Long.class),
+            new Required<>("waves", Integer.class),
             new NonRequired<>("locale", String.class)
         );
     }
 
-    public Document create(String uuid, Boolean hellomsg, Boolean alerts, String locale, long playtime, long buildings) {
+    public Document create(String uuid, Boolean hellomsg, Boolean alerts, String locale, long playtime, long buildings, int waves) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
                 "hellomsg", hellomsg,
                 "alerts", alerts,
                 "playtime", playtime,
-                "buildings", buildings
+                "buildings", buildings,
+                "waves", waves
         ));
 
         schema.put("locale", locale);
