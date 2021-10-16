@@ -24,8 +24,13 @@ public class BlockBuildEndListener {
         if (event.unit.isPlayer()) {
             Player player = event.unit.getPlayer();
             Document playerInfo = PandorumPlugin.createInfo(player);
-            long buildingsBuilt = playerInfo.getLong("buildings") + 1;
-            playerInfo.replace("buildings", buildingsBuilt);
+            if (event.breaking) {
+                long deconstructed = playerInfo.getLong("buildingsDeconstructed") + 1;
+                playerInfo.replace("buildingsDeconstructed", deconstructed);
+            } else {
+                long built = playerInfo.getLong("buildingsBuilt") + 1;
+                playerInfo.replace("buildingsBuilt", built);
+            }
             PandorumPlugin.savePlayerStats(player.uuid());
         }
     }
