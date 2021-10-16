@@ -104,7 +104,7 @@ public class ConfigEntry implements HistoryEntry {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("history.config", findLocale(player.locale), name, Icons.icons.get(liquid.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, Icons.get(liquid.name), ftime);
         }
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
@@ -113,7 +113,7 @@ public class ConfigEntry implements HistoryEntry {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
 
-            return Bundle.format("history.config", findLocale(player.locale), name, Icons.icons.get(item.name), ftime);
+            return Bundle.format("history.config", findLocale(player.locale), name, Icons.get(item.name), ftime);
         }
 
         if (block instanceof UnitFactory) {
@@ -121,7 +121,7 @@ public class ConfigEntry implements HistoryEntry {
             if (unit == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
-            return Bundle.format("history.config.unit", findLocale(player.locale), name, Icons.icons.get(unit.name), ftime);
+            return Bundle.format("history.config.unit", findLocale(player.locale), name, Icons.get(unit.name), ftime);
         }
         return Bundle.format("history.config.changed", findLocale(player.locale), name, ftime);
     }

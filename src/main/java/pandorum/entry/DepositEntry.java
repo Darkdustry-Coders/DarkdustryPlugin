@@ -35,6 +35,6 @@ public class DepositEntry implements HistoryEntry {
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         final String ftime = df.format(this.time);
 
-        return Bundle.format("history.deposit", findLocale(player.locale), name, count, Icons.icons.get(item.name), block.name, ftime);
+        return Bundle.format("history.deposit", findLocale(player.locale), name, count, Icons.get(item.name), block.name, ftime);
     }
 }

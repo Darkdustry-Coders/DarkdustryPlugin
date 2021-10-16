@@ -202,7 +202,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("vote", "<y/n>", "Решить судьбу игрока.", VoteCommand::run);
         handler.register("sync", "Синхронизация с сервером.", SyncCommand::run);
         handler.register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", TranslatorCommand::run);
-        handler.register("status", "Посмотреть информацию о себе.", StatusCommand::run);
+        handler.register("info", "[player...]", "Посмотреть информацию о себе.", InfoCommand::run);
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
 
         // Все команды ниже не используются в PluginType.other

@@ -19,7 +19,7 @@ public class UnitsCommand {
             case "list" -> {
                 StringBuilder units = new StringBuilder();
                 content.units().each(unit -> {
-                    if (!unit.name.equals("block")) units.append(" ").append(Icons.icons.get(unit.name)).append(unit.name);
+                    if (!unit.name.equals("block")) units.append(" ").append(Icons.get(unit.name)).append(unit.name);
                 });
                 bundled(player, "commands.units.list", units.toString());
             }

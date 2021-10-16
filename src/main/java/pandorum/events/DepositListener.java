@@ -29,12 +29,12 @@ public class DepositListener {
                 if (playerInfo.getBoolean("alerts")) bundled(p, "events.withdraw-thorium", colorizedName(event.player), event.tile.tileX(), event.tile.tileY());
             });
 
-            WebhookEmbedBuilder banEmbedBuilder = new WebhookEmbedBuilder()
+            WebhookEmbedBuilder depositEmbedBuilder = new WebhookEmbedBuilder()
                     .setColor(0xE81CFF)
                     .setTitle(new WebhookEmbed.EmbedTitle("ВНИМАНИЕ!!! Данный игрок положил торий в реактор возле ядра!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %d, Y: %d", event.tile.tileX(), event.tile.tileY())))
+                    .addField(new WebhookEmbed.EmbedField(true, "Позиция", String.format("X: %s, Y: %s", event.tile.tileX(), event.tile.tileY())))
                     .addField(new WebhookEmbed.EmbedField(true, "Никнейм", Strings.stripColors(event.player.name)));
-            DiscordWebhookManager.client.send(banEmbedBuilder.build());
+            DiscordWebhookManager.client.send(depositEmbedBuilder.build());
         }
 
         HistoryEntry entry = new DepositEntry(Misc.colorizedName(event.player), event.tile.block, event.item, event.amount);

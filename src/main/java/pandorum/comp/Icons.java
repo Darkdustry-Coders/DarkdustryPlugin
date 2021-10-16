@@ -4,7 +4,7 @@ import arc.struct.StringMap;
 import mindustry.gen.Iconc;
 
 public class Icons {
-    public static StringMap icons;
+    private static StringMap icons;
 
     public static void init() {
         icons = StringMap.of(
@@ -76,5 +76,9 @@ public class Icons {
                 "beta", Iconc.unitBeta,
                 "gamma", Iconc.unitGamma
         );
+    }
+
+    public static Object get(String key) {
+        return icons.get(key);
     }
 }
