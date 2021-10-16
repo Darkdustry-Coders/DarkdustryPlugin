@@ -18,8 +18,8 @@ import static pandorum.Misc.sendToChat;
 
 public class MenuListener {
     public static void init() {
-        // Приветственное сообщение
-        Menus.registerMenu(1, (player, option) -> {
+        // Приветственное сообщение (0)
+        Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 Document playerInfo = PandorumPlugin.createInfo(player);
                 playerInfo.replace("hellomsg", false);
@@ -28,8 +28,8 @@ public class MenuListener {
             }
         });
 
-        // Команда /despw
-        Menus.registerMenu(2, (player, option) -> {
+        // Команда /despw (1)
+        Menus.registerMenu((player, option) -> {
             if (option == 1) return;
             int amount = 0;
 
@@ -65,8 +65,8 @@ public class MenuListener {
             DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
-        // Команда /artv
-        Menus.registerMenu(3, (player, option) -> {
+        // Команда /artv (2)
+        Menus.registerMenu((player, option) -> {
             if (option == 0) {
                 Events.fire(new EventType.GameOverEvent(Team.crux));
                 sendToChat("commands.admin.artv.info");
@@ -76,6 +76,11 @@ public class MenuListener {
                         .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
                 DiscordWebhookManager.client.send(artvEmbedBuilder.build());
             }
+        });
+
+        //Информация о игроке (3)
+        Menus.registerMenu((player, option) -> {
+            //Пока что не делает ничего
         });
     }
 }
