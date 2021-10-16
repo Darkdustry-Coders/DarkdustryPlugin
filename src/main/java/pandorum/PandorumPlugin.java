@@ -198,7 +198,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         handler.register("units", "<list/change/name> [unit]", "Действия с юнитами.", UnitsCommand::run);
         handler.register("unban", "<ip/uuid...>", "Разбанить игрока.", UnbanCommand::run);
-        handler.register("votekick", "<name...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
+        handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
         handler.register("vote", "<y/n>", "Решить судьбу игрока.", VoteCommand::run);
         handler.register("sync", "Синхронизация с сервером.", SyncCommand::run);
         handler.register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", TranslatorCommand::run);
@@ -262,7 +262,7 @@ public final class PandorumPlugin extends Plugin {
     public static Document createInfo(Player player) {
         Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
         if (playerInfo == null) {
-            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0, 0, 0);
+            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0, 0, 0, 0);
             playersInfo.add(playerInfo);
             savePlayerStats(player.uuid());
         }

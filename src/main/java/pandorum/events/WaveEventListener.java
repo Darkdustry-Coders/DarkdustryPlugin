@@ -11,8 +11,8 @@ public class WaveEventListener {
     public static void call(final EventType.WaveEvent event) {
         Groups.player.each(p -> p.team() != state.rules.waveTeam, p -> {
             Document playerInfo = PandorumPlugin.createInfo(p);
-            int wavesSurvived = playerInfo.getInteger("waves") + 1;
-            playerInfo.replace("waves", wavesSurvived);
+            int wavesSurvived = playerInfo.getInteger("wavesSurvived") + 1;
+            playerInfo.replace("wavesSurvived", wavesSurvived);
             PandorumPlugin.savePlayerStats(p.uuid());
         });
     }
