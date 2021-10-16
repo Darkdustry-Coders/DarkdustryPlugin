@@ -27,7 +27,7 @@ public class InfoCommand {
 
         String[][] options = {{Bundle.format("events.menu.close", findLocale(player.locale))}};
 
-        Call.menu(player.con, Short.MAX_VALUE, Bundle.format("commands.info.header", findLocale(player.locale), args[0]),
+        Call.menu(player.con, 3, Bundle.format("commands.info.header", findLocale(player.locale), args[0]),
                 Bundle.format("commands.info.content", findLocale(player.locale), TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")),
                 playerInfo.getLong("buildingsBuilt"), playerInfo.getLong("buildingsDeconstructed"),
                 playerInfo.getInteger("wavesSurvived"), playerInfo.getInteger("gamesWon"),
