@@ -29,7 +29,7 @@ public class PlayerJoinListener {
 
         if (playerInfo.getBoolean("hellomsg")) {
             String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
-            Call.menu(event.player.con, 1, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
+            Call.menu(event.player.con, 0, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
         }
         
         bundled(event.player, "events.motd");
