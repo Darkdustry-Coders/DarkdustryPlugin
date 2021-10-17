@@ -7,7 +7,6 @@ public enum ResponseType {
 
     private final int value;
 
-
     ResponseType(int value) {
         this.value = value;
     }
@@ -16,6 +15,6 @@ public enum ResponseType {
         for (ResponseType status : values()) {
             if (status.value == value) return status;
         }
-        throw new IllegalArgumentException("Invalid code: " + value);
+        return SKIP;
     }
 }

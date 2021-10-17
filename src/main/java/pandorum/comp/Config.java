@@ -40,7 +40,6 @@ public class Config {
     }
 
     public enum PluginType {
-
         /** Тип для серверов с режимом выживания или атаки */
         def,
 
