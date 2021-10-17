@@ -34,8 +34,10 @@ public class Loader {
         Administration.Config.messageRateLimit.set(1);
         Administration.Config.enableVotekick.set(true);
 
-        netServer.admins.addActionFilter(ActionFilter::call);
-        netServer.admins.addChatFilter(ChatFilter::call);
+        netServer.admins.addActionFilter(ActionFilter::filter);
+        netServer.admins.addChatFilter(ChatFilter::filter);
+
+        netServer.chatFormatter = (player, message) -> player == null ? message : player.coloredName() + " [orange]>[white] " + message;
 
         Events.on(EventType.PlayerUnbanEvent.class, PlayerUnbanListener::call);
         Events.on(EventType.PlayerBanEvent.class, PlayerBanListener::call);
