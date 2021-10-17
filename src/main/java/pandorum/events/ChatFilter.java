@@ -18,7 +18,7 @@ import static mindustry.Vars.netServer;
 
 public class ChatFilter {
     public static String filter(final Player author, final String text) {
-        author.sendMessage(text, author);
+        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         Map<String, String> translationsCache = new HashMap<>();
         Groups.player.each(player -> !player.equals(author), player -> {
