@@ -1,7 +1,7 @@
 package pandorum.commands.client;
 
 import arc.files.Fi;
-import mindustry.gen.Groups;
+import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.Misc;
@@ -12,16 +12,21 @@ import pandorum.vote.VoteSession;
 
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.current;
+import static pandorum.PandorumPlugin.nominateCooldowns;
 
 public class NominateCommand {
+
+    private static final float cooldownTime = 300f;
+
     public static void run(final String[] args, final Player player) {
-        if (Groups.player.size() < 3) {
-            bundled(player, "commands.not-enough-players");
+        if (current[0] != null) {
+            bundled(player, "commands.vote-already-started");
             return;
         }
 
-        if (current[0] != null) {
-            bundled(player, "commands.vote-already-started");
+        Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        if (!vtime.get()) {
+            bundled(player, "commands.nominate.cooldown", cooldownTime);
             return;
         }
 
@@ -35,11 +40,13 @@ public class NominateCommand {
                 VoteSession session = new VoteMapSession(current, map);
                 current[0] = session;
                 session.vote(player, 1);
+                vtime.reset();
             }
             case "save" -> {
                 VoteSession session = new VoteSaveSession(current, args[1]);
                 current[0] = session;
                 session.vote(player, 1);
+                vtime.reset();
             }
             case "load" -> {
                 Fi save = Misc.findSave(args[1]);
@@ -50,6 +57,7 @@ public class NominateCommand {
                 VoteSession session = new VoteLoadSession(current, save);
                 current[0] = session;
                 session.vote(player, 1);
+                vtime.reset();
             }
             default -> bundled(player, "commands.nominate.incorrect-mode");
         }

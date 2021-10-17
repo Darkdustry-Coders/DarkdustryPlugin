@@ -3,6 +3,7 @@ package pandorum;
 import arc.files.Fi;
 import arc.util.Strings;
 import arc.util.Structs;
+import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
@@ -52,6 +53,7 @@ public abstract class Misc {
         }
         return null;
     }
+
     public static Locale findLocale(String lang) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(lang) || lang.startsWith(l.toString()));
         return locale != null ? locale : Bundle.defaultLocale();
@@ -91,6 +93,6 @@ public abstract class Misc {
 
     public static void connectToHub(Player player) {
         Tuple2<String, Integer> hub = PandorumPlugin.config.parseIp();
-        Call.connect(player.con, hub.t1, hub.t2);
+        Vars.net.pingHost(hub.t1, hub.t2, host -> Call.connect(player.con, hub.t1, hub.t2), error -> bundled(player, "commands.hub.offline"));
     }
 }

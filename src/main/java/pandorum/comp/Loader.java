@@ -11,6 +11,7 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
 import pandorum.comp.admin.Authme;
+import pandorum.effects.Effects;
 import pandorum.events.*;
 
 import java.io.InputStream;
@@ -57,6 +58,7 @@ public class Loader {
 
         Timer.schedule(() -> PandorumPlugin.rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
+        Effects.init();
         MenuListener.init();
         Icons.init();
         Authme.init();

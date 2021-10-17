@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.Timekeeper;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
@@ -7,9 +8,12 @@ import pandorum.Misc;
 import pandorum.vote.VoteKickSession;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.currentlyKicking;
+import static pandorum.PandorumPlugin.*;
 
 public class VoteKickCommand {
+
+    private static final float cooldownTime = 300f;
+
     public static void run(final String[] args, final Player player) {
         if (!Administration.Config.enableVotekick.bool()) {
             bundled(player, "commands.votekick.disabled");
@@ -17,12 +21,18 @@ public class VoteKickCommand {
         }
 
         if (Groups.player.size() < 3) {
-            bundled(player, "commands.not-enough-players");
+            bundled(player, "commands.votekick.not-enough-players");
             return;
         }
 
         if (currentlyKicking[0] != null) {
             bundled(player, "commands.vote-already-started");
+            return;
+        }
+
+        Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        if (!vtime.get()) {
+            bundled(player, "commands.votekick.cooldown", cooldownTime);
             return;
         }
 
@@ -48,7 +58,8 @@ public class VoteKickCommand {
         }
 
         VoteKickSession session = new VoteKickSession(currentlyKicking, found);
-        session.vote(player, 1);
         currentlyKicking[0] = session;
+        vtime.reset();
+        session.vote(player, 1);
     }
 }

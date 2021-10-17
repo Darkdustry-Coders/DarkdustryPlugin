@@ -34,8 +34,8 @@ public class SpawnCommand {
             return;
         }
 
-        UnitType unit = content.units().find(b -> b.name.equals(args[0]));
-        if (unit == null || args[0].equals("block")) {
+        UnitType unit = content.units().find(b -> b.name.equalsIgnoreCase(args[0]));
+        if (unit == null || args[0].equalsIgnoreCase("block")) {
             bundled(player, "commands.unit-not-found");
             return;
         }

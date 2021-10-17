@@ -6,6 +6,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Log;
+import arc.util.Timekeeper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,6 +59,10 @@ public final class PandorumPlugin extends Plugin {
     public static Config config;
     public static Seq<IpInfo> forbiddenIps;
 
+    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>();
+    public static final ObjectMap<String, Timekeeper> votekickCooldowns = new ObjectMap<>();
+    public static final ObjectMap<String, Long> loginCooldowns = new ObjectMap<>();
+
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
     public static final Seq<String> votesRTV = new Seq<>();
     public static final Seq<String> votesVNW = new Seq<>();
@@ -76,7 +81,6 @@ public final class PandorumPlugin extends Plugin {
     public static final OkHttpClient client = new OkHttpClient();
 
     public static Socket socket;
-    public static final ObjectMap<String, Long> loginCooldowns = new ObjectMap<>();
     public static final Seq<String> waiting = new Seq<>();
 
     public PandorumPlugin() throws IOException, URISyntaxException {

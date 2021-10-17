@@ -11,6 +11,7 @@ import static pandorum.Misc.bundled;
 
 public class UnitsCommand {
     public static void run(final String[] args, final Player player) {
+        if (Misc.adminCheck(player)) return;
         switch (args[0]) {
             case "name" -> {
                 if (!player.dead()) bundled(player, "commands.unit-name", player.unit().type().name);
@@ -18,14 +19,11 @@ public class UnitsCommand {
             }
             case "list" -> {
                 StringBuilder units = new StringBuilder();
-                content.units().each(unit -> {
-                    if (!unit.name.equals("block")) units.append(" ").append(Icons.get(unit.name)).append(unit.name);
-                });
+                content.units().each(unit -> !unit.name.equals("block"), unit -> units.append(" ").append(Icons.get(unit.name)).append(unit.name));
                 bundled(player, "commands.units.list", units.toString());
             }
             case "change" -> {
-                if (Misc.adminCheck(player)) return;
-                if (args.length == 1 || args[1].equals("block")) {
+                if (args.length == 1 || args[1].equalsIgnoreCase("block")) {
                     bundled(player, "commands.units.incorrect");
                     return;
                 }
@@ -34,9 +32,9 @@ public class UnitsCommand {
                     bundled(player, "commands.unit-not-found");
                     return;
                 }
-                Unit spawn = found.spawn(player.team(), player.x(), player.y());
-                spawn.spawnedByCore(true);
-                player.unit(spawn);
+                Unit unit = found.spawn(player.team(), player.x(), player.y());
+                unit.spawnedByCore(true);
+                player.unit(unit);
                 bundled(player, "commands.units.change.success");
             }
             default -> bundled(player, "commands.units.incorrect");
