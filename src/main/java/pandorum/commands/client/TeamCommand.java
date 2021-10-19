@@ -13,7 +13,7 @@ import static pandorum.Misc.bundled;
 
 public class TeamCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
+        if (Misc.permissionCheck(player, 4)) return;
 
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {

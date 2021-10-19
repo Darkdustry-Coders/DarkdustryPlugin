@@ -11,7 +11,7 @@ import static pandorum.Misc.bundled;
 
 public class UnitsCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
+        if (Misc.permissionCheck(player, 4)) return;
         switch (args[0]) {
             case "name" -> {
                 if (!player.dead()) bundled(player, "commands.unit-name", player.unit().type().name);

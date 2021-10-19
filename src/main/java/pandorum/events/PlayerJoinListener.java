@@ -18,9 +18,9 @@ public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
-        if (nameCheck(event.player, Strings.stripColors(event.player.name))) return;
+        if (nameCheck(event.player)) return;
 
-        sendToChat("events.player-join", colorizedName(event.player));
+        sendToChat("events.player-join", event.player.coloredName());
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
 
         Effects.onJoin(event.player);

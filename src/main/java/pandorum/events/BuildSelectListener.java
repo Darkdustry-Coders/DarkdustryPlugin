@@ -11,7 +11,6 @@ import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.PluginType;
 import pandorum.comp.DiscordWebhookManager;
-import pandorum.Misc;
 
 import static pandorum.Misc.bundled;
 
@@ -25,7 +24,7 @@ public class BuildSelectListener {
             if (PandorumPlugin.interval.get(750f)) {
                 Groups.player.each(p -> {
                     Document playerInfo = PandorumPlugin.createInfo(p);
-                    if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", Misc.colorizedName(builder), event.tile.x, event.tile.y);
+                    if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
                 });
 
                 WebhookEmbedBuilder alertEmbedBuilder = new WebhookEmbedBuilder()

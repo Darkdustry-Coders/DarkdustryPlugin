@@ -9,7 +9,7 @@ import static pandorum.Misc.findLocale;
 
 public class ARTVCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
+        if (Misc.permissionCheck(player, 4)) return;
         String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
         Call.menu(player.con, 2, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
     }

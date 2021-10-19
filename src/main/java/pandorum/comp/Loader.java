@@ -4,15 +4,18 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
 import arc.util.Log;
+import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.io.Streams;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.net.Administration;
+import org.bson.Document;
 import pandorum.PandorumPlugin;
-import pandorum.comp.admin.Authme;
+import pandorum.admin.Authme;
 import pandorum.effects.Effects;
 import pandorum.events.*;
+import pandorum.ranks.RankType;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -38,7 +41,12 @@ public class Loader {
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
 
-        netServer.chatFormatter = (player, message) -> player == null ? message : player.coloredName() + " [orange]>[white] " + message;
+        netServer.chatFormatter = (player, message) -> {
+            if (player == null) return message;
+            Document playerInfo = PandorumPlugin.createInfo(player);
+            String prefix = player.admin ? Strings.format("<@> ", Icons.get("admin")) : playerInfo.getInteger("permission") > 1 ? Strings.format("<@> ", RankType.getByPermission(playerInfo.getInteger("permission")).sign) : "";
+            return prefix + player.coloredName() + "[orange] > [white]" + message;
+        };
 
         Events.on(EventType.PlayerUnbanEvent.class, PlayerUnbanListener::call);
         Events.on(EventType.PlayerBanEvent.class, PlayerBanListener::call);

@@ -1,4 +1,4 @@
-package pandorum.comp.admin;
+package pandorum.admin;
 import arc.util.Log;
 import arc.util.Time;
 import io.socket.client.Socket;

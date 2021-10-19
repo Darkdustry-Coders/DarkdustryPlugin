@@ -9,15 +9,15 @@ import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
+import pandorum.Misc;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
-import static pandorum.Misc.adminCheck;
 import static pandorum.Misc.bundled;
 
 public class FillCommand {
     public static void run(final String[] args, final Player player) {
-        if (adminCheck(player)) return;
+        if (Misc.permissionCheck(player, 5)) return;
 
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 50 || Strings.parseInt(args[1]) > 50) {
             bundled(player, "commands.admin.fill.incorrect-number-format");

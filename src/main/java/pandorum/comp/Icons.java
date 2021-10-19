@@ -74,7 +74,9 @@ public class Icons {
 
                 "alpha", Iconc.unitAlpha,
                 "beta", Iconc.unitBeta,
-                "gamma", Iconc.unitGamma
+                "gamma", Iconc.unitGamma,
+
+                "admin", Iconc.admin
         );
     }
 

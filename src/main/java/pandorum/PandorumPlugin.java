@@ -181,6 +181,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
+        handler.register("moderator", "<add/remove> <uuid>", "Изменить статус игрока", ModeratorCommand::run);
     }
 
     @Override
@@ -197,8 +198,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("a", "<message...>", "Отправить сообщение админам.", AdminChatCommand::run);
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("pl", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
-        handler.register("despw", "Убить всех юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("rainbow", "Радуга!", RainbowCommand::run);
+        handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
         handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         handler.register("units", "<list/change/name> [unit]", "Действия с юнитами.", UnitsCommand::run);
         handler.register("unban", "<ip/uuid...>", "Разбанить игрока.", UnbanCommand::run);
@@ -226,6 +226,7 @@ public final class PandorumPlugin extends Plugin {
             handler.register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", NominateCommand::run);
             handler.register("voting", "<y/n>", "Проголосовать.", VotingCommand::run);
             handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
+            handler.register("rainbow", "Радуга!", RainbowCommand::run);
         }
 
         // Команды ниже используются в PluginType.pvp
@@ -233,6 +234,7 @@ public final class PandorumPlugin extends Plugin {
             handler.register("surrender", "Сдаться.", SurrenderCommand::run);
         }
 
+        // Команды ниже используются в PluginType.sand
         if (config.type == PluginType.sand) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
         }
@@ -266,7 +268,7 @@ public final class PandorumPlugin extends Plugin {
     public static Document createInfo(Player player) {
         Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
         if (playerInfo == null) {
-            playerInfo = playerInfoSchema.create(player.uuid(), true, true, "off", 0, 0, 0, 0, 0);
+            playerInfo = playerInfoSchema.create(player.uuid(), 1, true, true, "off", 0, 0, 0, 0, 0);
             playersInfo.add(playerInfo);
             savePlayerStats(player.uuid());
         }

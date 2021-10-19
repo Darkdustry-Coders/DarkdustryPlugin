@@ -42,7 +42,7 @@ public class VoteKickCommand {
             return;
         }
 
-        if (found.admin) {
+        if (found.admin()) {
             bundled(player, "commands.votekick.cannot-kick-admin");
             return;
         }

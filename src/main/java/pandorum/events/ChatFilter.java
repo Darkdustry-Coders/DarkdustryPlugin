@@ -21,8 +21,8 @@ public class ChatFilter {
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         Map<String, String> translationsCache = new HashMap<>();
-        Groups.player.each(player -> !player.equals(author), player -> {
 
+        Groups.player.each(player -> !player.equals(author), player -> {
             Document playerInfo = PandorumPlugin.createInfo(player);
 
             String locale = playerInfo.getString("locale");

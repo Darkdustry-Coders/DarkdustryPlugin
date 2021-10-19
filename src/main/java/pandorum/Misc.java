@@ -10,8 +10,8 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Packets;
+import org.bson.Document;
 import pandorum.comp.Bundle;
-import pandorum.comp.Config;
 import pandorum.struct.Tuple2;
 
 import java.util.Locale;
@@ -31,7 +31,7 @@ public abstract class Misc {
 
     public static String colorizedName(Player player) {
         Objects.requireNonNull(player, "player");
-        return "[#" + player.color().toString().toUpperCase() + "]" + player.name;
+        return player.coloredName();
     }
 
     public static Map findMap(String text) {
@@ -59,8 +59,10 @@ public abstract class Misc {
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
-    public static boolean adminCheck(Player player) {
-        if (!player.admin() && !(PandorumPlugin.config.type == Config.PluginType.anarchy)) {
+    public static boolean permissionCheck(Player player, int required) {
+        Document playerInfo = PandorumPlugin.createInfo(player);
+        int permission = player.admin ? playerInfo.getInteger("permission") : 5;
+        if (!player.admin() && permission < required) {
             bundled(player, "commands.permission-denied");
             return true;
         }
@@ -79,7 +81,8 @@ public abstract class Misc {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
-    public static boolean nameCheck(Player player, String name) {
+    public static boolean nameCheck(Player player) {
+        String name = Strings.stripColors(player.name);
         if (name.length() < 1 || name.length() > 30) {
             player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
             return true;

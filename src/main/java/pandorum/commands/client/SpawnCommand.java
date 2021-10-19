@@ -15,7 +15,7 @@ import static pandorum.Misc.bundled;
 
 public class SpawnCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
+        if (Misc.permissionCheck(player, 5)) return;
 
         if (args.length > 1 && !Strings.canParseInt(args[1])){
             bundled(player, "commands.non-int");
