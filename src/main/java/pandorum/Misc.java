@@ -37,7 +37,7 @@ public abstract class Misc {
     public static Map findMap(String text) {
         for (int i = 0; i < maps.all().size; i++) {
             Map map = maps.all().get(i);
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || map.name().equalsIgnoreCase(text)) {
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(text)) {
                 return map;
             }
         }
@@ -76,7 +76,7 @@ public abstract class Misc {
     }
 
     public static Player findByName(String name) {
-        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)));
+        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
     public static boolean nameCheck(Player player, String name) {
