@@ -17,7 +17,7 @@ import static pandorum.Misc.bundled;
 
 public class FillCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.permissionCheck(player, 5)) return;
+        if (Misc.adminCheck(player)) return;
 
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 50 || Strings.parseInt(args[1]) > 50) {
             bundled(player, "commands.admin.fill.incorrect-number-format");

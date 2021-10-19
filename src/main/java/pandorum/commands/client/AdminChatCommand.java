@@ -9,7 +9,7 @@ import static pandorum.Misc.bundled;
 
 public class AdminChatCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.permissionCheck(player, 4)) return;
+        if (Misc.adminCheck(player)) return;
         Groups.player.each(Player::admin, admin -> bundled(admin, "commands.admin.a.chat", Pal.adminChat.toString(), Misc.colorizedName(player), args[0]));
     }
 }

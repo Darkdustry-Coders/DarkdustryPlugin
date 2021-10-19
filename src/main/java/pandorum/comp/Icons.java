@@ -76,7 +76,9 @@ public class Icons {
                 "beta", Iconc.unitBeta,
                 "gamma", Iconc.unitGamma,
 
-                "admin", Iconc.admin
+                "admin", '\uE817',
+                "active", '\uE82C',
+                "veteran", '\uE810'
         );
     }
 

@@ -16,7 +16,7 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         super(
             collection,
             new Required<>("uuid", String.class),
-            new Required<>("permission", Integer.class),
+            new Required<>("rank", Integer.class),
             new Required<>("hellomsg", Boolean.class),
             new Required<>("alerts", Boolean.class),
             new Required<>("playtime", Long.class),
@@ -28,10 +28,10 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         );
     }
 
-    public Document create(String uuid, int permission, Boolean hellomsg, Boolean alerts, String locale, long playtime, long built, long deconstructed, int waves, int games) {
+    public Document create(String uuid, int rank, Boolean hellomsg, Boolean alerts, String locale, long playtime, long built, long deconstructed, int waves, int games) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
-                "permission", permission,
+                "rank", rank,
                 "hellomsg", hellomsg,
                 "alerts", alerts,
                 "playtime", playtime,

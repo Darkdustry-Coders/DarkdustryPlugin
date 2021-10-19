@@ -44,7 +44,8 @@ public class Loader {
         netServer.chatFormatter = (player, message) -> {
             if (player == null) return message;
             Document playerInfo = PandorumPlugin.createInfo(player);
-            String prefix = player.admin ? Strings.format("<@> ", Icons.get("admin")) : playerInfo.getInteger("permission") > 1 ? Strings.format("<@> ", RankType.getByPermission(playerInfo.getInteger("permission")).sign) : "";
+            if (!player.admin && playerInfo.getInteger("rank") == 1) return player.coloredName() + "[orange] > [white]" + message;
+            String prefix = Strings.format("[accent]<@[accent]> [white]", player.admin ? "[scarlet]" + Icons.get("admin") : Icons.get(RankType.getByNumber(playerInfo.getInteger("rank")).toString()));
             return prefix + player.coloredName() + "[orange] > [white]" + message;
         };
 

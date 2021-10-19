@@ -11,7 +11,7 @@ import static pandorum.PandorumPlugin.rainbow;
 
 public class RainbowCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.permissionCheck(player, 2)) return;
+
         RainbowPlayerEntry old = rainbow.find(entry -> entry.player.uuid().equals(player.uuid()));
         if (old != null) {
             rainbow.remove(old);

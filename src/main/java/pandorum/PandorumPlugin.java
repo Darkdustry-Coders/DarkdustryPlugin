@@ -67,7 +67,7 @@ public final class PandorumPlugin extends Plugin {
     public static final Seq<String> votesRTV = new Seq<>();
     public static final Seq<String> votesVNW = new Seq<>();
     public static final Seq<String> activeHistoryPlayers = new Seq<>();
-    public static final Interval interval = new Interval();
+    public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
     public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
@@ -181,7 +181,6 @@ public final class PandorumPlugin extends Plugin {
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
-        handler.register("moderator", "<add/remove> <uuid>", "Изменить статус игрока", ModeratorCommand::run);
     }
 
     @Override
@@ -208,6 +207,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", TranslatorCommand::run);
         handler.register("info", "[player...]", "Посмотреть информацию о себе.", InfoCommand::run);
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
+        handler.register("rank", "Информация о рангах.", RankCommand::run);
 
         // Все команды ниже не используются в PluginType.other
         if (config.type != PluginType.other) {

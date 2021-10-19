@@ -10,7 +10,7 @@ import static pandorum.Misc.bundled;
 
 public class CoreCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.permissionCheck(player, 5)) return;
+        if (Misc.adminCheck(player)) return;
 
         Block core = switch(args[0].toLowerCase()) {
             case "big", "nucleus" -> Blocks.coreNucleus;

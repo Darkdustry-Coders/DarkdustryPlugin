@@ -10,7 +10,6 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Packets;
-import org.bson.Document;
 import pandorum.comp.Bundle;
 import pandorum.struct.Tuple2;
 
@@ -59,10 +58,8 @@ public abstract class Misc {
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
-    public static boolean permissionCheck(Player player, int required) {
-        Document playerInfo = PandorumPlugin.createInfo(player);
-        int permission = player.admin ? playerInfo.getInteger("permission") : 5;
-        if (!player.admin() && permission < required) {
+    public static boolean adminCheck(Player player) {
+        if (!player.admin()) {
             bundled(player, "commands.permission-denied");
             return true;
         }
