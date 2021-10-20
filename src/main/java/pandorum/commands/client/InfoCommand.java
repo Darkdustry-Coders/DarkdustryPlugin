@@ -31,8 +31,8 @@ public class InfoCommand {
                 Bundle.format("commands.info.content", findLocale(player.locale), TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")),
                 playerInfo.getLong("buildingsBuilt"), playerInfo.getLong("buildingsDeconstructed"),
                 playerInfo.getInteger("wavesSurvived"), playerInfo.getInteger("gamesWon"),
-                (Bundle.format(playerInfo.getBoolean("hellomsg") ? "commands.info.hellomsg.enabled" : "commands.info.hellomsg.disabled", findLocale(player.locale))),
-                (Bundle.format(playerInfo.getBoolean("alerts") ? "commands.info.alerts.enabled" : "commands.info.alerts.disabled", findLocale(player.locale))),
+                playerInfo.getBoolean("hellomsg") ? "on" : "off",
+                playerInfo.getBoolean("alerts") ? "on" : "off",
                 playerInfo.getString("locale")
         ), options);
     }
