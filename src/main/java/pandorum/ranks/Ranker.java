@@ -19,13 +19,13 @@ public class Ranker {
 
     public static void updatePlayerRank(Player player) {
         Document playerInfo = PandorumPlugin.createInfo(player);
-        if (RankType.getByNumber(playerInfo.getInteger("permission")) == RankType.player && TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")) >= activePlaytime && playerInfo.getInteger("wavesSurvived") >= activeWavesSurvived && playerInfo.getInteger("gamesWon") >= activeGamesWon && playerInfo.getLong("buildingsBuilt") >= activeBuildingsBuilt) {
+        if (RankType.getByNumber(playerInfo.getInteger("rank")) == RankType.player && TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")) >= activePlaytime && playerInfo.getInteger("wavesSurvived") >= activeWavesSurvived && playerInfo.getInteger("gamesWon") >= activeGamesWon && playerInfo.getLong("buildingsBuilt") >= activeBuildingsBuilt) {
             playerInfo.replace("rank", RankType.active.number);
             bundled(player, "events.active-promotion");
             PandorumPlugin.savePlayerStats(player.uuid());
         }
 
-        if (RankType.getByNumber(playerInfo.getInteger("permission")) == RankType.active && TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")) >= veteranPlaytime && playerInfo.getInteger("wavesSurvived") >= veteranWavesSurvived && playerInfo.getInteger("gamesWon") >= veteranGamesWon && playerInfo.getLong("buildingsBuilt") >= veteranBuildingsBuilt) {
+        if (RankType.getByNumber(playerInfo.getInteger("rank")) == RankType.active && TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")) >= veteranPlaytime && playerInfo.getInteger("wavesSurvived") >= veteranWavesSurvived && playerInfo.getInteger("gamesWon") >= veteranGamesWon && playerInfo.getLong("buildingsBuilt") >= veteranBuildingsBuilt) {
             playerInfo.replace("rank", RankType.veteran.number);
             bundled(player, "events.veteran-promotion");
             PandorumPlugin.savePlayerStats(player.uuid());
