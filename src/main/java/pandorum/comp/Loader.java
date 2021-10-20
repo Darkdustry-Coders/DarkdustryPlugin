@@ -4,18 +4,16 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
 import arc.util.Log;
-import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.io.Streams;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.net.Administration;
-import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.admin.Authme;
 import pandorum.effects.Effects;
 import pandorum.events.*;
-import pandorum.ranks.RankType;
+import pandorum.ranks.Ranks;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -43,9 +41,7 @@ public class Loader {
 
         netServer.chatFormatter = (player, message) -> {
             if (player == null) return message;
-            Document playerInfo = PandorumPlugin.createInfo(player);
-            if (!player.admin && playerInfo.getInteger("rank") == 1) return player.coloredName() + "[orange] > [white]" + message;
-            String prefix = Strings.format("[accent]<@[accent]> [white]", player.admin ? "[scarlet]" + Icons.get("admin") : Icons.get(RankType.getByNumber(playerInfo.getInteger("rank")).toString()));
+            String prefix = Ranks.getRank(player).tag;
             return prefix + player.coloredName() + "[orange] > [white]" + message;
         };
 
@@ -68,6 +64,7 @@ public class Loader {
         Timer.schedule(() -> PandorumPlugin.rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
         Effects.init();
+        Ranks.init();
         MenuListener.init();
         Icons.init();
         Authme.init();

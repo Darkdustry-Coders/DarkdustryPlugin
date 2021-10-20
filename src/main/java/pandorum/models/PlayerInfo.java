@@ -16,29 +16,27 @@ public class PlayerInfo extends MongoSchema<String, Object> {
         super(
             collection,
             new Required<>("uuid", String.class),
-            new Required<>("rank", Integer.class),
             new Required<>("hellomsg", Boolean.class),
             new Required<>("alerts", Boolean.class),
             new Required<>("playtime", Long.class),
-            new Required<>("buildingsBuilt", Long.class),
-            new Required<>("buildingsDeconstructed", Long.class),
-            new Required<>("wavesSurvived", Integer.class),
-            new Required<>("gamesWon", Integer.class),
+            new Required<>("buildingsBuilt", Integer.class),
+            new Required<>("buildingsDeconstructed", Integer.class),
+            new Required<>("maxWave", Integer.class),
+            new Required<>("gamesPlayed", Integer.class),
             new NonRequired<>("locale", String.class)
         );
     }
 
-    public Document create(String uuid, int rank, Boolean hellomsg, Boolean alerts, String locale, long playtime, long built, long deconstructed, int waves, int games) {
+    public Document create(String uuid, Boolean hellomsg, Boolean alerts, String locale, long playtime, int built, int deconstructed, int wave, int games) {
         HashMap<String, Object> schema = new HashMap<>(Map.of(
                 "uuid", uuid,
-                "rank", rank,
                 "hellomsg", hellomsg,
                 "alerts", alerts,
                 "playtime", playtime,
                 "buildingsBuilt", built,
                 "buildingsDeconstructed", deconstructed,
-                "wavesSurvived", waves,
-                "gamesWon", games
+                "maxWave", wave,
+                "gamesPlayed", games
         ));
 
         schema.put("locale", locale);

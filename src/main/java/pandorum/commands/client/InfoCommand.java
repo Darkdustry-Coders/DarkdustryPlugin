@@ -30,7 +30,7 @@ public class InfoCommand {
         Call.menu(player.con, 3, Bundle.format("commands.info.header", findLocale(player.locale), Misc.colorizedName(target)),
                 Bundle.format("commands.info.content", findLocale(player.locale), TimeUnit.MILLISECONDS.toMinutes(playerInfo.getLong("playtime")),
                 playerInfo.getLong("buildingsBuilt"), playerInfo.getLong("buildingsDeconstructed"),
-                playerInfo.getInteger("wavesSurvived"), playerInfo.getInteger("gamesWon"),
+                playerInfo.getInteger("maxWave"), playerInfo.getInteger("gamesPlayed"),
                 playerInfo.getBoolean("hellomsg") ? "on" : "off",
                 playerInfo.getBoolean("alerts") ? "on" : "off",
                 playerInfo.getString("locale")

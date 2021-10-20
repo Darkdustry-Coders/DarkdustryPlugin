@@ -16,10 +16,10 @@ public class GameOverListener {
                 .setTitle(new WebhookEmbed.EmbedTitle("Игра окончена! Победила команда " + event.winner.name + "! Загружаю новую карту...", null));
         DiscordWebhookManager.client.send(gameoverEmbedBuilder.build());
 
-        Groups.player.each(p -> p.team().equals(event.winner), p -> {
+        Groups.player.each(p -> {
             Document playerInfo = PandorumPlugin.createInfo(p);
-            int gamesWon = playerInfo.getInteger("gamesWon") + 1;
-            playerInfo.replace("gamesWon", gamesWon);
+            int gamesPlayed = playerInfo.getInteger("gamesPlayed") + 1;
+            playerInfo.replace("gamesPlayed", gamesPlayed);
             PandorumPlugin.savePlayerStats(p.uuid());
         });
 
