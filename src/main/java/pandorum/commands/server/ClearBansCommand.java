@@ -6,7 +6,7 @@ import static mindustry.Vars.netServer;
 
 public class ClearBansCommand {
     public static void run(final String[] args) {
-        netServer.admins.getBanned().each(unban -> netServer.admins.unbanPlayerID(unban.id));
+        netServer.admins.getBanned().each(ban -> netServer.admins.unbanPlayerID(ban.id));
         netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
         Log.info("Все игроки разбанены!");
     }

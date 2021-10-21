@@ -7,6 +7,7 @@ import mindustry.gen.Player;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Translator;
+import pandorum.discord.BotHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ public class ChatFilter {
             } catch (IOException | InterruptedException ignored) {}
         });
 
+        BotHandler.text("**@**: @", Strings.stripColors(author.name), text.replaceAll("https?://|@", " "));
         return null;
     }
 }

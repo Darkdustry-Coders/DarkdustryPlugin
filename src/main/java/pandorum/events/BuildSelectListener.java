@@ -5,9 +5,12 @@ import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
 
@@ -23,6 +26,14 @@ public class BuildSelectListener {
                     Document playerInfo = PandorumPlugin.createInfo(p);
                     if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
                 });
+
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setColor(BotMain.errorColor)
+                        .setAuthor("Анти-гриф система")
+                        .setTitle("Игрок строит ториевый реактор близко к ядру!")
+                        .addField("Никнейм: ", Strings.stripColors(builder.name), false);
+
+                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
             }
         }
     }

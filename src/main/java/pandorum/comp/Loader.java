@@ -4,10 +4,8 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
 import arc.util.Log;
-import arc.util.Timer;
 import arc.util.io.Streams;
 import mindustry.game.EventType;
-import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
 import pandorum.admin.Authme;
@@ -61,8 +59,6 @@ public class Loader {
         Events.on(EventType.GameOverEvent.class, GameOverListener::call);
         Events.on(EventType.WaveEvent.class, WaveEventListener::call);
         Events.run(EventType.Trigger.update, TriggerUpdateListener::call);
-
-        Timer.schedule(() -> PandorumPlugin.rainbow.each(r -> Groups.player.contains(p -> p == r.player), RainbowPlayerEntry::changeEntryColor), 0f, 0.05f);
 
         Effects.init();
         Ranks.init();

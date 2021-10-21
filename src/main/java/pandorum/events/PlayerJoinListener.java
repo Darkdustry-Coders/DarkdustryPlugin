@@ -1,11 +1,15 @@
 package pandorum.events;
 
 import arc.util.Log;
+import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 import pandorum.effects.Effects;
 import pandorum.ranks.Ranks;
 
@@ -21,6 +25,12 @@ public class PlayerJoinListener {
 
         sendToChat("events.player-join", event.player.coloredName());
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(BotMain.successColor)
+                .setTitle(Strings.format("**@** зашел на сервер!", Strings.stripColors(event.player.name)));
+
+        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
 
         Effects.onJoin(event.player);
 

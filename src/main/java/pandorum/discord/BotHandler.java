@@ -90,6 +90,10 @@ public class BotHandler {
         channel.sendMessage(Strings.format(text, args)).queue();
     }
 
+    public static void text(String text, Object... args) {
+        text(botChannel, text, args);
+    }
+
     public static void errDelete(Message message, String title, String text, Object... args) {
         message.getChannel().sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor).build()).queue(result -> result.delete().queueAfter(messageDeleteTime, TimeUnit.MILLISECONDS));
 

@@ -7,8 +7,11 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
@@ -62,6 +65,13 @@ public class MenuListener {
             if (option == 0) {
                 Events.fire(new EventType.GameOverEvent(Team.crux));
                 sendToChat("commands.admin.artv.info");
+
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setColor(BotMain.normalColor)
+                        .setAuthor(Strings.stripColors(player.name))
+                        .setTitle("Админ принудительно завершил игру.");
+
+                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
             }
         });
 

@@ -69,7 +69,6 @@ public final class PandorumPlugin extends Plugin {
     public static final Interval interval = new Interval(2);
 
     public static CacheSeq<HistoryEntry>[][] history;
-    public static final Seq<RainbowPlayerEntry> rainbow = new Seq<>();
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
@@ -226,7 +225,6 @@ public final class PandorumPlugin extends Plugin {
             handler.register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", NominateCommand::run);
             handler.register("voting", "<y/n>", "Проголосовать.", VotingCommand::run);
             handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
-            handler.register("rainbow", "Радуга!", RainbowCommand::run);
         }
 
         // Команды ниже используются в PluginType.pvp

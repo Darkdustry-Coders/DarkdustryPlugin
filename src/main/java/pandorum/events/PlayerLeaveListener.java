@@ -6,8 +6,11 @@ import arc.util.Strings;
 import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.Gamemode;
 import pandorum.effects.Effects;
@@ -20,6 +23,12 @@ public class PlayerLeaveListener {
 
         sendToChat("events.player-leave", event.player.coloredName());
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(BotMain.errorColor)
+                .setTitle(Strings.format("**@** вышел с сервера!", Strings.stripColors(event.player.name)));
+
+        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
 
         Effects.onLeave(event.player);
 

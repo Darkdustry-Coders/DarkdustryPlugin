@@ -1,9 +1,15 @@
 package pandorum.events;
 
+import arc.util.Strings;
+import arc.util.Time;
+import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
+import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 
@@ -24,5 +30,14 @@ public class WorldLoadListener {
                         .build();
             }
         }
+
+        Time.runTask(2.5f, () -> {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.normalColor)
+                    .setTitle("Карта загружена.")
+                    .addField("Название: ", Strings.stripColors(Vars.state.map.name()), false);
+
+            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        });
     }
 }
