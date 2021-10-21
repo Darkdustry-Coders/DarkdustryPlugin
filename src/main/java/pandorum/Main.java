@@ -16,7 +16,7 @@ import org.bson.Document;
 import pandorum.models.PlayerModel;
 
 public class Main {
-    public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
+    public static void main(String[] args) throws IllegalArgumentException {
         Properties log4j = new Properties();
 
         log4j.setProperty("log4j.rootLogger", "OFF, stdout");
