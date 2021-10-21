@@ -1,12 +1,9 @@
 package pandorum.events;
 
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Config.PluginType;
-import pandorum.comp.DiscordWebhookManager;
+import pandorum.comp.Config;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 
@@ -17,7 +14,7 @@ import static mindustry.Vars.world;
 public class WorldLoadListener {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
-        if (PandorumPlugin.config.type != PluginType.other) {
+        if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
             for (Tile tile : world.tiles) {
@@ -27,10 +24,5 @@ public class WorldLoadListener {
                         .build();
             }
         }
-
-        WebhookEmbedBuilder loadEmbedBuilder = new WebhookEmbedBuilder()
-                .setColor(0x05DDF5)
-                .setTitle(new WebhookEmbed.EmbedTitle("Загружена новая карта!", null));
-        DiscordWebhookManager.client.send(loadEmbedBuilder.build());
     }
 }

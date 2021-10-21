@@ -1,8 +1,5 @@
 package pandorum.events;
 
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
@@ -12,8 +9,7 @@ import mindustry.gen.Groups;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.vote.VoteKickSession;
-import pandorum.comp.Config.PluginType;
-import pandorum.comp.DiscordWebhookManager;
+import pandorum.comp.Config.Gamemode;
 import pandorum.effects.Effects;
 
 import static pandorum.Misc.sendToChat;
@@ -32,11 +28,6 @@ public class PlayerLeaveListener {
         playerInfo.replace("playtime", time);
         PandorumPlugin.savePlayerStats(event.player.uuid());
 
-        WebhookEmbedBuilder leaveEmbedBuilder = new WebhookEmbedBuilder()
-                .setColor(0xFF0000)
-                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s вышел с сервера!", Strings.stripColors(event.player.name())), null));
-        DiscordWebhookManager.client.send(leaveEmbedBuilder.build());
-
         PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
@@ -46,8 +37,7 @@ public class PlayerLeaveListener {
             sendToChat("commands.votekick.left", event.player.coloredName(), VoteKickSession.kickDuration / 60f);
         }
 
-        if (PandorumPlugin.config.type == PluginType.other) return;
-        if (PandorumPlugin.config.type == PluginType.pvp) {
+        if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) {
             Seq<String> teamVotes = PandorumPlugin.surrendered.get(event.player.team(), Seq::new);
             if (teamVotes.contains(event.player.uuid())) {
                 teamVotes.remove(event.player.uuid());
@@ -59,6 +49,7 @@ public class PlayerLeaveListener {
             PandorumPlugin.votesRTV.remove(event.player.uuid());
             sendToChat("commands.rtv.left", event.player.coloredName(), PandorumPlugin.votesRTV.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
+
         if (PandorumPlugin.votesVNW.contains(event.player.uuid())) {
             PandorumPlugin.votesVNW.remove(event.player.uuid());
             sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));

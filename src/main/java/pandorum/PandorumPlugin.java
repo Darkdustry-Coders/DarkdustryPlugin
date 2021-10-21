@@ -183,6 +183,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         handler.register("units", "<list/change/name> [unit]", "Действия с юнитами.", UnitsCommand::run);
         handler.register("unban", "<ip/uuid...>", "Разбанить игрока.", UnbanCommand::run);
+        handler.register("ban", "<ip/uuid...>", "Забанить игрока.", BanCommand::run);
         handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
         handler.register("vote", "<y/n>", "Решить судьбу игрока.", VoteCommand::run);
         handler.register("sync", "Синхронизация с сервером.", SyncCommand::run);
@@ -192,7 +193,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("rank", "Информация о рангах.", RankCommand::run);
 
         // Все команды ниже не используются в PluginType.other
-        if (config.type != PluginType.other) {
+        if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
             handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
@@ -212,12 +213,12 @@ public final class PandorumPlugin extends Plugin {
         }
 
         // Команды ниже используются в PluginType.pvp
-        if (config.type == PluginType.pvp) {
+        if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
             handler.register("surrender", "Сдаться.", SurrenderCommand::run);
         }
 
         // Команды ниже используются в PluginType.sand
-        if (config.type == PluginType.sand) {
+        if (config.mode == Config.Gamemode.sandbox) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
         }
     }

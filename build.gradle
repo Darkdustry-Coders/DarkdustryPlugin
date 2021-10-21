@@ -8,6 +8,10 @@ compileTestJava.options.encoding = 'UTF-8'
 repositories{
     mavenCentral()
     maven{ url 'https://jitpack.io' }
+    maven{
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 def json = new JsonSlurper()
@@ -17,7 +21,7 @@ ext{
 
     project.version = mod['version']
 
-    mindustryVersion = 'v132'
+    mindustryVersion = 'v133'
 }
 
 dependencies{
@@ -27,8 +31,8 @@ dependencies{
     implementation 'org.json:json:20210307'
     implementation 'org.mongodb:mongodb-driver-reactivestreams:4.3.2'
     implementation 'org.slf4j:slf4j-log4j12:2.0.0-alpha4'
-    implementation "com.google.code.gson:gson:2.8.8"
-    implementation 'club.minnced:discord-webhooks:0.7.2'
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'net.dv8tion:JDA:4.3.0_331'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'io.socket:socket.io-client:2.0.1'
 }

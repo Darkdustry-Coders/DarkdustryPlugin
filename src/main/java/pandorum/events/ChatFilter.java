@@ -6,7 +6,6 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
-import pandorum.comp.DiscordWebhookManager;
 import pandorum.comp.Translator;
 
 import java.io.IOException;
@@ -59,7 +58,6 @@ public class ChatFilter {
             } catch (IOException | InterruptedException ignored) {}
         });
 
-        DiscordWebhookManager.client.send(String.format("**[%s]:** %s", Strings.stripColors(author.name), text.replaceAll("https?://|@", " ")));
         return null;
     }
 }
