@@ -1,24 +1,29 @@
 package pandorum.commands.client;
 
-import mindustry.gen.Player;
+import static pandorum.Misc.bundled;
+
+import com.mongodb.BasicDBObject;
+
 import org.bson.Document;
 
-import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.createInfo;
-import static pandorum.PandorumPlugin.savePlayerStats;
+import mindustry.gen.Player;
+import mindustry.net.Administration.PlayerInfo;
+import pandorum.models.PlayerModel;
 
 public class AlertCommand {
     public static void run(final String[] args, final Player player) {
-        Document playerInfo = createInfo(player);
-        if (playerInfo.getBoolean("alerts")) {
-            playerInfo.replace("alerts", false);
-            bundled(player, "commands.alert.off");
-            savePlayerStats(player.uuid());
-            return;
-        }
+        PlayerModel.find(
+            new BasicDBObject("UUID", player.uuid()),
+            playerInfo -> {
+                playerInfo.alerts = !playerInfo.alerts;
+                playerInfo.save();
 
-        playerInfo.replace("alerts", true);
-        bundled(player, "commands.alert.on");
-        savePlayerStats(player.uuid());
+                bundled(
+                    player,
+                    "commands.alert."
+                    + (playerInfo.alerts ? "on" : "off")
+                );
+            }
+        );
     }
 }

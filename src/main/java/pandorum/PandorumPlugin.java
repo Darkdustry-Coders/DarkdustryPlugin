@@ -1,5 +1,23 @@
 package pandorum;
 
+import static mindustry.Vars.dataDirectory;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
+
+import org.bson.Document;
+import org.json.JSONArray;
+
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -7,43 +25,61 @@ import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Timekeeper;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mongodb.BasicDBObject;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.changestream.FullDocument;
-import com.mongodb.client.model.changestream.OperationType;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
-import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import mindustry.game.Team;
-import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import okhttp3.OkHttpClient;
-import org.bson.BsonDocument;
-import org.bson.Document;
-import org.json.JSONArray;
-import pandorum.commands.client.*;
-import pandorum.commands.server.*;
-import pandorum.comp.*;
+import pandorum.commands.client.ARTVCommand;
+import pandorum.commands.client.AdminChatCommand;
+import pandorum.commands.client.AlertCommand;
+import pandorum.commands.client.CoreCommand;
+import pandorum.commands.client.FillCommand;
+import pandorum.commands.client.GiveCommand;
+import pandorum.commands.client.HelpCommand;
+import pandorum.commands.client.HistoryCommand;
+import pandorum.commands.client.HubCommand;
+import pandorum.commands.client.InfoCommand;
+import pandorum.commands.client.LoginCommand;
+import pandorum.commands.client.MapCommand;
+import pandorum.commands.client.MapListCommand;
+import pandorum.commands.client.NominateCommand;
+import pandorum.commands.client.PlayerListCommand;
+import pandorum.commands.client.RTVCommand;
+import pandorum.commands.client.RainbowCommand;
+import pandorum.commands.client.RankCommand;
+import pandorum.commands.client.SavesListCommand;
+import pandorum.commands.client.SpawnCommand;
+import pandorum.commands.client.SpectateCommand;
+import pandorum.commands.client.SurrenderCommand;
+import pandorum.commands.client.SyncCommand;
+import pandorum.commands.client.TeamChatCommand;
+import pandorum.commands.client.TeamCommand;
+import pandorum.commands.client.TranslatorCommand;
+import pandorum.commands.client.UnbanCommand;
+import pandorum.commands.client.UnitsCommand;
+import pandorum.commands.client.UnitsDespawnCommand;
+import pandorum.commands.client.VNWCommand;
+import pandorum.commands.client.VoteCommand;
+import pandorum.commands.client.VoteKickCommand;
+import pandorum.commands.client.VotingCommand;
+import pandorum.commands.server.ClearAdminsCommand;
+import pandorum.commands.server.ClearBansCommand;
+import pandorum.commands.server.DespawnCommand;
+import pandorum.commands.server.ReloadCommand;
+import pandorum.commands.server.RestartCommand;
+import pandorum.commands.server.SayCommand;
+import pandorum.comp.Config;
 import pandorum.comp.Config.PluginType;
-import pandorum.database.ArrowSubscriber;
+import pandorum.comp.IpInfo;
+import pandorum.comp.Loader;
+import pandorum.comp.RainbowPlayerEntry;
+import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
-import pandorum.models.PlayerInfo;
+import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
@@ -74,8 +110,6 @@ public final class PandorumPlugin extends Plugin {
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
-    public static Seq<Document> playersInfo = new Seq<>();
-    public static PlayerInfo playerInfoSchema;
 
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final OkHttpClient client = new OkHttpClient();
@@ -95,7 +129,8 @@ public final class PandorumPlugin extends Plugin {
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("darkdustry");
         playersInfoCollection = database.getCollection("playersinfo");
-        playerInfoSchema = new PlayerInfo(playersInfoCollection);
+
+        PlayerModel.setSourceCollection(playersInfoCollection);
 
         Fi file = dataDirectory.child("config.json");
         if (!file.exists()) {
@@ -111,59 +146,6 @@ public final class PandorumPlugin extends Plugin {
             String fullCode = languages.getJSONObject(i).getString("full_code");
             codeLanguages.put(codeAlpha, fullCode);
         }
-
-        playersInfoCollection.find().subscribe(new ArrowSubscriber<>(
-                next -> {
-                    Document player = playerInfoSchema.tryApplySchema(next);
-
-                    if (next == null) return;
-                    if (player == null) {
-                        playersInfoCollection
-                                .deleteOne(new BasicDBObject("id", next.getObjectId("_id")))
-                                .subscribe(new ArrowSubscriber<>());
-                        return;
-                    }
-                    playersInfo.add(player);
-                }
-        ));
-
-        playersInfoCollection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).subscribe(new ArrowSubscriber<>(
-                changeStreamDocument -> {
-                    OperationType operation = changeStreamDocument.getOperationType();
-                    BsonDocument changedDocumentKey = changeStreamDocument.getDocumentKey();
-                    Document changedDocument = changeStreamDocument.getFullDocument();
-
-                    if (changedDocumentKey == null) return;
-
-                    int playerInfoIndex = playersInfo.indexOf(document -> document
-                            .toBsonDocument()
-                            .getObjectId("_id")
-                            .equals(changedDocumentKey.getObjectId("_id"))
-                    );
-
-                    try {
-                        switch (operation) {
-                            case DELETE -> playersInfo.remove(document -> document
-                                .toBsonDocument()
-                                .getObjectId("_id")
-                                .equals(changedDocumentKey.getObjectId("_id"))
-                            );
-                            case INSERT -> {
-                                assert changedDocument != null;
-                                Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(changedDocument);
-                                playersInfo.add(SCHPlayerInfoDocument);
-                            }
-                            case UPDATE, REPLACE -> {
-                                assert changedDocument != null;
-                                Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(changedDocument);
-                                playersInfo.set(playerInfoIndex, SCHPlayerInfoDocument);
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.err(e);
-                    }
-                }
-        ));
     }
 
     @Override
@@ -238,40 +220,5 @@ public final class PandorumPlugin extends Plugin {
         if (config.type == PluginType.sand) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
         }
-    }
-
-    /**
-     * @param uuid - Uuid конкретного игрока, которого надо сохранить в базу данных
-     */
-    public static void savePlayerStats(String uuid) {
-        Document player = playersInfo.find((docPlayer) -> docPlayer.getString("uuid").equals(uuid));
-        BasicDBObject filter = new BasicDBObject("uuid", uuid);
-
-        if (player == null) {
-            playersInfoCollection.deleteOne(filter).subscribe(new ArrowSubscriber<>());
-            return;
-        }
-
-        try {
-            Document SCHPlayerInfoDocument = playerInfoSchema.applySchema(player);
-            SCHPlayerInfoDocument.remove("_id");
-            SCHPlayerInfoDocument.remove("__v");
-            playersInfoCollection.replaceOne(
-                    Filters.eq("_id", player.getObjectId("_id")),
-                    SCHPlayerInfoDocument
-            ).subscribe(new ArrowSubscriber<>());
-        } catch(Exception e) {
-            Log.err(e);
-        }
-    }
-
-    public static Document createInfo(Player player) {
-        Document playerInfo = playersInfo.find((info) -> info.getString("uuid").equals(player.uuid()));
-        if (playerInfo == null) {
-            playerInfo = playerInfoSchema.create(player.uuid(), 1, true, true, "off", 0, 0, 0, 0, 0);
-            playersInfo.add(playerInfo);
-            savePlayerStats(player.uuid());
-        }
-        return playerInfo;
     }
 }
