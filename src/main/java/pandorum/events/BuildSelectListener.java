@@ -1,16 +1,17 @@
 package pandorum.events;
 
 import arc.util.Strings;
+import com.mongodb.BasicDBObject;
 import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
 
@@ -22,10 +23,9 @@ public class BuildSelectListener {
             Player builder = event.builder.getPlayer();
 
             if (PandorumPlugin.interval.get(0, 750f)) {
-                Groups.player.each(p -> {
-                    Document playerInfo = PandorumPlugin.createInfo(p);
-                    if (playerInfo.getBoolean("alerts")) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
-                });
+                Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+                    if (playerInfo.alerts) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
+                }));
 
                 EmbedBuilder embed = new EmbedBuilder()
                         .setColor(BotMain.errorColor)

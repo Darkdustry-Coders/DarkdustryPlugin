@@ -4,13 +4,14 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
+import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+import pandorum.models.PlayerModel;
 import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.Gamemode;
 import pandorum.effects.Effects;
@@ -32,12 +33,8 @@ public class PlayerLeaveListener {
 
         Effects.onLeave(event.player);
 
-        Document playerInfo = PandorumPlugin.createInfo(event.player);
-        long time = Time.timeSinceMillis(event.player.con.connectTime) + playerInfo.getLong("playtime");
-        playerInfo.replace("playtime", time);
-        PandorumPlugin.savePlayerStats(event.player.uuid());
+        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime));
 
-        PandorumPlugin.rainbow.remove(p -> p.player.uuid().equals(event.player.uuid()));
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
         if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {

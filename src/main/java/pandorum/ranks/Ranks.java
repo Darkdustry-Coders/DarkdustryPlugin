@@ -1,9 +1,9 @@
 package pandorum.ranks;
 
 import arc.struct.IntMap;
+import com.mongodb.BasicDBObject;
 import mindustry.gen.Player;
-import org.bson.Document;
-import pandorum.PandorumPlugin;
+import pandorum.models.PlayerModel;
 
 public class Ranks {
     public static IntMap<Rank> rankNames = new IntMap<>();
@@ -52,10 +52,11 @@ public class Ranks {
     }
 
     public static Rank getRank(Player player) {
-        Document playerInfo = PandorumPlugin.createInfo(player);
         if (player.admin) return rankNames.get(3);
-        if (veteranReq.checkVeteran(playerInfo.getLong("playtime"), playerInfo.getInteger("buildingsBuilt"), playerInfo.getInteger("maxWave"), playerInfo.getInteger("gamesPlayed"))) return rankNames.get(2);
-        if (activeReq.checkActive(playerInfo.getLong("playtime"), playerInfo.getInteger("buildingsBuilt"), playerInfo.getInteger("maxWave"), playerInfo.getInteger("gamesPlayed"))) return rankNames.get(1);
-        return rankNames.get(0);
+        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+            if (veteranReq.checkVeteran(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) return rankNames.get(2);
+            if (activeReq.checkActive(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) return rankNames.get(1);
+            return rankNames.get(0);
+        });
     }
 }

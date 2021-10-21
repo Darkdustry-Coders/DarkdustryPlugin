@@ -1,14 +1,14 @@
 package pandorum.events;
 
 import arc.struct.Seq;
+import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
-import mindustry.gen.Player;
 import mindustry.world.Tile;
-
-import org.bson.Document;
-import pandorum.comp.Config;
-import pandorum.entry.*;
 import pandorum.PandorumPlugin;
+import pandorum.comp.Config;
+import pandorum.entry.BlockEntry;
+import pandorum.entry.HistoryEntry;
+import pandorum.models.PlayerModel;
 
 public class BlockBuildEndListener {
     public static void call(final EventType.BlockBuildEndEvent event) {
@@ -22,16 +22,10 @@ public class BlockBuildEndListener {
         }
 
         if (event.unit.isPlayer()) {
-            Player player = event.unit.getPlayer();
-            Document playerInfo = PandorumPlugin.createInfo(player);
-            if (event.breaking) {
-                long deconstructed = playerInfo.getLong("buildingsDeconstructed") + 1;
-                playerInfo.replace("buildingsDeconstructed", deconstructed);
-            } else {
-                long built = playerInfo.getLong("buildingsBuilt") + 1;
-                playerInfo.replace("buildingsBuilt", built);
-            }
-            PandorumPlugin.savePlayerStats(player.uuid());
+            PlayerModel.find(new BasicDBObject("UUID", event.unit.getPlayer().uuid()), playerInfo -> {
+                if (event.breaking) playerInfo.buildingsDeconstructed++;
+                else playerInfo.buildingsBuilt++;
+            });
         }
     }
 }

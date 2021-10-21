@@ -1,6 +1,5 @@
 package pandorum.events;
 
-import arc.util.Strings;
 import mindustry.game.EventType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.discord.BotHandler;

@@ -2,12 +2,12 @@ package pandorum.events;
 
 import arc.util.Log;
 import arc.util.Strings;
+import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import org.bson.Document;
-import pandorum.PandorumPlugin;
 import pandorum.comp.Translator;
 import pandorum.discord.BotHandler;
+import pandorum.models.PlayerModel;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,18 +22,14 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         Map<String, String> translationsCache = new HashMap<>();
 
-        Groups.player.each(player -> !player.equals(author), player -> {
-            Document playerInfo = PandorumPlugin.createInfo(player);
+        Groups.player.each(player -> !player.equals(author), player -> PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
 
-            String locale = playerInfo.getString("locale");
-
-            if (locale.equals("off")) {
+            if (playerInfo.locale.equals("off")) {
                 player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
                 return;
             }
 
-            String language = Objects.equals(locale, "auto") ? player.locale() : locale;
-
+            String language = Objects.equals(playerInfo.locale, "auto") ? player.locale() : playerInfo.locale;
             if (translationsCache.containsKey(language)) {
                 player.sendMessage(netServer.chatFormatter.format(author, text) + (translationsCache.get(language).equalsIgnoreCase(text) ? "" : " [white]([gray]" + translationsCache.get(language) + "[white])"), author, text);
                 return;
@@ -57,7 +53,7 @@ public class ChatFilter {
                     player.sendMessage(netServer.chatFormatter.format(author, text) + (translationsCache.get(language).equalsIgnoreCase(text) ? "" : " [white]([gray]" + translationsCache.get(language) + "[white])"), author, text);
                 });
             } catch (IOException | InterruptedException ignored) {}
-        });
+        }));
 
         BotHandler.text("**@**: @", Strings.stripColors(author.name), text.replaceAll("https?://|@", " "));
         return null;

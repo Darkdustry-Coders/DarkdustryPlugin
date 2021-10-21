@@ -2,16 +2,16 @@ package pandorum.events;
 
 import arc.Events;
 import arc.util.Strings;
+import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.bson.Document;
-import pandorum.PandorumPlugin;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
@@ -21,9 +21,7 @@ public class MenuListener {
         // Приветственное сообщение (0)
         Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                Document playerInfo = PandorumPlugin.createInfo(player);
-                playerInfo.replace("hellomsg", false);
-                PandorumPlugin.savePlayerStats(player.uuid());
+                PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> playerInfo.hellomsg = false);
                 bundled(player, "events.hellomsg.disabled");
             }
         });

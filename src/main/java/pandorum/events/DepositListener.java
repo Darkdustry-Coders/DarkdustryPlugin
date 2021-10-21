@@ -2,6 +2,7 @@ package pandorum.events;
 
 import arc.struct.Seq;
 import arc.util.Strings;
+import com.mongodb.BasicDBObject;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.game.EventType;
@@ -10,11 +11,11 @@ import mindustry.world.Tile;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
-import org.bson.Document;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.entry.DepositEntry;
 import pandorum.entry.HistoryEntry;
+import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
 
@@ -23,10 +24,10 @@ public class DepositListener {
         if (PandorumPlugin.config.mode == Gamemode.hexed || PandorumPlugin.config.mode == Gamemode.hub || PandorumPlugin.config.mode == Gamemode.castle) return;
 
         if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
-            Groups.player.each(p -> {
-                Document playerInfo = PandorumPlugin.createInfo(p);
-                if (playerInfo.getBoolean("alerts")) bundled(p, "events.withdraw-thorium", event.player.coloredName(), event.tile.tileX(), event.tile.tileY());
-            });
+
+            Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+                if (playerInfo.alerts) bundled(p, "events.withdraw-thorium", event.player.coloredName(), event.tile.tileX(), event.tile.tileY());
+            }));
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)
