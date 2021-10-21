@@ -2,8 +2,6 @@ package pandorum.events;
 
 import arc.Events;
 import arc.util.Strings;
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -11,7 +9,6 @@ import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
-import pandorum.comp.DiscordWebhookManager;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
@@ -58,11 +55,6 @@ public class MenuListener {
             }
 
             bundled(player, "commands.admin.despw.success", amount);
-            WebhookEmbedBuilder despwEmbedBuilder = new WebhookEmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle(new WebhookEmbed.EmbedTitle("Убито " + amount + " юнитов!", null))
-                    .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-            DiscordWebhookManager.client.send(despwEmbedBuilder.build());
         });
 
         // Команда /artv (2)
@@ -70,11 +62,6 @@ public class MenuListener {
             if (option == 0) {
                 Events.fire(new EventType.GameOverEvent(Team.crux));
                 sendToChat("commands.admin.artv.info");
-                WebhookEmbedBuilder artvEmbedBuilder = new WebhookEmbedBuilder()
-                        .setColor(0xFF0000)
-                        .setTitle(new WebhookEmbed.EmbedTitle("Игра принудительно завершена!", null))
-                        .addField(new WebhookEmbed.EmbedField(true, "Imposter", Strings.stripColors(player.name)));
-                DiscordWebhookManager.client.send(artvEmbedBuilder.build());
             }
         });
 

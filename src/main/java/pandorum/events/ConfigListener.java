@@ -17,7 +17,7 @@ import pandorum.struct.CacheSeq;
 
 public class ConfigListener {
     public static void call(final EventType.ConfigEvent event) {
-        if (event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > Vars.world.width() || event.tile.tileX() > Vars.world.height() || PandorumPlugin.config.type == Config.PluginType.other) return;
+        if (event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > Vars.world.width() || event.tile.tileX() > Vars.world.height() || PandorumPlugin.config.mode == Config.Gamemode.hexed || PandorumPlugin.config.mode == Config.Gamemode.hub || PandorumPlugin.config.mode == Config.Gamemode.castle) return;
 
         CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
         boolean connect = true;

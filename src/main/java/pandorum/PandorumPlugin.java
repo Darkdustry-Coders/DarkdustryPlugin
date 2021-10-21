@@ -32,7 +32,6 @@ import org.json.JSONArray;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
 import pandorum.comp.*;
-import pandorum.comp.Config.PluginType;
 import pandorum.database.ArrowSubscriber;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerInfo;
@@ -211,7 +210,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("rank", "Информация о рангах.", RankCommand::run);
 
         // Все команды ниже не используются в PluginType.other
-        if (config.type != PluginType.other) {
+        if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
             handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
@@ -231,12 +230,12 @@ public final class PandorumPlugin extends Plugin {
         }
 
         // Команды ниже используются в PluginType.pvp
-        if (config.type == PluginType.pvp) {
+        if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
             handler.register("surrender", "Сдаться.", SurrenderCommand::run);
         }
 
         // Команды ниже используются в PluginType.sand
-        if (config.type == PluginType.sand) {
+        if (config.mode == Config.Gamemode.sandbox) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
         }
     }

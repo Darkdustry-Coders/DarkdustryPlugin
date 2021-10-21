@@ -1,16 +1,13 @@
 package pandorum.events;
 
 import arc.util.Log;
-import arc.util.Strings;
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import org.bson.Document;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
-import pandorum.comp.DiscordWebhookManager;
 import pandorum.effects.Effects;
+import pandorum.ranks.Ranks;
 
 import static pandorum.Misc.*;
 
@@ -19,6 +16,8 @@ public class PlayerJoinListener {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
         if (nameCheck(event.player)) return;
+
+        event.player.name(Ranks.getRank(event.player).tag + event.player.coloredName());
 
         sendToChat("events.player-join", event.player.coloredName());
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
@@ -33,10 +32,5 @@ public class PlayerJoinListener {
         }
         
         bundled(event.player, "events.motd");
-
-        WebhookEmbedBuilder joinEmbedBuilder = new WebhookEmbedBuilder()
-                .setColor(0x00FF00)
-                .setTitle(new WebhookEmbed.EmbedTitle(String.format("%s зашёл на сервер!", Strings.stripColors(event.player.name())), null));
-        DiscordWebhookManager.client.send(joinEmbedBuilder.build());
     }
 }

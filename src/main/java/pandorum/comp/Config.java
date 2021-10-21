@@ -24,9 +24,11 @@ public class Config {
 
     public String hubIp = "darkdustry.ml:6567";
 
-    public PluginType type = PluginType.def;  
+    public Gamemode mode = Gamemode.survival;
 
-    public String DiscordWebhookLink = null;
+    public String DiscordBotToken = "token";
+
+    public String DiscordServerChannel = "channel";
 
     public Tuple2<String, Integer> parseIp() {
         String ip = hubIp;
@@ -39,17 +41,15 @@ public class Config {
         return Tuple2.of(ip, port);
     }
 
-    public enum PluginType {
-        /** Тип для серверов с режимом выживания или атаки */
-        def,
-
-        /** Тип для PvP серверов */
+    public enum Gamemode {
+        survival,
+        attack,
+        sandbox,
+        hexed,
         pvp,
-
-        /** Тип для серверов с режимом песочницы */
-        sand,
-
-        /** Тип для любого другого сервера */
-        other
+        castle,
+        tower,
+        hub,
+        siege,
     }
 }
