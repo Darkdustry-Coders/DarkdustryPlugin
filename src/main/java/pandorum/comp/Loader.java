@@ -11,6 +11,7 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
 import pandorum.admin.Authme;
+import pandorum.discord.BotMain;
 import pandorum.effects.Effects;
 import pandorum.events.*;
 import pandorum.ranks.Ranks;
@@ -69,6 +70,8 @@ public class Loader {
         Icons.init();
         Authme.init();
         PandorumPlugin.socket.connect();
+
+        BotMain.run();
 
         Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
     }

@@ -28,7 +28,9 @@ public class Config {
 
     public String DiscordBotToken = "token";
 
-    public String DiscordServerChannel = "channel";
+    public Long DiscordChannelID = 0L;
+
+    public String prefix = "test";
 
     public Tuple2<String, Integer> parseIp() {
         String ip = hubIp;
