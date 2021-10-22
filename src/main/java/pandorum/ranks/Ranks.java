@@ -1,6 +1,9 @@
 package pandorum.ranks;
 
 import arc.struct.IntMap;
+
+import java.util.function.Consumer;
+
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
@@ -51,14 +54,18 @@ public class Ranks {
         }
     }
 
-    public static Rank getRank(Player player) {
-        if (player.admin) return rankNames.get(3);
+    public static void getRank(Player player, Consumer<Rank> callback) {
+        if (player.admin)
+            callback.accept(rankNames.get(3));
         PlayerModel.find(
             new BasicDBObject("UUID", player.uuid()),
             playerInfo -> {
-                if (veteranReq.checkVeteran(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) return rankNames.get(2);
-                if (activeReq.checkActive(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) return rankNames.get(1);
-                return rankNames.get(0);
+                Rank rank = rankNames.get(0);
+
+                if (veteranReq.checkVeteran(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) rank = rankNames.get(2);
+                if (activeReq.checkActive(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) rank = rankNames.get(1);
+
+                callback.accept(rank);
             }
         );
     }
