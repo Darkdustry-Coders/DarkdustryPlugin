@@ -8,6 +8,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 import pandorum.PandorumPlugin;
 
@@ -24,7 +25,7 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    public static void translate(String text, String dest_lang, pandorum.database.Callback<JSONObject> callback) throws IOException, InterruptedException {
+    public static void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
         String destAlphaLang = PandorumPlugin.codeLanguages.get("en");
 
         if (PandorumPlugin.codeLanguages.containsKey(dest_lang)) destAlphaLang = PandorumPlugin.codeLanguages.get(dest_lang);
@@ -49,7 +50,7 @@ public class Translator {
                         new JSONObject(Objects.requireNonNull(response.body()).string()) :
                         new JSONObject("{}");
                 try {
-                    callback.call(parsedBody);
+                    callback.accept(parsedBody);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
