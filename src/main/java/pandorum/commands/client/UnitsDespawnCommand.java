@@ -8,7 +8,7 @@ import pandorum.comp.Bundle;
 
 import static pandorum.Misc.findLocale;
 
-public class UnitsDespawnCommand {
+public class UnitsDespawnCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.sharded", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.crux", findLocale(player.locale))}, {Bundle.format("commands.admin.despw.menu.suicide", findLocale(player.locale))}};

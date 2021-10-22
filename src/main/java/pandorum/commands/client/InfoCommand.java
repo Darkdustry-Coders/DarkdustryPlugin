@@ -15,7 +15,7 @@ import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.models.PlayerModel;
 
-public class InfoCommand {
+public class InfoCommand implements ClientCommand {
     public static void run(final String[] args, final @NotNull Player player) {
         Player target = args.length > 0 ? Misc.findByName(args[0]) : player;
         if (target == null) {

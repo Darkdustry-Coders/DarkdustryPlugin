@@ -7,7 +7,7 @@ import mindustry.gen.Player;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
-public class SyncCommand {
+public class SyncCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * 15) {
             bundled(player, "commands.sync.time");

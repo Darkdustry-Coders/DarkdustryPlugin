@@ -6,7 +6,7 @@ import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
 
-public class AlertCommand {
+public class AlertCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(
             new BasicDBObject("UUID", player.uuid()),

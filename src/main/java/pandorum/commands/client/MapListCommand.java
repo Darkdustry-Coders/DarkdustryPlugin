@@ -11,14 +11,14 @@ import pandorum.comp.Bundle;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
-public class MapListCommand {
+public class MapListCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");
             return;
         }
 
-        Seq<Map> mapList = Vars.maps.all();
+        Seq<Map> mapList = Vars.maps.customMaps();
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(mapList.size / 6.0f);
 

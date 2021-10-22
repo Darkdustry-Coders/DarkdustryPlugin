@@ -11,7 +11,7 @@ import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
 
-public class TeamCommand {
+public class TeamCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {

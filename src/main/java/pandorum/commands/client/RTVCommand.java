@@ -12,7 +12,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.Misc;
 
-public class RTVCommand {
+public class RTVCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (votesRTV.contains(player.uuid())) {
             bundled(player, "commands.already-voted");

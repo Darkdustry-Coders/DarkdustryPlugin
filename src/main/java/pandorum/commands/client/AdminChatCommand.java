@@ -7,7 +7,7 @@ import pandorum.Misc;
 
 import static pandorum.Misc.bundled;
 
-public class AdminChatCommand {
+public class AdminChatCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         Groups.player.each(Player::admin, admin -> bundled(admin, "commands.admin.a.chat", Pal.adminChat.toString(), Misc.colorizedName(player), args[0]));

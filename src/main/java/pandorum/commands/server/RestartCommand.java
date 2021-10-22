@@ -8,7 +8,7 @@ import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
-public class RestartCommand {
+public class RestartCommand implements ServerCommand {
     public static void run(final String[] args) {
         Log.info("Перезапуск сервера...");
 

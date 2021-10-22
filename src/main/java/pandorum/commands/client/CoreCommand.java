@@ -8,7 +8,7 @@ import pandorum.Misc;
 
 import static pandorum.Misc.bundled;
 
-public class CoreCommand {
+public class CoreCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

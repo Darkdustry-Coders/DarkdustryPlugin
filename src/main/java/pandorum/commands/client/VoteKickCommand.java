@@ -10,7 +10,7 @@ import pandorum.vote.VoteKickSession;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.*;
 
-public class VoteKickCommand {
+public class VoteKickCommand implements ClientCommand {
 
     private static final float cooldownTime = 300f;
 

@@ -34,8 +34,8 @@ public abstract class Misc {
     }
 
     public static Map findMap(String text) {
-        for (int i = 0; i < maps.all().size; i++) {
-            Map map = maps.all().get(i);
+        for (int i = 0; i < maps.customMaps().size; i++) {
+            Map map = maps.customMaps().get(i);
             if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(text)) {
                 return map;
             }

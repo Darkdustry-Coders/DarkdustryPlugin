@@ -14,7 +14,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.current;
 import static pandorum.PandorumPlugin.nominateCooldowns;
 
-public class NominateCommand {
+public class NominateCommand implements ClientCommand {
 
     private static final float cooldownTime = 300f;
 

@@ -6,7 +6,7 @@ import mindustry.gen.Player;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.*;
 
-public class LoginCommand {
+public class LoginCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (waiting.contains(player.uuid())) {
             bundled(player, "commands.login.waiting");

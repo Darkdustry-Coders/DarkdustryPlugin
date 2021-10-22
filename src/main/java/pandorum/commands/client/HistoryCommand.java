@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.activeHistoryPlayers;
 
-public class HistoryCommand {
+public class HistoryCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (activeHistoryPlayers.contains(player.uuid())) {
             activeHistoryPlayers.remove(player.uuid());

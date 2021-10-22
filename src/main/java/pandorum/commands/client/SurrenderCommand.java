@@ -15,7 +15,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 import static pandorum.PandorumPlugin.surrendered;
 
-public class SurrenderCommand {
+public class SurrenderCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         Team team = player.team();
         Seq<String> teamVotes = surrendered.get(team, Seq::new);

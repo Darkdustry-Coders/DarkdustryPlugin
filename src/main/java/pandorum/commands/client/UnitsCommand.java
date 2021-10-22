@@ -9,7 +9,7 @@ import pandorum.comp.Icons;
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
-public class UnitsCommand {
+public class UnitsCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         switch (args[0]) {

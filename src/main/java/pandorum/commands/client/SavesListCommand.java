@@ -13,7 +13,7 @@ import java.util.Objects;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
-public class SavesListCommand {
+public class SavesListCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

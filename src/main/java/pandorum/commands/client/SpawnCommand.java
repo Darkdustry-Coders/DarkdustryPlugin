@@ -13,7 +13,7 @@ import pandorum.discord.BotMain;
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
-public class SpawnCommand {
+public class SpawnCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

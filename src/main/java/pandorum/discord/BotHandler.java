@@ -1,9 +1,11 @@
 package pandorum.discord;
 
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
 import arc.util.io.Streams;
 import mindustry.Vars;
+import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -72,9 +74,26 @@ public class BotHandler {
                 Vars.maps.reload();
 
                 text(msg, "*Карта добавлена на сервер.*");
-            } catch (Exception err) {
+            } catch (Exception e) {
                 errDelete(msg, "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
             }
+        });
+
+        handler.<Message>register("maps", "Список всех карт сервера.", (args, msg) -> {
+            Seq<Map> mapList = Vars.maps.customMaps();
+
+            StringBuilder maps = new StringBuilder();
+            for (int i = 0; i < mapList.size; i++) {
+                maps.append(i).append(". ").append(mapList.get(i).name()).append("\n");
+            }
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.errorColor)
+                    .setAuthor("Карты сервера")
+                    .setTitle("Список карт сервера")
+                    .addField("Найдено " + mapList.size + "карт:", maps.toString(), false);
+
+            msg.getChannel().sendMessageEmbeds(embed.build()).queue();
         });
     }
 

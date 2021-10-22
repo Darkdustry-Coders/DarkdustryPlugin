@@ -7,7 +7,7 @@ import pandorum.comp.Bundle;
 
 import static pandorum.Misc.findLocale;
 
-public class ARTVCommand {
+public class ARTVCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
