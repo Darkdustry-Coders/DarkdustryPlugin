@@ -22,9 +22,7 @@ public class PlayerJoinListener {
 
         if (nameCheck(event.player)) return;
 
-        Ranks.getRank(event.player, rank -> event.player.name(
-            rank.tag + event.player.coloredName()
-        ));
+        Ranks.updateRank(event.player);
 
         sendToChat("events.player-join", event.player.coloredName());
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());

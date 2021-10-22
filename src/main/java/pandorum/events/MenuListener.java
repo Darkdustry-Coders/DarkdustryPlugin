@@ -29,25 +29,13 @@ public class MenuListener {
         // Команда /despw (1)
         Menus.registerMenu((player, option) -> {
             if (option == 1) return;
-            int amount = 0;
 
+            int unitCount = Groups.unit.size();
             switch (option) {
-                case 0 -> {
-                    amount = Groups.unit.size();
-                    Groups.unit.each(Unitc::kill);
-                }
-                case 2 -> {
-                    amount = Groups.unit.count(Unitc::isPlayer);
-                    Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                }
-                case 3 -> {
-                    amount = Groups.unit.count(u -> u.team == Team.sharded);
-                    Groups.unit.each(u -> u.team == Team.sharded, Unitc::kill);
-                }
-                case 4 -> {
-                    amount = Groups.unit.count(u -> u.team == Team.crux);
-                    Groups.unit.each(u -> u.team == Team.crux, Unitc::kill);
-                }
+                case 0 -> Groups.unit.each(Unitc::kill);
+                case 2 -> Groups.unit.each(Unitc::isPlayer, Unitc::kill);
+                case 3 -> Groups.unit.each(u -> u.team == Team.sharded, Unitc::kill);
+                case 4 -> Groups.unit.each(u -> u.team == Team.crux, Unitc::kill);
                 case 5 -> {
                     player.clearUnit();
                     bundled(player, "commands.admin.despw.suicide");
@@ -55,7 +43,16 @@ public class MenuListener {
                 }
             }
 
+            int amount = unitCount - Groups.unit.size();
             bundled(player, "commands.admin.despw.success", amount);
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.errorColor)
+                    .setTitle("Юниты убиты.")
+                    .addField("Админ: ", Strings.stripColors(player.name), false)
+                    .addField("Количество: ", Integer.toString(amount), false);
+
+            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         });
 
         // Команда /artv (2)
@@ -65,9 +62,9 @@ public class MenuListener {
                 sendToChat("commands.admin.artv.info");
 
                 EmbedBuilder embed = new EmbedBuilder()
-                        .setColor(BotMain.normalColor)
-                        .setAuthor(Strings.stripColors(player.name))
-                        .setTitle("Админ принудительно завершил игру.");
+                        .setColor(BotMain.errorColor)
+                        .setTitle("Игра принудительно завершена.")
+                        .addField("Админ: ", Strings.stripColors(player.name), false);
 
                 BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
             }

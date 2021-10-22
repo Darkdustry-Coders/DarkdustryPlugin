@@ -23,7 +23,8 @@ public class CoreCommand {
             bundled(player, "commands.admin.core.core-not-found");
             return;
         }
-        Call.constructFinish(player.tileOn(), core, player.unit(), (byte)0, player.team(), false);
+
+        Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, player.team(), false);
         bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
     }
 }
