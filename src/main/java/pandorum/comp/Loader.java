@@ -38,12 +38,6 @@ public class Loader {
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
 
-        netServer.chatFormatter = (player, message) -> {
-            if (player == null) return message;
-            String prefix = Ranks.getRank(player).tag;
-            return prefix + player.coloredName() + "[orange] > [white]" + message;
-        };
-
         Events.on(EventType.PlayerUnbanEvent.class, PlayerUnbanListener::call);
         Events.on(EventType.PlayerBanEvent.class, PlayerBanListener::call);
         Events.on(EventType.ServerLoadEvent.class, ServerLoadListener::call);

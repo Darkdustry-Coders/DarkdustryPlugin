@@ -1,9 +1,13 @@
 package pandorum.commands.client;
 
+import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
+import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.Misc;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
 
@@ -23,5 +27,13 @@ public class TeamCommand {
 
         bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
         target.team(team);
+
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(BotMain.successColor)
+                .setTitle("Команда игрока изменена.")
+                .addField("Никнейм: ", Strings.stripColors(player.name), false)
+                .addField("Новая команда: ", team.name, false);
+
+        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
     }
 }

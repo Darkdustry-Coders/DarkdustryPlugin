@@ -5,7 +5,10 @@ import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
+import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.Misc;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
@@ -37,7 +40,17 @@ public class SpawnCommand {
             return;
         }
 
-        for (int i = 0; count > i; i++) unit.spawn(team, player.x, player.y);
+        for (int i = 0; i < count; ++i) unit.spawn(team, player.x, player.y);
         bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(BotMain.successColor)
+                .setTitle("Заспавнены юниты.")
+                .addField("Заспавнил: ", Strings.stripColors(player.name), false)
+                .addField("Тип юнита: ", unit.name, false)
+                .addField("Команда: ", team.name, false)
+                .addField("Количество: ", Integer.toString(count), false);
+
+        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
     }
 }
