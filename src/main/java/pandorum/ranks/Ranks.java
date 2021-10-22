@@ -1,5 +1,7 @@
 package pandorum.ranks;
 
+import java.util.function.Consumer;
+
 import com.mongodb.BasicDBObject;
 
 import arc.struct.IntMap;
@@ -50,7 +52,7 @@ public class Ranks {
         }
     }
 
-    public static void updateRank(Player player) {
+    public static void updateRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank rank;
             if (player.admin) rank = rankNames.get(3);
@@ -58,7 +60,7 @@ public class Ranks {
             else if (activeReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) rank = rankNames.get(1);
             else rank = rankNames.get(0);
 
-            player.name(rank.tag + player.getInfo().lastName);
+            callback.accept(rank);
         });
     }
 }
