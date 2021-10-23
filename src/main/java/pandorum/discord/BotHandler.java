@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
+import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
 import java.io.File;
@@ -79,12 +81,33 @@ public class BotHandler {
             }
         });
 
+        handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
+            Map map = Misc.findMap(args[0]);
+            if (map == null) {
+                errDelete(msg, "Карта не найдена.", "Проверьте правильность ввода.");
+                return;
+            }
+
+            Fi mapFile = map.file;
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.successColor)
+                    .setAuthor("Карта с сервера")
+                    .setTitle("Карта успешно получена!");
+
+            msg.getChannel().sendMessageEmbeds(embed.build()).addFile(mapFile.file()).queue();
+        });
+
         handler.<Message>register("maps", "Список всех карт сервера.", (args, msg) -> {
             Seq<Map> mapList = Vars.maps.customMaps();
 
+            if (mapList.size == 0) {
+                errDelete(msg, "На сервере нет карт.", "Список карт пуст.");
+                return;
+            }
+
             StringBuilder maps = new StringBuilder();
             for (int i = 0; i < mapList.size; i++) {
-                maps.append(i).append(". ").append(mapList.get(i).name()).append("\n");
+                maps.append(i + 1).append(". ").append(mapList.get(i).name()).append("\n");
             }
 
             EmbedBuilder embed = new EmbedBuilder()

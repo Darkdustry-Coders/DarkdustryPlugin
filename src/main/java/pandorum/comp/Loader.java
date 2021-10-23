@@ -12,7 +12,6 @@ import pandorum.admin.Authme;
 import pandorum.discord.BotMain;
 import pandorum.effects.Effects;
 import pandorum.events.*;
-import pandorum.ranks.Ranks;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -55,7 +54,6 @@ public class Loader {
         Events.run(EventType.Trigger.update, TriggerUpdateListener::call);
 
         Effects.init();
-        Ranks.init();
         MenuListener.init();
         Icons.init();
         Authme.init();

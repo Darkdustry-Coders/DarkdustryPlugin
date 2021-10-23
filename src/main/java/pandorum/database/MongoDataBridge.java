@@ -20,14 +20,13 @@ import org.reactivestreams.Subscription;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     private static MongoCollection<Document> collection;
-    private static Set<String> specialKeys = Set.of(
+    private static final Set<String> specialKeys = Set.of(
         "_id", "__v", "DEFAULT_CODEC_REGISTRY"
     );
 
     public ObjectId _id;
     public int __v;
     private Map<String, Object> latest = new HashMap<>();
-
 
     public static void setSourceCollection(MongoCollection<Document> collection) {
         MongoDataBridge.collection = collection;
@@ -46,14 +45,15 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             new FindOneAndUpdateOptions()
                 .upsert(true)
                 .returnDocument(ReturnDocument.AFTER)
-        ).subscribe(new Subscriber<Document>() {
+        ).subscribe(new Subscriber<>() {
             @Override
             public void onSubscribe(Subscription s) {
                 s.request(1);
             }
 
             @Override
-            public void onNext(Document t) {}
+            public void onNext(Document t) {
+            }
 
             @Override
             public void onComplete() {
@@ -68,7 +68,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     }
 
     public void save() {
-        save((error) -> error.printStackTrace());
+        save(Throwable::printStackTrace);
     }
 
     public static <T extends MongoDataBridge<T>>void findAndApplySchema(Class<T> clazz, Bson filter, Consumer<T> callback) {
@@ -90,8 +90,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     }
             });
 
-            filter.toBsonDocument().forEach((key, value) ->
-                defaultObject.append(key, value));
+            filter.toBsonDocument().forEach(defaultObject::append);
 
             collection
                 .findOneAndUpdate(
@@ -103,35 +102,37 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     new FindOneAndUpdateOptions()
                         .upsert(true)
                         .returnDocument(ReturnDocument.AFTER)
-                ).subscribe(new Subscriber<Document>() {
-                    @Override
-                    public void onSubscribe(Subscription s) {
-                        s.request(1);
-                    }
+                ).subscribe(new Subscriber<>() {
+                        @Override
+                        public void onSubscribe(Subscription s) {
+                            s.request(1);
+                        }
 
-                    @Override
-                    public void onNext(Document document) {
-                        fields.forEach((field) -> {
-                            try {
-                                field.set(
-                                    dataClass,
-                                    document.getOrDefault(field.getName(), field.get(dataClass))
-                                );
-                            } catch (IllegalArgumentException | IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        @Override
+                        public void onNext(Document document) {
+                            fields.forEach((field) -> {
+                                try {
+                                    field.set(
+                                            dataClass,
+                                            document.getOrDefault(field.getName(), field.get(dataClass))
+                                    );
+                                } catch (IllegalArgumentException | IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            });
 
-                        dataClass.resetLatest();
-                        callback.accept(dataClass);
-                    }
+                            dataClass.resetLatest();
+                            callback.accept(dataClass);
+                        }
 
-                    @Override
-                    public void onComplete() {}
+                        @Override
+                        public void onComplete() {
+                        }
 
-                    @Override
-                    public void onError(Throwable t) {}
-                });
+                        @Override
+                        public void onError(Throwable t) {
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,7 +161,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     field.getName(),
                     field.get(this)
                 );
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
 
         return values;

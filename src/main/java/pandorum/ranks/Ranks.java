@@ -1,65 +1,61 @@
 package pandorum.ranks;
 
-import java.util.function.Consumer;
-
+import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
-
-import arc.struct.IntMap;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
+import java.util.function.Consumer;
+
 public class Ranks {
-    public static IntMap<Rank> rankNames = new IntMap<>();
+
+    public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "Admin", null, null);
+    public static Rank veteran = new Rank("[accent]<[white]\uE813[accent]> ", "Veteran", null, null);
+    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "Active", veteran, new Requirements(45000000L, 30000, 250, 25));
+    public static Rank player = new Rank("[accent]<> ", "Player", active, new Requirements(15000000L, 15000, 100, 10));
 
     public static class Rank {
         public String name;
         public String tag;
+        public @Nullable Rank next;
+        public @Nullable Requirements nextReq;
 
-        public Rank(String tag, String name) {
+        public Rank(String tag, String name, Rank next, Requirements nextReq) {
             this.name = name;
             this.tag = tag;
+            this.next = next;
+            this.nextReq = nextReq;
         }
     }
 
-    public static void init() {
-        rankNames.put(0, new Rank("[accent]<> ", "Player"));
-        rankNames.put(1, new Rank("[accent]<[white]\uE800[accent]> ", "Active"));
-        rankNames.put(2, new Rank("[accent]<[white]\uE813[accent]> ", "Veteran"));
-        rankNames.put(3, new Rank("[accent]<[scarlet]\uE817[accent]> ", "Admin"));
-    }
+    public static class Requirements {
+        public long playtime;
+        public int buildingsBuilt;
+        public int maxWave;
+        public int gamesPlayed;
 
-    public static class activeReq {
-        // Миллисекунды
-        public static long playtime = 750 * 60 * 1000;
-        public static int buildingsBuilt = 1500 * 10;
-        public static int maxWave = 100;
-        public static int gamesPlayed = 10;
-
-        public static boolean check(long playtime, int buildingsBuilt, int maxWave, int gamesPlayed) {
-            return playtime >= activeReq.playtime && buildingsBuilt >= activeReq.buildingsBuilt && maxWave >= activeReq.maxWave && gamesPlayed >= activeReq.gamesPlayed;
+        public Requirements(long playtime, int buildingsBuilt, int maxWave, int gamesPlayed) {
+            this.playtime = playtime;
+            this.buildingsBuilt = buildingsBuilt;
+            this.maxWave = maxWave;
+            this.gamesPlayed = gamesPlayed;
         }
-    }
 
-    public static class veteranReq {
-        // Миллисекунды
-        public static long playtime = 1500 * 60 * 1000;
-        public static int buildingsBuilt = 2500 * 10;
-        public static int maxWave = 250;
-        public static int gamesPlayed = 25;
-
-        public static boolean check(long playtime, int buildingsBuilt, int maxWave, int gamesPlayed) {
-            return playtime >= veteranReq.playtime && buildingsBuilt >= veteranReq.buildingsBuilt && maxWave >= veteranReq.maxWave && gamesPlayed >= veteranReq.gamesPlayed;
+        public boolean check(long time, int built, int wave, int games) {
+            return time >= playtime && built >= buildingsBuilt && wave >= maxWave && games >= gamesPlayed;
         }
     }
 
     public static void getRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank rank;
-            if (player.admin) rank = rankNames.get(3);
-            else if (veteranReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) rank = rankNames.get(2);
-            else if (activeReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) rank = rankNames.get(1);
-            else rank = rankNames.get(0);
+            if (player.admin) rank = admin;
+            else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
+               rank = playerInfo.rank.next;
+               //TODO сообщение о повышении ранга?
+            } else rank = playerInfo.rank;
 
+            playerInfo.rank = rank;
             callback.accept(rank);
         });
     }
