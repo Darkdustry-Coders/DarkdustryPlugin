@@ -46,7 +46,7 @@ public abstract class Misc {
     public static Fi findSave(String text) {
         for (int i = 0; i < saveDirectory.list().length; i++) {
             Fi save = saveDirectory.list()[i];
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Objects.equals(save.nameWithoutExtension(), text)) {
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || save.nameWithoutExtension().equalsIgnoreCase(text)) {
                 return save;
             }
         }
@@ -92,7 +92,7 @@ public abstract class Misc {
     }
 
     public static void connectToHub(Player player) {
-        Tuple2<String, Integer> hub = PandorumPlugin.config.parseIp();
+        Tuple2<String, Integer> hub = PandorumPlugin.config.getIp();
         Vars.net.pingHost(hub.t1, hub.t2, host -> Call.connect(player.con, hub.t1, hub.t2), error -> bundled(player, "commands.hub.offline"));
     }
 }

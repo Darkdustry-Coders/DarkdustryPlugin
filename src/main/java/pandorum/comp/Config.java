@@ -1,6 +1,7 @@
 package pandorum.comp;
 
 import arc.util.Strings;
+import mindustry.Vars;
 import pandorum.struct.Tuple2;
 
 public class Config {
@@ -30,11 +31,11 @@ public class Config {
 
     public Long DiscordChannelID = 0L;
 
-    public String prefix = "test";
+    public String prefix = "prefix";
 
-    public Tuple2<String, Integer> parseIp() {
+    public Tuple2<String, Integer> getIp() {
         String ip = hubIp;
-        int port = 6567;
+        int port = Vars.port;
         if (ip.contains(":") && Strings.canParsePositiveInt(ip.split(":")[1])) {
             String[] parts = ip.split(":");
             ip = parts[0];

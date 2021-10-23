@@ -1,19 +1,16 @@
 package pandorum;
 
-import java.util.Properties;
-
-import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.bson.Document;
-
 import pandorum.models.PlayerModel;
+
+import java.util.Properties;
 
 public class Main {
     public static void main(String[] args) throws IllegalArgumentException {

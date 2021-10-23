@@ -42,7 +42,7 @@ public class IpInfo {
         int fullMask = mask / 8;
         byte b = (byte)(0xff00 >> (mask & 0x07));
         for (int i = 0; i < fullMask; i++) {
-            if(rem[i] != req[i]) return false;
+            if (rem[i] != req[i]) return false;
         }
 
         return b == 0 || (rem[fullMask] & b) == (req[fullMask] & b);
