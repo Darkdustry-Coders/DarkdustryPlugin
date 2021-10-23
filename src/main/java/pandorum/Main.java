@@ -38,8 +38,5 @@ public class Main {
         MongoCollection<Document> collection = database.getCollection("statistics");
 
         PlayerModel.setSourceCollection(collection);
-        PlayerModel.find(new BasicDBObject("UUID", "УНИКАЛЬНОЕ АЙДИ"), (ss) -> {
-            
-        });
     }
 }
