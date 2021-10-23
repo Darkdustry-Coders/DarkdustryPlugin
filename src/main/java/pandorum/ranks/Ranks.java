@@ -52,7 +52,7 @@ public class Ranks {
         }
     }
 
-    public static void updateRank(Player player, Consumer<Rank> callback) {
+    public static void getRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank rank;
             if (player.admin) rank = rankNames.get(3);
