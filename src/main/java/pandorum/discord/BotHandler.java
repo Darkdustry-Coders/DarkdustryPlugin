@@ -1,17 +1,16 @@
 package pandorum.discord;
 
+import arc.Core;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
 import arc.util.io.Streams;
 import mindustry.Vars;
+import mindustry.gen.Groups;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
@@ -34,7 +33,7 @@ public class BotHandler {
 
     public BotHandler() {
         guild = jda.getGuildById(810758118442663936L);
-        botChannel = guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID);
+        botChannel = guild != null ? guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID) : null;
 
         register();
     }
@@ -61,6 +60,11 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
+            if (!checkAdmin(msg.getAuthor())) {
+                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+                return;
+            }
+
             if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFileName().endsWith(".msav")) {
                 errDelete(msg, "Ошибка", "Пожалуйста, прикрепи файл карты к сообщению.");
                 return;
@@ -82,6 +86,11 @@ public class BotHandler {
         });
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
+            if (!checkAdmin(msg.getAuthor())) {
+                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+                return;
+            }
+
             Map map = Misc.findMap(args[0]);
             if (map == null) {
                 errDelete(msg, "Карта не найдена.", "Проверьте правильность ввода.");
@@ -99,7 +108,6 @@ public class BotHandler {
 
         handler.<Message>register("maps", "Список всех карт сервера.", (args, msg) -> {
             Seq<Map> mapList = Vars.maps.customMaps();
-
             if (mapList.size == 0) {
                 errDelete(msg, "На сервере нет карт.", "Список карт пуст.");
                 return;
@@ -111,10 +119,28 @@ public class BotHandler {
             }
 
             EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.errorColor)
+                    .setColor(BotMain.normalColor)
                     .setAuthor("Карты сервера")
                     .setTitle("Список карт сервера")
                     .addField("Найдено " + mapList.size + "карт:", maps.toString(), false);
+
+            msg.getChannel().sendMessageEmbeds(embed.build()).queue();
+        });
+
+        handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
+            if (Vars.state.isMenu()) {
+                errDelete(msg, "Сервер отключен.", "Попросите администратора запустить его.");
+                return;
+            }
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.successColor)
+                    .setAuthor("Статус сервера")
+                    .setTitle("Сервер онлайн.")
+                    .addField("Игроков:", Integer.toString(Groups.player.size()), false)
+                    .addField("Карта:", Vars.state.map.name(), false)
+                    .addField("Волна:", Integer.toString(Vars.state.wave), false)
+                    .addField("Нагрузка на сервер:", Long.toString(Core.app.getJavaHeap() / 1024 / 1024), false);
 
             msg.getChannel().sendMessageEmbeds(embed.build()).queue();
         });
@@ -138,7 +164,6 @@ public class BotHandler {
 
     public static void errDelete(Message message, String title, String text, Object... args) {
         message.getChannel().sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor).build()).queue(result -> result.delete().queueAfter(messageDeleteTime, TimeUnit.MILLISECONDS));
-
         message.delete().queueAfter(messageDeleteTime, TimeUnit.MILLISECONDS);
     }
 
@@ -150,5 +175,11 @@ public class BotHandler {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean checkAdmin(User user) {
+        if (user.isBot() || user.isSystem()) return false;
+        Member member = guild.retrieveMember(user).complete();
+        return member.getRoles().stream().anyMatch(role -> role.getIdLong() == 810760273689444385L);
     }
 }

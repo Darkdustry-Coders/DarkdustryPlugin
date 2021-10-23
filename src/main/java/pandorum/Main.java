@@ -30,6 +30,7 @@ public class Main {
             .applyConnectionString(connString)
             .retryWrites(true)
             .build();
+
         MongoClient mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("darkdustry");
         MongoCollection<Document> collection = database.getCollection("statistics");
