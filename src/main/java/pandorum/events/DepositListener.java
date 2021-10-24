@@ -25,12 +25,9 @@ public class DepositListener {
 
         if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertDistance)) {
 
-            Groups.player.each(p -> PlayerModel.find(
-                PlayerModel.class,
-                new BasicDBObject("UUID", p.uuid()), playerInfo -> {
-                    if (playerInfo.alerts) bundled(p, "events.withdraw-thorium", event.player.coloredName(), event.tile.tileX(), event.tile.tileY());
-                }
-            ));
+            Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+                if (playerInfo.alerts) bundled(p, "events.withdraw-thorium", event.player.coloredName(), event.tile.tileX(), event.tile.tileY());
+            }));
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)

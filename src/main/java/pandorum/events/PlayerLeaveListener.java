@@ -14,7 +14,7 @@ import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
 import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.Gamemode;
-import pandorum.effects.Effects;
+import pandorum.comp.effects.Effects;
 
 import static pandorum.Misc.sendToChat;
 import static pandorum.Misc.colorizedTeam;
@@ -33,11 +33,7 @@ public class PlayerLeaveListener {
 
         Effects.onLeave(event.player);
 
-        PlayerModel.find(
-            PlayerModel.class,
-            new BasicDBObject("UUID", event.player.uuid()),
-            playerInfo -> playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime)
-        );
+        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime));
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 

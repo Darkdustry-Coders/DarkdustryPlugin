@@ -1,4 +1,4 @@
-package pandorum.admin;
+package pandorum.comp.admin;
 
 public enum ResponseType {
     ACCEPT(1),

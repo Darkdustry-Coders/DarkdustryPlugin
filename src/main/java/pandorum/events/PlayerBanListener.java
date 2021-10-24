@@ -17,8 +17,9 @@ public class PlayerBanListener {
                     .setColor(BotMain.errorColor)
                     .setAuthor("Банхаммер")
                     .setTitle("Игрок был заблокирован!")
-                    .addField("Никнейм: ", Strings.stripColors(info.lastName), false)
-                    .addField("IP: ", info.lastIP, false);
+                    .addField("Никнейм:", Strings.stripColors(info.lastName), false)
+                    .addField("IP:", info.lastIP, false)
+                    .addField("Uuid:", event.uuid, false);
 
             BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         }

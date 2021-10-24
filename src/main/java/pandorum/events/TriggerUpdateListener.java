@@ -2,8 +2,8 @@ package pandorum.events;
 
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
-import pandorum.effects.Effects;
-import pandorum.ranks.Ranks;
+import pandorum.comp.effects.Effects;
+import pandorum.comp.Ranks;
 
 public class TriggerUpdateListener {
     public static void call() {

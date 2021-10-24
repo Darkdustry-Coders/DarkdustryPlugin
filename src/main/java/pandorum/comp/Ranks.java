@@ -1,4 +1,4 @@
-package pandorum.ranks;
+package pandorum.comp;
 
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
@@ -6,6 +6,8 @@ import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
 import java.util.function.Consumer;
+
+import static pandorum.Misc.bundled;
 
 public class Ranks {
 
@@ -47,6 +49,7 @@ public class Ranks {
     }
 
     public static void getRank(Player player, Consumer<Rank> callback) {
+<<<<<<< HEAD:src/main/java/pandorum/comp/Ranks.java
         PlayerModel.find(
             PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()),
@@ -55,12 +58,25 @@ public class Ranks {
                 if (player.admin) rank = admin;
                 else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
                     rank = playerInfo.rank.next;
-                //TODO сообщение о повышении ранга?
+                    bundled(player, "events.rank-increase", playerInfo.rank.next.tag, playerInfo.rank.next.name);
                 } else rank = playerInfo.rank;
 
                 playerInfo.rank = rank;
                 callback.accept(rank);
             }
         );
+=======
+        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+            Rank rank;
+            if (player.admin) rank = admin;
+            else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
+               rank = playerInfo.rank.next;
+               //TODO сообщение о повышении ранга?
+            } else rank = playerInfo.rank;
+
+            playerInfo.rank = rank;
+            callback.accept(rank);
+        });
+>>>>>>> parent of e485450 (tools):src/main/java/pandorum/ranks/Ranks.java
     }
 }

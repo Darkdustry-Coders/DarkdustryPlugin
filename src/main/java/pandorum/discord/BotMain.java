@@ -29,7 +29,6 @@ public class BotMain extends ListenerAdapter {
     public static void run() {
         try {
             jda = JDABuilder.createDefault(PandorumPlugin.config.DiscordBotToken).setActivity(EntityBuilder.createActivity("Сервер Darkdustry", null, Activity.ActivityType.STREAMING)).addEventListeners(new BotMain()).build();
-            Log.info("Бот успешно запущен.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -53,6 +52,7 @@ public class BotMain extends ListenerAdapter {
                 return;
             }
             Misc.sendToChat("events.discord-message", msg.getAuthor().getAsTag(), msg.getContentRaw());
+            Log.info("[Discord]@: @", msg.getAuthor().getAsTag(), msg.getContentRaw());
         }
     }
 }

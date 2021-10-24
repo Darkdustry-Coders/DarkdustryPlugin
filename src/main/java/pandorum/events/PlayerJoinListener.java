@@ -10,9 +10,9 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
-import pandorum.effects.Effects;
+import pandorum.comp.effects.Effects;
 import pandorum.models.PlayerModel;
-import pandorum.ranks.Ranks;
+import pandorum.comp.Ranks;
 
 import static pandorum.Misc.*;
 
@@ -35,16 +35,12 @@ public class PlayerJoinListener {
 
         Effects.onJoin(event.player);
 
-        PlayerModel.find(
-            PlayerModel.class,
-            new BasicDBObject("UUID", event.player.uuid()),
-            playerInfo -> {
-                if (playerInfo.hellomsg) {
-                    String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
-                    Call.menu(event.player.con, 0, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
-                }
+        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
+            if (playerInfo.hellomsg) {
+                String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
+                Call.menu(event.player.con, 0, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale)), options);
             }
-        );
+        });
         
         bundled(event.player, "events.motd");
     }

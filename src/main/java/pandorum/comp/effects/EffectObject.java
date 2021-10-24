@@ -1,4 +1,4 @@
-package pandorum.effects;
+package pandorum.comp.effects;
 
 import arc.graphics.Color;
 import arc.util.Reflect;

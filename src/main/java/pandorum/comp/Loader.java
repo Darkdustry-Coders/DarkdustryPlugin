@@ -3,15 +3,16 @@ package pandorum.comp;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
-import arc.util.Log;
 import arc.util.io.Streams;
 import mindustry.game.EventType;
 import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
-import pandorum.admin.Authme;
+import pandorum.comp.admin.Authme;
+import pandorum.comp.effects.Effects;
 import pandorum.discord.BotMain;
-import pandorum.effects.Effects;
 import pandorum.events.*;
+import pandorum.events.filters.ActionFilter;
+import pandorum.events.filters.ChatFilter;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -60,7 +61,5 @@ public class Loader {
         PandorumPlugin.socket.connect();
 
         BotMain.run();
-
-        Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
     }
 }

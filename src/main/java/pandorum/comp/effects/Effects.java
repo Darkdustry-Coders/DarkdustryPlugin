@@ -1,4 +1,4 @@
-package pandorum.effects;
+package pandorum.comp.effects;
 
 import mindustry.gen.Player;
 

@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.filters;
 
 import arc.struct.Seq;
 import mindustry.net.Administration;
