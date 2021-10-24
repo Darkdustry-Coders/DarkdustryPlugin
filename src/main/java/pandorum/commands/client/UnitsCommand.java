@@ -6,13 +6,15 @@ import mindustry.type.UnitType;
 import pandorum.Misc;
 import pandorum.comp.Icons;
 
+import java.util.Locale;
+
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
 public class UnitsCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "name" -> {
                 if (!player.dead()) bundled(player, "commands.admin.unit-name", player.unit().type().name);
             }
