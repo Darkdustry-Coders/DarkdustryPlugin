@@ -50,7 +50,6 @@ public class Ranks {
 
     public static void getRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(
-            PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()),
             playerInfo -> {
                 Rank rank;
@@ -64,17 +63,5 @@ public class Ranks {
                 callback.accept(rank);
             }
         );
-
-        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
-            Rank rank;
-            if (player.admin) rank = admin;
-            else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
-               rank = playerInfo.rank.next;
-               //TODO сообщение о повышении ранга?
-            } else rank = playerInfo.rank;
-
-            playerInfo.rank = rank;
-            callback.accept(rank);
-        });
     }
 }
