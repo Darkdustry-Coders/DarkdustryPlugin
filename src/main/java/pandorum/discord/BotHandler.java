@@ -73,7 +73,7 @@ public class BotHandler {
             Message.Attachment a = msg.getAttachments().get(0);
 
             try {
-                new File("../maps/").mkdir();
+                new File("config/maps/").mkdir();
                 File mapFile = new File("../maps/" + a.getFileName());
                 Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile));
 
@@ -115,7 +115,7 @@ public class BotHandler {
 
             StringBuilder maps = new StringBuilder();
             for (int i = 0; i < mapList.size; i++) {
-                maps.append(i + 1).append(". ").append(mapList.get(i).name()).append("\n");
+                maps.append(i + 1).append(". ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
             }
 
             EmbedBuilder embed = new EmbedBuilder()
