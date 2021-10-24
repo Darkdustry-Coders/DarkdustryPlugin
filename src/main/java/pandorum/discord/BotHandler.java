@@ -133,14 +133,14 @@ public class BotHandler {
             }
 
             StringBuilder maps = new StringBuilder();
-            for (int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++) {
+            for (int i = 20 * page; i < Math.min(20 * (page + 1), mapList.size); i++) {
                 maps.append(i + 1).append(". ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
             }
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.normalColor)
                     .setAuthor("Карты сервера")
-                    .setTitle("Список карт сервера (страница " + page + " из " + pages + ")")
+                    .setTitle("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
                     .addField("Карты:", maps.toString(), false);
 
             msg.getChannel().sendMessageEmbeds(embed.build()).queue();

@@ -1,7 +1,6 @@
 package pandorum.models;
 
 import org.darkdustry.MongoDataBridge;
-
 import pandorum.comp.Ranks;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
@@ -16,3 +15,5 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public int gamesPlayed = 0;
     public Ranks.Rank rank = Ranks.player;
 }
+
+
