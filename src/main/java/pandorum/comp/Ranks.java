@@ -7,6 +7,8 @@ import pandorum.models.PlayerModel;
 
 import java.util.function.Consumer;
 
+import static pandorum.Misc.bundled;
+
 public class Ranks {
 
     public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "Admin", null, null);
@@ -55,7 +57,7 @@ public class Ranks {
                 if (player.admin) rank = admin;
                 else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
                     rank = playerInfo.rank.next;
-                //TODO сообщение о повышении ранга?
+                    bundled(player, "events.rank-increase", playerInfo.rank.next.tag, playerInfo.rank.next.name);
                 } else rank = playerInfo.rank;
 
                 playerInfo.rank = rank;
