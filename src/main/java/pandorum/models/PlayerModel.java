@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.bson.conversions.Bson;
 
 import pandorum.database.MongoDataBridge;
-import pandorum.ranks.Ranks;
+import pandorum.comp.Ranks;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String UUID;
