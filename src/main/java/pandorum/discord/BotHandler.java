@@ -74,8 +74,7 @@ public class BotHandler {
             Message.Attachment a = msg.getAttachments().get(0);
 
             try {
-                new File("config/maps/").mkdir();
-                File mapFile = new File("../maps/" + a.getFileName());
+                File mapFile = new File("config/maps/" + a.getFileName());
                 Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile));
 
                 Vars.maps.reload();
