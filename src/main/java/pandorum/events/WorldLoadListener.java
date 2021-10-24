@@ -31,7 +31,7 @@ public class WorldLoadListener {
             }
         }
 
-        Time.runTask(2.5f, () -> {
+        Time.runTask(1f, () -> {
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.normalColor)
                     .setTitle("Карта загружена.")

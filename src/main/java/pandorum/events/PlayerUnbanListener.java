@@ -17,8 +17,9 @@ public class PlayerUnbanListener {
                     .setColor(BotMain.errorColor)
                     .setAuthor("Банхаммер")
                     .setTitle("Игрок был разбанен!")
-                    .addField("Никнейм: ", Strings.stripColors(info.lastName), false)
-                    .addField("IP: ", info.lastIP, false);
+                    .addField("Никнейм:", Strings.stripColors(info.lastName), false)
+                    .addField("IP:", info.lastIP, false)
+                    .addField("Uuid:", event.uuid, false);
 
             BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         }
