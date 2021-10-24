@@ -49,7 +49,6 @@ public class Ranks {
     }
 
     public static void getRank(Player player, Consumer<Rank> callback) {
-<<<<<<< HEAD:src/main/java/pandorum/comp/Ranks.java
         PlayerModel.find(
             PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()),
