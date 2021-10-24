@@ -65,7 +65,7 @@ public class Ranks {
                 callback.accept(rank);
             }
         );
-=======
+
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank rank;
             if (player.admin) rank = admin;
@@ -77,6 +77,5 @@ public class Ranks {
             playerInfo.rank = rank;
             callback.accept(rank);
         });
->>>>>>> parent of e485450 (tools):src/main/java/pandorum/ranks/Ranks.java
     }
 }
