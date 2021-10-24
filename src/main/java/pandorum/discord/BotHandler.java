@@ -2,6 +2,7 @@ package pandorum.discord;
 
 import arc.Core;
 import arc.files.Fi;
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
@@ -60,7 +61,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (!checkAdmin(msg.getAuthor())) {
+            if (checkAdmin(msg.getAuthor())) {
                 errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -86,7 +87,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (!checkAdmin(msg.getAuthor())) {
+            if (checkAdmin(msg.getAuthor())) {
                 errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -106,23 +107,41 @@ public class BotHandler {
             msg.getChannel().sendMessageEmbeds(embed.build()).addFile(mapFile.file()).queue();
         });
 
-        handler.<Message>register("maps", "Список всех карт сервера.", (args, msg) -> {
+        handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
+            if (checkAdmin(msg.getAuthor())) {
+                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+                return;
+            }
+
+            if (args.length > 0 && !Strings.canParseInt(args[0])) {
+                errDelete(msg, "Страница должна быть числом.", "Аргументы не верны.");
+                return;
+            }
+
             Seq<Map> mapList = Vars.maps.customMaps();
             if (mapList.size == 0) {
                 errDelete(msg, "На сервере нет карт.", "Список карт пуст.");
                 return;
             }
 
+            int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
+            int pages = Mathf.ceil(mapList.size / 20f);
+
+            if (--page >= pages || page < 0) {
+                errDelete(msg, "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
+                return;
+            }
+
             StringBuilder maps = new StringBuilder();
-            for (int i = 0; i < mapList.size; i++) {
+            for (int i = 6 * page; i < Math.min(6 * (page + 1), mapList.size); i++) {
                 maps.append(i + 1).append(". ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
             }
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.normalColor)
                     .setAuthor("Карты сервера")
-                    .setTitle("Список карт сервера")
-                    .addField("Найдено " + mapList.size + "карт:", maps.toString(), false);
+                    .setTitle("Список карт сервера (страница " + page + " из " + pages + ")")
+                    .addField("Карты:", maps.toString(), false);
 
             msg.getChannel().sendMessageEmbeds(embed.build()).queue();
         });
@@ -178,8 +197,8 @@ public class BotHandler {
     }
 
     public static boolean checkAdmin(User user) {
-        if (user.isBot() || user.isSystem()) return false;
+        if (user.isBot() || user.isSystem()) return true;
         Member member = guild.retrieveMember(user).complete();
-        return member.getRoles().stream().anyMatch(role -> role.getIdLong() == 810760273689444385L);
+        return member.getRoles().stream().noneMatch(role -> role.getIdLong() == 810760273689444385L);
     }
 }
