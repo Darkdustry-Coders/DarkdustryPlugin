@@ -11,6 +11,6 @@ public class ServerLoadListener {
                 .setColor(BotMain.successColor)
                 .setTitle("Сервер запущен!");
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        Time.runTask(5f, () -> BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue());
     }
 }
