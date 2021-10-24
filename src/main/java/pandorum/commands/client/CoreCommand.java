@@ -24,7 +24,9 @@ public class CoreCommand implements ClientCommand {
             return;
         }
 
-        Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, player.team(), false);
+        try {
+            Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, player.team(), false);
+        } catch (Exception ignored) {}
         bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
     }
 }
