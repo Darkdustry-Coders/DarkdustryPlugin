@@ -14,7 +14,7 @@ import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
 import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.Gamemode;
-import pandorum.effects.Effects;
+import pandorum.comp.effects.Effects;
 
 import static pandorum.Misc.sendToChat;
 import static pandorum.Misc.colorizedTeam;

@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.filters;
 
 import arc.struct.StringMap;
 import arc.util.Log;

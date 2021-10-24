@@ -1,4 +1,4 @@
-package pandorum.ranks;
+package pandorum.comp;
 
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;

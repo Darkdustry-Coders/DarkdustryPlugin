@@ -10,9 +10,9 @@ import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
-import pandorum.effects.Effects;
+import pandorum.comp.effects.Effects;
 import pandorum.models.PlayerModel;
-import pandorum.ranks.Ranks;
+import pandorum.comp.Ranks;
 
 import static pandorum.Misc.*;
 

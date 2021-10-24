@@ -2,11 +2,11 @@ package pandorum.models;
 
 import org.darkdustry.MongoDataBridge;
 
-import pandorum.ranks.Ranks;
+import pandorum.comp.Ranks;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String UUID;
-    public String locale;
+    public String locale = "off";
     public boolean hellomsg = true;
     public boolean alerts = true;
     public long playTime = 0;

@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.util.Log;
 import arc.util.Time;
 import mindustry.game.EventType;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,6 +13,9 @@ public class ServerLoadListener {
             .setColor(BotMain.successColor)
             .setTitle("Сервер запущен!");
 
-        Time.runTask(5f, () -> BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue());
+        Time.runTask(5f, () -> {
+            Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
+            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        });
     }
 }
