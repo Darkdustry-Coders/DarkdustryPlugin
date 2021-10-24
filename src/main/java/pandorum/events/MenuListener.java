@@ -21,7 +21,12 @@ public class MenuListener {
         // Приветственное сообщение (0)
         Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> playerInfo.hellomsg = false);
+                PlayerModel.find(
+                    PlayerModel.class,
+                    new BasicDBObject("UUID", player.uuid()),
+                    playerInfo -> playerInfo.hellomsg = false
+                );
+
                 bundled(player, "events.hellomsg.disabled");
             }
         });

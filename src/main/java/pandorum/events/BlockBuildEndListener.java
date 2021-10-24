@@ -22,10 +22,14 @@ public class BlockBuildEndListener {
         }
 
         if (event.unit.isPlayer()) {
-            PlayerModel.find(new BasicDBObject("UUID", event.unit.getPlayer().uuid()), playerInfo -> {
-                if (event.breaking) playerInfo.buildingsDeconstructed++;
-                else playerInfo.buildingsBuilt++;
-            });
+            PlayerModel.find(
+                PlayerModel.class,
+                new BasicDBObject("UUID", event.unit.getPlayer().uuid()),
+                playerInfo -> {
+                    if (event.breaking) playerInfo.buildingsDeconstructed++;
+                    else playerInfo.buildingsBuilt++;
+                }
+            );
         }
     }
 }

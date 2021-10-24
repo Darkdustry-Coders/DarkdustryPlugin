@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'io.socket:socket.io-client:2.0.1'
 
-    compileOnly fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 jar {

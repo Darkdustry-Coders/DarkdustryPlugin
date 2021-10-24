@@ -28,6 +28,7 @@ public class InfoCommand implements ClientCommand {
         }};
 
         PlayerModel.find(
+            PlayerModel.class,
             new BasicDBObject("UUID", target.uuid()),
             playerInfo -> Call.menu(
                 player.con,

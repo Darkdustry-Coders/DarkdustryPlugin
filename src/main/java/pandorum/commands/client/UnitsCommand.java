@@ -6,8 +6,6 @@ import mindustry.type.UnitType;
 import pandorum.Misc;
 import pandorum.comp.Icons;
 
-import java.util.Locale;
-
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 

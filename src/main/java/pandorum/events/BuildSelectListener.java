@@ -23,9 +23,13 @@ public class BuildSelectListener {
             Player builder = event.builder.getPlayer();
 
             if (PandorumPlugin.interval.get(0, 750f)) {
-                Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
-                    if (playerInfo.alerts) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
-                }));
+                Groups.player.each(p -> PlayerModel.find(
+                    PlayerModel.class,
+                    new BasicDBObject("UUID", p.uuid()),
+                    playerInfo -> {
+                        if (playerInfo.alerts) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
+                    }
+                ));
 
                 EmbedBuilder embed = new EmbedBuilder()
                         .setColor(BotMain.errorColor)
