@@ -37,8 +37,8 @@ public class FillCommand implements ClientCommand {
         for (int x = player.tileX(); x < w; x++) {
             for (int y = player.tileY(); y < h; y++) {
                 if (world.tile(x, y) != null) {
-                    world.tile(x, y).setFloorNet(floor);
-                    world.tile(x, y).setNet(block);
+                    world.tile(x, y).setFloorNet(floor, block.isOverlay() || block instanceof OreBlock ? block : Blocks.air);
+                    if (!(block.isOverlay() || block instanceof OreBlock)) world.tile(x, y).setNet(block);
                 }
             }
         }
