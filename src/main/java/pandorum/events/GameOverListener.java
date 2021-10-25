@@ -12,7 +12,10 @@ import pandorum.models.PlayerModel;
 
 public class GameOverListener {
     public static void call(final EventType.GameOverEvent event) {
-        Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> playerInfo.gamesPlayed++));
+        Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+            playerInfo.gamesPlayed++;
+            playerInfo.save();
+        }));
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.normalColor)

@@ -71,6 +71,7 @@ public class Ranks {
                 } else rank = current;
 
                 playerInfo.rank = ranks.findKey(rank, false, 0);
+                playerInfo.save();
                 callback.accept(rank);
             }
         );

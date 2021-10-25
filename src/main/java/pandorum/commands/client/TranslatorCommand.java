@@ -35,6 +35,7 @@ public class TranslatorCommand implements ClientCommand {
                     bundled(player, "commands.tr.changed", args[0]);
                 }
             }
+            playerInfo.save();
         });
     }
 }

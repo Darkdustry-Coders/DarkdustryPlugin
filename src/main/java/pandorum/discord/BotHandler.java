@@ -6,6 +6,7 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
+import arc.util.Time;
 import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.gen.Groups;
@@ -37,6 +38,13 @@ public class BotHandler {
         botChannel = guild != null ? guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID) : null;
 
         register();
+
+        Time.runTask(2.5f, () ->{
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(successColor)
+                    .setTitle("Сервер успешно запущен!");
+            botChannel.sendMessageEmbeds(embed.build()).queue();
+        });
     }
 
     private static void register() {

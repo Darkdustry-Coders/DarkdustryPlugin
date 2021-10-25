@@ -29,28 +29,31 @@ public class InfoCommand implements ClientCommand {
 
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),
-            playerInfo -> Call.menu(
-                player.con,
-                3,
-                Bundle.format(
-                    "commands.info.header",
-                    findLocale(player.locale),
-                    Misc.colorizedName(target)
-                ),
-                Bundle.format(
-                    "commands.info.content",
-                    findLocale(player.locale),
-                    TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
-                    playerInfo.buildingsBuilt,
-                    playerInfo.buildingsDeconstructed,
-                    playerInfo.maxWave,
-                    playerInfo.gamesPlayed,
-                    playerInfo.hellomsg ? "on" : "off",
-                    playerInfo.alerts ? "on" : "off",
-                    playerInfo.locale
-                ),
-                options
-            )
+            playerInfo -> {
+                playerInfo.save();
+                Call.menu(
+                        player.con,
+                        3,
+                        Bundle.format(
+                                "commands.info.header",
+                                findLocale(player.locale),
+                                Misc.colorizedName(target)
+                        ),
+                        Bundle.format(
+                                "commands.info.content",
+                                findLocale(player.locale),
+                                TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
+                                playerInfo.buildingsBuilt,
+                                playerInfo.buildingsDeconstructed,
+                                playerInfo.maxWave,
+                                playerInfo.gamesPlayed,
+                                playerInfo.hellomsg ? "on" : "off",
+                                playerInfo.alerts ? "on" : "off",
+                                playerInfo.locale
+                        ),
+                        options
+                );
+            }
         );
     }
 }

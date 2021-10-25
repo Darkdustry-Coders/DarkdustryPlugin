@@ -25,6 +25,7 @@ public class BlockBuildEndListener {
             PlayerModel.find(new BasicDBObject("UUID", event.unit.getPlayer().uuid()), playerInfo -> {
                 if (event.breaking) playerInfo.buildingsDeconstructed++;
                 else playerInfo.buildingsBuilt++;
+                playerInfo.save();
             });
         }
     }
