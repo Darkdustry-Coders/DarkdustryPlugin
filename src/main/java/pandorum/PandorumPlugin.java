@@ -5,6 +5,7 @@ import static mindustry.Vars.dataDirectory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import arc.struct.StringMap;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,26 +63,28 @@ public final class PandorumPlugin extends Plugin {
     public static Config config;
     public static Seq<IpInfo> forbiddenIps;
 
-    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>();
-    public static final ObjectMap<String, Timekeeper> votekickCooldowns = new ObjectMap<>();
+    public static final ObjectMap<String, Timekeeper>
+            nominateCooldowns = new ObjectMap<>(),
+            votekickCooldowns = new ObjectMap<>();
+
     public static final ObjectMap<String, Long> loginCooldowns = new ObjectMap<>();
-
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
-    public static final Seq<String> votesRTV = new Seq<>();
-    public static final Seq<String> votesVNW = new Seq<>();
-    public static final Seq<String> activeHistoryPlayers = new Seq<>();
-    public static final Interval interval = new Interval(2);
+    public static final Seq<String>
+            votesRTV = new Seq<>(),
+            votesVNW = new Seq<>(),
+            activeHistoryPlayers = new Seq<>(),
+            waiting = new Seq<>();
 
+    public static final Interval interval = new Interval(2);
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
 
-    public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
+    public static final StringMap codeLanguages = new StringMap();
     public static final OkHttpClient client = new OkHttpClient();
 
     public static Socket socket;
-    public static final Seq<String> waiting = new Seq<>();
 
     public PandorumPlugin() throws IOException, URISyntaxException {
         socket = IO.socket("ws://127.0.0.1:9189");
@@ -92,6 +95,7 @@ public final class PandorumPlugin extends Plugin {
                 .applyConnectionString(connString)
                 .retryWrites(true)
                 .build();
+
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("darkdustry");
         playersInfoCollection = database.getCollection("playersinfo");

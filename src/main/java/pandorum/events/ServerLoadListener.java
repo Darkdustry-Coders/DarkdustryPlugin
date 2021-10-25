@@ -13,9 +13,10 @@ public class ServerLoadListener {
             .setColor(BotMain.successColor)
             .setTitle("Сервер запущен!");
 
-        Time.runTask(5f, () -> {
+        Time.runTask(7.5f, () -> {
             Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            // Проверка на нулл, бот мог еще не запуститься
+            if (BotHandler.botChannel != null) BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         });
     }
 }
