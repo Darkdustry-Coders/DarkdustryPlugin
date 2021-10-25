@@ -1,10 +1,12 @@
 package pandorum.database;
 
+import arc.util.Log;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.mongodb.BasicDBObject;
@@ -62,6 +64,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
             @Override
             public void onError(Throwable t) {
+                if (!Objects.isNull(t)) Log.err(t);
                 callback.accept(t);
             }
         });
