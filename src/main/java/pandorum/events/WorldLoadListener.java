@@ -36,8 +36,11 @@ public class WorldLoadListener {
                     .setColor(BotMain.normalColor)
                     .setTitle("Карта загружена.")
                     .addField("Название: ", Strings.stripColors(Vars.state.map.name()), false);
+            try {
+                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            } catch (NullPointerException ignored) {
 
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            }
         });
     }
 }

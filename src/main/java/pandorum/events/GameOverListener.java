@@ -22,7 +22,11 @@ public class GameOverListener {
                 .setAuthor("Сервер")
                 .setTitle("Игра окончена! Загружаю новую карту!");
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        try {
+            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        } catch (NullPointerException ignored) {
+
+        }
 
         if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) PandorumPlugin.surrendered.clear();
         PandorumPlugin.votesRTV.clear();
