@@ -1,7 +1,6 @@
 package pandorum.models;
 
 import org.darkdustry.MongoDataBridge;
-import pandorum.comp.Ranks;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String UUID;
@@ -13,7 +12,7 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public int buildingsDeconstructed = 0;
     public int maxWave = 0;
     public int gamesPlayed = 0;
-    public Ranks.Rank rank = Ranks.player;
+    public int rank = 0;
 }
 
 

@@ -57,6 +57,7 @@ public class Loader {
         Effects.init();
         MenuListener.init();
         Icons.init();
+        Ranks.init();
         Authme.init();
         PandorumPlugin.socket.connect();
 

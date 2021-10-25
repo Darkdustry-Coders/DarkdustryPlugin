@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.struct.IntMap;
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Player;
@@ -16,9 +17,11 @@ public class Ranks {
     public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "Active", veteran, new Requirements(45000000L, 30000, 250, 25));
     public static Rank player = new Rank("[accent]<> ", "Player", active, new Requirements(15000000L, 15000, 100, 10));
 
+    public static IntMap<Rank> ranks = new IntMap<>();
+
     public static class Rank {
-        public String name;
         public String tag;
+        public String name;
         public @Nullable Rank next;
         public @Nullable Requirements nextReq;
 
@@ -48,19 +51,27 @@ public class Ranks {
         }
     }
 
+    public static void init() {
+        ranks.put(0, player);
+        ranks.put(1, active);
+        ranks.put(2, veteran);
+        ranks.put(3, admin);
+    }
+
     public static void getRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(
             PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()),
             playerInfo -> {
+                Rank current = ranks.get(playerInfo.rank);
                 Rank rank;
                 if (player.admin) rank = admin;
-                else if (playerInfo.rank.next != null && playerInfo.rank.nextReq != null && playerInfo.rank.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
-                    rank = playerInfo.rank.next;
-                    bundled(player, "events.rank-increase", playerInfo.rank.next.tag, playerInfo.rank.next.name);
-                } else rank = playerInfo.rank;
+                else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
+                    rank = current.next;
+                    bundled(player, "events.rank-increase", current.next.tag, current.next.name);
+                } else rank = current;
 
-                playerInfo.rank = rank;
+                playerInfo.rank = ranks.findKey(rank, false, 0);
                 callback.accept(rank);
             }
         );
