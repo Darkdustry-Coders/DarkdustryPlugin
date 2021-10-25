@@ -1,6 +1,9 @@
 package pandorum.models;
 
-import org.darkdustry.MongoDataBridge;
+import org.bson.conversions.Bson;
+
+import java.util.function.Consumer;
+import pandorum.database.MongoDataBridge;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String UUID;
@@ -13,6 +16,10 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public int maxWave = 0;
     public int gamesPlayed = 0;
     public int rank = 0;
+
+    public static void find(Bson filter, Consumer<PlayerModel> callback) {
+        PlayerModel.findAndApplySchema(PlayerModel.class, filter, callback);
+    }
 }
 
 
