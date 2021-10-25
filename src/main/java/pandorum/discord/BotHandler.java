@@ -38,13 +38,6 @@ public class BotHandler {
         botChannel = guild != null ? guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID) : null;
 
         register();
-
-        Time.runTask(2.5f, () ->{
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(successColor)
-                    .setTitle("Сервер успешно запущен!");
-            botChannel.sendMessageEmbeds(embed.build()).queue();
-        });
     }
 
     private static void register() {
