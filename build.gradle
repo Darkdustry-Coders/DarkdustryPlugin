@@ -29,8 +29,6 @@ dependencies {
     implementation 'net.dv8tion:JDA:4.3.0_331'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'io.socket:socket.io-client:2.0.1'
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 jar {

@@ -60,7 +60,6 @@ public class Ranks {
 
     public static void getRank(Player player, Consumer<Rank> callback) {
         PlayerModel.find(
-            PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()),
             playerInfo -> {
                 Rank current = ranks.get(playerInfo.rank);

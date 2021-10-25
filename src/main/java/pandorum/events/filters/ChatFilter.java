@@ -21,7 +21,6 @@ public class ChatFilter {
         StringMap translationsCache = new StringMap();
 
         Groups.player.each(player -> !player.equals(author), player -> PlayerModel.find(
-            PlayerModel.class,
             new BasicDBObject("UUID", player.uuid()), playerInfo -> {
                 if (playerInfo.locale.equals("off")) {
                     player.sendMessage(netServer.chatFormatter.format(author, text), author, text);

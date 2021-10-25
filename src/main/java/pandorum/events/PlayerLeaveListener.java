@@ -33,11 +33,7 @@ public class PlayerLeaveListener {
 
         Effects.onLeave(event.player);
 
-        PlayerModel.find(
-            PlayerModel.class,
-            new BasicDBObject("UUID", event.player.uuid()),
-            playerInfo -> playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime)
-        );
+        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime));
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
