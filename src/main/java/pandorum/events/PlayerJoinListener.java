@@ -22,10 +22,10 @@ public class PlayerJoinListener {
 
         if (nameCheck(event.player)) return;
 
-        Ranks.getRank(event.player, rank -> event.player.name(rank.tag + event.player.getInfo().lastName));
+        Ranks.getRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
 
-        sendToChat("events.player-join", event.player.coloredName());
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+        sendToChat("events.player-join", event.player.coloredName());
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
