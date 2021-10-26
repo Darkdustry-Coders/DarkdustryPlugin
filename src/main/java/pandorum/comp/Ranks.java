@@ -70,8 +70,10 @@ public class Ranks {
                     bundled(player, "events.rank-increase", current.next.tag, current.next.name);
                 } else rank = current;
 
-                playerInfo.rank = ranks.findKey(rank, false, 0);
-                playerInfo.save();
+                if (playerInfo.rank != ranks.findKey(rank, false, 0)) {
+                    playerInfo.rank = ranks.findKey(rank, false, 0);
+                    playerInfo.save();
+                }
                 callback.accept(rank);
             }
         );
