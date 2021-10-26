@@ -22,8 +22,8 @@ import static pandorum.Misc.colorizedTeam;
 public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
 
-        sendToChat("events.player-leave", event.player.coloredName());
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+        sendToChat("events.player-leave", event.player.coloredName());
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.errorColor)
