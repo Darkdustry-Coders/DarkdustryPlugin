@@ -30,7 +30,6 @@ public class InfoCommand implements ClientCommand {
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),
             playerInfo -> {
-                playerInfo.save();
                 Call.menu(
                         player.con,
                         3,
