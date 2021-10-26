@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 public class RankCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
-            playerInfo.save();
             Ranks.getRank(player, rank -> Call.infoMessage(player.con, Bundle.format("commands.rank.info",
                     Misc.findLocale(player.locale),
                     rank.tag,
