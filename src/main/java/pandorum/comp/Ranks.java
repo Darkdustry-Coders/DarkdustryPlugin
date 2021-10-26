@@ -58,17 +58,18 @@ public class Ranks {
         ranks.put(3, admin);
     }
 
-    public static void getRank(Player player, Consumer<Rank> callback) {
+    public static void getRank(Player p, Consumer<Rank> callback) {
         PlayerModel.find(
-            new BasicDBObject("UUID", player.uuid()),
+            new BasicDBObject("UUID", p.uuid()),
             playerInfo -> {
                 Rank current = ranks.get(playerInfo.rank);
                 Rank rank;
-                if (player.admin) rank = admin;
+                if (p.admin) rank = admin;
                 else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
                     rank = current.next;
-                    bundled(player, "events.rank-increase", current.next.tag, current.next.name);
-                } else rank = current;
+                    bundled(p, "events.rank-increase", current.next.tag, current.next.name);
+                } else if (current == admin) rank = player;
+                else rank = current;
 
                 if (playerInfo.rank != ranks.findKey(rank, false, 0)) {
                     playerInfo.rank = ranks.findKey(rank, false, 0);

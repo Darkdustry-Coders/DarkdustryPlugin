@@ -15,7 +15,7 @@ public class PlayerUnbanListener {
         if (info != null) {
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)
-                    .setAuthor("Банхаммер")
+                    .setAuthor("UNBAN")
                     .setTitle("Игрок был разбанен!")
                     .addField("Никнейм:", Strings.stripColors(info.lastName), false)
                     .addField("IP:", info.lastIP, false)

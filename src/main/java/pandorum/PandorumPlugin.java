@@ -75,7 +75,7 @@ public final class PandorumPlugin extends Plugin {
             activeHistoryPlayers = new Seq<>(),
             waiting = new Seq<>();
 
-    public static final Interval interval = new Interval(2);
+    public static final Interval interval = new Interval(3);
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;

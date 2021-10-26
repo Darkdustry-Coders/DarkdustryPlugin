@@ -15,7 +15,7 @@ public class PlayerBanListener {
         if (info != null) {
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)
-                    .setAuthor("Банхаммер")
+                    .setAuthor("BAN")
                     .setTitle("Игрок был заблокирован!")
                     .addField("Никнейм:", Strings.stripColors(info.lastName), false)
                     .addField("IP:", info.lastIP, false)

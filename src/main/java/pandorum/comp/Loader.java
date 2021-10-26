@@ -52,7 +52,7 @@ public class Loader {
         Events.on(EventType.PlayerLeave.class, PlayerLeaveListener::call);
         Events.on(EventType.GameOverEvent.class, GameOverListener::call);
         Events.on(EventType.WaveEvent.class, WaveEventListener::call);
-        Events.run(EventType.Trigger.update, TriggerUpdateListener::call);
+        Events.run(EventType.Trigger.update, TriggerUpdateListener::update);
 
         Effects.init();
         MenuListener.init();

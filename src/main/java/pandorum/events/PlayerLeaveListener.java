@@ -4,20 +4,18 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
-import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.PandorumPlugin;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
-import pandorum.models.PlayerModel;
-import pandorum.vote.VoteKickSession;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.effects.Effects;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
+import pandorum.vote.VoteKickSession;
 
-import static pandorum.Misc.sendToChat;
 import static pandorum.Misc.colorizedTeam;
+import static pandorum.Misc.sendToChat;
 
 public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
@@ -27,16 +25,16 @@ public class PlayerLeaveListener {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.errorColor)
-                .setTitle(Strings.format("**@** вышел с сервера!", Strings.stripColors(event.player.name)));
+                .setTitle(Strings.format("**@** вышел с сервера.", Strings.stripColors(event.player.name)));
 
         BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
 
         Effects.onLeave(event.player);
 
-        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
-            playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime);
-            playerInfo.save();
-        });
+        //PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
+        //    playerInfo.playTime += Time.timeSinceMillis(event.player.con.connectTime);
+        //    playerInfo.save();
+        //});
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 

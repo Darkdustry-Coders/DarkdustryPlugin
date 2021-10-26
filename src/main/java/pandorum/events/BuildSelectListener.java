@@ -29,7 +29,7 @@ public class BuildSelectListener {
 
                 EmbedBuilder embed = new EmbedBuilder()
                         .setColor(BotMain.errorColor)
-                        .setAuthor("Анти-гриф система")
+                        .setAuthor("Anti-grief")
                         .setTitle("Игрок строит ториевый реактор близко к ядру!")
                         .addField("Никнейм: ", Strings.stripColors(builder.name), false);
 

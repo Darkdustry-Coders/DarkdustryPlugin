@@ -19,7 +19,7 @@ public class GameOverListener {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.normalColor)
-                .setAuthor("Сервер")
+                .setAuthor("Gameover")
                 .setTitle("Игра окончена! Загружаю новую карту!");
 
         try {

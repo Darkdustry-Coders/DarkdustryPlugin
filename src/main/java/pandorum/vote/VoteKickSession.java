@@ -51,8 +51,8 @@ public class VoteKickSession {
     }
 
     protected boolean checkPass() {
-        if(votes >= votesRequired()) {
-            sendToChat("commands.votekick.vote-passed", colorizedName(target), (kickDuration / 60));
+        if (votes >= votesRequired()) {
+            sendToChat("commands.votekick.vote-passed", colorizedName(target), (kickDuration / 60f));
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
             stop();
             return true;

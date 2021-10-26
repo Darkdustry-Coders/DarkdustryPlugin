@@ -31,7 +31,7 @@ public class DepositListener {
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)
-                    .setAuthor("Анти-гриф система")
+                    .setAuthor("Anti-grief")
                     .setTitle("Игрок положил торий в реактор рядом с ядром!")
                     .addField("Никнейм: ", Strings.stripColors(event.player.name), false);
 

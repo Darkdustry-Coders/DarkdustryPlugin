@@ -26,7 +26,7 @@ public class VoteMapSession extends VoteSession {
     @Override
     protected Task start() {
         return Timer.schedule(() -> {
-            if(!checkPass()){
+            if (!checkPass()) {
                 sendToChat("commands.nominate.map.failed", target.name());
                 stop();
             }
@@ -43,7 +43,7 @@ public class VoteMapSession extends VoteSession {
 
     @Override
     protected boolean checkPass() {
-        if(votes >= votesRequired()) {
+        if (votes >= votesRequired()) {
             sendToChat("commands.nominate.map.passed", target.name());
             stop();
 

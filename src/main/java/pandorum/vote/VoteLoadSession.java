@@ -27,7 +27,7 @@ public class VoteLoadSession extends VoteSession {
     @Override
     protected Task start() {
         return Timer.schedule(() -> {
-            if(!checkPass()) {
+            if (!checkPass()) {
                 sendToChat("commands.nominate.load.failed", target.nameWithoutExtension());
                 stop();
             }
@@ -35,7 +35,7 @@ public class VoteLoadSession extends VoteSession {
     }
 
     @Override
-    public void vote(Player player, int sign){
+    public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
         sendToChat("commands.nominate.load.vote", colorizedName(player), target.nameWithoutExtension(), votes, votesRequired());
@@ -44,7 +44,7 @@ public class VoteLoadSession extends VoteSession {
 
     @Override
     protected boolean checkPass() {
-        if(votes >= votesRequired()) {
+        if (votes >= votesRequired()) {
             sendToChat("commands.nominate.load.passed", target.nameWithoutExtension());
             stop();
 
@@ -63,7 +63,7 @@ public class VoteLoadSession extends VoteSession {
             Timer.schedule(new Task() {
                 @Override
                 public void run() {
-                    try{
+                    try {
                         r.run();
                     } catch(MapException e) {
                         Log.err(e);

@@ -29,7 +29,7 @@ public class PlayerJoinListener {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
-                .setTitle(Strings.format("**@** зашел на сервер!", Strings.stripColors(event.player.name)));
+                .setTitle(Strings.format("**@** зашел на сервер.", Strings.stripColors(event.player.name)));
 
         BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
 

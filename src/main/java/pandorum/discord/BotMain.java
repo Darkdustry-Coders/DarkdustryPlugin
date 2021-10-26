@@ -43,7 +43,6 @@ public class BotMain extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         Message msg = event.getMessage();
-
         BotHandler.handler.handleMessage(msg.getContentRaw(), msg);
 
         if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBot()) {

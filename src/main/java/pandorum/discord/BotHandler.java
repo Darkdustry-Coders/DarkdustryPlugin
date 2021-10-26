@@ -100,7 +100,7 @@ public class BotHandler {
             Fi mapFile = map.file;
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.successColor)
-                    .setAuthor("Карта с сервера")
+                    .setAuthor("Server map")
                     .setTitle("Карта успешно получена!");
 
             msg.getChannel().sendMessageEmbeds(embed.build()).addFile(mapFile.file()).queue();
@@ -138,7 +138,7 @@ public class BotHandler {
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.normalColor)
-                    .setAuthor("Карты сервера")
+                    .setAuthor("Server maps")
                     .setTitle("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
                     .addField("Карты:", maps.toString(), false);
 
