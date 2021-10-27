@@ -36,7 +36,7 @@ public abstract class Misc {
     public static Map findMap(String text) {
         for (int i = 0; i < maps.customMaps().size; i++) {
             Map map = maps.customMaps().get(i);
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(text)) {
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(text) || Strings.stripColors(map.name()).contains(text)) {
                 return map;
             }
         }
@@ -93,6 +93,6 @@ public abstract class Misc {
 
     public static void connectToHub(Player player) {
         Tuple2<String, Integer> hub = PandorumPlugin.config.getIp();
-        Vars.net.pingHost(hub.t1, hub.t2, host -> Call.connect(player.con, hub.t1, hub.t2), error -> bundled(player, "commands.hub.offline"));
+        Vars.net.pingHost(hub.t1, hub.t2, host -> Call.connect(player.con, hub.t1, hub.t2), e -> bundled(player, "commands.hub.offline"));
     }
 }
