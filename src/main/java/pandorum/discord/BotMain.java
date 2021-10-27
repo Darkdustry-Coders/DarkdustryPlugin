@@ -3,12 +3,10 @@ package pandorum.discord;
 import arc.util.Log;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.internal.entities.EntityBuilder;
 import org.jetbrains.annotations.NotNull;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
@@ -28,7 +26,7 @@ public class BotMain extends ListenerAdapter {
 
     public static void run() {
         try {
-            jda = JDABuilder.createDefault(PandorumPlugin.config.DiscordBotToken).setActivity(EntityBuilder.createActivity("Сервер Darkdustry", null, Activity.ActivityType.STREAMING)).addEventListeners(new BotMain()).build();
+            jda = JDABuilder.createDefault(PandorumPlugin.config.DiscordBotToken).addEventListeners(new BotMain()).build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
