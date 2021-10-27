@@ -13,6 +13,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.comp.Bundle;
+import pandorum.comp.Ranks;
 import pandorum.models.PlayerModel;
 
 public class InfoCommand implements ClientCommand {
@@ -23,9 +24,7 @@ public class InfoCommand implements ClientCommand {
             return;
         }
 
-        String[][] options = {{
-            Bundle.format("events.menu.close", findLocale(player.locale))
-        }};
+        String[][] options = {{Bundle.format("events.menu.close", findLocale(player.locale))}};
 
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),
@@ -41,6 +40,8 @@ public class InfoCommand implements ClientCommand {
                         Bundle.format(
                                 "commands.info.content",
                                 findLocale(player.locale),
+                                Ranks.ranks.get(playerInfo.rank).tag,
+                                Ranks.ranks.get(playerInfo.rank).name,
                                 TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
                                 playerInfo.buildingsBuilt,
                                 playerInfo.buildingsDeconstructed,
