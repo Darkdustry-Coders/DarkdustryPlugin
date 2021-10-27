@@ -3,6 +3,7 @@ package pandorum.entry;
 import static pandorum.Misc.findLocale;
 
 import mindustry.gen.Player;
+import mindustry.net.Administration.PlayerAction;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
 
@@ -21,13 +22,13 @@ public class RotateEntry implements HistoryEntry {
     protected static final String[] sides;
 
     static {
-        sides = Bundle.get("history.rotate.all", Bundle.defaultLocale()).split(", ");
+        sides = "\uE803, \uE804, \uE802, \uE805".split(", ");
     }
 
-    public RotateEntry(String name, Block block, int rotation) {
-        this.name = name;
-        this.block = block;
-        this.rotation = rotation;
+    public RotateEntry(PlayerAction action) {
+        this.name = action.player.coloredName();
+        this.block = action.tile.build.block;
+        this.rotation = action.rotation;
         this.time = new Date();
     }
 

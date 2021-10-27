@@ -19,6 +19,6 @@ public class RestartCommand implements ServerCommand {
         BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
 
         Groups.player.each(Misc::connectToHub);
-        Time.runTask(5f, () -> System.exit(2));
+        Time.runTask(60f, () -> System.exit(2));
     }
 }

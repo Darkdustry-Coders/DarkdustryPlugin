@@ -38,9 +38,7 @@ public class WorldLoadListener {
                     .addField("Название: ", Strings.stripColors(Vars.state.map.name()), false);
             try {
                 BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
-            } catch (NullPointerException ignored) {
-
-            }
+            } catch (NullPointerException ignored) {}
         });
     }
 }

@@ -47,6 +47,7 @@ public class MenuListener {
             }
 
             int amount = unitCount - Groups.unit.size();
+            if (amount == 0) return;
             bundled(player, "commands.admin.despw.success", amount);
 
             EmbedBuilder embed = new EmbedBuilder()
@@ -74,8 +75,6 @@ public class MenuListener {
         });
 
         //Информация о игроке (3)
-        Menus.registerMenu((player, option) -> {
-            //Пока что не делает ничего
-        });
+        Menus.registerMenu((player, option) -> {});
     }
 }

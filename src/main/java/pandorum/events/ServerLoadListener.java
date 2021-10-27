@@ -18,9 +18,7 @@ public class ServerLoadListener {
         Time.runTask(1f, () -> {
             try {
                 BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
-            } catch (NullPointerException ignored) {
-
-            }
+            } catch (NullPointerException ignored) {}
         });
     }
 }

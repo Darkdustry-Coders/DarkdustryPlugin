@@ -12,6 +12,7 @@ import mindustry.gen.Groups;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
@@ -43,18 +44,11 @@ public class BotHandler {
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (CommandHandler.Command command : handler.getCommandList()) {
-                builder.append(prefix);
-                builder.append("**");
-                builder.append(command.text);
-                builder.append("**");
+                builder.append(prefix).append("**").append(command.text).append("**");
                 if (command.params.length > 0) {
-                    builder.append(" *");
-                    builder.append(command.paramText);
-                    builder.append("*");
+                    builder.append(" *").append(command.paramText).append("*");
                 }
-                builder.append(" - ");
-                builder.append(command.description);
-                builder.append("\n");
+                builder.append(" - ").append(command.description).append("\n");
             }
 
             info(msg.getChannel(), "Команды", builder.toString());
@@ -71,7 +65,7 @@ public class BotHandler {
                 return;
             }
 
-            Message.Attachment a = msg.getAttachments().get(0);
+            Attachment a = msg.getAttachments().get(0);
 
             try {
                 File mapFile = new File("config/maps/" + a.getFileName());

@@ -21,7 +21,7 @@ public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
 
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
-        sendToChat("events.player-leave", event.player.coloredName());
+        sendToChat("events.player-leave", "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.errorColor)

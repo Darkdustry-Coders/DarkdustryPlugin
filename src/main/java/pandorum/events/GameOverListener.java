@@ -24,9 +24,7 @@ public class GameOverListener {
 
         try {
             BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
-        } catch (NullPointerException ignored) {
-
-        }
+        } catch (NullPointerException ignored) {}
 
         if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) PandorumPlugin.surrendered.clear();
         PandorumPlugin.votesRTV.clear();

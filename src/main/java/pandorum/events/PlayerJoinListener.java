@@ -25,7 +25,7 @@ public class PlayerJoinListener {
         Ranks.getRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
 
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
-        sendToChat("events.player-join", event.player.coloredName());
+        sendToChat("events.player-join", "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
