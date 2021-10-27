@@ -38,7 +38,7 @@ public class DepositListener {
             BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         }
 
-        HistoryEntry entry = new DepositEntry(event.player.coloredName(), event.tile.block, event.item, event.amount);
+        HistoryEntry entry = new DepositEntry(event);
         Seq<Tile> linkedTiles = event.tile.tile.getLinkedTiles(new Seq<>());
         for (Tile tile : linkedTiles) {
             PandorumPlugin.history[tile.x][tile.y].add(entry);

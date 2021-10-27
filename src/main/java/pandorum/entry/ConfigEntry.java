@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static mindustry.Vars.world;
-import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
@@ -37,7 +36,7 @@ public class ConfigEntry implements HistoryEntry {
     public Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
-        this.name = colorizedName(event.player);
+        this.name = event.player.coloredName();
         this.block = event.tile.block();
         this.build = event.tile;
         this.value = build instanceof UnitFactory.UnitFactoryBuild ? ((UnitFactory.UnitFactoryBuild)build).unit() : getConfig(event);
@@ -63,7 +62,7 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player){
         final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(this.time);
+        final String ftime = df.format(time);
 
         if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);

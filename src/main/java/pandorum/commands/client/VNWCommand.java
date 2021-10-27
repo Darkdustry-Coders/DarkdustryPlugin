@@ -2,7 +2,6 @@ package pandorum.commands.client;
 
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.Misc;
 
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
@@ -20,7 +19,7 @@ public class VNWCommand implements ClientCommand {
         votesVNW.add(player.uuid());
         int cur = votesVNW.size;
         int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
-        sendToChat("commands.vnw.ok", Misc.colorizedName(player), cur, req);
+        sendToChat("commands.vnw.ok", player.coloredName(), cur, req);
 
         if (cur < req) {
             return;

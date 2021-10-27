@@ -26,9 +26,7 @@ public class Translator {
             .addHeader("sec-fetch-site", "cross-site");
 
     public static void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
-        String destAlphaLang = PandorumPlugin.codeLanguages.get("en");
-
-        if (PandorumPlugin.codeLanguages.containsKey(dest_lang)) destAlphaLang = PandorumPlugin.codeLanguages.get(dest_lang);
+        String destAlphaLang = PandorumPlugin.codeLanguages.containsKey(dest_lang) ? PandorumPlugin.codeLanguages.get(dest_lang) : PandorumPlugin.codeLanguages.get("en");
 
         RequestBody formBody = new FormBody.Builder()
                 .add("to", destAlphaLang)

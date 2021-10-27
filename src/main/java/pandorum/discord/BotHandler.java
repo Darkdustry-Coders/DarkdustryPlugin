@@ -158,7 +158,7 @@ public class BotHandler {
                     .addField("Игроков:", Integer.toString(Groups.player.size()), false)
                     .addField("Карта:", Vars.state.map.name(), false)
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
-                    .addField("Нагрузка на сервер:", Long.toString(Core.app.getJavaHeap() / 1024 / 1024), false);
+                    .addField("Нагрузка на сервер:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false);
 
             msg.getChannel().sendMessageEmbeds(embed.build()).queue();
         });

@@ -35,7 +35,7 @@ public class RotateEntry implements HistoryEntry {
     public String getMessage(Player player) {
         final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(this.time);
+        final String ftime = df.format(time);
 
         return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
     }

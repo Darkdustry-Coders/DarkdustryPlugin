@@ -8,7 +8,6 @@ import mindustry.io.SaveIO;
 
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
-import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
@@ -34,7 +33,7 @@ public class VoteSaveSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.nominate.save.vote", colorizedName(player), target, votes, votesRequired());
+        sendToChat("commands.nominate.save.vote", player.coloredName(), target, votes, votesRequired());
         checkPass();
     }
 

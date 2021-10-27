@@ -1,20 +1,20 @@
 package pandorum.entry;
 
-import arc.util.*;
 import mindustry.game.EventType.BlockBuildEndEvent;
-import mindustry.gen.*;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.world.Block;
+import pandorum.comp.Bundle;
+import pandorum.comp.Icons;
 
-import pandorum.comp.*;
-import static pandorum.Misc.*;
-
-import java.util.TimeZone;
-import java.time.ZoneId;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.TimeZone;
+
+import static pandorum.Misc.findLocale;
 
 public class BlockEntry implements HistoryEntry {
-    @Nullable
     public final boolean isPlayer;
     public final String name;
     public final Unit unit;
@@ -27,7 +27,7 @@ public class BlockEntry implements HistoryEntry {
         this.breaking = event.breaking;
         this.unit = event.unit;
         this.isPlayer = unit.isPlayer();
-        this.name = isPlayer ? colorizedName(unit.getPlayer()) : null;
+        this.name = isPlayer ? unit.getPlayer().coloredName() : null;
         this.block = this.breaking ? null : event.tile.build.block;
         this.rotation = this.breaking ? -1 : event.tile.build.rotation;
         this.time = new Date();
@@ -37,7 +37,7 @@ public class BlockEntry implements HistoryEntry {
     public String getMessage(Player player) {
         final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(this.time);
+        final String ftime = df.format(time);
 
         if (breaking) {
             return isPlayer ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :

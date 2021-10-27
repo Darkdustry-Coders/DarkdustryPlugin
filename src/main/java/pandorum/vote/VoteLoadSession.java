@@ -12,7 +12,6 @@ import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
-import static pandorum.Misc.colorizedName;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
@@ -38,7 +37,7 @@ public class VoteLoadSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.nominate.load.vote", colorizedName(player), target.nameWithoutExtension(), votes, votesRequired());
+        sendToChat("commands.nominate.load.vote", player.coloredName(), target.nameWithoutExtension(), votes, votesRequired());
         checkPass();
     }
 

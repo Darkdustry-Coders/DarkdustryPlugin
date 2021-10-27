@@ -28,32 +28,30 @@ public class InfoCommand implements ClientCommand {
 
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),
-            playerInfo -> {
-                Call.menu(
-                        player.con,
-                        3,
-                        Bundle.format(
-                                "commands.info.header",
-                                findLocale(player.locale),
-                                Misc.colorizedName(target)
-                        ),
-                        Bundle.format(
-                                "commands.info.content",
-                                findLocale(player.locale),
-                                Ranks.ranks.get(playerInfo.rank).tag,
-                                Ranks.ranks.get(playerInfo.rank).name,
-                                TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
-                                playerInfo.buildingsBuilt,
-                                playerInfo.buildingsDeconstructed,
-                                playerInfo.maxWave,
-                                playerInfo.gamesPlayed,
-                                playerInfo.hellomsg ? "on" : "off",
-                                playerInfo.alerts ? "on" : "off",
-                                playerInfo.locale
-                        ),
-                        options
-                );
-            }
+            playerInfo -> Call.menu(
+                    player.con,
+                    3,
+                    Bundle.format(
+                            "commands.info.header",
+                            findLocale(player.locale),
+                            target.coloredName()
+                    ),
+                    Bundle.format(
+                            "commands.info.content",
+                            findLocale(player.locale),
+                            Ranks.ranks.get(playerInfo.rank).tag,
+                            Ranks.ranks.get(playerInfo.rank).name,
+                            TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
+                            playerInfo.buildingsBuilt,
+                            playerInfo.buildingsDeconstructed,
+                            playerInfo.maxWave,
+                            playerInfo.gamesPlayed,
+                            playerInfo.hellomsg ? "on" : "off",
+                            playerInfo.alerts ? "on" : "off",
+                            playerInfo.locale
+                    ),
+                    options
+            )
         );
     }
 }

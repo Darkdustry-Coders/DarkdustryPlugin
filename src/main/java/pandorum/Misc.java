@@ -14,7 +14,6 @@ import pandorum.comp.Bundle;
 import pandorum.struct.Tuple2;
 
 import java.util.Locale;
-import java.util.Objects;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.saveDirectory;
@@ -24,13 +23,7 @@ public abstract class Misc {
     private Misc() {}
 
     public static String colorizedTeam(Team team) {
-        Objects.requireNonNull(team, "team");
         return Strings.format("[#@]@", team.color, team);
-    }
-
-    public static String colorizedName(Player player) {
-        Objects.requireNonNull(player, "player");
-        return player.coloredName();
     }
 
     public static Map findMap(String text) {
@@ -46,11 +39,15 @@ public abstract class Misc {
     public static Fi findSave(String text) {
         for (int i = 0; i < saveDirectory.list().length; i++) {
             Fi save = saveDirectory.list()[i];
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || save.nameWithoutExtension().equalsIgnoreCase(text)) {
+            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || save.nameWithoutExtension().equalsIgnoreCase(text) || save.nameWithoutExtension().contains(text)) {
                 return save;
             }
         }
         return null;
+    }
+
+    public static Player findByName(String name) {
+        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
     public static Locale findLocale(String lang) {
@@ -72,10 +69,6 @@ public abstract class Misc {
 
     public static void sendToChat(String key, Object... values) {
         Groups.player.each(p -> bundled(p, key, values));
-    }
-
-    public static Player findByName(String name) {
-        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
     public static boolean nameCheck(Player player) {

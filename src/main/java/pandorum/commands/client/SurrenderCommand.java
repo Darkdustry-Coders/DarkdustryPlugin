@@ -25,7 +25,7 @@ public class SurrenderCommand implements ClientCommand {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        sendToChat("commands.surrender.ok", Misc.colorizedTeam(player.team()), Misc.colorizedName(player), cur, req);
+        sendToChat("commands.surrender.ok", Misc.colorizedTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) {
             return;

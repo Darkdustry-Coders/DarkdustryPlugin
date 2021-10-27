@@ -14,8 +14,8 @@ public class Ranks {
 
     public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "Admin", null, null);
     public static Rank veteran = new Rank("[accent]<[white]\uE813[accent]> ", "Veteran", null, null);
-    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "Active", veteran, new Requirements(45000000L, 30000, 250, 25));
-    public static Rank player = new Rank("[accent]<> ", "Player", active, new Requirements(15000000L, 15000, 100, 10));
+    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "Active", veteran, new Requirements(45000000L, 30000, 25));
+    public static Rank player = new Rank("[accent]<> ", "Player", active, new Requirements(15000000L, 15000, 10));
 
     public static IntMap<Rank> ranks = new IntMap<>();
 
@@ -36,18 +36,16 @@ public class Ranks {
     public static class Requirements {
         public long playtime;
         public int buildingsBuilt;
-        public int maxWave;
         public int gamesPlayed;
 
-        public Requirements(long playtime, int buildingsBuilt, int maxWave, int gamesPlayed) {
+        public Requirements(long playtime, int buildingsBuilt, int gamesPlayed) {
             this.playtime = playtime;
             this.buildingsBuilt = buildingsBuilt;
-            this.maxWave = maxWave;
             this.gamesPlayed = gamesPlayed;
         }
 
-        public boolean check(long time, int built, int wave, int games) {
-            return time >= playtime && built >= buildingsBuilt && wave >= maxWave && games >= gamesPlayed;
+        public boolean check(long time, int built, int games) {
+            return time >= playtime && built >= buildingsBuilt && games >= gamesPlayed;
         }
     }
 
@@ -65,7 +63,7 @@ public class Ranks {
                 Rank current = ranks.get(playerInfo.rank);
                 Rank rank;
                 if (p.admin) rank = admin;
-                else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.maxWave, playerInfo.gamesPlayed)) {
+                else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
                     rank = current.next;
                     bundled(p, "events.rank-increase", current.next.tag, current.next.name);
                 } else if (current == admin) rank = player;

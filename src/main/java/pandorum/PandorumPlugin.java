@@ -136,7 +136,7 @@ public final class PandorumPlugin extends Plugin {
     }
 
     @Override
-    public void registerClientCommands(CommandHandler handler){
+    public void registerClientCommands(CommandHandler handler) {
         handler.removeCommand("a");
         handler.removeCommand("t");
         handler.removeCommand("help");

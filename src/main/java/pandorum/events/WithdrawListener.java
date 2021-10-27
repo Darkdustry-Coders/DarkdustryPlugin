@@ -12,7 +12,7 @@ public class WithdrawListener {
     public static void call(final EventType.WithdrawEvent event) {
         if (PandorumPlugin.config.mode == Config.Gamemode.hexed || PandorumPlugin.config.mode == Config.Gamemode.hub || PandorumPlugin.config.mode == Config.Gamemode.castle) return;
 
-        HistoryEntry entry = new WithdrawEntry(event.player.coloredName(), event.tile.block, event.item, event.amount);
+        HistoryEntry entry = new WithdrawEntry(event);
         Seq<Tile> linkedTiles = event.tile.tile.getLinkedTiles(new Seq<>());
         for (Tile tile : linkedTiles) {
             PandorumPlugin.history[tile.x][tile.y].add(entry);
