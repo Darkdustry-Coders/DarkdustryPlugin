@@ -19,10 +19,10 @@ public class TriggerUpdateListener {
                 playerInfo.playTime += 1000;
                 playerInfo.save();
             }));
+        }
 
-            if (PandorumPlugin.interval.get(2, 300f)) {
-                jda.getPresence().setActivity(Activity.streaming(Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."), null));
-            }
+        if (PandorumPlugin.interval.get(2, 300f)) {
+            jda.getPresence().setActivity(Activity.streaming(Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."), null));
         }
     }
 }
