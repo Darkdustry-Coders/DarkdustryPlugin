@@ -33,7 +33,6 @@ public class MenuListener {
         Menus.registerMenu((player, option) -> {
             if (option == 1) return;
 
-            int unitCount = Groups.unit.size();
             switch (option) {
                 case 0 -> Groups.unit.each(Unitc::kill);
                 case 2 -> Groups.unit.each(Unitc::isPlayer, Unitc::kill);
@@ -46,15 +45,12 @@ public class MenuListener {
                 }
             }
 
-            int amount = unitCount - Groups.unit.size();
-            if (amount == 0) return;
-            bundled(player, "commands.admin.despw.success", amount);
+            bundled(player, "commands.admin.despw.success");
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(BotMain.errorColor)
                     .setTitle("Юниты убиты.")
-                    .addField("Админ: ", Strings.stripColors(player.name), false)
-                    .addField("Количество: ", Integer.toString(amount), false);
+                    .addField("Админ: ", Strings.stripColors(player.name), false);
 
             BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
         });

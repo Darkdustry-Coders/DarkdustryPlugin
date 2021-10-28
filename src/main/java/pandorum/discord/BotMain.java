@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class BotMain extends ListenerAdapter {
 

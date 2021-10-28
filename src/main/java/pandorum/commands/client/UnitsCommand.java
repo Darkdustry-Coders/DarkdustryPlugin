@@ -26,14 +26,22 @@ public class UnitsCommand implements ClientCommand {
                     bundled(player, "commands.admin.units.incorrect");
                     return;
                 }
-                UnitType found = content.units().find(u -> u.name.equalsIgnoreCase(args[1]));
-                if (found == null) {
+
+                UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[1]));
+                if (type == null) {
                     bundled(player, "commands.unit-not-found");
                     return;
                 }
-                Unit unit = found.spawn(player.team(), player.x(), player.y());
+
+                Player target = args.length > 2 ? Misc.findByName(args[2]) : player;
+                if (target == null) {
+                    bundled(player, "commands.player-not-found");
+                    return;
+                }
+
+                Unit unit = type.spawn(player.team(), player.x(), player.y());
                 unit.spawnedByCore(true);
-                player.unit(unit);
+                target.unit(unit);
                 bundled(player, "commands.admin.units.change.success");
             }
             default -> bundled(player, "commands.admin.units.incorrect");
