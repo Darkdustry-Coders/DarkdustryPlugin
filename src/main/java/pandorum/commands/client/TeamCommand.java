@@ -6,6 +6,8 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.Misc;
+import pandorum.PandorumPlugin;
+import pandorum.comp.Config;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -13,6 +15,7 @@ import static pandorum.Misc.bundled;
 
 public class TeamCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
+        if (PandorumPlugin.config.mode != Config.Gamemode.sandbox || Misc.adminCheck(player)) return;
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {
             bundled(player, "commands.teams");
