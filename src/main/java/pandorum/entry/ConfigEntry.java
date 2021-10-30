@@ -97,6 +97,12 @@ public class ConfigEntry implements HistoryEntry {
             return Bundle.format("history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()], ftime);
         }
 
+        if (block == Blocks.message) {
+            String message = (String)value;
+            message = message.length() > 15 ? message.substring(0, 16) + "..." : message;
+            return Bundle.format("history.config.message", findLocale(player.locale), name, message, ftime);
+        }
+
         if (block == Blocks.liquidSource) {
             Liquid liquid = (Liquid)value;
             if (liquid == null) {
