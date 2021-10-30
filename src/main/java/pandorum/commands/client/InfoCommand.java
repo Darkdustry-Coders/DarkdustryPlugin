@@ -14,6 +14,7 @@ import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
+import pandorum.events.MenuListener;
 import pandorum.models.PlayerModel;
 
 public class InfoCommand implements ClientCommand {
@@ -30,7 +31,7 @@ public class InfoCommand implements ClientCommand {
             new BasicDBObject("UUID", target.uuid()),
             playerInfo -> Call.menu(
                     player.con,
-                    3,
+                    MenuListener.infoMenu,
                     Bundle.format(
                             "commands.info.header",
                             findLocale(player.locale),
