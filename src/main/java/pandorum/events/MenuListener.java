@@ -18,8 +18,8 @@ import static pandorum.Misc.sendToChat;
 
 public class MenuListener {
     public static int welcomeMenu,
-            despwMenu;
-            artvMenu;
+            despwMenu,
+            artvMenu,
             infoMenu;
 
     public static void init() {
