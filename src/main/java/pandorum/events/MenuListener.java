@@ -17,9 +17,14 @@ import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
 
 public class MenuListener {
+    public static int welcomeMenu,
+            despwMenu;
+            artvMenu;
+            infoMenu;
+
     public static void init() {
         // Приветственное сообщение (0)
-        Menus.registerMenu((player, option) -> {
+        welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
                     playerInfo.hellomsg = false;
@@ -30,7 +35,7 @@ public class MenuListener {
         });
 
         // Команда /despw (1)
-        Menus.registerMenu((player, option) -> {
+        despwMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) return;
 
             switch (option) {
@@ -56,7 +61,7 @@ public class MenuListener {
         });
 
         // Команда /artv (2)
-        Menus.registerMenu((player, option) -> {
+        artvMenu = Menus.registerMenu((player, option) -> {
             if (option == 0) {
                 Events.fire(new EventType.GameOverEvent(Team.crux));
                 sendToChat("commands.admin.artv.info");
@@ -71,6 +76,6 @@ public class MenuListener {
         });
 
         //Информация о игроке (3)
-        Menus.registerMenu((player, option) -> {});
+        infoMenu = Menus.registerMenu((player, option) -> {});
     }
 }
