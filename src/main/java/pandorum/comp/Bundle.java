@@ -3,6 +3,7 @@ package pandorum.comp;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
+import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.Vars;
 import mindustry.gen.Iconc;
@@ -72,7 +73,7 @@ public class Bundle {
         StringMap bundle = bundles.get(locale);
         if (bundle == null && locale.getDisplayName().equals("router")) {
             StringMap router = new StringMap();
-            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, v.replaceAll("[\\d\\D]", Iconc.blockRouter)));
+            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("[\\d\\D]", Character.toString(Iconc.blockRouter))));
             bundles.put(locale, bundle = router);
         } else if (bundle == null && Structs.contains(supportedLocales, locale)) {
             bundles.put(locale, bundle = load(locale));
