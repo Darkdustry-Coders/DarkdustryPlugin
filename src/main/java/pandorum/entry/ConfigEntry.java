@@ -45,14 +45,13 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     private Object getConfig(ConfigEvent event) {
-        if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+        if (event.tile.block().configurations.containsKey(Integer.class) && (event.tile.block().configurations.containsKey(Point2[].class) || event.tile.block().configurations.containsKey(Point2.class))) {
             int count;
-            if (block instanceof PowerNode) {
+            if (event.tile.block() instanceof PowerNode) {
                 count = build != null ? build.getPowerConnections(new Seq<>()).size : 0;
             } else {
                 count = build != null ? (int) event.value : -1;
             }
-
             return Pack.longInt(count, (int) event.value);
         }
         return event.value;

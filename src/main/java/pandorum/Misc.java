@@ -9,7 +9,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import mindustry.net.Packets;
+import mindustry.net.Packets.KickReason;
 import pandorum.comp.Bundle;
 import pandorum.struct.Tuple2;
 
@@ -78,7 +78,7 @@ public abstract class Misc {
             return true;
         }
         if (name.contains("@")) {
-            player.con.kick(Packets.KickReason.kick, 0);
+            player.con.kick(KickReason.kick, 0);
             return true;
         }
         return false;

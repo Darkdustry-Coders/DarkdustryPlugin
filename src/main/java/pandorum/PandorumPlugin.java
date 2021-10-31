@@ -168,7 +168,7 @@ public final class PandorumPlugin extends Plugin {
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
             handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
             handler.register("artv", "Принудительно завершить игру.", ARTVCommand::run);
-            handler.register("core", "<small/medium/big>", "Заспавнить ядро.", CoreCommand::run);
+            handler.register("core", "[small/medium/big]", "Заспавнить ядро.", CoreCommand::run);
             handler.register("give", "<item> [count]", "Выдать ресурсы в ядро.", GiveCommand::run);
             handler.register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", AlertCommand::run);
             handler.register("team", "<team> [player...]", "Смена команды для админов.", TeamCommand::run);

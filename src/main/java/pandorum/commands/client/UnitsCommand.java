@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import mindustry.content.UnitTypes;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
@@ -22,13 +23,13 @@ public class UnitsCommand implements ClientCommand {
                 bundled(player, "commands.admin.units.list", units.toString());
             }
             case "change" -> {
-                if (args.length == 1 || args[1].equalsIgnoreCase("block")) {
+                if (args.length == 1) {
                     bundled(player, "commands.admin.units.incorrect");
                     return;
                 }
 
                 UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[1]));
-                if (type == null) {
+                if (type == null || type == UnitTypes.block) {
                     bundled(player, "commands.unit-not-found");
                     return;
                 }

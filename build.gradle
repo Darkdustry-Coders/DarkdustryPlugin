@@ -14,7 +14,6 @@ repositories {
 
 ext {
     project.version = '1.4'
-
     mindustryVersion = 'v133'
 }
 
