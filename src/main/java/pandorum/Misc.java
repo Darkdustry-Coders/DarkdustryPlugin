@@ -59,6 +59,10 @@ public abstract class Misc {
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
+    /**
+     * @param player A player to check
+     * @return true if a player isn't an admin, false if he is
+     */
     public static boolean adminCheck(Player player) {
         if (!player.admin()) {
             bundled(player, "commands.permission-denied");

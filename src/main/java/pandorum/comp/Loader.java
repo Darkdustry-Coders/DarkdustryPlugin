@@ -3,9 +3,12 @@ package pandorum.comp;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
+import arc.util.Timer;
 import arc.util.io.Streams;
 import mindustry.game.EventType;
+import mindustry.gen.Groups;
 import mindustry.net.Administration;
+import org.javacord.api.entity.activity.ActivityType;
 import pandorum.PandorumPlugin;
 import pandorum.comp.effects.Effects;
 import pandorum.discord.BotMain;
@@ -17,6 +20,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 import static mindustry.Vars.netServer;
+import static pandorum.discord.BotMain.bot;
 
 public class Loader {
     public static void init() {
@@ -36,6 +40,7 @@ public class Loader {
 
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
+        netServer.invalidHandler = InvalidCommandResponse::response;
 
         Events.on(EventType.PlayerUnbanEvent.class, PlayerUnbanListener::call);
         Events.on(EventType.PlayerBanEvent.class, PlayerBanListener::call);
@@ -60,5 +65,7 @@ public class Loader {
         Ranks.init();
 
         BotMain.run();
+
+        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."))), 0f, 10f);
     }
 }
