@@ -27,17 +27,13 @@ public class BotMain implements MessageCreateListener {
     public static void run() {
         bot = new DiscordApiBuilder()
                 .setToken(PandorumPlugin.config.DiscordBotToken)
-                .setAllIntents()
                 .login().join();
 
         bot.setAutomaticMessageCacheCleanupEnabled(true);
-        bot.setMessageCacheSize(0, 0);
 
-        bot.addListener(new BotMain());
+        bot.addMessageCreateListener(new BotMain());
 
-        listener = new BotHandler();
-
-        bot.addMessageComponentCreateListener(event ->{
+        bot.addMessageComponentCreateListener(event -> {
             MessageComponentInteraction interaction = event.getMessageComponentInteraction();
             String button = interaction.getCustomId();
             Message msg = interaction.getMessage().get();
@@ -56,6 +52,8 @@ public class BotMain implements MessageCreateListener {
                 }
             }
         });
+
+        listener = new BotHandler();
     }
 
     @Override
