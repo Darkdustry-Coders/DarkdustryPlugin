@@ -8,7 +8,7 @@ import mindustry.content.Items;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.world.Tile;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 import pandorum.discord.BotHandler;
@@ -35,7 +35,7 @@ public class DepositListener {
                     .setTitle("Игрок положил торий в реактор рядом с ядром!")
                     .addField("Никнейм: ", Strings.stripColors(event.player.name), false);
 
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            BotHandler.botChannel.sendMessage(embed).join();
         }
 
         HistoryEntry entry = new DepositEntry(event);

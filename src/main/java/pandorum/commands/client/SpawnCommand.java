@@ -5,7 +5,7 @@ import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -51,6 +51,6 @@ public class SpawnCommand implements ClientCommand {
                 .addField("Команда: ", team.name, false)
                 .addField("Количество: ", Integer.toString(count), false);
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        BotHandler.botChannel.sendMessage(embed).join();
     }
 }

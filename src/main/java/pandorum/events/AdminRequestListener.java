@@ -2,7 +2,7 @@ package pandorum.events;
 
 import arc.util.Strings;
 import mindustry.game.EventType;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -22,7 +22,7 @@ public class AdminRequestListener {
                         .addField("Никнейм: ", Strings.stripColors(event.other.name), false)
                         .addField("IP: ", event.other.ip(), false);
 
-                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+                BotHandler.botChannel.sendMessage(embed).join();
             }
         }
     }

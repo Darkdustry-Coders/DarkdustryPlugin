@@ -7,7 +7,7 @@ import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
 public class Authme {
-    public static void addAdmin(String uuid) {
+    public static void confirm(String uuid) {
         Player player = Misc.findByID(uuid);
         if (player == null) return;
         netServer.admins.adminPlayer(player.uuid(), player.usid());
@@ -15,7 +15,7 @@ public class Authme {
         bundled(player, "commands.login.success");
     }
 
-    public static void ignoreRequest(String uuid) {
+    public static void deny(String uuid) {
         Player player = Misc.findByID(uuid);
         if (player == null) return;
         bundled(player, "commands.login.ignore");

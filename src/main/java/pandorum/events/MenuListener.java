@@ -8,7 +8,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
@@ -57,7 +57,7 @@ public class MenuListener {
                     .setTitle("Юниты убиты.")
                     .addField("Админ: ", Strings.stripColors(player.name), false);
 
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            BotHandler.botChannel.sendMessage(embed).join();
         });
 
         // Команда /artv (2)
@@ -71,7 +71,7 @@ public class MenuListener {
                         .setTitle("Игра принудительно завершена.")
                         .addField("Админ: ", Strings.stripColors(player.name), false);
 
-                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+                BotHandler.botChannel.sendMessage(embed).join();
             }
         });
 

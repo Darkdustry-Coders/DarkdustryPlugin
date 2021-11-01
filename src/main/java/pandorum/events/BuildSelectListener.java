@@ -6,7 +6,7 @@ import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
 import pandorum.discord.BotHandler;
@@ -33,7 +33,7 @@ public class BuildSelectListener {
                         .setTitle("Игрок строит ториевый реактор близко к ядру!")
                         .addField("Никнейм: ", Strings.stripColors(builder.name), false);
 
-                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+                BotHandler.botChannel.sendMessage(embed).join();
             }
         }
     }

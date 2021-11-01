@@ -3,7 +3,7 @@ package pandorum.events;
 import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 import pandorum.discord.BotHandler;
@@ -23,7 +23,7 @@ public class GameOverListener {
                 .setTitle("Игра окончена! Загружаю новую карту!");
 
         try {
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            BotHandler.botChannel.sendMessage(embed).join();
         } catch (NullPointerException ignored) {}
 
         if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) PandorumPlugin.surrendered.clear();

@@ -11,9 +11,13 @@ import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.gen.Groups;
 import mindustry.maps.Map;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.Message.Attachment;
+import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.MessageAttachment;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
@@ -22,22 +26,23 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
-import static pandorum.discord.BotMain.*;
+import static pandorum.discord.BotMain.errorColor;
+import static pandorum.discord.BotMain.normalColor;
 
 public class BotHandler {
     public static final String prefix = PandorumPlugin.config.prefix;
     public static final CommandHandler handler = new CommandHandler(prefix);
-    public static Guild guild;
-    public static TextChannel botChannel, adminChannel;
+    public static ServerTextChannel botChannel, adminChannel;
+    public static Server server;
 
-    public static final ObjectMap<Long, String> waiting = new ObjectMap<>();
+    public static final ObjectMap<Message, String> waiting = new ObjectMap<>();
 
     public BotHandler() {
-        guild = jda.getGuildById(810758118442663936L);
-        botChannel = guild != null ? guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID) : null;
-        adminChannel = guild != null ? guild.getTextChannelById(844215222784753664L) : null;
+        botChannel = BotMain.bot.getServerTextChannelById(PandorumPlugin.config.DiscordChannelID).get();
+        adminChannel = BotMain.bot.getServerTextChannelById(844215222784753664L).get();
+
+        server = BotMain.bot.getServerById(810758118442663936L).get();
 
         register();
     }
@@ -53,43 +58,43 @@ public class BotHandler {
                 builder.append(" - ").append(command.description).append("\n");
             }
 
-            info(msg.getChannel(), "Команды", builder.toString());
+            info(msg.getServerTextChannel().get(), "Команды", builder.toString());
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthor())) {
-                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+            if (checkAdmin(msg.getUserAuthor().get())) {
+                err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
 
             if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFileName().endsWith(".msav")) {
-                errDelete(msg, "Ошибка", "Пожалуйста, прикрепи файл карты к сообщению.");
+                err(msg, "Ошибка", "Пожалуйста, прикрепи файл карты к сообщению.");
                 return;
             }
 
-            Attachment a = msg.getAttachments().get(0);
+            MessageAttachment a = msg.getAttachments().get(0);
 
             try {
                 File mapFile = new File("config/maps/" + a.getFileName());
-                Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile));
+                Streams.copy(download(a.getUrl().toString()), new FileOutputStream(mapFile));
 
                 Vars.maps.reload();
 
                 text(msg, "*Карта добавлена на сервер.*");
             } catch (Exception e) {
-                errDelete(msg, "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
+                err(msg, "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
             }
         });
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthor())) {
-                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+            if (checkAdmin(msg.getUserAuthor().get())) {
+                err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
 
             Map map = Misc.findMap(args[0]);
             if (map == null) {
-                errDelete(msg, "Карта не найдена.", "Проверьте правильность ввода.");
+                err(msg, "Карта не найдена.", "Проверьте правильность ввода.");
                 return;
             }
 
@@ -99,18 +104,18 @@ public class BotHandler {
                     .setAuthor("Server map")
                     .setTitle("Карта успешно получена!");
 
-            msg.getChannel().sendMessageEmbeds(embed.build()).addFile(mapFile.file()).queue();
+            new MessageBuilder().setEmbed(embed).addFile(mapFile.file()).send(msg.getChannel()).join();
         });
 
         handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
-                errDelete(msg, "Страница должна быть числом.", "Аргументы не верны.");
+                err(msg, "Страница должна быть числом.", "Аргументы не верны.");
                 return;
             }
 
             Seq<Map> mapList = Vars.maps.customMaps();
             if (mapList.size == 0) {
-                errDelete(msg, "На сервере нет карт.", "Список карт пуст.");
+                err(msg, "На сервере нет карт.", "Список карт пуст.");
                 return;
             }
 
@@ -118,7 +123,7 @@ public class BotHandler {
             int pages = Mathf.ceil(mapList.size / 20f);
 
             if (--page >= pages || page < 0) {
-                errDelete(msg, "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
+                err(msg, "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
                 return;
             }
 
@@ -133,12 +138,12 @@ public class BotHandler {
                     .setTitle("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
                     .addField("Карты:", maps.toString(), false);
 
-            msg.getChannel().sendMessageEmbeds(embed.build()).queue();
+            msg.getChannel().sendMessage(embed).join();
         });
 
         handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
             if (Vars.state.isMenu()) {
-                errDelete(msg, "Сервер отключен.", "Попросите администратора запустить его.");
+                err(msg, "Сервер отключен.", "Попросите администратора запустить его.");
                 return;
             }
 
@@ -151,29 +156,28 @@ public class BotHandler {
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
                     .addField("Нагрузка на сервер:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false);
 
-            msg.getChannel().sendMessageEmbeds(embed.build()).queue();
+            msg.getChannel().sendMessage(embed).join();
         });
     }
 
-    public static void info(MessageChannel channel, String title, String text, Object... args) {
-        channel.sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor).build()).queue();
+    public static void info(ServerTextChannel channel, String title, String text, Object... args) {
+        channel.sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
     }
 
     public static void text(Message message, String text, Object... args) {
-        text(message.getChannel(), text, args);
+        text(message.getServerTextChannel().get(), text, args);
     }
 
-    public static void text(MessageChannel channel, String text, Object... args) {
-        channel.sendMessage(Strings.format(text, args)).queue();
+    public static void text(ServerTextChannel channel, String text, Object... args) {
+        channel.sendMessage(Strings.format(text, args)).join();
     }
 
     public static void text(String text, Object... args) {
         text(botChannel, text, args);
     }
 
-    public static void errDelete(Message message, String title, String text, Object... args) {
-        message.getChannel().sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor).build()).queue(result -> result.delete().queueAfter(messageDeleteTime, TimeUnit.MILLISECONDS));
-        message.delete().queueAfter(messageDeleteTime, TimeUnit.MILLISECONDS);
+    public static void err(Message message, String title, String text, Object... args) {
+        message.getChannel().sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor)).join();
     }
 
     public static InputStream download(String url) {
@@ -187,8 +191,7 @@ public class BotHandler {
     }
 
     public static boolean checkAdmin(User user) {
-        if (user.isBot() || user.isSystem()) return true;
-        Member member = guild.retrieveMember(user).complete();
-        return member.getRoles().stream().noneMatch(role -> role.getIdLong() == 810760273689444385L);
+        if (user.isBot()) return true;
+        return user.getRoles(server).stream().noneMatch(role -> role.getId() == 810760273689444385L);
     }
 }

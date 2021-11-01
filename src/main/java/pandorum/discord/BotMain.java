@@ -1,23 +1,21 @@
 package pandorum.discord;
 
 import arc.util.Log;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
+import org.javacord.api.DiscordApi;
+import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.Message;
+import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.MessageComponentInteraction;
+import org.javacord.api.listener.message.MessageCreateListener;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
 import java.awt.*;
 
-public class BotMain extends ListenerAdapter {
+public class BotMain implements MessageCreateListener {
 
-    public static JDA jda;
+    public static DiscordApi bot;
     public static BotHandler listener;
 
     public static final Color normalColor = Color.decode("#FAB462");
@@ -27,47 +25,51 @@ public class BotMain extends ListenerAdapter {
     public static final long messageDeleteTime = 10000;
 
     public static void run() {
-        try {
-            jda = JDABuilder.createDefault(PandorumPlugin.config.DiscordBotToken).addEventListeners(new BotMain()).build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+        bot = new DiscordApiBuilder()
+                .setToken(PandorumPlugin.config.DiscordBotToken)
+                .setAllIntents()
+                .login().join();
 
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
+        bot.setAutomaticMessageCacheCleanupEnabled(true);
+        bot.setMessageCacheSize(0, 0);
+
+        bot.addListener(new BotMain());
+
         listener = new BotHandler();
-        Log.info("Бот успешно запущен!");
+
+        bot.addMessageComponentCreateListener(event ->{
+            MessageComponentInteraction interaction = event.getMessageComponentInteraction();
+            String button = interaction.getCustomId();
+            Message msg = interaction.getMessage().get();
+            if (BotHandler.waiting.containsKey(msg)) {
+                switch (button) {
+                    case "confirm" -> {
+                        BotHandler.text(msg, "Запрос был подтвержден " + msg.getAuthor().getDisplayName());
+                        msg.delete();
+                        Authme.confirm(BotHandler.waiting.get(msg));
+                    }
+                    case "deny" -> {
+                        BotHandler.text(msg, "Запрос был отклонен " + msg.getAuthor().getDisplayName());
+                        msg.delete();
+                        Authme.deny(BotHandler.waiting.get(msg));
+                    }
+                }
+            }
+        });
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageCreate(MessageCreateEvent event) {
         Message msg = event.getMessage();
-        BotHandler.handler.handleMessage(msg.getContentRaw(), msg);
+        BotHandler.handler.handleMessage(msg.getContent(), msg);
 
-        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBot() && !msg.getContentRaw().startsWith(BotHandler.prefix)) {
-            if (msg.getContentRaw().length() > 100) {
-                BotHandler.errDelete(msg, "Ошибка", "Длина сообщения не может быть больше 100 символов!");
+        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix)) {
+            if (msg.getContent().length() > 100) {
+                BotHandler.err(msg, "Ошибка", "Длина сообщения не может быть больше 100 символов!");
                 return;
             }
-            Misc.sendToChat("events.discord-message", msg.getAuthor().getAsTag(), msg.getContentRaw());
-            Log.info("[Discord]@: @", msg.getAuthor().getAsTag(), msg.getContentRaw());
-        }
-    }
-
-    @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
-        if (event.getChannel() == BotHandler.adminChannel && BotHandler.waiting.containsKey(event.getMessageIdLong())) {
-            switch (event.getReactionEmote().getName()) {
-                case "white_check_mark" -> {
-                    Authme.addAdmin(BotHandler.waiting.get(event.getMessageIdLong()));
-                    BotHandler.text(event.getChannel(), event.getUser().getName() + " подтвердил запрос");
-                }
-                case "x" -> {
-                    Authme.ignoreRequest(BotHandler.waiting.get(event.getMessageIdLong()));
-                    BotHandler.text(event.getChannel(), event.getUser().getName() + " отклонил запрос");
-                }
-            }
+            Misc.sendToChat("events.discord-message", msg.getAuthor().getDisplayName(), msg.getContent());
+            Log.info("[Discord]@: @", msg.getAuthor().getDisplayName(), msg.getContent());
         }
     }
 }

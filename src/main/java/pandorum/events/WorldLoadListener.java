@@ -5,7 +5,7 @@ import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
 import pandorum.discord.BotHandler;
@@ -37,7 +37,7 @@ public class WorldLoadListener {
                     .setTitle("Карта загружена.")
                     .addField("Название: ", Strings.stripColors(Vars.state.map.name()), false);
             try {
-                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+                BotHandler.botChannel.sendMessage(embed).join();
             } catch (NullPointerException ignored) {}
         });
     }

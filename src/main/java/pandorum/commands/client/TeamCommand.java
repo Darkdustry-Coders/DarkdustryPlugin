@@ -4,7 +4,7 @@ import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -35,6 +35,6 @@ public class TeamCommand implements ClientCommand {
                 .addField("Никнейм: ", Strings.stripColors(player.name), false)
                 .addField("Новая команда: ", team.name, false);
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        BotHandler.botChannel.sendMessage(embed).join();
     }
 }

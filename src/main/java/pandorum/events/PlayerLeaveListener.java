@@ -6,7 +6,7 @@ import arc.util.Strings;
 import arc.util.Time;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.effects.Effects;
@@ -27,7 +27,7 @@ public class PlayerLeaveListener {
                 .setColor(BotMain.errorColor)
                 .setTitle(Strings.format("**@** вышел с сервера.", Strings.stripColors(event.player.name)));
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        BotHandler.botChannel.sendMessage(embed).join();
 
         Effects.onLeave(event.player);
 

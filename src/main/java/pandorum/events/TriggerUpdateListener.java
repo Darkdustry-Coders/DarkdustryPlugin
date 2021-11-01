@@ -2,13 +2,13 @@ package pandorum.events;
 
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.entities.Activity;
+import org.javacord.api.entity.activity.ActivityType;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Ranks;
 import pandorum.comp.effects.Effects;
 import pandorum.models.PlayerModel;
 
-import static pandorum.discord.BotMain.jda;
+import static pandorum.discord.BotMain.bot;
 
 public class TriggerUpdateListener {
     public static void update() {
@@ -22,7 +22,7 @@ public class TriggerUpdateListener {
         }
 
         if (PandorumPlugin.interval.get(2, 300f)) {
-            jda.getPresence().setActivity(Activity.streaming(Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."), null));
+            bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере.")));
         }
     }
 }

@@ -3,7 +3,7 @@ package pandorum.events;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.game.EventType;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -17,7 +17,7 @@ public class ServerLoadListener {
 
         Time.runTask(1f, () -> {
             try {
-                BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+                BotHandler.botChannel.sendMessage(embed).join();
             } catch (NullPointerException ignored) {}
         });
     }

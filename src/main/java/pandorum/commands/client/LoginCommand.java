@@ -2,7 +2,11 @@ package pandorum.commands.client;
 
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -28,15 +32,18 @@ public class LoginCommand implements ClientCommand {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.normalColor)
                 .setTitle("Запрос на выдачу прав администратора.")
-                .addField("Никнейм: ", player.name, false)
-                .addField("UUID: ", player.uuid(), false)
-                .setDescription("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.");
+                .addField("Никнейм: ", player.name, true)
+                .addField("UUID: ", player.uuid(), true)
+                .setFooter("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.");
 
-        BotHandler.adminChannel.sendMessageEmbeds(embed.build()).queue(message -> {
-            BotHandler.waiting.put(message.getIdLong(), player.uuid());
-            message.addReaction(BotHandler.guild.getEmotesByName("white_check_mark", false).get(0));
-            message.addReaction(BotHandler.guild.getEmotesByName("x", false).get(0));
-        });
+        Message message = new MessageBuilder().setEmbed(embed).addComponents(
+                ActionRow.of(
+                        Button.success("confirm", "Подтвердить"),
+                        Button.danger("deny", "Отклонить")
+                )
+        ).send(BotHandler.adminChannel).join();
+
+        BotHandler.waiting.put(message, player.uuid());
 
         vtime.reset();
         bundled(player, "commands.login.sent");

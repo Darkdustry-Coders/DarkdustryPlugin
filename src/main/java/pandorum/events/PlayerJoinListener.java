@@ -5,14 +5,14 @@ import arc.util.Strings;
 import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
+import pandorum.comp.Ranks;
+import pandorum.comp.effects.Effects;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
-import pandorum.comp.effects.Effects;
 import pandorum.models.PlayerModel;
-import pandorum.comp.Ranks;
 
 import static pandorum.Misc.*;
 
@@ -31,7 +31,7 @@ public class PlayerJoinListener {
                 .setColor(BotMain.successColor)
                 .setTitle(Strings.format("**@** зашел на сервер.", Strings.stripColors(event.player.name)));
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        BotHandler.botChannel.sendMessage(embed).join();
 
         Effects.onJoin(event.player);
 

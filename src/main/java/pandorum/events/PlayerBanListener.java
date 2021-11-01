@@ -3,7 +3,7 @@ package pandorum.events;
 import arc.util.Strings;
 import mindustry.game.EventType;
 import mindustry.net.Administration.PlayerInfo;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -21,7 +21,7 @@ public class PlayerBanListener {
                     .addField("IP:", info.lastIP, false)
                     .addField("Uuid:", event.uuid, false);
 
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            BotHandler.botChannel.sendMessage(embed).join();
         }
     }
 }

@@ -7,7 +7,7 @@ import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -63,7 +63,7 @@ public class VoteKickSession {
                     .setTitle("Игрок был выгнан с сервера голосованием!")
                     .addField("Никнейм: ", Strings.stripColors(target.name), false);
 
-            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+            BotHandler.botChannel.sendMessage(embed).join();
             stop();
             return true;
         }

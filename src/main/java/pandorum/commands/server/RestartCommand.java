@@ -3,7 +3,7 @@ package pandorum.commands.server;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -16,7 +16,7 @@ public class RestartCommand implements ServerCommand {
                 .setColor(BotMain.errorColor)
                 .setTitle("Сервер выключился для перезапуска!");
 
-        BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
+        BotHandler.botChannel.sendMessage(embed).join();
 
         Groups.player.each(Misc::connectToHub);
         Time.runTask(60f, () -> System.exit(2));
