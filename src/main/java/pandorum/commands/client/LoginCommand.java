@@ -1,30 +1,44 @@
 package pandorum.commands.client;
 
-import arc.util.Time;
+import arc.util.Timekeeper;
 import mindustry.gen.Player;
+import net.dv8tion.jda.api.EmbedBuilder;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.*;
+import static pandorum.PandorumPlugin.loginCooldowns;
 
 public class LoginCommand implements ClientCommand {
-    public static void run(final String[] args, final Player player) {
-        if (waiting.contains(player.uuid())) {
-            bundled(player, "commands.login.waiting");
-            return;
-        }
 
+    private static final float cooldownTime = 1000f;
+
+    public static void run(final String[] args, final Player player) {
         if (player.admin()) {
             bundled(player, "commands.login.already");
             return;
         }
 
-        if (loginCooldowns.containsKey(player.uuid())) {
-            if (Time.timeSinceMillis(loginCooldowns.get(player.uuid())) < 1000 * 60 * 15L) return;
-            loginCooldowns.remove(player.uuid());
+        Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        if (!vtime.get()) {
+            bundled(player, "commands.login.cooldown", cooldownTime);
+            return;
         }
 
-        waiting.add(player.uuid());
-        socket.emit("registerAsAdmin", player.uuid(), player.name());
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(BotMain.normalColor)
+                .setTitle("Запрос на выдачу прав администратора.")
+                .addField("Никнейм: ", player.name, false)
+                .addField("UUID: ", player.uuid(), false)
+                .setDescription("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.");
+
+        BotHandler.adminChannel.sendMessageEmbeds(embed.build()).queue(message -> {
+            BotHandler.waiting.put(message.getIdLong(), player.uuid());
+            message.addReaction(BotHandler.guild.getEmotesByName("white_check_mark", false).get(0));
+            message.addReaction(BotHandler.guild.getEmotesByName("x", false).get(0));
+        });
+
+        vtime.reset();
         bundled(player, "commands.login.sent");
     }
 }

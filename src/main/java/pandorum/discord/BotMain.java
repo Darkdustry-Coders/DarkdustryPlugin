@@ -6,12 +6,14 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
+import pandorum.comp.Authme;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class BotMain extends ListenerAdapter {
 
@@ -43,13 +45,29 @@ public class BotMain extends ListenerAdapter {
         Message msg = event.getMessage();
         BotHandler.handler.handleMessage(msg.getContentRaw(), msg);
 
-        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBot()) {
+        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBot() && !msg.getContentRaw().startsWith(BotHandler.prefix)) {
             if (msg.getContentRaw().length() > 100) {
                 BotHandler.errDelete(msg, "Ошибка", "Длина сообщения не может быть больше 100 символов!");
                 return;
             }
             Misc.sendToChat("events.discord-message", msg.getAuthor().getAsTag(), msg.getContentRaw());
             Log.info("[Discord]@: @", msg.getAuthor().getAsTag(), msg.getContentRaw());
+        }
+    }
+
+    @Override
+    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+        if (event.getChannel() == BotHandler.adminChannel && BotHandler.waiting.containsKey(event.getMessageIdLong())) {
+            switch (event.getReactionEmote().getName()) {
+                case "white_check_mark" -> {
+                    Authme.addAdmin(BotHandler.waiting.get(event.getMessageIdLong()));
+                    BotHandler.text(event.getChannel(), event.getUser().getName() + " подтвердил запрос");
+                }
+                case "x" -> {
+                    Authme.ignoreRequest(BotHandler.waiting.get(event.getMessageIdLong()));
+                    BotHandler.text(event.getChannel(), event.getUser().getName() + " отклонил запрос");
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package pandorum.discord;
 import arc.Core;
 import arc.files.Fi;
 import arc.math.Mathf;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
@@ -26,16 +27,17 @@ import java.util.concurrent.TimeUnit;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
-    private static final String prefix = PandorumPlugin.config.prefix;
+    public static final String prefix = PandorumPlugin.config.prefix;
     public static final CommandHandler handler = new CommandHandler(prefix);
-
     public static Guild guild;
+    public static TextChannel botChannel, adminChannel;
 
-    public static TextChannel botChannel;
+    public static final ObjectMap<Long, String> waiting = new ObjectMap<>();
 
     public BotHandler() {
         guild = jda.getGuildById(810758118442663936L);
         botChannel = guild != null ? guild.getTextChannelById(PandorumPlugin.config.DiscordChannelID) : null;
+        adminChannel = guild != null ? guild.getTextChannelById(844215222784753664L) : null;
 
         register();
     }
@@ -101,11 +103,6 @@ public class BotHandler {
         });
 
         handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthor())) {
-                errDelete(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
-                return;
-            }
-
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 errDelete(msg, "Страница должна быть числом.", "Аргументы не верны.");
                 return;

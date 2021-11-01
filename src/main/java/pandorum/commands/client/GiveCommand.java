@@ -1,7 +1,7 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
-import mindustry.game.Teams;
+import mindustry.game.Teams.TeamData;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.Misc;
@@ -27,7 +27,7 @@ public class GiveCommand implements ClientCommand {
             return;
         }
 
-        Teams.TeamData team = state.teams.get(player.team());
+        TeamData team = state.teams.get(player.team());
         if (!team.hasCore()) {
             bundled(player, "commands.admin.give.core-not-found");
             return;

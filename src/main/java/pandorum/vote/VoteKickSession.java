@@ -1,11 +1,15 @@
 package pandorum.vote;
 
 import arc.struct.Seq;
+import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
+import net.dv8tion.jda.api.EmbedBuilder;
+import pandorum.discord.BotHandler;
+import pandorum.discord.BotMain;
 
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
@@ -53,6 +57,13 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.vote-passed", target.coloredName(), (kickDuration / 60f));
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.errorColor)
+                    .setAuthor("KICK")
+                    .setTitle("Игрок был выгнан с сервера голосованием!")
+                    .addField("Никнейм: ", Strings.stripColors(target.name), false);
+
+            BotHandler.botChannel.sendMessageEmbeds(embed.build()).queue();
             stop();
             return true;
         }

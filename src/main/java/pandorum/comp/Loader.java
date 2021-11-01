@@ -7,7 +7,6 @@ import arc.util.io.Streams;
 import mindustry.game.EventType;
 import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
-import pandorum.comp.admin.Authme;
 import pandorum.comp.effects.Effects;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
@@ -52,14 +51,13 @@ public class Loader {
         Events.on(EventType.PlayerLeave.class, PlayerLeaveListener::call);
         Events.on(EventType.GameOverEvent.class, GameOverListener::call);
         Events.on(EventType.WaveEvent.class, WaveEventListener::call);
+        Events.on(EventType.AdminRequestEvent.class, AdminRequestListener::call);
         Events.run(EventType.Trigger.update, TriggerUpdateListener::update);
 
         Effects.init();
         MenuListener.init();
         Icons.init();
         Ranks.init();
-        Authme.init();
-        PandorumPlugin.socket.connect();
 
         BotMain.run();
     }

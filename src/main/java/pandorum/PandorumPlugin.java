@@ -1,11 +1,13 @@
 package pandorum;
 
-import static mindustry.Vars.dataDirectory;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
+import arc.files.Fi;
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.struct.StringMap;
+import arc.util.CommandHandler;
+import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Timekeeper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,31 +17,14 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-
-import org.bson.Document;
-import org.json.JSONArray;
-
-import arc.files.Fi;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
-import arc.util.CommandHandler;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.Timekeeper;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import okhttp3.OkHttpClient;
+import org.bson.Document;
+import org.json.JSONArray;
 import pandorum.commands.client.*;
-import pandorum.commands.server.ClearAdminsCommand;
-import pandorum.commands.server.ClearBansCommand;
-import pandorum.commands.server.DespawnCommand;
-import pandorum.commands.server.ReloadCommand;
-import pandorum.commands.server.RestartCommand;
-import pandorum.commands.server.SayCommand;
+import pandorum.commands.server.*;
 import pandorum.comp.Config;
-
 import pandorum.comp.IpInfo;
 import pandorum.comp.Loader;
 import pandorum.comp.Translator;
@@ -48,6 +33,11 @@ import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
@@ -65,15 +55,14 @@ public final class PandorumPlugin extends Plugin {
 
     public static final ObjectMap<String, Timekeeper>
             nominateCooldowns = new ObjectMap<>(),
-            votekickCooldowns = new ObjectMap<>();
+            votekickCooldowns = new ObjectMap<>(),
+            loginCooldowns = new ObjectMap<>();
 
-    public static final ObjectMap<String, Long> loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
     public static final Seq<String>
             votesRTV = new Seq<>(),
             votesVNW = new Seq<>(),
-            activeHistoryPlayers = new Seq<>(),
-            waiting = new Seq<>();
+            activeHistoryPlayers = new Seq<>();
 
     public static final Interval interval = new Interval(3);
     public static CacheSeq<HistoryEntry>[][] history;
@@ -84,11 +73,7 @@ public final class PandorumPlugin extends Plugin {
     public static final StringMap codeLanguages = new StringMap();
     public static final OkHttpClient client = new OkHttpClient();
 
-    public static Socket socket;
-
     public PandorumPlugin() throws IOException, URISyntaxException {
-        socket = IO.socket("ws://127.0.0.1:9189");
-
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
 
         MongoClientSettings settings = MongoClientSettings.builder()
