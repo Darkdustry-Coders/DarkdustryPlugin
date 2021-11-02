@@ -8,8 +8,6 @@ import pandorum.comp.Ranks;
 import pandorum.comp.effects.Effects;
 import pandorum.models.PlayerModel;
 
-import static pandorum.discord.BotMain.bot;
-
 public class TriggerUpdateListener {
     public static void update() {
         Groups.player.each(p -> p.unit().moving(), Effects::onMove);
@@ -19,10 +17,6 @@ public class TriggerUpdateListener {
                 playerInfo.playTime += 1000;
                 playerInfo.save();
             }));
-        }
-
-        if (PandorumPlugin.interval.get(2, 300f)) {
-            bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере.")));
         }
     }
 }
