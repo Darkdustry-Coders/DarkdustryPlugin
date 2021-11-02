@@ -9,7 +9,7 @@ import mindustry.gen.Groups;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
-import pandorum.comp.effects.Effects;
+import pandorum.comp.Effects;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.vote.VoteKickSession;
@@ -25,7 +25,7 @@ public class PlayerLeaveListener {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.errorColor)
-                .setTitle(Strings.format("**@** вышел с сервера.", Strings.stripColors(event.player.name)));
+                .setTitle(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name)));
 
         BotHandler.botChannel.sendMessage(embed).join();
 

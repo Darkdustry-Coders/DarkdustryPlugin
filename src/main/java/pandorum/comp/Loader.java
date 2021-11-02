@@ -10,7 +10,6 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import org.javacord.api.entity.activity.ActivityType;
 import pandorum.PandorumPlugin;
-import pandorum.comp.effects.Effects;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;

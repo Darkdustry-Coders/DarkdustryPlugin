@@ -2,7 +2,6 @@ package pandorum.vote;
 
 import arc.util.Timer;
 import arc.util.Timer.Task;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
@@ -45,10 +44,5 @@ public class VoteSaveSession extends VoteSession {
             stop();
         }
         return false;
-    }
-
-    @Override
-    public int votesRequired() {
-        return (int)Math.ceil(config.voteRatio * Groups.player.size());
     }
 }

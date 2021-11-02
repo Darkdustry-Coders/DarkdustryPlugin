@@ -4,8 +4,6 @@ import arc.files.Fi;
 import arc.util.Log;
 import arc.util.Timer;
 import arc.util.Timer.Task;
-import mindustry.game.Gamemode;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.MapException;
@@ -53,7 +51,7 @@ public class VoteLoadSession extends VoteSession {
                 reloader.begin();
                 SaveIO.load(target);
 
-                state.rules = state.map.applyRules(Gamemode.survival);
+                state.rules = state.map.applyRules(state.rules.mode());
                 logic.play();
 
                 reloader.end();
@@ -73,10 +71,5 @@ public class VoteLoadSession extends VoteSession {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public int votesRequired() {
-        return (int)Math.ceil(config.voteRatio * Groups.player.size());
     }
 }

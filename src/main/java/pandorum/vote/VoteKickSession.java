@@ -77,6 +77,6 @@ public class VoteKickSession {
     }
 
     protected int votesRequired() {
-        return 2 + (Groups.player.size() > 4 ? 1 : 0);
+        return Groups.player.size() > 4 ? 3 : 2;
     }
 }

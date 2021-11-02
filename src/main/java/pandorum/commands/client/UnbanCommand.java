@@ -13,6 +13,6 @@ public class UnbanCommand implements ClientCommand {
             bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(args[0]).lastName);
             return;
         }
-        bundled(player, "commands.admin.unban.not-banned");
+        bundled(player, "commands.admin.unban.fail");
     }
 }

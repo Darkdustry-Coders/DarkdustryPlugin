@@ -2,6 +2,7 @@ package pandorum.commands.client;
 
 import arc.util.Strings;
 import arc.util.Structs;
+import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
@@ -35,12 +36,12 @@ public class SpawnCommand implements ClientCommand {
         }
 
         UnitType unit = content.units().find(b -> b.name.equalsIgnoreCase(args[0]));
-        if (unit == null || args[0].equalsIgnoreCase("block")) {
+        if (unit == null || unit == UnitTypes.block) {
             bundled(player, "commands.unit-not-found");
             return;
         }
 
-        for (int i = 0; i < count; ++i) unit.spawn(team, player.x, player.y);
+        for (int i = 0; i < count; i++) unit.spawn(team, player.x, player.y);
         bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
 
         EmbedBuilder embed = new EmbedBuilder()

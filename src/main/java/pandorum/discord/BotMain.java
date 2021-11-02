@@ -40,12 +40,12 @@ public class BotMain implements MessageCreateListener {
             if (BotHandler.waiting.containsKey(msg)) {
                 switch (button) {
                     case "confirm" -> {
-                        BotHandler.text(msg, "Запрос был подтвержден " + interaction.getUser().getDisplayName(BotHandler.server));
+                        BotHandler.text(msg, "**Запрос был подтвержден** " + interaction.getUser().getDisplayName(BotHandler.server));
                         msg.delete();
                         Authme.confirm(BotHandler.waiting.get(msg));
                     }
                     case "deny" -> {
-                        BotHandler.text(msg, "Запрос был отклонен " + interaction.getUser().getDisplayName(BotHandler.server));
+                        BotHandler.text(msg, "**Запрос был отклонен** " + interaction.getUser().getDisplayName(BotHandler.server));
                         msg.delete();
                         Authme.deny(BotHandler.waiting.get(msg));
                     }

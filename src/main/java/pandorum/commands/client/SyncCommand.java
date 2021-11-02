@@ -8,8 +8,11 @@ import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
 public class SyncCommand implements ClientCommand {
+
+    private static final int cooldownTime = 15;
+
     public static void run(final String[] args, final Player player) {
-        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * 15) {
+        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * cooldownTime) {
             bundled(player, "commands.sync.time");
             return;
         }

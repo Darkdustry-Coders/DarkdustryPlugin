@@ -9,7 +9,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
-import pandorum.comp.effects.Effects;
+import pandorum.comp.Effects;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
@@ -29,7 +29,7 @@ public class PlayerJoinListener {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
-                .setTitle(Strings.format("**@** зашел на сервер.", Strings.stripColors(event.player.name)));
+                .setTitle(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name)));
 
         BotHandler.botChannel.sendMessage(embed).join();
 

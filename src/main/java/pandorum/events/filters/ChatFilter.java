@@ -47,7 +47,7 @@ public class ChatFilter {
                             translationsCache.put(language, text);
                             return;
                         }
-                        player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([gray]" + translationsCache.get(language) + "[white])", author, text);
+                        player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([gray]" + translatedText + "[white])", author, text);
                         translationsCache.put(language, translatedText);
                     });
                 } catch (IOException | InterruptedException ignored) {}

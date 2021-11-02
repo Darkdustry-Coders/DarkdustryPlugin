@@ -2,10 +2,9 @@ package pandorum.events;
 
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
-import org.javacord.api.entity.activity.ActivityType;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Ranks;
-import pandorum.comp.effects.Effects;
+import pandorum.comp.Effects;
 import pandorum.models.PlayerModel;
 
 public class TriggerUpdateListener {
