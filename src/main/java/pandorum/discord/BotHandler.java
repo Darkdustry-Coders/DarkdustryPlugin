@@ -149,13 +149,18 @@ public class BotHandler {
                     .addField("Карта:", Vars.state.map.name(), false)
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
                     .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false)
-                    .setFooter("Используй **" + prefix + "players**, чтобы получить список всех игроков.");
+                    .setFooter("Используй " + prefix + "players, чтобы посмотреть список всех игроков.");
 
             msg.getChannel().sendMessage(embed).join();
         });
 
         handler.<Message>register("players","Посмотреть список игроков на сервере.", (args, msg) -> {
-            if (Vars.state.isMenu() || Groups.player.size() == 0) {
+            if (Vars.state.isMenu()) {
+                err(msg, "Сервер отключен.", "Попросите администратора запустить его.");
+                return;
+            }
+
+            if (Groups.player.size() == 0) {
                 err(msg, "На сервере нет игроков.", "Список игроков пуст.");
                 return;
             }
@@ -177,10 +182,6 @@ public class BotHandler {
         });
     }
 
-    public static void info(ServerTextChannel channel, String title, String text, Object... args) {
-        channel.sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
-    }
-
     public static void text(Message message, String text, Object... args) {
         text(message.getServerTextChannel().get(), text, args);
     }
@@ -191,6 +192,10 @@ public class BotHandler {
 
     public static void text(String text, Object... args) {
         text(botChannel, text, args);
+    }
+
+    public static void info(ServerTextChannel channel, String title, String text, Object... args) {
+        channel.sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
     }
 
     public static void err(Message message, String title, String text, Object... args) {

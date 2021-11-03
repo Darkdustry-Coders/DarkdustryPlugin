@@ -25,7 +25,7 @@ public class InfoCommand implements ClientCommand {
             return;
         }
 
-        String[][] options = {{Bundle.format("events.menu.close", findLocale(player.locale))}};
+        String[][] options = player == target ? new String[][]{{Bundle.format("events.menu.close", findLocale(player.locale))}} : new String[][]{{Bundle.format("events.menu.close", findLocale(player.locale))}, {Bundle.format("events.menu.check-my-info", findLocale(player.locale))}};
 
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),

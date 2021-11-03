@@ -58,7 +58,7 @@ public class BotMain implements MessageCreateListener {
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
         Message msg = event.getMessage();
-        if (BotHandler.handler.handleMessage(msg.getContent(), msg).type == CommandHandler.ResponseType.valid) return;
+        BotHandler.handler.handleMessage(msg.getContent(), msg);
 
         if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix)) {
             if (msg.getContent().length() > 100) {
