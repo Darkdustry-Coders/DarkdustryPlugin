@@ -3,6 +3,7 @@ package pandorum.events;
 import arc.Events;
 import arc.util.Strings;
 import com.mongodb.BasicDBObject;
+import mindustry.Vars;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -23,7 +24,6 @@ public class MenuListener {
             infoMenu;
 
     public static void init() {
-        // Приветственное сообщение (0)
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
@@ -34,7 +34,6 @@ public class MenuListener {
             }
         });
 
-        // Команда /despw (1)
         despwMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) return;
 
@@ -60,10 +59,9 @@ public class MenuListener {
             BotHandler.botChannel.sendMessage(embed).join();
         });
 
-        // Команда /artv (2)
         artvMenu = Menus.registerMenu((player, option) -> {
             if (option == 0) {
-                Events.fire(new GameOverEvent(Team.crux));
+                Events.fire(new GameOverEvent(Vars.state.rules.waveTeam));
                 sendToChat("commands.admin.artv.info");
 
                 EmbedBuilder embed = new EmbedBuilder()
@@ -75,7 +73,6 @@ public class MenuListener {
             }
         });
 
-        //Информация о игроке (3)
         infoMenu = Menus.registerMenu((player, option) -> {});
     }
 }

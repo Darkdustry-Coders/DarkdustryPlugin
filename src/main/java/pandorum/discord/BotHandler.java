@@ -1,7 +1,6 @@
 package pandorum.discord;
 
 import arc.Core;
-import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -10,6 +9,7 @@ import arc.util.Strings;
 import arc.util.io.Streams;
 import mindustry.Vars;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.maps.Map;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
@@ -98,13 +98,7 @@ public class BotHandler {
                 return;
             }
 
-            Fi mapFile = map.file;
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.successColor)
-                    .setAuthor("Server map")
-                    .setTitle("Карта успешно получена!");
-
-            new MessageBuilder().setEmbed(embed).addFile(mapFile.file()).send(msg.getChannel()).join();
+            new MessageBuilder().addFile(map.file.file()).send(msg.getChannel()).join();
         });
 
         handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
@@ -154,7 +148,30 @@ public class BotHandler {
                     .addField("Игроков:", Integer.toString(Groups.player.size()), false)
                     .addField("Карта:", Vars.state.map.name(), false)
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
-                    .addField("Нагрузка на сервер:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false);
+                    .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false)
+                    .setFooter("Используй **" + prefix + "players**, чтобы получить список всех игроков.");
+
+            msg.getChannel().sendMessage(embed).join();
+        });
+
+        handler.<Message>register("players","Посмотреть список игроков на сервере.", (args, msg) -> {
+            if (Vars.state.isMenu() || Groups.player.size() == 0) {
+                err(msg, "На сервере нет игроков.", "Список игроков пуст.");
+                return;
+            }
+
+            StringBuilder players = new StringBuilder();
+            int i = 1;
+            for (Player player : Groups.player) {
+                players.append(i).append(". ").append(Strings.stripColors(player.name)).append("\n");
+                i++;
+            }
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(BotMain.normalColor)
+                    .setAuthor("Server players")
+                    .setTitle("Список игроков на сервере (всего " + Groups.player.size() + ")")
+                    .addField("Игроки:", players.toString(), false);
 
             msg.getChannel().sendMessage(embed).join();
         });

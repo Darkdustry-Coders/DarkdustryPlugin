@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.util.CommandHandler;
 import arc.util.Log;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -21,8 +22,6 @@ public class BotMain implements MessageCreateListener {
     public static final Color normalColor = Color.decode("#FAB462");
     public static final Color successColor = Color.decode("#00FF00");
     public static final Color errorColor = Color.decode("#ff3838");
-
-    public static final long messageDeleteTime = 10000;
 
     public static void run() {
         bot = new DiscordApiBuilder()
@@ -59,7 +58,7 @@ public class BotMain implements MessageCreateListener {
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
         Message msg = event.getMessage();
-        BotHandler.handler.handleMessage(msg.getContent(), msg);
+        if (BotHandler.handler.handleMessage(msg.getContent(), msg).type == CommandHandler.ResponseType.valid) return;
 
         if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix)) {
             if (msg.getContent().length() > 100) {

@@ -28,11 +28,7 @@ public class InvalidCommandResponse {
                 }
             }
 
-            if (closest != null) {
-                return Bundle.format("commands.unknown.closest", Misc.findLocale(player.locale), closest.text);
-            } else {
-                return Bundle.format("commands.unknown", Misc.findLocale(player.locale));
-            }
+            return closest != null ? Bundle.format("commands.unknown.closest", Misc.findLocale(player.locale), closest.text) : Bundle.format("commands.unknown", Misc.findLocale(player.locale));
         }
     }
 }
