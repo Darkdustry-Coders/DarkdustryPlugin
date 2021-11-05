@@ -89,7 +89,6 @@ public abstract class Misc {
         return false;
     }
 
-
     public static String formatTime(Date time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));

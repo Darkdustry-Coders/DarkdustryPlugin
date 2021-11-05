@@ -62,7 +62,7 @@ public class BotMain implements MessageCreateListener {
 
         if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix)) {
             if (msg.getContent().length() > 100) {
-                BotHandler.err(msg, "Ошибка", "Длина сообщения не может быть больше 100 символов!");
+                BotHandler.err(msg, "Ошибка.", "Длина сообщения не может быть больше 100 символов!");
                 return;
             }
             Misc.sendToChat("events.discord-message", msg.getAuthor().getDisplayName(), msg.getContent());

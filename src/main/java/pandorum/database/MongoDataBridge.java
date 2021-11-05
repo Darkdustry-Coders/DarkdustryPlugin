@@ -39,8 +39,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
         BasicDBObject operations = toBsonOperations(latest, values);
         
-        if (!operations.isEmpty())
-            latest = values;
+        if (!operations.isEmpty()) latest = values;
         collection.findOneAndUpdate(
             new BasicDBObject("_id", values.get("_id")),
             operations,
@@ -54,8 +53,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             }
 
             @Override
-            public void onNext(Document t) {
-            }
+            public void onNext(Document t) {}
 
             @Override
             public void onComplete() {
@@ -157,8 +155,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         Map<String, Object> values = new HashMap<>();
 
         for (Field field : fields) {
-            if (!Modifier.isPublic(field.getModifiers()))
-                continue;
+            if (!Modifier.isPublic(field.getModifiers())) continue;
             try {
                 values.put(
                     field.getName(),
