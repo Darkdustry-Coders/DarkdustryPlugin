@@ -6,27 +6,21 @@ import com.mongodb.BasicDBObject;
 import mindustry.Vars;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.game.Team;
-import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import pandorum.comp.Bundle;
-import pandorum.comp.Ranks;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
 
-import java.util.concurrent.TimeUnit;
-
-import static pandorum.Misc.*;
-import static pandorum.Misc.findLocale;
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.sendToChat;
 
 public class MenuListener {
     public static int welcomeMenu,
             despwMenu,
-            artvMenu,
-            infoMenu;
+            artvMenu;
 
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -75,39 +69,6 @@ public class MenuListener {
                         .addField("Админ: ", Strings.stripColors(player.name), false);
 
                 BotHandler.botChannel.sendMessage(embed).join();
-            }
-        });
-
-        infoMenu = Menus.registerMenu((player, option) -> {
-            if (option == 1) {
-                String[][] options = {{Bundle.format("events.menu.close", findLocale(player.locale))}};
-                PlayerModel.find(
-                        new BasicDBObject("UUID", player.uuid()),
-                        playerInfo -> Call.menu(
-                                player.con,
-                                infoMenu,
-                                Bundle.format(
-                                        "commands.info.header",
-                                        findLocale(player.locale),
-                                        player.coloredName()
-                                ),
-                                Bundle.format(
-                                        "commands.info.content",
-                                        findLocale(player.locale),
-                                        Ranks.ranks.get(playerInfo.rank).tag,
-                                        Ranks.ranks.get(playerInfo.rank).name,
-                                        TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
-                                        playerInfo.buildingsBuilt,
-                                        playerInfo.buildingsDeconstructed,
-                                        playerInfo.maxWave,
-                                        playerInfo.gamesPlayed,
-                                        playerInfo.hellomsg ? "on" : "off",
-                                        playerInfo.alerts ? "on" : "off",
-                                        playerInfo.locale
-                                ),
-                                options
-                        )
-                );
             }
         });
     }

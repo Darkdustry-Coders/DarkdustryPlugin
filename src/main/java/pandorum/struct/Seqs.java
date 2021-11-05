@@ -2,7 +2,8 @@ package pandorum.struct;
 
 import arc.func.Boolf;
 import arc.struct.Queue;
-import arc.util.*;
+import arc.util.Nullable;
+import arc.util.Strings;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -22,47 +23,47 @@ public abstract class Seqs {
         }
     }
 
-    public static <T> SeqBuilder<T> newBuilder(){
+    public static <T> SeqBuilder<T> newBuilder() {
         return new SeqBuilder<>();
     }
 
-    public static <T> SafeQueue<T> safeQueue(){
+    public static <T> SafeQueue<T> safeQueue() {
         return new SafeQueue<>();
     }
 
-    public static <T> EmptyQueue<T> emptyQueue(){
-        return (EmptyQueue<T>)EMPTY_QUEUE;
+    public static <T> EmptyQueue<T> emptyQueue() {
+        return (EmptyQueue<T>) EMPTY_QUEUE;
     }
 
-    private static class SafeQueue<T> extends Queue<T>{
+    private static class SafeQueue<T> extends Queue<T> {
 
         @Override
-        public T removeFirst(){
+        public T removeFirst() {
             return isEmpty() ? null : super.removeFirst();
         }
 
         @Override
-        public T removeLast(){
+        public T removeLast() {
             return isEmpty() ? null : super.removeLast();
         }
 
         @Override
-        public T removeIndex(int index){
+        public T removeIndex(int index) {
             return index < 0 || index >= size ? null : super.removeIndex(index);
         }
 
         @Override
-        public T first(){
+        public T first() {
             return isEmpty() ? null : super.first();
         }
 
         @Override
-        public T last(){
+        public T last() {
             return isEmpty() ? null : super.last();
         }
 
         @Override
-        public T get(int index){
+        public T get(int index) {
             return index < 0 || index >= size ? null : super.get(index);
         }
     }
@@ -85,57 +86,57 @@ public abstract class Seqs {
         }
 
         @Override
-        public boolean remove(T value){
+        public boolean remove(T value) {
             return false;
         }
 
         @Override
-        public boolean remove(T value, boolean identity){
+        public boolean remove(T value, boolean identity) {
             return false;
         }
 
         @Override
-        public T removeIndex(int index){
+        public T removeIndex(int index) {
             return null;
         }
 
         @Override
-        public T removeFirst(){
+        public T removeFirst() {
             return null;
         }
 
         @Override
-        public T removeLast(){
+        public T removeLast() {
             return null;
         }
 
         @Override
-        public T first(){
+        public T first() {
             return null;
         }
 
         @Override
-        public T last(){
+        public T last() {
             return null;
         }
 
         @Override
-        public T get(int index){
+        public T get(int index) {
             return null;
         }
 
         @Override
-        public int indexOf(T value, boolean identity){
+        public int indexOf(T value, boolean identity) {
             return -1;
         }
 
         @Override
-        public int indexOf(Boolf<T> value){
+        public int indexOf(Boolf<T> value) {
             return -1;
         }
 
         @Override
-        public boolean isEmpty(){
+        public boolean isEmpty() {
             return true;
         }
     }
@@ -170,7 +171,7 @@ public abstract class Seqs {
             }
         }
 
-        public <T1 extends T> CacheSeq<T1> build(){
+        public <T1 extends T> CacheSeq<T1> build() {
             return new CacheSeq<>(this);
         }
     }

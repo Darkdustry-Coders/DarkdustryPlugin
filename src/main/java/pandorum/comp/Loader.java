@@ -31,12 +31,6 @@ public class Loader {
             throw new ArcRuntimeException(e);
         }
 
-        Administration.Config.showConnectMessages.set(false);
-        Administration.Config.strict.set(true);
-        Administration.Config.motd.set("off");
-        Administration.Config.messageRateLimit.set(1);
-        Administration.Config.enableVotekick.set(true);
-
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
         netServer.invalidHandler = InvalidCommandResponse::response;
@@ -58,11 +52,16 @@ public class Loader {
         Events.on(EventType.AdminRequestEvent.class, AdminRequestListener::call);
         Events.run(EventType.Trigger.update, TriggerUpdateListener::update);
 
+        Administration.Config.showConnectMessages.set(false);
+        Administration.Config.strict.set(true);
+        Administration.Config.motd.set("off");
+        Administration.Config.messageRateLimit.set(1);
+        Administration.Config.enableVotekick.set(true);
+
         Effects.init();
         MenuListener.init();
         Icons.init();
         Ranks.init();
-
         BotMain.run();
 
         Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."))), 0f, 10f);

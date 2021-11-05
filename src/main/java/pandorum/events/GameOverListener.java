@@ -20,7 +20,7 @@ public class GameOverListener {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.normalColor)
                 .setAuthor("Gameover")
-                .setTitle("Игра окончена! Загружаю новую карту!");
+                .setTitle("Игра окончена. Загружаю новую карту...");
 
         try {
             BotHandler.botChannel.sendMessage(embed).join();

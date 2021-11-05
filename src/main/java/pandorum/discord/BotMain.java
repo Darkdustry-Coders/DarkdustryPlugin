@@ -1,6 +1,5 @@
 package pandorum.discord;
 
-import arc.util.CommandHandler;
 import arc.util.Log;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -12,7 +11,7 @@ import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class BotMain implements MessageCreateListener {
 
@@ -53,6 +52,7 @@ public class BotMain implements MessageCreateListener {
         });
 
         listener = new BotHandler();
+        Log.info("Бот успешно запущен...");
     }
 
     @Override

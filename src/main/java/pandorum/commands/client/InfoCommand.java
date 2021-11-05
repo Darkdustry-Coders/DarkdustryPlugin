@@ -1,21 +1,18 @@
 package pandorum.commands.client;
 
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findLocale;
-
-import java.util.concurrent.TimeUnit;
-
 import com.mongodb.BasicDBObject;
-
-import org.jetbrains.annotations.NotNull;
-
 import mindustry.gen.Call;
 import mindustry.gen.Player;
+import org.jetbrains.annotations.NotNull;
 import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
-import pandorum.events.MenuListener;
 import pandorum.models.PlayerModel;
+
+import java.util.concurrent.TimeUnit;
+
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.findLocale;
 
 public class InfoCommand implements ClientCommand {
     public static void run(final String[] args, final @NotNull Player player) {
@@ -25,21 +22,14 @@ public class InfoCommand implements ClientCommand {
             return;
         }
 
-        String[][] options = player == target ? new String[][]{{Bundle.format("events.menu.close", findLocale(player.locale))}} : new String[][]{{Bundle.format("events.menu.close", findLocale(player.locale))}, {Bundle.format("events.menu.check-my-info", findLocale(player.locale))}};
-
         PlayerModel.find(
             new BasicDBObject("UUID", target.uuid()),
-            playerInfo -> Call.menu(
+            playerInfo -> Call.infoMessage(
                     player.con,
-                    MenuListener.infoMenu,
-                    Bundle.format(
-                            "commands.info.header",
-                            findLocale(player.locale),
-                            target.coloredName()
-                    ),
                     Bundle.format(
                             "commands.info.content",
                             findLocale(player.locale),
+                            target.coloredName(),
                             Ranks.ranks.get(playerInfo.rank).tag,
                             Ranks.ranks.get(playerInfo.rank).name,
                             TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
@@ -50,8 +40,7 @@ public class InfoCommand implements ClientCommand {
                             playerInfo.hellomsg ? "on" : "off",
                             playerInfo.alerts ? "on" : "off",
                             playerInfo.locale
-                    ),
-                    options
+                    )
             )
         );
     }

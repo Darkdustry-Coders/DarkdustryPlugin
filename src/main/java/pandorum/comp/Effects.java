@@ -12,9 +12,9 @@ public class Effects {
     private static EffectObject moveEffect, leaveEffect, joinEffect;
 
     public static void init() {
-        moveEffect = new EffectObject(0, 0, 30, "#4169e1", "freezing");
-        leaveEffect = new EffectObject(0, 0, 30, "#4169e1", "greenLaserCharge");
-        joinEffect = new EffectObject(0, 0, 30, "#4169e1", "greenBomb");
+        moveEffect = new EffectObject("#4169e1", "freezing");
+        leaveEffect = new EffectObject("#4169e1", "greenLaserCharge");
+        joinEffect = new EffectObject("#4169e1", "greenBomb");
     }
 
     public static void on(EffectObject effect, float x, float y) {
@@ -38,19 +38,9 @@ public class Effects {
     }
 
     public static class EffectObject {
-        public float x;
-        public float y;
-        public float rotation;
+        public float rotation = 30;
         private final String color;
         private final String effect;
-
-        public EffectObject(float x, float y, float rotation, String color, String effect) {
-            this.x = x;
-            this.y = y;
-            this.rotation = rotation;
-            this.color = color;
-            this.effect = effect;
-        }
 
         public Color getColor() {
             return Color.valueOf(color);
@@ -62,6 +52,11 @@ public class Effects {
 
         public void spawn(float x, float y) {
             Call.effect(getEffect(), x, y, rotation, getColor());
+        }
+
+        public EffectObject(String color, String effect) {
+            this.color = color;
+            this.effect = effect;
         }
     }
 }

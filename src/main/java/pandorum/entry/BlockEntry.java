@@ -4,17 +4,16 @@ import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.world.Block;
+import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.TimeZone;
 
 import static pandorum.Misc.findLocale;
 
 public class BlockEntry implements HistoryEntry {
+
     public final boolean isPlayer;
     public final String name;
     public final Unit unit;
@@ -35,9 +34,7 @@ public class BlockEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(time);
+        String ftime = Misc.formatTime(time);
 
         if (breaking) {
             return isPlayer ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :

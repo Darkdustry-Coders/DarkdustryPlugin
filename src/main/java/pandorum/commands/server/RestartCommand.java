@@ -2,11 +2,12 @@ package pandorum.commands.server;
 
 import arc.util.Log;
 import arc.util.Time;
-import mindustry.gen.Groups;
+import mindustry.net.Packets.KickReason;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+
+import static mindustry.Vars.netServer;
 
 public class RestartCommand implements ServerCommand {
     public static void run(final String[] args) {
@@ -18,7 +19,7 @@ public class RestartCommand implements ServerCommand {
 
         BotHandler.botChannel.sendMessage(embed).join();
 
-        Groups.player.each(Misc::connectToHub);
-        Time.runTask(60f, () -> System.exit(2));
+        netServer.kickAll(KickReason.serverRestarting);
+        Time.runTask(10f, () -> System.exit(2));
     }
 }

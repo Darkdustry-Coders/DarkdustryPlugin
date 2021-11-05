@@ -12,10 +12,10 @@ import static pandorum.Misc.bundled;
 
 public class Ranks {
 
-    public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "Admin", null, null);
-    public static Rank veteran = new Rank("[accent]<[white]\uE813[accent]> ", "Veteran", null, null);
-    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "Active", veteran, new Requirements(50000000L, 50000, 30));
-    public static Rank player = new Rank("[accent]<> ", "Player", active, new Requirements(25000000L, 25000, 15));
+    public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", null, null);
+    public static Rank veteran = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Veteran", null, null);
+    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", veteran, new Requirements(50000000L, 50000, 30));
+    public static Rank player = new Rank("[accent]<> ", "[accent]Player", active, new Requirements(25000000L, 25000, 15));
 
     public static IntMap<Rank> ranks = new IntMap<>();
 

@@ -16,18 +16,17 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Door;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.units.UnitFactory;
+import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.TimeZone;
 
 import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
+
     public String name;
     public Block block;
     public Object value;
@@ -59,9 +58,7 @@ public class ConfigEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player){
-        final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(time);
+        String ftime = Misc.formatTime(time);
 
         if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);

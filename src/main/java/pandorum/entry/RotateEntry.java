@@ -1,16 +1,14 @@
 package pandorum.entry;
 
-import static pandorum.Misc.findLocale;
-
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 import mindustry.world.Block;
+import pandorum.Misc;
 import pandorum.comp.Bundle;
 
-import java.util.TimeZone;
-import java.time.ZoneId;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static pandorum.Misc.findLocale;
 
 public class RotateEntry implements HistoryEntry {
 
@@ -34,10 +32,7 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        final String ftime = df.format(time);
-
+        String ftime = Misc.formatTime(time);
         return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
     }
 }

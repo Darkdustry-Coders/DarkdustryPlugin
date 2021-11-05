@@ -33,7 +33,7 @@ public class Config {
 
     public String prefix = "prefix";
 
-    public Tuple2<String, Integer> getIp() {
+    public Tuple2<String, Integer> getHubIp() {
         String ip = hubIp;
         int port = Vars.port;
         if (ip.contains(":") && Strings.canParsePositiveInt(ip.split(":")[1])) {

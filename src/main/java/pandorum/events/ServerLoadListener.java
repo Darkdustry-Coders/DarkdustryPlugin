@@ -9,7 +9,7 @@ import pandorum.discord.BotMain;
 
 public class ServerLoadListener {
     public static void call(final EventType.ServerLoadEvent event) {
-        Log.info("[Darkdustry]: Сервер запущен и готов к работе!");
+        Log.info("[Darkdustry]: Плагин загружен. Сервер готов к работе...");
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.normalColor)

@@ -64,7 +64,7 @@ public final class PandorumPlugin extends Plugin {
             votesVNW = new Seq<>(),
             activeHistoryPlayers = new Seq<>();
 
-    public static final Interval interval = new Interval(3);
+    public static final Interval interval = new Interval(2);
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;
@@ -90,7 +90,7 @@ public final class PandorumPlugin extends Plugin {
         Fi file = dataDirectory.child("config.json");
         if (!file.exists()) {
             file.writeString(gson.toJson(config = new Config()));
-            Log.info("Файл config.json успешно сгенерирован!");
+            Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
         } else {
             config = gson.fromJson(file.reader(), Config.class);
         }
@@ -112,7 +112,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("say");
 
-        handler.register("reload-config", "Перезапустить файл конфигов.", ReloadCommand::run);
+        handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
         handler.register("clear-bans", "Разбанить всех.", ClearBansCommand::run);
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
@@ -166,12 +166,10 @@ public final class PandorumPlugin extends Plugin {
             handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
         }
 
-        // Команды ниже используются в PluginType.pvp
         if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
             handler.register("surrender", "Сдаться.", SurrenderCommand::run);
         }
 
-        // Команды ниже используются в PluginType.sand
         if (config.mode == Config.Gamemode.sandbox) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
         }

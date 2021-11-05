@@ -3,17 +3,18 @@ package pandorum;
 import arc.files.Fi;
 import arc.util.Strings;
 import arc.util.Structs;
-import mindustry.Vars;
 import mindustry.game.Team;
-import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Packets.KickReason;
 import pandorum.comp.Bundle;
-import pandorum.struct.Tuple2;
 
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.saveDirectory;
@@ -26,20 +27,20 @@ public abstract class Misc {
         return Strings.format("[#@]@", team.color, team);
     }
 
-    public static Map findMap(String text) {
+    public static Map findMap(String name) {
         for (int i = 0; i < maps.customMaps().size; i++) {
             Map map = maps.customMaps().get(i);
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(text) || Strings.stripColors(map.name()).contains(text)) {
+            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name)) {
                 return map;
             }
         }
         return null;
     }
 
-    public static Fi findSave(String text) {
+    public static Fi findSave(String name) {
         for (int i = 0; i < saveDirectory.list().length; i++) {
             Fi save = saveDirectory.list()[i];
-            if ((Strings.canParseInt(text) && i == Strings.parseInt(text) - 1) || save.nameWithoutExtension().equalsIgnoreCase(text) || save.nameWithoutExtension().contains(text)) {
+            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
                 return save;
             }
         }
@@ -59,10 +60,6 @@ public abstract class Misc {
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
-    /**
-     * @param player A player to check
-     * @return true if a player isn't an admin, false if he is
-     */
     public static boolean adminCheck(Player player) {
         if (!player.admin()) {
             bundled(player, "commands.permission-denied");
@@ -92,8 +89,10 @@ public abstract class Misc {
         return false;
     }
 
-    public static void connectToHub(Player player) {
-        Tuple2<String, Integer> hub = PandorumPlugin.config.getIp();
-        Vars.net.pingHost(hub.t1, hub.t2, host -> Call.connect(player.con, hub.t1, hub.t2), e -> bundled(player, "commands.hub.offline"));
+
+    public static String formatTime(Date time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
+        return simpleDateFormat.format(time);
     }
 }

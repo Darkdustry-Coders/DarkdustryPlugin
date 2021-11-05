@@ -33,7 +33,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     }
 
     public Object get(int index) {
-        return switch(index) {
+        return switch (index) {
             case 0 -> t1;
             case 1 -> t2;
             default -> null;
@@ -55,7 +55,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tuple2<?, ?> tuple2 = (Tuple2<?, ?>)o;
         return t1.equals(tuple2.t1) &&
