@@ -38,7 +38,7 @@ public class PlayerJoinListener {
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
                 String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
-                Call.menu(event.player.con, MenuListener.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), "discord.gg/xagFsu9K5W"), options);
+                Call.menu(event.player.con, MenuListener.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), "dsc.gg/darkdustry"), options);
             }
         });
         
