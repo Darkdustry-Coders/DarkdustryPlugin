@@ -19,7 +19,7 @@ public class PlayerBanListener {
                     .setTitle("Игрок был заблокирован!")
                     .addField("Никнейм:", Strings.stripColors(info.lastName), false)
                     .addField("IP:", info.lastIP, false)
-                    .addField("Uuid:", event.uuid, false);
+                    .addField("UUID:", event.uuid, false);
 
             BotHandler.botChannel.sendMessage(embed).join();
         }

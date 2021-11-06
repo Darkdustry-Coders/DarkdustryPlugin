@@ -1,18 +1,14 @@
 package pandorum.events;
 
 import arc.struct.Seq;
-import arc.util.Strings;
 import com.mongodb.BasicDBObject;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.world.Tile;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 import pandorum.entry.DepositEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
@@ -28,14 +24,6 @@ public class DepositListener {
             Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
                 if (playerInfo.alerts) bundled(p, "events.withdraw-thorium", event.player.coloredName(), event.tile.tileX(), event.tile.tileY());
             }));
-
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.errorColor)
-                    .setAuthor("Anti-grief")
-                    .setTitle("Игрок положил торий в реактор рядом с ядром!")
-                    .addField("Никнейм: ", Strings.stripColors(event.player.name), false);
-
-            BotHandler.botChannel.sendMessage(embed).join();
         }
 
         HistoryEntry entry = new DepositEntry(event);

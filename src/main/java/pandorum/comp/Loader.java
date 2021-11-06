@@ -3,12 +3,17 @@ package pandorum.comp;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.ArcRuntimeException;
+import arc.util.Reflect;
 import arc.util.Timer;
 import arc.util.io.Streams;
+import mindustry.core.NetServer;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.net.Administration;
+import mindustry.net.Net;
+import mindustry.net.Packets;
 import org.javacord.api.entity.activity.ActivityType;
+import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
@@ -19,6 +24,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.net;
 import static pandorum.discord.BotMain.bot;
 
 public class Loader {
@@ -30,6 +36,12 @@ public class Loader {
         } catch(Exception e) {
             throw new ArcRuntimeException(e);
         }
+
+        PandorumPlugin.serverListeners = Reflect.get(Net.class, net, "serverListeners");
+        PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
+        PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
+
+        Misc.handleServer(Packets.ConnectPacket.class, ConnectHandler::handle);
 
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
@@ -64,6 +76,6 @@ public class Loader {
         Ranks.init();
         BotMain.run();
 
-        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."))), 0f, 10f);
+        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."))), 0f, 15f);
     }
 }

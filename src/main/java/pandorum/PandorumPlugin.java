@@ -1,6 +1,7 @@
 package pandorum;
 
 import arc.files.Fi;
+import arc.func.Cons2;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
@@ -8,6 +9,8 @@ import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Timekeeper;
+import arc.util.io.ReusableByteOutStream;
+import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +22,7 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
+import mindustry.net.NetConnection;
 import okhttp3.OkHttpClient;
 import org.bson.Document;
 import org.json.JSONArray;
@@ -40,6 +44,8 @@ import java.net.URISyntaxException;
 import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
+
+    public static final String discordServerLink = "dsc.gg/darkdustry";
 
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
@@ -64,14 +70,17 @@ public final class PandorumPlugin extends Plugin {
             votesVNW = new Seq<>(),
             activeHistoryPlayers = new Seq<>();
 
-    public static final Interval interval = new Interval(2);
+    public static final Interval interval = new Interval(3);
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
-
     public static final StringMap codeLanguages = new StringMap();
     public static final OkHttpClient client = new OkHttpClient();
+
+    public static ObjectMap<Class<?>, Cons2<NetConnection, Object>> serverListeners;
+    public static ReusableByteOutStream writeBuffer;
+    public static Writes outputBuffer;
 
     public PandorumPlugin() throws IOException, URISyntaxException {
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
@@ -111,6 +120,7 @@ public final class PandorumPlugin extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("say");
+        handler.removeCommand("pardon");
 
         handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
@@ -118,6 +128,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
+        handler.register("pardon", "<ID>", "Снять кик с игрока.", PardonCommand::run);
     }
 
     @Override
@@ -137,8 +148,8 @@ public final class PandorumPlugin extends Plugin {
         handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
         handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         handler.register("units", "<list/change/name> [unit] [player...]", "Действия с юнитами.", UnitsCommand::run);
-        handler.register("unban", "<ip/uuid...>", "Разбанить игрока.", UnbanCommand::run);
-        handler.register("ban", "<ip/uuid...>", "Забанить игрока.", BanCommand::run);
+        handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
+        handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
         handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
         handler.register("vote", "<y/n>", "Решить судьбу игрока.", VoteCommand::run);
         handler.register("sync", "Синхронизация с сервером.", SyncCommand::run);

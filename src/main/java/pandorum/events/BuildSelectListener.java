@@ -1,16 +1,12 @@
 package pandorum.events;
 
-import arc.util.Strings;
 import com.mongodb.BasicDBObject;
 import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
@@ -26,14 +22,6 @@ public class BuildSelectListener {
                 Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
                     if (playerInfo.alerts) bundled(p, "events.alert", builder.coloredName(), event.tile.x, event.tile.y);
                 }));
-
-                EmbedBuilder embed = new EmbedBuilder()
-                        .setColor(BotMain.errorColor)
-                        .setAuthor("Anti-grief")
-                        .setTitle("Игрок строит ториевый реактор близко к ядру!")
-                        .addField("Никнейм: ", Strings.stripColors(builder.name), false);
-
-                BotHandler.botChannel.sendMessage(embed).join();
             }
         }
     }

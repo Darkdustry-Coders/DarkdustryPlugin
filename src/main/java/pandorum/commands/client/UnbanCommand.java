@@ -9,7 +9,7 @@ import static pandorum.Misc.bundled;
 public class UnbanCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
-        if (netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
+        if (netServer.admins.unbanPlayerID(args[0])) {
             bundled(player, "commands.admin.unban.success", netServer.admins.getInfo(args[0]).lastName);
             return;
         }

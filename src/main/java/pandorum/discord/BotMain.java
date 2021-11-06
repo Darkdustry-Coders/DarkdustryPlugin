@@ -39,12 +39,12 @@ public class BotMain implements MessageCreateListener {
                 switch (button) {
                     case "confirm" -> {
                         BotHandler.text(msg, "**Запрос был подтвержден** " + interaction.getUser().getDisplayName(BotHandler.server));
-                        msg.delete();
+                        msg.delete().join();
                         Authme.confirm(BotHandler.waiting.get(msg));
                     }
                     case "deny" -> {
                         BotHandler.text(msg, "**Запрос был отклонен** " + interaction.getUser().getDisplayName(BotHandler.server));
-                        msg.delete();
+                        msg.delete().join();
                         Authme.deny(BotHandler.waiting.get(msg));
                     }
                 }
@@ -60,11 +60,7 @@ public class BotMain implements MessageCreateListener {
         Message msg = event.getMessage();
         BotHandler.handler.handleMessage(msg.getContent(), msg);
 
-        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix)) {
-            if (msg.getContent().length() > 100) {
-                BotHandler.err(msg, "Ошибка.", "Длина сообщения не может быть больше 100 символов!");
-                return;
-            }
+        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix) && msg.getContent().length() < 100) {
             Misc.sendToChat("events.discord-message", msg.getAuthor().getDisplayName(), msg.getContent());
             Log.info("[Discord]@: @", msg.getAuthor().getDisplayName(), msg.getContent());
         }

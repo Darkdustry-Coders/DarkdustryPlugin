@@ -11,11 +11,14 @@ public class TriggerUpdateListener {
     public static void update() {
         Groups.player.each(p -> p.unit().moving(), Effects::onMove);
         if (PandorumPlugin.interval.get(1, 60f)) {
-            Groups.player.each(player -> Ranks.getRank(player, rank -> player.name(rank.tag + "[#" + player.color.toString().toUpperCase() + "]" + player.getInfo().lastName)));
             Groups.player.each(player -> PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
                 playerInfo.playTime += 1000;
                 playerInfo.save();
             }));
+        }
+
+        if (PandorumPlugin.interval.get(2, 300f)) {
+            Groups.player.each(player -> Ranks.getRank(player, rank -> player.name(rank.tag + "[#" + player.color.toString().toUpperCase() + "]" + player.getInfo().lastName)));
         }
     }
 }
