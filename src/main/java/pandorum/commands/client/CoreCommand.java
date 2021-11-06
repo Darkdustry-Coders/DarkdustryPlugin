@@ -26,7 +26,7 @@ public class CoreCommand implements ClientCommand {
 
         try {
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, player.team(), false);
-            bundled(player, "commands.admin.core.success");
+            bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
         } catch (Exception e) {
             bundled(player, "commands.admin.core.failed");
         }
