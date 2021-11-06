@@ -43,9 +43,6 @@ public class ConnectHandler {
         Locale locale = packet.locale == null ? Bundle.defaultLocale() : Misc.findLocale(packet.locale);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
-        con.hasBegunConnecting = true;
-        con.mobile = packet.mobile;
-
         packet.name = fixName(packet.name);
 
         if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
@@ -54,6 +51,9 @@ public class ConnectHandler {
             con.kick(KickReason.idInUse);
             return;
         }
+
+        con.hasBegunConnecting = true;
+        con.mobile = packet.mobile;
 
         if (packet.uuid == null || packet.usid == null) {
             con.kick(KickReason.idInUse);
