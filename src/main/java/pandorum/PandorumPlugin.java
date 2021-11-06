@@ -121,12 +121,14 @@ public final class PandorumPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("say");
         handler.removeCommand("pardon");
+        handler.removeCommand("exit");
 
         handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
         handler.register("clear-bans", "Разбанить всех.", ClearBansCommand::run);
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
+        handler.register("exit", "Выключить сервер.", ExitCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
         handler.register("pardon", "<ID>", "Снять кик с игрока.", PardonCommand::run);
     }

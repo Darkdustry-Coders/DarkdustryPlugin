@@ -7,14 +7,14 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
-import mindustry.Vars;
 import mindustry.core.Version;
 import mindustry.game.EventType;
+import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets;
+import mindustry.net.Packets.ConnectPacket;
 import mindustry.net.Packets.KickReason;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
@@ -23,9 +23,12 @@ import pandorum.comp.Bundle;
 import java.util.Locale;
 
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.platform;
+import static mindustry.Vars.mods;
+import static mindustry.Vars.maxNameLength;
 
 public class ConnectHandler {
-    public static void handle(NetConnection con, Packets.ConnectPacket packet) {
+    public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
         if (con.address.startsWith("steam:")) {
@@ -38,52 +41,63 @@ public class ConnectHandler {
 
         String uuid = packet.uuid;
         Locale locale = packet.locale == null ? Bundle.defaultLocale() : Misc.findLocale(packet.locale);
-
-        if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
-
-        if (con.hasBegunConnecting) {
-            con.kick(Packets.KickReason.idInUse);
-            return;
-        }
-
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         con.hasBegunConnecting = true;
         con.mobile = packet.mobile;
 
+        packet.name = fixName(packet.name);
+
+        if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
+
+        if (con.hasBegunConnecting) {
+            con.kick(KickReason.idInUse);
+            return;
+        }
+
         if (packet.uuid == null || packet.usid == null) {
-            con.kick(Packets.KickReason.idInUse);
+            con.kick(KickReason.idInUse);
             return;
         }
 
         if (netServer.admins.isIDBanned(uuid)) {
-            con.kick(Packets.KickReason.banned);
+            con.kick(KickReason.banned);
             return;
         }
 
         if (Time.millis() < netServer.admins.getKickTime(uuid, con.address)) {
-            con.kick(Packets.KickReason.recentKick);
+            con.kick(KickReason.recentKick);
             return;
         }
 
-        if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit() && !netServer.admins.isAdmin(uuid, packet.usid)) {
-            con.kick(Packets.KickReason.playerLimit);
+        if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
+            con.kick(KickReason.playerLimit);
             return;
         }
 
         Seq<String> extraMods = packet.mods.copy();
-        Seq<String> missingMods = Vars.mods.getIncompatibility(extraMods);
+        Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
         if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
-            StringBuilder mods = new StringBuilder(Bundle.format("events.incompatible-mods", locale));
+            StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", locale));
             if (!missingMods.isEmpty()) {
-                mods.append(Bundle.format("events.missing-mods", locale)).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
+                reason.append(Bundle.format("events.missing-mods", locale)).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
             }
 
             if (!extraMods.isEmpty()) {
-                mods.append(Bundle.format("events.unnecessary-mods", locale)).append("> ").append(extraMods.toString("\n> "));
+                reason.append(Bundle.format("events.unnecessary-mods", locale)).append("> ").append(extraMods.toString("\n> "));
             }
-            con.kick(mods.toString(), 0);
+            con.kick(reason.toString(), 0);
+        }
+
+        if (!netServer.admins.isWhitelisted(packet.uuid, packet.usid)) {
+            info.adminUsid = packet.usid;
+            info.lastName = packet.name;
+            info.id = packet.uuid;
+            netServer.admins.save();
+            Call.infoMessage(con, Bundle.format("events.not-whitelisted", locale, PandorumPlugin.discordServerLink));
+            con.kick(KickReason.whitelist);
+            return;
         }
 
         if (packet.versionType == null || ((packet.version == -1 || !packet.versionType.equals(Version.type)) && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
@@ -91,10 +105,8 @@ public class ConnectHandler {
             return;
         }
 
-        packet.name = fixName(packet.name);
-
-        if (packet.name.trim().length() <= 0) {
-            con.kick(KickReason.nameEmpty);
+        if (packet.name.trim().length() <= 0 || packet.name.trim().length() > maxNameLength) {
+            con.kick(Bundle.format("events.bad-name-length", locale, maxNameLength));
             return;
         }
 
@@ -134,7 +146,7 @@ public class ConnectHandler {
             player.write(PandorumPlugin.outputBuffer);
         } catch(Throwable t) {
             con.kick(KickReason.nameEmpty);
-            Log.err("Обнаружен игрок с пустым никнеймом! UUID: @", uuid);
+            Log.info("Обнаружен игрок с пустым никнеймом! UUID: @", uuid);
             return;
         }
 
@@ -144,13 +156,13 @@ public class ConnectHandler {
 
         netServer.sendWorldData(player);
 
-        Vars.platform.updateRPC();
+        platform.updateRPC();
 
         Events.fire(new EventType.PlayerConnect(player));
     }
 
     private static String fixName(String name) {
-        name = name.trim().replace("\n", "").replace("\t", "");
+        name = name.trim().replace("\n", " ").replace("\t", " ").replace("@", " ");
         if (name.equals("[") || name.equals("]")) {
             return "";
         }
@@ -167,7 +179,7 @@ public class ConnectHandler {
 
         StringBuilder result = new StringBuilder();
         int curChar = 0;
-        while (curChar < name.length() && result.toString().getBytes(Strings.utf8).length < Vars.maxNameLength) {
+        while (curChar < name.length() && result.toString().getBytes(Strings.utf8).length < maxNameLength) {
             result.append(name.charAt(curChar++));
         }
         return result.toString();

@@ -20,8 +20,6 @@ public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
         PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
 
-        if (nameCheck(event.player)) return;
-
         Ranks.getRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
 
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
@@ -31,7 +29,7 @@ public class PlayerJoinListener {
                 .setColor(BotMain.successColor)
                 .setTitle(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name)));
 
-        BotHandler.botChannel.sendMessage(embed).join();
+        BotHandler.sendEmbed(embed);
 
         Effects.onJoin(event.player);
 

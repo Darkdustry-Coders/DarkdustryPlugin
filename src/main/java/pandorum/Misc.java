@@ -9,7 +9,6 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets.KickReason;
 import pandorum.comp.Bundle;
 
 import java.text.SimpleDateFormat;
@@ -76,19 +75,6 @@ public abstract class Misc {
 
     public static void sendToChat(String key, Object... values) {
         Groups.player.each(p -> bundled(p, key, values));
-    }
-
-    public static boolean nameCheck(Player player) {
-        String name = Strings.stripColors(player.name);
-        if (name.length() < 1 || name.length() > 30) {
-            player.con.kick(Bundle.format("events.bad-name-length", findLocale(player.locale)), 0);
-            return true;
-        }
-        if (name.contains("@")) {
-            player.con.kick(KickReason.kick, 0);
-            return true;
-        }
-        return false;
     }
 
     public static String formatTime(Date time) {

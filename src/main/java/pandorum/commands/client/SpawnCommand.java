@@ -52,6 +52,6 @@ public class SpawnCommand implements ClientCommand {
                 .addField("Команда: ", team.name, false)
                 .addField("Количество: ", Integer.toString(count), false);
 
-        BotHandler.botChannel.sendMessage(embed).join();
+        BotHandler.sendEmbed(embed);
     }
 }

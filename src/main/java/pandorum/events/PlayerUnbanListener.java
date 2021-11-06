@@ -21,7 +21,7 @@ public class PlayerUnbanListener {
                     .addField("IP:", info.lastIP, false)
                     .addField("UUID:", event.uuid, false);
 
-            BotHandler.botChannel.sendMessage(embed).join();
+            BotHandler.sendEmbed(embed);
         }
     }
 }

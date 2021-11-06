@@ -22,7 +22,7 @@ public class AdminRequestListener {
                         .addField("Никнейм: ", Strings.stripColors(event.other.name), false)
                         .addField("IP: ", event.other.ip(), false);
 
-                BotHandler.botChannel.sendMessage(embed).join();
+                BotHandler.sendEmbed(embed);
             }
         }
     }

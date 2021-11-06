@@ -15,10 +15,6 @@ public class ServerLoadListener {
                 .setColor(BotMain.normalColor)
                 .setTitle("Сервер запущен.");
 
-        Time.runTask(1f, () -> {
-            try {
-                BotHandler.botChannel.sendMessage(embed).join();
-            } catch (NullPointerException ignored) {}
-        });
+        Time.runTask(1f, () -> BotHandler.sendEmbed(embed));
     }
 }

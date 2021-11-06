@@ -27,7 +27,7 @@ public class PlayerLeaveListener {
                 .setColor(BotMain.errorColor)
                 .setTitle(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name)));
 
-        BotHandler.botChannel.sendMessage(embed).join();
+        BotHandler.sendEmbed(embed);
 
         Effects.onLeave(event.player);
 

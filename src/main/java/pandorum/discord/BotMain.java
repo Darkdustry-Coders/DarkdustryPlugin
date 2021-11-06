@@ -4,16 +4,14 @@ import arc.util.Log;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.Message;
-import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
-import org.javacord.api.listener.message.MessageCreateListener;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
-import java.awt.Color;
+import java.awt.*;
 
-public class BotMain implements MessageCreateListener {
+public class BotMain {
 
     public static DiscordApi bot;
     public static BotHandler listener;
@@ -29,7 +27,15 @@ public class BotMain implements MessageCreateListener {
 
         bot.setAutomaticMessageCacheCleanupEnabled(true);
 
-        bot.addMessageCreateListener(new BotMain());
+        bot.addMessageCreateListener(event -> {
+            Message msg = event.getMessage();
+            BotHandler.handler.handleMessage(msg.getContent(), msg);
+
+            if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix) && msg.getContent().length() > 0 && msg.getContent().length() < 100) {
+                Misc.sendToChat("events.discord-message", msg.getAuthor().getDisplayName(), msg.getContent());
+                Log.info("[Discord]@: @", msg.getAuthor().getDisplayName(), msg.getContent());
+            }
+        });
 
         bot.addMessageComponentCreateListener(event -> {
             MessageComponentInteraction interaction = event.getMessageComponentInteraction();
@@ -53,16 +59,5 @@ public class BotMain implements MessageCreateListener {
 
         listener = new BotHandler();
         Log.info("Бот успешно запущен...");
-    }
-
-    @Override
-    public void onMessageCreate(MessageCreateEvent event) {
-        Message msg = event.getMessage();
-        BotHandler.handler.handleMessage(msg.getContent(), msg);
-
-        if (msg.getChannel().equals(BotHandler.botChannel) && !msg.getAuthor().isBotUser() && !msg.getContent().startsWith(BotHandler.prefix) && msg.getContent().length() < 100) {
-            Misc.sendToChat("events.discord-message", msg.getAuthor().getDisplayName(), msg.getContent());
-            Log.info("[Discord]@: @", msg.getAuthor().getDisplayName(), msg.getContent());
-        }
     }
 }

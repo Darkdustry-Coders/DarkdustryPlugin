@@ -35,6 +35,6 @@ public class TeamCommand implements ClientCommand {
                 .addField("Никнейм: ", Strings.stripColors(player.name), false)
                 .addField("Новая команда: ", team.name, false);
 
-        BotHandler.botChannel.sendMessage(embed).join();
+        BotHandler.sendEmbed(embed);
     }
 }

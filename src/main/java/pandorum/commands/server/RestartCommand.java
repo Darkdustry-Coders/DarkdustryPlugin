@@ -17,9 +17,12 @@ public class RestartCommand implements ServerCommand {
                 .setColor(BotMain.errorColor)
                 .setTitle("Сервер выключился для перезапуска!");
 
-        BotHandler.botChannel.sendMessage(embed).join();
+        BotHandler.sendEmbed(embed);
 
         netServer.kickAll(KickReason.serverRestarting);
-        Time.runTask(10f, () -> System.exit(2));
+        Time.runTask(10f, () -> {
+            BotMain.bot.disconnect();
+            System.exit(2);
+        });
     }
 }

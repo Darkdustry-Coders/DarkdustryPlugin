@@ -36,16 +36,18 @@ public class LoginCommand implements ClientCommand {
                 .addField("UUID: ", player.uuid(), true)
                 .setFooter("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.");
 
-        Message message = new MessageBuilder().setEmbed(embed).addComponents(
-                ActionRow.of(
-                        Button.success("confirm", "Подтвердить"),
-                        Button.danger("deny", "Отклонить")
-                )
-        ).send(BotHandler.adminChannel).join();
+        if (BotMain.bot != null && BotHandler.adminChannel != null) {
+            Message message = new MessageBuilder().setEmbed(embed).addComponents(
+                    ActionRow.of(
+                            Button.success("confirm", "Подтвердить"),
+                            Button.danger("deny", "Отклонить")
+                    )
+            ).send(BotHandler.adminChannel).join();
 
-        BotHandler.waiting.put(message, player.uuid());
+            BotHandler.waiting.put(message, player.uuid());
 
-        vtime.reset();
-        bundled(player, "commands.login.sent");
+            vtime.reset();
+            bundled(player, "commands.login.sent");
+        }
     }
 }

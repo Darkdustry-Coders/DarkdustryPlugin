@@ -14,10 +14,7 @@ public class AlertCommand implements ClientCommand {
                 playerInfo.alerts = !playerInfo.alerts;
                 playerInfo.save();
 
-                bundled(
-                    player,
-                    (playerInfo.alerts ? "commands.alert.on" : "commands.alert.off")
-                );
+                bundled(player, (playerInfo.alerts ? "commands.alert.on" : "commands.alert.off"));
             }
         );
     }

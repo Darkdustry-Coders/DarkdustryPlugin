@@ -27,8 +27,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static pandorum.discord.BotMain.errorColor;
-import static pandorum.discord.BotMain.normalColor;
+import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
     public static final String prefix = PandorumPlugin.config.prefix;
@@ -58,7 +57,7 @@ public class BotHandler {
                 builder.append(" - ").append(command.description).append("\n");
             }
 
-            info(msg.getServerTextChannel().get(), "Команды", builder.toString());
+            info(msg, "Команды", builder.toString());
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
@@ -187,6 +186,7 @@ public class BotHandler {
     }
 
     public static void text(ServerTextChannel channel, String text, Object... args) {
+        if (BotMain.bot == null || channel == null || text == null) return;
         channel.sendMessage(Strings.format(text, args)).join();
     }
 
@@ -194,11 +194,13 @@ public class BotHandler {
         text(botChannel, text, args);
     }
 
-    public static void info(ServerTextChannel channel, String title, String text, Object... args) {
-        channel.sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
+    public static void info(Message message, String title, String text, Object... args) {
+        if (BotMain.bot == null || message == null || message.getChannel() == null) return;
+        message.getChannel().sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
     }
 
     public static void err(Message message, String title, String text, Object... args) {
+        if (BotMain.bot == null || message == null || message.getChannel() == null) return;
         message.getChannel().sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor)).join();
     }
 
@@ -215,5 +217,10 @@ public class BotHandler {
     public static boolean checkAdmin(User user) {
         if (user.isBot()) return true;
         return user.getRoles(server).stream().noneMatch(role -> role.getId() == 810760273689444385L);
+    }
+
+    public static void sendEmbed(EmbedBuilder embed) {
+        if (BotMain.bot == null || botChannel == null) return;
+        botChannel.sendMessage(embed).join();
     }
 }

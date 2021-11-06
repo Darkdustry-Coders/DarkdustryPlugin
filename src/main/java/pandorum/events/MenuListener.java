@@ -55,7 +55,7 @@ public class MenuListener {
                     .setTitle("Юниты убиты.")
                     .addField("Админ: ", Strings.stripColors(player.name), false);
 
-            BotHandler.botChannel.sendMessage(embed).join();
+            BotHandler.sendEmbed(embed);
         });
 
         artvMenu = Menus.registerMenu((player, option) -> {
@@ -68,7 +68,7 @@ public class MenuListener {
                         .setTitle("Игра принудительно завершена.")
                         .addField("Админ: ", Strings.stripColors(player.name), false);
 
-                BotHandler.botChannel.sendMessage(embed).join();
+                BotHandler.sendEmbed(embed);
             }
         });
     }
