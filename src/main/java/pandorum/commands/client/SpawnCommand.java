@@ -8,6 +8,7 @@ import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
+import pandorum.comp.Icons;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -32,7 +33,7 @@ public class SpawnCommand implements ClientCommand {
         Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
         if (team == null) {
             StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(t.emoji).append(Misc.colorizedTeam(t));
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(Icons.get(t.name)).append(Misc.colorizedTeam(t));
             bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
