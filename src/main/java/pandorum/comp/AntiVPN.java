@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import okhttp.Callback;
-import okhttp.HttpUrl;
-import okhttp.OkHttpClient;
-import okhttp.Request;
-import okhttp.Response;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import org.json.JSONObject;
 
