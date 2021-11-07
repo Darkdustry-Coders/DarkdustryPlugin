@@ -23,6 +23,7 @@ public class AdminRequestListener {
 
                 BotHandler.sendEmbed(embed);
             }
+            default -> {}
         }
     }
 }
