@@ -19,8 +19,6 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import io.ipinfo.api.IPinfo;
-import io.ipinfo.api.cache.SimpleCache;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import okhttp3.OkHttpClient;
@@ -31,6 +29,7 @@ import pandorum.commands.server.*;
 import pandorum.comp.Config;
 import pandorum.comp.Loader;
 import pandorum.comp.Translator;
+import pandorum.comp.AntiVPN;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
@@ -39,7 +38,6 @@ import pandorum.vote.VoteSession;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.time.Duration;
 
 import static mindustry.Vars.dataDirectory;
 
@@ -53,11 +51,6 @@ public final class PandorumPlugin extends Plugin {
             .serializeNulls()
             .disableHtmlEscaping()
             .create();
-
-    public static final IPinfo ipInfo = new IPinfo.Builder()
-            .setToken("2e70d1019b8e01")
-            .setCache(new SimpleCache(Duration.ofDays(1)))
-            .build();
 
     public static VoteSession[] current = {null};
     public static VoteKickSession[] currentlyKicking = {null};
@@ -84,6 +77,8 @@ public final class PandorumPlugin extends Plugin {
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
+
+    public static AntiVPN antiVPN;
 
     public PandorumPlugin() throws IOException, URISyntaxException {
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
