@@ -23,7 +23,7 @@ public class AntiVPN {
         this.token = token;
     }
 
-    public void isDangerousIp(String ip, Consumer<Boolean> callback) {
+    public void checkIp(String ip, Consumer<Boolean> callback) {
         HttpUrl url = new HttpUrl.Builder()
             .scheme("https")
             .host("proxycheck.io")
