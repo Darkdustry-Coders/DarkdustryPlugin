@@ -74,7 +74,11 @@ public class Icons {
 
                 "alpha", Iconc.unitAlpha,
                 "beta", Iconc.unitBeta,
-                "gamma", Iconc.unitGamma
+                "gamma", Iconc.unitGamma,
+
+                "sharded", Iconc.teamSharded,
+                "crux", Iconc.teamCrux,
+                "derelict", Iconc.teamDerelict
         );
     }
 
