@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import okhttp.Callback;
+import okhttp.HttpUrl;
+import okhttp.OkHttpClient;
+import okhttp.Request;
+import okhttp.Response;
 
 import org.json.JSONObject;
 
