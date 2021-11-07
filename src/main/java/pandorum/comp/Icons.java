@@ -83,6 +83,6 @@ public class Icons {
     }
 
     public static Object get(String key) {
-        return icons.get(key);
+        return icons.containsKey(key) ? icons.get(key) : "";
     }
 }
