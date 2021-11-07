@@ -1,4 +1,4 @@
-package pandorum.comp
+package pandorum.comp;
 
 import java.io.IOException;
 import java.util.HashMap;
