@@ -1,10 +1,9 @@
 package pandorum.database;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import org.bson.types.Symbol;
-
-import kotlin.collections.builders.SetBuilder;
 
 public class DataChanges {
     public static Symbol undefined = new Symbol("undefined");
@@ -21,13 +20,13 @@ public class DataChanges {
         Map<String, Object> first,
         Map<String, Object> second
     ) {
-        SetBuilder<String> keys = new SetBuilder<>();
+        HashSet<String> keys = new HashSet<>();
         HashMap<String, DataChanges> changes = new HashMap<>();
 
         keys.addAll(first.keySet());
         keys.addAll(second.keySet());
 
-        keys.build().forEach((key) -> {
+        keys.forEach((key) -> {
             Object firstValue = first.containsKey(key) ? first.get(key): DataChanges.undefined;
             Object secondValue = second.containsKey(key) ? second.get(key) : DataChanges.undefined;
             

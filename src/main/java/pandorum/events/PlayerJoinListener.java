@@ -18,7 +18,7 @@ import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
-        PandorumPlugin.antiVPN.checkIp(event.player.ip(), result -> {
+        PandorumPlugin.antiVPN.isDangerousIp(event.player.ip(), result -> {
             if (result) event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale)));
         });
 
