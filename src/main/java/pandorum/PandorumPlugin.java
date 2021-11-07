@@ -27,7 +27,6 @@ import org.json.JSONArray;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
 import pandorum.comp.Config;
-import pandorum.comp.IpInfo;
 import pandorum.comp.Loader;
 import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
@@ -55,7 +54,6 @@ public final class PandorumPlugin extends Plugin {
     public static VoteSession[] current = {null};
     public static VoteKickSession[] currentlyKicking = {null};
     public static Config config;
-    public static Seq<IpInfo> forbiddenIps;
 
     public static final ObjectMap<String, Timekeeper>
             nominateCooldowns = new ObjectMap<>(),

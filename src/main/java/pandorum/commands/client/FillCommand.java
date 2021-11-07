@@ -16,16 +16,19 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 
 public class FillCommand implements ClientCommand {
+
+    private static final int maxSize = 25;
+
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 
-        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > 25 || Strings.parseInt(args[1]) > 25) {
-            bundled(player, "commands.admin.fill.incorrect-number-format");
+        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxSize || Strings.parseInt(args[1]) > maxSize) {
+            bundled(player, "commands.admin.fill.incorrect-number-format", maxSize);
             return;
         }
 
-        int w = Mathf.clamp(Strings.parseInt(args[0]), 0, 25) + player.tileX();
-        int h = Mathf.clamp(Strings.parseInt(args[1]), 0, 25) + player.tileY();
+        int w = Mathf.clamp(Strings.parseInt(args[0]), 0, maxSize) + player.tileX();
+        int h = Mathf.clamp(Strings.parseInt(args[1]), 0, maxSize) + player.tileY();
 
         Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
         Block block = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanceof OreBlock || o instanceof Prop || o instanceof TreeBlock) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;

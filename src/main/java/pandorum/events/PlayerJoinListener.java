@@ -7,6 +7,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Call;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
+import pandorum.comp.AntiVpn;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Effects;
@@ -18,7 +19,10 @@ import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
-        PandorumPlugin.forbiddenIps.each(i -> i.matchIp(event.player.con.address), i -> event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale))));
+        if (AntiVpn.checkIP(event.player.ip())) {
+            event.player.con.kick(Bundle.get("events.vpn-ip", findLocale(event.player.locale)));
+            return;
+        }
 
         Ranks.getRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
 

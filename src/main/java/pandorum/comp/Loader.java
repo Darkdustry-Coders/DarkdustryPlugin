@@ -1,11 +1,8 @@
 package pandorum.comp;
 
 import arc.Events;
-import arc.struct.Seq;
-import arc.util.ArcRuntimeException;
 import arc.util.Reflect;
 import arc.util.Timer;
-import arc.util.io.Streams;
 import mindustry.core.NetServer;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -18,22 +15,12 @@ import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;
 import pandorum.events.filters.ChatFilter;
 
-import java.io.InputStream;
-import java.util.Objects;
-
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
 import static pandorum.discord.BotMain.bot;
 
 public class Loader {
     public static void init() {
-        try {
-            InputStream stream = Loader.class.getClassLoader().getResourceAsStream("vpn-ipv4.txt");
-            Objects.requireNonNull(stream, "stream");
-            PandorumPlugin.forbiddenIps = Seq.with(Streams.copyString(stream).split(System.lineSeparator())).map(IpInfo::new);
-        } catch(Exception e) {
-            throw new ArcRuntimeException(e);
-        }
 
         PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
