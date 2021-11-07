@@ -6,6 +6,7 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
+import pandorum.comp.Icons;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -17,7 +18,7 @@ public class TeamCommand implements ClientCommand {
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {
             StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(t.emoji).append(Misc.colorizedTeam(t));
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(Icons.get(t.name)).append(Misc.colorizedTeam(t));
             bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
