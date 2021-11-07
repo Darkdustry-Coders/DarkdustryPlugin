@@ -31,7 +31,9 @@ public class SpawnCommand implements ClientCommand {
 
         Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
         if (team == null) {
-            bundled(player, "commands.teams");
+            StringBuilder teams = new StringBuilder();
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(t.emoji).append(Misc.colorizedTeam(t));
+            bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
 

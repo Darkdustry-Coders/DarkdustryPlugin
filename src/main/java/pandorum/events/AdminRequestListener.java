@@ -18,9 +18,8 @@ public class AdminRequestListener {
                         .setColor(BotMain.errorColor)
                         .setAuthor("KICK")
                         .setTitle("Игрок был выгнан с сервера!")
-                        .addField("Админом: ", Strings.stripColors(event.player.name), false)
-                        .addField("Никнейм: ", Strings.stripColors(event.other.name), false)
-                        .addField("IP: ", event.other.ip(), false);
+                        .addField("Админом:", Strings.stripColors(event.player.name), false)
+                        .addField("Никнейм игрока:", Strings.stripColors(event.other.name), false);
 
                 BotHandler.sendEmbed(embed);
             }

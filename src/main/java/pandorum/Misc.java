@@ -1,14 +1,12 @@
 package pandorum;
 
 import arc.files.Fi;
-import arc.func.Cons2;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import mindustry.net.NetConnection;
 import pandorum.comp.Bundle;
 
 import java.text.SimpleDateFormat;
@@ -81,10 +79,5 @@ public abstract class Misc {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return simpleDateFormat.format(time);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> void handleServer(Class<T> type, Cons2<NetConnection, T> listener) {
-        PandorumPlugin.serverListeners.put(type, (Cons2<NetConnection, Object>)listener);
     }
 }

@@ -13,10 +13,7 @@ public class RestartCommand implements ServerCommand {
     public static void run(final String[] args) {
         Log.info("Перезапуск сервера...");
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.errorColor)
-                .setTitle("Сервер выключился для перезапуска!");
-
+        EmbedBuilder embed = new EmbedBuilder().setColor(BotMain.errorColor).setTitle("Сервер выключился для перезапуска!");
         BotHandler.sendEmbed(embed);
 
         netServer.kickAll(KickReason.serverRestarting);

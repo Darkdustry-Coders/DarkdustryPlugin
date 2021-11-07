@@ -12,7 +12,7 @@ public class ReloadCommand implements ServerCommand {
         try {
             PandorumPlugin.config = PandorumPlugin.gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
             BotMain.bot.disconnect();
-            BotMain.run();
+            BotMain.start();
             Log.info("Файл конфигурации перезагружен...");
         } catch(Exception e) {
             Log.err(e);

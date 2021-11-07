@@ -4,9 +4,9 @@ import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.Colors;
 import arc.struct.Seq;
-import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.core.Version;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
@@ -23,8 +23,6 @@ import pandorum.comp.Bundle;
 import java.util.Locale;
 
 import static mindustry.Vars.netServer;
-import static mindustry.Vars.platform;
-import static mindustry.Vars.mods;
 import static mindustry.Vars.maxNameLength;
 
 public class ConnectHandler {
@@ -76,7 +74,7 @@ public class ConnectHandler {
         }
 
         Seq<String> extraMods = packet.mods.copy();
-        Seq<String> missingMods = mods.getIncompatibility(extraMods);
+        Seq<String> missingMods = Vars.mods.getIncompatibility(extraMods);
 
         if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
             StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", locale));
@@ -110,9 +108,7 @@ public class ConnectHandler {
             return;
         }
 
-        if (packet.locale == null) {
-            packet.locale = "en";
-        }
+        if (packet.locale == null) packet.locale = "en";
 
         String ip = con.address;
 
@@ -123,9 +119,7 @@ public class ConnectHandler {
             return;
         }
 
-        if (packet.version == -1) {
-            con.modclient = true;
-        }
+        if (packet.version == -1) con.modclient = true;
 
         Player player = Player.create();
         player.admin = netServer.admins.isAdmin(uuid, packet.usid);
@@ -144,9 +138,8 @@ public class ConnectHandler {
         try {
             PandorumPlugin.writeBuffer.reset();
             player.write(PandorumPlugin.outputBuffer);
-        } catch(Throwable t) {
+        } catch(Exception e) {
             con.kick(KickReason.nameEmpty);
-            Log.info("Обнаружен игрок с пустым никнеймом! UUID: @", uuid);
             return;
         }
 
@@ -156,13 +149,13 @@ public class ConnectHandler {
 
         netServer.sendWorldData(player);
 
-        platform.updateRPC();
+        Vars.platform.updateRPC();
 
         Events.fire(new EventType.PlayerConnect(player));
     }
 
     private static String fixName(String name) {
-        name = name.trim().replace("\n", " ").replace("\t", " ").replace("@", " ");
+        name = name.trim().replace("\n", "").replace("\t", "").replace("@", "");
         if (name.equals("[") || name.equals("]")) {
             return "";
         }

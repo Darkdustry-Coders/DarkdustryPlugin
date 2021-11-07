@@ -61,7 +61,7 @@ public class VoteKickSession {
                     .setColor(BotMain.errorColor)
                     .setAuthor("KICK")
                     .setTitle("Игрок был выгнан с сервера голосованием!")
-                    .addField("Никнейм: ", Strings.stripColors(target.name), false);
+                    .addField("Никнейм игрока: ", Strings.stripColors(target.name), false);
 
             BotHandler.botChannel.sendMessage(embed).join();
             stop();

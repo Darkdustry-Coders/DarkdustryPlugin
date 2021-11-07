@@ -20,7 +20,7 @@ public class BotMain {
     public static final Color successColor = Color.decode("#00FF00");
     public static final Color errorColor = Color.decode("#ff3838");
 
-    public static void run() {
+    public static void start() {
         bot = new DiscordApiBuilder()
                 .setToken(PandorumPlugin.config.DiscordBotToken)
                 .login().join();

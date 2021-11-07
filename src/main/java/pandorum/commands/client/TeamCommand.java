@@ -16,7 +16,9 @@ public class TeamCommand implements ClientCommand {
         if (Misc.adminCheck(player)) return;
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {
-            bundled(player, "commands.teams");
+            StringBuilder teams = new StringBuilder();
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(t.emoji).append(Misc.colorizedTeam(t));
+            bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
 

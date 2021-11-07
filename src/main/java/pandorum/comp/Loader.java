@@ -10,10 +10,8 @@ import mindustry.core.NetServer;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.net.Administration;
-import mindustry.net.Net;
-import mindustry.net.Packets;
+import mindustry.net.Packets.ConnectPacket;
 import org.javacord.api.entity.activity.ActivityType;
-import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
@@ -23,8 +21,8 @@ import pandorum.events.filters.ChatFilter;
 import java.io.InputStream;
 import java.util.Objects;
 
-import static mindustry.Vars.netServer;
 import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 import static pandorum.discord.BotMain.bot;
 
 public class Loader {
@@ -37,11 +35,10 @@ public class Loader {
             throw new ArcRuntimeException(e);
         }
 
-        PandorumPlugin.serverListeners = Reflect.get(Net.class, net, "serverListeners");
         PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
-        Misc.handleServer(Packets.ConnectPacket.class, ConnectHandler::handle);
+        net.handleServer(ConnectPacket.class, ConnectHandler::handle);
 
         netServer.admins.addActionFilter(ActionFilter::filter);
         netServer.admins.addChatFilter(ChatFilter::filter);
@@ -64,18 +61,19 @@ public class Loader {
         Events.on(EventType.AdminRequestEvent.class, AdminRequestListener::call);
         Events.run(EventType.Trigger.update, TriggerUpdateListener::update);
 
-        Administration.Config.showConnectMessages.set(false);
-        Administration.Config.strict.set(true);
         Administration.Config.motd.set("off");
         Administration.Config.messageRateLimit.set(1);
+        Administration.Config.showConnectMessages.set(false);
+        Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
+        Administration.Config.allowCustomClients.set(true);
 
         Effects.init();
         MenuListener.init();
         Icons.init();
         Ranks.init();
-        BotMain.run();
+        BotMain.start();
 
-        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, (Groups.player.size() + (Groups.player.size() % 10 == 1 && Groups.player.size() != 11 ? " игрок на сервере." : " игроков на сервере."))), 0f, 15f);
+        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, "Игроков на сервере: " + Groups.player.size()), 0f, 15f);
     }
 }

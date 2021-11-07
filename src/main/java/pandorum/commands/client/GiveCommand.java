@@ -5,6 +5,7 @@ import mindustry.game.Teams.TeamData;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.Misc;
+import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.state;
@@ -23,7 +24,9 @@ public class GiveCommand implements ClientCommand {
 
         Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
         if (item == null) {
-            bundled(player, "commands.admin.give.item-not-found");
+            StringBuilder items = new StringBuilder();
+            content.items().each(res -> items.append(" ").append(Icons.get(res.name)).append(res.name));
+            bundled(player, "commands.admin.give.item-not-found", items.toString());
             return;
         }
 

@@ -18,7 +18,6 @@ public class PlayerUnbanListener {
                     .setAuthor("UNBAN")
                     .setTitle("Игрок был разбанен!")
                     .addField("Никнейм:", Strings.stripColors(info.lastName), false)
-                    .addField("IP:", info.lastIP, false)
                     .addField("UUID:", event.uuid, false);
 
             BotHandler.sendEmbed(embed);

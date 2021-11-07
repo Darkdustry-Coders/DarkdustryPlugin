@@ -9,6 +9,6 @@ public class ClearAdminsCommand implements ServerCommand {
     public static void run(final String[] args) {
         netServer.admins.getAdmins().each(admin -> netServer.admins.unAdminPlayer(admin.id));
         Groups.player.each(player -> player.admin(false));
-        Log.info("Админов больше нет!");
+        Log.info("Все админы сняты...");
     }
 }

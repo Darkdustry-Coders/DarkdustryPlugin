@@ -1,7 +1,6 @@
 package pandorum;
 
 import arc.files.Fi;
-import arc.func.Cons2;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
@@ -22,7 +21,6 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
-import mindustry.net.NetConnection;
 import okhttp3.OkHttpClient;
 import org.bson.Document;
 import org.json.JSONArray;
@@ -45,7 +43,7 @@ import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static final String discordServerLink = "dsc.gg/darkdustry";
+    public static final String discordServerLink = "https://dsc.gg/darkdustry";
 
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
@@ -78,7 +76,6 @@ public final class PandorumPlugin extends Plugin {
     public static final StringMap codeLanguages = new StringMap();
     public static final OkHttpClient client = new OkHttpClient();
 
-    public static ObjectMap<Class<?>, Cons2<NetConnection, Object>> serverListeners;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
 
@@ -148,7 +145,6 @@ public final class PandorumPlugin extends Plugin {
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("pl", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
         handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         handler.register("units", "<list/change/name> [unit] [player...]", "Действия с юнитами.", UnitsCommand::run);
         handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
         handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
@@ -185,6 +181,10 @@ public final class PandorumPlugin extends Plugin {
 
         if (config.mode == Config.Gamemode.sandbox) {
             handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
+        }
+
+        if (config.mode != Config.Gamemode.hub) {
+            handler.register("hub", "Выйти в Хаб.", HubCommand::run);
         }
     }
 }
