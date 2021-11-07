@@ -8,14 +8,11 @@ import static pandorum.Misc.bundled;
 
 public class AlertCommand implements ClientCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(
-            new BasicDBObject("UUID", player.uuid()),
-            playerInfo -> {
-                playerInfo.alerts = !playerInfo.alerts;
-                playerInfo.save();
+        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+            playerInfo.alerts = !playerInfo.alerts;
+            playerInfo.save();
 
-                bundled(player, (playerInfo.alerts ? "commands.alert.on" : "commands.alert.off"));
-            }
-        );
+            bundled(player, (playerInfo.alerts ? "commands.alert.on" : "commands.alert.off"));
+        });
     }
 }

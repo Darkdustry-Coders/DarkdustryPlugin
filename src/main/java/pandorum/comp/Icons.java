@@ -78,7 +78,9 @@ public class Icons {
 
                 "sharded", Iconc.teamSharded,
                 "crux", Iconc.teamCrux,
-                "derelict", Iconc.teamDerelict
+                "derelict", Iconc.teamDerelict,
+
+                "admin", Iconc.admin
         );
     }
 

@@ -17,7 +17,7 @@ public class Ranks {
     public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", veteran, new Requirements(50000000L, 50000, 30));
     public static Rank player = new Rank("[accent]<> ", "[accent]Player", active, new Requirements(25000000L, 25000, 15));
 
-    public static IntMap<Rank> ranks = new IntMap<>();
+    private static final IntMap<Rank> ranks = new IntMap<>();
 
     public static class Rank {
         public String tag;
@@ -56,25 +56,26 @@ public class Ranks {
         ranks.put(3, admin);
     }
 
-    public static void getRank(Player p, Consumer<Rank> callback) {
-        PlayerModel.find(
-            new BasicDBObject("UUID", p.uuid()),
-            playerInfo -> {
-                Rank current = ranks.get(playerInfo.rank);
-                Rank rank;
-                if (p.admin) rank = admin;
-                else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
-                    rank = current.next;
-                    bundled(p, "events.rank-increase", current.next.tag, current.next.name);
-                } else if (current == admin) rank = player;
-                else rank = current;
+    public static Rank get(int index) {
+        return ranks.get(index);
+    }
 
-                if (playerInfo.rank != ranks.findKey(rank, false, 0)) {
-                    playerInfo.rank = ranks.findKey(rank, false, 0);
-                    playerInfo.save();
-                }
-                callback.accept(rank);
+    public static void getRank(Player p, Consumer<Rank> callback) {
+        PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+            Rank current = get(playerInfo.rank);
+            Rank rank;
+            if (p.admin) rank = admin;
+            else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
+                rank = current.next;
+                bundled(p, "events.rank-increase", current.next.tag, current.next.name);
+            } else if (current == admin) rank = player;
+            else rank = current;
+
+            if (playerInfo.rank != ranks.findKey(rank, false, 0)) {
+                playerInfo.rank = ranks.findKey(rank, false, 0);
+                playerInfo.save();
             }
-        );
+            callback.accept(rank);
+        });
     }
 }

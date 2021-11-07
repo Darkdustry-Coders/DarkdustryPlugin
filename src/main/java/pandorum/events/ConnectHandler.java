@@ -29,9 +29,7 @@ public class ConnectHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
-        if (con.address.startsWith("steam:")) {
-            packet.uuid = con.address.substring("steam:".length());
-        }
+        if (con.address.startsWith("steam:")) packet.uuid = con.address.substring("steam:".length());
 
         Events.fire(new EventType.ConnectPacketEvent(con, packet));
 
@@ -111,7 +109,6 @@ public class ConnectHandler {
         if (packet.locale == null) packet.locale = "en";
 
         String ip = con.address;
-
         netServer.admins.updatePlayerJoined(uuid, ip, packet.name);
 
         if (packet.version != Version.build && Version.build != -1 && packet.version != -1) {

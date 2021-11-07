@@ -35,8 +35,8 @@ public class TeamCommand implements ClientCommand {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
                 .setTitle("Команда игрока изменена.")
-                .addField("Никнейм: ", Strings.stripColors(player.name), false)
-                .addField("Новая команда: ", team.name, false);
+                .addField("Никнейм:", Strings.stripColors(player.name), false)
+                .addField("Новая команда:", team.name, false);
 
         BotHandler.sendEmbed(embed);
     }

@@ -40,7 +40,7 @@ public class IpInfo {
         byte[] rem = remoteAddress.getAddress();
         byte[] req = required.getAddress();
         int fullMask = mask / 8;
-        byte b = (byte)(0xff00 >> (mask & 0x07));
+        byte b = (byte) (0xff00 >> (mask & 0x07));
         for (int i = 0; i < fullMask; i++) {
             if (rem[i] != req[i]) return false;
         }

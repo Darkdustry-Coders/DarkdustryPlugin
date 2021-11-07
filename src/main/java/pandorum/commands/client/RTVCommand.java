@@ -20,7 +20,7 @@ public class RTVCommand implements ClientCommand {
 
         votesRTV.add(player.uuid());
         int cur = votesRTV.size;
-        int req = (int)Math.ceil(config.voteRatio * Groups.player.size());
+        int req = (int) Math.ceil(config.voteRatio * Groups.player.size());
         sendToChat("commands.rtv.ok", player.coloredName(), cur, req);
 
         if (cur < req) {

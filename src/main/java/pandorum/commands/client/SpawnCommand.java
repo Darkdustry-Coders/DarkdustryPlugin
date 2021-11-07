@@ -50,10 +50,10 @@ public class SpawnCommand implements ClientCommand {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(BotMain.successColor)
                 .setTitle("Заспавнены юниты.")
-                .addField("Заспавнил: ", Strings.stripColors(player.name), false)
-                .addField("Тип юнита: ", unit.name, false)
-                .addField("Команда: ", team.name, false)
-                .addField("Количество: ", Integer.toString(count), false);
+                .addField("Заспавнил:", Strings.stripColors(player.name), false)
+                .addField("Тип юнита:", unit.name, false)
+                .addField("Команда:", team.name, false)
+                .addField("Количество:", Integer.toString(count), false);
 
         BotHandler.sendEmbed(embed);
     }
