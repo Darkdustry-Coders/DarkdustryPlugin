@@ -1,7 +1,6 @@
 package pandorum.comp;
 
 import arc.graphics.Color;
-import arc.util.Reflect;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Call;
@@ -12,9 +11,9 @@ public class Effects {
     private static EffectObject moveEffect, leaveEffect, joinEffect;
 
     public static void init() {
-        moveEffect = new EffectObject("#4169e1", "freezing");
-        leaveEffect = new EffectObject("#4169e1", "greenLaserCharge");
-        joinEffect = new EffectObject("#4169e1", "greenBomb");
+        moveEffect = new EffectObject(Color.valueOf("#4169e1"), Fx.freezing);
+        leaveEffect = new EffectObject(Color.valueOf("#4169e1"), Fx.greenLaserCharge);
+        joinEffect = new EffectObject(Color.valueOf("#4169e1"), Fx.greenBomb);
     }
 
     public static void on(EffectObject effect, float x, float y) {
@@ -39,22 +38,14 @@ public class Effects {
 
     public static class EffectObject {
         public float rotation = 30;
-        private final String color;
-        private final String effect;
-
-        public Color getColor() {
-            return Color.valueOf(color);
-        }
-
-        public Effect getEffect() {
-            return Reflect.get(Fx.class, effect);
-        }
+        private final Color color;
+        private final Effect effect;
 
         public void spawn(float x, float y) {
-            Call.effect(getEffect(), x, y, rotation, getColor());
+            Call.effect(effect, x, y, rotation, color);
         }
 
-        public EffectObject(String color, String effect) {
+        public EffectObject(Color color, Effect effect) {
             this.color = color;
             this.effect = effect;
         }

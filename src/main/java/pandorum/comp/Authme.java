@@ -17,7 +17,6 @@ public class Authme {
 
     public static void deny(String uuid) {
         Player player = Misc.findByID(uuid);
-        if (player == null) return;
-        bundled(player, "commands.login.ignore");
+        if (player != null) bundled(player, "commands.login.ignore");
     }
 }
