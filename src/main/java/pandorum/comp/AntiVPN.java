@@ -25,13 +25,13 @@ public class AntiVPN {
 
     public AntiVPN(String token) {
         this.cache = new Cache2kBuilder<String, Boolean>() {}
-            .expireAfterWrite(15, TimeUnit.DAYS)
+            .expireAfterWrite(7, TimeUnit.DAYS)
             .build();
         this.client = new OkHttpClient();
         this.token = token;
     }
 
-    public void isDangerousIp(String ip, Consumer<Boolean> callback) {
+    public void checkIp(String ip, Consumer<Boolean> callback) {
         if (cache.containsKey(ip)) {
             cache.expireAt(ip, new Date().getTime() + TimeUnit.DAYS.toMillis(15));
             callback.accept(cache.get(ip));
@@ -67,15 +67,15 @@ public class AntiVPN {
                 String isProxy = ipInfo.getString("proxy");
                 String ipType = ipInfo.getString("type");
 
-                boolean isDangerous = risk >= 66 || isProxy == "yes"
+                boolean isVPN = risk >= 66 || isProxy == "yes"
                     || Set.of(
                         "tor", "socks", "socks4", "socks4a",
                         "socks5", "socks5h", "shadowsocks",
                         "compromised server", "inference engine",
                         "openvpn", "vpn"
                     ).contains(ipType.toLowerCase());
-                cache.put(ip, isDangerous);
-                callback.accept(isDangerous);
+                cache.put(ip, isVPN);
+                callback.accept(isVPN);
             }
         });
     }
