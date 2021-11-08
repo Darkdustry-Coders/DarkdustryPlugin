@@ -1,41 +1,29 @@
 package pandorum.comp;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
-import org.cache2k.Cache;
-import org.cache2k.Cache2kBuilder;
+import arc.struct.ObjectMap;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class AntiVPN {
-    private static Cache<String, Boolean> cache;
     private static String key;
     private static OkHttpClient client;
     public static String API_VERSION = "v2";
+    private static ObjectMap<String, Boolean> cache;
 
     public AntiVPN(String token) {
-        cache = new Cache2kBuilder<String, Boolean>() {}
-            .expireAfterWrite(7, TimeUnit.DAYS)
-            .build();
         client = new OkHttpClient();
+        cache = new ObjectMap<>();
         key = token;
     }
 
     public void checkIp(String ip, Consumer<Boolean> callback) {
         if (cache.containsKey(ip)) {
-            cache.expireAt(ip, new Date().getTime() + TimeUnit.DAYS.toMillis(7));
             callback.accept(cache.get(ip));
             return;
         }
