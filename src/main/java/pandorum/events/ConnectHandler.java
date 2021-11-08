@@ -111,7 +111,7 @@ public class ConnectHandler {
         netServer.admins.updatePlayerJoined(uuid, ip, packet.name);
 
         boolean[] vpn = {false};
-        PandorumPlugin.antiVPN.isDangerousIp(ip, result -> vpn[0] = result);
+        PandorumPlugin.antiVPN.checkIp(ip, result -> vpn[0] = result);
         if (vpn[0]) {
             con.kick(Bundle.format("events.vpn-ip", locale), 0);
             return;

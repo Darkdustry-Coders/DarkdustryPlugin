@@ -12,9 +12,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class Translator {
-    private static OkHttpClient client;
+    private final OkHttpClient client;
 
-    private static final Request.Builder requestBuilder = new Request.Builder()
+    private final Request.Builder requestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
             .addHeader("accept-language", "ru,en;q=0.9")
@@ -27,7 +27,7 @@ public class Translator {
             .addHeader("sec-fetch-site", "cross-site");
 
     public Translator() {
-        client = new OkHttpClient();
+        this.client = new OkHttpClient();
     }
 
     public void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
