@@ -1,18 +1,19 @@
 package pandorum.comp;
 
 import arc.util.Log;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import okhttp3.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Consumer;
-
 import pandorum.PandorumPlugin;
 
+import java.io.IOException;
+import java.util.Objects;
+import java.util.function.Consumer;
+
 public class Translator {
+    private static OkHttpClient client;
+
     private static final Request.Builder requestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
@@ -25,7 +26,11 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    public static void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
+    public Translator() {
+        client = new OkHttpClient();
+    }
+
+    public void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
         String destAlphaLang = PandorumPlugin.codeLanguages.containsKey(dest_lang) ? PandorumPlugin.codeLanguages.get(dest_lang) : PandorumPlugin.codeLanguages.get("en");
 
         RequestBody formBody = new FormBody.Builder()
@@ -36,7 +41,7 @@ public class Translator {
         Request request = requestBuilder
                 .post(formBody)
                 .build();
-        PandorumPlugin.client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.err(e);
@@ -58,7 +63,7 @@ public class Translator {
         });
     }
 
-    public static JSONArray getAllLanguages() throws IOException {
+    public JSONArray getAllLanguages() throws IOException {
         Request request = new Request.Builder()
                 .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
                 .get()
@@ -73,7 +78,7 @@ public class Translator {
                 .addHeader("sec-fetch-site", "cross-site")
                 .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"")
                 .build();
-        Response response = PandorumPlugin.client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
         return response.isSuccessful() ?
                 new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") :
                 new JSONArray("[]");

@@ -36,10 +36,12 @@ public class ConnectHandler {
         con.connectTime = Time.millis();
 
         String uuid = packet.uuid;
-        Locale locale = packet.locale == null ? Bundle.defaultLocale() : Misc.findLocale(packet.locale);
+        String ip = con.address;
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
+        if (packet.locale == null) packet.locale = "en";
         packet.name = fixName(packet.name);
+        Locale locale = Misc.findLocale(packet.locale);
 
         if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
 
@@ -102,14 +104,18 @@ public class ConnectHandler {
         }
 
         if (packet.name.trim().length() <= 0 || packet.name.trim().length() > maxNameLength) {
-            con.kick(Bundle.format("events.bad-name-length", locale, maxNameLength));
+            con.kick(Bundle.format("events.bad-name-length", locale, maxNameLength), 0);
             return;
         }
 
-        if (packet.locale == null) packet.locale = "en";
-
-        String ip = con.address;
         netServer.admins.updatePlayerJoined(uuid, ip, packet.name);
+
+        boolean[] vpn = {false};
+        PandorumPlugin.antiVPN.isDangerousIp(ip, result -> vpn[0] = result);
+        if (vpn[0]) {
+            con.kick(Bundle.format("events.vpn-ip", locale), 0);
+            return;
+        }
 
         if (packet.version != Version.build && Version.build != -1 && packet.version != -1) {
             con.kick(packet.version > Version.build ? KickReason.serverOutdated : KickReason.clientOutdated);

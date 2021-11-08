@@ -21,15 +21,14 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
-import okhttp3.OkHttpClient;
 import org.bson.Document;
 import org.json.JSONArray;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
+import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
 import pandorum.comp.Loader;
 import pandorum.comp.Translator;
-import pandorum.comp.AntiVPN;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
@@ -73,11 +72,11 @@ public final class PandorumPlugin extends Plugin {
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
     public static final StringMap codeLanguages = new StringMap();
-    public static final OkHttpClient client = new OkHttpClient();
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
 
+    public static Translator translator;
     public static AntiVPN antiVPN;
 
     public PandorumPlugin() throws IOException, URISyntaxException {
@@ -102,7 +101,10 @@ public final class PandorumPlugin extends Plugin {
             config = gson.fromJson(file.reader(), Config.class);
         }
 
-        JSONArray languages = Translator.getAllLanguages();
+        antiVPN = new AntiVPN("w7j425-826177-597253-3134u9");
+        translator = new Translator();
+
+        JSONArray languages = translator.getAllLanguages();
         for (int i = 0; i < languages.length(); i++) {
             String codeAlpha = languages.getJSONObject(i).getString("code_alpha_1");
             String fullCode = languages.getJSONObject(i).getString("full_code");
