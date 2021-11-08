@@ -16,7 +16,6 @@ ext {
 dependencies {
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-    runtimeOnly 'org.cache2k:cache2k-core:2.4.1.Final'
 
     implementation 'org.json:json:20210307'
     implementation 'org.mongodb:mongodb-driver-reactivestreams:4.3.2'

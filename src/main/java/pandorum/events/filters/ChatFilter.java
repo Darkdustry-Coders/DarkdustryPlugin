@@ -6,7 +6,7 @@ import arc.util.Strings;
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.comp.Translator;
+import pandorum.PandorumPlugin;
 import pandorum.discord.BotHandler;
 import pandorum.models.PlayerModel;
 
@@ -34,7 +34,7 @@ public class ChatFilter {
                 }
 
                 try {
-                    Translator.translate(text, language, translated -> {
+                    PandorumPlugin.translator.translate(text, language, translated -> {
                         if ((!translated.isNull("err") && translated.optString("err").equals("")) || translated.optString("result", text).equalsIgnoreCase(text) || translated.optString("result", text).isBlank()) {
                             player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
                             translationsCache.put(language, text);
@@ -49,7 +49,7 @@ public class ChatFilter {
             }
         ));
 
-        BotHandler.text("**@**: @", Strings.stripColors(author.name), text.replaceAll("https?://|@", " "));
+        BotHandler.text("**@**: @", Strings.stripColors(author.name), Strings.stripColors(text).replaceAll("https?://|@", " "));
         return null;
     }
 }

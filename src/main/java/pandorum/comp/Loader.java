@@ -55,8 +55,6 @@ public class Loader {
         Administration.Config.enableVotekick.set(true);
         Administration.Config.allowCustomClients.set(true);
 
-        PandorumPlugin.antiVPN = new AntiVPN("w7j425-826177-597253-3134u9");
-
         Effects.init();
         MenuListener.init();
         Icons.init();

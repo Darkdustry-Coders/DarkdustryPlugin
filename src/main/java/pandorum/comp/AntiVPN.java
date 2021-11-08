@@ -2,12 +2,14 @@ package pandorum.comp;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.cache2k.Cache;
 import org.cache2k.Cache2kBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import okhttp3.Call;
@@ -18,22 +20,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AntiVPN {
-    private Cache<String, Boolean> cache;
-    private String token;
-    private OkHttpClient client;
+    private static Cache<String, Boolean> cache;
+    private static String key;
+    private static OkHttpClient client;
     public static String API_VERSION = "v2";
 
     public AntiVPN(String token) {
-        this.cache = new Cache2kBuilder<String, Boolean>() {}
+        cache = new Cache2kBuilder<String, Boolean>() {}
             .expireAfterWrite(7, TimeUnit.DAYS)
             .build();
-        this.client = new OkHttpClient();
-        this.token = token;
+        client = new OkHttpClient();
+        key = token;
     }
 
     public void checkIp(String ip, Consumer<Boolean> callback) {
         if (cache.containsKey(ip)) {
-            cache.expireAt(ip, new Date().getTime() + TimeUnit.DAYS.toMillis(15));
+            cache.expireAt(ip, new Date().getTime() + TimeUnit.DAYS.toMillis(7));
             callback.accept(cache.get(ip));
             return;
         }
@@ -43,7 +45,7 @@ public class AntiVPN {
             .host("proxycheck.io")
             .addPathSegment(API_VERSION)
             .addPathSegment(ip)
-            .addQueryParameter("key", token)
+            .addQueryParameter("key", key)
             .addQueryParameter("risk", "1")
             .addQueryParameter("vpn", "1")
             .build();
@@ -54,12 +56,12 @@ public class AntiVPN {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call request, IOException e) {
+            public void onFailure(@NotNull Call request, @NotNull IOException e) {
                 callback.accept(false);
             }
 
             @Override
-            public void onResponse(Call request, Response response) throws IOException {
+            public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
                 JSONObject body = new JSONObject(response.body().string());
                 JSONObject ipInfo = body.getJSONObject(ip);
 
@@ -67,7 +69,7 @@ public class AntiVPN {
                 String isProxy = ipInfo.getString("proxy");
                 String ipType = ipInfo.getString("type");
 
-                boolean isVPN = risk >= 66 || isProxy == "yes"
+                boolean isVPN = risk >= 66 || Objects.equals(isProxy, "yes")
                     || Set.of(
                         "tor", "socks", "socks4", "socks4a",
                         "socks5", "socks5h", "shadowsocks",
