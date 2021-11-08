@@ -1,7 +1,12 @@
 package pandorum.commands.client;
 
 import arc.util.Timekeeper;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.entity.Message;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Player;
+import pandorum.comp.Authme;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -24,25 +29,23 @@ public class LoginCommand implements ClientCommand {
             return;
         }
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.normalColor)
-                .setTitle("Запрос на выдачу прав администратора.")
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.normalColor)
+                .author("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
+                .title("Запрос на выдачу прав администратора.")
                 .addField("Никнейм: ", player.name, true)
                 .addField("UUID: ", player.uuid(), true)
-                .setFooter("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.");
+                .footer("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.", null)
+                .build();
 
-        if (BotMain.bot != null && BotHandler.adminChannel != null) {
-            Message message = new MessageBuilder().setEmbed(embed).addComponents(
-                    ActionRow.of(
-                            Button.success("confirm", "Подтвердить"),
-                            Button.danger("deny", "Отклонить")
-                    )
-            ).send(BotHandler.adminChannel).join();
+        Message message = BotHandler.adminChannel.createMessage(MessageCreateSpec.builder()
+                .addEmbed(embed)
+                .addComponent(ActionRow.of(Authme.confirm, Authme.deny))
+                .build()).block();
 
-            BotHandler.waiting.put(message, player.uuid());
+        BotHandler.waiting.put(message, player.uuid());
 
-            vtime.reset();
-            bundled(player, "commands.login.sent");
-        }
+        vtime.reset();
+        bundled(player, "commands.login.sent");
     }
 }

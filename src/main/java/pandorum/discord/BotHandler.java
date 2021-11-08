@@ -13,6 +13,8 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateFields;
+import discord4j.core.spec.MessageCreateSpec;
 import mindustry.Vars;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -21,11 +23,11 @@ import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 import static pandorum.discord.BotMain.*;
 
@@ -58,7 +60,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
+            if (checkAdmin(msg.getAuthorAsMember().block())) {
                 err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -83,7 +85,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
+            if (checkAdmin(msg.getAuthorAsMember().block())) {
                 err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -94,7 +96,13 @@ public class BotHandler {
                 return;
             }
 
-            //Надо отправить файл карты в канал
+            try {
+                msg.getChannel().block().createMessage(MessageCreateSpec.builder()
+                        .addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file())))
+                        .build()).block();
+            } catch (Exception e) {
+                err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
+            }
         });
 
         handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
@@ -129,7 +137,7 @@ public class BotHandler {
                     .addField("Карты:", maps.toString(), false)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
 
         handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
@@ -149,7 +157,7 @@ public class BotHandler {
                     .footer("Используй " + prefix + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
 
         handler.<Message>register("players","Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -177,12 +185,12 @@ public class BotHandler {
                     .addField("Игроки:", players.toString(), false)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
     }
 
     public static void text(Message message, String text, Object... args) {
-        text(Objects.requireNonNull(message.getChannel().block()), text, args);
+        text(message.getChannel().block(), text, args);
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
@@ -190,11 +198,11 @@ public class BotHandler {
     }
 
     public static void info(Message message, String title, String text, Object... args) {
-        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
+        sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static void err(Message message, String title, String text, Object... args) {
-        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
+        sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static InputStream download(String url) {

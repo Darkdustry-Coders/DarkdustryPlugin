@@ -3,12 +3,13 @@ package pandorum.comp;
 import arc.Events;
 import arc.util.Reflect;
 import arc.util.Timer;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
 import mindustry.core.NetServer;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import mindustry.net.Packets.ConnectPacket;
-import org.javacord.api.entity.activity.ActivityType;
 import pandorum.PandorumPlugin;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
@@ -17,7 +18,6 @@ import pandorum.events.filters.ChatFilter;
 
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
-import static pandorum.discord.BotMain.bot;
 
 public class Loader {
     public static void init() {
@@ -61,6 +61,6 @@ public class Loader {
         Ranks.init();
         BotMain.start();
 
-        Timer.schedule(() -> bot.updateActivity(ActivityType.WATCHING, "Игроков на сервере: " + Groups.player.size()), 0f, 15f);
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.online(ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))), 0f, 15f);
     }
 }
