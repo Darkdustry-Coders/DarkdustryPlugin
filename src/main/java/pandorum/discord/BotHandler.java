@@ -39,8 +39,8 @@ public class BotHandler {
     public static final ObjectMap<Message, String> waiting = new ObjectMap<>();
 
     public BotHandler() {
-        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID));
-        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(844215222784753664L));
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(844215222784753664L)).block();
 
         register();
     }
