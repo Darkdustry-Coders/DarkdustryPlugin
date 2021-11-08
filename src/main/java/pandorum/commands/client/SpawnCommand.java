@@ -2,11 +2,11 @@ package pandorum.commands.client;
 
 import arc.util.Strings;
 import arc.util.Structs;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.Misc;
 import pandorum.comp.Icons;
 import pandorum.discord.BotHandler;
@@ -47,13 +47,14 @@ public class SpawnCommand implements ClientCommand {
         for (int i = 0; i < count; i++) unit.spawn(team, player.x, player.y);
         bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.successColor)
-                .setTitle("Заспавнены юниты.")
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.normalColor)
+                .title("Заспавнены юниты!")
                 .addField("Заспавнил:", Strings.stripColors(player.name), false)
                 .addField("Тип юнита:", unit.name, false)
                 .addField("Команда:", team.name, false)
-                .addField("Количество:", Integer.toString(count), false);
+                .addField("Количество:", Integer.toString(count), false)
+                .build();
 
         BotHandler.sendEmbed(embed);
     }

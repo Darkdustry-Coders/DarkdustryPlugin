@@ -1,9 +1,9 @@
 package pandorum.events;
 
 import com.mongodb.BasicDBObject;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 import pandorum.discord.BotHandler;
@@ -17,10 +17,11 @@ public class GameOverListener {
             playerInfo.save();
         }));
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.normalColor)
-                .setAuthor("Gameover")
-                .setTitle("Игра окончена. Загружаю новую карту...");
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.normalColor)
+                .author("Gameover", null, "https://w7.pngwing.com/pngs/679/718/png-transparent-globe-world-font-awesome-icon-globe-miscellaneous-map-earth-thumbnail.png")
+                .title("Игра окончена. Загружаю новую карту...")
+                .build();
 
         BotHandler.sendEmbed(embed);
 

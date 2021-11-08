@@ -2,10 +2,10 @@ package pandorum.events;
 
 import arc.util.Strings;
 import arc.util.Time;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
 import pandorum.discord.BotHandler;
@@ -32,10 +32,11 @@ public class WorldLoadListener {
         }
 
         Time.runTask(1f, () -> {
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.normalColor)
-                    .setTitle("Карта загружена.")
-                    .addField("Название: ", Strings.stripColors(Vars.state.map.name()), false);
+            EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                    .color(BotMain.normalColor)
+                    .title("Карта загружена.")
+                    .addField("Название:", Strings.stripColors(Vars.state.map.name()), false)
+                    .build();
 
             BotHandler.sendEmbed(embed);
         });

@@ -1,9 +1,8 @@
 package pandorum.events;
 
 import arc.util.Log;
-import arc.util.Time;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -11,10 +10,11 @@ public class ServerLoadListener {
     public static void call(final EventType.ServerLoadEvent event) {
         Log.info("[Darkdustry]: Плагин загружен. Сервер готов к работе...");
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.normalColor)
-                .setTitle("Сервер запущен.");
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.normalColor)
+                .title("Сервер запущен!")
+                .build();
 
-        Time.runTask(1f, () -> BotHandler.sendEmbed(embed));
+        BotHandler.sendEmbed(embed);
     }
 }

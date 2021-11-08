@@ -3,13 +3,13 @@ package pandorum.events;
 import arc.util.Log;
 import arc.util.Strings;
 import com.mongodb.BasicDBObject;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
-import pandorum.comp.Ranks;
 import pandorum.comp.Effects;
+import pandorum.comp.Ranks;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
@@ -23,9 +23,10 @@ public class PlayerJoinListener {
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player-join", "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName);
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.successColor)
-                .setTitle(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name)));
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.successColor)
+                .title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.getInfo().lastName)))
+                .build();
 
         BotHandler.sendEmbed(embed);
 

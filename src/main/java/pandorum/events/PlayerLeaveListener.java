@@ -4,9 +4,9 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
@@ -23,9 +23,10 @@ public class PlayerLeaveListener {
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player-leave", "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName);
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(BotMain.errorColor)
-                .setTitle(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name)));
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(BotMain.errorColor)
+                .title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.getInfo().lastName)))
+                .build();
 
         BotHandler.sendEmbed(embed);
 

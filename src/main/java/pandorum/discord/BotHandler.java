@@ -7,17 +7,16 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
 import arc.util.io.Streams;
+import discord4j.common.util.Snowflake;
+import discord4j.core.object.entity.Attachment;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.Vars;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import org.javacord.api.entity.channel.ServerTextChannel;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageAttachment;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.user.User;
 import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
@@ -26,22 +25,20 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
     public static final String prefix = PandorumPlugin.config.prefix;
     public static final CommandHandler handler = new CommandHandler(prefix);
-    public static ServerTextChannel botChannel, adminChannel;
-    public static Server server;
+    public static MessageChannel botChannel, adminChannel;
 
     public static final ObjectMap<Message, String> waiting = new ObjectMap<>();
 
     public BotHandler() {
-        botChannel = BotMain.bot.getServerTextChannelById(PandorumPlugin.config.DiscordChannelID).get();
-        adminChannel = BotMain.bot.getServerTextChannelById(844215222784753664L).get();
-
-        server = BotMain.bot.getServerById(810758118442663936L).get();
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID));
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(844215222784753664L));
 
         register();
     }
@@ -61,21 +58,21 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (checkAdmin(msg.getUserAuthor().get())) {
+            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
                 err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
 
-            if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFileName().endsWith(".msav")) {
+            if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFilename().endsWith(".msav")) {
                 err(msg, "Ошибка", "Пожалуйста, прикрепи файл карты к сообщению.");
                 return;
             }
 
-            MessageAttachment a = msg.getAttachments().get(0);
+            Attachment a = msg.getAttachments().get(0);
 
             try {
-                File mapFile = new File("config/maps/" + a.getFileName());
-                Streams.copy(download(a.getUrl().toString()), new FileOutputStream(mapFile));
+                File mapFile = new File("config/maps/" + a.getFilename());
+                Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile));
 
                 Vars.maps.reload();
 
@@ -86,7 +83,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (checkAdmin(msg.getUserAuthor().get())) {
+            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
                 err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -97,7 +94,7 @@ public class BotHandler {
                 return;
             }
 
-            new MessageBuilder().addFile(map.file.file()).send(msg.getChannel()).join();
+            //Надо отправить файл карты в канал
         });
 
         handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
@@ -125,13 +122,14 @@ public class BotHandler {
                 maps.append(i + 1).append(". ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
             }
 
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.normalColor)
-                    .setAuthor("Server maps")
-                    .setTitle("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
-                    .addField("Карты:", maps.toString(), false);
+            EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                    .color(BotMain.normalColor)
+                    .author("Server maps", null, "https://cdn.iconscout.com/icon/free/png-256/map-and-location-2569358-2148268.png")
+                    .title("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
+                    .addField("Карты:", maps.toString(), false)
+                    .build();
 
-            msg.getChannel().sendMessage(embed).join();
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
 
         handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
@@ -140,17 +138,18 @@ public class BotHandler {
                 return;
             }
 
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.successColor)
-                    .setAuthor("Статус сервера")
-                    .setTitle("Сервер онлайн.")
+            EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                    .color(BotMain.successColor)
+                    .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
+                    .title("Сервер онлайн.")
                     .addField("Игроков:", Integer.toString(Groups.player.size()), false)
                     .addField("Карта:", Vars.state.map.name(), false)
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
                     .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false)
-                    .setFooter("Используй " + prefix + "players, чтобы посмотреть список всех игроков.");
+                    .footer("Используй " + prefix + "players, чтобы посмотреть список всех игроков.", null)
+                    .build();
 
-            msg.getChannel().sendMessage(embed).join();
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
 
         handler.<Message>register("players","Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -171,42 +170,36 @@ public class BotHandler {
                 i++;
             }
 
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.normalColor)
-                    .setAuthor("Server players")
-                    .setTitle("Список игроков на сервере (всего " + Groups.player.size() + ")")
-                    .addField("Игроки:", players.toString(), false);
+            EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                    .color(BotMain.normalColor)
+                    .author("Server players", null, "https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png")
+                    .title("Список игроков на сервере (всего " + Groups.player.size() + ")")
+                    .addField("Игроки:", players.toString(), false)
+                    .build();
 
-            msg.getChannel().sendMessage(embed).join();
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
     }
 
     public static void text(Message message, String text, Object... args) {
-        text(message.getServerTextChannel().get(), text, args);
+        text(Objects.requireNonNull(message.getChannel().block()), text, args);
     }
 
-    public static void text(ServerTextChannel channel, String text, Object... args) {
-        if (BotMain.bot == null || channel == null || text == null) return;
-        channel.sendMessage(Strings.format(text, args)).join();
-    }
-
-    public static void text(String text, Object... args) {
-        text(botChannel, text, args);
+    public static void text(MessageChannel channel, String text, Object... args) {
+        channel.createMessage(Strings.format(text, args)).block();
     }
 
     public static void info(Message message, String title, String text, Object... args) {
-        if (BotMain.bot == null || message == null || message.getChannel() == null) return;
-        message.getChannel().sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(normalColor)).join();
+        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static void err(Message message, String title, String text, Object... args) {
-        if (BotMain.bot == null || message == null || message.getChannel() == null) return;
-        message.getChannel().sendMessage(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(errorColor)).join();
+        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static InputStream download(String url) {
         try {
-            HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
             return connection.getInputStream();
         } catch(Exception e) {
@@ -214,13 +207,16 @@ public class BotHandler {
         }
     }
 
-    public static boolean checkAdmin(User user) {
-        if (user.isBot()) return true;
-        return user.getRoles(server).stream().noneMatch(role -> role.getId() == 810760273689444385L);
+    public static boolean checkAdmin(Member member) {
+        if (member.isBot()) return true;
+        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
     }
 
-    public static void sendEmbed(EmbedBuilder embed) {
-        if (BotMain.bot == null || botChannel == null) return;
-        botChannel.sendMessage(embed).join();
+    public static void sendEmbed(EmbedCreateSpec embed) {
+        botChannel.createMessage(embed).block();
+    }
+
+    public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
+        channel.createMessage(embed).block();
     }
 }

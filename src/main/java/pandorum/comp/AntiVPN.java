@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import org.cache2k.Cache;
 import org.cache2k.Cache2kBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import okhttp3.Call;
@@ -54,12 +55,12 @@ public class AntiVPN {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call request, IOException e) {
+            public void onFailure(@NotNull Call request, @NotNull IOException e) {
                 callback.accept(false);
             }
 
             @Override
-            public void onResponse(Call request, Response response) throws IOException {
+            public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
                 JSONObject body = new JSONObject(response.body().string());
                 JSONObject ipInfo = body.getJSONObject(ip);
 
@@ -67,7 +68,7 @@ public class AntiVPN {
                 String isProxy = ipInfo.getString("proxy");
                 String ipType = ipInfo.getString("type");
 
-                boolean isDangerous = risk >= 66 || isProxy == "yes"
+                boolean isDangerous = risk >= 66 || isProxy.equals("yes")
                     || Set.of(
                         "tor", "socks", "socks4", "socks4a",
                         "socks5", "socks5h", "shadowsocks",

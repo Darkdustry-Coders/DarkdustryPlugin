@@ -4,10 +4,10 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.Timer.Task;
+import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
@@ -57,13 +57,14 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.vote-passed", target.coloredName(), (kickDuration / 60f));
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(BotMain.errorColor)
-                    .setAuthor("KICK")
-                    .setTitle("Игрок был выгнан с сервера голосованием!")
-                    .addField("Никнейм игрока: ", Strings.stripColors(target.name), false);
+            EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                    .color(BotMain.errorColor)
+                    .author("KICK", null, "https://thumbs.dreamstime.com/b/red-cross-symbol-icon-as-delete-remove-fail-failure-incorr-incorrect-answer-89999776.jpg")
+                    .title("Игрок был выгнан с сервера голосованием!")
+                    .addField("Никнейм игрока:", Strings.stripColors(target.name), false)
+                    .build();
 
-            BotHandler.botChannel.sendMessage(embed).join();
+            BotHandler.sendEmbed(embed);
             stop();
             return true;
         }
