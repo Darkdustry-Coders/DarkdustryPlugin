@@ -146,7 +146,7 @@ public class ConnectHandler {
         netServer.sendWorldData(player);
 
         PandorumPlugin.antiVPN.checkIp(ip, result -> {
-            if (result) con.kick(Bundle.format("events.vpn-ip", locale))
+            if (result) con.kick(Bundle.format("events.vpn-ip", locale));
         });
 
         Events.fire(new EventType.PlayerConnect(player));
