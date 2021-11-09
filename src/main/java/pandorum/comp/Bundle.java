@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 public class Bundle {
 
     private static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
-
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static final Locale[] supportedLocales;
@@ -50,8 +49,8 @@ public class Bundle {
     }
 
     public static boolean has(String key, Locale locale) {
-        StringMap props = getOrLoad(locale);
-        return props != null && props.containsKey(key);
+        StringMap bundle = getOrLoad(locale);
+        return bundle != null && bundle.containsKey(key);
     }
 
     public static String format(String key, Locale locale, Object... values) {

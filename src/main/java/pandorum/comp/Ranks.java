@@ -60,22 +60,26 @@ public class Ranks {
         return ranks.get(index);
     }
 
+    public static int rankId(Rank rank) {
+        return ranks.findKey(rank, false, 0);
+    }
+
     public static void getRank(Player p, Consumer<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
             Rank current = get(playerInfo.rank);
-            Rank rank;
-            if (p.admin) rank = admin;
+            Rank next;
+            if (p.admin) next = admin;
             else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
-                rank = current.next;
+                next = current.next;
                 bundled(p, "events.rank-increase", current.next.tag, current.next.name);
-            } else if (current == admin) rank = player;
-            else rank = current;
+            } else if (current == admin) next = player;
+            else next = current;
 
-            if (playerInfo.rank != ranks.findKey(rank, false, 0)) {
-                playerInfo.rank = ranks.findKey(rank, false, 0);
+            if (playerInfo.rank != rankId(next)) {
+                playerInfo.rank = rankId(next);
                 playerInfo.save();
             }
-            callback.accept(rank);
+            callback.accept(next);
         });
     }
 }

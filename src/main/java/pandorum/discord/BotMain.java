@@ -57,6 +57,6 @@ public class BotMain {
         });
 
         listener = new BotHandler();
-        Log.info("Бот успешно запущен...");
+        Log.info("[Darkdustry] Бот успешно запущен...");
     }
 }

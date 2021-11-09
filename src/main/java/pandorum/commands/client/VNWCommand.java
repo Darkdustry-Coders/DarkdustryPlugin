@@ -21,9 +21,7 @@ public class VNWCommand implements ClientCommand {
         int req = (int) Math.ceil(config.voteRatio * Groups.player.size());
         sendToChat("commands.vnw.ok", player.coloredName(), cur, req);
 
-        if (cur < req) {
-            return;
-        }
+        if (cur < req) return;
 
         sendToChat("commands.vnw.successful");
         votesVNW.clear();

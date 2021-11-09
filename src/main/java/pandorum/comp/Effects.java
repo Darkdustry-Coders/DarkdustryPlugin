@@ -37,12 +37,11 @@ public class Effects {
     }
 
     public static class EffectObject {
-        public float rotation = 30;
         private final Color color;
         private final Effect effect;
 
         public void spawn(float x, float y) {
-            Call.effect(effect, x, y, rotation, color);
+            Call.effect(effect, x, y, 30, color);
         }
 
         public EffectObject(Color color, Effect effect) {

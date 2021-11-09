@@ -14,10 +14,11 @@ public class Authme {
 
     public static void confirm(String uuid) {
         Player player = Misc.findByID(uuid);
-        if (player == null) return;
-        netServer.admins.adminPlayer(player.uuid(), player.usid());
-        player.admin(true);
-        bundled(player, "commands.login.success");
+        if (player != null) {
+            netServer.admins.adminPlayer(player.uuid(), player.usid());
+            player.admin(true);
+            bundled(player, "commands.login.success");
+        }
     }
 
     public static void deny(String uuid) {

@@ -18,12 +18,10 @@ import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
-        Ranks.getRank(event.player, rank -> {
-            String name = rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName;
-            event.player.name(name);
-            Log.info("@ зашёл на сервер, IP: @, ID: @", name, event.player.ip(), event.player.uuid());
-            sendToChat("events.player-join", name);
-        });
+        Ranks.getRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
+
+        Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
+        sendToChat("events.player-join", event.player.color.toString().toUpperCase(), event.player.getInfo().lastName);
 
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .color(BotMain.successColor)
@@ -33,6 +31,13 @@ public class PlayerJoinListener {
         BotHandler.sendEmbed(embed);
 
         Effects.onJoin(event.player);
+
+        boolean[] vpn = {false};
+        PandorumPlugin.antiVPN.checkIp(event.player.ip(), result -> vpn[0] = result);
+        if (vpn[0]) {
+            event.player.con.kick(Bundle.format("events.vpn-ip", findLocale(event.player.locale)));
+            return;
+        }
 
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {

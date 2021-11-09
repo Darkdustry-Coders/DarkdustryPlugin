@@ -3,6 +3,7 @@ package pandorum.commands.client;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Time;
+import mindustry.content.Blocks;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.world.Tile;
@@ -24,20 +25,18 @@ public class SurrenderCommand implements ClientCommand {
 
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
-        int req = (int)Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
+        int req = (int) Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
         sendToChat("commands.surrender.ok", Misc.colorizedTeam(player.team()), player.coloredName(), cur, req);
 
-        if (cur < req) {
-            return;
-        }
+        if (cur < req) return;
 
         surrendered.remove(player.team());
         sendToChat("commands.surrender.successful", Misc.colorizedTeam(player.team()));
-        Groups.unit.each(u -> u.team == player.team(), u -> Time.run(Mathf.random(360), u::kill));
         for (Tile tile : world.tiles) {
-            if (tile.build != null && tile.team() == player.team()) {
-                Time.run(Mathf.random(360), tile.build::kill);
+            if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {
+                Time.run(Mathf.random(360f), tile::removeNet);
             }
         }
+        Groups.unit.each(u -> u.team == player.team(), u -> Time.run(Mathf.random(360f), u::kill));
     }
 }

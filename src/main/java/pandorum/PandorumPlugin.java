@@ -159,11 +159,9 @@ public final class PandorumPlugin extends Plugin {
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
         handler.register("rank", "Информация о рангах.", RankCommand::run);
 
-        // Все команды ниже не используются в PluginType.other
         if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
-            handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
             handler.register("artv", "Принудительно завершить игру.", ARTVCommand::run);
             handler.register("core", "[small/medium/big]", "Заспавнить ядро.", CoreCommand::run);
             handler.register("give", "<item> [count]", "Выдать ресурсы в ядро.", GiveCommand::run);
@@ -176,6 +174,10 @@ public final class PandorumPlugin extends Plugin {
             handler.register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", NominateCommand::run);
             handler.register("voting", "<y/n>", "Проголосовать.", VotingCommand::run);
             handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
+
+            if (config.mode != Config.Gamemode.pvp && config.mode != Config.Gamemode.siege) {
+                handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
+            }
         }
 
         if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {

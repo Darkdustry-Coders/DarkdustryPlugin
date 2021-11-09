@@ -35,7 +35,7 @@ public class LoginCommand implements ClientCommand {
                 .title("Запрос на выдачу прав администратора.")
                 .addField("Никнейм: ", player.name, true)
                 .addField("UUID: ", player.uuid(), true)
-                .footer("Нажми на реакцию чтобы подтвердить или отменить получение прав админа.", null)
+                .footer("Нажми на кнопку чтобы подтвердить или отменить получение прав админа.", null)
                 .build();
 
         Message message = BotHandler.adminChannel.createMessage(MessageCreateSpec.builder()
