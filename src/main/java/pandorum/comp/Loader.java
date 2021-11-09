@@ -2,12 +2,8 @@ package pandorum.comp;
 
 import arc.Events;
 import arc.util.Reflect;
-import arc.util.Timer;
-import discord4j.core.object.presence.ClientActivity;
-import discord4j.core.object.presence.ClientPresence;
 import mindustry.core.NetServer;
 import mindustry.game.EventType;
-import mindustry.gen.Groups;
 import mindustry.net.Administration;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.PandorumPlugin;
@@ -60,7 +56,5 @@ public class Loader {
         Icons.init();
         Ranks.init();
         BotMain.start();
-
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.online(ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))), 0f, 15f);
     }
 }
