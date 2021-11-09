@@ -32,13 +32,6 @@ public class PlayerJoinListener {
 
         Effects.onJoin(event.player);
 
-        boolean[] vpn = {false};
-        PandorumPlugin.antiVPN.checkIp(event.player.ip(), result -> vpn[0] = result);
-        if (vpn[0]) {
-            event.player.con.kick(Bundle.format("events.vpn-ip", findLocale(event.player.locale)));
-            return;
-        }
-
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
                 String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
