@@ -19,7 +19,7 @@ public class BotMain {
     public static GatewayDiscordClient client;
     public static BotHandler listener;
 
-    public static final Color normalColor = Color.YELLOW;
+    public static final Color normalColor = Color.ORANGE;
     public static final Color successColor = Color.GREEN;
     public static final Color errorColor = Color.RED;
 
