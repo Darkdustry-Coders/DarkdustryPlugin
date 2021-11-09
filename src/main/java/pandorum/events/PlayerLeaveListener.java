@@ -19,9 +19,8 @@ import static pandorum.Misc.sendToChat;
 
 public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
-
-        Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
-        sendToChat("events.player-leave", "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName);
+        Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+        sendToChat("events.player-leave", event.player.name);
 
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .color(BotMain.errorColor)

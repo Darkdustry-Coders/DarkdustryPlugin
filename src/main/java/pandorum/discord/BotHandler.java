@@ -61,7 +61,7 @@ public class BotHandler {
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
             if (checkAdmin(msg.getAuthorAsMember().block())) {
-                err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+                err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
 
@@ -75,9 +75,7 @@ public class BotHandler {
             try {
                 File mapFile = new File("config/maps/" + a.getFilename());
                 Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile));
-
                 Vars.maps.reload();
-
                 text(msg, "*Карта добавлена на сервер.*");
             } catch (Exception e) {
                 err(msg, "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
@@ -86,10 +84,11 @@ public class BotHandler {
 
         handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
             if (checkAdmin(msg.getAuthorAsMember().block())) {
-                err(msg, "Эта команда только для админов.", "У тебя нет прав на ее использование.");
+                err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
 
+            Vars.maps.reload();
             Map map = Misc.findMap(args[0]);
             if (map == null) {
                 err(msg, "Карта не найдена.", "Проверьте правильность ввода.");
@@ -97,11 +96,34 @@ public class BotHandler {
             }
 
             try {
-                msg.getChannel().block().createMessage(MessageCreateSpec.builder()
+                msg.getChannel().block()
+                        .createMessage(MessageCreateSpec.builder()
                         .addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file())))
                         .build()).block();
             } catch (Exception e) {
                 err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
+            }
+        });
+
+        handler.<Message>register("removemap", "<name...>", "Удалить карту с сервера.", (args, msg) -> {
+            if (checkAdmin(msg.getAuthorAsMember().block())) {
+                err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
+                return;
+            }
+
+            Vars.maps.reload();
+            Map map = Misc.findMap(args[0]);
+            if (map == null) {
+                err(msg, "Карта не найдена.", "Проверьте правильность ввода.");
+                return;
+            }
+
+            try {
+                Vars.maps.removeMap(map);
+                Vars.maps.reload();
+                text(msg, "*Карта удалена с сервера.*");
+            } catch (Exception e) {
+                err(msg, "Возникла ошибка.", "Ошибка удаления карты с сервера.");
             }
         });
 
@@ -111,6 +133,7 @@ public class BotHandler {
                 return;
             }
 
+            Vars.maps.reload();
             Seq<Map> mapList = Vars.maps.customMaps();
             if (mapList.size == 0) {
                 err(msg, "На сервере нет карт.", "Список карт пуст.");
@@ -217,7 +240,7 @@ public class BotHandler {
 
     public static boolean checkAdmin(Member member) {
         if (member.isBot()) return true;
-        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
+        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(907554436149309460L)) || role.getId().equals(Snowflake.of(810760273689444385L)));
     }
 
     public static void sendEmbed(EmbedCreateSpec embed) {

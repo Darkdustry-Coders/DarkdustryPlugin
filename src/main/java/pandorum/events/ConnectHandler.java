@@ -110,13 +110,6 @@ public class ConnectHandler {
 
         netServer.admins.updatePlayerJoined(uuid, ip, packet.name);
 
-        boolean[] vpn = {false};
-        PandorumPlugin.antiVPN.checkIp(ip, result -> vpn[0] = result);
-        if (vpn[0]) {
-            con.kick(Bundle.format("events.vpn-ip", locale), 0);
-            return;
-        }
-
         if (packet.version != Version.build && Version.build != -1 && packet.version != -1) {
             con.kick(packet.version > Version.build ? KickReason.serverOutdated : KickReason.clientOutdated);
             return;
