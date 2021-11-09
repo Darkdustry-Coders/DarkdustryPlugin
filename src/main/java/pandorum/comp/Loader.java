@@ -61,6 +61,6 @@ public class Loader {
         Ranks.init();
         BotMain.start();
 
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))), 0f, 15f);
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).block(), 0f, 15f);
     }
 }
