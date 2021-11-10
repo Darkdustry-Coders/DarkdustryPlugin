@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.handlers;
 
 import arc.Events;
 import arc.graphics.Color;
@@ -39,10 +39,6 @@ public class ConnectHandler {
         String ip = con.address;
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
-        if (packet.locale == null) packet.locale = "en";
-        packet.name = fixName(packet.name);
-        Locale locale = Misc.findLocale(packet.locale);
-
         if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
 
         if (con.hasBegunConnecting) {
@@ -72,6 +68,10 @@ public class ConnectHandler {
             con.kick(KickReason.playerLimit);
             return;
         }
+
+        if (packet.locale == null) packet.locale = "en";
+        Locale locale = Misc.findLocale(packet.locale);
+        packet.name = fixName(packet.name);
 
         Seq<String> extraMods = packet.mods.copy();
         Seq<String> missingMods = Vars.mods.getIncompatibility(extraMods);
@@ -163,7 +163,6 @@ public class ConnectHandler {
                 String prev = name.substring(0, i);
                 String next = name.substring(i);
                 String result = checkColor(next);
-
                 name = prev + result;
             }
         }
@@ -183,15 +182,11 @@ public class ConnectHandler {
 
                 if (Colors.get(color.toUpperCase()) != null || Colors.get(color.toLowerCase()) != null) {
                     Color result = (Colors.get(color.toLowerCase()) == null ? Colors.get(color.toUpperCase()) : Colors.get(color.toLowerCase()));
-                    if (result.a <= 0.8f) {
-                        return str.substring(i + 1);
-                    }
+                    if (result.a <= 0.8f) return str.substring(i + 1);
                 } else {
                     try {
                         Color result = Color.valueOf(color);
-                        if (result.a <= 0.8f) {
-                            return str.substring(i + 1);
-                        }
+                        if (result.a <= 0.8f) return str.substring(i + 1);
                     } catch(Exception e) {
                         return str;
                     }

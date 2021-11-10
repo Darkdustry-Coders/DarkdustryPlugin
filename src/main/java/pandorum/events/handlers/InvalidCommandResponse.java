@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.handlers;
 
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandResponse;

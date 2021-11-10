@@ -82,7 +82,7 @@ public class BotHandler {
             }
         });
 
-        handler.<Message>register("map", "<name...>", "Получить файл карты с сервера.", (args, msg) -> {
+        handler.<Message>register("map", "<название...>", "Получить файл карты с сервера.", (args, msg) -> {
             if (checkAdmin(msg.getAuthorAsMember().block())) {
                 err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
@@ -105,7 +105,7 @@ public class BotHandler {
             }
         });
 
-        handler.<Message>register("removemap", "<name...>", "Удалить карту с сервера.", (args, msg) -> {
+        handler.<Message>register("removemap", "<название...>", "Удалить карту с сервера.", (args, msg) -> {
             if (checkAdmin(msg.getAuthorAsMember().block())) {
                 err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;

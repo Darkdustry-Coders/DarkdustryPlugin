@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import org.jetbrains.annotations.NotNull;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
@@ -12,11 +11,11 @@ import pandorum.models.PlayerModel;
 
 import java.util.concurrent.TimeUnit;
 
-import static pandorum.Misc.bundled;
+import static pandorum.Misc.*;
 
 public class InfoCommand implements ClientCommand {
     public static void run(final String[] args, final @NotNull Player player) {
-        Player target = args.length > 0 ? Misc.findByName(args[0]) : player;
+        Player target = args.length > 0 ? findByName(args[0]) : player;
         if (target == null) {
             bundled(player, "commands.player-not-found");
             return;
@@ -25,7 +24,7 @@ public class InfoCommand implements ClientCommand {
         PlayerModel.find(new BasicDBObject("UUID", target.uuid()), playerInfo -> {
             Rank rank = Ranks.get(playerInfo.rank);
             Call.infoMessage(player.con, Bundle.format("commands.info.content",
-                    Misc.findLocale(player.locale),
+                    findLocale(player.locale),
                     target.coloredName(),
                     rank.tag,
                     rank.name,

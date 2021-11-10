@@ -43,18 +43,18 @@ public class PlayerLeaveListener {
             Seq<String> teamVotes = PandorumPlugin.surrendered.get(event.player.team(), Seq::new);
             if (teamVotes.contains(event.player.uuid())) {
                 teamVotes.remove(event.player.uuid());
-                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 
         if (PandorumPlugin.votesRTV.contains(event.player.uuid())) {
             PandorumPlugin.votesRTV.remove(event.player.uuid());
-            sendToChat("commands.rtv.left", event.player.coloredName(), PandorumPlugin.votesRTV.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
+            sendToChat("commands.rtv.left", event.player.coloredName(), PandorumPlugin.votesRTV.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
 
         if (PandorumPlugin.votesVNW.contains(event.player.uuid())) {
             PandorumPlugin.votesVNW.remove(event.player.uuid());
-            sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, (int)Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
+            sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
     }
 }

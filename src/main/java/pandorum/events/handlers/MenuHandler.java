@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.handlers;
 
 import arc.Events;
 import arc.util.Strings;
@@ -17,7 +17,7 @@ import pandorum.models.PlayerModel;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
 
-public class MenuListener {
+public class MenuHandler {
     public static int welcomeMenu,
             despwMenu,
             artvMenu;
@@ -34,7 +34,7 @@ public class MenuListener {
         });
 
         despwMenu = Menus.registerMenu((player, option) -> {
-            if (option == 1) return;
+            if (option == 1 || option == -1) return;
 
             switch (option) {
                 case 0 -> Groups.unit.each(Unitc::kill);

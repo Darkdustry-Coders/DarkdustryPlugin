@@ -12,6 +12,7 @@ import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.*;
@@ -35,7 +36,7 @@ public class PlayerJoinListener {
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
                 String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
-                Call.menu(event.player.con, MenuListener.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink), options);
+                Call.menu(event.player.con, MenuHandler.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink), options);
             }
         });
         

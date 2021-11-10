@@ -16,6 +16,9 @@ import pandorum.discord.BotMain;
 import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;
 import pandorum.events.filters.ChatFilter;
+import pandorum.events.handlers.ConnectHandler;
+import pandorum.events.handlers.InvalidCommandResponse;
+import pandorum.events.handlers.MenuHandler;
 
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
@@ -56,7 +59,7 @@ public class Loader {
         Administration.Config.allowCustomClients.set(true);
 
         Effects.init();
-        MenuListener.init();
+        MenuHandler.init();
         Icons.init();
         Ranks.init();
         BotMain.start();

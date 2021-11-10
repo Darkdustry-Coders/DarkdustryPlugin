@@ -23,7 +23,7 @@ public class UnitsCommand implements ClientCommand {
                 bundled(player, "commands.admin.units.list", units.toString());
             }
             case "change" -> {
-                if (args.length == 1) {
+                if (args.length < 2) {
                     bundled(player, "commands.admin.units.incorrect");
                     return;
                 }

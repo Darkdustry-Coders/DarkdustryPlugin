@@ -5,7 +5,6 @@ import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Config.Gamemode;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.models.PlayerModel;
@@ -25,7 +24,7 @@ public class GameOverListener {
 
         BotHandler.sendEmbed(embed);
 
-        if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) PandorumPlugin.surrendered.clear();
+        PandorumPlugin.surrendered.clear();
         PandorumPlugin.votesRTV.clear();
         PandorumPlugin.votesVNW.clear();
     }
