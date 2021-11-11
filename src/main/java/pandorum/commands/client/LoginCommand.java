@@ -43,7 +43,7 @@ public class LoginCommand implements ClientCommand {
                 .addComponent(ActionRow.of(Authme.confirm, Authme.deny))
                 .build()).block();
 
-        BotHandler.waiting.put(message, player.uuid());
+        Authme.loginWaiting.put(message, player.uuid());
 
         vtime.reset();
         bundled(player, "commands.login.sent");

@@ -16,6 +16,7 @@ public class HelpCommand implements ClientCommand {
             bundled(player, "commands.page-not-int");
             return;
         }
+
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(netServer.clientCommands.getCommandList().size / 6.0f);
 

@@ -36,17 +36,9 @@ public class Effects {
         } catch (NullPointerException ignored) {}
     }
 
-    public static class EffectObject {
-        private final Color color;
-        private final Effect effect;
-
+    public record EffectObject(Color color, Effect effect) {
         public void spawn(float x, float y) {
             Call.effect(effect, x, y, 30, color);
-        }
-
-        public EffectObject(Color color, Effect effect) {
-            this.color = color;
-            this.effect = effect;
         }
     }
 }

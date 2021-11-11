@@ -31,6 +31,8 @@ public class Config {
 
     public Long DiscordChannelID = 0L;
 
+    public Long DiscordAdminChannelID = 844215222784753664L;
+
     public String prefix = "prefix";
 
     public Tuple2<String, Integer> hubIp() {

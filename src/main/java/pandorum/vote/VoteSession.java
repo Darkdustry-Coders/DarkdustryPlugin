@@ -29,7 +29,7 @@ public abstract class VoteSession {
     protected abstract boolean checkPass();
 
     public int votesRequired() {
-        return (int)Math.ceil(config.voteRatio * Groups.player.size());
+        return (int) Math.ceil(config.voteRatio * Groups.player.size());
     }
 
     public void stop() {

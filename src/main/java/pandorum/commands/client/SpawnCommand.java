@@ -16,6 +16,9 @@ import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
 public class SpawnCommand implements ClientCommand {
+
+    private static final int maxAmount = 25;
+
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 
@@ -25,8 +28,8 @@ public class SpawnCommand implements ClientCommand {
         }
 
         int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (count > 25 || count < 1) {
-            bundled(player, "commands.admin.spawn.limit");
+        if (count > maxAmount || count < 1) {
+            bundled(player, "commands.admin.spawn.limit", maxAmount);
             return;
         }
 

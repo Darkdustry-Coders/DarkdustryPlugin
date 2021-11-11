@@ -40,17 +40,19 @@ public class BotMain {
         client.on(ButtonInteractionEvent.class).subscribe(event -> {
             Message msg = event.getMessage().get();
             String button = event.getCustomId();
-            if (BotHandler.waiting.containsKey(msg)) {
+            if (Authme.loginWaiting.containsKey(msg)) {
                 switch (button) {
                     case "confirm" -> {
                         BotHandler.text(msg, "**Запрос был подтвержден** " + event.getInteraction().getMember().get().getDisplayName());
                         msg.delete().block();
-                        Authme.confirm(BotHandler.waiting.get(msg));
+                        Authme.confirm(Authme.loginWaiting.get(msg));
+                        Authme.loginWaiting.remove(msg);
                     }
                     case "deny" -> {
                         BotHandler.text(msg, "**Запрос был отклонен** " + event.getInteraction().getMember().get().getDisplayName());
                         msg.delete().block();
-                        Authme.deny(BotHandler.waiting.get(msg));
+                        Authme.deny(Authme.loginWaiting.get(msg));
+                        Authme.loginWaiting.remove(msg);
                     }
                 }
             }

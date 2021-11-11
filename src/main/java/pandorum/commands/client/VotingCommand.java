@@ -17,9 +17,9 @@ public class VotingCommand implements ClientCommand {
             return;
         }
 
-        int sign = switch(args[0].toLowerCase()) {
-            case "y", "yes", "да" ->  1;
-            case "n", "no", "нет" -> -1;
+        int sign = switch (args[0].toLowerCase()) {
+            case "y", "yes", "+", "да" ->  1;
+            case "n", "no", "-", "нет" -> -1;
             default -> 0;
         };
 

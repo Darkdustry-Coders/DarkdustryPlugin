@@ -2,7 +2,6 @@ package pandorum.discord;
 
 import arc.Core;
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
@@ -36,12 +35,9 @@ public class BotHandler {
     public static final CommandHandler handler = new CommandHandler(prefix);
     public static MessageChannel botChannel, adminChannel;
 
-    public static final ObjectMap<Message, String> waiting = new ObjectMap<>();
-
     public BotHandler() {
         botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
-        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(844215222784753664L)).block();
-
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
         register();
     }
 
@@ -96,10 +92,7 @@ public class BotHandler {
             }
 
             try {
-                msg.getChannel().block()
-                        .createMessage(MessageCreateSpec.builder()
-                        .addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file())))
-                        .build()).block();
+                msg.getChannel().block().createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).block();
             } catch (Exception e) {
                 err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
@@ -244,7 +237,7 @@ public class BotHandler {
     }
 
     public static void sendEmbed(EmbedCreateSpec embed) {
-        botChannel.createMessage(embed).block();
+        sendEmbed(botChannel, embed);
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {

@@ -178,14 +178,14 @@ public final class PandorumPlugin extends Plugin {
             if (config.mode != Config.Gamemode.pvp && config.mode != Config.Gamemode.siege) {
                 handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
             }
-        }
 
-        if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
-            handler.register("surrender", "Сдаться.", SurrenderCommand::run);
-        }
+            if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
+                handler.register("surrender", "Сдаться.", SurrenderCommand::run);
+            }
 
-        if (config.mode == Config.Gamemode.sandbox) {
-            handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
+            if (config.mode == Config.Gamemode.sandbox) {
+                handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
+            }
         }
 
         if (config.mode != Config.Gamemode.hub) {

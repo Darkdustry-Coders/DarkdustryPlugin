@@ -16,6 +16,7 @@ public class PlayerListCommand implements ClientCommand {
             bundled(player, "commands.page-not-int");
             return;
         }
+
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil((float) Groups.player.size() / 6.0f);
 
