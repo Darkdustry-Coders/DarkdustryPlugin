@@ -184,7 +184,7 @@ public final class PandorumPlugin extends Plugin {
             }
 
             if (config.mode == Config.Gamemode.sandbox) {
-                handler.register("fill", "<width> <height> <floor> [overlay/ore/wall]", "Заполнить область данным типом блока.", FillCommand::run);
+                handler.register("fill", "<width> <height> <floor> [block] [ore/overlay]", "Заполнить область данным типом блока.", FillCommand::run);
             }
         }
 

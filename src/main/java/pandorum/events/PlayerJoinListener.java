@@ -15,6 +15,8 @@ import pandorum.discord.BotMain;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
+import java.util.concurrent.TimeUnit;
+
 import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
@@ -39,6 +41,16 @@ public class PlayerJoinListener {
                 Call.menu(event.player.con, MenuHandler.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink), options);
             }
         });
+
+        //TODO это тест, убрать
+        Call.infoMessage(event.player.con, Bundle.format("events.rank-increase",
+                findLocale(event.player.locale),
+                "ban",
+                "Admin",
+                0,
+                3,
+                2)
+        );
         
         bundled(event.player, "events.motd");
     }

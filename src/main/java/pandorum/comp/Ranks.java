@@ -3,12 +3,15 @@ package pandorum.comp;
 import arc.struct.IntMap;
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
+import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static pandorum.Misc.bundled;
+import static pandorum.Misc.findLocale;
 
 public class Ranks {
 
@@ -71,7 +74,16 @@ public class Ranks {
             if (p.admin) next = admin;
             else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
                 next = current.next;
-                bundled(p, "events.rank-increase", current.next.tag, current.next.name);
+
+                Call.infoMessage(p.con, Bundle.format("events.rank-increase",
+                        findLocale(p.locale),
+                        next.tag,
+                        next.name,
+                        TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
+                        playerInfo.buildingsBuilt,
+                        playerInfo.gamesPlayed)
+                );
+
             } else if (current == admin) next = player;
             else next = current;
 

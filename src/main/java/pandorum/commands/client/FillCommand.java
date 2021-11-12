@@ -5,6 +5,7 @@ import arc.util.Strings;
 import mindustry.content.Blocks;
 import mindustry.gen.Player;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.Prop;
@@ -30,9 +31,10 @@ public class FillCommand implements ClientCommand {
         int w = Mathf.clamp(Strings.parseInt(args[0]), 0, maxSize) + player.tileX();
         int h = Mathf.clamp(Strings.parseInt(args[1]), 0, maxSize) + player.tileY();
 
-        Floor floor = (Floor)content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
-        Block block = args.length > 3 ? content.blocks().find(o -> (o.isOverlay() || o instanceof OreBlock || o instanceof Prop || o instanceof TreeBlock) && o.name.equalsIgnoreCase(args[3])) : Blocks.air;
-        if (floor == null || block == null) {
+        Floor floor = (Floor) content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
+        Block block = args.length > 3 ? content.blocks().find(b -> (b instanceof Wall || b instanceof Prop || b instanceof TreeBlock) && b.name.equalsIgnoreCase(args[3])) : Blocks.air;
+        Block overlay = args.length > 4 ? content.blocks().find(o -> (o instanceof OreBlock || o.isOverlay()) && o.name.equalsIgnoreCase(args[4])) : Blocks.air;
+        if (floor == null || block == null || overlay == null) {
             bundled(player, "commands.admin.fill.incorrect-type");
             return;
         }
@@ -40,11 +42,11 @@ public class FillCommand implements ClientCommand {
         for (int x = player.tileX(); x < w; x++) {
             for (int y = player.tileY(); y < h; y++) {
                 if (world.tile(x, y) != null) {
-                    world.tile(x, y).setFloorNet(floor, block.isOverlay() || block instanceof OreBlock ? block : Blocks.air);
-                    if (!(block.isOverlay() || block instanceof OreBlock)) world.tile(x, y).setNet(block);
+                    world.tile(x, y).setFloorNet(floor, overlay);
+                    world.tile(x, y).setNet(block);
                 }
             }
         }
-        bundled(player, "commands.admin.fill.success", floor, block);
+        bundled(player, "commands.admin.fill.success");
     }
 }
