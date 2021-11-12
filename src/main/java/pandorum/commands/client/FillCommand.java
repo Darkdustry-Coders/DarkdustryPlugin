@@ -43,15 +43,15 @@ public class FillCommand implements ClientCommand {
             return;
         }
 
-        for (int x = player.tileX(); x < w; x += block.size) {
-            for (int y = player.tileY(); y < h; y += block.size) {
-                if (world.tile(x, y) != null) world.tile(x, y).setNet(block);
-            }
-        }
-
         for (int x = player.tileX(); x < w; x++) {
             for (int y = player.tileY(); y < h; y++) {
                 if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor);
+            }
+        }
+
+        for (int x = player.tileX(); x < w; x += block.size) {
+            for (int y = player.tileY(); y < h; y += block.size) {
+                if (world.tile(x, y) != null) world.tile(x, y).setNet(block);
             }
         }
 
