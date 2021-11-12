@@ -79,6 +79,9 @@ public class Icons {
                 "sharded", Iconc.teamSharded,
                 "crux", Iconc.teamCrux,
                 "derelict", Iconc.teamDerelict,
+                "green", Iconc.statusElectrified,
+                "purple", Iconc.statusSporeSlowed,
+                "blue", Iconc.statusWet,
 
                 "admin", Iconc.admin
         );

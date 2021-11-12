@@ -76,8 +76,8 @@ public abstract class Misc {
     }
 
     public static String formatTime(Date time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        return simpleDateFormat.format(time);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
+        return format.format(time);
     }
 }
