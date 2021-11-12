@@ -33,7 +33,6 @@ public class ChatFilter {
                     return;
                 }
 
-                try {
                     PandorumPlugin.translator.translate(text, language, translated -> {
                         if ((!translated.isNull("err") && translated.optString("err").equals("")) || translated.optString("result", text).equalsIgnoreCase(text) || translated.optString("result", text).isBlank()) {
                             player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
@@ -45,10 +44,7 @@ public class ChatFilter {
                         player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([gray]" + translatedText + "[white])", author, text);
                         translationsCache.put(language, translatedText);
                     });
-                } catch (IOException | InterruptedException e) {
-                    player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
                 }
-            }
         ));
 
         BotHandler.text(BotHandler.botChannel, "**@**: @", Strings.stripColors(author.name), Strings.stripColors(text).replaceAll("https?://|@", " "));

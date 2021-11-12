@@ -9,7 +9,7 @@ import static pandorum.Misc.bundled;
 
 public class SpectateCommand implements ClientCommand {
 
-    public static Team spectateTeam = Team.derelict;
+    public static final Team spectateTeam = Team.derelict;
 
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;

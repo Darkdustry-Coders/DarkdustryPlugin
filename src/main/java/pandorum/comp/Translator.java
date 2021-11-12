@@ -30,7 +30,7 @@ public class Translator {
         this.client = new OkHttpClient();
     }
 
-    public void translate(String text, String dest_lang, Consumer<JSONObject> callback) throws IOException, InterruptedException {
+    public void translate(String text, String dest_lang, Consumer<JSONObject> callback) {
         String destAlphaLang = PandorumPlugin.codeLanguages.containsKey(dest_lang) ? PandorumPlugin.codeLanguages.get(dest_lang) : PandorumPlugin.codeLanguages.get("en");
 
         RequestBody formBody = new FormBody.Builder()

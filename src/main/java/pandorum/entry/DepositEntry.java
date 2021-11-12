@@ -14,11 +14,11 @@ import static pandorum.Misc.findLocale;
 
 public class DepositEntry implements HistoryEntry {
 
-    public String name;
-    public Block block;
-    public Item item;
-    public int amount;
-    public Date time;
+    public final String name;
+    public final Block block;
+    public final Item item;
+    public final int amount;
+    public final Date time;
 
     public DepositEntry(DepositEvent event) {
         this.name = event.player.coloredName();

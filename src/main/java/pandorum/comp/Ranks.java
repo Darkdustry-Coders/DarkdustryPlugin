@@ -10,7 +10,6 @@ import pandorum.models.PlayerModel;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
 public class Ranks {

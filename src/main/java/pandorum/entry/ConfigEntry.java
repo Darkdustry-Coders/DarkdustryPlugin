@@ -27,12 +27,12 @@ import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
 
-    public String name;
-    public Block block;
-    public Object value;
-    public boolean connect;
-    public Building build;
-    public Date time;
+    public final String name;
+    public final Block block;
+    public final Object value;
+    public final boolean connect;
+    public final Building build;
+    public final Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();

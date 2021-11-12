@@ -36,7 +36,6 @@ import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static mindustry.Vars.dataDirectory;
 
@@ -79,7 +78,7 @@ public final class PandorumPlugin extends Plugin {
     public static Translator translator;
     public static AntiVPN antiVPN;
 
-    public PandorumPlugin() throws IOException, URISyntaxException {
+    public PandorumPlugin() throws IOException {
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
 
         MongoClientSettings settings = MongoClientSettings.builder()

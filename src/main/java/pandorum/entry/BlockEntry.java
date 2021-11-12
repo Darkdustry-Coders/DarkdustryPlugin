@@ -20,7 +20,7 @@ public class BlockEntry implements HistoryEntry {
     public final Block block;
     public final boolean breaking;
     public final int rotation;
-    public Date time;
+    public final Date time;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.breaking = event.breaking;
