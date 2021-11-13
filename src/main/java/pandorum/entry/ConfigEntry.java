@@ -31,14 +31,12 @@ public class ConfigEntry implements HistoryEntry {
     public final Block block;
     public final Object value;
     public final boolean connect;
-    public final Building build;
     public final Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
         this.block = event.tile.block();
-        this.build = event.tile;
-        this.value = build instanceof UnitFactory.UnitFactoryBuild ? ((UnitFactory.UnitFactoryBuild)build).unit() : getConfig(event);
+        this.value = event.tile instanceof UnitFactory.UnitFactoryBuild factory ? factory.unit() : getConfig(event);
         this.connect = connect;
         this.time = new Date();
     }
@@ -47,9 +45,9 @@ public class ConfigEntry implements HistoryEntry {
         if (event.tile.block().configurations.containsKey(Integer.class) && (event.tile.block().configurations.containsKey(Point2[].class) || event.tile.block().configurations.containsKey(Point2.class))) {
             int count;
             if (event.tile.block() instanceof PowerNode) {
-                count = build != null ? build.getPowerConnections(new Seq<>()).size : 0;
+                count = event.tile != null ? event.tile.getPowerConnections(new Seq<>()).size : 0;
             } else {
-                count = build != null ? (int) event.value : -1;
+                count = event.tile != null ? (int) event.value : -1;
             }
             return Pack.longInt(count, (int) event.value);
         }
@@ -79,28 +77,28 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof Door) {
-            boolean data = (boolean)value;
+            boolean data = (boolean) value;
             return data ? Bundle.format("history.config.door.on", findLocale(player.locale), name, block, ftime) : Bundle.format("history.config.door.off", findLocale(player.locale), name, block, ftime);
         }
 
         if (block == Blocks.switchBlock) {
-            boolean data = (boolean)value;
+            boolean data = (boolean) value;
             return data ? Bundle.format("history.config.switch.on", findLocale(player.locale), name, ftime) : Bundle.format("history.config.switch.off", findLocale(player.locale), name, ftime);
         }
 
         if (block == Blocks.commandCenter) {
-            final String[] commands = Bundle.get("history.config.command-center.all", findLocale(player.locale)).split(", ");
+            final String[] commands = Bundle.format("history.config.command-center.all", findLocale(player.locale)).split(", ");
             return Bundle.format("history.config.command-center", findLocale(player.locale), name, commands[((UnitCommand)value).ordinal()], ftime);
         }
 
         if (block == Blocks.message) {
-            String message = (String)value;
+            String message = (String) value;
             message = message.length() > 15 ? message.substring(0, 16) + "..." : message;
             return Bundle.format("history.config.message", findLocale(player.locale), name, message, ftime);
         }
 
         if (block == Blocks.liquidSource) {
-            Liquid liquid = (Liquid)value;
+            Liquid liquid = (Liquid) value;
             if (liquid == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
@@ -109,7 +107,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if(block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource){
-            Item item = (Item)value;
+            Item item = (Item) value;
             if (item == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
@@ -118,7 +116,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof UnitFactory) {
-            UnitType unit = (UnitType)value;
+            UnitType unit = (UnitType) value;
             if (unit == null) {
                 return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
             }
