@@ -22,14 +22,9 @@ public class ConfigListener {
         CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
         boolean connect = true;
 
-        HistoryEntry last = entries.peek();
-        if (!entries.isEmpty() && last instanceof ConfigEntry lastConfigEntry) {
-
-            Seq<Building> conns = event.tile.getPowerConnections(new Seq<>());
-            connect = lastConfigEntry.value instanceof Long &&
-                    (conns.any() && event.tile.block instanceof PowerNode &&
-                    conns.size > Pack.leftInt((Long) lastConfigEntry.value) ||
-                    event.value instanceof Integer && (int) event.value >= 0);
+        if (!entries.isEmpty() && entries.peek() instanceof ConfigEntry lastConfigEntry) {
+            Seq<Building> connections = event.tile.getPowerConnections(new Seq<>());
+            connect = lastConfigEntry.value instanceof Long && (connections.any() && event.tile.block instanceof PowerNode && connections.size > Pack.leftInt((Long) lastConfigEntry.value) || event.value instanceof Integer && (int) event.value >= 0);
         }
 
         HistoryEntry entry = new ConfigEntry(event, connect);

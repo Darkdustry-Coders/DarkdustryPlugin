@@ -6,7 +6,6 @@ import arc.util.Pack;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
-import mindustry.gen.Building;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
@@ -45,9 +44,9 @@ public class ConfigEntry implements HistoryEntry {
         if (event.tile.block().configurations.containsKey(Integer.class) && (event.tile.block().configurations.containsKey(Point2[].class) || event.tile.block().configurations.containsKey(Point2.class))) {
             int count;
             if (event.tile.block() instanceof PowerNode) {
-                count = event.tile != null ? event.tile.getPowerConnections(new Seq<>()).size : 0;
+                count = event.tile.getPowerConnections(new Seq<>()).size;
             } else {
-                count = event.tile != null ? (int) event.value : -1;
+                count = (int) event.value;
             }
             return Pack.longInt(count, (int) event.value);
         }
@@ -66,7 +65,7 @@ public class ConfigEntry implements HistoryEntry {
 
             Tile tile = world.tile(data);
             if (tile == null) {
-                return Bundle.format("history.config.changed", findLocale(player.locale));
+                return Bundle.format("history.config.changed", findLocale(player.locale), name, ftime);
             }
 
             if (connect) {
@@ -93,8 +92,11 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block == Blocks.message) {
             String message = (String) value;
-            message = message.length() > 15 ? message.substring(0, 16) + "..." : message;
-            return Bundle.format("history.config.message", findLocale(player.locale), name, message, ftime);
+            if (message == null || message.isBlank()) {
+                return Bundle.format("history.config.default", findLocale(player.locale), name, ftime);
+            }
+
+            return Bundle.format("history.config.message", findLocale(player.locale), name, message.length() > 15 ? message.substring(0, 16) + "..." : message, ftime);
         }
 
         if (block == Blocks.liquidSource) {

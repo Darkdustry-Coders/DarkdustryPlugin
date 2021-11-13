@@ -10,8 +10,6 @@ import pandorum.PandorumPlugin;
 import pandorum.discord.BotHandler;
 import pandorum.models.PlayerModel;
 
-import java.io.IOException;
-
 import static mindustry.Vars.netServer;
 
 public class ChatFilter {
