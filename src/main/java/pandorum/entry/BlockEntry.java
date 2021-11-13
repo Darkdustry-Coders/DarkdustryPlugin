@@ -9,41 +9,42 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
 import java.util.Date;
+import java.util.Locale;
 
 import static pandorum.Misc.findLocale;
 
 public class BlockEntry implements HistoryEntry {
 
+    public final Unit unit;
     public final boolean isPlayer;
     public final String name;
-    public final Unit unit;
-    public final Block block;
     public final boolean breaking;
+    public final Block block;
     public final int rotation;
     public final Date time;
 
     public BlockEntry(BlockBuildEndEvent event) {
-        this.breaking = event.breaking;
         this.unit = event.unit;
         this.isPlayer = unit.isPlayer();
         this.name = isPlayer ? unit.getPlayer().coloredName() : null;
-        this.block = this.breaking ? null : event.tile.build.block;
-        this.rotation = this.breaking ? -1 : event.tile.build.rotation;
+        this.breaking = event.breaking;
+        this.block = breaking ? null : event.tile.build.block;
+        this.rotation = breaking ? -1 : event.tile.build.rotation;
         this.time = new Date();
     }
 
     @Override
     public String getMessage(Player player) {
         String ftime = Misc.formatTime(time);
+        Locale locale = findLocale(player.locale);
 
         if (breaking) {
-            return isPlayer ? Bundle.format("history.block.destroy.player", findLocale(player.locale), name, ftime) :
-            Bundle.format("history.block.destroy.unit", findLocale(player.locale), Icons.get(unit.type.name), unit.type.name, ftime);
+            return isPlayer ? Bundle.format("history.block.destroy.player", locale, name, ftime) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.type.name), unit.type.name, ftime);
         }
 
-        StringBuilder base = new StringBuilder(isPlayer ? Bundle.format("history.block.construct.player", findLocale(player.locale), name, block, ftime) : Bundle.format("history.block.construct.unit", findLocale(player.locale), Icons.get(unit.type.name), unit.type.name, block, ftime));
+        StringBuilder base = new StringBuilder(isPlayer ? Bundle.format("history.block.construct.player", locale, name, block, ftime) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.type.name), unit.type.name, block, ftime));
         if (block.rotate) {
-            base.append(Bundle.format("history.block.construct.rotate", findLocale(player.locale), RotateEntry.sides[rotation]));
+            base.append(Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]));
         }
         return base.toString();
     }

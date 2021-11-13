@@ -15,8 +15,9 @@ import static pandorum.Misc.findLocale;
 public class Ranks {
 
     public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", null, null);
-    public static Rank veteran = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Veteran", null, null);
-    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", veteran, new Requirements(50000000L, 50000, 30));
+    public static Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", null, null);
+    public static Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", veteran, new Requirements(100000000L, 100000, 100));
+    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", activePlus, new Requirements(50000000L, 50000, 30));
     public static Rank player = new Rank("[accent]<> ", "[accent]Player", active, new Requirements(25000000L, 25000, 15));
 
     private static final IntMap<Rank> ranks = new IntMap<>();
@@ -54,8 +55,9 @@ public class Ranks {
     public static void init() {
         ranks.put(0, player);
         ranks.put(1, active);
-        ranks.put(2, veteran);
-        ranks.put(3, admin);
+        ranks.put(2, activePlus);
+        ranks.put(3, veteran);
+        ranks.put(4, admin);
     }
 
     public static Rank get(int index) {
@@ -90,6 +92,7 @@ public class Ranks {
                 playerInfo.rank = rankId(next);
                 playerInfo.save();
             }
+
             callback.accept(next);
         });
     }
