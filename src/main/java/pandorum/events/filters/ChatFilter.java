@@ -20,32 +20,30 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         StringMap translationsCache = new StringMap();
 
-        Groups.player.each(player -> !player.equals(author), player -> PlayerModel.find(
-            new BasicDBObject("UUID", player.uuid()), playerInfo -> {
-                if (playerInfo.locale.equals("off")) {
+        Groups.player.each(player -> !player.equals(author), player -> PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+            if (playerInfo.locale.equals("off")) {
+                player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+                return;
+            }
+
+            String language = playerInfo.locale.equals("auto") ? player.locale() : playerInfo.locale;
+            if (translationsCache.containsKey(language)) {
+                player.sendMessage(netServer.chatFormatter.format(author, text) + (translationsCache.get(language).equalsIgnoreCase(text) ? "" : " [white]([gray]" + translationsCache.get(language) + "[white])"), author, text);
+                return;
+            }
+
+            PandorumPlugin.translator.translate(text, language, translated -> {
+                if ((!translated.isNull("err") && translated.optString("err").equals("")) || translated.optString("result", text).equalsIgnoreCase(text) || translated.optString("result", text).isBlank()) {
                     player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+                    translationsCache.put(language, text);
                     return;
                 }
 
-                String language = playerInfo.locale.equals("auto") ? player.locale() : playerInfo.locale;
-                if (translationsCache.containsKey(language)) {
-                    player.sendMessage(netServer.chatFormatter.format(author, text) + (translationsCache.get(language).equalsIgnoreCase(text) ? "" : " [white]([gray]" + translationsCache.get(language) + "[white])"), author, text);
-                    return;
-                }
-
-                    PandorumPlugin.translator.translate(text, language, translated -> {
-                        if ((!translated.isNull("err") && translated.optString("err").equals("")) || translated.optString("result", text).equalsIgnoreCase(text) || translated.optString("result", text).isBlank()) {
-                            player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-                            translationsCache.put(language, text);
-                            return;
-                        }
-
-                        String translatedText = translated.optString("result", text);
-                        player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([gray]" + translatedText + "[white])", author, text);
-                        translationsCache.put(language, translatedText);
-                    });
-                }
-        ));
+                String translatedText = translated.optString("result", text);
+                player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([gray]" + translatedText + "[white])", author, text);
+                translationsCache.put(language, translatedText);
+            });
+        }));
 
         BotHandler.text(BotHandler.botChannel, "**@**: @", Strings.stripColors(author.name), Strings.stripColors(text).replaceAll("https?://|@", " "));
         return null;
