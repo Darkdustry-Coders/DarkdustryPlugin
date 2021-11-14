@@ -33,7 +33,7 @@ public class VoteKickCommand {
 
         Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
         if (!vtime.get()) {
-            bundled(player, "commands.votekick.cooldown", cooldownTime);
+            bundled(player, "commands.votekick.cooldown", (int) (cooldownTime / 60f));
             return;
         }
 

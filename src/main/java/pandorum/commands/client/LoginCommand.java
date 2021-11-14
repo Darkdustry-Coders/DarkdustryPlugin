@@ -15,7 +15,7 @@ import static pandorum.PandorumPlugin.loginCooldowns;
 
 public class LoginCommand {
 
-    private static final float cooldownTime = 1000f;
+    private static final float cooldownTime = 1200f;
 
     public static void run(final String[] args, final Player player) {
         if (player.admin()) {
@@ -25,7 +25,7 @@ public class LoginCommand {
 
         Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
         if (!vtime.get()) {
-            bundled(player, "commands.login.cooldown", cooldownTime);
+            bundled(player, "commands.login.cooldown", (int) (cooldownTime / 60f));
             return;
         }
 
