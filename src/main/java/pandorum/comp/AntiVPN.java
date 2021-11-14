@@ -37,6 +37,7 @@ public class AntiVPN {
                 .addQueryParameter("risk", "1")
                 .addQueryParameter("vpn", "1")
                 .build();
+
         Request request = new Request.Builder()
                 .addHeader("accept", "application/json")
                 .url(url)

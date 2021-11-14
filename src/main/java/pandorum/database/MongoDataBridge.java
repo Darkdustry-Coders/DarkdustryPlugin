@@ -64,7 +64,9 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     }
 
     public void save() {
-        save(Log::err);
+        save(e -> {
+            if (e != null) Log.err(e);
+        });
     }
 
     public static <T extends MongoDataBridge<T>>void findAndApplySchema(Class<T> sourceClass, Bson filter, Consumer<T> callback) {

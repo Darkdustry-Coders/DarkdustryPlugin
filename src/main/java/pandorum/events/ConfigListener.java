@@ -1,7 +1,6 @@
 package pandorum.events;
 
 import arc.struct.Seq;
-import arc.util.Log;
 import arc.util.Pack;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
@@ -40,9 +39,7 @@ public class ConfigListener {
     private static boolean isLastUniqueCount(CacheSeq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
         for (int i = entries.size - 2; i >= maxSearchBound; i--) {
             if (entries.get(i) instanceof ConfigEntry pre && pre.value instanceof Long preCfg) {
-                if (Pack.leftInt(lastCount) > Pack.leftInt(preCfg)) {
-                    return true;
-                }
+                if (Pack.leftInt(lastCount) > Pack.leftInt(preCfg)) return true;
             }
         }
         return false;
