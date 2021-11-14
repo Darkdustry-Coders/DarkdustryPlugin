@@ -1,7 +1,6 @@
 package pandorum.entry;
 
 import arc.math.geom.Point2;
-import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
@@ -44,10 +43,11 @@ public class ConfigEntry implements HistoryEntry {
         if (event.tile.block().configurations.containsKey(Integer.class) && (event.tile.block().configurations.containsKey(Point2[].class) || event.tile.block().configurations.containsKey(Point2.class))) {
             int count;
             if (event.tile.block() instanceof PowerNode) {
-                count = event.tile.getPowerConnections(new Seq<>()).size;
-            } else {
+                count = event.tile.power.links.size;
+            } else { // например катапульта
                 count = (int) event.value;
             }
+            // слева текущие кол-во соединений, справа координата последнего соединённого узла
             return Pack.longInt(count, (int) event.value);
         }
         return event.value;
