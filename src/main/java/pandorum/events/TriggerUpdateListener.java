@@ -17,7 +17,7 @@ public class TriggerUpdateListener {
             }));
         }
 
-        if (PandorumPlugin.interval.get(2, 300f)) {
+        if (PandorumPlugin.interval.get(2, 120f)) {
             Groups.player.each(player -> Ranks.getRank(player, rank -> player.name(rank.tag + "[#" + player.color.toString().toUpperCase() + "]" + player.getInfo().lastName)));
         }
     }

@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 import static pandorum.discord.BotMain.*;
 
@@ -35,7 +36,7 @@ public class BotHandler {
     public static final CommandHandler handler = new CommandHandler(prefix);
     public static MessageChannel botChannel, adminChannel;
 
-    public BotHandler() {
+    public static void init() {
         botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
         adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
         register();
@@ -56,7 +57,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthorAsMember().block())) {
+            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
                 err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -79,7 +80,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("map", "<название...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthorAsMember().block())) {
+            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
                 err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -92,14 +93,14 @@ public class BotHandler {
             }
 
             try {
-                msg.getChannel().block().createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).block();
+                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).block();
             } catch (Exception e) {
                 err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
         });
 
         handler.<Message>register("removemap", "<название...>", "Удалить карту с сервера.", (args, msg) -> {
-            if (checkAdmin(msg.getAuthorAsMember().block())) {
+            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
                 err(msg, "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -153,7 +154,7 @@ public class BotHandler {
                     .addField("Карты:", maps.toString(), false)
                     .build();
 
-            sendEmbed(msg.getChannel().block(), embed);
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
 
         handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
@@ -173,7 +174,7 @@ public class BotHandler {
                     .footer("Используй " + prefix + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
-            sendEmbed(msg.getChannel().block(), embed);
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
 
         handler.<Message>register("players","Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -201,12 +202,12 @@ public class BotHandler {
                     .addField("Игроки:", players.toString(), false)
                     .build();
 
-            sendEmbed(msg.getChannel().block(), embed);
+            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
     }
 
     public static void text(Message message, String text, Object... args) {
-        text(message.getChannel().block(), text, args);
+        text(Objects.requireNonNull(message.getChannel().block()), text, args);
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
@@ -214,11 +215,11 @@ public class BotHandler {
     }
 
     public static void info(Message message, String title, String text, Object... args) {
-        sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
+        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static void err(Message message, String title, String text, Object... args) {
-        sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
+        sendEmbed(Objects.requireNonNull(message.getChannel().block()), EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
     }
 
     public static InputStream download(String url) {

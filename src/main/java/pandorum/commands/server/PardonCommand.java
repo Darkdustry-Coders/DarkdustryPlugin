@@ -5,7 +5,7 @@ import mindustry.net.Administration.PlayerInfo;
 
 import static mindustry.Vars.netServer;
 
-public class PardonCommand implements ServerCommand {
+public class PardonCommand {
     public static void run(final String[] args) {
         PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
         if (info != null) {

@@ -24,17 +24,9 @@ public class ConfigListener {
         boolean connect = connections > 0;
 
         if (!entries.isEmpty() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long l) {
-            Log.debug("old conns: @, now conns: @", Pack.leftInt(l), connections);
-            // У множественного подключения/отключения немного другая логика и она требует более сложный метод поиска изменения
-            boolean isBatch = entries.size >= 2 && entries.get(entries.size - 2) instanceof ConfigEntry e
-                    && e.value instanceof Long l1 && Pack.leftInt(l1) != connections
-                    && e.block instanceof PowerNode;
+            boolean isBatch = entries.size >= 2 && entries.get(entries.size - 2) instanceof ConfigEntry e && e.value instanceof Long l1 && Pack.leftInt(l1) != connections && e.block instanceof PowerNode;
 
-            Log.debug("isBatch = " + isBatch);
-
-            connect = event.tile.block instanceof PowerNode node ?
-                    isBatch ? isLastUniqueCount(entries, l, node.maxNodes) : connections > Pack.leftInt(l) :
-                    event.value instanceof Integer i && i >= 0;
+            connect = event.tile.block instanceof PowerNode node ? isBatch ? isLastUniqueCount(entries, l, node.maxNodes) : connections > Pack.leftInt(l) : event.value instanceof Integer i && i >= 0;
         }
 
         HistoryEntry entry = new ConfigEntry(event, connect);
@@ -48,7 +40,6 @@ public class ConfigListener {
     private static boolean isLastUniqueCount(CacheSeq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
         for (int i = entries.size - 2; i >= maxSearchBound; i--) {
             if (entries.get(i) instanceof ConfigEntry pre && pre.value instanceof Long preCfg) {
-                // Log.debug("pre: @, post: @", Pack.leftInt(preCfg), Pack.leftInt(lastCount));
                 if (Pack.leftInt(lastCount) > Pack.leftInt(preCfg)) {
                     return true;
                 }

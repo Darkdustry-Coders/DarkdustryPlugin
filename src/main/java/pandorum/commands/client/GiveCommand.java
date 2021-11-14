@@ -11,7 +11,7 @@ import static mindustry.Vars.content;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 
-public class GiveCommand implements ClientCommand {
+public class GiveCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

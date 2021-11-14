@@ -12,7 +12,7 @@ import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 
-public class FillCommand implements ClientCommand {
+public class FillCommand {
 
     private static final int maxSize = 25;
 

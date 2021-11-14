@@ -15,7 +15,7 @@ import pandorum.discord.BotMain;
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
-public class SpawnCommand implements ClientCommand {
+public class SpawnCommand {
 
     private static final int maxAmount = 25;
 

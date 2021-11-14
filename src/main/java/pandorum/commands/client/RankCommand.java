@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.findLocale;
 
-public class RankCommand implements ClientCommand {
+public class RankCommand {
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank rank = Ranks.get(playerInfo.rank);

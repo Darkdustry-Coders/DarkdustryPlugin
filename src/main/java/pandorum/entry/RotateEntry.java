@@ -3,12 +3,12 @@ package pandorum.entry;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 import mindustry.world.Block;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 
 import java.util.Date;
 
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.formatTime;
 
 public class RotateEntry implements HistoryEntry {
 
@@ -28,7 +28,7 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        String ftime = Misc.formatTime(time);
+        String ftime = formatTime(time);
         return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
     }
 }

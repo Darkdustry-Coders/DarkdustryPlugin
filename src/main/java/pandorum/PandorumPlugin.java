@@ -50,8 +50,8 @@ public final class PandorumPlugin extends Plugin {
             .disableHtmlEscaping()
             .create();
 
-    public static VoteSession[] current = {null};
-    public static VoteKickSession[] currentlyKicking = {null};
+    public static final VoteSession[] current = {null};
+    public static final VoteKickSession[] currentlyKicking = {null};
     public static Config config;
 
     public static final ObjectMap<String, Timekeeper>

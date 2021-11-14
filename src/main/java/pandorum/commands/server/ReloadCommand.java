@@ -6,7 +6,7 @@ import pandorum.comp.Config;
 
 import static mindustry.Vars.dataDirectory;
 
-public class ReloadCommand implements ServerCommand {
+public class ReloadCommand {
     public static void run(final String[] args) {
         try {
             PandorumPlugin.config = PandorumPlugin.gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);

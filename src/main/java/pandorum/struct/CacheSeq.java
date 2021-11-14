@@ -87,9 +87,7 @@ public class CacheSeq<T> extends Seq<T> {
     }
 
     public void cleanUpBySize() {
-        if (!evictsBySize()) {
-            return;
-        }
+        if (!evictsBySize()) return;
 
         while (size > maximumSize) {
             remove(first());

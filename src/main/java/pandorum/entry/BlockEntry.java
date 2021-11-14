@@ -4,7 +4,6 @@ import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.world.Block;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
@@ -12,6 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.formatTime;
 
 public class BlockEntry implements HistoryEntry {
 
@@ -29,13 +29,13 @@ public class BlockEntry implements HistoryEntry {
         this.name = isPlayer ? unit.getPlayer().coloredName() : null;
         this.breaking = event.breaking;
         this.block = breaking ? null : event.tile.build.block;
-        this.rotation = breaking ? -1 : event.tile.build.rotation;
+        this.rotation = breaking ? 0 : event.tile.build.rotation;
         this.time = new Date();
     }
 
     @Override
     public String getMessage(Player player) {
-        String ftime = Misc.formatTime(time);
+        String ftime = formatTime(time);
         Locale locale = findLocale(player.locale);
 
         if (breaking) {
@@ -47,5 +47,7 @@ public class BlockEntry implements HistoryEntry {
             base.append(Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]));
         }
         return base.toString();
+
+
     }
 }

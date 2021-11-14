@@ -7,7 +7,7 @@ import pandorum.Misc;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 
-public class SpectateCommand implements ClientCommand {
+public class SpectateCommand {
 
     public static final Team spectateTeam = Team.derelict;
 

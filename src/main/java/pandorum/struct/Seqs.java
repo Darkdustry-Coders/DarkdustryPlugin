@@ -148,7 +148,7 @@ public abstract class Seqs {
         private SeqBuilder() {}
 
         public SeqBuilder<T> maximumSize(int maximumSize) {
-            requireArgument(maximumSize >= 0, "maximum size must not be negative");
+            requireArgument(maximumSize >= 0, "Maximum size must not be negative.");
             this.maximumSize = maximumSize;
             return this;
         }
@@ -158,7 +158,7 @@ public abstract class Seqs {
         }
 
         public SeqBuilder<T> expireAfterWrite(long duration, TimeUnit unit) {
-            requireArgument(duration >= 0, "duration cannot be negative: @ @", duration, unit);
+            requireArgument(duration >= 0, "Duration cannot be negative: @ @.", duration, unit);
             this.expireAfterWriteNanos = unit.toNanos(duration);
             return this;
         }

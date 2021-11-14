@@ -25,15 +25,11 @@ public class Effects {
     }
 
     public static void onJoin(Player p) {
-        try {
-            on(joinEffect, p.team().core().x, p.team().core().y);
-        } catch (NullPointerException ignored) {}
+        if (p.team().core() != null) on(joinEffect, p.team().core().x, p.team().core().y);
     }
 
     public static void onLeave(Player p) {
-        try {
-            on(leaveEffect, p.x, p.y);
-        } catch (NullPointerException ignored) {}
+        on(leaveEffect, p.x, p.y);
     }
 
     public record EffectObject(Color color, Effect effect) {

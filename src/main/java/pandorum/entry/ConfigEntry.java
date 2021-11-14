@@ -45,10 +45,9 @@ public class ConfigEntry implements HistoryEntry {
             int count;
             if (event.tile.block() instanceof PowerNode) {
                 count = event.tile.power.links.size;
-            } else { // например катапульта
+            } else {
                 count = (int) event.value;
             }
-            // слева текущие кол-во соединений, справа координата последнего соединённого узла
             return Pack.longInt(count, (int) event.value);
         }
         return event.value;

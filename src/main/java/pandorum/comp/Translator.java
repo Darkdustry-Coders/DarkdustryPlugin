@@ -38,9 +38,11 @@ public class Translator {
                 .add("text", text)
                 .add("platform", "dp")
                 .build();
+
         Request request = requestBuilder
                 .post(formBody)
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -49,16 +51,10 @@ public class Translator {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONObject parsedBody = response.isSuccessful() ?
-                        new JSONObject(Objects.requireNonNull(response.body()).string()) :
-                        new JSONObject("{}");
-                try {
-                    callback.accept(parsedBody);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (response.body() != null) Objects.requireNonNull(response.body()).close();
-                }
+                JSONObject parsedBody = response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()) : new JSONObject("{}");
+
+                callback.accept(parsedBody);
+                if (response.body() != null) Objects.requireNonNull(response.body()).close();
             }
         });
     }
@@ -78,9 +74,8 @@ public class Translator {
                 .addHeader("sec-fetch-site", "cross-site")
                 .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"")
                 .build();
+
         Response response = client.newCall(request).execute();
-        return response.isSuccessful() ?
-                new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") :
-                new JSONArray("[]");
+        return response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") : new JSONArray("[]");
     }
 }

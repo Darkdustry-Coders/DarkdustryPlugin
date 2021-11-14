@@ -11,10 +11,10 @@ import static pandorum.Misc.bundled;
 
 public class Authme {
 
-    public static ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
+    public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
-    public static Button confirm = Button.success("confirm", "Подтвердить");
-    public static Button deny = Button.danger("deny", "Отклонить");
+    public static final Button confirm = Button.success("confirm", "Подтвердить");
+    public static final Button deny = Button.danger("deny", "Отклонить");
 
     public static void confirm(String uuid) {
         Player player = Misc.findByID(uuid);

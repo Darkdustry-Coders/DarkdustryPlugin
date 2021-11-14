@@ -56,7 +56,6 @@ public class Loader {
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
-        Administration.Config.allowCustomClients.set(true);
 
         Effects.init();
         MenuHandler.init();

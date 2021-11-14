@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.current;
 
-public class VotingCommand implements ClientCommand {
+public class VotingCommand {
     public static void run(final String[] args, final Player player) {
         if (current[0] == null) {
             bundled(player, "commands.no-voting");

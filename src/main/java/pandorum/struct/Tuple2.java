@@ -1,8 +1,12 @@
 package pandorum.struct;
 
-import java.io.*;
-import java.util.*;
-import java.util.function.Function;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.Iterator;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Collections;
 
 public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     @Serial
@@ -18,14 +22,6 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
 
     public static <T1, T2> Tuple2<T1, T2> of(T1 t1, T2 t2) {
         return new Tuple2<>(t1, t2);
-    }
-
-    public <R> Tuple2<R, T2> mapT1(Function<T1, R> mapper) {
-        return new Tuple2<>(mapper.apply(t1), t2);
-    }
-
-    public <R> Tuple2<T1, R> mapT2(Function<T2, R> mapper) {
-        return new Tuple2<>(t1, mapper.apply(t2));
     }
 
     public int size() {
@@ -58,8 +54,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tuple2<?, ?> tuple2 = (Tuple2<?, ?>)o;
-        return t1.equals(tuple2.t1) &&
-               t2.equals(tuple2.t2);
+        return t1.equals(tuple2.t1) && t2.equals(tuple2.t2);
     }
 
     @Override

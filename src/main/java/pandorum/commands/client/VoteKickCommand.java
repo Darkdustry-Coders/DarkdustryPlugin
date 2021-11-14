@@ -4,13 +4,14 @@ import arc.util.Timekeeper;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
-import pandorum.Misc;
 import pandorum.vote.VoteKickSession;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.*;
+import static pandorum.Misc.findByName;
+import static pandorum.PandorumPlugin.currentlyKicking;
+import static pandorum.PandorumPlugin.votekickCooldowns;
 
-public class VoteKickCommand implements ClientCommand {
+public class VoteKickCommand {
 
     private static final float cooldownTime = 300f;
 
@@ -36,7 +37,7 @@ public class VoteKickCommand implements ClientCommand {
             return;
         }
 
-        Player found = Misc.findByName(args[0]);
+        Player found = findByName(args[0]);
         if (found == null) {
             bundled(player, "commands.player-not-found");
             return;

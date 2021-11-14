@@ -4,13 +4,13 @@ import mindustry.game.EventType.WithdrawEvent;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
 import java.util.Date;
 
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.formatTime;
 
 public class WithdrawEntry implements HistoryEntry {
 
@@ -30,7 +30,7 @@ public class WithdrawEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        String ftime = Misc.formatTime(time);
+        String ftime = formatTime(time);
         return Bundle.format("history.withdraw", findLocale(player.locale), name, amount, Icons.get(item.name), block.name, ftime);
     }
 }

@@ -11,7 +11,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 import static pandorum.PandorumPlugin.votesRTV;
 
-public class RTVCommand implements ClientCommand {
+public class RTVCommand {
     public static void run(final String[] args, final Player player) {
         if (votesRTV.contains(player.uuid())) {
             bundled(player, "commands.already-voted");

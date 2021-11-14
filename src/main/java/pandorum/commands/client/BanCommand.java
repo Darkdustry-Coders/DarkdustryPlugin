@@ -6,7 +6,7 @@ import pandorum.Misc;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
-public class BanCommand implements ClientCommand {
+public class BanCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         if (netServer.admins.getInfoOptional(args[0]) != null && netServer.admins.banPlayerID(args[0])) {

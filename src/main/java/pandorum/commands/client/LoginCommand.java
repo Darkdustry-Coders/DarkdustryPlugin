@@ -13,7 +13,7 @@ import pandorum.discord.BotMain;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.loginCooldowns;
 
-public class LoginCommand implements ClientCommand {
+public class LoginCommand {
 
     private static final float cooldownTime = 1000f;
 

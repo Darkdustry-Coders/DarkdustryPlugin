@@ -23,16 +23,22 @@ public class Config {
     /** Время голосования через /votekick. В секундах */
     public float votekickDuration = 40f;
 
+    /** IP адрес хаба. */
     public String hubIp = "darkdustry.ml:6567";
 
+    /** Режим игры на этом сервере. Влияет на доступные команды и не только. */
     public Gamemode mode = Gamemode.survival;
 
+    /** Токен бота, привязанного к серверу. Если его не указать, сервер не запустится! */
     public String DiscordBotToken = "token";
 
+    /** ID канала в Discord, куда отправляются все сообщения. */
     public Long DiscordChannelID = 0L;
 
+    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
     public Long DiscordAdminChannelID = 844215222784753664L;
 
+    /** Префикс бота, привязанного к серверу. */
     public String prefix = "prefix";
 
     public Tuple2<String, Integer> hubIp() {

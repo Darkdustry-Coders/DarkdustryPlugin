@@ -3,7 +3,6 @@ package pandorum.commands.client;
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import org.jetbrains.annotations.NotNull;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
@@ -13,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.*;
 
-public class InfoCommand implements ClientCommand {
-    public static void run(final String[] args, final @NotNull Player player) {
+public class InfoCommand {
+    public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findByName(args[0]) : player;
         if (target == null) {
             bundled(player, "commands.player-not-found");

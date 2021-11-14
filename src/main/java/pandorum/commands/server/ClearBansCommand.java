@@ -4,7 +4,7 @@ import arc.util.Log;
 
 import static mindustry.Vars.netServer;
 
-public class ClearBansCommand implements ServerCommand {
+public class ClearBansCommand {
     public static void run(final String[] args) {
         netServer.admins.getBanned().each(ban -> netServer.admins.unbanPlayerID(ban.id));
         netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));

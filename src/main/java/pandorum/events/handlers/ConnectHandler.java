@@ -99,7 +99,7 @@ public class ConnectHandler {
         }
 
         if (packet.versionType == null || ((packet.version == -1 || !packet.versionType.equals(Version.type)) && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
-            con.kick(!Version.type.equals(packet.versionType) ? KickReason.typeMismatch : KickReason.customClient);
+            con.kick(Version.type.equals(packet.versionType) ? KickReason.customClient : KickReason.typeMismatch);
             return;
         }
 

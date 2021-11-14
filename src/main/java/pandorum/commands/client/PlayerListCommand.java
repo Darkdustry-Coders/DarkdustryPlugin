@@ -10,7 +10,7 @@ import pandorum.comp.Icons;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
-public class PlayerListCommand implements ClientCommand {
+public class PlayerListCommand {
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

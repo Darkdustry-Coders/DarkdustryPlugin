@@ -13,9 +13,11 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static mindustry.Vars.maps;
+import static mindustry.Vars.saveExtension;
 import static mindustry.Vars.saveDirectory;
 
 public abstract class Misc {
@@ -39,7 +41,7 @@ public abstract class Misc {
     public static Fi findSave(String name) {
         for (int i = 0; i < saveDirectory.list().length; i++) {
             Fi save = saveDirectory.list()[i];
-            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
+            if (Objects.equals(save.extension(), saveExtension) && ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name))) {
                 return save;
             }
         }

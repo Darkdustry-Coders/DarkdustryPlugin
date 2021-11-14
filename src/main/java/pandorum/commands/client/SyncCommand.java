@@ -7,7 +7,7 @@ import mindustry.gen.Player;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
-public class SyncCommand implements ClientCommand {
+public class SyncCommand {
 
     private static final int cooldownTime = 15;
 

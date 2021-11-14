@@ -7,7 +7,7 @@ import pandorum.models.PlayerModel;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.*;
 
-public class TranslatorCommand implements ClientCommand {
+public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             switch (args[0].toLowerCase()) {

@@ -1,6 +1,6 @@
 package pandorum.comp;
 
-import arc.struct.IntMap;
+import arc.struct.Seq;
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
@@ -14,23 +14,25 @@ import static pandorum.Misc.findLocale;
 
 public class Ranks {
 
-    public static Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", null, null);
-    public static Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", null, null);
-    public static Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", veteran, new Requirements(100000000L, 100000, 100));
-    public static Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", activePlus, new Requirements(50000000L, 50000, 30));
-    public static Rank player = new Rank("[accent]<> ", "[accent]Player", active, new Requirements(25000000L, 25000, 15));
+    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4, null, null);
+    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, null, null);
+    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, veteran, new Requirements(100000000L, 100000, 100));
+    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, activePlus, new Requirements(50000000L, 50000, 30));
+    public static final Rank player = new Rank("[accent]<> ", "[accent]Player", 0, active, new Requirements(25000000L, 25000, 15));
 
-    private static final IntMap<Rank> ranks = new IntMap<>();
+    private static final Seq<Rank> ranks = new Seq<>(true);
 
     public static class Rank {
         public String tag;
         public String name;
+        public int id;
         public @Nullable Rank next;
         public @Nullable Requirements nextReq;
 
-        public Rank(String tag, String name, Rank next, Requirements nextReq) {
+        public Rank(String tag, String name, int id, Rank next, Requirements nextReq) {
             this.name = name;
             this.tag = tag;
+            this.id = id;
             this.next = next;
             this.nextReq = nextReq;
         }
@@ -53,19 +55,11 @@ public class Ranks {
     }
 
     public static void init() {
-        ranks.put(0, player);
-        ranks.put(1, active);
-        ranks.put(2, activePlus);
-        ranks.put(3, veteran);
-        ranks.put(4, admin);
+        ranks.addAll(player, active, activePlus, veteran, admin);
     }
 
     public static Rank get(int index) {
         return ranks.get(index);
-    }
-
-    public static int rankId(Rank rank) {
-        return ranks.findKey(rank, false, 0);
     }
 
     public static void getRank(Player p, Consumer<Rank> callback) {
@@ -88,8 +82,8 @@ public class Ranks {
             } else if (current == admin) next = player;
             else next = current;
 
-            if (playerInfo.rank != rankId(next)) {
-                playerInfo.rank = rankId(next);
+            if (playerInfo.rank != next.id) {
+                playerInfo.rank = next.id;
                 playerInfo.save();
             }
 

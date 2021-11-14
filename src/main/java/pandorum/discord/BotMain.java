@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.util.ArcRuntimeException;
 import arc.util.Log;
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
@@ -17,7 +18,6 @@ public class BotMain {
 
     public static DiscordClient bot;
     public static GatewayDiscordClient client;
-    public static BotHandler listener;
 
     public static final Color normalColor = Color.ORANGE;
     public static final Color successColor = Color.GREEN;
@@ -27,13 +27,15 @@ public class BotMain {
         bot = DiscordClient.create(PandorumPlugin.config.DiscordBotToken);
         client = bot.login().block();
 
+        if (client == null) throw new ArcRuntimeException("Не удалось запустить бота. Выключаю сервер...");
+
         client.on(MessageCreateEvent.class).subscribe(event -> {
             Message msg = event.getMessage();
             BotHandler.handler.handleMessage(msg.getContent(), msg);
 
             if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && !msg.getContent().startsWith(BotHandler.prefix) && msg.getContent().length() > 0 && msg.getContent().length() < 100) {
-                Misc.sendToChat("events.discord-message", msg.getAuthorAsMember().block().getDisplayName(), msg.getContent());
-                Log.info("[Discord]@: @", msg.getAuthorAsMember().block().getDisplayName(), msg.getContent());
+                Misc.sendToChat("events.discord-message", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
+                Log.info("[Discord]@: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
             }
         });
 
@@ -58,7 +60,7 @@ public class BotMain {
             }
         });
 
-        listener = new BotHandler();
+        BotHandler.init();
         Log.info("[Darkdustry] Бот успешно запущен...");
     }
 }
