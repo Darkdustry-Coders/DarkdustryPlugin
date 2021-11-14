@@ -47,7 +47,5 @@ public class BlockEntry implements HistoryEntry {
             base.append(Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]));
         }
         return base.toString();
-
-
     }
 }
