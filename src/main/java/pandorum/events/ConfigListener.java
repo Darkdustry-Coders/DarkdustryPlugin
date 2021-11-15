@@ -19,7 +19,7 @@ public class ConfigListener {
         if (event.tile.block instanceof LogicBlock || event.player == null || event.tile.tileX() > Vars.world.width() || event.tile.tileX() > Vars.world.height() || PandorumPlugin.config.mode == Config.Gamemode.hexed || PandorumPlugin.config.mode == Config.Gamemode.hub || PandorumPlugin.config.mode == Config.Gamemode.castle) return;
 
         CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
-        int connections = event.tile.power.links.size;
+        int connections = event.tile.power != null ? event.tile.power.links.size : 0;
         boolean connect = connections > 0;
 
         if (!entries.isEmpty() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long l) {
