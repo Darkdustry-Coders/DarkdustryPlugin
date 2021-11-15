@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import arc.math.Mathf;
 import arc.util.Strings;
 import mindustry.content.Blocks;
 import mindustry.gen.Player;
@@ -24,8 +23,8 @@ public class FillCommand {
             return;
         }
 
-        int w = Mathf.clamp(Strings.parseInt(args[0]), 0, maxSize) + player.tileX();
-        int h = Mathf.clamp(Strings.parseInt(args[1]), 0, maxSize) + player.tileY();
+        int w = Strings.parseInt(args[0], 0) + player.tileX();
+        int h = Strings.parseInt(args[1], 0) + player.tileY();
 
         Floor floor;
         Block block;

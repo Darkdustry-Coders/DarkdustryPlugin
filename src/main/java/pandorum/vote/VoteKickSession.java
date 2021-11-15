@@ -24,8 +24,8 @@ public class VoteKickSession {
     public static int kickDuration = 45 * 60;
 
     public VoteKickSession(VoteKickSession[] kickSession, Player target) {
-        this.target = target;
         this.kickSession = kickSession;
+        this.target = target;
         this.task = start();
     }
 
