@@ -53,8 +53,13 @@ public class Translator {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JSONObject parsedBody = response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()) : new JSONObject("{}");
 
-                callback.accept(parsedBody);
-                if (response.body() != null) Objects.requireNonNull(response.body()).close();
+                try {
+                    callback.accept(parsedBody);
+                } catch(Exception e) {
+                    Log.err(e);
+                } finally {
+                    if (response.body() != null) Objects.requireNonNull(response.body()).close();
+                }
             }
         });
     }
