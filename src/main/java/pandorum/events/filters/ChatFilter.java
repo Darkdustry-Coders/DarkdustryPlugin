@@ -28,19 +28,18 @@ public class ChatFilter {
 
             String language = playerInfo.locale.equals("auto") ? player.locale() : playerInfo.locale;
             if (cache.containsKey(language)) {
-                player.sendMessage(Strings.format("@ [white]([gray]@[white])", formatted, cache.get(language)), author, text);
+                player.sendMessage(cache.get(language) + (cache.get(language).equalsIgnoreCase(text) ? "" : Strings.format(" [white]([gray]@[white])", formatted)), author, text);
                 return;
             }
 
-            PandorumPlugin.translator.translate(text, language, translated -> {
-                if ((!translated.isNull("err") && translated.optString("err").equals("")) || translated.optString("result", text).equalsIgnoreCase(text) || translated.optString("result", text).isBlank()) {
+            PandorumPlugin.translator.translate(Strings.stripColors(text), language, translatedText -> {
+                if (translatedText.equalsIgnoreCase(text) || translatedText.isBlank()) {
                     player.sendMessage(formatted, author, text);
                     cache.put(language, text);
                     return;
                 }
 
-                String translatedText = translated.optString("result", text);
-                player.sendMessage(Strings.format("@ [white]([gray]@[white])", formatted, translatedText), author, text);
+                player.sendMessage(Strings.format(translatedText + " [white]([gray]@[white])", formatted), author, text);
                 cache.put(language, translatedText);
             });
         }));

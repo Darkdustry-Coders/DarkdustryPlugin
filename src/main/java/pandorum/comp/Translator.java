@@ -29,7 +29,7 @@ public class Translator {
         this.client = new OkHttpClient();
     }
 
-    public void translate(String text, String lang, Consumer<JSONObject> callback) {
+    public void translate(String text, String lang, Consumer<String> callback) {
         String language = PandorumPlugin.codeLanguages.get(lang, PandorumPlugin.codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder()
@@ -45,16 +45,17 @@ public class Translator {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.accept(new JSONObject("{}"));
+                callback.accept("");
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONObject parsedBody = response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()) : new JSONObject("{}");
+                JSONObject translated = new JSONObject(Objects.requireNonNull(response.body()).string());
+                String translatedText = translated.optString("result", text);
                 try {
-                    callback.accept(parsedBody);
+                    callback.accept(translatedText);
                 } finally {
-                    if (response.body() != null) Objects.requireNonNull(response.body()).close();
+                    if (response.body() != null) response.close();
                 }
             }
         });
