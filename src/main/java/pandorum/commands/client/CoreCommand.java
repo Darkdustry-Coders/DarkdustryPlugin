@@ -12,11 +12,10 @@ public class CoreCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 
-        Block core = args.length > 0 ? switch(args[0].toLowerCase()) {
+        Block core = args.length > 0 ? switch (args[0].toLowerCase()) {
             case "big", "nucleus" -> Blocks.coreNucleus;
             case "medium", "foundation" -> Blocks.coreFoundation;
             case "small", "shard" -> Blocks.coreShard;
-            default -> null;
         } : Blocks.coreShard;
 
         if (core == null) {

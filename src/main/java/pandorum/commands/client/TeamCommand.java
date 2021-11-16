@@ -1,14 +1,10 @@
 package pandorum.commands.client;
 
-import arc.util.Strings;
 import arc.util.Structs;
-import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.comp.Icons;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 
 import static pandorum.Misc.bundled;
 
@@ -29,16 +25,7 @@ public class TeamCommand {
             return;
         }
 
-        bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
         target.team(team);
-
-        EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                .color(BotMain.normalColor)
-                .title("Команда игрока изменена!")
-                .addField("Никнейм:", Strings.stripColors(player.name), false)
-                .addField("Новая команда:", team.name, false)
-                .build();
-
-        BotHandler.sendEmbed(embed);
+        bundled(target, "commands.admin.team.success", Misc.colorizedTeam(team));
     }
 }

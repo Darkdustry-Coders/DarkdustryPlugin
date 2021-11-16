@@ -1,15 +1,9 @@
 package pandorum.events;
 
-import arc.util.Strings;
-import arc.util.Time;
-import discord4j.core.spec.EmbedCreateSpec;
-import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 
@@ -30,15 +24,5 @@ public class WorldLoadListener {
                         .build();
             }
         }
-
-        Time.runTask(1f, () -> {
-            EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                    .color(BotMain.normalColor)
-                    .title("Карта загружена.")
-                    .addField("Название:", Strings.stripColors(Vars.state.map.name()), false)
-                    .build();
-
-            BotHandler.sendEmbed(embed);
-        });
     }
 }

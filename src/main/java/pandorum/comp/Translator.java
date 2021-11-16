@@ -1,6 +1,5 @@
 package pandorum.comp;
 
-import arc.util.Log;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -30,11 +29,11 @@ public class Translator {
         this.client = new OkHttpClient();
     }
 
-    public void translate(String text, String dest_lang, Consumer<JSONObject> callback) {
-        String destAlphaLang = PandorumPlugin.codeLanguages.containsKey(dest_lang) ? PandorumPlugin.codeLanguages.get(dest_lang) : PandorumPlugin.codeLanguages.get("en");
+    public void translate(String text, String lang, Consumer<JSONObject> callback) {
+        String language = PandorumPlugin.codeLanguages.get(lang, PandorumPlugin.codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder()
-                .add("to", destAlphaLang)
+                .add("to", language)
                 .add("text", text)
                 .add("platform", "dp")
                 .build();
@@ -46,17 +45,14 @@ public class Translator {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.err(e);
+                callback.accept(new JSONObject("{}"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JSONObject parsedBody = response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()) : new JSONObject("{}");
-
                 try {
                     callback.accept(parsedBody);
-                } catch(Exception e) {
-                    Log.err(e);
                 } finally {
                     if (response.body() != null) Objects.requireNonNull(response.body()).close();
                 }
