@@ -16,6 +16,7 @@ public class CoreCommand {
             case "big", "nucleus" -> Blocks.coreNucleus;
             case "medium", "foundation" -> Blocks.coreFoundation;
             case "small", "shard" -> Blocks.coreShard;
+            default -> null
         } : Blocks.coreShard;
 
         if (core == null) {
