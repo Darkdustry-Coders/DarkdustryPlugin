@@ -93,7 +93,7 @@ public class BotHandler {
             }
 
             try {
-                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).block();
+                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe();
             } catch (Exception e) {
                 err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
@@ -211,7 +211,7 @@ public class BotHandler {
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).block();
+        channel.createMessage(Strings.format(text, args)).subscribe();
     }
 
     public static void info(Message message, String title, String text, Object... args) {
