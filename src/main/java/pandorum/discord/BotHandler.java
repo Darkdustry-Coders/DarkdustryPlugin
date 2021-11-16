@@ -242,6 +242,6 @@ public class BotHandler {
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).block();
+        channel.createMessage(embed).subscribe();
     }
 }
