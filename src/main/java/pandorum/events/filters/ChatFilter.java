@@ -28,23 +28,25 @@ public class ChatFilter {
 
             String language = playerInfo.locale.equals("auto") ? player.locale() : playerInfo.locale;
             if (cache.containsKey(language)) {
-                player.sendMessage(cache.get(language) + (cache.get(language).equalsIgnoreCase(text) ? "" : Strings.format(" [white]([gray]@[white])", formatted)), author, text);
+                player.sendMessage(formatTranslated(formatted, text, cache.get(language)), author, text);
                 return;
             }
 
             PandorumPlugin.translator.translate(Strings.stripColors(text), language, translatedText -> {
-                if (translatedText.equalsIgnoreCase(text) || translatedText.isBlank()) {
-                    player.sendMessage(formatted, author, text);
-                    cache.put(language, text);
-                    return;
-                }
-
-                player.sendMessage(Strings.format(translatedText + " [white]([gray]@[white])", formatted), author, text);
+                player.sendMessage(formatTranslated(formatted, text, translatedText), author, text);
                 cache.put(language, translatedText);
             });
         }));
 
         BotHandler.text(BotHandler.botChannel, "**@**: @", Strings.stripColors(author.name), Strings.stripColors(text).replaceAll("https?://|@", " "));
         return null;
+    }
+
+    private static String formatTranslated(String formatted, String text, String translatedText) {
+        if (translatedText.equalsIgnoreCase(text) || translatedText.isBlank()) {
+            return formatted;
+        } else {
+            return formatted + Strings.format(" [white]([gray]@[white])", translatedText);
+        }
     }
 }
