@@ -3,9 +3,13 @@ package pandorum.events;
 import arc.util.Log;
 import arc.util.Strings;
 import com.mongodb.BasicDBObject;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
+import discord4j.core.object.presence.Status;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
@@ -41,5 +45,7 @@ public class PlayerJoinListener {
         });
         
         bundled(event.player, "events.motd");
+
+        BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {});
     }
 }

@@ -12,12 +12,12 @@ public class CoreCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 
-        Block core = args.length > 0 ? switch (args[0].toLowerCase()) {
+        Block core = args.length == 0 ? Blocks.coreShard : switch (args[0].toLowerCase()) {
             case "big", "nucleus" -> Blocks.coreNucleus;
             case "medium", "foundation" -> Blocks.coreFoundation;
             case "small", "shard" -> Blocks.coreShard;
             default -> null;
-        } : Blocks.coreShard;
+        };
 
         if (core == null) {
             bundled(player, "commands.admin.core.core-not-found");
@@ -27,7 +27,7 @@ public class CoreCommand {
         try {
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, player.team(), false);
             bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed");
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             bundled(player, "commands.admin.core.failed");
         }
     }

@@ -93,7 +93,7 @@ public class BotHandler {
             }
 
             try {
-                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe();
+                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {});
             } catch (Exception e) {
                 err(msg, "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
@@ -206,12 +206,16 @@ public class BotHandler {
         });
     }
 
+    public static void text(String text, Object... args) {
+        text(botChannel, text, args);
+    }
+
     public static void text(Message message, String text, Object... args) {
         text(Objects.requireNonNull(message.getChannel().block()), text, args);
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).subscribe();
+        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
     }
 
     public static void info(Message message, String title, String text, Object... args) {
@@ -242,6 +246,6 @@ public class BotHandler {
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).subscribe();
+        channel.createMessage(embed).subscribe(null, e -> {});
     }
 }

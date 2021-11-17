@@ -4,6 +4,9 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
+import discord4j.core.object.presence.Status;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -56,5 +59,7 @@ public class PlayerLeaveListener {
             PandorumPlugin.votesVNW.remove(event.player.uuid());
             sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
+
+        BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {});
     }
 }

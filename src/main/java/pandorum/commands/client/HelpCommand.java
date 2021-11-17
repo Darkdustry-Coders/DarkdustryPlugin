@@ -21,7 +21,7 @@ public class HelpCommand {
         int pages = Mathf.ceil(netServer.clientCommands.getCommandList().size / 6.0f);
 
         if (--page >= pages || page < 0) {
-            bundled(player, "commands.under-page", String.valueOf(pages));
+            bundled(player, "commands.under-page", pages);
             return;
         }
 

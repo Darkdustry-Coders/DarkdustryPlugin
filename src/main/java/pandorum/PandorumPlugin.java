@@ -129,7 +129,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("exit", "Выключить сервер.", ExitCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
-        handler.register("pardon", "<ID>", "Снять кик с игрока.", PardonCommand::run);
+        handler.register("pardon", "<uuid>", "Снять кик с игрока.", PardonCommand::run);
     }
 
     @Override

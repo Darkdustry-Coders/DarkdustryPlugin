@@ -11,7 +11,7 @@ import static mindustry.Vars.netServer;
 
 public class PlayerBanListener {
     public static void call(final EventType.PlayerBanEvent event) {
-        PlayerInfo info = netServer.admins.getInfo(event.uuid);
+        PlayerInfo info = netServer.admins.getInfoOptional(event.uuid);
         if (info != null) {
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .color(BotMain.errorColor)
