@@ -17,8 +17,8 @@ public class ChatFilter {
         String formatted = netServer.chatFormatter.format(author, text);
         StringMap cache = new StringMap();
 
-        author.sendMessage(formatted, author, text);
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
+        author.sendMessage(formatted, author, text);
 
         Groups.player.each(player -> !player.equals(author), player -> PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             if (playerInfo.locale.equals("off")) {

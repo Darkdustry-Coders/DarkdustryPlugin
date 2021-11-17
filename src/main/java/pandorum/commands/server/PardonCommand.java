@@ -10,8 +10,8 @@ public class PardonCommand {
         PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
         if (info != null) {
             info.lastKicked = 0;
-            if (netServer.admins.kickedIPs.containsKey(info.lastIP)) netServer.admins.kickedIPs.remove(info.lastIP);
-            Log.info("Кик снят с игрока: @", info.lastName);
+            netServer.admins.kickedIPs.remove(info.lastIP);
+            Log.info("Игрок @ снова может зайти на сервер.", info.lastName);
         } else {
             Log.err("Игрок не найден.");
         }

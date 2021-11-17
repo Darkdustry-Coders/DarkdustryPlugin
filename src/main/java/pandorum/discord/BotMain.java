@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.struct.Seq;
 import arc.util.Log;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
@@ -39,8 +40,7 @@ public class BotMain {
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
-                if (msg.getContent().startsWith(BotHandler.prefix))
-                    BotHandler.handler.handleMessage(msg.getContent(), msg);
+                if (msg.getContent().startsWith(BotHandler.prefix)) BotHandler.handler.handleMessage(msg.getContent(), msg);
 
                 if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && msg.getContent().length() > 0) {
                     Misc.sendToChat("events.discord-message", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());

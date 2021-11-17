@@ -23,6 +23,7 @@ import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
 import pandorum.comp.AntiVPN;
@@ -93,11 +94,11 @@ public final class PandorumPlugin extends Plugin {
         PlayerModel.setSourceCollection(playersInfoCollection);
 
         Fi file = dataDirectory.child("config.json");
-        if (!file.exists()) {
+        if (file.exists()) {
+            config = gson.fromJson(file.reader(), Config.class);
+        } else {
             file.writeString(gson.toJson(config = new Config()));
             Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
-        } else {
-            config = gson.fromJson(file.reader(), Config.class);
         }
 
         antiVPN = new AntiVPN("w7j425-826177-597253-3134u9");
@@ -105,9 +106,8 @@ public final class PandorumPlugin extends Plugin {
 
         JSONArray languages = translator.getAllLanguages();
         for (int i = 0; i < languages.length(); i++) {
-            String codeAlpha = languages.getJSONObject(i).getString("code_alpha_1");
-            String fullCode = languages.getJSONObject(i).getString("full_code");
-            codeLanguages.put(codeAlpha, fullCode);
+            JSONObject language = languages.getJSONObject(i);
+            codeLanguages.put(language.getString("code_alpha_1"), language.getString("full_code"));
         }
     }
 
