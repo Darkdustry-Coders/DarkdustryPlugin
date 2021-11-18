@@ -38,7 +38,7 @@ public class ChatFilter {
             });
         }));
 
-        BotHandler.text("**@**: @", Strings.stripColors(author.name), Strings.stripColors(text).replaceAll("https?://|", " "));
+        BotHandler.text("**@**: @", Strings.stripColors(author.name), Strings.stripColors(text));
         return null;
     }
 
