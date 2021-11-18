@@ -9,6 +9,6 @@ public class SayCommand {
     public static void run(final String[] args) {
         Log.info("Server: &ly@", args[0]);
         sendToChat("commands.say.chat", args[0]);
-        BotHandler.text("**@**: @", "Сервер", args[0].replaceAll("https?://|", " "));
+        BotHandler.text("**@**: @", "Сервер", args[0]);
     }
 }
