@@ -71,6 +71,7 @@ public class BotMain {
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch(Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
+            Log.err(e);
             System.exit(2);
         }
     }
