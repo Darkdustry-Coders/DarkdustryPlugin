@@ -56,19 +56,13 @@ public class AntiVPN {
                 JSONObject ipInfo = body.getJSONObject(ip);
 
                 int risk = ipInfo.getInt("risk");
-                String isProxy = ipInfo.getString("proxy");
-                String ipType = ipInfo.getString("type");
+                String type = ipInfo.getString("type");
 
-                Log.info("Risk: @", risk);
-                Log.info("IsProxy: @", isProxy);
-                Log.info("IpType: @", ipType);
-
-                boolean isDangerous = risk >= 66 || isProxy.equals("yes") || Set.of(
+                boolean isDangerous = risk > 66 || Set.of(
                         "tor", "socks", "socks4", "socks4a",
                         "socks5", "socks5h", "shadowsocks",
-                        "compromised server", "inference engine",
                         "openvpn", "vpn"
-                ).contains(ipType.toLowerCase());
+                ).contains(type.toLowerCase());
                 cache.put(ip, isDangerous);
                 callback.accept(isDangerous);
             }

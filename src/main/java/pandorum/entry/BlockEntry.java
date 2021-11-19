@@ -16,10 +16,10 @@ import static pandorum.Misc.formatTime;
 public class BlockEntry implements HistoryEntry {
 
     public final Unit unit;
-    public final boolean isPlayer;
     public final String name;
-    public final boolean breaking;
+    public final boolean isPlayer;
     public final Block block;
+    public final boolean breaking;
     public final int rotation;
     public final Date time;
 
