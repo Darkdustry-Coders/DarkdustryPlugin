@@ -1,6 +1,5 @@
 package pandorum.discord;
 
-import arc.struct.Seq;
 import arc.util.Log;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;

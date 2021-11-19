@@ -30,7 +30,6 @@ public class DepositEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        String ftime = formatTime(time);
-        return Bundle.format("history.deposit", findLocale(player.locale), name, amount, Icons.get(item.name), block.name, ftime);
+        return Bundle.format("history.deposit", findLocale(player.locale), name, amount, Icons.get(item.name), block.name, formatTime(time));
     }
 }

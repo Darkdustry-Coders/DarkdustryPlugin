@@ -28,7 +28,6 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        String ftime = formatTime(time);
-        return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], ftime);
+        return Bundle.format("history.rotate", findLocale(player.locale), name, block.name, sides[rotation], formatTime(time));
     }
 }

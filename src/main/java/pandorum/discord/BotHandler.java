@@ -5,12 +5,16 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Strings;
+import arc.util.Timer;
 import arc.util.io.Streams;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Attachment;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
+import discord4j.core.object.presence.Status;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.MessageCreateSpec;
@@ -40,6 +44,8 @@ public class BotHandler {
         botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
         adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
         register();
+
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
     }
 
     private static void register() {
@@ -144,7 +150,7 @@ public class BotHandler {
 
             StringBuilder maps = new StringBuilder();
             for (int i = 20 * page; i < Math.min(20 * (page + 1), mapList.size); i++) {
-                maps.append(i + 1).append(". ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
+                maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
             }
 
             EmbedCreateSpec embed = EmbedCreateSpec.builder()

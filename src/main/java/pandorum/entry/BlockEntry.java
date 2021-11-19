@@ -38,14 +38,11 @@ public class BlockEntry implements HistoryEntry {
         String ftime = formatTime(time);
         Locale locale = findLocale(player.locale);
 
-        if (breaking) {
-            return isPlayer ? Bundle.format("history.block.destroy.player", locale, name, ftime) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.type.name), unit.type.name, ftime);
-        }
+        if (breaking) return isPlayer ? Bundle.format("history.block.destroy.player", locale, name, ftime) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.type.name), unit.type.name, ftime);
 
         StringBuilder base = new StringBuilder(isPlayer ? Bundle.format("history.block.construct.player", locale, name, block, ftime) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.type.name), unit.type.name, block, ftime));
-        if (block.rotate) {
-            base.append(Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]));
-        }
+        if (block.rotate) base.append(Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]));
+
         return base.toString();
     }
 }
