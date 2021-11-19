@@ -1,6 +1,7 @@
 package pandorum.comp;
 
 import arc.struct.ObjectMap;
+import arc.util.Log;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -57,6 +58,10 @@ public class AntiVPN {
                 int risk = ipInfo.getInt("risk");
                 String isProxy = ipInfo.getString("proxy");
                 String ipType = ipInfo.getString("type");
+
+                Log.info("Risk: @", risk);
+                Log.info("IsProxy: @", isProxy);
+                Log.info("IpType: @", ipType);
 
                 boolean isDangerous = risk >= 66 || isProxy.equals("yes") || Set.of(
                         "tor", "socks", "socks4", "socks4a",
