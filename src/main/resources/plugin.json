@@ -2,6 +2,6 @@
   "name": "DarkdustryPlugin",
   "author": "Darkdustry",
   "main": "pandorum.PandorumPlugin",
-  "description": "Core plugin for Darkdustry servers",
+  "description": "The main plugin for Darkdustry servers",
   "version": "1.4"
 }
