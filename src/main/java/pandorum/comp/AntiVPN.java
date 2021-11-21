@@ -1,7 +1,6 @@
 package pandorum.comp;
 
 import arc.struct.ObjectMap;
-import arc.util.Log;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -16,6 +15,9 @@ public class AntiVPN {
     private final String token;
     private final OkHttpClient client;
     private static final String API_VERSION = "v2";
+
+    private final Request.Builder requestBuilder = new Request.Builder()
+            .addHeader("accept", "application/json");
 
     public AntiVPN(String token) {
         this.cache = new ObjectMap<>();
@@ -39,8 +41,7 @@ public class AntiVPN {
                 .addQueryParameter("vpn", "1")
                 .build();
 
-        Request request = new Request.Builder()
-                .addHeader("accept", "application/json")
+        Request request = requestBuilder
                 .url(url)
                 .build();
 

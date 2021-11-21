@@ -48,6 +48,9 @@ public class Loader {
 
         Administration.Config.motd.set("off");
         Administration.Config.messageRateLimit.set(1);
+        Administration.Config.interactRateWindow.set(3);
+        Administration.Config.interactRateLimit.set(50);
+        Administration.Config.interactRateKick.set(1000);
         Administration.Config.showConnectMessages.set(false);
         Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
