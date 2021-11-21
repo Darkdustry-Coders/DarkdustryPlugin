@@ -18,7 +18,7 @@ public class PlayerListCommand {
         }
 
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-        int pages = Mathf.ceil((float) Groups.player.size() / 6.0f);
+        int pages = Mathf.ceil(Groups.player.size() / 6.0f);
 
         if (--page >= pages || page < 0) {
             bundled(player, "commands.under-page", pages);
@@ -26,13 +26,13 @@ public class PlayerListCommand {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(Bundle.format("commands.pl.page", findLocale(player.locale), page + 1, pages)).append("\n");
+        result.append(Bundle.format("commands.players.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
-            Player p = Groups.player.index(i);
             result.append("[#9c88ee]* [white]");
+            Player p = Groups.player.index(i);
             if (p.admin) result.append(Icons.get("admin")).append(" ");
-            result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: ").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.pl.locale", findLocale(player.locale))).append(p.locale).append("\n");
+            result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: ").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
         }
         player.sendMessage(result.toString());
     }

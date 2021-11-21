@@ -35,8 +35,12 @@ public class PlayerJoinListener {
 
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
-                String[][] options = {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}};
-                Call.menu(event.player.con, MenuHandler.welcomeMenu, Bundle.format("events.hellomsg.header", findLocale(event.player.locale)), Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink), options);
+                Call.menu(event.player.con,
+                        MenuHandler.welcomeMenu,
+                        Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
+                        Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink),
+                        new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
+                );
             }
         });
         

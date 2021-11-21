@@ -1,7 +1,7 @@
 package pandorum.commands.client;
 
 import arc.math.Mathf;
-import arc.util.CommandHandler;
+import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
@@ -29,7 +29,7 @@ public class HelpCommand {
         result.append(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), netServer.clientCommands.getCommandList().size); i++) {
-            CommandHandler.Command command = netServer.clientCommands.getCommandList().get(i);
+            Command command = netServer.clientCommands.getCommandList().get(i);
             String desc = Bundle.has(Strings.format("commands.@.description", command.text), findLocale(player.locale)) ? Bundle.format(Strings.format("commands.@.description", command.text), findLocale(player.locale)) : command.description;
             result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
         }

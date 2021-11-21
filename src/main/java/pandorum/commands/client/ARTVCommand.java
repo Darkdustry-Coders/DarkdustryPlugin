@@ -11,7 +11,11 @@ import static pandorum.Misc.findLocale;
 public class ARTVCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
-        String[][] options = {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}};
-        Call.menu(player.con, MenuHandler.artvMenu, Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)), Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)), options);
+        Call.menu(player.con,
+                MenuHandler.artvMenu,
+                Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
+                Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),
+                new String[][] {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}}
+        );
     }
 }
