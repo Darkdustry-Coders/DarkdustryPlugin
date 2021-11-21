@@ -16,7 +16,6 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
 import mindustry.net.Packets.KickReason;
-import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 
@@ -24,6 +23,7 @@ import java.util.Locale;
 
 import static mindustry.Vars.netServer;
 import static mindustry.Vars.maxNameLength;
+import static pandorum.Misc.findLocale;
 
 public class ConnectHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
@@ -70,7 +70,7 @@ public class ConnectHandler {
         }
 
         if (packet.locale == null) packet.locale = "en";
-        Locale locale = Misc.findLocale(packet.locale);
+        Locale locale = findLocale(packet.locale);
         packet.name = fixName(packet.name);
 
         Seq<String> extraMods = packet.mods.copy();

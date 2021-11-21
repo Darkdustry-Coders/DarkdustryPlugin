@@ -3,16 +3,17 @@ package pandorum.events;
 import arc.util.Strings;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
-import pandorum.Misc;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+
+import static pandorum.Misc.sendToChat;
 
 public class AdminRequestListener {
     public static void call(final EventType.AdminRequestEvent event) {
         switch (event.action) {
-            case wave -> Misc.sendToChat("events.admin.wave-skip", event.player.coloredName());
+            case wave -> sendToChat("events.admin.wave-skip", event.player.coloredName());
             case kick -> {
-                Misc.sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());
+                sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());
 
                 EmbedCreateSpec embed = EmbedCreateSpec.builder()
                         .color(BotMain.errorColor)

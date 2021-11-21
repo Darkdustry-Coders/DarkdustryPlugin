@@ -143,6 +143,7 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("sync");
 
         handler.register("help", "[page]", "Список всех команд.", HelpCommand::run);
+        handler.register("discord", "Ссылка на наш Discord сервер.", DiscordLinkCommand::run);
         handler.register("a", "<message...>", "Отправить сообщение админам.", AdminChatCommand::run);
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("players", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);

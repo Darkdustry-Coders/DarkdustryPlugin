@@ -14,9 +14,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
 
 public class MenuHandler {
-    public static int welcomeMenu,
-            despwMenu,
-            artvMenu;
+    public static int welcomeMenu, despwMenu, artvMenu;
 
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {

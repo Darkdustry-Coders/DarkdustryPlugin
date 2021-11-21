@@ -32,7 +32,7 @@ public class PlayerListCommand {
             result.append("[#9c88ee]* [white]");
             Player p = Groups.player.index(i);
             if (p.admin) result.append(Icons.get("admin")).append(" ");
-            result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: ").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
+            result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: [white]").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
         }
         player.sendMessage(result.toString());
     }
