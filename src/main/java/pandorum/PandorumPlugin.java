@@ -121,6 +121,7 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("say");
         handler.removeCommand("pardon");
         handler.removeCommand("exit");
+        handler.removeCommand("js");
 
         handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
@@ -130,6 +131,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("exit", "Выключить сервер.", ExitCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
         handler.register("pardon", "<uuid...>", "Снять кик с игрока.", PardonCommand::run);
+        handler.register("js", "<script...>", "Выполнить JS скрипт.", ConsoleJavaScriptCommand::run);
     }
 
     @Override
@@ -158,6 +160,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("info", "[player...]", "Посмотреть информацию о себе.", InfoCommand::run);
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
         handler.register("rank", "Информация о рангах.", RankCommand::run);
+        handler.register("js", "<script...>", "Выполнить JS скрипт.", JavaScriptCommand::run);
 
         if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
