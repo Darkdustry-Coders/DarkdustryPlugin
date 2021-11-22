@@ -6,7 +6,6 @@ import arc.graphics.Colors;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Time;
-import mindustry.Vars;
 import mindustry.core.Version;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
@@ -21,8 +20,7 @@ import pandorum.comp.Bundle;
 
 import java.util.Locale;
 
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.maxNameLength;
+import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
 
 public class ConnectHandler {
@@ -74,7 +72,7 @@ public class ConnectHandler {
         packet.name = fixName(packet.name);
 
         Seq<String> extraMods = packet.mods.copy();
-        Seq<String> missingMods = Vars.mods.getIncompatibility(extraMods);
+        Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
         if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
             StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", locale));

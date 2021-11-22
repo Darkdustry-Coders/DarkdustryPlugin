@@ -32,7 +32,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         MongoDataBridge.collection = collection;
     }
 
-    public void save(Consumer<Throwable> callback) {
+    public void save() {
         Map<String, Object> values = getDeclaredPublicFields();
 
         BasicDBObject operations = toBsonOperations(latest, values);
@@ -52,20 +52,12 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             public void onNext(Document t) {}
 
             @Override
-            public void onComplete() {
-                callback.accept(null);
-            }
+            public void onComplete() {}
 
             @Override
             public void onError(Throwable t) {
-                callback.accept(t);
+                Log.err(t);
             }
-        });
-    }
-
-    public void save() {
-        save(e -> {
-            if (e != null) Log.err(e);
         });
     }
 

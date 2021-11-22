@@ -64,8 +64,7 @@ public class Ranks {
 
     public static void getRank(Player p, Consumer<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
-            Rank current = get(playerInfo.rank);
-            Rank next;
+            Rank current = get(playerInfo.rank), next = current;
             if (p.admin) next = admin;
             else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
                 next = current.next;
@@ -80,7 +79,6 @@ public class Ranks {
                 );
 
             } else if (current == admin) next = player;
-            else next = current;
 
             if (playerInfo.rank != next.id) {
                 playerInfo.rank = next.id;

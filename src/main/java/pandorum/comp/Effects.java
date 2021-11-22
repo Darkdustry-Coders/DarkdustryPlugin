@@ -29,7 +29,7 @@ public class Effects {
     }
 
     public static void onLeave(Player p) {
-        on(leaveEffect, p.x, p.y);
+        if (!p.dead()) on(leaveEffect, p.x, p.y);
     }
 
     public record EffectObject(Color color, Effect effect) {

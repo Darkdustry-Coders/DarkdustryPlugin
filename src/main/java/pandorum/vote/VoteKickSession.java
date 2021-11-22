@@ -56,6 +56,7 @@ public class VoteKickSession {
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.vote-passed", target.coloredName(), (kickDuration / 60f));
+            stop();
             Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .color(BotMain.errorColor)
@@ -65,7 +66,6 @@ public class VoteKickSession {
                     .build();
 
             BotHandler.sendEmbed(embed);
-            stop();
             return true;
         }
         return false;

@@ -1,5 +1,6 @@
 package pandorum.vote;
 
+import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Player;
@@ -40,8 +41,8 @@ public class VoteSaveSession extends VoteSession {
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.save.passed", target);
-            SaveIO.save(saveDirectory.child(String.format("%s.%s", target, saveExtension)));
             stop();
+            SaveIO.save(saveDirectory.child(Strings.format("@.@", target, saveExtension)));
         }
         return false;
     }

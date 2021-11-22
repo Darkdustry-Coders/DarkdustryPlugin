@@ -87,7 +87,7 @@ public class Icons {
         );
     }
 
-    public static Object get(String key) {
+    public static String get(String key) {
         return icons.containsKey(key) ? icons.get(key) : "";
     }
 }
