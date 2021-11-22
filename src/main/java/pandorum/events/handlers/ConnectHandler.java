@@ -103,8 +103,8 @@ public class ConnectHandler {
             return;
         }
 
-        if (packet.name.trim().length() <= 0 || packet.name.trim().length() > maxNameLength) {
-            con.kick(Bundle.format("events.bad-name-length", locale, maxNameLength), 0);
+        if (packet.name.trim().length() <= 0) {
+            con.kick(KickReason.nameEmpty), 0);
             return;
         }
 
@@ -135,7 +135,7 @@ public class ConnectHandler {
             PandorumPlugin.writeBuffer.reset();
             player.write(PandorumPlugin.outputBuffer);
         } catch(Exception e) {
-            con.kick(KickReason.nameEmpty);
+            con.kick(KickReason.nameEmpty, 0);
             return;
         }
 
