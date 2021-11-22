@@ -104,7 +104,7 @@ public class ConnectHandler {
         }
 
         if (packet.name.trim().length() <= 0) {
-            con.kick(KickReason.nameEmpty), 0);
+            con.kick(KickReason.nameEmpty, 0);
             return;
         }
 
