@@ -101,6 +101,12 @@ public class ConnectHandler {
             return;
         }
 
+        if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(packet.uuid) || player.usid().equals(packet.usid))) {
+            con.kick(KickReason.idInUse);
+            return;
+        }
+
+
         if (packet.name.trim().length() <= 0) {
             con.kick(KickReason.nameEmpty, 0);
             return;
