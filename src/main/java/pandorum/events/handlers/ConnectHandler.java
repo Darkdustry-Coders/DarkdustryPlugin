@@ -33,10 +33,6 @@ public class ConnectHandler {
 
         con.connectTime = Time.millis();
 
-        String uuid = packet.uuid;
-        String ip = con.address;
-        PlayerInfo info = netServer.admins.getInfo(uuid);
-
         if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
 
         if (con.hasBegunConnecting) {
@@ -52,12 +48,12 @@ public class ConnectHandler {
             return;
         }
 
-        if (netServer.admins.isIDBanned(uuid)) {
+        if (netServer.admins.isIDBanned(packet.uuid)) {
             con.kick(KickReason.banned);
             return;
         }
 
-        if (Time.millis() < netServer.admins.getKickTime(uuid, con.address)) {
+        if (Time.millis() < netServer.admins.getKickTime(packet.uuid, con.address)) {
             con.kick(KickReason.recentKick);
             return;
         }
@@ -86,6 +82,10 @@ public class ConnectHandler {
             con.kick(reason.toString(), 0);
         }
 
+        String uuid = packet.uuid;
+        String ip = con.address;
+        PlayerInfo info = netServer.admins.getInfo(uuid);
+
         if (!netServer.admins.isWhitelisted(packet.uuid, packet.usid)) {
             info.adminUsid = packet.usid;
             info.lastName = packet.name;
@@ -105,7 +105,6 @@ public class ConnectHandler {
             con.kick(KickReason.idInUse);
             return;
         }
-
 
         if (packet.name.trim().length() <= 0) {
             con.kick(KickReason.nameEmpty, 0);
