@@ -83,13 +83,14 @@ public class ConnectHandler {
         }
 
         String uuid = packet.uuid;
+        String usid = packet.usid;
         String ip = con.address;
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
-        if (!netServer.admins.isWhitelisted(packet.uuid, packet.usid)) {
-            info.adminUsid = packet.usid;
+        if (!netServer.admins.isWhitelisted(uuid, usid)) {
             info.lastName = packet.name;
-            info.id = packet.uuid;
+            info.adminUsid = usid;
+            info.id = uuid;
             netServer.admins.save();
             Call.infoMessage(con, Bundle.format("events.not-whitelisted", locale, PandorumPlugin.discordServerLink));
             con.kick(KickReason.whitelist);
@@ -101,7 +102,7 @@ public class ConnectHandler {
             return;
         }
 
-        if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(packet.uuid) || player.usid().equals(packet.usid))) {
+        if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
             con.kick(KickReason.idInUse);
             return;
         }
@@ -121,9 +122,9 @@ public class ConnectHandler {
         if (packet.version == -1) con.modclient = true;
 
         Player player = Player.create();
-        player.admin = netServer.admins.isAdmin(uuid, packet.usid);
+        player.admin = netServer.admins.isAdmin(uuid, usid);
         player.con = con;
-        player.con.usid = packet.usid;
+        player.con.usid = usid;
         player.con.uuid = uuid;
         player.con.mobile = packet.mobile;
         player.name = packet.name;
@@ -131,7 +132,7 @@ public class ConnectHandler {
         player.color.set(packet.color).a(1f);
 
         if (!player.admin && !info.admin) {
-            info.adminUsid = packet.usid;
+            info.adminUsid = usid;
         }
 
         try {
@@ -156,7 +157,7 @@ public class ConnectHandler {
     }
 
     private static String fixName(String name) {
-        name = name.trim().replace("\n", "").replace("\t", "").replace("@", "");
+        name = name.trim().replace("\n", "").replace("\t", "");
         if (name.equals("[") || name.equals("]")) {
             return "";
         }
