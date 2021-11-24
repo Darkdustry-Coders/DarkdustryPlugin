@@ -65,7 +65,6 @@ public class ConnectHandler {
 
         if (packet.locale == null) packet.locale = "en";
         Locale locale = findLocale(packet.locale);
-        packet.name = fixName(packet.name);
 
         Seq<String> extraMods = packet.mods.copy();
         Seq<String> missingMods = mods.getIncompatibility(extraMods);
@@ -85,6 +84,7 @@ public class ConnectHandler {
         String uuid = packet.uuid;
         String usid = packet.usid;
         String ip = con.address;
+        packet.name = fixName(packet.name);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
