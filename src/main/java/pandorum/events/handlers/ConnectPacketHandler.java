@@ -18,16 +18,12 @@ import mindustry.net.Packets.KickReason;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 
-import java.util.Locale;
-
 import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
 
-public class ConnectHandler {
+public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
-
-        if (con.address.startsWith("steam:")) packet.uuid = con.address.substring("steam:".length());
 
         Events.fire(new EventType.ConnectPacketEvent(con, packet));
 
@@ -64,19 +60,19 @@ public class ConnectHandler {
         }
 
         if (packet.locale == null) packet.locale = "en";
-        Locale locale = findLocale(packet.locale);
+        String locale = packet.locale;
 
         Seq<String> extraMods = packet.mods.copy();
         Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
         if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
-            StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", locale));
+            StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", findLocale(locale)));
             if (!missingMods.isEmpty()) {
-                reason.append(Bundle.format("events.missing-mods", locale)).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
+                reason.append(Bundle.format("events.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
             }
 
             if (!extraMods.isEmpty()) {
-                reason.append(Bundle.format("events.unnecessary-mods", locale)).append("> ").append(extraMods.toString("\n> "));
+                reason.append(Bundle.format("events.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
             }
             con.kick(reason.toString(), 0);
         }
@@ -84,15 +80,15 @@ public class ConnectHandler {
         String uuid = packet.uuid;
         String usid = packet.usid;
         String ip = con.address;
-        packet.name = fixName(packet.name);
+        String name = fixName(packet.name);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
-            info.lastName = packet.name;
+            info.lastName = name;
             info.adminUsid = usid;
             info.id = uuid;
             netServer.admins.save();
-            Call.infoMessage(con, Bundle.format("events.not-whitelisted", locale, PandorumPlugin.discordServerLink));
+            Call.infoMessage(con, Bundle.format("events.not-whitelisted", findLocale(locale), PandorumPlugin.discordServerLink));
             con.kick(KickReason.whitelist);
             return;
         }
@@ -107,12 +103,12 @@ public class ConnectHandler {
             return;
         }
 
-        if (packet.name.trim().length() <= 0) {
-            con.kick(KickReason.nameEmpty, 0);
+        if (name.trim().length() <= 0) {
+            con.kick(KickReason.nameEmpty);
             return;
         }
 
-        netServer.admins.updatePlayerJoined(uuid, ip, packet.name);
+        netServer.admins.updatePlayerJoined(uuid, ip, name);
 
         if (packet.version != Version.build && Version.build != -1 && packet.version != -1) {
             con.kick(packet.version > Version.build ? KickReason.serverOutdated : KickReason.clientOutdated);
@@ -127,8 +123,8 @@ public class ConnectHandler {
         player.con.usid = usid;
         player.con.uuid = uuid;
         player.con.mobile = packet.mobile;
-        player.name = packet.name;
-        player.locale = packet.locale;
+        player.name = name;
+        player.locale = locale;
         player.color.set(packet.color).a(1f);
 
         if (!player.admin && !info.admin) {
@@ -139,7 +135,7 @@ public class ConnectHandler {
             PandorumPlugin.writeBuffer.reset();
             player.write(PandorumPlugin.outputBuffer);
         } catch(Exception e) {
-            con.kick(KickReason.nameEmpty, 0);
+            con.kick(KickReason.nameEmpty);
             return;
         }
 
@@ -150,7 +146,7 @@ public class ConnectHandler {
         netServer.sendWorldData(player);
 
         PandorumPlugin.antiVPN.checkIp(ip, result -> {
-            if (result) con.kick(Bundle.format("events.vpn-ip", locale));
+            if (result) con.kick(Bundle.format("events.vpn-ip", findLocale(locale)), 0);
         });
 
         Events.fire(new EventType.PlayerConnect(player));

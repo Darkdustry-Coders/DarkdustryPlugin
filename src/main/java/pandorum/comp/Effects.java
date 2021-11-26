@@ -34,7 +34,7 @@ public class Effects {
 
     public record EffectObject(Color color, Effect effect) {
         public void spawn(float x, float y) {
-            Call.effect(effect, x, y, 30, color);
+            Call.effect(effect, x, y, 0, color);
         }
     }
 }

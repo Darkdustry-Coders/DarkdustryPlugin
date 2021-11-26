@@ -131,7 +131,6 @@ public final class PandorumPlugin extends Plugin {
         handler.register("exit", "Выключить сервер.", ExitCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
         handler.register("pardon", "<uuid...>", "Снять кик с игрока.", PardonCommand::run);
-        handler.register("js", "<script...>", "Выполнить JS скрипт.", ConsoleJavaScriptCommand::run);
     }
 
     @Override
@@ -160,9 +159,8 @@ public final class PandorumPlugin extends Plugin {
         handler.register("info", "[player...]", "Посмотреть информацию о себе.", InfoCommand::run);
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
         handler.register("rank", "Информация о рангах.", RankCommand::run);
-        handler.register("js", "<script...>", "Выполнить JS скрипт.", JavaScriptCommand::run);
 
-        if (PandorumPlugin.config.mode != Config.Gamemode.hexed && PandorumPlugin.config.mode != Config.Gamemode.hub && PandorumPlugin.config.mode != Config.Gamemode.castle) {
+        if (config.isModeSimple()) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
             handler.register("artv", "Принудительно завершить игру.", ARTVCommand::run);

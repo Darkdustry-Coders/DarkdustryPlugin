@@ -53,14 +53,19 @@ public class Config {
     }
 
     public enum Gamemode {
-        survival,
         attack,
-        sandbox,
-        hexed,
-        pvp,
         castle,
-        tower,
+        crawler,
+        hexed,
         hub,
+        pvp,
+        sandbox,
         siege,
+        survival,
+        tower
+    }
+
+    public boolean isModeSimple() {
+        return mode != Config.Gamemode.hexed && mode != Config.Gamemode.hub && mode != Config.Gamemode.castle && mode != Config.Gamemode.crawler;
     }
 }
