@@ -38,7 +38,7 @@ public class PlayerJoinListener {
                 Call.menu(event.player.con,
                         MenuHandler.welcomeMenu,
                         Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
-                        Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink),
+                        Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink, "ban"),
                         new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
                 );
             }
