@@ -62,7 +62,7 @@ public class Ranks {
         return ranks.get(index);
     }
 
-    public static void getRank(Player p, Cons<Rank> cons) {
+    public static void getRank(Player p, Cons<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
             Rank current = get(playerInfo.rank), next = current;
             if (p.admin) next = admin;
