@@ -68,7 +68,6 @@ public class Ranks {
             if (p.admin) next = admin;
             else if (current.next != null && current.nextReq != null && current.nextReq.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
                 next = current.next;
-
                 Call.infoMessage(p.con, Bundle.format("events.rank-increase",
                         findLocale(p.locale),
                         next.tag,
@@ -77,7 +76,6 @@ public class Ranks {
                         playerInfo.buildingsBuilt,
                         playerInfo.gamesPlayed)
                 );
-
             } else if (current == admin) next = player;
 
             if (playerInfo.rank != next.id) {

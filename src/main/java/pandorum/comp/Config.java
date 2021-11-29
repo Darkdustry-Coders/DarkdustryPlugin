@@ -5,7 +5,6 @@ import mindustry.Vars;
 import pandorum.struct.Tuple2;
 
 public class Config {
-
     public int alertDistance = 150;
 
     /** Необходимое количество игроков для успешного завершения голосования. */

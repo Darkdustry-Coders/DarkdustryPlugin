@@ -20,8 +20,8 @@ public class Authme {
     public static void confirm(String uuid) {
         Player player = Misc.findByID(uuid);
         if (player != null) {
-            netServer.admins.adminPlayer(player.uuid(), player.usid());
             player.admin(true);
+            netServer.admins.adminPlayer(player.uuid(), player.usid());
             bundled(player, "commands.login.success");
         }
     }

@@ -1,12 +1,13 @@
 package pandorum.commands.server;
 
 import arc.util.Log;
-import mindustry.Vars;
+
+import static mindustry.Vars.net;
 
 public class ExitCommand {
     public static void run(final String[] args) {
         Log.info("Выключаю сервер.");
-        Vars.net.dispose();
+        net.dispose();
         System.exit(2);
     }
 }

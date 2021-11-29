@@ -3,7 +3,6 @@ package pandorum.commands.server;
 import arc.util.Log;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config;
-import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
 import static mindustry.Vars.dataDirectory;
