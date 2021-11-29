@@ -9,6 +9,7 @@ import mindustry.gen.Player;
 import pandorum.comp.Authme;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
+import pandorum.struct.Tuple2;
 
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.loginCooldowns;
@@ -43,7 +44,7 @@ public class LoginCommand {
                 .addComponent(ActionRow.of(Authme.confirm, Authme.deny))
                 .build()).block();
 
-        Authme.loginWaiting.put(message, player.uuid());
+        Authme.loginWaiting.put(message, Tuple2.of(player.uuid(), player.name()));
 
         vtime.reset();
         bundled(player, "commands.login.sent");
