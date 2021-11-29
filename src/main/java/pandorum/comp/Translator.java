@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.func.Cons;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -8,7 +9,6 @@ import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class Translator {
     private final OkHttpClient client;
@@ -29,7 +29,7 @@ public class Translator {
         this.client = new OkHttpClient();
     }
 
-    public void translate(String text, String lang, Consumer<String> callback) {
+    public void translate(String text, String lang, Cons<String> callback) {
         String language = PandorumPlugin.codeLanguages.get(lang, PandorumPlugin.codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder()
@@ -45,7 +45,7 @@ public class Translator {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.accept("");
+                callback.get("");
             }
 
             @Override
@@ -53,7 +53,7 @@ public class Translator {
                 JSONObject translated = new JSONObject(Objects.requireNonNull(response.body()).string());
                 String translatedText = translated.optString("result", text);
                 try {
-                    callback.accept(translatedText);
+                    callback.get(translatedText);
                 } finally {
                     if (response.body() != null) response.close();
                 }
