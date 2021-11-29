@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.func.Boolc;
 import arc.struct.ObjectMap;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +9,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class AntiVPN {
     private final ObjectMap<String, Boolean> cache;
@@ -25,7 +25,7 @@ public class AntiVPN {
         this.token = token;
     }
 
-    public void checkIp(String ip, Consumer<Boolean> callback) {
+    public void checkIp(String ip, Boolc callback) {
         if (cache.containsKey(ip)) {
             callback.accept(cache.get(ip));
             return;
