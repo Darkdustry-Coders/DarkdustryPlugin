@@ -44,7 +44,7 @@ public class LoginCommand {
                 .addComponent(ActionRow.of(Authme.confirm, Authme.deny))
                 .build()).block();
 
-        Authme.loginWaiting.put(message, Tuple2.of(player.uuid(), player.name()));
+        Authme.loginWaiting.put(message, Tuple2.of(player.uuid(), player.getInfo().lastName));
 
         vtime.reset();
         bundled(player, "commands.login.sent");
