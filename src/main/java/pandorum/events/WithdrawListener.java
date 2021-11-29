@@ -4,7 +4,6 @@ import arc.struct.Seq;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Config;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.WithdrawEntry;
 

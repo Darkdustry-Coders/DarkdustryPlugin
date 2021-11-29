@@ -115,13 +115,12 @@ public final class PandorumPlugin extends Plugin {
     public void init() {
         Loader.init();
     }
-   
+
     @Override
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("say");
         handler.removeCommand("pardon");
         handler.removeCommand("exit");
-        handler.removeCommand("js");
 
         handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);

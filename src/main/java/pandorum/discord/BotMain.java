@@ -6,6 +6,7 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.command.Interaction;
 import discord4j.core.object.entity.Message;
 import discord4j.rest.request.RouteMatcher;
 import discord4j.rest.response.ResponseFunction;
@@ -49,15 +50,15 @@ public class BotMain {
 
             client.on(ButtonInteractionEvent.class).subscribe(event -> {
                 Message msg = event.getMessage().get();
-                String button = event.getCustomId();
+                Interaction interaction = event.getInteraction();
                 if (Authme.loginWaiting.containsKey(msg)) {
-                    switch (button) {
+                    switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден **" + event.getInteraction().getMember().get().getDisplayName() + "**");
+                            BotHandler.text(msg, "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
                             Authme.confirm(Authme.loginWaiting.get(msg).t1);
                         }
                         case "deny" -> {
-                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден **" + event.getInteraction().getMember().get().getDisplayName() + "**");
+                            BotHandler.text(msg, "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
                             Authme.deny(Authme.loginWaiting.get(msg).t1);
                         }
                     }

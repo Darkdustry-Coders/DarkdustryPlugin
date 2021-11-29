@@ -41,14 +41,18 @@ public class BotHandler {
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
-        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
-        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
-        register();
+        registerChannels();
+        registerCommands();
 
         Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
     }
 
-    private static void register() {
+    public static void registerChannels() {
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
+    }
+
+    private static void registerCommands() {
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (CommandHandler.Command command : handler.getCommandList()) {

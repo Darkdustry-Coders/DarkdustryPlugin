@@ -47,7 +47,7 @@ public class Loader {
         Events.run(Trigger.update, TriggerUpdateListener::update);
 
         Administration.Config.motd.set("off");
-        Administration.Config.messageRateLimit.set(1);
+        Administration.Config.antiSpam.set(false);
         Administration.Config.interactRateWindow.set(3);
         Administration.Config.interactRateLimit.set(50);
         Administration.Config.interactRateKick.set(1000);

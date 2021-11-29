@@ -2,7 +2,6 @@ package pandorum.events.handlers;
 
 import arc.Events;
 import com.mongodb.BasicDBObject;
-import mindustry.Vars;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -10,6 +9,7 @@ import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.models.PlayerModel;
 
+import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
 
@@ -47,7 +47,7 @@ public class MenuHandler {
 
         artvMenu = Menus.registerMenu((player, option) -> {
             if (option == 0) {
-                Events.fire(new GameOverEvent(Vars.state.rules.waveTeam));
+                Events.fire(new GameOverEvent(state.rules.waveTeam));
                 sendToChat("commands.admin.artv.info");
             }
         });

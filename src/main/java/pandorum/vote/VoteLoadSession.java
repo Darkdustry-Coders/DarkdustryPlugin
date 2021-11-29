@@ -67,7 +67,7 @@ public class VoteLoadSession extends VoteSession {
                         net.closeServer();
                     }
                 }
-            }, 10);
+            }, 10f);
             return true;
         }
         return false;

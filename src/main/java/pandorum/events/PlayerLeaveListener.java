@@ -13,6 +13,8 @@ import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 import pandorum.vote.VoteKickSession;
 
+import java.util.concurrent.TimeUnit;
+
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.colorizedTeam;
 import static pandorum.Misc.sendToChat;
@@ -35,8 +37,8 @@ public class PlayerLeaveListener {
 
         if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
-            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), VoteKickSession.kickDuration * 1000L);
-            sendToChat("commands.votekick.left", event.player.coloredName(), VoteKickSession.kickDuration / 60f);
+            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), VoteKickSession.kickDuration);
+            sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(VoteKickSession.kickDuration));
         }
 
         if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) {

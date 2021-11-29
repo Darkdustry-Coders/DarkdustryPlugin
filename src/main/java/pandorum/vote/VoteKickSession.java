@@ -11,6 +11,8 @@ import mindustry.net.Packets.KickReason;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
+import java.util.concurrent.TimeUnit;
+
 import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
@@ -21,7 +23,8 @@ public class VoteKickSession {
     protected Task task;
     protected int votes;
 
-    public static int kickDuration = 45 * 60;
+    /** В миллисекундах */
+    public static long kickDuration = 45 * 60 * 1000L;
 
     public VoteKickSession(VoteKickSession[] kickSession, Player target) {
         this.kickSession = kickSession;
@@ -55,9 +58,11 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.vote-passed", target.coloredName(), (kickDuration / 60f));
+            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(VoteKickSession.kickDuration));
             stop();
-            Groups.player.each(p -> p.uuid().equals(target.uuid()), p -> p.kick(KickReason.vote, kickDuration * 1000L));
+
+            target.kick(KickReason.vote, kickDuration);
+
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .color(BotMain.errorColor)
                     .author("KICK", null, "https://thumbs.dreamstime.com/b/red-cross-symbol-icon-as-delete-remove-fail-failure-incorr-incorrect-answer-89999776.jpg")
