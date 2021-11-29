@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Nullable;
 import com.mongodb.BasicDBObject;
@@ -8,7 +9,6 @@ import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import static pandorum.Misc.findLocale;
 
@@ -62,7 +62,7 @@ public class Ranks {
         return ranks.get(index);
     }
 
-    public static void getRank(Player p, Consumer<Rank> callback) {
+    public static void getRank(Player p, Cons<Rank> cons) {
         PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
             Rank current = get(playerInfo.rank), next = current;
             if (p.admin) next = admin;
