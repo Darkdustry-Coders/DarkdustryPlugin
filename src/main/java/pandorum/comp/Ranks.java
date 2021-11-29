@@ -85,7 +85,7 @@ public class Ranks {
                 playerInfo.save();
             }
 
-            callback.accept(next);
+            callback.get(next);
         });
     }
 }
