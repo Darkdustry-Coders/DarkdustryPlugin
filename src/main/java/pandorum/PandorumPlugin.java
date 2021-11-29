@@ -139,7 +139,6 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("help");
         handler.removeCommand("votekick");
         handler.removeCommand("vote");
-        handler.removeCommand("js");
         handler.removeCommand("sync");
 
         handler.register("help", "[page]", "Список всех команд.", HelpCommand::run);
