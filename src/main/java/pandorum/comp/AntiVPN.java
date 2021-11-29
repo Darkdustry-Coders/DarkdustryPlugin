@@ -27,7 +27,7 @@ public class AntiVPN {
 
     public void checkIp(String ip, Boolc callback) {
         if (cache.containsKey(ip)) {
-            callback.accept(cache.get(ip));
+            callback.get(cache.get(ip));
             return;
         }
 
@@ -48,7 +48,7 @@ public class AntiVPN {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call request, @NotNull IOException e) {
-                callback.accept(false);
+                callback.get(false);
             }
 
             @Override
@@ -65,7 +65,7 @@ public class AntiVPN {
                         "openvpn", "vpn"
                 ).contains(type.toLowerCase());
                 cache.put(ip, isDangerous);
-                callback.accept(isDangerous);
+                callback.get(isDangerous);
             }
         });
     }
