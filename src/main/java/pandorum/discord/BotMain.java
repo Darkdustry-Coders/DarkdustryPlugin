@@ -53,11 +53,11 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (button) {
                         case "confirm" -> {
-                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден " + event.getInteraction().getMember().get().getDisplayName());
+                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден **" + event.getInteraction().getMember().get().getDisplayName() + "**");
                             Authme.confirm(Authme.loginWaiting.get(msg).t1);
                         }
                         case "deny" -> {
-                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден " + event.getInteraction().getMember().get().getDisplayName());
+                            BotHandler.text(msg, "Запрос игрока **" + Authme.loginWaiting.get(msg).t2 + "** был подтвержден **" + event.getInteraction().getMember().get().getDisplayName() + "**");
                             Authme.deny(Authme.loginWaiting.get(msg).t1);
                         }
                     }
