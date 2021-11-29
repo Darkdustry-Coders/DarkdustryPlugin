@@ -18,7 +18,7 @@ public class Ranks {
     public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, null, null);
     public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, veteran, new Requirements(100000000L, 100000, 100));
     public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, activePlus, new Requirements(50000000L, 50000, 30));
-    public static final Rank player = new Rank("[accent]<> ", "[accent]Player", 0, active, new Requirements(25000000L, 25000, 15));
+    public static final Rank player = new Rank("", "[accent]Player", 0, active, new Requirements(25000000L, 25000, 15));
 
     private static final Seq<Rank> ranks = new Seq<>(true);
 
