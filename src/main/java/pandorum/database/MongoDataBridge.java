@@ -1,5 +1,6 @@
 package pandorum.database;
 
+import arc.func.Cons;
 import arc.util.Log;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
@@ -16,7 +17,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     private static MongoCollection<Document> collection;
@@ -61,7 +61,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         });
     }
 
-    public static <T extends MongoDataBridge<T>>void findAndApplySchema(Class<T> sourceClass, Bson filter, Consumer<T> callback) {
+    public static <T extends MongoDataBridge<T>>void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> callback) {
         try {
             T dataClass = sourceClass.getConstructor().newInstance();
 
@@ -95,12 +95,12 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                         try {
                             field.set(dataClass, document.getOrDefault(field.getName(), field.get(dataClass)));
                         } catch (IllegalArgumentException | IllegalAccessException e) {
-                            e.printStackTrace();
+                            Log.err(e);
                         }
                     });
 
                     dataClass.resetLatest();
-                    callback.accept(dataClass);
+                    callback.get(dataClass);
                 }
 
                 @Override
