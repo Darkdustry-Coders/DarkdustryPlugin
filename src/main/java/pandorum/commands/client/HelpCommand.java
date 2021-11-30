@@ -21,8 +21,7 @@ public class HelpCommand {
             return;
         }
 
-        Seq<Command> commandList = netServer.clientCommands.getCommandList();
-        if (!player.admin) commandList.removeAll(command -> adminOnlyCommands.contains(command.text));
+        Seq<Command> commandList = player.admin ? netServer.clientCommands.getCommandList() : netServer.clientCommands.getCommandList().removeAll(command -> adminOnlyCommands.contains(command.text));;
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandList.size / 6.0f);
 
@@ -36,8 +35,8 @@ public class HelpCommand {
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), commandList.size); i++) {
             Command command = commandList.get(i);
-            String desc = Bundle.get(Strings.format("commands.@.description", command.text), findLocale(player.locale), command.description);
-            result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(desc).append("\n");
+            String description = Bundle.get(Strings.format("commands.@.description", command.text), findLocale(player.locale), command.description);
+            result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(description).append("\n");
         }
         player.sendMessage(result.toString());
     }
