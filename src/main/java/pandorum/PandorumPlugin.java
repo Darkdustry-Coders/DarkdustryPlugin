@@ -3,8 +3,10 @@ package pandorum;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.struct.StringMap;
-import arc.util.*;
+import arc.util.CommandHandler;
+import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Timekeeper;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -19,8 +21,6 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
 import pandorum.comp.AntiVPN;
@@ -52,23 +52,16 @@ public final class PandorumPlugin extends Plugin {
     public static final VoteKickSession[] currentlyKicking = {null};
     public static Config config;
 
-    public static final ObjectMap<String, Timekeeper>
-            nominateCooldowns = new ObjectMap<>(),
-            votekickCooldowns = new ObjectMap<>(),
-            loginCooldowns = new ObjectMap<>();
+    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
 
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
-    public static final Seq<String>
-            votesRTV = new Seq<>(),
-            votesVNW = new Seq<>(),
-            activeHistoryPlayers = new Seq<>();
+    public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
     public static final Interval interval = new Interval(3);
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
-    public static final StringMap codeLanguages = new StringMap();
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
@@ -100,12 +93,6 @@ public final class PandorumPlugin extends Plugin {
 
         antiVPN = new AntiVPN("w7j425-826177-597253-3134u9");
         translator = new Translator();
-
-        JSONArray languages = translator.getAllLanguages();
-        for (int i = 0; i < languages.length(); i++) {
-            JSONObject language = languages.getJSONObject(i);
-            codeLanguages.put(language.getString("code_alpha_1"), language.getString("full_code"));
-        }
     }
 
     @Override

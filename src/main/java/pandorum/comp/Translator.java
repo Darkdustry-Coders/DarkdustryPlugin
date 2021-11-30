@@ -1,18 +1,16 @@
 package pandorum.comp;
 
 import arc.func.Cons;
+import arc.struct.StringMap;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class Translator {
-    private final OkHttpClient client;
-
     private final Request.Builder requestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
@@ -25,12 +23,21 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    public Translator() {
+    private final OkHttpClient client;
+    public static final StringMap codeLanguages = new StringMap();
+
+    public Translator() throws IOException {
         this.client = new OkHttpClient();
+
+        JSONArray languages = getAllLanguages();
+        for (int i = 0; i < languages.length(); i++) {
+            JSONObject language = languages.getJSONObject(i);
+            codeLanguages.put(language.getString("code_alpha_1"), language.getString("full_code"));
+        }
     }
 
     public void translate(String text, String lang, Cons<String> callback) {
-        String language = PandorumPlugin.codeLanguages.get(lang, PandorumPlugin.codeLanguages.get("en"));
+        String language = codeLanguages.get(lang, codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder()
                 .add("to", language)
