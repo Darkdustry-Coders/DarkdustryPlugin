@@ -33,7 +33,7 @@ public class FillCommand {
             floor = Blocks.air.asFloor();
             block = content.blocks().find(b -> b.name.equalsIgnoreCase(args[2]));
         } else {
-            floor = (Floor) content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2]));
+            floor = content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2])).asFloor();
             block = content.blocks().find(b -> b.name.equalsIgnoreCase(args[3]));
         }
 

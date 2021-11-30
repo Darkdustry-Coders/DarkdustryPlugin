@@ -81,13 +81,15 @@ public class ConnectPacketHandler {
         String usid = packet.usid;
         String ip = con.address;
         String name = fixName(packet.name);
+        Color color = new Color(packet.color).a(1f);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
             info.lastName = name;
+            info.lastIP = ip;
             info.adminUsid = usid;
-            info.id = uuid;
-            netServer.admins.save();
+            if (!info.names.contains(name, false)) info.names.add(name);
+            if (!info.ips.contains(ip, false)) info.ips.add(ip);
             Call.infoMessage(con, Bundle.format("events.not-whitelisted", findLocale(locale), PandorumPlugin.discordServerLink));
             con.kick(KickReason.whitelist);
             return;
@@ -125,7 +127,7 @@ public class ConnectPacketHandler {
         player.con.mobile = packet.mobile;
         player.name = name;
         player.locale = locale;
-        player.color.set(packet.color).a(1f);
+        player.color = color;
 
         if (!player.admin && !info.admin) {
             info.adminUsid = usid;

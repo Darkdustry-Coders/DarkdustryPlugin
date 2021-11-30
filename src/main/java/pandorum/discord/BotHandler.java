@@ -36,8 +36,7 @@ import java.util.Objects;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
-    public static final String prefix = PandorumPlugin.config.prefix;
-    public static final CommandHandler handler = new CommandHandler(prefix);
+    public static final CommandHandler handler = new CommandHandler(PandorumPlugin.config.prefix);
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -53,10 +52,11 @@ public class BotHandler {
     }
 
     private static void registerCommands() {
+        handler.setPrefix(PandorumPlugin.config.prefix);
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (CommandHandler.Command command : handler.getCommandList()) {
-                builder.append(prefix).append("**").append(command.text).append("**");
+                builder.append(PandorumPlugin.config.prefix).append("**").append(command.text).append("**");
                 if (command.params.length > 0) {
                     builder.append(" *").append(command.paramText).append("*");
                 }
@@ -181,7 +181,7 @@ public class BotHandler {
                     .addField("Карта:", Vars.state.map.name(), false)
                     .addField("Волна:", Integer.toString(Vars.state.wave), false)
                     .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false)
-                    .footer("Используй " + prefix + "players, чтобы посмотреть список всех игроков.", null)
+                    .footer("Используй " + PandorumPlugin.config.prefix + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
             sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);

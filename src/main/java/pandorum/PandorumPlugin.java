@@ -4,10 +4,7 @@ import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
-import arc.util.CommandHandler;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.Timekeeper;
+import arc.util.*;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -42,7 +39,7 @@ import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static final String discordServerLink = "https://dsc.gg/darkdustry";
+    public static String discordServerLink = "https://dsc.gg/darkdustry";
 
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
@@ -80,6 +77,14 @@ public final class PandorumPlugin extends Plugin {
     public static AntiVPN antiVPN;
 
     public PandorumPlugin() throws IOException {
+        Fi file = dataDirectory.child("config.json");
+        if (file.exists()) {
+            config = gson.fromJson(file.reader(), Config.class);
+        } else {
+            file.writeString(gson.toJson(config = new Config()));
+            Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
+        }
+
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
 
         MongoClientSettings settings = MongoClientSettings.builder()
@@ -92,14 +97,6 @@ public final class PandorumPlugin extends Plugin {
         playersInfoCollection = database.getCollection("playersinfo");
 
         PlayerModel.setSourceCollection(playersInfoCollection);
-
-        Fi file = dataDirectory.child("config.json");
-        if (file.exists()) {
-            config = gson.fromJson(file.reader(), Config.class);
-        } else {
-            file.writeString(gson.toJson(config = new Config()));
-            Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
-        }
 
         antiVPN = new AntiVPN("w7j425-826177-597253-3134u9");
         translator = new Translator();
