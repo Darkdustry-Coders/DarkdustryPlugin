@@ -13,7 +13,6 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
 public class WithdrawEntry implements HistoryEntry {
-
     public final String name;
     public final Block block;
     public final Item item;

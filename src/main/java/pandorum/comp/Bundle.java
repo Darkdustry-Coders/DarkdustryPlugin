@@ -44,13 +44,12 @@ public class Bundle {
     private Bundle() {}
 
     public static String get(String key, Locale locale) {
-        StringMap bundle = getOrLoad(locale);
-        return bundle != null && bundle.containsKey(key) ? bundle.get(key) : "???" + key + "???";
+        return get(key, locale, "???" + key + "???");
     }
 
-    public static boolean has(String key, Locale locale) {
+    public static String get(String key, Locale locale, String defaultValue) {
         StringMap bundle = getOrLoad(locale);
-        return bundle != null && bundle.containsKey(key);
+        return bundle != null && bundle.containsKey(key) ? bundle.get(key) : defaultValue;
     }
 
     public static String format(String key, Locale locale, Object... values) {

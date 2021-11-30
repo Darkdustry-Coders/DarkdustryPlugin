@@ -13,7 +13,6 @@ import static pandorum.Misc.formatTime;
 import static pandorum.Misc.findLocale;
 
 public class DepositEntry implements HistoryEntry {
-
     public final String name;
     public final Block block;
     public final Item item;

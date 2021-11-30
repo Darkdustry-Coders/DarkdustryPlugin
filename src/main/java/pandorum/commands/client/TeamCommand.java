@@ -2,7 +2,6 @@ package pandorum.commands.client;
 
 import arc.util.Structs;
 import mindustry.game.Team;
-import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.comp.Icons;

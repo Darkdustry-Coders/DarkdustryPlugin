@@ -25,7 +25,6 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
-
     public final String name;
     public final Block block;
     public final Object value;
