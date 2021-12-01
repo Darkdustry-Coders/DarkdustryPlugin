@@ -12,7 +12,11 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Door;
+import mindustry.world.blocks.logic.LogicBlock;
+import mindustry.world.blocks.logic.MessageBlock;
+import mindustry.world.blocks.logic.SwitchBlock;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.UnitFactory;
 import pandorum.Misc;
 import pandorum.comp.Bundle;
@@ -52,6 +56,10 @@ public class ConfigEntry implements HistoryEntry {
         return event.value;
     }
 
+    private String substringMessage(String message) {
+        return message.length() > 15 ? message.substring(0, 16) + "..." : message;
+    }
+
     @Override
     public String getMessage(Player player){
         String ftime = Misc.formatTime(time);
@@ -80,23 +88,23 @@ public class ConfigEntry implements HistoryEntry {
             return data ? Bundle.format("history.config.door.on", locale, name, block, ftime) : Bundle.format("history.config.door.off", locale, name, block, ftime);
         }
 
-        if (block == Blocks.switchBlock) {
+        if (block instanceof SwitchBlock) {
             boolean data = (boolean) value;
             return data ? Bundle.format("history.config.switch.on", locale, name, ftime) : Bundle.format("history.config.switch.off", locale, name, ftime);
         }
 
-        if (block == Blocks.commandCenter) {
-            final String[] commands = Bundle.format("history.config.command-center.all", locale).split(", ");
+        if (block instanceof CommandCenter) {
+            String[] commands = Bundle.format("history.config.command-center.all", locale).split(", ");
             return Bundle.format("history.config.command-center", locale, name, commands[((UnitCommand)value).ordinal()], ftime);
         }
 
-        if (block == Blocks.message) {
+        if (block instanceof MessageBlock) {
             String message = (String) value;
-            if (message == null || message.isBlank()) {
+            if (message.isBlank()) {
                 return Bundle.format("history.config.default", locale, name, ftime);
             }
 
-            return Bundle.format("history.config.message", locale, name, message.length() > 15 ? message.substring(0, 16) + "..." : message, ftime);
+            return Bundle.format("history.config.message", locale, name, substringMessage(message), ftime);
         }
 
         if (block == Blocks.liquidSource) {
@@ -122,8 +130,14 @@ public class ConfigEntry implements HistoryEntry {
             if (unit == null) {
                 return Bundle.format("history.config.default", locale, name, ftime);
             }
+
             return Bundle.format("history.config.unit", locale, name, Icons.get(unit.name), ftime);
         }
+
+        if (block instanceof LogicBlock) {
+            return Bundle.format("history.config.processor", locale, name, ftime);
+        }
+
         return Bundle.format("history.config.changed", locale, name, ftime);
     }
 }

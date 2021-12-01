@@ -12,7 +12,7 @@ public class CacheSeq<T> extends Seq<T> {
     private final long expireAfterWriteNanos;
     private final int maximumSize;
 
-    CacheSeq(Seqs.SeqBuilder<? super T> builder) {
+    public CacheSeq(Seqs.SeqBuilder<? super T> builder) {
         maximumSize = builder.maximumSize;
         expireAfterWriteNanos = builder.expireAfterWriteNanos;
         writeQueue = expiresAfterWrite() ? Seqs.safeQueue() : Seqs.emptyQueue();

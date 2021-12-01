@@ -5,8 +5,6 @@ import mindustry.Vars;
 import pandorum.struct.Tuple2;
 
 public class Config {
-    public int alertDistance = 150;
-
     /** Необходимое количество игроков для успешного завершения голосования. */
     public float voteRatio = 0.6f;
 
@@ -32,10 +30,10 @@ public class Config {
     public String DiscordBotToken = "token";
 
     /** ID канала в Discord, куда отправляются все сообщения. */
-    public Long DiscordChannelID = 0L;
+    public long DiscordChannelID = 0L;
 
     /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
-    public Long DiscordAdminChannelID = 844215222784753664L;
+    public long DiscordAdminChannelID = 0L;
 
     /** Префикс бота, привязанного к серверу. */
     public String prefix = "prefix";

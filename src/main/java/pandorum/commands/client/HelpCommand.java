@@ -21,7 +21,7 @@ public class HelpCommand {
             return;
         }
 
-        Seq<Command> commandList = player.admin ? netServer.clientCommands.getCommandList() : netServer.clientCommands.getCommandList().removeAll(command -> adminOnlyCommands.contains(command.text));;
+        Seq<Command> commandList = player.admin ? netServer.clientCommands.getCommandList() : netServer.clientCommands.getCommandList().removeAll(command -> adminOnlyCommands.contains(command.text));
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandList.size / 6.0f);
 

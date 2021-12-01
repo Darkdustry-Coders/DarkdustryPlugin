@@ -29,25 +29,22 @@ public class Loader {
         netServer.admins.addChatFilter(ChatFilter::filter);
         netServer.invalidHandler = InvalidCommandResponse::response;
 
-        Events.on(PlayerUnbanEvent.class, PlayerUnbanListener::call);
-        Events.on(PlayerBanEvent.class, PlayerBanListener::call);
-        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
-        Events.on(WorldLoadEvent.class, WorldLoadListener::call);
+        Events.on(AdminRequestEvent.class, AdminRequestListener::call);
         Events.on(BlockBuildEndEvent.class, BlockBuildEndListener::call);
-        Events.on(ConfigEvent.class, ConfigListener::call);
-        Events.on(TapEvent.class, TapListener::call);
-        Events.on(DepositEvent.class, DepositListener::call);
-        Events.on(WithdrawEvent.class, WithdrawListener::call);
         Events.on(BuildSelectEvent.class, BuildSelectListener::call);
+        Events.on(ConfigEvent.class, ConfigListener::call);
+        Events.on(DepositEvent.class, DepositListener::call);
+        Events.on(GameOverEvent.class, GameOverListener::call);
         Events.on(PlayerJoin.class, PlayerJoinListener::call);
         Events.on(PlayerLeave.class, PlayerLeaveListener::call);
-        Events.on(GameOverEvent.class, GameOverListener::call);
+        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
+        Events.on(TapEvent.class, TapListener::call);
         Events.on(WaveEvent.class, WaveEventListener::call);
-        Events.on(AdminRequestEvent.class, AdminRequestListener::call);
+        Events.on(WithdrawEvent.class, WithdrawListener::call);
+        Events.on(WorldLoadEvent.class, WorldLoadListener::call);
         Events.run(Trigger.update, TriggerUpdateListener::update);
 
         Administration.Config.motd.set("off");
-        Administration.Config.antiSpam.set(false);
         Administration.Config.interactRateWindow.set(3);
         Administration.Config.interactRateLimit.set(50);
         Administration.Config.interactRateKick.set(1000);
@@ -55,10 +52,8 @@ public class Loader {
         Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
 
-        Effects.init();
         MenuHandler.init();
         Icons.init();
-        Ranks.init();
         BotMain.start();
     }
 }
