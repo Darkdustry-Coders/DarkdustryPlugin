@@ -3,6 +3,7 @@ package pandorum.comp;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Nullable;
+import arc.util.Strings;
 import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -13,23 +14,25 @@ import java.util.concurrent.TimeUnit;
 import static pandorum.Misc.findLocale;
 
 public class Ranks {
-    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", null, null);
-    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", new Requirements(100000000L, 100000, 100), null);
-    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", new Requirements(50000000L, 50000, 30), veteran);
-    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", new Requirements(25000000L, 25000, 15), activePlus);
-    public static final Rank player = new Rank("", "[accent]Player", null, active);
+    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4, null, null);
+    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(100000000L, 100000, 100), null);
+    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(50000000L, 50000, 30), veteran);
+    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(25000000L, 25000, 15), activePlus);
+    public static final Rank player = new Rank("", "[accent]Player", 0, null, active);
 
     private static final Seq<Rank> ranks = Seq.with(player, active, activePlus, veteran, admin);
 
     public static class Rank {
         public String tag;
         public String name;
+        public int id;
         public @Nullable Rank next;
         public @Nullable Requirements req;
 
-        public Rank(String tag, String name, Requirements req, Rank next) {
+        public Rank(String tag, String name, int id, Requirements req, Rank next) {
             this.name = name;
             this.tag = tag;
+            this.id = id;
             this.req = req;
             this.next = next;
         }
@@ -51,47 +54,44 @@ public class Ranks {
         }
     }
 
-    public static Rank getBestRank(long time, int built, int games) {
-        Rank best = player;
-        for (Rank rank : ranks) {
-            if (rank.req != null && rank.req.check(time, built, games)) best = rank;
-        }
-        return best;
+    public static Rank get(int index) {
+        return ranks.get(index);
+    }
+
+    public static Rank getRank(Player player, int index) {
+        return player.admin ? admin : get(index);
     }
 
     public static void updateRank(Player player, Cons<Rank> callback) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
-            if (player.admin && playerInfo.rank != admin) {
-                playerInfo.rank = admin;
-                playerInfo.save();
-                callback.get(playerInfo.rank);
-                return;
-            }
+            Rank current = get(playerInfo.rank);
 
-            if (!player.admin && playerInfo.rank == admin) {
-                playerInfo.rank = getBestRank(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed);
-                playerInfo.save();
-                callback.get(playerInfo.rank);
-                return;
-            }
-
-            if (playerInfo.rank.next != null && playerInfo.rank.next.req != null && playerInfo.rank.next.req.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
+            if (current.next != null && current.next.req != null && current.next.req.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
                 Call.infoMessage(player.con, Bundle.format("events.rank-increase",
                         findLocale(player.locale),
-                        playerInfo.rank.next.tag,
-                        playerInfo.rank.next.name,
+                        current.next.tag,
+                        current.next.name,
                         TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
                         playerInfo.buildingsBuilt,
                         playerInfo.gamesPlayed
                 ));
 
-                playerInfo.rank = playerInfo.rank.next;
+                playerInfo.rank = current.next.id;
                 playerInfo.save();
-                callback.get(playerInfo.rank.next);
+                callback.get(current.next);
                 return;
             }
 
-            callback.get(playerInfo.rank);
+            callback.get(current);
         });
+    }
+
+    public static void updateName(Player player) {
+        if (player.admin) {
+            player.name(Strings.format("@[#@]@", admin.tag, player.color.toString().toUpperCase(), player.getInfo().lastName));
+            return;
+        }
+
+        updateRank(player, rank -> player.name(Strings.format("@[#@]@", rank.tag, player.color.toString().toUpperCase(), player.getInfo().lastName)));
     }
 }

@@ -4,6 +4,8 @@ import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
+import pandorum.comp.Ranks;
+import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 
 import java.util.concurrent.TimeUnit;
@@ -19,19 +21,18 @@ public class InfoCommand {
         }
 
         PlayerModel.find(new BasicDBObject("UUID", target.uuid()), playerInfo -> {
+            Rank rank = Ranks.getRank(player, playerInfo.rank);
             Call.infoMessage(player.con, Bundle.format("commands.info.content",
                     findLocale(player.locale),
                     target.coloredName(),
-                    playerInfo.rank.tag,
-                    playerInfo.rank.name,
+                    rank.tag,
+                    rank.name,
                     TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
                     playerInfo.buildingsBuilt,
                     playerInfo.buildingsDeconstructed,
-                    playerInfo.maxWave,
-                    playerInfo.gamesPlayed,
-                    playerInfo.hellomsg ? "on" : "off",
-                    playerInfo.alerts ? "on" : "off",
-                    playerInfo.locale
+                    playerInfo.pvpWinCount,
+                    playerInfo.pvpLoseCount,
+                    playerInfo.gamesPlayed
             ));
         });
     }

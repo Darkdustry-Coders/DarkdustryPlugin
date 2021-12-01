@@ -248,7 +248,7 @@ public class BotHandler {
 
     public static boolean checkAdmin(Member member) {
         if (member.isBot()) return true;
-        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(907554436149309460L)) || role.getId().equals(Snowflake.of(810760273689444385L)));
+        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
     }
 
     public static void sendEmbed(EmbedCreateSpec embed) {

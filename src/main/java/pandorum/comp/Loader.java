@@ -39,7 +39,6 @@ public class Loader {
         Events.on(PlayerLeave.class, PlayerLeaveListener::call);
         Events.on(ServerLoadEvent.class, ServerLoadListener::call);
         Events.on(TapEvent.class, TapListener::call);
-        Events.on(WaveEvent.class, WaveEventListener::call);
         Events.on(WithdrawEvent.class, WithdrawListener::call);
         Events.on(WorldLoadEvent.class, WorldLoadListener::call);
         Events.run(Trigger.update, TriggerUpdateListener::update);

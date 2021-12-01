@@ -19,7 +19,7 @@ import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
     public static void call(final EventType.PlayerJoin event) {
-        Ranks.updateRank(event.player, rank -> event.player.name(rank.tag + "[#" + event.player.color.toString().toUpperCase() + "]" + event.player.getInfo().lastName));
+        Ranks.updateName(event.player);
 
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player-join", event.player.color.toString().toUpperCase(), event.player.getInfo().lastName);

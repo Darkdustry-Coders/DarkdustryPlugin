@@ -18,7 +18,7 @@ public class TriggerUpdateListener {
         }
 
         if (PandorumPlugin.interval.get(2, 300f)) {
-            Groups.player.each(player -> Ranks.updateRank(player, rank -> player.name(rank.tag + "[#" + player.color.toString().toUpperCase() + "]" + player.getInfo().lastName)));
+            Groups.player.each(Ranks::updateName);
         }
     }
 }

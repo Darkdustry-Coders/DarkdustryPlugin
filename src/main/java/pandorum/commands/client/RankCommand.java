@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
+import pandorum.comp.Ranks;
 import pandorum.models.PlayerModel;
 import pandorum.comp.Ranks.Rank;
 
@@ -14,7 +15,7 @@ import static pandorum.Misc.findLocale;
 public class RankCommand {
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
-            Rank rank = playerInfo.rank;
+            Rank rank = Ranks.getRank(player, playerInfo.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.info",
                     findLocale(player.locale),
                     rank.tag,

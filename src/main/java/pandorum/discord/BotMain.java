@@ -1,5 +1,7 @@
 package pandorum.discord;
 
+import arc.util.CommandHandler.CommandResponse;
+import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
@@ -40,7 +42,15 @@ public class BotMain {
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
-                if (msg.getContent().startsWith(PandorumPlugin.config.prefix)) BotHandler.handler.handleMessage(msg.getContent(), msg);
+                if (msg.getContent().startsWith(PandorumPlugin.config.prefix)) {
+                    CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
+                    if (response.type == ResponseType.fewArguments) {
+                        BotHandler.err(msg, "Недостаточно аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                    } else if (response.type == ResponseType.manyArguments) {
+                        BotHandler.err(msg, "Слишком много аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                    }
+                    return;
+                }
 
                 if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && msg.getContent().length() > 0) {
                     Misc.sendToChat("events.discord-message", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
