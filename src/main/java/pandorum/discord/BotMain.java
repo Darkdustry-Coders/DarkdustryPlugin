@@ -42,13 +42,13 @@ public class BotMain {
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
-                if (msg.getContent().startsWith(PandorumPlugin.config.prefix)) {
-                    CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
-                    if (response.type == ResponseType.fewArguments) {
-                        BotHandler.err(msg.getChannel().block(), "Недостаточно аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
-                    } else if (response.type == ResponseType.manyArguments) {
-                        BotHandler.err(msg.getChannel().block(), "Слишком много аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
-                    }
+                CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
+                if (response.type == ResponseType.fewArguments) {
+                    BotHandler.err(msg.getChannel().block(), "Недостаточно аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                    return;
+                }
+                if (response.type == ResponseType.manyArguments) {
+                    BotHandler.err(msg.getChannel().block(), "Слишком много аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
                     return;
                 }
 
