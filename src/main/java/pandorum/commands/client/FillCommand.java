@@ -23,15 +23,21 @@ public class FillCommand {
             return;
         }
 
-        int w = Strings.parseInt(args[0], 0) + player.tileX();
-        int h = Strings.parseInt(args[1], 0) + player.tileY();
+        int w = Strings.parseInt(args[0]) + player.tileX();
+        int h = Strings.parseInt(args[1]) + player.tileY();
 
         Floor floor;
         Block block;
 
         if (args.length == 3) {
-            floor = Blocks.air.asFloor();
-            block = content.blocks().find(b -> b.name.equalsIgnoreCase(args[2]));
+            Block found = content.blocks().find(b -> b.name.equalsIgnoreCase(args[2]));
+            if (found.isFloor()) {
+                floor = found.asFloor();
+                block = Blocks.air;
+            } else {
+                floor = Blocks.air.asFloor();
+                block = found;
+            }
         } else {
             floor = content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2])).asFloor();
             block = content.blocks().find(b -> b.name.equalsIgnoreCase(args[3]));

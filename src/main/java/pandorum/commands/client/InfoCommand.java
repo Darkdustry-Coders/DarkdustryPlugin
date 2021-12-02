@@ -21,7 +21,7 @@ public class InfoCommand {
         }
 
         PlayerModel.find(new BasicDBObject("UUID", target.uuid()), playerInfo -> {
-            Rank rank = Ranks.getRank(player, playerInfo.rank);
+            Rank rank = Ranks.getRank(target, playerInfo.rank);
             Call.infoMessage(player.con, Bundle.format("commands.info.content",
                     findLocale(player.locale),
                     target.coloredName(),

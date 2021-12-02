@@ -3,15 +3,13 @@ package pandorum.events.handlers;
 import arc.Events;
 import com.mongodb.BasicDBObject;
 import mindustry.game.EventType.GameOverEvent;
-import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.state;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.*;
 
 public class MenuHandler {
     public static int welcomeMenu, despwMenu, artvMenu;
@@ -28,21 +26,28 @@ public class MenuHandler {
         });
 
         despwMenu = Menus.registerMenu((player, option) -> {
-            if (option == 1 || option == -1) return;
-
             switch (option) {
-                case 0 -> Groups.unit.each(Unitc::kill);
-                case 2 -> Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                case 3 -> Groups.unit.each(u -> u.team == Team.sharded, Unitc::kill);
-                case 4 -> Groups.unit.each(u -> u.team == Team.crux, Unitc::kill);
-                default -> {
+                case 0 -> {
+                    Groups.unit.each(Unitc::kill);
+                    bundled(player, "commands.admin.despw.success.all");
+                }
+                case 2 -> {
+                    Groups.unit.each(Unitc::isPlayer, Unitc::kill);
+                    bundled(player, "commands.admin.despw.success.players");
+                }
+                case 3 -> {
+                    Groups.unit.each(u -> u.team == state.rules.defaultTeam, Unitc::kill);
+                    bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.defaultTeam));
+                }
+                case 4 -> {
+                    Groups.unit.each(u -> u.team == state.rules.waveTeam, Unitc::kill);
+                    bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.waveTeam));
+                }
+                case 5 -> {
                     player.clearUnit();
-                    bundled(player, "commands.admin.despw.suicide");
-                    return;
+                    bundled(player, "commands.admin.despw.success.suicide");
                 }
             }
-
-            bundled(player, "commands.admin.despw.success");
         });
 
         artvMenu = Menus.registerMenu((player, option) -> {
