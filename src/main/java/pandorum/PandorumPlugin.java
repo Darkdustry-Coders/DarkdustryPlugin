@@ -19,7 +19,6 @@ import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
-import mindustry.gen.Call;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.client.*;
@@ -132,7 +131,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("players", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
         handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("units", "<list/change/name> [unit] [player...]", "Действия с юнитами.", UnitsCommand::run);
+        handler.register("changeunit", "<unit> [player...]", "Изменить юнита игроку.", ChangeUnitCommand::run);
         handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
         handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
         handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);

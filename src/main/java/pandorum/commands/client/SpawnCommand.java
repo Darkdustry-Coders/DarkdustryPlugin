@@ -7,9 +7,11 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.Misc;
+import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
+import static pandorum.Misc.colorizedTeam;
 
 public class SpawnCommand {
 
@@ -32,18 +34,20 @@ public class SpawnCommand {
         Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
         if (team == null) {
             StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(Misc.colorizedTeam(t));
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(colorizedTeam(t));
             bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
 
-        UnitType unit = content.units().find(b -> b.name.equalsIgnoreCase(args[0]));
-        if (unit == null || unit == UnitTypes.block) {
-            bundled(player, "commands.unit-not-found");
+        UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[0]) && u != UnitTypes.block);
+        if (type == null) {
+            StringBuilder units = new StringBuilder();
+            content.units().each(u -> u != UnitTypes.block, u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
+            bundled(player, "commands.unit-not-found", units.toString());
             return;
         }
 
-        for (int i = 0; i < count; i++) unit.spawn(team, player.x, player.y);
-        bundled(player, "commands.admin.spawn.success", count, unit.name, Misc.colorizedTeam(team));
+        for (int i = 0; i < count; i++) type.spawn(team, player.x, player.y);
+        bundled(player, "commands.admin.spawn.success", count, Icons.get(type.name), colorizedTeam(team));
     }
 }

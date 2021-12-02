@@ -20,12 +20,12 @@ public class GiveCommand {
             return;
         }
 
-        int count = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
+        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
 
         Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
         if (item == null) {
             StringBuilder items = new StringBuilder();
-            content.items().each(res -> items.append(" ").append(Icons.get(res.name)).append(res.name));
+            content.items().each(i -> items.append(" ").append(Icons.get(i.name)).append(i.name));
             bundled(player, "commands.admin.give.item-not-found", items.toString());
             return;
         }
@@ -36,7 +36,7 @@ public class GiveCommand {
             return;
         }
 
-        team.core().items.add(item, count);
-        bundled(player, "commands.admin.give.success");
+        team.core().items.add(item, amount);
+        bundled(player, "commands.admin.give.success", amount, Icons.get(item.name));
     }
 }
