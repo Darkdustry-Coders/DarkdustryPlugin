@@ -7,7 +7,6 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.Misc;
-import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
@@ -33,7 +32,7 @@ public class SpawnCommand {
         Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
         if (team == null) {
             StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(Icons.get(t.name)).append(Misc.colorizedTeam(t));
+            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(Misc.colorizedTeam(t));
             bundled(player, "commands.team-not-found", teams.toString());
             return;
         }

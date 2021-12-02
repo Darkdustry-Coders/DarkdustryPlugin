@@ -13,7 +13,7 @@ import static mindustry.Vars.world;
 public class WorldLoadListener {
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
-        if (PandorumPlugin.config.isModeSimple()) {
+        if (PandorumPlugin.config.mode.isSimple) {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
             for (Tile tile : world.tiles) {

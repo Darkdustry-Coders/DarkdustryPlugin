@@ -10,7 +10,7 @@ import pandorum.entry.RotateEntry;
 
 public class ActionFilter {
     public static boolean filter(final PlayerAction action) {
-        if (PandorumPlugin.config.isModeSimple() && action.type == Administration.ActionType.rotate) {
+        if (PandorumPlugin.config.mode.isSimple && action.type == Administration.ActionType.rotate) {
             HistoryEntry entry = new RotateEntry(action);
             Seq<Tile> linkedTiles = action.tile.getLinkedTiles(new Seq<>());
             for (Tile tile : linkedTiles) {

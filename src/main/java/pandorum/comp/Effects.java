@@ -7,7 +7,6 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 
 public class Effects {
-
     private static final Effect moveEffect = Fx.freezing, leaveEffect = Fx.greenLaserCharge, joinEffect = Fx.greenBomb;
 
     public static void on(Effect effect, float x, float y) {

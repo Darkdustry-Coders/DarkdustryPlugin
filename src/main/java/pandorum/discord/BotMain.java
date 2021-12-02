@@ -45,9 +45,9 @@ public class BotMain {
                 if (msg.getContent().startsWith(PandorumPlugin.config.prefix)) {
                     CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
                     if (response.type == ResponseType.fewArguments) {
-                        BotHandler.err(msg, "Недостаточно аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                        BotHandler.err(msg.getChannel().block(), "Недостаточно аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
                     } else if (response.type == ResponseType.manyArguments) {
-                        BotHandler.err(msg, "Слишком много аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                        BotHandler.err(msg.getChannel().block(), "Слишком много аргументов.", "Использование : **@@** *@*", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
                     }
                     return;
                 }
@@ -64,11 +64,11 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(msg, "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
                             Authme.confirm(Authme.loginWaiting.get(msg).t1);
                         }
                         case "deny" -> {
-                            BotHandler.text(msg, "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
                             Authme.deny(Authme.loginWaiting.get(msg).t1);
                         }
                     }

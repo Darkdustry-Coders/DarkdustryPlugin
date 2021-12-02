@@ -142,7 +142,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
         handler.register("rank", "Информация о рангах.", RankCommand::run);
 
-        if (config.isModeSimple()) {
+        if (config.mode.isSimple) {
             handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
             handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
             handler.register("artv", "Принудительно завершить игру.", ARTVCommand::run);
@@ -158,11 +158,11 @@ public final class PandorumPlugin extends Plugin {
             handler.register("voting", "<y/n>", "Проголосовать.", VotingCommand::run);
             handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
 
-            if (config.mode != Config.Gamemode.pvp && config.mode != Config.Gamemode.siege) {
+            if (!config.mode.isPvP) {
                 handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
             }
 
-            if (config.mode == Config.Gamemode.pvp || config.mode == Config.Gamemode.siege) {
+            if (config.mode.isPvP) {
                 handler.register("surrender", "Сдаться.", SurrenderCommand::run);
             }
 

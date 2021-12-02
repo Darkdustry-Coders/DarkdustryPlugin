@@ -13,7 +13,7 @@ public class GameOverListener {
         Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
             playerInfo.gamesPlayed++;
 
-            if (state.rules.pvp) {
+            if (PandorumPlugin.config.mode.isPvP) {
                 if (p.team() == event.winner) playerInfo.pvpWinCount++;
                 else playerInfo.pvpLoseCount++;
             }

@@ -8,6 +8,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.comp.Bundle;
+import pandorum.comp.Icons;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -25,7 +26,7 @@ public abstract class Misc {
     private Misc() {}
 
     public static String colorizedTeam(Team team) {
-        return Strings.format("[#@]@", team.color, team);
+        return Strings.format("@[#@]@", Icons.get(team.name), team.color, team.name);
     }
 
     public static Map findMap(String name) {
