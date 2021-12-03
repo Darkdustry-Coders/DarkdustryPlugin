@@ -13,7 +13,7 @@ import static pandorum.Misc.findLocale;
 
 public class HelpCommand {
 
-    private static final Seq<String> adminOnlyCommands = Seq.with("a", "artv", "ban", "changeunit", "core", "fill", "give", "spawn", "spectate", "team", "unban", "despw");
+    private static final Seq<String> adminOnlyCommands = Seq.with("a", "artv", "ban", "unit", "core", "fill", "give", "spawn", "spectate", "team", "unban", "despw");
 
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
