@@ -31,6 +31,6 @@ public class ChangeUnitCommand {
         Unit unit = type.spawn(player.team(), player.x(), player.y());
         unit.spawnedByCore(true);
         target.unit(unit);
-        bundled(target, "commands.admin.changeunit.success", Icons.get(type.name));
+        bundled(target, "commands.admin.unit.success", Icons.get(type.name));
     }
 }
