@@ -35,13 +35,13 @@ public class PlayerLeaveListener {
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
 
-        if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
+        if (PandorumPlugin.currentlyKicking[0] != null && event.player == PandorumPlugin.currentlyKicking[0].target()) {
             PandorumPlugin.currentlyKicking[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), PandorumPlugin.config.kickDuration);
             sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(PandorumPlugin.config.kickDuration));
         }
 
-        if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) {
+        if (PandorumPlugin.config.mode.isPvP) {
             Seq<String> teamVotes = PandorumPlugin.surrendered.get(event.player.team(), Seq::new);
             if (teamVotes.contains(event.player.uuid())) {
                 teamVotes.remove(event.player.uuid());
