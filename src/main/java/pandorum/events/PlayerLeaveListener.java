@@ -7,11 +7,9 @@ import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
-import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
-import pandorum.vote.VoteKickSession;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +20,7 @@ import static pandorum.Misc.sendToChat;
 public class PlayerLeaveListener {
     public static void call(final EventType.PlayerLeave event) {
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
-        sendToChat("events.player-leave", event.player.color.toString().toUpperCase(), event.player.getInfo().lastName);
+        sendToChat("events.player-leave", event.player.color, event.player.getInfo().lastName);
 
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .color(BotMain.errorColor)

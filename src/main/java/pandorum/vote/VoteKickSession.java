@@ -17,7 +17,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
 public class VoteKickSession {
-    protected Player target;
+    protected final Player target;
     protected Seq<String> voted = new Seq<>();
     protected VoteKickSession[] kickSession;
     protected Task task;

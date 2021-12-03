@@ -43,18 +43,14 @@ public class BotMain {
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
                 CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
-                if (response.type == ResponseType.fewArguments) {
-                    BotHandler.err(msg.getChannel().block(), "Недостаточно аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
-                    return;
-                }
-                if (response.type == ResponseType.manyArguments) {
-                    BotHandler.err(msg.getChannel().block(), "Слишком много аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
+                    BotHandler.err(msg.getChannel().block(), "Неверное количество аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
                     return;
                 }
 
                 if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && msg.getContent().length() > 0) {
                     Misc.sendToChat("events.discord-message", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
-                    Log.info("[Discord]@: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
+                    Log.info("[Discord] @: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                 }
             }, e -> {});
 
@@ -64,11 +60,11 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getMember().get().getDisplayName());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getUser().getUsername());
                             Authme.confirm(Authme.loginWaiting.get(msg));
                         }
                         case "deny" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getMember().get().getDisplayName());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getUser().getUsername());
                             Authme.deny(Authme.loginWaiting.get(msg));
                         }
                     }

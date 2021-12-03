@@ -46,7 +46,7 @@ public class ChatFilter {
         if (translatedText.equalsIgnoreCase(text) || translatedText.isBlank()) {
             return formatted;
         } else {
-            return formatted + Strings.format(" [white]([gray]@[white])", translatedText);
+            return Strings.format("@ [white]([gray]@[white])", formatted, translatedText);
         }
     }
 }

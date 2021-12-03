@@ -22,7 +22,7 @@ public class PlayerJoinListener {
         Ranks.updateName(event.player);
 
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
-        sendToChat("events.player-join", event.player.color.toString().toUpperCase(), event.player.getInfo().lastName);
+        sendToChat("events.player-join", event.player.color, event.player.getInfo().lastName);
 
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .color(BotMain.successColor)

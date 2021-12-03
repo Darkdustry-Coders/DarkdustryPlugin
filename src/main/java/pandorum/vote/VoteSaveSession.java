@@ -12,7 +12,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PandorumPlugin.config;
 
 public class VoteSaveSession extends VoteSession {
-    private final String target;
+    protected final String target;
 
     public VoteSaveSession(VoteSession[] session, String target) {
         super(session);

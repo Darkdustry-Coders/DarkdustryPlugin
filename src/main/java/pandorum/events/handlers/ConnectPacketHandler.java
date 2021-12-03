@@ -37,7 +37,6 @@ public class ConnectPacketHandler {
         }
 
         con.hasBegunConnecting = true;
-        con.mobile = packet.mobile;
 
         if (packet.uuid == null || packet.usid == null) {
             con.kick(KickReason.idInUse);
