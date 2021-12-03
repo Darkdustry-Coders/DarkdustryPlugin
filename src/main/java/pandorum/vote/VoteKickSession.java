@@ -58,7 +58,7 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(VoteKickSession.kickDuration));
+            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
             stop();
 
             target.kick(KickReason.vote, kickDuration);
