@@ -3,9 +3,9 @@ package pandorum.commands.client;
 import arc.math.Mathf;
 import arc.util.Strings;
 import mindustry.gen.Groups;
+import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
@@ -31,7 +31,7 @@ public class PlayerListCommand {
         for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
             result.append("[#9c88ee]* [white]");
             Player p = Groups.player.index(i);
-            if (p.admin) result.append(Icons.get("admin")).append(" ");
+            if (p.admin) result.append(Iconc.admin).append(" ");
             result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: [white]").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
         }
         player.sendMessage(result.toString());
