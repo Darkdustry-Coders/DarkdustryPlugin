@@ -131,7 +131,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("players", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
         handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("changeunit", "<unit> [player...]", "Изменить юнита игроку.", ChangeUnitCommand::run);
+        handler.register("unit", "<unit> [player...]", "Изменить юнита игроку.", ChangeUnitCommand::run);
         handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
         handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
         handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
