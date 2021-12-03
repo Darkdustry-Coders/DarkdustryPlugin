@@ -23,9 +23,6 @@ public class VoteKickSession {
     protected Task task;
     protected int votes;
 
-    /** В миллисекундах */
-    public static long kickDuration = 45 * 60 * 1000L;
-
     public VoteKickSession(VoteKickSession[] kickSession, Player target) {
         this.kickSession = kickSession;
         this.target = target;
@@ -58,10 +55,10 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
+            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
             stop();
 
-            target.kick(KickReason.vote, kickDuration);
+            target.kick(KickReason.vote, config.kickDuration);
 
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .color(BotMain.errorColor)
