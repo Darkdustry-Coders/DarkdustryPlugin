@@ -64,12 +64,12 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
-                            Authme.confirm(Authme.loginWaiting.get(msg).t1);
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getMember().get().getDisplayName());
+                            Authme.confirm(Authme.loginWaiting.get(msg));
                         }
                         case "deny" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).t2, interaction.getMember().get().getDisplayName());
-                            Authme.deny(Authme.loginWaiting.get(msg).t1);
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getMember().get().getDisplayName());
+                            Authme.deny(Authme.loginWaiting.get(msg));
                         }
                     }
                     Authme.loginWaiting.remove(msg);
