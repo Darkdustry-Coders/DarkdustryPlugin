@@ -81,9 +81,7 @@ public class Icons {
                 "derelict", Iconc.teamDerelict,
                 "green", Iconc.statusElectrified,
                 "purple", Iconc.statusSporeSlowed,
-                "blue", Iconc.statusWet,
-
-                "admin", Iconc.admin
+                "blue", Iconc.statusWet
         );
     }
 
