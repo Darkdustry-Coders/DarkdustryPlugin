@@ -37,8 +37,8 @@ public class PlayerLeaveListener {
 
         if (PandorumPlugin.currentlyKicking[0] != null && PandorumPlugin.currentlyKicking[0].target().uuid().equals(event.player.uuid())) {
             PandorumPlugin.currentlyKicking[0].stop();
-            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), VoteKickSession.kickDuration);
-            sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(VoteKickSession.kickDuration));
+            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), PandorumPlugin.config.kickDuration);
+            sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(PandorumPlugin.config.kickDuration));
         }
 
         if (PandorumPlugin.config.mode == Gamemode.pvp || PandorumPlugin.config.mode == Gamemode.siege) {
