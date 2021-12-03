@@ -102,9 +102,10 @@ public final class PandorumPlugin extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        handler.removeCommand("say");
-        handler.removeCommand("pardon");
         handler.removeCommand("exit");
+        handler.removeCommand("say");
+        handler.removeCommand("kick");
+        handler.removeCommand("pardon");
 
         handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
         handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
@@ -113,6 +114,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("exit", "Выключить сервер.", ExitCommand::run);
         handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
+        handler.register("kick", "<никнейм...>", "Выгнать игрока с сервера.", KickCommand::run);
         handler.register("pardon", "<uuid...>", "Снять кик с игрока.", PardonCommand::run);
     }
 

@@ -13,7 +13,7 @@ public class PardonCommand {
             netServer.admins.kickedIPs.remove(info.lastIP);
             Log.info("Игрок @ снова может зайти на сервер.", info.lastName);
         } else {
-            Log.err("Игрок не найден.");
+            Log.err("Игрок не найден...");
         }
     }
 }
