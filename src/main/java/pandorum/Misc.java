@@ -9,9 +9,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import pandorum.annotations.ClientCommand;
-import pandorum.annotations.DisableGamemode;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.*;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Icons;
@@ -161,7 +159,49 @@ public abstract class Misc {
                     Modifier.isStatic(method.getModifiers())
                  && Arrays.equals(method.getParameterTypes(), requiredParams)
             ) {
+                Seq<Config.Gamemode> disabledGamemodes = new Seq<>();
+                Seq<Config.Gamemode> reqiuredGamemodes = new Seq<>();
+
+                boolean requireSimpleGamemode = method.isAnnotationPresent(RequireSimpleGamemode.class);
+                boolean hasRequiredGamemodes = method.isAnnotationPresent(DisabledGamemodes.class);
+                boolean hasDisabledGamemodes = method.isAnnotationPresent(RequiredGamemodes.class);
+                if (hasRequiredGamemodes) {
+                    disabledGamemodes = Seq.with(
+                            Arrays.stream(method.getAnnotation(DisabledGamemodes.class).value())
+                                    .map(disableGamemodeAnnotation -> disableGamemodeAnnotation.Gamemode()).toArray(Config.Gamemode[]::new)
+                    );
+                }
+                if (hasDisabledGamemodes) {
+                    disabledGamemodes = Seq.with(
+                            Arrays.stream(method.getAnnotation(RequiredGamemodes.class).value())
+                                    .map(requireGamemodeAnnotation -> requireGamemodeAnnotation.Gamemode()).toArray(Config.Gamemode[]::new)
+                    );
+                }
+
+                if (hasRequiredGamemodes && hasDisabledGamemodes) {
+                    Log.info("Cannot disable and ban one gamemode");
+                    return;
+                }
+                if (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode)) {
+                    Log.info("Not initialized command(command not reqiure this gamemode)");
+                    return;
+                }
+                if (hasDisabledGamemodes && disabledGamemodes.contains(gamemode)) {
+                    Log.info("Not initialized command(gamemode is disabled for this command");
+                    return;
+                }
                 
+                if (hasRequiredGamemodes && requireSimpleGamemode) {
+                    Log.info("Cannot require gamemode and reqire simple gamemode");
+                    return;
+                }
+                
+                if (requireSimpleGamemode && !gamemode.isSimple) {
+                    Log.info("Not simple gamemode. Skip command");
+                    return;
+                }
+
+                methods.add(method);
             } else
                 Log.info("Annotated method " + method.getName() + " is not static or it has invalid parameters");
         });
