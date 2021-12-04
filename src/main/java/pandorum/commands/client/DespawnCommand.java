@@ -11,7 +11,7 @@ import static mindustry.Vars.state;
 import static pandorum.Misc.colorizedTeam;
 import static pandorum.Misc.findLocale;
 
-public class UnitsDespawnCommand {
+public class DespawnCommand {
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         Call.menu(player.con,
