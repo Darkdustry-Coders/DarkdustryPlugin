@@ -127,54 +127,52 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("vote");
         handler.removeCommand("sync");
 
-        handler.register("help", "[page]", "Список всех команд.", HelpCommand::run);
-        handler.register("discord", "Ссылка на наш Discord сервер.", DiscordLinkCommand::run);
-        handler.register("a", "<message...>", "Отправить сообщение админам.", AdminChatCommand::run);
-        handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
-        handler.register("players", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
-        handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("unit", "<unit> [player...]", "Изменить юнита игроку.", UnitCommand::run);
-        handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
-        handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
-        handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
-        handler.register("vote", "<y/n>", "Решить судьбу игрока.", VoteCommand::run);
-        handler.register("sync", "Синхронизация с сервером.", SyncCommand::run);
-        handler.register("tr", "<off/auto/current/locale>", "Переключение переводчика чата.", TranslatorCommand::run);
-        handler.register("info", "[player...]", "Посмотреть информацию о себе.", InfoCommand::run);
-        handler.register("login", "Зайти на сервер как администратор.", LoginCommand::run);
-        handler.register("rank", "Информация о рангах.", RankCommand::run);
+        handler.register("help", "[page]", "List of all commands.", HelpCommand::run);
+        handler.register("discord", "Get a link to our Discord server.", DiscordLinkCommand::run);
+        handler.register("a", "<message...>", "Send message to admins.", AdminChatCommand::run);
+        handler.register("t", "<message...>", "Send message to teammates", TeamChatCommand::run);
+        handler.register("votekick", "<player...>", "Start a voting to kick a player.", VoteKickCommand::run);
+        handler.register("vote", "<y/n>", "Vote to kick a player.", VoteCommand::run);
+        handler.register("sync", "Re-synchronize world state.", SyncCommand::run);
+        handler.register("tr", "<off/auto/current/locale>", "Manage chat translator.", TranslatorCommand::run);
+        handler.register("info", "[player...]", "See some info about a player.", InfoCommand::run);
+        handler.register("rank", "See information about your rank.", RankCommand::run);
+        handler.register("players", "[page]", "List of all players.", PlayerListCommand::run);
+
+        handler.register("ban", "<uuid...>", "Ban a player.", BanCommand::run);
+        handler.register("unban", "<uuid...>", "Unban a player.", UnbanCommand::run);
+        handler.register("despw", "Kill units.", DespawnCommand::run);
+        handler.register("unit", "<unit> [player...]", "Change a unit.", UnitCommand::run);
+        handler.register("login", "Send confirmation to get admin.", LoginCommand::run);
 
         if (config.mode.isSimple) {
-            handler.register("history", "Переключение отображения истории при нажатии на тайл.", HistoryCommand::run);
-            handler.register("rtv", "Проголосовать за смену карты.", RTVCommand::run);
-            handler.register("artv", "Принудительно завершить игру.", ARTVCommand::run);
-            handler.register("core", "[small/medium/big]", "Заспавнить ядро.", CoreCommand::run);
-            handler.register("give", "<item> [count]", "Выдать ресурсы в ядро.", GiveCommand::run);
-            handler.register("alert", "Включить или отключить предупреждения о постройке реакторов вблизи к ядру.", AlertCommand::run);
-            handler.register("team", "<team> [player...]", "Смена команды для админов.", TeamCommand::run);
-            handler.register("spectate", "Режим наблюдателя.", SpectateCommand::run);
-            handler.register("map", "Информация о карте.",  MapCommand::run);
-            handler.register("maps", "[page]", "Вывести список карт.", MapListCommand::run);
-            handler.register("saves", "[page]", "Вывести список сохранений на сервере.", SavesListCommand::run);
-            handler.register("nominate", "<map/save/load> <name...>", "Начать голосование за смену карты/загрузку карты.", NominateCommand::run);
-            handler.register("voting", "<y/n>", "Проголосовать.", VotingCommand::run);
-            handler.register("spawn", "<unit> [count] [team]", "Заспавнить юнитов.", SpawnCommand::run);
+            handler.register("rtv", "Vote to skip the map.", RTVCommand::run);
 
-            if (!config.mode.isPvP) {
-                handler.register("vnw", "Проголосовать за пропуск волны.", VNWCommand::run);
-            }
+            if (!config.mode.isPvP) handler.register("vnw", "Vote to skip a wave.", VNWCommand::run);
+            else handler.register("surrender", "Vote to surrender.", SurrenderCommand::run);
 
-            if (config.mode.isPvP) {
-                handler.register("surrender", "Сдаться.", SurrenderCommand::run);
-            }
+            handler.register("history", "Enable tile inspector.", HistoryCommand::run);
+            handler.register("alert", "Enable/disable alerts.", AlertCommand::run);
+            handler.register("map", "Information about current map.",  MapCommand::run);
+            handler.register("maps", "[page]", "List of all maps.", MapsListCommand::run);
+            handler.register("saves", "[page]", "List of all saves.", SavesListCommand::run);
+            handler.register("nominate", "<map/save/load> <name...>", "Vote for load a save/map.", NominateCommand::run);
+            handler.register("voting", "<y/n>", "Vote «yes» or «no».", VotingCommand::run);
+
+            handler.register("spawn", "<unit> [count] [team]", "Spawn units.", SpawnCommand::run);
+            handler.register("artv", "Force a gameover.", ARTVCommand::run);
+            handler.register("core", "[small/medium/big]", "Spawn a core.", CoreCommand::run);
+            handler.register("give", "<item> [count]", "Add items to the core.", GiveCommand::run);
+            handler.register("team", "<team> [player...]", "Change team.", TeamCommand::run);
+            handler.register("spectate", "Spectator mode.", SpectateCommand::run);
 
             if (config.mode == Config.Gamemode.sandbox) {
-                handler.register("fill", "<width> <height> <block_1> [block_2]", "Заполнить область данным типом блока.", FillCommand::run);
+                handler.register("fill", "<width> <height> <block_1> [block_2]", "Fill an area with some floor.", FillCommand::run);
             }
         }
 
         if (config.mode != Config.Gamemode.hub) {
-            handler.register("hub", "Выйти в Хаб.", HubCommand::run);
+            handler.register("hub", "Connect to HUB.", HubCommand::run);
         }
     }
 }
