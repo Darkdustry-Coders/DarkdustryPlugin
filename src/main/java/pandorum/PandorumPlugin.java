@@ -107,15 +107,13 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("kick");
         handler.removeCommand("pardon");
 
-        handler.register("reload-config", "Перезапустить файл конфигурации.", ReloadCommand::run);
-        handler.register("despw", "Убить всех юнитов на карте.", DespawnCommand::run);
-        handler.register("clear-bans", "Разбанить всех.", ClearBansCommand::run);
-        handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
-        handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
-        handler.register("exit", "Выключить сервер.", ExitCommand::run);
-        handler.register("say", "<message...>", "Сказать в чат от имени сервера.", SayCommand::run);
-        handler.register("kick", "<player...>", "Выгнать игрока с сервера.", KickCommand::run);
-        handler.register("pardon", "<uuid...>", "Снять кик с игрока.", PardonCommand::run);
+        handler.register("reload-config", "Reload the configuration file.", ConsoleReloadCommand::run);
+        handler.register("despw", "Kill all units.", ConsoleDespawnCommand::run);
+        handler.register("rr", "Restart the server.", ConsoleRestartCommand::run);
+        handler.register("exit", "Shut down the server.", ConsoleExitCommand::run);
+        handler.register("say", "<message...>", "Send a message as a server..", ConsoleSayCommand::run);
+        handler.register("kick", "<player...>", "Kick a player from the server.", ConsoleKickCommand::run);
+        handler.register("pardon", "<uuid...>", "Pardon a kicked player.", ConsolePardonCommand::run);
     }
 
     @Override
