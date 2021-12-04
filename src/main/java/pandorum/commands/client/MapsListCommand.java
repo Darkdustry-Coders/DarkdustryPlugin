@@ -31,7 +31,7 @@ public class MapsListCommand {
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), mapsList.size); i++) {
             Map map = mapsList.get(i);
-            result.append("[lightgray] ").append(i + 1).append("[orange] ").append(map.name()).append("\n");
+            result.append("[lightgray] ").append(i + 1).append(". [orange]").append(map.name()).append("\n");
         }
 
         player.sendMessage(result.toString());

@@ -35,6 +35,7 @@ public class PlayerJoinListener {
 
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
+                Log.info("hellomsg");
                 Call.menu(event.player.con,
                         MenuHandler.welcomeMenu,
                         Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),

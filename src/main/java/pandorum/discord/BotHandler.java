@@ -139,14 +139,14 @@ public class BotHandler {
             }
 
             maps.reload();
-            Seq<Map> mapList = maps.customMaps();
-            if (mapList.size == 0) {
+            Seq<Map> mapsList = maps.customMaps();
+            if (mapsList.size == 0) {
                 err(msg.getChannel().block(), "На сервере нет карт.", "Список карт пуст.");
                 return;
             }
 
             int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-            int pages = Mathf.ceil(mapList.size / 20f);
+            int pages = Mathf.ceil(mapsList.size / 20f);
 
             if (--page >= pages || page < 0) {
                 err(msg.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
@@ -154,8 +154,8 @@ public class BotHandler {
             }
 
             StringBuilder maps = new StringBuilder();
-            for (int i = 20 * page; i < Math.min(20 * (page + 1), mapList.size); i++) {
-                maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(mapList.get(i).name())).append("\n");
+            for (int i = 20 * page; i < Math.min(20 * (page + 1), mapsList.size); i++) {
+                maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(mapsList.get(i).name())).append("\n");
             }
 
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
@@ -209,7 +209,7 @@ public class BotHandler {
 
             StringBuilder players = new StringBuilder();
             for (int i = 20 * page; i < Math.min(20 * (page + 1), Groups.player.size()); i++) {
-                players.append(i).append(". ").append(Strings.stripColors(Groups.player.index(i).name)).append("\n");
+                players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(Groups.player.index(i).name)).append("\n");
             }
 
             EmbedCreateSpec embed = EmbedCreateSpec.builder()

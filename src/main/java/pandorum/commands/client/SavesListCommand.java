@@ -34,7 +34,7 @@ public class SavesListCommand {
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), savesList.size); i++) {
             Fi save = savesList.get(i);
-            result.append("[lightgray] ").append(i + 1).append("[orange] ").append(save.nameWithoutExtension()).append("\n");
+            result.append("[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()).append("\n");
         }
 
         player.sendMessage(result.toString());
