@@ -7,7 +7,7 @@ import pandorum.Misc;
 
 import static pandorum.Misc.sendToChat;
 
-public class KickCommand {
+public class ConsoleKickCommand {
     public static void run(final String[] args) {
         Player target = Misc.findByName(args[0]);
 
