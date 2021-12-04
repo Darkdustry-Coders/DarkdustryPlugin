@@ -10,8 +10,10 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.annotations.ClientCommand;
+import pandorum.annotations.DisableGamemode;
 import pandorum.annotations.ServerCommand;
 import pandorum.comp.Bundle;
+import pandorum.comp.Config;
 import pandorum.comp.Icons;
 import pandorum.struct.CommandType;
 
@@ -134,7 +136,14 @@ public abstract class Misc {
         return methods;
     }
 
-    public static Seq<Method> getCommandMethods(String basePackage, CommandType type) {
+    private static boolean CheckDisableGamemode(Method method, Config.Gamemode gamemode) {
+        if (method.isAnnotationPresent(DisableGamemode.class))
+            if (method.getAnnotation(DisableGamemode.class).Gamemode() == gamemode)
+                return true;
+        return false;
+    }
+
+    public static Seq<Method> getCommandMethods(String basePackage, CommandType type, Config.Gamemode gamemode) {
         Seq<Method> methods = new Seq<>();
 
         Class<?>[] requiredParams = switch (type) {
@@ -152,7 +161,7 @@ public abstract class Misc {
                     Modifier.isStatic(method.getModifiers())
                  && Arrays.equals(method.getParameterTypes(), requiredParams)
             ) {
-                methods.add(method);
+                
             } else
                 Log.info("Annotated method " + method.getName() + " is not static or it has invalid parameters");
         });
