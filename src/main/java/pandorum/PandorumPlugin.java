@@ -114,6 +114,8 @@ public final class PandorumPlugin extends Plugin {
         handler.register("say", "<message...>", "Send a message as a server..", ConsoleSayCommand::run);
         handler.register("kick", "<player...>", "Kick a player from the server.", ConsoleKickCommand::run);
         handler.register("pardon", "<uuid...>", "Pardon a kicked player.", ConsolePardonCommand::run);
+        handler.register("ban", "<ip/name/id> <ip/username/uuid...>", "Ban a player by ip, name or uuid.", ConsoleBanCommand::run);
+        handler.register("unban", "<ip/all/uuid>", "Unban a player by ip or uuid.", ConsoleUnbanCommand::run);
     }
 
     @Override

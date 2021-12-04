@@ -53,10 +53,6 @@ public abstract class Misc {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
-    public static Player findByID(String uuid) {
-        return Groups.player.find(p -> p.uuid().equals(uuid));
-    }
-
     public static Locale findLocale(String lang) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(lang) || lang.startsWith(l.toString()));
         return locale != null ? locale : Bundle.defaultLocale();
