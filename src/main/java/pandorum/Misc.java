@@ -2,21 +2,28 @@ package pandorum;
 
 import arc.files.Fi;
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import pandorum.annotations.ClientCommand;
+import pandorum.annotations.ServerCommand;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
+import pandorum.struct.CommandType;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.zip.ZipFile;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.saveExtension;
@@ -81,5 +88,75 @@ public abstract class Misc {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(time);
+    }
+
+    public static Seq<Class> loadClasses(String basePackage) {
+        Seq<Class> classes = new Seq<>();
+        ClassLoader classLoader = PandorumPlugin.class.getClassLoader();
+        String packageName = basePackage.replace('.', '/');
+        URL pckg = classLoader.getResource(packageName);
+        if (pckg == null)
+            throw new NullPointerException("Cannot get resources to package " + basePackage);
+        String pckgStr = pckg.toString();
+        String path = pckgStr.substring("jar:file:".length(), pckgStr.lastIndexOf("!/"));
+
+        try {
+            ZipFile zipFile = new ZipFile(path);
+            zipFile.stream()
+                    .filter(e -> e.getName().startsWith(packageName)
+                            && e.getName().endsWith(".class"))
+                    .forEach(e -> {
+                        try{
+                            String name = e.getName().replace('/', '.');
+                            name = name.substring(0, name.lastIndexOf('.'));
+
+                            classes.add(Class.forName(name));
+                        }catch(ClassNotFoundException ex){
+                            ex.printStackTrace();
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return classes;
+    }
+
+    public static Seq<Method> getAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass) {
+        Seq<Method> methods = new Seq<>();
+        loadClasses(basePackage).each(classObject ->
+                Arrays.stream(classObject.getMethods()).forEach(method -> {
+                            if (method.isAnnotationPresent(annotationClass))
+                                methods.add(method);
+                        }
+                )
+        );
+        return methods;
+    }
+
+    public static Seq<Method> getCommandMethods(String basePackage, CommandType type) {
+        Seq<Method> methods = new Seq<>();
+
+        Class<?>[] requiredParams = switch (type) {
+            case Client -> new Class<?>[] { Player.class, String[].class };
+            case Server -> new Class<?>[] { String[].class };
+        };
+
+        Class<? extends Annotation> annotation = switch (type) {
+            case Server -> ServerCommand.class;
+            case Client -> ClientCommand.class;
+        };
+
+        getAnnotatedMethods(basePackage, annotation).each(method -> {
+            if (
+                    Modifier.isStatic(method.getModifiers())
+                 && Arrays.equals(method.getParameterTypes(), requiredParams)
+            ) {
+                methods.add(method);
+            } else
+                Log.info("Annotated method " + method.getName() + " is not static or it has invalid parameters");
+        });
+
+        return methods;
     }
 }
