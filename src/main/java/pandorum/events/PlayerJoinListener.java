@@ -38,7 +38,7 @@ public class PlayerJoinListener {
                 Call.menu(event.player.con,
                         MenuHandler.welcomeMenu,
                         Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
-                        "ichi ni",
+                        Bundle.format("events.hellomsg", findLocale(event.player.locale), PandorumPlugin.discordServerLink),
                         new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
                 );
             }
@@ -47,12 +47,3 @@ public class PlayerJoinListener {
         bundled(event.player, "events.motd");
     }
 }
-
-/*
-                Call.menu(event.player.con,
-                        MenuHandler.welcomeMenu,
-                        Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
-                        Bundle.format("events.hellomsg", findLocale(event.player.locale)).replace("{ссылка}", PandorumPlugin.discordServerLink),
-                        new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
-                );
- */
