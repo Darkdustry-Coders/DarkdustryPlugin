@@ -33,14 +33,6 @@ public class PlayerJoinListener {
 
         Effects.onJoin(event.player);
 
-
-        Call.menu(event.player.con,
-                MenuHandler.welcomeMenu,
-                Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
-                Bundle.format("events.hellomsg", findLocale(event.player.locale)).replace("{ссылка}", PandorumPlugin.discordServerLink),
-                new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
-        );
-
         PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
             if (playerInfo.hellomsg) {
                 Call.menu(event.player.con,
