@@ -7,7 +7,7 @@ import pandorum.discord.BotMain;
 
 import static mindustry.Vars.dataDirectory;
 
-public class ReloadCommand {
+public class ConsoleReloadCommand {
     public static void run(final String[] args) {
         try {
             PandorumPlugin.config = PandorumPlugin.gson.fromJson(dataDirectory.child("config.json").readString(), Config.class);
