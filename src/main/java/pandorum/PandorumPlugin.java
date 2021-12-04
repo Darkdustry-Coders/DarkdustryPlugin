@@ -113,8 +113,8 @@ public final class PandorumPlugin extends Plugin {
         handler.register("clear-admins", "Снять все админки.", ClearAdminsCommand::run);
         handler.register("rr", "Перезапустить сервер.", RestartCommand::run);
         handler.register("exit", "Выключить сервер.", ExitCommand::run);
-        handler.register("say", "<сообщение...>", "Сказать в чат от имени сервера.", SayCommand::run);
-        handler.register("kick", "<никнейм...>", "Выгнать игрока с сервера.", KickCommand::run);
+        handler.register("say", "<message...>", "Сказать в чат от имени сервера.", SayCommand::run);
+        handler.register("kick", "<player...>", "Выгнать игрока с сервера.", KickCommand::run);
         handler.register("pardon", "<uuid...>", "Снять кик с игрока.", PardonCommand::run);
     }
 
@@ -133,7 +133,7 @@ public final class PandorumPlugin extends Plugin {
         handler.register("t", "<message...>", "Отправить сообщение игрокам твоей команды.", TeamChatCommand::run);
         handler.register("players", "[page]", "Вывести список игроков и их ID.", PlayerListCommand::run);
         handler.register("despw", "Убить юнитов на карте.", UnitsDespawnCommand::run);
-        handler.register("unit", "<unit> [player...]", "Изменить юнита игроку.", ChangeUnitCommand::run);
+        handler.register("unit", "<unit> [player...]", "Изменить юнита игроку.", UnitCommand::run);
         handler.register("unban", "<uuid...>", "Разбанить игрока.", UnbanCommand::run);
         handler.register("ban", "<uuid...>", "Забанить игрока.", BanCommand::run);
         handler.register("votekick", "<player...>", "Проголосовать за кик игрока.", VoteKickCommand::run);
