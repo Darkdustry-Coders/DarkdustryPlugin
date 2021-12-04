@@ -1,6 +1,7 @@
 package pandorum;
 
 import arc.files.Fi;
+import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
@@ -30,8 +31,9 @@ public abstract class Misc {
     }
 
     public static Map findMap(String name) {
-        for (int i = 0; i < maps.customMaps().size; i++) {
-            Map map = maps.customMaps().get(i);
+        Seq<Map> mapsList = maps.customMaps();
+        for (int i = 0; i < mapsList.size; i++) {
+            Map map = mapsList.get(i);
             if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name)) {
                 return map;
             }
@@ -40,9 +42,10 @@ public abstract class Misc {
     }
 
     public static Fi findSave(String name) {
-        for (int i = 0; i < saveDirectory.list().length; i++) {
-            Fi save = saveDirectory.list()[i];
-            if (Objects.equals(save.extension(), saveExtension) && ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name))) {
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(f -> Objects.equals(f.extension(), saveExtension));
+        for (int i = 0; i < savesList.size; i++) {
+            Fi save = savesList.get(i);
+            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
                 return save;
             }
         }

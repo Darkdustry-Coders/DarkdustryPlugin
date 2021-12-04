@@ -31,7 +31,7 @@ public class GiveCommand {
         }
 
         TeamData team = state.teams.get(player.team());
-        if (!team.hasCore()) {
+        if (team.noCores()) {
             bundled(player, "commands.admin.give.core-not-found");
             return;
         }

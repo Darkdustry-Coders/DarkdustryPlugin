@@ -25,15 +25,15 @@ public class PlayerListCommand {
             return;
         }
 
-        StringBuilder result = new StringBuilder();
-        result.append(Bundle.format("commands.players.page", findLocale(player.locale), page + 1, pages)).append("\n");
+        StringBuilder result = new StringBuilder(Bundle.format("commands.players.page", findLocale(player.locale), page + 1, pages)).append("\n");
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), Groups.player.size()); i++) {
-            result.append("[#9c88ee]* [white]");
             Player p = Groups.player.index(i);
+            result.append("[#9c88ee]* [white]");
             if (p.admin) result.append(Iconc.admin).append(" ");
-            result.append(p.coloredName()).append("[accent] / [cyan]").append("ID: [white]").append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
+            result.append(p.coloredName()).append("[accent] / [cyan]").append(Bundle.format("commands.players.id", findLocale(player.locale))).append(p.id()).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale).append("\n");
         }
+
         player.sendMessage(result.toString());
     }
 }

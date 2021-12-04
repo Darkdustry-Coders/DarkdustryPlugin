@@ -44,6 +44,7 @@ public class BotHandler {
         registerChannels();
         registerCommands();
 
+        handler.setPrefix(PandorumPlugin.config.prefix);
         Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
     }
 
@@ -53,7 +54,6 @@ public class BotHandler {
     }
 
     private static void registerCommands() {
-        handler.setPrefix(PandorumPlugin.config.prefix);
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (CommandHandler.Command command : handler.getCommandList()) {

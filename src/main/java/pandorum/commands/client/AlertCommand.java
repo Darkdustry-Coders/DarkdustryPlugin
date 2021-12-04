@@ -12,7 +12,7 @@ public class AlertCommand {
             playerInfo.alerts = !playerInfo.alerts;
             playerInfo.save();
 
-            bundled(player, (playerInfo.alerts ? "commands.alert.on" : "commands.alert.off"));
+            bundled(player, playerInfo.alerts ? "commands.alert.on" : "commands.alert.off");
         });
     }
 }

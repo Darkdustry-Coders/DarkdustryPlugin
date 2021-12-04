@@ -44,7 +44,7 @@ public class Bundle {
     private Bundle() {}
 
     public static String get(String key, Locale locale) {
-        return get(key, locale, "???" + key + "???");
+        return get(key, locale, key);
     }
 
     public static String get(String key, Locale locale, String defaultValue) {
