@@ -1,10 +1,12 @@
 package pandorum.commands.server;
 
 import arc.util.Log;
+import pandorum.annotations.ServerCommand;
 
 import static mindustry.Vars.netServer;
 
 public class ConsoleUnbanCommand {
+    @ServerCommand(name = "unban", args = "<ip/all/uuid>", description = "Unban a player by ip or uuid.")
     public static void run(final String[] args) {
         if (args[0].equalsIgnoreCase("all")) {
             netServer.admins.getBanned().each(ban -> netServer.admins.unbanPlayerID(ban.id));

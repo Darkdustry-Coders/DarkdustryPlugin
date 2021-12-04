@@ -5,11 +5,13 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
 import pandorum.Misc;
+import pandorum.annotations.ServerCommand;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.sendToChat;
 
 public class ConsoleBanCommand {
+    @ServerCommand(name = "ban", args = "<ip/name/id> <ip/username/uuid...>", description = "Ban a player by ip, name or uuid.")
     public static void run(final String[] args) {
         switch (args[0].toLowerCase()) {
             case "id" -> {
