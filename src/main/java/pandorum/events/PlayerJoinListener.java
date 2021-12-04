@@ -37,7 +37,7 @@ public class PlayerJoinListener {
             if (playerInfo.hellomsg) {
                 Call.menu(event.player.con,
                         MenuHandler.welcomeMenu,
-                        "nya",
+                        Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
                         "ichi ni",
                         new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
                 );
