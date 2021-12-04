@@ -5,7 +5,7 @@ import pandorum.discord.BotHandler;
 
 import static pandorum.Misc.sendToChat;
 
-public class SayCommand {
+public class ConsoleSayCommand {
     public static void run(final String[] args) {
         sendToChat("commands.say.chat", args[0]);
         Log.info("Server: &ly@", args[0]);
