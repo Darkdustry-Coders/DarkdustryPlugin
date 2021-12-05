@@ -3,7 +3,7 @@ package pandorum.commands.server;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.commands.ServerCommand;
 
 public class ConsoleDespawnCommand {
     @ServerCommand(name = "despw", args = "", description = "Kill all units.")

@@ -4,7 +4,7 @@ import arc.util.Log;
 import arc.util.Time;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.net.Packets.KickReason;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.commands.ServerCommand;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 

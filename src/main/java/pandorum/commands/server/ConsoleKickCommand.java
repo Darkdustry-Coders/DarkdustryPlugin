@@ -4,7 +4,7 @@ import arc.util.Log;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
 import pandorum.Misc;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.commands.ServerCommand;
 
 import static pandorum.Misc.sendToChat;
 

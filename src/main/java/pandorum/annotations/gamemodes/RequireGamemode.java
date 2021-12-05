@@ -1,4 +1,6 @@
-package pandorum.annotations;
+package pandorum.annotations.gamemodes;
+
+import pandorum.comp.Config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,4 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface RequirePvP {}
+public @interface RequireGamemode {
+    Config.Gamemode Gamemode();
+}

@@ -1,7 +1,7 @@
 package pandorum.commands.server;
 
 import arc.util.Log;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.commands.ServerCommand;
 import pandorum.discord.BotHandler;
 
 import static pandorum.Misc.sendToChat;

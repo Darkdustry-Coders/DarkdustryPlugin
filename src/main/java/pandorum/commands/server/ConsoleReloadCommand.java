@@ -2,7 +2,7 @@ package pandorum.commands.server;
 
 import arc.util.Log;
 import pandorum.PandorumPlugin;
-import pandorum.annotations.ServerCommand;
+import pandorum.annotations.commands.ServerCommand;
 import pandorum.comp.Config;
 import pandorum.discord.BotMain;
 

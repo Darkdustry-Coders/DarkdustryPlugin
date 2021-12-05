@@ -1,4 +1,4 @@
-package pandorum.annotations;
+package pandorum.annotations.commands;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
