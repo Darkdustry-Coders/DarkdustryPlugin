@@ -177,42 +177,42 @@ public abstract class Misc {
                                     .map(RequireGamemode::Gamemode).toArray(Config.Gamemode[]::new)
                     );
                 }
-
+                String skipMessage = "Skip command:" + method.getDeclaringClass().getPackageName() + "." + method.getDeclaringClass() + "." + method.getName();
                 if (hasRequiredGamemodes && hasDisabledGamemodes) {
-                    Log.info("Cannot disable and ban one gamemode");
+                    Log.info("Disable and require gamemodes. " + skipMessage);
                     return;
                 }
                 if (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode)) {
-                    Log.info("Not initialized command(command not reqiure this gamemode)");
+                    Log.info("Required gamemode is not match current gamemode. " + skipMessage);
                     return;
                 }
                 if (hasDisabledGamemodes && disabledGamemodes.contains(gamemode)) {
-                    Log.info("Not initialized command(gamemode is disabled for this command");
+                    Log.info("Current gamemode is disabled. " + skipMessage);
                     return;
                 }
                 
                 if (hasRequiredGamemodes && requireSimpleGamemode) {
-                    Log.info("Cannot require gamemode and reqire simple gamemode");
+                    Log.info("Require gamemode and require simple gamemode. " + skipMessage);
                     return;
                 }
                 
                 if (requireSimpleGamemode && !gamemode.isSimple) {
-                    Log.info("Not simple gamemode. Skip command");
+                    Log.info("Require simple gamemode and current gamemode is not simple. " + skipMessage);
                     return;
                 }
 
                 if (requirePvP && disablePvp) {
-                    Log.info("Require and diasble pvp");
+                    Log.info("Require and disable PvP. " + skipMessage);
                     return;
                 }
 
                 if (requirePvP && !gamemode.isPvP) {
-                    Log.info("Not pvp. Skip");
+                    Log.info("Require PvP and current gamemode is not PvP. " + skipMessage);
                     return;
                 }
 
                 if (disablePvp && gamemode.isPvP) {
-                    Log.info("Gamemode is pvp. Skip");
+                    Log.info("Disable PvP and current gamemode is PvP. " + skipMessage);
                     return;
                 }
 
