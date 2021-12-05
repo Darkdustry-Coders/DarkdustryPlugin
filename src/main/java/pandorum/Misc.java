@@ -134,13 +134,6 @@ public abstract class Misc {
         return methods;
     }
 
-    private static boolean CheckDisableGamemode(Method method, Config.Gamemode gamemode) {
-        if (method.isAnnotationPresent(DisableGamemode.class))
-            if (method.getAnnotation(DisableGamemode.class).Gamemode() == gamemode)
-                return true;
-        return false;
-    }
-
     public static Seq<Method> getCommandMethods(String basePackage, CommandType type, Config.Gamemode gamemode) {
         Seq<Method> methods = new Seq<>();
 
@@ -165,16 +158,19 @@ public abstract class Misc {
                 boolean requireSimpleGamemode = method.isAnnotationPresent(RequireSimpleGamemode.class);
                 boolean hasRequiredGamemodes = method.isAnnotationPresent(DisabledGamemodes.class);
                 boolean hasDisabledGamemodes = method.isAnnotationPresent(RequiredGamemodes.class);
+                boolean requirePvP = method.isAnnotationPresent(RequirePvP.class);
+                boolean disablePvp = method.isAnnotationPresent(DisablePvP.class);
+
                 if (hasRequiredGamemodes) {
                     disabledGamemodes = Seq.with(
                             Arrays.stream(method.getAnnotation(DisabledGamemodes.class).value())
-                                    .map(disableGamemodeAnnotation -> disableGamemodeAnnotation.Gamemode()).toArray(Config.Gamemode[]::new)
+                                    .map(DisableGamemode::Gamemode).toArray(Config.Gamemode[]::new)
                     );
                 }
                 if (hasDisabledGamemodes) {
                     disabledGamemodes = Seq.with(
                             Arrays.stream(method.getAnnotation(RequiredGamemodes.class).value())
-                                    .map(requireGamemodeAnnotation -> requireGamemodeAnnotation.Gamemode()).toArray(Config.Gamemode[]::new)
+                                    .map(RequireGamemode::Gamemode).toArray(Config.Gamemode[]::new)
                     );
                 }
 
@@ -198,6 +194,21 @@ public abstract class Misc {
                 
                 if (requireSimpleGamemode && !gamemode.isSimple) {
                     Log.info("Not simple gamemode. Skip command");
+                    return;
+                }
+
+                if (requirePvP && disablePvp) {
+                    Log.info("Require and diasble pvp");
+                    return;
+                }
+
+                if (requirePvP && !gamemode.isPvP) {
+                    Log.info("Not pvp. Skip");
+                    return;
+                }
+
+                if (disablePvp && gamemode.isPvP) {
+                    Log.info("Gamemode is pvp. Skip");
                     return;
                 }
 
