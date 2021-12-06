@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.files.Fi;
 import arc.struct.Seq;
+import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Structs;
@@ -9,6 +10,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import org.checkerframework.checker.units.qual.C;
 import pandorum.annotations.commands.ClientCommand;
 import pandorum.annotations.commands.ServerCommand;
 import pandorum.annotations.containers.DisabledGamemodes;
@@ -21,6 +23,7 @@ import pandorum.struct.CommandType;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -29,9 +32,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.zip.ZipFile;
 
-import static mindustry.Vars.maps;
-import static mindustry.Vars.saveExtension;
-import static mindustry.Vars.saveDirectory;
+import static mindustry.Vars.*;
 
 public abstract class Misc {
 
@@ -138,89 +139,125 @@ public abstract class Misc {
         return methods;
     }
 
-    public static Seq<Method> getCommandMethods(String basePackage, CommandType type, Config.Gamemode gamemode) {
-        Seq<Method> methods = new Seq<>();
+    public static Seq<CommandHandler.Command> getClientCommands(String basePackage, Config.Gamemode gamemode) {
+        Seq<CommandHandler.Command> commands = new Seq<>();
 
-        Class<?>[] requiredParams = switch (type) {
-            case Client -> new Class<?>[] { Player.class, String[].class };
-            case Server -> new Class<?>[] { String[].class };
-        };
+        Class<?>[] requiredParams = new Class<?>[] { String[].class, Player.class };
 
-        Class<? extends Annotation> annotation = switch (type) {
-            case Server -> ServerCommand.class;
-            case Client -> ClientCommand.class;
-        };
+        getAnnotatedMethods(basePackage, ClientCommand.class).each(
+                method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
+                method -> {
+                    Seq<Config.Gamemode> disabledGamemodes = new Seq<>();
+                    Seq<Config.Gamemode> reqiuredGamemodes = new Seq<>();
 
-        getAnnotatedMethods(basePackage, annotation).each(method -> {
-            if (
-                    Modifier.isStatic(method.getModifiers())
-                 && Arrays.equals(method.getParameterTypes(), requiredParams)
-            ) {
-                Seq<Config.Gamemode> disabledGamemodes = new Seq<>();
-                Seq<Config.Gamemode> reqiuredGamemodes = new Seq<>();
+                    boolean requireSimpleGamemode = method.isAnnotationPresent(RequireSimpleGamemode.class);
+                    boolean hasRequiredGamemodes = method.isAnnotationPresent(DisabledGamemodes.class);
+                    boolean hasDisabledGamemodes = method.isAnnotationPresent(RequiredGamemodes.class);
+                    boolean requirePvP = method.isAnnotationPresent(RequirePvP.class);
+                    boolean disablePvp = method.isAnnotationPresent(DisablePvP.class);
 
-                boolean requireSimpleGamemode = method.isAnnotationPresent(RequireSimpleGamemode.class);
-                boolean hasRequiredGamemodes = method.isAnnotationPresent(DisabledGamemodes.class);
-                boolean hasDisabledGamemodes = method.isAnnotationPresent(RequiredGamemodes.class);
-                boolean requirePvP = method.isAnnotationPresent(RequirePvP.class);
-                boolean disablePvp = method.isAnnotationPresent(DisablePvP.class);
+                    if (hasRequiredGamemodes) {
+                        disabledGamemodes = Seq.with(
+                                Arrays.stream(method.getAnnotation(DisabledGamemodes.class).value())
+                                        .map(DisableGamemode::Gamemode).toArray(Config.Gamemode[]::new)
+                        );
+                    }
 
-                if (hasRequiredGamemodes) {
-                    disabledGamemodes = Seq.with(
-                            Arrays.stream(method.getAnnotation(DisabledGamemodes.class).value())
-                                    .map(DisableGamemode::Gamemode).toArray(Config.Gamemode[]::new)
+                    if (hasDisabledGamemodes) {
+                        disabledGamemodes = Seq.with(
+                                Arrays.stream(method.getAnnotation(RequiredGamemodes.class).value())
+                                        .map(RequireGamemode::Gamemode).toArray(Config.Gamemode[]::new)
+                        );
+                    }
+
+                    String skipMessage = "Skip command:" + method.getDeclaringClass().getPackageName() + "." + method.getDeclaringClass() + "." + method.getName();
+
+                    if (hasRequiredGamemodes && hasDisabledGamemodes) {
+                        Log.info("Disable and require gamemodes. " + skipMessage);
+                        return;
+                    }
+
+                    if (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode)) {
+                        Log.info("Required gamemode is not match current gamemode. " + skipMessage);
+                        return;
+                    }
+
+                    if (hasDisabledGamemodes && disabledGamemodes.contains(gamemode)) {
+                        Log.info("Current gamemode is disabled. " + skipMessage);
+                        return;
+                    }
+
+                    if (hasRequiredGamemodes && requireSimpleGamemode) {
+                        Log.info("Require gamemode and require simple gamemode. " + skipMessage);
+                        return;
+                    }
+
+                    if (requireSimpleGamemode && !gamemode.isSimple) {
+                        Log.info("Require simple gamemode and current gamemode is not simple. " + skipMessage);
+                        return;
+                    }
+
+                    if (requirePvP && disablePvp) {
+                        Log.info("Require and disable PvP. " + skipMessage);
+                        return;
+                    }
+                    if (requirePvP && !gamemode.isPvP) {
+                        Log.info("Require PvP and current gamemode is not PvP. " + skipMessage);
+                        return;
+                    }
+
+                    if (disablePvp && gamemode.isPvP) {
+                        Log.info("Disable PvP and current gamemode is PvP. " + skipMessage);
+                        return;
+                    }
+
+                    ClientCommand commandAnnotaion = method.getAnnotation(ClientCommand.class);
+
+                    commands.add(
+                            new CommandHandler.Command(
+                                    commandAnnotaion.name(),
+                                    commandAnnotaion.args(),
+                                    commandAnnotaion.description(),
+                                    (CommandHandler.CommandRunner<Player>)((String[] args, Player player) -> {
+                                        if (commandAnnotaion.admin() && !player.admin) return;
+                                        try {
+                                            method.invoke(null, player, args);
+                                        } catch (Exception e) {}
+                                    })
+                            )
                     );
                 }
-                if (hasDisabledGamemodes) {
-                    disabledGamemodes = Seq.with(
-                            Arrays.stream(method.getAnnotation(RequiredGamemodes.class).value())
-                                    .map(RequireGamemode::Gamemode).toArray(Config.Gamemode[]::new)
+        );
+
+        return commands;
+    }
+
+    public static Seq<CommandHandler.Command> getServerCommands(String basePackage) {
+        Seq<CommandHandler.Command> commands = new Seq<>();
+
+        Class<?>[] requiredParams = new Class<?>[] { String[].class };
+
+        getAnnotatedMethods(basePackage, ServerCommand.class).each(
+                method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
+                method -> {
+                    ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
+                    Log.info("METHOD");
+                    commands.add(
+
+                            new CommandHandler.Command(
+                                    commandAnnotation.name(),
+                                    commandAnnotation.args(),
+                                    commandAnnotation.description(),
+                                    (args, p) -> {
+                                        try {
+                                            method.invoke(null, (Object) args);
+                                        } catch (Exception e) {}
+                                    }
+                            )
                     );
                 }
-                String skipMessage = "Skip command:" + method.getDeclaringClass().getPackageName() + "." + method.getDeclaringClass() + "." + method.getName();
-                if (hasRequiredGamemodes && hasDisabledGamemodes) {
-                    Log.info("Disable and require gamemodes. " + skipMessage);
-                    return;
-                }
-                if (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode)) {
-                    Log.info("Required gamemode is not match current gamemode. " + skipMessage);
-                    return;
-                }
-                if (hasDisabledGamemodes && disabledGamemodes.contains(gamemode)) {
-                    Log.info("Current gamemode is disabled. " + skipMessage);
-                    return;
-                }
-                
-                if (hasRequiredGamemodes && requireSimpleGamemode) {
-                    Log.info("Require gamemode and require simple gamemode. " + skipMessage);
-                    return;
-                }
-                
-                if (requireSimpleGamemode && !gamemode.isSimple) {
-                    Log.info("Require simple gamemode and current gamemode is not simple. " + skipMessage);
-                    return;
-                }
+        );
 
-                if (requirePvP && disablePvp) {
-                    Log.info("Require and disable PvP. " + skipMessage);
-                    return;
-                }
-
-                if (requirePvP && !gamemode.isPvP) {
-                    Log.info("Require PvP and current gamemode is not PvP. " + skipMessage);
-                    return;
-                }
-
-                if (disablePvp && gamemode.isPvP) {
-                    Log.info("Disable PvP and current gamemode is PvP. " + skipMessage);
-                    return;
-                }
-
-                methods.add(method);
-            } else
-                Log.info("Annotated method " + method.getName() + " is not static or it has invalid parameters");
-        });
-
-        return methods;
+        return commands;
     }
 }
