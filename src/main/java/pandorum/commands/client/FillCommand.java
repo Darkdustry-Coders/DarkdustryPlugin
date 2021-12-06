@@ -6,15 +6,19 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
 import pandorum.Misc;
+import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.gamemodes.RequireGamemode;
+import pandorum.comp.Config;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 
 public class FillCommand {
-
     private static final int maxSize = 25;
 
+    @RequireGamemode(Gamemode = Config.Gamemode.sandbox)
+    @ClientCommand(name = "fill", args = "<width> <height> <block_1> [block_2]", description = "Fill an area with some floor.", admin = true)
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

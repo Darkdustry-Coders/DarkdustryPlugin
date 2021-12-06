@@ -5,10 +5,14 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import pandorum.Misc;
+import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.gamemodes.RequireSimpleGamemode;
 
 import static pandorum.Misc.bundled;
 
 public class CoreCommand {
+    @RequireSimpleGamemode
+    @ClientCommand(name = "core", args = "[small/medium/big]", description = "Spwn a core.", admin = true)
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 
