@@ -21,22 +21,19 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import org.bson.Document;
-import pandorum.annotations.commands.ServerCommand;
 import pandorum.commands.client.*;
-import pandorum.commands.server.*;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
-import pandorum.comp.Loader;
 import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
-import pandorum.struct.CommandType;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
 import java.io.IOException;
 
+import static mindustry.Vars.clientLoaded;
 import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
@@ -99,36 +96,26 @@ public final class PandorumPlugin extends Plugin {
 
     @Override
     public void init() {
-        Misc.getServerCommands("pandorum.commands.server").each(command ->
-            Log.info("Command with" +
-                    " name " + command.text + "," +
-                    " args " + command.paramText + "," +
-                    " desc " + command.description
-            )
-        );
         //Loader.init();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
+        Log.info("Server commands default length " + handler.getCommandList().size);
         handler.removeCommand("exit");
         handler.removeCommand("say");
         handler.removeCommand("kick");
         handler.removeCommand("pardon");
 
-        handler.register("reload-config", "Reload the configuration file.", ConsoleReloadCommand::run);
-        handler.register("despw", "Kill all units.", ConsoleDespawnCommand::run);
-        handler.register("rr", "Restart the server.", ConsoleRestartCommand::run);
-        handler.register("exit", "Shut down the server.", ConsoleExitCommand::run);
-        handler.register("say", "<message...>", "Send a message as a server..", ConsoleSayCommand::run);
-        handler.register("kick", "<player...>", "Kick a player from the server.", ConsoleKickCommand::run);
-        handler.register("pardon", "<uuid...>", "Pardon a kicked player.", ConsolePardonCommand::run);
-        handler.register("ban", "<ip/name/id> <ip/username/uuid...>", "Ban a player by ip, name or uuid.", ConsoleBanCommand::run);
-        handler.register("unban", "<ip/all/uuid>", "Unban a player by ip or uuid.", ConsoleUnbanCommand::run);
+        Misc.handleServerCommands(handler, "pandorum.commands.server");
+
+        Log.info("Server commands " + handler.getCommandList().size);
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
+        Log.info("Client commands default length " + handler.getCommandList().size);
+
         handler.removeCommand("a");
         handler.removeCommand("t");
         handler.removeCommand("help");
@@ -136,52 +123,8 @@ public final class PandorumPlugin extends Plugin {
         handler.removeCommand("vote");
         handler.removeCommand("sync");
 
-        handler.register("help", "[page]", "List of all commands.", HelpCommand::run);
-        handler.register("discord", "Get a link to our Discord server.", DiscordLinkCommand::run);
-        handler.register("a", "<message...>", "Send message to admins.", AdminChatCommand::run);
-        handler.register("t", "<message...>", "Send message to teammates", TeamChatCommand::run);
-        handler.register("votekick", "<player...>", "Start a voting to kick a player.", VoteKickCommand::run);
-        handler.register("vote", "<y/n>", "Vote to kick a player.", VoteCommand::run);
-        handler.register("sync", "Re-synchronize world state.", SyncCommand::run);
-        handler.register("tr", "<off/auto/current/locale>", "Manage chat translator.", TranslatorCommand::run);
-        handler.register("info", "[player...]", "See some info about a player.", InfoCommand::run);
-        handler.register("rank", "See information about your rank.", RankCommand::run);
-        handler.register("players", "[page]", "List of all players.", PlayerListCommand::run);
+        Misc.handleClientCommands(handler, "pandorum.commands.client", config.mode);
 
-        handler.register("ban", "<uuid...>", "Ban a player.", BanCommand::run);
-        handler.register("unban", "<uuid...>", "Unban a player.", UnbanCommand::run);
-        handler.register("despw", "Kill units.", DespawnCommand::run);
-        handler.register("unit", "<unit> [player...]", "Change a unit.", UnitCommand::run);
-        handler.register("login", "Send confirmation to get admin.", LoginCommand::run);
-
-        if (config.mode.isSimple) {
-            handler.register("rtv", "Vote to skip the map.", RTVCommand::run);
-
-            if (!config.mode.isPvP) handler.register("vnw", "Vote to skip a wave.", VNWCommand::run);
-            else handler.register("surrender", "Vote to surrender.", SurrenderCommand::run);
-
-            handler.register("history", "Enable tile inspector.", HistoryCommand::run);
-            handler.register("alert", "Enable/disable alerts.", AlertCommand::run);
-            handler.register("map", "Information about current map.",  MapCommand::run);
-            handler.register("maps", "[page]", "List of all maps.", MapsListCommand::run);
-            handler.register("saves", "[page]", "List of all saves.", SavesListCommand::run);
-            handler.register("nominate", "<map/save/load> <name...>", "Vote for load a save/map.", NominateCommand::run);
-            handler.register("voting", "<y/n>", "Vote «yes» or «no».", VotingCommand::run);
-
-            handler.register("spawn", "<unit> [count] [team]", "Spawn units.", SpawnCommand::run);
-            handler.register("artv", "Force a gameover.", ARTVCommand::run);
-            handler.register("core", "[small/medium/big]", "Spawn a core.", CoreCommand::run);
-            handler.register("give", "<item> [count]", "Add items to the core.", GiveCommand::run);
-            handler.register("team", "<team> [player...]", "Change team.", TeamCommand::run);
-            handler.register("spectate", "Spectator mode.", SpectateCommand::run);
-
-            if (config.mode == Config.Gamemode.sandbox) {
-                handler.register("fill", "<width> <height> <block_1> [block_2]", "Fill an area with some floor.", FillCommand::run);
-            }
-        }
-
-        if (config.mode != Config.Gamemode.hub) {
-            handler.register("hub", "Connect to HUB.", HubCommand::run);
-        }
+        Log.info("Client commands " + handler.getCommandList().size);
     }
 }
