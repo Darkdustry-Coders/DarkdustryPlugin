@@ -5,12 +5,14 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Player;
+import pandorum.annotations.commands.ClientCommand;
 import pandorum.comp.Bundle;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
 public class PlayerListCommand {
+    @ClientCommand(name = "players", args = "[page]", description = "List of all players.", admin = false)
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

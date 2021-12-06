@@ -1,11 +1,13 @@
 package pandorum.commands.client;
 
 import mindustry.gen.Player;
+import pandorum.annotations.commands.ClientCommand;
 
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.currentlyKicking;
 
 public class VoteCommand {
+    @ClientCommand(name = "vote", args = "<y/n>", description = "Vote to kick a player.", admin = false)
     public static void run(final String[] args, final Player player) {
         if (currentlyKicking[0] == null) {
             bundled(player, "commands.no-voting");

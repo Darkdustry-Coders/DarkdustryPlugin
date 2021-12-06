@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import mindustry.gen.Player;
+import pandorum.annotations.commands.ClientCommand;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;
@@ -12,6 +13,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
 public class HelpCommand {
+    @ClientCommand(name = "help", args = "[page]", description = "List of all commands.", admin = false)
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

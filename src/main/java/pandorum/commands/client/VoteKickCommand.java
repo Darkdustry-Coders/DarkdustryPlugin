@@ -4,6 +4,7 @@ import arc.util.Timekeeper;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
+import pandorum.annotations.commands.ClientCommand;
 import pandorum.vote.VoteKickSession;
 
 import static pandorum.Misc.bundled;
@@ -14,7 +15,7 @@ import static pandorum.PandorumPlugin.votekickCooldowns;
 public class VoteKickCommand {
 
     private static final float cooldownTime = 300f;
-
+    @ClientCommand(name = "votekick", args = "<player...>", description = "Start a voting to kick a player.", admin = false)
     public static void run(final String[] args, final Player player) {
         if (!Administration.Config.enableVotekick.bool()) {
             bundled(player, "commands.votekick.disabled");
