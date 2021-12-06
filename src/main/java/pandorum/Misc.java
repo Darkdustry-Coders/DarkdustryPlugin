@@ -11,6 +11,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.OverrideCommand;
 import pandorum.annotations.commands.ServerCommand;
 import pandorum.annotations.containers.DisabledGamemodes;
 import pandorum.annotations.containers.RequiredGamemodes;
@@ -206,14 +207,18 @@ public abstract class Misc {
                         return;
                     }
 
-                    ClientCommand commandAnnotaion = method.getAnnotation(ClientCommand.class);
+                    ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
+
+                    if (method.isAnnotationPresent(OverrideCommand.class))
+                        if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                            handler.removeCommand(commandAnnotation.name());
 
                     handler.register(
-                                    commandAnnotaion.name(),
-                                    commandAnnotaion.args(),
-                                    commandAnnotaion.description(),
+                                    commandAnnotation.name(),
+                                    commandAnnotation.args(),
+                                    commandAnnotation.description(),
                                     (String[] args, Player player) -> {
-                                        if (commandAnnotaion.admin() && !player.admin) return;
+                                        if (commandAnnotation.admin() && !player.admin) return;
                                         try {
                                             method.invoke(null, player, args);
                                         } catch (Exception e) {}
@@ -229,6 +234,11 @@ public abstract class Misc {
                 method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
                 method -> {
                     ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
+
+                    if (method.isAnnotationPresent(OverrideCommand.class))
+                        if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                            handler.removeCommand(commandAnnotation.name());
+
                     handler.register(
                                     commandAnnotation.name(),
                                     commandAnnotation.args(),
