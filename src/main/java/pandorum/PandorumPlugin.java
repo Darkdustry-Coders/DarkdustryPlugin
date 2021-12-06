@@ -45,13 +45,17 @@ public final class PandorumPlugin extends Plugin {
             .serializeNulls()
             .disableHtmlEscaping()
             .create();
+
     public static final VoteSession[] current = {null};
     public static final VoteKickSession[] currentlyKicking = {null};
+
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
+
     public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
+
     public static final Interval interval = new Interval(3);
-    public static String discordServerLink = "https://dsc.gg/darkdustry";
+
     public static Config config;
     public static CacheSeq<HistoryEntry>[][] history;
 
@@ -63,6 +67,8 @@ public final class PandorumPlugin extends Plugin {
 
     public static Translator translator;
     public static AntiVPN antiVPN;
+
+    public static String discordServerLink = "https://dsc.gg/darkdustry";
 
     public PandorumPlugin() throws IOException {
         Fi file = dataDirectory.child("config.json");

@@ -43,8 +43,7 @@ public class BotHandler {
         registerCommands();
 
         handler.setPrefix(PandorumPlugin.config.prefix);
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {
-        }), 0f, 12f);
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
     }
 
     public static void registerChannels() {
@@ -103,8 +102,7 @@ public class BotHandler {
             }
 
             try {
-                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {
-                });
+                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {});
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
@@ -228,8 +226,7 @@ public class BotHandler {
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {
-        });
+        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
     }
 
     public static void info(MessageChannel channel, String title, String text, Object... args) {
@@ -245,8 +242,7 @@ public class BotHandler {
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).subscribe(null, e -> {
-        });
+        channel.createMessage(embed).subscribe(null, e -> {});
     }
 
     public static InputStream download(String url) {

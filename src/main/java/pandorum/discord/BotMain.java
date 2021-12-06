@@ -51,8 +51,7 @@ public class BotMain {
                     Misc.sendToChat("events.discord.chat", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                     Log.info("[Discord] @: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                 }
-            }, e -> {
-            });
+            }, e -> {});
 
             client.on(ButtonInteractionEvent.class).subscribe(event -> {
                 Message msg = event.getMessage().get();
@@ -71,15 +70,13 @@ public class BotMain {
                     Authme.loginWaiting.remove(msg);
                     msg.delete().block();
                 }
-            }, e -> {
-            });
+            }, e -> {});
 
             BotHandler.init();
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
-            Log.err(e);
-            System.exit(2);
+            throw new RuntimeException(e);
         }
     }
 }

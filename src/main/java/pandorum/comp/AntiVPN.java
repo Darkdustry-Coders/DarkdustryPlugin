@@ -11,10 +11,10 @@ import java.util.Objects;
 import java.util.Set;
 
 public class AntiVPN {
-    private static final String API_VERSION = "v2";
     private final ObjectMap<String, Boolean> cache;
     private final String token;
     private final OkHttpClient client;
+
     private final Request.Builder requestBuilder = new Request.Builder()
             .addHeader("accept", "application/json");
 
@@ -33,7 +33,7 @@ public class AntiVPN {
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("https")
                 .host("proxycheck.io")
-                .addPathSegment(API_VERSION)
+                .addPathSegment("v2")
                 .addPathSegment(ip)
                 .addQueryParameter("key", token)
                 .addQueryParameter("risk", "1")

@@ -12,6 +12,8 @@ import java.util.Objects;
 
 public class Translator {
     public static final StringMap codeLanguages = new StringMap();
+    private final OkHttpClient client;
+
     private final Request.Builder requestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
@@ -23,7 +25,6 @@ public class Translator {
             .addHeader("sec-fetch-dest", "empty")
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
-    private final OkHttpClient client;
 
     public Translator() throws IOException {
         this.client = new OkHttpClient();
