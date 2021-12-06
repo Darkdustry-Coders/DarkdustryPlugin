@@ -135,7 +135,7 @@ public class ConnectPacketHandler {
         try {
             PandorumPlugin.writeBuffer.reset();
             player.write(PandorumPlugin.outputBuffer);
-        } catch(Exception e) {
+        } catch (Exception e) {
             con.kick(KickReason.nameEmpty);
             return;
         }
@@ -188,7 +188,7 @@ public class ConnectPacketHandler {
                     try {
                         Color result = Color.valueOf(color);
                         if (result.a <= 0.8f) return str.substring(i + 1);
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         return str;
                     }
                 }

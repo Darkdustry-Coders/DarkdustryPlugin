@@ -28,7 +28,7 @@ public class VoteCommand {
         }
 
         int sign = switch (args[0].toLowerCase()) {
-            case "y", "yes", "+", "да" ->  1;
+            case "y", "yes", "+", "да" -> 1;
             case "n", "no", "-", "нет" -> -1;
             default -> 0;
         };

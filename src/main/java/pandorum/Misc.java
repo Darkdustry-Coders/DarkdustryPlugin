@@ -18,13 +18,12 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
-import static mindustry.Vars.maps;
-import static mindustry.Vars.saveExtension;
-import static mindustry.Vars.saveDirectory;
+import static mindustry.Vars.*;
 
 public abstract class Misc {
 
-    private Misc() {}
+    private Misc() {
+    }
 
     public static String colorizedTeam(Team team) {
         return Strings.format("[white]@[#@]@", Icons.get(team.name), team.color, team.name);

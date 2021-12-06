@@ -22,38 +22,6 @@ public class Ranks {
 
     private static final Seq<Rank> ranks = Seq.with(player, active, activePlus, veteran, admin);
 
-    public static class Rank {
-        public String tag;
-        public String name;
-        public int id;
-        public @Nullable Rank next;
-        public @Nullable Requirements req;
-
-        public Rank(String tag, String name, int id, Requirements req, Rank next) {
-            this.name = name;
-            this.tag = tag;
-            this.id = id;
-            this.req = req;
-            this.next = next;
-        }
-    }
-
-    public static class Requirements {
-        public long playtime;
-        public int buildingsBuilt;
-        public int gamesPlayed;
-
-        public Requirements(long playtime, int buildingsBuilt, int gamesPlayed) {
-            this.playtime = playtime;
-            this.buildingsBuilt = buildingsBuilt;
-            this.gamesPlayed = gamesPlayed;
-        }
-
-        public boolean check(long time, int built, int games) {
-            return time >= playtime && built >= buildingsBuilt && games >= gamesPlayed;
-        }
-    }
-
     public static Rank get(int index) {
         return ranks.get(index);
     }
@@ -93,5 +61,39 @@ public class Ranks {
         }
 
         updateRank(player, rank -> player.name(Strings.format("@[#@]@", rank.tag, player.color.toString().toUpperCase(), player.getInfo().lastName)));
+    }
+
+    public static class Rank {
+        public String tag;
+        public String name;
+        public int id;
+        public @Nullable
+        Rank next;
+        public @Nullable
+        Requirements req;
+
+        public Rank(String tag, String name, int id, Requirements req, Rank next) {
+            this.name = name;
+            this.tag = tag;
+            this.id = id;
+            this.req = req;
+            this.next = next;
+        }
+    }
+
+    public static class Requirements {
+        public long playtime;
+        public int buildingsBuilt;
+        public int gamesPlayed;
+
+        public Requirements(long playtime, int buildingsBuilt, int gamesPlayed) {
+            this.playtime = playtime;
+            this.buildingsBuilt = buildingsBuilt;
+            this.gamesPlayed = gamesPlayed;
+        }
+
+        public boolean check(long time, int built, int games) {
+            return time >= playtime && built >= buildingsBuilt && games >= gamesPlayed;
+        }
     }
 }

@@ -2,11 +2,7 @@ package pandorum.struct;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Iterator;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Collections;
+import java.util.*;
 
 public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     @Serial
@@ -53,7 +49,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple2<?, ?> tuple2 = (Tuple2<?, ?>)o;
+        Tuple2<?, ?> tuple2 = (Tuple2<?, ?>) o;
         return t1.equals(tuple2.t1) && t2.equals(tuple2.t2);
     }
 

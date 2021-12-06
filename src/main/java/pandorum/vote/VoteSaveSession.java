@@ -22,7 +22,7 @@ public class VoteSaveSession extends VoteSession {
     @Override
     protected Task start() {
         return Timer.schedule(() -> {
-            if (!checkPass()){
+            if (!checkPass()) {
                 sendToChat("commands.nominate.save.failed", target);
                 stop();
             }

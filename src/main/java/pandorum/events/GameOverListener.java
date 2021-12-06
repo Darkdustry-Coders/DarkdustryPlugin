@@ -6,8 +6,6 @@ import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.models.PlayerModel;
 
-import static mindustry.Vars.state;
-
 public class GameOverListener {
     public static void call(final EventType.GameOverEvent event) {
         Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {

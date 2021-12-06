@@ -39,25 +39,20 @@ import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static String discordServerLink = "https://dsc.gg/darkdustry";
-
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
             .setPrettyPrinting()
             .serializeNulls()
             .disableHtmlEscaping()
             .create();
-
     public static final VoteSession[] current = {null};
     public static final VoteKickSession[] currentlyKicking = {null};
-    public static Config config;
-
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
-
     public static final ObjectMap<Team, Seq<String>> surrendered = new ObjectMap<>();
     public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
-
     public static final Interval interval = new Interval(3);
+    public static String discordServerLink = "https://dsc.gg/darkdustry";
+    public static Config config;
     public static CacheSeq<HistoryEntry>[][] history;
 
     public static MongoClient mongoClient;
@@ -153,7 +148,7 @@ public final class PandorumPlugin extends Plugin {
 
             handler.register("history", "Enable tile inspector.", HistoryCommand::run);
             handler.register("alert", "Enable/disable alerts.", AlertCommand::run);
-            handler.register("map", "Information about current map.",  MapCommand::run);
+            handler.register("map", "Information about current map.", MapCommand::run);
             handler.register("maps", "[page]", "List of all maps.", MapsListCommand::run);
             handler.register("saves", "[page]", "List of all saves.", SavesListCommand::run);
             handler.register("nominate", "<map/save/load> <name...>", "Vote for load a save/map.", NominateCommand::run);

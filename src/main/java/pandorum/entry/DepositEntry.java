@@ -9,8 +9,8 @@ import pandorum.comp.Icons;
 
 import java.util.Date;
 
-import static pandorum.Misc.formatTime;
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.formatTime;
 
 public class DepositEntry implements HistoryEntry {
     public final String name;

@@ -22,12 +22,11 @@ import pandorum.comp.Authme;
 import java.util.Objects;
 
 public class BotMain {
-    public static DiscordClient bot;
-    public static GatewayDiscordClient client;
-
     public static final Color normalColor = Color.ORANGE;
     public static final Color successColor = Color.GREEN;
     public static final Color errorColor = Color.RED;
+    public static DiscordClient bot;
+    public static GatewayDiscordClient client;
 
     public static void start() {
         try {
@@ -52,7 +51,8 @@ public class BotMain {
                     Misc.sendToChat("events.discord.chat", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                     Log.info("[Discord] @: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                 }
-            }, e -> {});
+            }, e -> {
+            });
 
             client.on(ButtonInteractionEvent.class).subscribe(event -> {
                 Message msg = event.getMessage().get();
@@ -71,11 +71,12 @@ public class BotMain {
                     Authme.loginWaiting.remove(msg);
                     msg.delete().block();
                 }
-            }, e -> {});
+            }, e -> {
+            });
 
             BotHandler.init();
             Log.info("[Darkdustry] Бот успешно запущен...");
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
             Log.err(e);
             System.exit(2);

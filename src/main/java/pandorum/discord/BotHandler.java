@@ -31,9 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
 
-import static mindustry.Vars.customMapDirectory;
-import static mindustry.Vars.state;
-import static mindustry.Vars.maps;
+import static mindustry.Vars.*;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
@@ -45,7 +43,8 @@ public class BotHandler {
         registerCommands();
 
         handler.setPrefix(PandorumPlugin.config.prefix);
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {
+        }), 0f, 12f);
     }
 
     public static void registerChannels() {
@@ -104,7 +103,8 @@ public class BotHandler {
             }
 
             try {
-                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {});
+                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {
+                });
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
@@ -168,7 +168,7 @@ public class BotHandler {
             sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
         });
 
-        handler.<Message>register("status","Узнать статус сервера.", (args, msg) -> {
+        handler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
             if (state.isMenu()) {
                 err(msg.getChannel().block(), "Сервер отключен.", "Попросите администратора запустить его.");
                 return;
@@ -228,7 +228,8 @@ public class BotHandler {
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
+        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {
+        });
     }
 
     public static void info(MessageChannel channel, String title, String text, Object... args) {
@@ -244,7 +245,8 @@ public class BotHandler {
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).subscribe(null, e -> {});
+        channel.createMessage(embed).subscribe(null, e -> {
+        });
     }
 
     public static InputStream download(String url) {
@@ -252,7 +254,7 @@ public class BotHandler {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
             return connection.getInputStream();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

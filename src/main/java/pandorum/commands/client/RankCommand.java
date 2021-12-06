@@ -5,8 +5,8 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
-import pandorum.models.PlayerModel;
 import pandorum.comp.Ranks.Rank;
+import pandorum.models.PlayerModel;
 
 import java.util.concurrent.TimeUnit;
 

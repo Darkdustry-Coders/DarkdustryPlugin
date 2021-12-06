@@ -11,11 +11,10 @@ import java.util.Objects;
 import java.util.Set;
 
 public class AntiVPN {
+    private static final String API_VERSION = "v2";
     private final ObjectMap<String, Boolean> cache;
     private final String token;
     private final OkHttpClient client;
-    private static final String API_VERSION = "v2";
-
     private final Request.Builder requestBuilder = new Request.Builder()
             .addHeader("accept", "application/json");
 

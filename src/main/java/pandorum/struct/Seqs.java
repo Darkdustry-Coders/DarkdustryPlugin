@@ -15,7 +15,8 @@ public abstract class Seqs {
 
     public static final Queue<?> EMPTY_QUEUE = new EmptyQueue<>();
 
-    private Seqs() {}
+    private Seqs() {
+    }
 
     static void requireArgument(boolean expression, String template, @Nullable Object... args) {
         if (!expression) {
@@ -68,7 +69,7 @@ public abstract class Seqs {
         }
     }
 
-    private static class EmptyQueue<T> extends Queue<T>{
+    private static class EmptyQueue<T> extends Queue<T> {
 
         @Override
         public void add(T object) {
@@ -145,7 +146,8 @@ public abstract class Seqs {
         protected long expireAfterWriteNanos = UNSET_INT;
         protected int maximumSize = UNSET_INT;
 
-        private SeqBuilder() {}
+        private SeqBuilder() {
+        }
 
         public SeqBuilder<T> maximumSize(int maximumSize) {
             requireArgument(maximumSize >= 0, "Maximum size must not be negative.");
@@ -166,7 +168,7 @@ public abstract class Seqs {
         private long toNanosSaturated(Duration duration) {
             try {
                 return duration.toNanos();
-            } catch(ArithmeticException tooBig) {
+            } catch (ArithmeticException tooBig) {
                 return duration.isNegative() ? Long.MIN_VALUE : Long.MAX_VALUE;
             }
         }

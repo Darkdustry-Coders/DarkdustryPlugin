@@ -1,9 +1,10 @@
 package pandorum.database;
 
+import org.bson.types.Symbol;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import org.bson.types.Symbol;
 
 public class DataChanges {
     public static Symbol undefined = new Symbol("undefined");
@@ -24,11 +25,11 @@ public class DataChanges {
         keys.addAll(second.keySet());
 
         keys.forEach(key -> {
-            Object firstValue = first.containsKey(key) ? first.get(key): undefined;
+            Object firstValue = first.containsKey(key) ? first.get(key) : undefined;
             Object secondValue = second.containsKey(key) ? second.get(key) : undefined;
-            
+
             if (firstValue == secondValue) return;
-            
+
             changes.put(key, new DataChanges(firstValue, secondValue));
         });
 

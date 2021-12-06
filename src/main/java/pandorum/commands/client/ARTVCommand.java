@@ -15,7 +15,7 @@ public class ARTVCommand {
                 MenuHandler.artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
                 Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),
-                new String[][] {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}}
+                new String[][]{{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}}
         );
     }
 }

@@ -62,7 +62,7 @@ public class VoteLoadSession extends VoteSession {
                 public void run() {
                     try {
                         r.run();
-                    } catch(MapException e) {
+                    } catch (MapException e) {
                         Log.err(e);
                         net.closeServer();
                     }

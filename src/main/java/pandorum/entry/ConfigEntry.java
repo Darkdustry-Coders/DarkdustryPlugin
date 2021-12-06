@@ -58,7 +58,7 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     @Override
-    public String getMessage(Player player){
+    public String getMessage(Player player) {
         String ftime = Misc.formatTime(time);
         Locale locale = findLocale(player.locale);
 
@@ -88,7 +88,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof CommandCenter) {
             String[] commands = Bundle.format("history.config.command-center.all", locale).split(", ");
-            return Bundle.format("history.config.command-center", locale, name, commands[((UnitCommand)value).ordinal()], ftime);
+            return Bundle.format("history.config.command-center", locale, name, commands[((UnitCommand) value).ordinal()], ftime);
         }
 
         if (block instanceof MessageBlock) {

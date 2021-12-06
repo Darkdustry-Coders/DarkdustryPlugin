@@ -11,12 +11,11 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
 public class RotateEntry implements HistoryEntry {
+    public static final String[] sides = {"\uE803", "\uE804", "\uE802", "\uE805"};
     public final String name;
     public final Block block;
     public final int rotation;
     public final Date time;
-    
-    public static final String[] sides = {"\uE803", "\uE804", "\uE802", "\uE805"};
 
     public RotateEntry(PlayerAction action) {
         this.name = action.player.coloredName();

@@ -15,14 +15,9 @@ import java.util.ResourceBundle;
 
 public class Bundle {
 
+    public static final Locale[] supportedLocales;
     private static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
-
-    public static final Locale[] supportedLocales;
-
-    public static Locale defaultLocale() {
-        return Structs.find(supportedLocales, l -> l.toString().equals("en"));
-    }
 
     static {
         Fi[] files = Vars.mods.list().find(mod -> mod.main instanceof PandorumPlugin).root.child("bundles").list();
@@ -41,7 +36,12 @@ public class Bundle {
         }
     }
 
-    private Bundle() {}
+    private Bundle() {
+    }
+
+    public static Locale defaultLocale() {
+        return Structs.find(supportedLocales, l -> l.toString().equals("en"));
+    }
 
     public static String get(String key, Locale locale) {
         return get(key, locale, key);
