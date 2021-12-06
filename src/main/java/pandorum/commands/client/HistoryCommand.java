@@ -1,11 +1,15 @@
 package pandorum.commands.client;
 
 import mindustry.gen.Player;
+import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.gamemodes.RequireSimpleGamemode;
 
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.activeHistoryPlayers;
 
 public class HistoryCommand {
+    @RequireSimpleGamemode
+    @ClientCommand(name = "history", args = "", description = "Enable tile inspector.", admin = false)
     public static void run(final String[] args, final Player player) {
         if (activeHistoryPlayers.contains(player.uuid())) {
             activeHistoryPlayers.remove(player.uuid());

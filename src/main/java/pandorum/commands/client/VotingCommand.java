@@ -1,11 +1,15 @@
 package pandorum.commands.client;
 
 import mindustry.gen.Player;
+import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.gamemodes.RequireSimpleGamemode;
 
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.current;
 
 public class VotingCommand {
+    @RequireSimpleGamemode
+    @ClientCommand(name = "voting", args = "<y/n>", description = "Vote «yes» or «no».", admin = false)
     public static void run(final String[] args, final Player player) {
         if (current[0] == null) {
             bundled(player, "commands.no-voting");
