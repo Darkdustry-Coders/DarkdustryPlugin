@@ -21,6 +21,7 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
 import mindustry.mod.Plugin;
 import org.bson.Document;
+import pandorum.annotations.commands.ServerCommand;
 import pandorum.commands.client.*;
 import pandorum.commands.server.*;
 import pandorum.comp.AntiVPN;
@@ -30,6 +31,7 @@ import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 import pandorum.struct.CacheSeq;
+import pandorum.struct.CommandType;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
@@ -97,7 +99,14 @@ public final class PandorumPlugin extends Plugin {
 
     @Override
     public void init() {
-        Loader.init();
+        Misc.getServerCommands("pandorum.commands.server").each(command ->
+            Log.info("Command with" +
+                    " name " + command.text + "," +
+                    " args " + command.paramText + "," +
+                    " desc " + command.description
+            )
+        );
+        //Loader.init();
     }
 
     @Override
