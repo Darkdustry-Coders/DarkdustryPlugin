@@ -137,7 +137,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof PayloadSource) {
             if (value instanceof Block buildPlan) {
-                return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
+                return Bundle.format("history.config", locale, name, block.name, buildPlan.name, ftime);
             } else if (value instanceof UnitType buildPlan) {
                 return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
             }
