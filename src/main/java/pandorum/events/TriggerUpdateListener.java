@@ -17,9 +17,5 @@ public class TriggerUpdateListener {
                 playerInfo.save();
             }));
         }
-
-        if (PandorumPlugin.interval.get(2, 300f)) {
-            Groups.player.each(Ranks::updateName);
-        }
     }
 }
