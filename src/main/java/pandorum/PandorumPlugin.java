@@ -89,7 +89,7 @@ public final class PandorumPlugin extends Plugin {
 
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("darkdustry");
-        playersInfoCollection = database.getCollection("playersinfo");
+        playersInfoCollection = database.getCollection("players");
 
         PlayerModel.setSourceCollection(playersInfoCollection);
 
