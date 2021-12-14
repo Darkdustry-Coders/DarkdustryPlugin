@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.Vars;
 import pandorum.struct.Tuple2;
@@ -14,6 +15,9 @@ public class Config {
     /** Время, через которое запись в истории тайла будет удалена. По умолчанию 30 минут. Записывается в миллисекундах */
     public long expireDelay = 1800000L;
 
+    /** Расстояние до ядер, в котором отслеживаются ториевые реакторы. */
+    public int alertsDistance = 120;
+
     /** Время голосования через /nominate. В секундах */
     public float voteDuration = 150f;
 
@@ -24,22 +28,25 @@ public class Config {
     public long kickDuration = 2700000L;
 
     /** IP адрес хаба. */
-    public String hubIp = "darkdustry.ml:6567";
+    public String hubIp = "darkdustry.ml";
 
-    /** Режим игры на этом сервере. Влияет на доступные команды и не только */
+    /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
 
     /** Токен бота, привязанного к серверу. Если его не указать, сервер не запустится! */
-    public String DiscordBotToken = "token";
+    public String discordBotToken = "token";
 
     /** ID канала в Discord, куда отправляются все сообщения */
-    public long DiscordChannelID = 0L;
+    public long discordChannelID = 0L;
 
     /** ID канала в Discord, куда отправляются подтверждения для администраторов */
-    public long DiscordAdminChannelID = 0L;
+    public long discordAdminChannelID = 0L;
 
     /** Префикс бота, привязанного к серверу */
     public String prefix = "prefix";
+
+    /** Ключ Anti-VPN API. */
+    public String antiVPNAPIToken = "w7j425-826177-597253-3134u9";
 
     public Tuple2<String, Integer> hubIp() {
         String ip = hubIp;
@@ -52,32 +59,24 @@ public class Config {
         return Tuple2.of(ip, port);
     }
 
+    public boolean historyEnabled() {
+        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+    }
+
+    public boolean alertsEnabled() {
+        return alertsDistance > 0 && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+    }
+
     public enum Gamemode {
         attack,
-        castle(false, false),
-        crawler(false, false),
-        hexed(false, false),
-        hub(false, false),
-        pvp(true),
+        castle,
+        crawler,
+        hexed,
+        hub,
+        pvp,
         sandbox,
-        siege(true),
+        siege,
         survival,
-        tower;
-
-        public boolean isPvP;
-        public boolean isSimple;
-
-        Gamemode(boolean isPvP, boolean isSimple) {
-            this.isPvP = isPvP;
-            this.isSimple = isSimple;
-        }
-
-        Gamemode(boolean isPvP) {
-            this(isPvP, true);
-        }
-
-        Gamemode() {
-            this(false, true);
-        }
+        tower
     }
 }

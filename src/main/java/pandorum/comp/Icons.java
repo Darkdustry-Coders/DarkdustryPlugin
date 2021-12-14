@@ -4,6 +4,7 @@ import arc.struct.StringMap;
 import mindustry.gen.Iconc;
 
 public class Icons {
+
     private static StringMap icons;
 
     public static void init() {

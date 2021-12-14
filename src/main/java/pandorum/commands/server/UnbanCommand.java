@@ -4,7 +4,7 @@ import arc.util.Log;
 
 import static mindustry.Vars.netServer;
 
-public class ConsoleUnbanCommand {
+public class UnbanCommand {
     public static void run(final String[] args) {
         if (args[0].equalsIgnoreCase("all")) {
             netServer.admins.getBanned().each(ban -> netServer.admins.unbanPlayerID(ban.id));

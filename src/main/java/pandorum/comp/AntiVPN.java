@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class AntiVPN {
+
     private final ObjectMap<String, Boolean> cache;
     private final String token;
     private final OkHttpClient client;

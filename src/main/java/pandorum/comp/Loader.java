@@ -19,6 +19,7 @@ import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
 
 public class Loader {
+
     public static void init() {
         PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");

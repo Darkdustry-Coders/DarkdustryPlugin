@@ -9,7 +9,7 @@ import pandorum.discord.BotMain;
 
 import static mindustry.Vars.netServer;
 
-public class ConsoleRestartCommand {
+public class RestartCommand {
     public static void run(final String[] args) {
         Log.info("Перезапуск сервера...");
 

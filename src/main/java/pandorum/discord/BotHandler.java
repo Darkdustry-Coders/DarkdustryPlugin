@@ -35,6 +35,7 @@ import static mindustry.Vars.*;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
+
     public static final CommandHandler handler = new CommandHandler(PandorumPlugin.config.prefix);
     public static MessageChannel botChannel, adminChannel;
 
@@ -42,16 +43,15 @@ public class BotHandler {
         registerChannels();
         registerCommands();
 
-        handler.setPrefix(PandorumPlugin.config.prefix);
         Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
     }
 
     public static void registerChannels() {
-        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordChannelID)).block();
-        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.DiscordAdminChannelID)).block();
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.discordChannelID)).block();
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.discordAdminChannelID)).block();
     }
 
-    private static void registerCommands() {
+    public static void registerCommands() {
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (CommandHandler.Command command : handler.getCommandList()) {

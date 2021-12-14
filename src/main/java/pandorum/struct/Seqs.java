@@ -2,7 +2,6 @@ package pandorum.struct;
 
 import arc.func.Boolf;
 import arc.struct.Queue;
-import arc.util.Nullable;
 import arc.util.Strings;
 
 import java.time.Duration;
@@ -18,7 +17,7 @@ public abstract class Seqs {
     private Seqs() {
     }
 
-    static void requireArgument(boolean expression, String template, @Nullable Object... args) {
+    public static void requireArgument(boolean expression, String template, Object... args) {
         if (!expression) {
             throw new IllegalArgumentException(Strings.format(template, args));
         }
@@ -160,7 +159,7 @@ public abstract class Seqs {
         }
 
         public SeqBuilder<T> expireAfterWrite(long duration, TimeUnit unit) {
-            requireArgument(duration >= 0, "Duration cannot be negative: @ @.", duration, unit);
+            requireArgument(duration >= 0, "Duration must not be negative: @ @.", duration, unit);
             this.expireAfterWriteNanos = unit.toNanos(duration);
             return this;
         }

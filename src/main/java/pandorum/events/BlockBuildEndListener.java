@@ -10,8 +10,9 @@ import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
 public class BlockBuildEndListener {
+
     public static void call(final EventType.BlockBuildEndEvent event) {
-        if (PandorumPlugin.config.mode.isSimple) {
+        if (PandorumPlugin.config.historyEnabled()) {
             HistoryEntry entry = new BlockEntry(event);
 
             Seq<Tile> linkedTiles = event.tile.getLinkedTiles(new Seq<>());

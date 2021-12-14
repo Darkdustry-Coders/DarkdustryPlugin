@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Translator {
+
     public static final StringMap codeLanguages = new StringMap();
     private final OkHttpClient client;
 

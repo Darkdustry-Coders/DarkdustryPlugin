@@ -11,6 +11,7 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
 public class RotateEntry implements HistoryEntry {
+
     public static final String[] sides = {"\uE803", "\uE804", "\uE802", "\uE805"};
 
     public final String name;

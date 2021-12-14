@@ -4,7 +4,7 @@ import arc.util.Log;
 
 import static mindustry.Vars.net;
 
-public class ConsoleExitCommand {
+public class ExitCommand {
     public static void run(final String[] args) {
         Log.info("Выключаю сервер.");
         net.dispose();

@@ -12,8 +12,6 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public long playTime = 0L;
     public int buildingsBuilt = 0;
     public int buildingsDeconstructed = 0;
-    public int pvpWinCount = 0;
-    public int pvpLoseCount = 0;
     public int gamesPlayed = 0;
     public int rank = 0;
 

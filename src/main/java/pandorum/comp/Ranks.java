@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static pandorum.Misc.findLocale;
 
 public class Ranks {
+
     public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4, null, null);
     public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(100000000L, 100000, 100), null);
     public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(50000000L, 50000, 30), veteran);

@@ -3,25 +3,22 @@ package pandorum.commands.client;
 import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import pandorum.Misc;
 
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedTeam;
+import static pandorum.Misc.*;
 
 public class TeamCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
         Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
         if (team == null) {
             StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(colorizedTeam(t));
+            Structs.each(t -> teams.append("\n[gold] - [white]").append(colorizedTeam(t)), Team.baseTeams);
             bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
 
-        Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
+        Player target = args.length > 1 ? findByName(args[1]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found");
+            bundled(player, "commands.player-not-found", args[1]);
             return;
         }
 

@@ -9,8 +9,9 @@ import pandorum.struct.CacheSeq;
 import static pandorum.Misc.findLocale;
 
 public class TapListener {
+
     public static void call(final EventType.TapEvent event) {
-        if (PandorumPlugin.activeHistoryPlayers.contains(event.player.uuid()) && event.tile != null) {
+        if (PandorumPlugin.config.historyEnabled() && PandorumPlugin.activeHistoryPlayers.contains(event.player.uuid()) && event.tile != null) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.x][event.tile.y];
             StringBuilder history = new StringBuilder(Bundle.format("history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
 

@@ -8,6 +8,7 @@ import pandorum.comp.Ranks;
 import pandorum.models.PlayerModel;
 
 public class TriggerUpdateListener {
+
     public static void update() {
         Groups.player.each(p -> p.unit().moving(), Effects::onMove);
         if (PandorumPlugin.interval.get(1, 60f)) {

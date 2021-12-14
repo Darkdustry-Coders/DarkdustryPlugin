@@ -9,12 +9,13 @@ import pandorum.Misc;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.sendToChat;
 
-public class ConsoleBanCommand {
+public class BanCommand {
     public static void run(final String[] args) {
+        Player target;
         switch (args[0].toLowerCase()) {
             case "id" -> {
                 netServer.admins.banPlayerID(args[1]);
-                Player target = Groups.player.find(p -> p.uuid().equals(args[1]));
+                target = Groups.player.find(p -> p.uuid().equals(args[1]));
                 if (target != null) {
                     target.kick(KickReason.banned);
                     sendToChat("events.server.ban", target.coloredName());
@@ -22,7 +23,7 @@ public class ConsoleBanCommand {
                 Log.info("Игрок успешно забанен.");
             }
             case "name" -> {
-                Player target = Misc.findByName(args[1]);
+                target = Misc.findByName(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
                     target.kick(KickReason.banned);
@@ -34,14 +35,14 @@ public class ConsoleBanCommand {
             }
             case "ip" -> {
                 netServer.admins.banPlayerIP(args[1]);
-                Player target = Groups.player.find(p -> p.ip().equals(args[1]));
+                target = Groups.player.find(p -> p.ip().equals(args[1]));
                 if (target != null) {
                     target.kick(KickReason.banned);
                     sendToChat("events.server.ban", target.coloredName());
                 }
                 Log.info("Игрок успешно забанен.");
             }
-            default -> Log.err("Неверный тип бана.");
+            default -> Log.err("Неверный тип целеуказания бана.");
         }
     }
 }

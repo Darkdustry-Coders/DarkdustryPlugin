@@ -16,7 +16,7 @@ public class InfoCommand {
     public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findByName(args[0]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found");
+            bundled(player, "commands.player-not-found", args[0]);
             return;
         }
 
@@ -30,8 +30,6 @@ public class InfoCommand {
                     TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
                     playerInfo.buildingsBuilt,
                     playerInfo.buildingsDeconstructed,
-                    playerInfo.pvpWinCount,
-                    playerInfo.pvpLoseCount,
                     playerInfo.gamesPlayed
             ));
         });

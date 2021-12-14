@@ -5,7 +5,6 @@ import mindustry.content.Blocks;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
-import pandorum.Misc;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
@@ -16,8 +15,6 @@ public class FillCommand {
     private static final int maxSize = 25;
 
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
-
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxSize || Strings.parseInt(args[1]) > maxSize) {
             bundled(player, "commands.admin.fill.incorrect-number-format", maxSize);
             return;

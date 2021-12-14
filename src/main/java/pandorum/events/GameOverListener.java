@@ -7,20 +7,17 @@ import pandorum.PandorumPlugin;
 import pandorum.models.PlayerModel;
 
 public class GameOverListener {
+
     public static void call(final EventType.GameOverEvent event) {
         Groups.player.each(p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
             playerInfo.gamesPlayed++;
-
-            if (PandorumPlugin.config.mode.isPvP) {
-                if (p.team() == event.winner) playerInfo.pvpWinCount++;
-                else playerInfo.pvpLoseCount++;
-            }
-
             playerInfo.save();
         }));
 
-        PandorumPlugin.surrendered.clear();
+        PandorumPlugin.votesSurrender.clear();
         PandorumPlugin.votesRTV.clear();
         PandorumPlugin.votesVNW.clear();
+
+        PandorumPlugin.spectating.clear();
     }
 }

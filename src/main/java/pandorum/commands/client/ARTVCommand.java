@@ -2,7 +2,6 @@ package pandorum.commands.client;
 
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
@@ -10,7 +9,6 @@ import static pandorum.Misc.findLocale;
 
 public class ARTVCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
         Call.menu(player.con,
                 MenuHandler.artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),

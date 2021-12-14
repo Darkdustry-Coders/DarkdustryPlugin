@@ -12,12 +12,11 @@ import pandorum.Misc;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
-import static pandorum.PandorumPlugin.surrendered;
+import static pandorum.PandorumPlugin.*;
 
 public class SurrenderCommand {
     public static void run(final String[] args, final Player player) {
-        Seq<String> teamVotes = surrendered.get(player.team(), Seq::new);
+        Seq<String> teamVotes = votesSurrender.get(player.team(), Seq::new);
         if (teamVotes.contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
@@ -30,7 +29,7 @@ public class SurrenderCommand {
 
         if (cur < req) return;
 
-        surrendered.remove(player.team());
+        votesSurrender.remove(player.team());
         sendToChat("commands.surrender.successful", Misc.colorizedTeam(player.team()));
         for (Tile tile : world.tiles) {
             if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {

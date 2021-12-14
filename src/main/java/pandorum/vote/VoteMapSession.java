@@ -63,7 +63,7 @@ public class VoteMapSession extends VoteSession {
                     try {
                         r.run();
                     } catch (MapException e) {
-                        Log.err(e);
+                        Log.err("@: @", e.map.name(), e.getMessage());
                         net.closeServer();
                     }
                 }

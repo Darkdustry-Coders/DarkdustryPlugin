@@ -7,6 +7,7 @@ import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
 public class ServerLoadListener {
+
     public static void call(final EventType.ServerLoadEvent event) {
         Log.info("[Darkdustry]: Сервер готов к работе...");
 

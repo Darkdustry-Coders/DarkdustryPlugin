@@ -4,16 +4,14 @@ import mindustry.content.UnitTypes;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
-import pandorum.Misc;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
+import static pandorum.Misc.findByName;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
-
         UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[0]) && u != UnitTypes.block);
         if (type == null) {
             StringBuilder units = new StringBuilder();
@@ -22,9 +20,9 @@ public class UnitCommand {
             return;
         }
 
-        Player target = args.length > 1 ? Misc.findByName(args[1]) : player;
+        Player target = args.length > 1 ? findByName(args[1]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found");
+            bundled(player, "commands.player-not-found", args[1]);
             return;
         }
 

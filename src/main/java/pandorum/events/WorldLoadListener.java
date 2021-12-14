@@ -11,9 +11,10 @@ import java.time.Duration;
 import static mindustry.Vars.world;
 
 public class WorldLoadListener {
+
     @SuppressWarnings("unchecked")
     public static void call(final EventType.WorldLoadEvent event) {
-        if (PandorumPlugin.config.mode.isSimple) {
+        if (PandorumPlugin.config.historyEnabled()) {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
             for (Tile tile : world.tiles) {

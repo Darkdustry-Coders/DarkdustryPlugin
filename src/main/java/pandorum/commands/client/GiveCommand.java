@@ -4,7 +4,6 @@ import arc.util.Strings;
 import mindustry.game.Teams.TeamData;
 import mindustry.gen.Player;
 import mindustry.type.Item;
-import pandorum.Misc;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
@@ -13,8 +12,6 @@ import static pandorum.Misc.bundled;
 
 public class GiveCommand {
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
-
         if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
             bundled(player, "commands.non-int");
             return;
@@ -26,13 +23,13 @@ public class GiveCommand {
         if (item == null) {
             StringBuilder items = new StringBuilder();
             content.items().each(i -> items.append(" ").append(Icons.get(i.name)).append(i.name));
-            bundled(player, "commands.admin.give.item-not-found", items.toString());
+            bundled(player, "commands.item-not-found", items.toString());
             return;
         }
 
         TeamData team = state.teams.get(player.team());
         if (team.noCores()) {
-            bundled(player, "commands.admin.give.core-not-found");
+            bundled(player, "commands.admin.give.no-core");
             return;
         }
 

@@ -37,28 +37,28 @@ public class VoteKickCommand {
             return;
         }
 
-        Player found = findByName(args[0]);
-        if (found == null) {
+        Player target = findByName(args[0]);
+        if (target == null) {
             bundled(player, "commands.player-not-found");
             return;
         }
 
-        if (found.admin()) {
-            bundled(player, "commands.votekick.cannot-kick-admin");
-            return;
-        }
-
-        if (found.team() != player.team()) {
-            bundled(player, "commands.votekick.cannot-kick-another-team");
-            return;
-        }
-
-        if (found == player) {
+        if (target == player) {
             bundled(player, "commands.votekick.cannot-vote-for-yourself");
             return;
         }
 
-        VoteKickSession session = new VoteKickSession(currentlyKicking, found);
+        if (target.admin()) {
+            bundled(player, "commands.votekick.cannot-kick-admin");
+            return;
+        }
+
+        if (target.team() != player.team()) {
+            bundled(player, "commands.votekick.cannot-kick-another-team");
+            return;
+        }
+
+        VoteKickSession session = new VoteKickSession(currentlyKicking, target);
         currentlyKicking[0] = session;
         vtime.reset();
         session.vote(player, 1);

@@ -6,7 +6,6 @@ import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
-import pandorum.Misc;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
@@ -18,8 +17,6 @@ public class SpawnCommand {
     private static final int maxAmount = 25;
 
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
-
         if (args.length > 1 && !Strings.canParseInt(args[1])) {
             bundled(player, "commands.non-int");
             return;

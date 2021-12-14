@@ -17,6 +17,7 @@ import mindustry.world.blocks.logic.SwitchBlock;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadSource;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.sandbox.LiquidSource;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.UnitFactory;
 import pandorum.Misc;
@@ -30,6 +31,7 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
+
     public final String name;
     public final Block block;
     public final Object value;
@@ -39,7 +41,7 @@ public class ConfigEntry implements HistoryEntry {
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
         this.block = event.tile.block();
-        this.value = event.tile instanceof UnitFactory.UnitFactoryBuild factory ? factory.unit() : getConfig(event);
+        this.value = getConfig(event);
         this.connect = connect;
         this.time = new Date();
     }
@@ -69,11 +71,7 @@ public class ConfigEntry implements HistoryEntry {
             }
 
             Tile tile = world.tile(data);
-            if (connect) {
-                return Bundle.format("history.config.connect", locale, name, block.name, tile.x, tile.y, ftime);
-            }
-
-            return Bundle.format("history.config.power-node.disconnect", locale, name, block.name, tile.x, tile.y, ftime);
+            return connect ? Bundle.format("history.config.connect", locale, name, block.name, tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, block.name, tile.x, tile.y, ftime);
         }
 
         if (block instanceof Door) {
@@ -94,16 +92,16 @@ public class ConfigEntry implements HistoryEntry {
         if (block instanceof MessageBlock) {
             String message = (String) value;
             if (message.isBlank()) {
-                return Bundle.format("history.config.default", locale, name, ftime);
+                return Bundle.format("history.config.default", locale, name, block.name, ftime);
             }
 
             return Bundle.format("history.config.message", locale, name, message, ftime);
         }
 
-        if (block == Blocks.liquidSource) {
+        if (block instanceof LiquidSource) {
             Liquid liquid = (Liquid) value;
             if (liquid == null) {
-                return Bundle.format("history.config.default", locale, name, ftime);
+                return Bundle.format("history.config.default", locale, name, block.name, ftime);
             }
 
             return Bundle.format("history.config", locale, name, block.name, Icons.get(liquid.name), ftime);
@@ -112,7 +110,7 @@ public class ConfigEntry implements HistoryEntry {
         if (block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource) {
             Item item = (Item) value;
             if (item == null) {
-                return Bundle.format("history.config.default", locale, name, ftime);
+                return Bundle.format("history.config.default", locale, name, block.name, ftime);
             }
 
             return Bundle.format("history.config", locale, name, block.name, Icons.get(item.name), ftime);
@@ -121,19 +119,20 @@ public class ConfigEntry implements HistoryEntry {
         if (block instanceof Constructor) {
             Block buildPlan = (Block) value;
             if (buildPlan == null) {
-                return Bundle.format("history.config.default", locale, name, ftime);
+                return Bundle.format("history.config.default", locale, name, block.name, ftime);
             }
 
             return Bundle.format("history.config", locale, name, block.name, buildPlan.name, ftime);
         }
 
-        if (block instanceof UnitFactory) {
-            UnitType buildPlan = (UnitType) value;
-            if (buildPlan == null) {
-                return Bundle.format("history.config.default", locale, name, ftime);
+        if (block instanceof UnitFactory factory) {
+            if (value instanceof UnitType buildPlan) {
+                return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
+            } else if (value instanceof Integer buildPlan) {
+                return buildPlan < 0 || buildPlan > factory.plans.size ? Bundle.format("history.config.default", locale, name, block.name, ftime) : Bundle.format("history.config", locale, name, block.name, Icons.get(factory.plans.get(buildPlan).unit.name), ftime);
             }
 
-            return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
+            return Bundle.format("history.config.default", locale, name, block.name, ftime);
         }
 
         if (block instanceof PayloadSource) {
@@ -142,9 +141,10 @@ public class ConfigEntry implements HistoryEntry {
             } else if (value instanceof UnitType buildPlan) {
                 return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
             }
-            return Bundle.format("history.config.default", locale, name, ftime);
+
+            return Bundle.format("history.config.default", locale, name, block.name, ftime);
         }
 
-        return Bundle.format("history.config.changed", locale, name, ftime);
+        return Bundle.format("history.config.changed", locale, name, block.name, ftime);
     }
 }

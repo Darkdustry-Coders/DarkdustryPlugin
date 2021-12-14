@@ -12,8 +12,9 @@ import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 
 public class ConfigListener {
+
     public static void call(final EventType.ConfigEvent event) {
-        if (PandorumPlugin.config.mode.isSimple && event.player != null && event.tile.tileX() <= Vars.world.width() && event.tile.tileX() <= Vars.world.height()) {
+        if (PandorumPlugin.config.historyEnabled() && event.player != null && event.tile.tileX() <= Vars.world.width() && event.tile.tileX() <= Vars.world.height()) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
             int connections = event.tile.power != null ? event.tile.power.links.size : 0;
             boolean connect = connections > 0;

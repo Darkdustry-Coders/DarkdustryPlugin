@@ -22,6 +22,7 @@ import pandorum.comp.Authme;
 import java.util.Objects;
 
 public class BotMain {
+
     public static final Color normalColor = Color.ORANGE;
     public static final Color successColor = Color.GREEN;
     public static final Color errorColor = Color.RED;
@@ -30,7 +31,7 @@ public class BotMain {
 
     public static void start() {
         try {
-            bot = DiscordClientBuilder.create(PandorumPlugin.config.DiscordBotToken)
+            bot = DiscordClientBuilder.create(PandorumPlugin.config.discordBotToken)
                     .onClientResponse(ResponseFunction.emptyIfNotFound())
                     .onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400))
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();

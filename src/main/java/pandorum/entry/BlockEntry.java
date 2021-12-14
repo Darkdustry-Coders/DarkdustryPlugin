@@ -14,6 +14,7 @@ import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
 public class BlockEntry implements HistoryEntry {
+
     public final Unit unit;
     public final String name;
     public final Block block;
