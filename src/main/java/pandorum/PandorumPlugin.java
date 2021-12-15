@@ -72,16 +72,16 @@ public final class PandorumPlugin extends Plugin {
     public static String discordServerLink = "https://dsc.gg/darkdustry";
 
     public PandorumPlugin() throws IOException {
-        Fi file = dataDirectory.child("config.json");
-        if (file.exists()) {
-            config = gson.fromJson(file.reader(), Config.class);
+        Fi configFi = dataDirectory.child("config.json");
+        if (configFi.exists()) {
+            config = gson.fromJson(configFi.reader(), Config.class);
+            Log.info("[Darkdustry] Конфигурация загружена.");
         } else {
-            file.writeString(gson.toJson(config = new Config()));
-            Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
+            configFi.writeString(gson.toJson(config = new Config()));
+            Log.info("[Darkdustry] Файл конфигурации сгенерирован... (@)", configFi.absolutePath());
         }
 
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
-
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connString)
                 .retryWrites(true)

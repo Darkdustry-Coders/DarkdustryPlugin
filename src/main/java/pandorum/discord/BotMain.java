@@ -22,6 +22,8 @@ import pandorum.comp.Authme;
 
 import java.util.Objects;
 
+import static pandorum.Misc.sendToChat;
+
 public class BotMain {
 
     public static final Color normalColor = Color.ORANGE;
