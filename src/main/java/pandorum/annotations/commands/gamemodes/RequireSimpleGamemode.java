@@ -1,4 +1,4 @@
-package pandorum.annotations.gamemodes;
+package pandorum.annotations.commands.gamemodes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,4 +7,4 @@ import java.lang.annotation.Target;
 
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface DisablePvP { }
+public @interface RequireSimpleGamemode {}

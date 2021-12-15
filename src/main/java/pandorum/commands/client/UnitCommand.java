@@ -6,13 +6,15 @@ import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.admin.RequireAdmin;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.bundled;
 
 public class UnitCommand {
-    @ClientCommand(name = "unit", args = "<unit> [player...]", description = "Change a unit.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "unit", args = "<unit> [player...]", description = "Change a unit.")
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

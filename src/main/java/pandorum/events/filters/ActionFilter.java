@@ -1,6 +1,7 @@
 package pandorum.events.filters;
 
 import arc.struct.Seq;
+import mindustry.game.EventType;
 import mindustry.net.Administration.ActionType;
 import mindustry.net.Administration.PlayerAction;
 import mindustry.world.Tile;

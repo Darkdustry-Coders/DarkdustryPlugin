@@ -6,7 +6,7 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.comp.Bundle;
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ import static pandorum.Misc.findLocale;
 
 public class SavesListCommand {
     @RequireSimpleGamemode
-    @ClientCommand(name = "saves", args = "[page]", description = "List of all saves.", admin = false)
+    @ClientCommand(name = "saves", args = "[page]", description = "List of all saves.")
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

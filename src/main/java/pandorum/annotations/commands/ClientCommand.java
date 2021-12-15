@@ -11,6 +11,5 @@ public @interface ClientCommand {
     String name();
     String args();
     String description();
-    boolean admin();
 }
 

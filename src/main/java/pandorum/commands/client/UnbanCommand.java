@@ -3,12 +3,14 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.admin.RequireAdmin;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 
 public class UnbanCommand {
-    @ClientCommand(name = "unban", args = "<uuid...>", description = "Unban a player.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "unban", args = "<uuid...>", description = "Unban a player.")
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
         if (netServer.admins.getInfoOptional(args[0]) != null && netServer.admins.unbanPlayerID(args[0])) {

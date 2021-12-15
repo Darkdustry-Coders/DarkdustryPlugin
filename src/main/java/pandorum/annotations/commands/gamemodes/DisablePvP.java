@@ -1,6 +1,4 @@
-package pandorum.annotations.containers;
-
-import pandorum.annotations.gamemodes.DisableGamemode;
+package pandorum.annotations.commands.gamemodes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +7,4 @@ import java.lang.annotation.Target;
 
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface DisabledGamemodes{
-    DisableGamemode[] value();
-}
+public @interface DisablePvP { }

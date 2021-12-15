@@ -12,7 +12,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
 public class PlayerListCommand {
-    @ClientCommand(name = "players", args = "[page]", description = "List of all players.", admin = false)
+    @ClientCommand(name = "players", args = "[page]", description = "List of all players.")
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

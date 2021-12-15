@@ -7,6 +7,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Player;
 import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.admin.RequireNotAdmin;
 import pandorum.comp.Authme;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -15,9 +16,10 @@ import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.loginCooldowns;
 
 public class LoginCommand {
-
     private static final float cooldownTime = 1200f;
-    @ClientCommand(name = "login", args = "", description = "Send confirmation to get admin.", admin = false)
+
+    @RequireNotAdmin
+    @ClientCommand(name = "login", args = "", description = "Send confirmation to get admin.")
     public static void run(final String[] args, final Player player) {
         if (player.admin()) {
             bundled(player, "commands.login.already");

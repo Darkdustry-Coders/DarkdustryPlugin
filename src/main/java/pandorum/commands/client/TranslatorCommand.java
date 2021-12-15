@@ -9,7 +9,7 @@ import static pandorum.Misc.bundled;
 import static pandorum.comp.Translator.codeLanguages;
 
 public class TranslatorCommand {
-    @ClientCommand(name = "tr", args = "<off/auto/current/locale>", description = "Manage chat translator.", admin = false)
+    @ClientCommand(name = "tr", args = "<off/auto/current/locale>", description = "Manage chat translator.")
     public static void run(final String[] args, final Player player) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             switch (args[0].toLowerCase()) {

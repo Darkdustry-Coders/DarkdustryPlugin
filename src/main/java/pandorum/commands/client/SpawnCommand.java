@@ -8,7 +8,8 @@ import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.admin.RequireAdmin;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
@@ -19,7 +20,8 @@ public class SpawnCommand {
     private static final int maxAmount = 25;
 
     @RequireSimpleGamemode
-    @ClientCommand(name = "spawn", args = "<unit> [count] [team]", description = "Spawn units.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "spawn", args = "<unit> [count] [team]", description = "Spawn units.")
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

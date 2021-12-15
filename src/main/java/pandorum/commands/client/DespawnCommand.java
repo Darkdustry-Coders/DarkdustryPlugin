@@ -5,6 +5,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.admin.RequireAdmin;
 import pandorum.comp.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
@@ -13,9 +14,9 @@ import static pandorum.Misc.colorizedTeam;
 import static pandorum.Misc.findLocale;
 
 public class DespawnCommand {
-    @ClientCommand(name = "despw", args = "", description = "Kill units.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "despw", args = "", description = "Kill units.")
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
         Call.menu(player.con,
                 MenuHandler.despwMenu,
                 Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)),

@@ -6,7 +6,8 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.admin.RequireAdmin;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
@@ -15,7 +16,8 @@ import static pandorum.Misc.bundled;
 
 public class GiveCommand {
     @RequireSimpleGamemode
-    @ClientCommand(name = "give", args = "<item> [count]", description = "Add items to the core.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "give", args = "<item> [count]", description = "Add items to the core.")
     public static void run(final String[] args, final Player player) {
         if (Misc.adminCheck(player)) return;
 

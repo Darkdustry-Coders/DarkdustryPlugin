@@ -4,7 +4,8 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.admin.RequireAdmin;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.comp.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
@@ -12,9 +13,9 @@ import static pandorum.Misc.findLocale;
 
 public class ARTVCommand {
     @RequireSimpleGamemode
-    @ClientCommand(name = "artv", args = "", description = "Force a gameover.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "artv", args = "", description = "Force a gameover.")
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
         Call.menu(player.con,
                 MenuHandler.artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),

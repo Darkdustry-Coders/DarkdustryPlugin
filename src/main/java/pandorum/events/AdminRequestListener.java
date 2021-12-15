@@ -3,6 +3,7 @@ package pandorum.events;
 import arc.util.Strings;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
+import pandorum.annotations.events.EventListener;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 

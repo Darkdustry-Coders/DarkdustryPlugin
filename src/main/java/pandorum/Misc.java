@@ -11,11 +11,10 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.commands.OverrideCommand;
 import pandorum.annotations.commands.ServerCommand;
-import pandorum.annotations.containers.DisabledGamemodes;
-import pandorum.annotations.containers.RequiredGamemodes;
-import pandorum.annotations.gamemodes.*;
+import pandorum.annotations.commands.gamemodes.containers.DisabledGamemodes;
+import pandorum.annotations.commands.gamemodes.containers.RequiredGamemodes;
+import pandorum.annotations.commands.gamemodes.*;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Icons;
@@ -93,8 +92,8 @@ public abstract class Misc {
         return format.format(time);
     }
 
-    public static Seq<Class> loadClasses(String basePackage) {
-        Seq<Class> classes = new Seq<>();
+    public static Seq<Class<?>> loadClasses(String basePackage) {
+        Seq<Class<?>> classes = new Seq<>();
         ClassLoader classLoader = PandorumPlugin.class.getClassLoader();
         String packageName = basePackage.replace('.', '/');
         URL pckg = classLoader.getResource(packageName);
@@ -137,9 +136,9 @@ public abstract class Misc {
         return methods;
     }
 
-    public static void handleClientCommands(CommandHandler handler, String basePackage, Config.Gamemode gamemode) {
+    public static Seq<Method> getClientCommands(String basePackage, Config.Gamemode gamemode) {
         Class<?>[] requiredParams = new Class<?>[] { String[].class, Player.class };
-
+        Seq<Method> methods = new Seq<Method>();
         getAnnotatedMethods(basePackage, ClientCommand.class).each(
                 method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
                 method -> {
@@ -207,49 +206,18 @@ public abstract class Misc {
                         return;
                     }
 
-                    ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
-
-                    if (method.isAnnotationPresent(OverrideCommand.class))
-                        if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
-                            handler.removeCommand(commandAnnotation.name());
-
-                    handler.register(
-                                    commandAnnotation.name(),
-                                    commandAnnotation.args(),
-                                    commandAnnotation.description(),
-                                    (String[] args, Player player) -> {
-                                        if (commandAnnotation.admin() && !player.admin) return;
-                                        try {
-                                            method.invoke(null, player, args);
-                                        } catch (Exception e) {}
-                                    }
-                            );
+                    methods.add(method);
                 });
+        return methods;
     }
 
-    public static void handleServerCommands(CommandHandler handler, String basePackage) {
+    public static Seq<Method> handleServerCommands(String basePackage) {
         Class<?>[] requiredParams = new Class<?>[] { String[].class };
-
+        Seq<Method> methods = new Seq<Method>();
         getAnnotatedMethods(basePackage, ServerCommand.class).each(
                 method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
-                method -> {
-                    ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
-
-                    if (method.isAnnotationPresent(OverrideCommand.class))
-                        if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
-                            handler.removeCommand(commandAnnotation.name());
-
-                    handler.register(
-                                    commandAnnotation.name(),
-                                    commandAnnotation.args(),
-                                    commandAnnotation.description(),
-                                    (String[] args) -> {
-                                        try {
-                                            method.invoke(null, (Object) args);
-                                        } catch (Exception e) {}
-                                    }
-                    );
-                }
+                methods::add
         );
+        return methods;
     }
 }

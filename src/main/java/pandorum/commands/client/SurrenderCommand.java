@@ -9,8 +9,8 @@ import mindustry.gen.Player;
 import mindustry.world.Tile;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequirePvP;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.gamemodes.RequirePvP;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
@@ -21,7 +21,7 @@ import static pandorum.PandorumPlugin.surrendered;
 public class SurrenderCommand {
     @RequireSimpleGamemode
     @RequirePvP
-    @ClientCommand(name = "surrender", args = "", description = "Vote to surrender.", admin = false)
+    @ClientCommand(name = "surrender", args = "", description = "Vote to surrender.")
     public static void run(final String[] args, final Player player) {
         Seq<String> teamVotes = surrendered.get(player.team(), Seq::new);
         if (teamVotes.contains(player.uuid())) {

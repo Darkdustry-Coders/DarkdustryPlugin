@@ -1,6 +1,6 @@
-package pandorum.annotations.gamemodes;
+package pandorum.annotations.commands.gamemodes;
 
-import pandorum.annotations.containers.DisabledGamemodes;
+import pandorum.annotations.commands.gamemodes.containers.DisabledGamemodes;
 import pandorum.comp.Config;
 
 import java.lang.annotation.*;

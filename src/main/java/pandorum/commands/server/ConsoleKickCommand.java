@@ -4,11 +4,13 @@ import arc.util.Log;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
 import pandorum.Misc;
+import pandorum.annotations.commands.OverrideCommand;
 import pandorum.annotations.commands.ServerCommand;
 
 import static pandorum.Misc.sendToChat;
 
 public class ConsoleKickCommand {
+    @OverrideCommand
     @ServerCommand(name = "kick", args = "<player...>", description = "Kick a player from the server.")
     public static void run(final String[] args) {
         Player target = Misc.findByName(args[0]);

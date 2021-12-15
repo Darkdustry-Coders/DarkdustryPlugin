@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static pandorum.Misc.*;
 
 public class InfoCommand {
-    @ClientCommand(name = "info", args = "[player...]", description = "See some info about a player.", admin = false)
+    @ClientCommand(name = "info", args = "[player...]", description = "See some info about a player.")
     public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findByName(args[0]) : player;
         if (target == null) {

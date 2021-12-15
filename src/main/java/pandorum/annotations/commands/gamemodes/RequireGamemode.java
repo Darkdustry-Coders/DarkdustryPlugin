@@ -1,4 +1,4 @@
-package pandorum.annotations.gamemodes;
+package pandorum.annotations.commands.gamemodes;
 
 import pandorum.comp.Config;
 

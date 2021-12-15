@@ -6,7 +6,7 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.maps;
@@ -15,7 +15,7 @@ import static pandorum.Misc.findLocale;
 
 public class MapsListCommand {
     @RequireSimpleGamemode
-    @ClientCommand(name = "maps", args = "[page]", description = "List of all maps.", admin = false)
+    @ClientCommand(name = "maps", args = "[page]", description = "List of all maps.")
     public static void run(final String[] args, final Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");

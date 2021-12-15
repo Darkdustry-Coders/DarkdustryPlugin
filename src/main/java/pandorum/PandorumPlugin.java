@@ -19,8 +19,14 @@ import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
+import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import org.bson.Document;
+import pandorum.annotations.commands.ClientCommand;
+import pandorum.annotations.commands.OverrideCommand;
+import pandorum.annotations.commands.ServerCommand;
+import pandorum.annotations.commands.admin.RequireAdmin;
+import pandorum.annotations.commands.admin.RequireNotAdmin;
 import pandorum.commands.client.*;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
@@ -102,12 +108,25 @@ public final class PandorumPlugin extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         Log.info("Server commands default length " + handler.getCommandList().size);
-        handler.removeCommand("exit");
-        handler.removeCommand("say");
-        handler.removeCommand("kick");
-        handler.removeCommand("pardon");
 
-        Misc.handleServerCommands(handler, "pandorum.commands.server");
+        Misc.handleServerCommands("pandorum.commands.server").each(method -> {
+            ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
+
+            if (method.isAnnotationPresent(OverrideCommand.class))
+                if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                    handler.removeCommand(commandAnnotation.name());
+
+            handler.register(
+                    commandAnnotation.name(),
+                    commandAnnotation.args(),
+                    commandAnnotation.description(),
+                    (String[] args) -> {
+                        try {
+                            method.invoke(null, (Object) args);
+                        } catch (Exception e) { Log.err(e.getMessage()); }
+                    }
+            );
+        });
 
         Log.info("Server commands " + handler.getCommandList().size);
     }
@@ -116,14 +135,27 @@ public final class PandorumPlugin extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         Log.info("Client commands default length " + handler.getCommandList().size);
 
-        handler.removeCommand("a");
-        handler.removeCommand("t");
-        handler.removeCommand("help");
-        handler.removeCommand("votekick");
-        handler.removeCommand("vote");
-        handler.removeCommand("sync");
+        Misc.getClientCommands("pandorum.commands.client", config.mode).each(method -> {
+            ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
 
-        Misc.handleClientCommands(handler, "pandorum.commands.client", config.mode);
+            if (method.isAnnotationPresent(OverrideCommand.class))
+                if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                    handler.removeCommand(commandAnnotation.name());
+            boolean admin = method.isAnnotationPresent(RequireAdmin.class);
+            boolean notAdmin = method.isAnnotationPresent(RequireNotAdmin.class);
+            handler.register(
+                    commandAnnotation.name(),
+                    commandAnnotation.args(),
+                    commandAnnotation.description(),
+                    (String[] args, Player player) -> {
+                        if (admin && !player.admin) return;
+                        if (notAdmin && player.admin) return;
+                        try {
+                            method.invoke(null, args, player);
+                        } catch (Exception e) { Log.err(e.getMessage()); }
+                    }
+            );
+        });
 
         Log.info("Client commands " + handler.getCommandList().size);
     }

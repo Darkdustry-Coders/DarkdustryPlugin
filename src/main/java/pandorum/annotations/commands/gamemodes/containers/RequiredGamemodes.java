@@ -1,6 +1,6 @@
-package pandorum.annotations.containers;
+package pandorum.annotations.commands.gamemodes.containers;
 
-import pandorum.annotations.gamemodes.RequireGamemode;
+import pandorum.annotations.commands.gamemodes.RequireGamemode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -6,16 +6,16 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.admin.RequireAdmin;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 
 import static pandorum.Misc.bundled;
 
 public class CoreCommand {
     @RequireSimpleGamemode
-    @ClientCommand(name = "core", args = "[small/medium/big]", description = "Spwn a core.", admin = true)
+    @RequireAdmin
+    @ClientCommand(name = "core", args = "[small/medium/big]", description = "Spwn a core.")
     public static void run(final String[] args, final Player player) {
-        if (Misc.adminCheck(player)) return;
-
         Block core = args.length == 0 ? Blocks.coreShard : switch (args[0].toLowerCase()) {
             case "big", "nucleus" -> Blocks.coreNucleus;
             case "medium", "foundation" -> Blocks.coreFoundation;

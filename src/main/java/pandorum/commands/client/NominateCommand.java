@@ -4,10 +4,9 @@ import arc.files.Fi;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import org.checkerframework.checker.units.qual.C;
 import pandorum.Misc;
 import pandorum.annotations.commands.ClientCommand;
-import pandorum.annotations.gamemodes.RequireSimpleGamemode;
+import pandorum.annotations.commands.gamemodes.RequireSimpleGamemode;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
@@ -21,7 +20,7 @@ public class NominateCommand {
     private static final float cooldownTime = 300f;
 
     @RequireSimpleGamemode
-    @ClientCommand(name = "nominate", args = "<map/save/load> <name...>", description = "Vote for load a save/map.", admin = false)
+    @ClientCommand(name = "nominate", args = "<map/save/load> <name...>", description = "Vote for load a save/map.")
     public static void run(final String[] args, final Player player) {
         if (current[0] != null) {
             bundled(player, "commands.vote-already-started");
