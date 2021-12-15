@@ -14,6 +14,7 @@ public class Authme {
 
     public static final Button confirm = Button.success("confirm", "Подтвердить");
     public static final Button deny = Button.danger("deny", "Отклонить");
+    public static final Button check = Button.primary("check", "Посмотреть информацию");
 
     public static void confirm(Player player) {
         if (player != null) {

@@ -3,6 +3,7 @@ package pandorum.discord;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
+import arc.util.Strings;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -15,6 +16,7 @@ import discord4j.rest.response.ResponseFunction;
 import discord4j.rest.route.Routes;
 import discord4j.rest.util.AllowedMentions;
 import discord4j.rest.util.Color;
+import mindustry.net.Administration.PlayerInfo;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
@@ -60,12 +62,16 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getUser().getUsername());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.confirm(Authme.loginWaiting.get(msg));
                         }
                         case "deny" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Authme.loginWaiting.get(msg).getInfo().lastName, interaction.getUser().getUsername());
+                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.deny(Authme.loginWaiting.get(msg));
+                        }
+                        case "check" -> {
+                            PlayerInfo info = Authme.loginWaiting.get(msg).getInfo();
+                            event.reply(Strings.format("> Информация об игроке **@**\n\nID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).withEphemeral(true).block();
                         }
                     }
                     Authme.loginWaiting.remove(msg);

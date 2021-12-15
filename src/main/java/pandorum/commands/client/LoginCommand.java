@@ -40,7 +40,7 @@ public class LoginCommand {
 
         Message message = BotHandler.adminChannel.createMessage(MessageCreateSpec.builder()
                 .addEmbed(embed)
-                .addComponent(ActionRow.of(Authme.confirm, Authme.deny))
+                .addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check))
                 .build()).block();
 
         Authme.loginWaiting.put(message, player);
