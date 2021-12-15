@@ -64,18 +64,20 @@ public class BotMain {
                         case "confirm" -> {
                             BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.confirm(Authme.loginWaiting.get(msg));
+                            Authme.loginWaiting.remove(msg);
+                            msg.delete().block();
                         }
                         case "deny" -> {
                             BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.deny(Authme.loginWaiting.get(msg));
+                            Authme.loginWaiting.remove(msg);
+                            msg.delete().block();
                         }
                         case "check" -> {
                             PlayerInfo info = Authme.loginWaiting.get(msg).getInfo();
                             event.reply(Strings.format("> Информация об игроке **@**\n\nID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).withEphemeral(true).block();
                         }
                     }
-                    Authme.loginWaiting.remove(msg);
-                    msg.delete().block();
                 }
             }, e -> {});
 
