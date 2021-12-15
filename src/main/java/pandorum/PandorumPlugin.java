@@ -9,7 +9,9 @@ import arc.util.Log;
 import arc.util.Timekeeper;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
-import arc.util.serialization.Jval;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -17,7 +19,6 @@ import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.game.Team;
-import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
@@ -37,6 +38,13 @@ import java.io.IOException;
 import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
+
+    public static final Gson gson = new GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
+            .setPrettyPrinting()
+            .serializeNulls()
+            .disableHtmlEscaping()
+            .create();
 
     public static final VoteSession[] current = {null};
     public static final VoteKickSession[] currentlyKicking = {null};
@@ -64,18 +72,16 @@ public final class PandorumPlugin extends Plugin {
     public static String discordServerLink = "https://dsc.gg/darkdustry";
 
     public PandorumPlugin() throws IOException {
-        JsonIO.json.setUsePrototypes(false);
-        Fi configFi = dataDirectory.child("config.json");
-        if (configFi.exists()) {
-            config = JsonIO.json.fromJson(Config.class, configFi);
-            Log.info("[Darkdustry] Конфигурация загружена...");
+        Fi file = dataDirectory.child("config.json");
+        if (file.exists()) {
+            config = gson.fromJson(file.reader(), Config.class);
         } else {
-            configFi.writeString(Jval.read(JsonIO.json.toJson(config = new Config(), Config.class)).toString(Jval.Jformat.formatted));
-            Log.info("[Darkdustry] Файл конфигурации сгенерирован... (@)", configFi.absolutePath());
+            file.writeString(gson.toJson(config = new Config()));
+            Log.info("Файл конфигурации сгенерирован... (@)", file.absolutePath());
         }
-        JsonIO.json.setUsePrototypes(true);
 
         ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
+
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connString)
                 .retryWrites(true)

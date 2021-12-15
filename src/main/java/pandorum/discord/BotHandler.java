@@ -5,7 +5,6 @@ import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.io.Streams;
@@ -55,7 +54,7 @@ public class BotHandler {
     public static void registerCommands() {
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
-            for (Command command : handler.getCommandList()) {
+            for (CommandHandler.Command command : handler.getCommandList()) {
                 builder.append(PandorumPlugin.config.prefix).append("**").append(command.text).append("**");
                 if (command.params.length > 0) {
                     builder.append(" *").append(command.paramText).append("*");
