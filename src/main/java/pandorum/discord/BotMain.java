@@ -15,17 +15,19 @@ import discord4j.rest.response.ResponseFunction;
 import discord4j.rest.route.Routes;
 import discord4j.rest.util.AllowedMentions;
 import discord4j.rest.util.Color;
-import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
 import java.util.Objects;
+
+import static pandorum.Misc.sendToChat;
 
 public class BotMain {
 
     public static final Color normalColor = Color.ORANGE;
     public static final Color successColor = Color.GREEN;
     public static final Color errorColor = Color.RED;
+
     public static DiscordClient bot;
     public static GatewayDiscordClient client;
 
@@ -38,8 +40,6 @@ public class BotMain {
 
             client = bot.login().block();
 
-            if (client == null) throw new RuntimeException("Не удалось запустить бота...");
-
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
                 CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
@@ -49,7 +49,7 @@ public class BotMain {
                 }
 
                 if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && msg.getContent().length() > 0) {
-                    Misc.sendToChat("events.discord.chat", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
+                    sendToChat("events.discord.chat", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                     Log.info("[Discord] @: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
                 }
             }, e -> {});
