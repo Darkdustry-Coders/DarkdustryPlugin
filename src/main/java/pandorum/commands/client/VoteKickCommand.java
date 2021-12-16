@@ -44,17 +44,17 @@ public class VoteKickCommand {
         }
 
         if (target == player) {
-            bundled(player, "commands.votekick.cannot-vote-for-yourself");
+            bundled(player, "commands.votekick.player-is-you");
             return;
         }
 
         if (target.admin()) {
-            bundled(player, "commands.votekick.cannot-kick-admin");
+            bundled(player, "commands.votekick.player-is-admin");
             return;
         }
 
         if (target.team() != player.team()) {
-            bundled(player, "commands.votekick.cannot-kick-another-team");
+            bundled(player, "commands.votekick.player-is-enemy");
             return;
         }
 

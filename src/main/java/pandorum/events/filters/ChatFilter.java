@@ -33,9 +33,9 @@ public class ChatFilter {
                 return;
             }
 
-            PandorumPlugin.translator.translate(Strings.stripColors(text), language, translatedText -> {
-                player.sendMessage(formatTranslated(formatted, text, translatedText), author, text);
-                cache.put(language, translatedText);
+            PandorumPlugin.translator.translate(Strings.stripColors(text), language, translated -> {
+                player.sendMessage(formatTranslated(formatted, text, translated), author, text);
+                cache.put(language, translated);
             });
         }));
 

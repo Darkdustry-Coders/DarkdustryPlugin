@@ -18,18 +18,18 @@ public class VoteCommand {
         }
 
         if (currentlyKicking[0].target() == player) {
-            bundled(player, "commands.vote.cannot-vote-for-yourself");
+            bundled(player, "commands.vote.player-is-you");
             return;
         }
 
         if (currentlyKicking[0].target().team() != player.team()) {
-            bundled(player, "commands.vote.cannot-vote-another-team");
+            bundled(player, "commands.vote.player-is-enemy");
             return;
         }
 
         int sign = switch (args[0].toLowerCase()) {
-            case "y", "yes", "+", "да" -> 1;
-            case "n", "no", "-", "нет" -> -1;
+            case "y", "yes", "+", "д", "да" -> 1;
+            case "n", "no", "-", "н", "нет" -> -1;
             default -> 0;
         };
 

@@ -81,7 +81,7 @@ public final class PandorumPlugin extends Plugin {
             Log.info("[Darkdustry] Файл конфигурации сгенерирован... (@)", configFi.absolutePath());
         }
 
-        ConnectionString connString = new ConnectionString("mongodb://darkdustry:XCore2000@127.0.0.1:27017/?authSource=darkdustry");
+        ConnectionString connString = new ConnectionString("mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry");
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connString)
                 .retryWrites(true)
