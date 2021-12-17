@@ -2,8 +2,6 @@ package pandorum;
 
 import arc.files.Fi;
 import arc.struct.Seq;
-import arc.util.CommandHandler;
-import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
@@ -12,9 +10,10 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import pandorum.annotations.commands.ClientCommand;
 import pandorum.annotations.commands.ServerCommand;
+import pandorum.annotations.commands.gamemodes.*;
 import pandorum.annotations.commands.gamemodes.containers.DisabledGamemodes;
 import pandorum.annotations.commands.gamemodes.containers.RequiredGamemodes;
-import pandorum.annotations.commands.gamemodes.*;
+import pandorum.annotations.events.EventListener;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Icons;
@@ -152,7 +151,7 @@ public abstract class Misc {
                     boolean disablePvp = method.isAnnotationPresent(DisablePvP.class);
 
                     if (hasRequiredGamemodes) {
-                        disabledGamemodes = Seq.with(
+                        reqiuredGamemodes = Seq.with(
                                 Arrays.stream(method.getAnnotation(DisabledGamemodes.class).value())
                                         .map(DisableGamemode::Gamemode).toArray(Config.Gamemode[]::new)
                         );
@@ -165,57 +164,38 @@ public abstract class Misc {
                         );
                     }
 
-                    String skipMessage = "Skip command:" + method.getDeclaringClass().getPackageName() + "." + method.getDeclaringClass() + "." + method.getName();
-
-                    if (hasRequiredGamemodes && hasDisabledGamemodes) {
-                        Log.info("Disable and require gamemodes. " + skipMessage);
-                        return;
+                    if(!(
+                            (hasRequiredGamemodes && hasDisabledGamemodes)
+                         || (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode))
+                         || (hasDisabledGamemodes && disabledGamemodes.contains(gamemode))
+                         || (hasRequiredGamemodes && requireSimpleGamemode)
+                         || (requireSimpleGamemode && !gamemode.isSimple)
+                         || (requirePvP && disablePvp)
+                         || (requirePvP && !gamemode.isPvP)
+                         || (disablePvp && gamemode.isPvP)
+                    )) {
+                        methods.add(method);
                     }
-
-                    if (hasRequiredGamemodes && !reqiuredGamemodes.contains(gamemode)) {
-                        Log.info("Required gamemode is not match current gamemode" + "(" + gamemode.name() + ")" + "." + skipMessage);
-                        return;
-                    }
-
-                    if (hasDisabledGamemodes && disabledGamemodes.contains(gamemode)) {
-                        Log.info("Current gamemode" + "(" + gamemode.name() + ")" + " is disabled. " + skipMessage);
-                        return;
-                    }
-
-                    if (hasRequiredGamemodes && requireSimpleGamemode) {
-                        Log.info("Require gamemode and require simple gamemode. " + skipMessage);
-                        return;
-                    }
-
-                    if (requireSimpleGamemode && !gamemode.isSimple) {
-                        Log.info("Require simple gamemode and current gamemode" + "(" + gamemode.name() + ")" + " is not simple. " + skipMessage);
-                        return;
-                    }
-
-                    if (requirePvP && disablePvp) {
-                        Log.info("Require and disable PvP. " + skipMessage);
-                        return;
-                    }
-                    if (requirePvP && !gamemode.isPvP) {
-                        Log.info("Require PvP and current gamemode" + "(" + gamemode.name() + ")" + " is not PvP. " + skipMessage);
-                        return;
-                    }
-
-                    if (disablePvp && gamemode.isPvP) {
-                        Log.info("Disable PvP and current gamemode"+ "(" + gamemode.name() + ")" +" is PvP. " + skipMessage);
-                        return;
-                    }
-
-                    methods.add(method);
                 });
         return methods;
     }
 
-    public static Seq<Method> handleServerCommands(String basePackage) {
+    public static Seq<Method> getServerCommands(String basePackage) {
         Class<?>[] requiredParams = new Class<?>[] { String[].class };
         Seq<Method> methods = new Seq<Method>();
         getAnnotatedMethods(basePackage, ServerCommand.class).each(
                 method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
+                methods::add
+        );
+        return methods;
+    }
+
+    public static Seq<Method> getEventsMethods(String basePackage) {
+        Seq<Method> methods = new Seq<Method>();
+        getAnnotatedMethods(basePackage, EventListener.class).each(
+                method ->  Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), new Class<?>[] {
+                            method.getAnnotation(EventListener.class).eventType()
+                        }),
                 methods::add
         );
         return methods;

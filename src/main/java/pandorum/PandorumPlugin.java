@@ -109,7 +109,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         Log.info("Server commands default length " + handler.getCommandList().size);
 
-        Misc.handleServerCommands("pandorum.commands.server").each(method -> {
+        Misc.getServerCommands("pandorum.commands.server").each(method -> {
             ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
 
             if (method.isAnnotationPresent(OverrideCommand.class))
