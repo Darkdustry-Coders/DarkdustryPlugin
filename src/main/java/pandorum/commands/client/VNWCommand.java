@@ -19,11 +19,11 @@ public class VNWCommand {
         votesVNW.add(player.uuid());
         int cur = votesVNW.size;
         int req = (int) Math.ceil(config.voteRatio * Groups.player.size());
-        sendToChat("commands.vnw.ok", player.coloredName(), cur, req);
+        sendToChat("commands.vnw.vote", player.coloredName(), cur, req);
 
         if (cur < req) return;
 
-        sendToChat("commands.vnw.successful");
+        sendToChat("commands.vnw.passed");
         votesVNW.clear();
         state.wavetime = 0f;
     }

@@ -89,7 +89,7 @@ public class ConnectPacketHandler {
             info.adminUsid = usid;
             if (!info.names.contains(name, false)) info.names.add(name);
             if (!info.ips.contains(ip, false)) info.ips.add(ip);
-            Call.infoMessage(con, Bundle.format("events.not-whitelisted", findLocale(locale), PandorumPlugin.discordServerLink));
+            Call.infoMessage(con, Bundle.format("events.not-whitelisted", findLocale(locale)));
             con.kick(KickReason.whitelist);
             return;
         }

@@ -37,7 +37,7 @@ public class Translator {
         }
     }
 
-    public void translate(String text, String lang, Cons<String> callback) {
+    public void translate(String text, String lang, Cons<String> cons) {
         String language = codeLanguages.get(lang, codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder()
@@ -53,7 +53,7 @@ public class Translator {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.get("");
+                cons.get("");
             }
 
             @Override
@@ -61,7 +61,7 @@ public class Translator {
                 JSONObject translated = new JSONObject(Objects.requireNonNull(response.body()).string());
                 String translatedText = translated.optString("result", text);
                 try {
-                    callback.get(translatedText);
+                    cons.get(translatedText);
                 } finally {
                     if (response.body() != null) response.close();
                 }

@@ -21,11 +21,11 @@ public class RTVCommand {
         votesRTV.add(player.uuid());
         int cur = votesRTV.size;
         int req = (int) Math.ceil(config.voteRatio * Groups.player.size());
-        sendToChat("commands.rtv.ok", player.coloredName(), cur, req);
+        sendToChat("commands.rtv.vote", player.coloredName(), cur, req);
 
         if (cur < req) return;
 
-        sendToChat("commands.rtv.successful");
+        sendToChat("commands.rtv.passed");
         votesRTV.clear();
         Events.fire(new GameOverEvent(state.rules.waveTeam));
     }

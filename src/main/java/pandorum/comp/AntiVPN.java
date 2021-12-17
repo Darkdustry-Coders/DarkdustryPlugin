@@ -25,9 +25,9 @@ public class AntiVPN {
         this.token = token;
     }
 
-    public void checkIp(String ip, Cons<Boolean> callback) {
+    public void checkIp(String ip, Cons<Boolean> cons) {
         if (cache.containsKey(ip)) {
-            callback.get(cache.get(ip));
+            cons.get(cache.get(ip));
             return;
         }
 
@@ -48,7 +48,7 @@ public class AntiVPN {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call request, @NotNull IOException e) {
-                callback.get(false);
+                cons.get(false);
             }
 
             @Override
@@ -64,8 +64,9 @@ public class AntiVPN {
                         "socks5", "socks5h", "shadowsocks",
                         "openvpn", "vpn"
                 ).contains(type.toLowerCase());
+
                 cache.put(ip, isDangerous);
-                callback.get(isDangerous);
+                cons.get(isDangerous);
             }
         });
     }

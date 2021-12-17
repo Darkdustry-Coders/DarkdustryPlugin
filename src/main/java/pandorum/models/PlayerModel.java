@@ -15,8 +15,8 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public int gamesPlayed = 0;
     public int rank = 0;
 
-    public static void find(Bson filter, Cons<PlayerModel> callback) {
-        PlayerModel.findAndApplySchema(PlayerModel.class, filter, callback);
+    public static void find(Bson filter, Cons<PlayerModel> cons) {
+        PlayerModel.findAndApplySchema(PlayerModel.class, filter, cons);
     }
 }
 

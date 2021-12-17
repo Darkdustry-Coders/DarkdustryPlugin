@@ -25,12 +25,12 @@ public class SurrenderCommand {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = (int) Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        sendToChat("commands.surrender.ok", Misc.colorizedTeam(player.team()), player.coloredName(), cur, req);
+        sendToChat("commands.surrender.vote", Misc.colorizedTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;
 
         votesSurrender.remove(player.team());
-        sendToChat("commands.surrender.successful", Misc.colorizedTeam(player.team()));
+        sendToChat("commands.surrender.passed", Misc.colorizedTeam(player.team()));
         for (Tile tile : world.tiles) {
             if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {
                 Time.run(Mathf.random(360f), tile::removeNet);

@@ -40,7 +40,7 @@ public class VoteKickSession {
     protected Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
-                sendToChat("commands.votekick.vote-failed", target.coloredName());
+                sendToChat("commands.votekick.failed", target.coloredName());
                 stop();
             }
         }, config.votekickDuration);
@@ -55,7 +55,7 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.vote-passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
+            sendToChat("commands.votekick.passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
             stop();
 
             target.kick(KickReason.vote, config.kickDuration);

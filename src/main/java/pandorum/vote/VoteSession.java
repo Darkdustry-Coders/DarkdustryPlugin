@@ -18,15 +18,15 @@ public abstract class VoteSession {
         this.task = start();
     }
 
-    public Seq<String> voted() {
-        return voted;
-    }
-
     protected abstract Task start();
 
     public abstract void vote(Player player, int sign);
 
     protected abstract boolean checkPass();
+
+    public Seq<String> voted() {
+        return voted;
+    }
 
     public int votesRequired() {
         return (int) Math.ceil(config.voteRatio * Groups.player.size());

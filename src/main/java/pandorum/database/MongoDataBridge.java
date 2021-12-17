@@ -31,7 +31,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         MongoDataBridge.collection = collection;
     }
 
-    public static <T extends MongoDataBridge<T>> void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> callback) {
+    public static <T extends MongoDataBridge<T>> void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> cons) {
         try {
             T dataClass = sourceClass.getConstructor().newInstance();
 
@@ -70,7 +70,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     });
 
                     dataClass.resetLatest();
-                    callback.get(dataClass);
+                    cons.get(dataClass);
                 }
 
                 @Override

@@ -69,7 +69,7 @@ public final class PandorumPlugin extends Plugin {
     public static Translator translator;
     public static AntiVPN antiVPN;
 
-    public static String discordServerLink = "https://dsc.gg/darkdustry";
+    private static String discordServerLink = "https://dsc.gg/darkdustry";
 
     public PandorumPlugin() throws IOException {
         Fi configFi = dataDirectory.child("config.json");

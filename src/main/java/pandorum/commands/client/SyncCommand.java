@@ -9,7 +9,7 @@ import static pandorum.Misc.bundled;
 
 public class SyncCommand {
 
-    private static final int cooldownTime = 15;
+    private static final float cooldownTime = 15f;
 
     public static void run(final String[] args, final Player player) {
         if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * cooldownTime) {

@@ -31,7 +31,7 @@ public class Ranks {
         return player.admin ? admin : get(index);
     }
 
-    public static void updateRank(Player player, Cons<Rank> callback) {
+    public static void updateRank(Player player, Cons<Rank> cons) {
         PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
             Rank current = get(playerInfo.rank);
 
@@ -47,11 +47,11 @@ public class Ranks {
 
                 playerInfo.rank = current.next.id;
                 playerInfo.save();
-                callback.get(current.next);
+                cons.get(current.next);
                 return;
             }
 
-            callback.get(current);
+            cons.get(current);
         });
     }
 
@@ -68,10 +68,8 @@ public class Ranks {
         public String tag;
         public String name;
         public int id;
-        public @Nullable
-        Rank next;
-        public @Nullable
-        Requirements req;
+        public @Nullable Rank next;
+        public @Nullable Requirements req;
 
         public Rank(String tag, String name, int id, Requirements req, Rank next) {
             this.name = name;

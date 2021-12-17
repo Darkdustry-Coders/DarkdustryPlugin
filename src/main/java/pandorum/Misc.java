@@ -61,7 +61,7 @@ public abstract class Misc {
     }
 
     public static boolean adminCheck(Player player) {
-        if (!player.admin()) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return true;
         }
