@@ -18,6 +18,7 @@ public class TriggerUpdateListener {
                     playerInfo.playTime += 1000L;
                     playerInfo.save();
                 });
+
                 Ranks.updateName(p);
             });
         }

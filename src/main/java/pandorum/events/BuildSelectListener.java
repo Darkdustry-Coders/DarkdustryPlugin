@@ -15,11 +15,7 @@ public class BuildSelectListener {
         if (PandorumPlugin.config.alertsEnabled() && !event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer() && event.team.cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertsDistance) && PandorumPlugin.interval.get(0, 900f)) {
             Groups.player.each(p -> p.team() == event.team, p -> PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
                 if (playerInfo.alerts) {
-                    bundled(p, "events.alert",
-                            event.builder.getPlayer().coloredName(),
-                            event.tile.x,
-                            event.tile.y
-                    );
+                    bundled(p, "events.alert", event.builder.getPlayer().coloredName(), event.tile.x, event.tile.y);
                 }
             }));
         }

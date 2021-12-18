@@ -12,7 +12,8 @@ import pandorum.Misc;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.*;
+import static pandorum.PandorumPlugin.config;
+import static pandorum.PandorumPlugin.votesSurrender;
 
 public class SurrenderCommand {
     public static void run(final String[] args, final Player player) {
@@ -29,8 +30,8 @@ public class SurrenderCommand {
 
         if (cur < req) return;
 
-        votesSurrender.remove(player.team());
         sendToChat("commands.surrender.passed", Misc.colorizedTeam(player.team()));
+        votesSurrender.remove(player.team());
         for (Tile tile : world.tiles) {
             if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {
                 Time.run(Mathf.random(360f), tile::removeNet);
