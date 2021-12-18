@@ -10,6 +10,7 @@ import pandorum.discord.BotMain;
 import static pandorum.Misc.sendToChat;
 
 public class AdminRequestListener {
+    @EventListener(eventType = EventType.AdminRequestEvent.class)
     public static void call(final EventType.AdminRequestEvent event) {
         switch (event.action) {
             case wave -> sendToChat("events.admin.wave-skip", event.player.coloredName());

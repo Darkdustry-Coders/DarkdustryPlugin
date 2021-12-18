@@ -7,6 +7,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.events.EventListener;
 import pandorum.comp.Effects;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
@@ -18,6 +19,7 @@ import static pandorum.Misc.colorizedTeam;
 import static pandorum.Misc.sendToChat;
 
 public class PlayerLeaveListener {
+    @EventListener(eventType = EventType.PlayerLeave.class)
     public static void call(final EventType.PlayerLeave event) {
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player-leave", event.player.color, event.player.getInfo().lastName);

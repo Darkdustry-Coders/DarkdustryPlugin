@@ -5,12 +5,14 @@ import com.mongodb.BasicDBObject;
 import mindustry.game.EventType;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.events.EventListener;
 import pandorum.entry.BlockEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
 public class BlockBuildEndListener {
-    public static void call(final EventType.BlockBuildEndEvent event) {
+    @EventListener(eventType = EventType.BlockBuildEndEvent.class)
+            public static void call(final EventType.BlockBuildEndEvent event) {
         if (PandorumPlugin.config.mode.isSimple) {
             HistoryEntry entry = new BlockEntry(event);
 

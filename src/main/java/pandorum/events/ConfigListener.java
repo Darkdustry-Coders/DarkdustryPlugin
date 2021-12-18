@@ -7,11 +7,13 @@ import mindustry.game.EventType;
 import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.events.EventListener;
 import pandorum.entry.ConfigEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 
 public class ConfigListener {
+    @EventListener(eventType = EventType.ConfigEvent.class)
     public static void call(final EventType.ConfigEvent event) {
         if (PandorumPlugin.config.mode.isSimple && event.player != null && event.tile.tileX() <= Vars.world.width() && event.tile.tileX() <= Vars.world.height()) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];

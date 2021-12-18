@@ -7,6 +7,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.events.EventListener;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
@@ -18,6 +19,7 @@ import pandorum.models.PlayerModel;
 import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
+    @EventListener(eventType = EventType.PlayerJoin.class)
     public static void call(final EventType.PlayerJoin event) {
         Ranks.updateName(event.player);
 

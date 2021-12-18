@@ -8,6 +8,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.events.EventListener;
 import pandorum.entry.DepositEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
@@ -15,6 +16,7 @@ import pandorum.models.PlayerModel;
 import static pandorum.Misc.bundled;
 
 public class DepositListener {
+    @EventListener(eventType = EventType.DepositEvent.class)
     public static void call(final EventType.DepositEvent event) {
         if (PandorumPlugin.config.mode.isSimple) {
             if (event.tile.block() == Blocks.thoriumReactor && event.item == Items.thorium && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < 150)) {

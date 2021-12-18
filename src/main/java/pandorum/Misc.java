@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.files.Fi;
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.game.Team;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
 import static mindustry.Vars.*;
@@ -91,56 +93,54 @@ public abstract class Misc {
         return format.format(time);
     }
 
-    public static Seq<Class<?>> loadClasses(String basePackage) {
-        Seq<Class<?>> classes = new Seq<>();
-        ClassLoader classLoader = PandorumPlugin.class.getClassLoader();
+    public static Seq<Class<?>> getClasses(String basePackage) {
         String packageName = basePackage.replace('.', '/');
-        URL pckg = classLoader.getResource(packageName);
+        URL pckg = PandorumPlugin.class.getClassLoader().getResource(packageName);
+
         if (pckg == null)
             throw new NullPointerException("Cannot get resources to package " + basePackage);
+
         String pckgStr = pckg.toString();
-        String path = pckgStr.substring("jar:file:".length(), pckgStr.lastIndexOf("!/"));
 
         try {
-            ZipFile zipFile = new ZipFile(path);
-            zipFile.stream()
+            ZipFile zipFile = new ZipFile(pckgStr.substring("jar:file:".length(), pckgStr.lastIndexOf("!/")));
+            return Seq.with(zipFile.stream()
                     .filter(e -> e.getName().startsWith(packageName)
                             && e.getName().endsWith(".class"))
-                    .forEach(e -> {
+                    .<Class<?>>map(e -> {
                         try{
                             String name = e.getName().replace('/', '.');
                             name = name.substring(0, name.lastIndexOf('.'));
 
-                            classes.add(Class.forName(name));
+                            return Class.forName(name);
                         }catch(ClassNotFoundException ex){
-                            ex.printStackTrace();
+                            Log.err(ex.getMessage());
+                            return null;
                         }
-                    });
+                    })
+                    .filter(Objects::nonNull)
+                    .toArray(Class<?>[]::new)
+            );
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.err(e.getMessage());
+            return new Seq<Class<?>>();
         }
-
-        return classes;
     }
 
     public static Seq<Method> getAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass) {
-        Seq<Method> methods = new Seq<>();
-        loadClasses(basePackage).each(classObject ->
-                Arrays.stream(classObject.getMethods()).forEach(method -> {
-                            if (method.isAnnotationPresent(annotationClass))
-                                methods.add(method);
-                        }
-                )
+        return getClasses(basePackage).map(classObject ->
+                Arrays.stream(classObject.getMethods()).filter(method -> method.isAnnotationPresent(annotationClass))
+        ).reduce(
+                new Seq<Method>(),
+                (Stream<Method> initial, Seq<Method> elem) -> elem.addAll(initial.toArray(Method[]::new))
         );
-        return methods;
     }
 
     public static Seq<Method> getClientCommands(String basePackage, Config.Gamemode gamemode) {
         Class<?>[] requiredParams = new Class<?>[] { String[].class, Player.class };
-        Seq<Method> methods = new Seq<Method>();
-        getAnnotatedMethods(basePackage, ClientCommand.class).each(
-                method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
-                method -> {
+        return getAnnotatedMethods(basePackage, ClientCommand.class)
+                .filter(method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams))
+                .map(method -> {
                     Seq<Config.Gamemode> disabledGamemodes = new Seq<>();
                     Seq<Config.Gamemode> reqiuredGamemodes = new Seq<>();
 
@@ -173,31 +173,24 @@ public abstract class Misc {
                          || (requirePvP && disablePvp)
                          || (requirePvP && !gamemode.isPvP)
                          || (disablePvp && gamemode.isPvP)
-                    )) {
-                        methods.add(method);
-                    }
-                });
-        return methods;
+                    )) return method;
+                    return null;
+                })
+                .filter(Objects::nonNull);
     }
 
     public static Seq<Method> getServerCommands(String basePackage) {
         Class<?>[] requiredParams = new Class<?>[] { String[].class };
-        Seq<Method> methods = new Seq<Method>();
-        getAnnotatedMethods(basePackage, ServerCommand.class).each(
-                method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams),
-                methods::add
+        return getAnnotatedMethods(basePackage, ServerCommand.class).filter(
+                method -> Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), requiredParams)
         );
-        return methods;
     }
 
     public static Seq<Method> getEventsMethods(String basePackage) {
-        Seq<Method> methods = new Seq<Method>();
-        getAnnotatedMethods(basePackage, EventListener.class).each(
+        return getAnnotatedMethods(basePackage, EventListener.class).filter(
                 method ->  Modifier.isStatic(method.getModifiers()) && Arrays.equals(method.getParameterTypes(), new Class<?>[] {
                             method.getAnnotation(EventListener.class).eventType()
-                        }),
-                methods::add
+                        })
         );
-        return methods;
     }
 }
