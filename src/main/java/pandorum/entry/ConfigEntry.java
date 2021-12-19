@@ -27,20 +27,21 @@ import pandorum.comp.Icons;
 import java.util.Date;
 import java.util.Locale;
 
+import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
 
 public class ConfigEntry implements HistoryEntry {
 
     public final String name;
-    public final Block block;
+    public final int blockID;
     public final Object value;
     public final boolean connect;
     public final Date time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
-        this.block = event.tile.block();
+        this.blockID = event.tile.block().id;
         this.value = getConfig(event);
         this.connect = connect;
         this.time = new Date();
@@ -61,6 +62,7 @@ public class ConfigEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
+        Block block = content.block(blockID);
         String ftime = Misc.formatTime(time);
         Locale locale = findLocale(player.locale);
 

@@ -20,13 +20,11 @@ public class CacheSeq<T> extends Seq<T> {
     }
 
     @Override
-    public void add(T e) {
-        if (e == null) {
-            return;
-        }
+    public void add(T value) {
+        if (value == null) return;
 
-        super.add(e);
-        writeQueue.add(Tuple2.of(e, Time.nanos()));
+        super.add(value);
+        writeQueue.add(Tuple2.of(value, Time.nanos()));
 
         cleanUpBySize();
         cleanUp();
