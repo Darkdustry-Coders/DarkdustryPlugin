@@ -27,7 +27,6 @@ import pandorum.annotations.commands.OverrideCommand;
 import pandorum.annotations.commands.ServerCommand;
 import pandorum.annotations.commands.admin.RequireAdmin;
 import pandorum.annotations.commands.admin.RequireNotAdmin;
-import pandorum.commands.client.*;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
 import pandorum.comp.Translator;
@@ -39,7 +38,6 @@ import pandorum.vote.VoteSession;
 
 import java.io.IOException;
 
-import static mindustry.Vars.clientLoaded;
 import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
@@ -109,7 +107,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         Log.info("Server commands default length " + handler.getCommandList().size);
 
-        Misc.getServerCommands("pandorum.commands.server").each(method -> {
+        Reflection.getServerCommands("pandorum.commands.server").each(method -> {
             ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
 
             if (method.isAnnotationPresent(OverrideCommand.class))
@@ -135,7 +133,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         Log.info("Client commands default length " + handler.getCommandList().size);
 
-        Misc.getClientCommands("pandorum.commands.client", config.mode).each(method -> {
+        Reflection.getClientCommands("pandorum.commands.client", config.mode).each(method -> {
             ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
 
             if (method.isAnnotationPresent(OverrideCommand.class))
