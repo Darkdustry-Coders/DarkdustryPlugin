@@ -27,7 +27,7 @@ public class Reflection {
         URL pckg = PandorumPlugin.class.getClassLoader().getResource(packageName);
 
         if (pckg == null)
-            throw new NullPointerException("Cannot get resources to package " + basePackage);
+            throw new IllegalArgumentException("Cannot get resources to package " + basePackage);
 
         String pckgStr = pckg.toString();
 

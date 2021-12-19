@@ -1,12 +1,15 @@
 package pandorum.comp;
 
 import arc.Events;
+import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.PandorumPlugin;
+import pandorum.Reflection;
+import pandorum.annotations.events.EventListener;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;
@@ -29,18 +32,16 @@ public class Loader {
         netServer.admins.addChatFilter(ChatFilter::filter);
         netServer.invalidHandler = InvalidCommandResponse::response;
 
-        Events.on(AdminRequestEvent.class, AdminRequestListener::call);
-        Events.on(BlockBuildEndEvent.class, BlockBuildEndListener::call);
-        Events.on(BuildSelectEvent.class, BuildSelectListener::call);
-        Events.on(ConfigEvent.class, ConfigListener::call);
-        Events.on(DepositEvent.class, DepositListener::call);
-        Events.on(GameOverEvent.class, GameOverListener::call);
-        Events.on(PlayerJoin.class, PlayerJoinListener::call);
-        Events.on(PlayerLeave.class, PlayerLeaveListener::call);
-        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
-        Events.on(TapEvent.class, TapListener::call);
-        Events.on(WithdrawEvent.class, WithdrawListener::call);
-        Events.on(WorldLoadEvent.class, WorldLoadListener::call);
+        Reflection.getEventsMethods("pandorum.events").each(method -> {
+            EventListener annotation = method.getAnnotation(EventListener.class);
+            Events.on(annotation.eventType(), event -> {
+                try {
+                    method.invoke(null, event);
+                } catch (Exception e) { Log.err(e.getMessage()); }
+            });
+            Log.info("Registred event " + annotation.eventType().toString());
+        });
+
         Events.run(Trigger.update, TriggerUpdateListener::update);
 
         Administration.Config.motd.set("off");

@@ -124,6 +124,7 @@ public final class PandorumPlugin extends Plugin {
                         } catch (Exception e) { Log.err(e.getMessage()); }
                     }
             );
+            Log.info("Registered command " + commandAnnotation.name());
         });
 
         Log.info("Server commands " + handler.getCommandList().size);
@@ -153,6 +154,7 @@ public final class PandorumPlugin extends Plugin {
                         } catch (Exception e) { Log.err(e.getMessage()); }
                     }
             );
+            Log.info("Registered command " + commandAnnotation.name());
         });
 
         Log.info("Client commands " + handler.getCommandList().size);
