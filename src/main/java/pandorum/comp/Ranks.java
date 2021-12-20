@@ -68,8 +68,10 @@ public class Ranks {
         public String tag;
         public String name;
         public int id;
-        public @Nullable Rank next;
-        public @Nullable Requirements req;
+        public @Nullable
+        Rank next;
+        public @Nullable
+        Requirements req;
 
         public Rank(String tag, String name, int id, Requirements req, Rank next) {
             this.name = name;

@@ -59,10 +59,7 @@ public class CacheSeq<T> extends Seq<T> {
 
     @Override
     public boolean remove(T value) {
-        int index = writeQueue.indexOf(t -> Objects.equals(t.t1, value));
-        if (index != -1) {
-            writeQueue.removeIndex(index);
-        }
+        writeQueue.remove(t -> Objects.equals(t.t1, value));
         return super.remove(value);
     }
 

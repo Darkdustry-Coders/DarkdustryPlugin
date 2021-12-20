@@ -2,7 +2,6 @@ package pandorum.entry;
 
 import arc.math.geom.Point2;
 import arc.util.Pack;
-import mindustry.content.Blocks;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
@@ -12,15 +11,17 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Door;
+import mindustry.world.blocks.distribution.Sorter;
 import mindustry.world.blocks.logic.MessageBlock;
 import mindustry.world.blocks.logic.SwitchBlock;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadSource;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.sandbox.LiquidSource;
+import mindustry.world.blocks.storage.Unloader;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.UnitFactory;
-import pandorum.Misc;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
@@ -30,6 +31,7 @@ import java.util.Locale;
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.formatTime;
 
 public class ConfigEntry implements HistoryEntry {
 
@@ -63,7 +65,7 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
-        String ftime = Misc.formatTime(time);
+        String ftime = formatTime(time);
         Locale locale = findLocale(player.locale);
 
         if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
@@ -109,7 +111,7 @@ public class ConfigEntry implements HistoryEntry {
             return Bundle.format("history.config", locale, name, block.name, Icons.get(liquid.name), ftime);
         }
 
-        if (block == Blocks.unloader || block == Blocks.sorter || block == Blocks.invertedSorter || block == Blocks.itemSource) {
+        if (block instanceof Unloader || block instanceof Sorter || block instanceof ItemSource) {
             Item item = (Item) value;
             if (item == null) {
                 return Bundle.format("history.config.default", locale, name, block.name, ftime);

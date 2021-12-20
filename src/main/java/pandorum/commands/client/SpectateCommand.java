@@ -3,7 +3,6 @@ package pandorum.commands.client;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 
-import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.spectating;
 
