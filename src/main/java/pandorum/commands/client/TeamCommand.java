@@ -8,7 +8,7 @@ import static pandorum.Misc.*;
 
 public class TeamCommand {
     public static void run(final String[] args, final Player player) {
-        Team team = Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[0]));
+        Team team = findTeam(args[0]);
         if (team == null) {
             StringBuilder teams = new StringBuilder();
             Structs.each(t -> teams.append("\n[gold] - [white]").append(colorizedTeam(t)), Team.baseTeams);

@@ -1,7 +1,6 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
-import arc.util.Structs;
 import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -9,8 +8,7 @@ import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.colorizedTeam;
+import static pandorum.Misc.*;
 
 public class SpawnCommand {
 
@@ -28,7 +26,7 @@ public class SpawnCommand {
             return;
         }
 
-        Team team = args.length > 2 ? Structs.find(Team.all, t -> t.name.equalsIgnoreCase(args[2])) : player.team();
+        Team team = args.length > 2 ? findTeam(args[2]) : player.team();
         if (team == null) {
             StringBuilder teams = new StringBuilder();
             for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(colorizedTeam(t));
@@ -36,7 +34,7 @@ public class SpawnCommand {
             return;
         }
 
-        UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[0]) && u != UnitTypes.block);
+        UnitType type = findUnit(args[0]);
         if (type == null) {
             StringBuilder units = new StringBuilder();
             content.units().each(u -> u != UnitTypes.block, u -> units.append(" ").append(Icons.get(u.name)).append(u.name));

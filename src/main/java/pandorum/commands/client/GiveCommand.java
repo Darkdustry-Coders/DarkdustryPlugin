@@ -9,6 +9,7 @@ import pandorum.comp.Icons;
 import static mindustry.Vars.content;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
+import static pandorum.Misc.findItem;
 
 public class GiveCommand {
     public static void run(final String[] args, final Player player) {
@@ -19,7 +20,7 @@ public class GiveCommand {
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
 
-        Item item = content.items().find(b -> b.name.equalsIgnoreCase(args[0]));
+        Item item = findItem(args[0]);
         if (item == null) {
             StringBuilder items = new StringBuilder();
             content.items().each(i -> items.append(" ").append(Icons.get(i.name)).append(i.name));

@@ -7,12 +7,11 @@ import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findByName;
+import static pandorum.Misc.*;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {
-        UnitType type = content.units().find(u -> u.name.equalsIgnoreCase(args[0]) && u != UnitTypes.block);
+        UnitType type = findUnit(args[0]);
         if (type == null) {
             StringBuilder units = new StringBuilder();
             content.units().each(u -> u != UnitTypes.block, u -> units.append(" ").append(Icons.get(u.name)).append(u.name));

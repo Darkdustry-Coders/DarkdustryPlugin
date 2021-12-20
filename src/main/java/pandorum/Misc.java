@@ -4,10 +4,13 @@ import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
+import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.type.Item;
+import mindustry.type.UnitType;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
@@ -51,13 +54,25 @@ public abstract class Misc {
         return null;
     }
 
+    public static Locale findLocale(String language) {
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(language) || language.startsWith(l.toString()));
+        return locale != null ? locale : Bundle.defaultLocale();
+    }
+
     public static Player findByName(String name) {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
-    public static Locale findLocale(String lang) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(lang) || lang.startsWith(l.toString()));
-        return locale != null ? locale : Bundle.defaultLocale();
+    public static UnitType findUnit(String name) {
+        return Strings.canParseInt(name) ? content.unit(Strings.parseInt(name)) : content.units().find(u -> u.name.equalsIgnoreCase(name) && u != UnitTypes.block);
+    }
+
+    public static Item findItem(String name) {
+        return Strings.canParseInt(name) ? content.item(Strings.parseInt(name)) : content.items().find(i -> i.name.equalsIgnoreCase(name));
+    }
+
+    public static Team findTeam(String name) {
+        return Structs.find(Team.all, t -> t.name.equalsIgnoreCase(name));
     }
 
     public static boolean adminCheck(Player player) {
