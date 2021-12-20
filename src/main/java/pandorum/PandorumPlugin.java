@@ -41,8 +41,13 @@ import java.io.IOException;
 import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
-
     public static String discordServerLink = "https://dsc.gg/darkdustry";
+
+    public static final String ClientCommandsBasePackage = "pandorum.commands.client";
+    public static final String ServerCommandsBasePackage = "pandorum.commands.server";
+    public static final String EventListenersBasePackage = "pandorum.events";
+    public static final String TriggerListenersBasePackage = "pandorum.events";
+    public static final String PacketHandlersBasePackage = "pandorum.events.handlers";
 
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
@@ -107,7 +112,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         Log.info("Server commands default length " + handler.getCommandList().size);
 
-        Reflection.getServerCommands("pandorum.commands.server").each(method -> {
+        Reflection.getServerCommands().each(method -> {
             ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
 
             if (method.isAnnotationPresent(OverrideCommand.class))
@@ -134,7 +139,7 @@ public final class PandorumPlugin extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         Log.info("Client commands default length " + handler.getCommandList().size);
 
-        Reflection.getClientCommands("pandorum.commands.client", config.mode).each(method -> {
+        Reflection.getClientCommands(config.mode).each(method -> {
             ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
 
             if (method.isAnnotationPresent(OverrideCommand.class))

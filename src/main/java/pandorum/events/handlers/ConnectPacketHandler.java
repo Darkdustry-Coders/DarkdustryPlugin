@@ -16,12 +16,14 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
 import mindustry.net.Packets.KickReason;
 import pandorum.PandorumPlugin;
+import pandorum.annotations.handlers.PacketHandler;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
 
 public class ConnectPacketHandler {
+    @PacketHandler(packetType = ConnectPacket.class)
     public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
