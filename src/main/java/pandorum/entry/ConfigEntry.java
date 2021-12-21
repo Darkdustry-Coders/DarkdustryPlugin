@@ -36,7 +36,7 @@ import static pandorum.Misc.formatTime;
 public class ConfigEntry implements HistoryEntry {
 
     public final String name;
-    public final int blockID;
+    public final short blockID;
     public final Object value;
     public final boolean connect;
     public final Date time;

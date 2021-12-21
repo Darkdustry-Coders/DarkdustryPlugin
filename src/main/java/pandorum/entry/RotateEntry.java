@@ -15,7 +15,7 @@ public class RotateEntry implements HistoryEntry {
     public static final String[] sides = {"\uE803", "\uE804", "\uE802", "\uE805"};
 
     public final String name;
-    public final int blockID;
+    public final short blockID;
     public final int rotation;
     public final Date time;
 

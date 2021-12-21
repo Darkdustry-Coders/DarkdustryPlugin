@@ -14,8 +14,8 @@ import static pandorum.Misc.formatTime;
 public class DepositEntry implements HistoryEntry {
 
     public final String name;
-    public final int blockID;
-    public final int itemID;
+    public final short blockID;
+    public final short itemID;
     public final int amount;
     public final Date time;
 

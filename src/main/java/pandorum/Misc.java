@@ -4,7 +4,6 @@ import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
-import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -64,15 +63,15 @@ public abstract class Misc {
     }
 
     public static UnitType findUnit(String name) {
-        return Strings.canParseInt(name) ? content.unit(Strings.parseInt(name)) : content.units().find(u -> u.name.equalsIgnoreCase(name) && u != UnitTypes.block);
+        return Strings.canParseInt(name) ? content.unit(Strings.parseInt(name)) : content.units().find(unit -> unit.name.equalsIgnoreCase(name));
     }
 
     public static Item findItem(String name) {
-        return Strings.canParseInt(name) ? content.item(Strings.parseInt(name)) : content.items().find(i -> i.name.equalsIgnoreCase(name));
+        return Strings.canParseInt(name) ? content.item(Strings.parseInt(name)) : content.items().find(item -> item.name.equalsIgnoreCase(name));
     }
 
     public static Team findTeam(String name) {
-        return Structs.find(Team.all, t -> t.name.equalsIgnoreCase(name));
+        return Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name) || (Strings.canParseInt(name) && team.id == Strings.parseInt(name)));
     }
 
     public static boolean adminCheck(Player player) {

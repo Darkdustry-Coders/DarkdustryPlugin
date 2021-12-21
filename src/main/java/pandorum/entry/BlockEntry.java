@@ -17,8 +17,8 @@ import static pandorum.Misc.formatTime;
 public class BlockEntry implements HistoryEntry {
 
     public final String name;
-    public final int unitID;
-    public final int blockID;
+    public final short unitID;
+    public final short blockID;
     public final int rotation;
     public final boolean breaking;
     public final Date time;
