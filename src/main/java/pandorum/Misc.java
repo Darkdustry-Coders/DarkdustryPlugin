@@ -28,7 +28,7 @@ public abstract class Misc {
     }
 
     public static String colorizedTeam(Team team) {
-        return Strings.format("[white]@[#@]@", Icons.get(team.name), team.color, team.name);
+        return "[white]" + Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }
 
     public static Map findMap(String name) {

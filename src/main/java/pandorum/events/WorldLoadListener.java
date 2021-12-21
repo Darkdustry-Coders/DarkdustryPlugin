@@ -1,7 +1,6 @@
 package pandorum.events;
 
 import mindustry.game.EventType;
-import mindustry.world.Tile;
 import pandorum.PandorumPlugin;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
@@ -17,12 +16,12 @@ public class WorldLoadListener {
         if (PandorumPlugin.config.historyEnabled()) {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
-            for (Tile tile : world.tiles) {
-                PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
-                        .maximumSize(PandorumPlugin.config.historyLimit)
-                        .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
-                        .build();
-            }
+            world.tiles.eachTile(tile -> {
+               PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
+                       .maximumSize(PandorumPlugin.config.historyLimit)
+                       .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
+                       .build();
+            });
         }
     }
 }

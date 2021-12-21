@@ -12,7 +12,7 @@ import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.netServer;
 
-public class ChatFilter {
+public final class ChatFilter {
 
     public static String filter(final Player author, final String text) {
         String formatted = netServer.chatFormatter.format(author, text);

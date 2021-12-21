@@ -8,7 +8,7 @@ import pandorum.PandorumPlugin;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.RotateEntry;
 
-public class ActionFilter {
+public final class ActionFilter {
 
     public static boolean filter(final PlayerAction action) {
         if (PandorumPlugin.config.historyEnabled() && action.type == ActionType.rotate) {

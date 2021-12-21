@@ -12,10 +12,9 @@ public class WithdrawListener {
     public static void call(final EventType.WithdrawEvent event) {
         if (PandorumPlugin.config.historyEnabled()) {
             HistoryEntry entry = new WithdrawEntry(event);
-            Seq<Tile> linkedTiles = event.tile.tile.getLinkedTiles(new Seq<>());
-            for (Tile tile : linkedTiles) {
+            event.tile.tile.getLinkedTiles(new Seq<>()).each(tile -> {
                 PandorumPlugin.history[tile.x][tile.y].add(entry);
-            }
+            });
         }
     }
 }
