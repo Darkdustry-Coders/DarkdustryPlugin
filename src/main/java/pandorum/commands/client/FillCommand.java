@@ -1,14 +1,14 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
-import mindustry.content.Blocks;
 import mindustry.gen.Player;
 import mindustry.world.Block;
-import mindustry.world.blocks.environment.Floor;
+import mindustry.world.Tile;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
+import static pandorum.Misc.findBlock;
 
 public class FillCommand {
 
@@ -23,37 +23,19 @@ public class FillCommand {
         int w = Strings.parseInt(args[0]) + player.tileX();
         int h = Strings.parseInt(args[1]) + player.tileY();
 
-        Floor floor;
-        Block block;
-
-        if (args.length == 3) {
-            Block found = content.blocks().find(b -> b.name.equalsIgnoreCase(args[2]));
-            if (found.isFloor()) {
-                floor = found.asFloor();
-                block = Blocks.air;
-            } else {
-                floor = Blocks.air.asFloor();
-                block = found;
-            }
-        } else {
-            floor = content.blocks().find(b -> b.isFloor() && b.name.equalsIgnoreCase(args[2])).asFloor();
-            block = content.blocks().find(b -> b.name.equalsIgnoreCase(args[3]));
-        }
-
-        if (floor == null || block == null) {
-            bundled(player, "commands.admin.fill.incorrect-type");
+        Block block = findBlock(args[0]);
+        if (block == null) {
+            bundled(player, "commands.admin.fill.block-not-found");
             return;
-        }
-
-        for (int x = player.tileX(); x < w; x++) {
-            for (int y = player.tileY(); y < h; y++) {
-                if (world.tile(x, y) != null) world.tile(x, y).setFloorNet(floor);
-            }
         }
 
         for (int x = player.tileX(); x < w; x += block.size) {
             for (int y = player.tileY(); y < h; y += block.size) {
-                if (world.tile(x, y) != null) world.tile(x, y).setNet(block);
+                Tile tile = world.tile(x, y);
+                if (tile != null) {
+                    if (block.isFloor()) tile.setFloorNet(block);
+                    else tile.setNet(block, player.team(), 0);
+                }
             }
         }
 

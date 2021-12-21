@@ -46,6 +46,6 @@ public class ClientCommandsLoader {
         CommandsHelper.register(handler, "give", "<item> [count]", "commands.give.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), GiveCommand::run);
         CommandsHelper.register(handler, "team", "<team> [player...]", "commands.team.description", true, TeamCommand::run);
         CommandsHelper.register(handler, "spectate", "commands.spectate.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), SpectateCommand::run);
-        CommandsHelper.register(handler, "fill", "<width> <height> <block_1> [block_2]", "commands.fill.description", true, Seq.with(Config.Gamemode.sandbox), FillCommand::run);
+        CommandsHelper.register(handler, "fill", "<width> <height> <block>", "commands.fill.description", true, Seq.with(Config.Gamemode.sandbox), FillCommand::run);
     }
 }

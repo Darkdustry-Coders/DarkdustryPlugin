@@ -10,6 +10,7 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
+import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
@@ -60,6 +61,10 @@ public abstract class Misc {
 
     public static Player findByName(String name) {
         return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
+    }
+
+    public static Block findBlock(String name) {
+        return Strings.canParseInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
 
     public static UnitType findUnit(String name) {
