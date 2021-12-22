@@ -71,21 +71,21 @@ public class ConfigEntry implements HistoryEntry {
         if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
             int data = Pack.rightInt((long) value);
             if (data < 0) {
-                return Bundle.format("history.config.disconnect", locale, name, block.name, ftime);
+                return Bundle.format("history.config.disconnect", locale, name, Icons.get(block.name), ftime);
             }
 
             Tile tile = world.tile(data);
-            return connect ? Bundle.format("history.config.connect", locale, name, block.name, tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, block.name, tile.x, tile.y, ftime);
+            return connect ? Bundle.format("history.config.connect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime);
         }
 
         if (block instanceof Door) {
             boolean data = (boolean) value;
-            return data ? Bundle.format("history.config.door.on", locale, name, block.name, ftime) : Bundle.format("history.config.door.off", locale, name, block.name, ftime);
+            return data ? Bundle.format("history.config.door.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.door.off", locale, name, Icons.get(block.name), ftime);
         }
 
         if (block instanceof SwitchBlock) {
             boolean data = (boolean) value;
-            return data ? Bundle.format("history.config.switch.on", locale, name, ftime) : Bundle.format("history.config.switch.off", locale, name, ftime);
+            return data ? Bundle.format("history.config.switch.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.switch.off", locale, name, Icons.get(block.name), ftime);
         }
 
         if (block instanceof CommandCenter) {
@@ -96,59 +96,59 @@ public class ConfigEntry implements HistoryEntry {
         if (block instanceof MessageBlock) {
             String message = (String) value;
             if (message.isBlank()) {
-                return Bundle.format("history.config.default", locale, name, block.name, ftime);
+                return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
             }
 
-            return Bundle.format("history.config.message", locale, name, message, ftime);
+            return Bundle.format("history.config.message", locale, name, Icons.get(block.name), message, ftime);
         }
 
         if (block instanceof LiquidSource) {
             Liquid liquid = (Liquid) value;
             if (liquid == null) {
-                return Bundle.format("history.config.default", locale, name, block.name, ftime);
+                return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
             }
 
-            return Bundle.format("history.config", locale, name, block.name, Icons.get(liquid.name), ftime);
+            return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(liquid.name), ftime);
         }
 
         if (block instanceof Unloader || block instanceof Sorter || block instanceof ItemSource) {
             Item item = (Item) value;
             if (item == null) {
-                return Bundle.format("history.config.default", locale, name, block.name, ftime);
+                return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
             }
 
-            return Bundle.format("history.config", locale, name, block.name, Icons.get(item.name), ftime);
+            return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(item.name), ftime);
         }
 
         if (block instanceof Constructor) {
             Block buildPlan = (Block) value;
             if (buildPlan == null) {
-                return Bundle.format("history.config.default", locale, name, block.name, ftime);
+                return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
             }
 
-            return Bundle.format("history.config", locale, name, block.name, buildPlan.name, ftime);
+            return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(buildPlan.name), ftime);
         }
 
         if (block instanceof UnitFactory factory) {
             if (value instanceof UnitType buildPlan) {
-                return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
+                return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(buildPlan.name), ftime);
             } else if (value instanceof Integer buildPlan) {
-                return buildPlan < 0 || buildPlan > factory.plans.size ? Bundle.format("history.config.default", locale, name, block.name, ftime) : Bundle.format("history.config", locale, name, block.name, Icons.get(factory.plans.get(buildPlan).unit.name), ftime);
+                return buildPlan < 0 || buildPlan > factory.plans.size ? Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(factory.plans.get(buildPlan).unit.name), ftime);
             }
 
-            return Bundle.format("history.config.default", locale, name, block.name, ftime);
+            return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
         }
 
         if (block instanceof PayloadSource) {
             if (value instanceof Block buildPlan) {
-                return Bundle.format("history.config", locale, name, block.name, buildPlan.name, ftime);
+                return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(buildPlan.name), ftime);
             } else if (value instanceof UnitType buildPlan) {
-                return Bundle.format("history.config", locale, name, block.name, Icons.get(buildPlan.name), ftime);
+                return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(buildPlan.name), ftime);
             }
 
-            return Bundle.format("history.config.default", locale, name, block.name, ftime);
+            return Bundle.format("history.config.default", locale, name, Icons.get(block.name), ftime);
         }
 
-        return Bundle.format("history.config.changed", locale, name, block.name, ftime);
+        return Bundle.format("history.config.changed", locale, name, Icons.get(block.name), ftime);
     }
 }

@@ -4,7 +4,6 @@ import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.Vars;
 import mindustry.game.EventType;
-import mindustry.world.Tile;
 import mindustry.world.blocks.power.PowerNode;
 import pandorum.PandorumPlugin;
 import pandorum.entry.ConfigEntry;
@@ -28,11 +27,7 @@ public class ConfigListener {
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);
-
-            Seq<Tile> linkedTiles = event.tile.tile.getLinkedTiles(new Seq<>());
-            for (Tile tile : linkedTiles) {
-                PandorumPlugin.history[tile.x][tile.y].add(entry);
-            }
+            event.tile.tile.getLinkedTiles(new Seq<>()).each(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
         }
     }
 

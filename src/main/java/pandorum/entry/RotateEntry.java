@@ -3,6 +3,7 @@ package pandorum.entry;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 import pandorum.comp.Bundle;
+import pandorum.comp.Icons;
 
 import java.util.Date;
 
@@ -28,6 +29,6 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", findLocale(player.locale), name, content.block(blockID).name, sides[rotation], formatTime(time));
+        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatTime(time));
     }
 }

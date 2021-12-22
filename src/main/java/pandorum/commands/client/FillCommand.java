@@ -4,8 +4,8 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import pandorum.comp.Icons;
 
-import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findBlock;
@@ -20,17 +20,17 @@ public class FillCommand {
             return;
         }
 
-        int w = Strings.parseInt(args[0]) + player.tileX();
-        int h = Strings.parseInt(args[1]) + player.tileY();
+        int width = Strings.parseInt(args[0]);
+        int height = Strings.parseInt(args[1]);
 
-        Block block = findBlock(args[0]);
+        Block block = findBlock(args[2]);
         if (block == null) {
-            bundled(player, "commands.admin.fill.block-not-found");
+            bundled(player, "commands.block-not-found");
             return;
         }
 
-        for (int x = player.tileX(); x < w; x += block.size) {
-            for (int y = player.tileY(); y < h; y += block.size) {
+        for (int x = player.tileX(); x < width + player.tileX(); x += block.size) {
+            for (int y = player.tileY(); y < height + player.tileY(); y += block.size) {
                 Tile tile = world.tile(x, y);
                 if (tile != null) {
                     if (block.isFloor()) tile.setFloorNet(block);
@@ -39,6 +39,6 @@ public class FillCommand {
             }
         }
 
-        bundled(player, "commands.admin.fill.success");
+        bundled(player, "commands.admin.fill.success", width, height, Icons.get(block.name, block.name));
     }
 }
