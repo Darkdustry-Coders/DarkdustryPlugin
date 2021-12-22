@@ -20,10 +20,10 @@ public class ConfigListener {
             int connections = event.tile.power != null ? event.tile.power.links.size : 0;
             boolean connect = connections > 0;
 
-            if (!entries.isEmpty() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long value) {
+            if (event.tile.block instanceof PowerNode node && entries.any() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long value) {
                 boolean isBatch = entries.size >= 2 && entries.get(entries.size - 2) instanceof ConfigEntry configEntry && configEntry.value instanceof Long l && Pack.leftInt(l) != connections && content.block(configEntry.blockID) instanceof PowerNode;
 
-                connect = event.tile.block instanceof PowerNode node ? isBatch ? isLastUniqueCount(entries, value, node.maxNodes) : connections > Pack.leftInt(value) : event.value instanceof Integer i && i >= 0;
+                connect = isBatch ? isLastUniqueCount(entries, value, node.maxNodes) : connections > Pack.leftInt(value);
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);

@@ -92,8 +92,6 @@ public class Icons {
                 "molten-slag", Iconc.blockMoltenSlag,
                 "space", Iconc.blockSpace,
 
-                "empty", Iconc.blockEmpty,
-
                 "stone", Iconc.blockStone,
                 "crater-stone", Iconc.blockCraterStone,
                 "char", Iconc.blockChar,

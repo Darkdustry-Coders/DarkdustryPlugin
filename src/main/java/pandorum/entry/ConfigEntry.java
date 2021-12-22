@@ -1,6 +1,5 @@
 package pandorum.entry;
 
-import arc.math.geom.Point2;
 import arc.util.Pack;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
@@ -11,10 +10,13 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Door;
+import mindustry.world.blocks.distribution.ItemBridge;
+import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.distribution.Sorter;
 import mindustry.world.blocks.logic.MessageBlock;
 import mindustry.world.blocks.logic.SwitchBlock;
 import mindustry.world.blocks.payloads.Constructor;
+import mindustry.world.blocks.payloads.PayloadMassDriver;
 import mindustry.world.blocks.payloads.PayloadSource;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.sandbox.ItemSource;
@@ -50,14 +52,8 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     private Object getConfig(ConfigEvent event) {
-        if (event.tile.block().configurations.containsKey(Integer.class) && (event.tile.block().configurations.containsKey(Point2[].class) || event.tile.block().configurations.containsKey(Point2.class))) {
-            int count;
-            if (event.tile.block() instanceof PowerNode) {
-                count = event.tile.power.links.size;
-            } else {
-                count = (int) event.value;
-            }
-            return Pack.longInt(count, (int) event.value);
+        if (event.tile.block() instanceof PowerNode) {
+            return Pack.longInt(event.tile.power.links.size, (int) event.value);
         }
         return event.value;
     }
@@ -68,14 +64,20 @@ public class ConfigEntry implements HistoryEntry {
         String ftime = formatTime(time);
         Locale locale = findLocale(player.locale);
 
-        if (block.configurations.containsKey(Integer.class) && (block.configurations.containsKey(Point2[].class) || block.configurations.containsKey(Point2.class))) {
+        if (block instanceof PowerNode) {
+            int data = Pack.rightInt((long) value);
+            Tile tile = world.tile(data);
+            return connect ? Bundle.format("history.config.power-node.connect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime);
+        }
+
+        if (block instanceof ItemBridge || block instanceof MassDriver || block instanceof PayloadMassDriver) {
             int data = Pack.rightInt((long) value);
             if (data < 0) {
                 return Bundle.format("history.config.disconnect", locale, name, Icons.get(block.name), ftime);
             }
 
             Tile tile = world.tile(data);
-            return connect ? Bundle.format("history.config.connect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime);
+            return Bundle.format("history.config.connect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime);
         }
 
         if (block instanceof Door) {
