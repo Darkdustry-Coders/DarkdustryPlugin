@@ -71,7 +71,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof ItemBridge || block instanceof MassDriver || block instanceof PayloadMassDriver) {
-            int data = Pack.rightInt((long) value);
+            int data = (int) value;
             if (data < 0) {
                 return Bundle.format("history.config.disconnect", locale, name, Icons.get(block.name), ftime);
             }
