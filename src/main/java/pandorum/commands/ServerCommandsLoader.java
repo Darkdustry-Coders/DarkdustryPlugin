@@ -13,6 +13,6 @@ public class ServerCommandsLoader {
         CommandsHelper.register(handler, "kick", "<player...>", "Kick a player from the server.", KickCommand::run);
         CommandsHelper.register(handler, "pardon", "<uuid...>", "Pardon a kicked player.", PardonCommand::run);
         CommandsHelper.register(handler, "ban", "<ip/name/id> <ip/username/uuid...>", "Ban a player by ip, name or uuid.", BanCommand::run);
-        CommandsHelper.register(handler, "unban", "<ip/all/uuid>", "Unban a player by ip or uuid.", UnbanCommand::run);
+        CommandsHelper.register(handler, "unban", "<ip/all/uuid...>", "Unban a player by ip or uuid.", UnbanCommand::run);
     }
 }

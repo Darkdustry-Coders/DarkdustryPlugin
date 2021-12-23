@@ -65,8 +65,7 @@ public class ConfigEntry implements HistoryEntry {
         Locale locale = findLocale(player.locale);
 
         if (block instanceof PowerNode) {
-            int data = Pack.rightInt((long) value);
-            Tile tile = world.tile(data);
+            Tile tile = world.tile(Pack.rightInt((long) value));
             return connect ? Bundle.format("history.config.power-node.connect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, ftime);
         }
 
@@ -91,8 +90,8 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof CommandCenter) {
-            String[] commands = Bundle.format("history.config.command-center.all", locale).split(", ");
-            return Bundle.format("history.config.command-center", locale, name, commands[((UnitCommand) value).ordinal()], ftime);
+            UnitCommand command = (UnitCommand) value;
+            return Bundle.format("history.config.command-center", locale, name, Icons.get(command.name()), ftime);
         }
 
         if (block instanceof MessageBlock) {

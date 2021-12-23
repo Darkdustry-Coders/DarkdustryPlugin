@@ -337,7 +337,11 @@ public class Icons {
                 "derelict", Iconc.teamDerelict,
                 "green", Iconc.statusElectrified,
                 "purple", Iconc.statusSporeSlowed,
-                "blue", Iconc.statusWet
+                "blue", Iconc.statusWet,
+
+                "attack", Iconc.commandAttack,
+                "rally", Iconc.commandRally,
+                "idle", Iconc.cancel
         );
     }
 
