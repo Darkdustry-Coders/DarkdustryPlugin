@@ -48,6 +48,8 @@ public final class PandorumPlugin extends Plugin {
     public static final String EventListenersBasePackage = "pandorum.events";
     public static final String TriggerListenersBasePackage = "pandorum.events";
     public static final String PacketHandlersBasePackage = "pandorum.events.handlers";
+    public static final String ActionFiltersBasePackage = "pandorum.events.filters";
+    public static final String ChatFiltersBasePackage = "pandorum.events.filters";
 
     public static final Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)

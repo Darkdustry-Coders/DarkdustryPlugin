@@ -1,8 +1,11 @@
 package pandorum;
 
 import arc.struct.Seq;
+import arc.struct.StringMap;
 import arc.util.Log;
+import mindustry.gen.Iconc;
 import mindustry.gen.Player;
+import mindustry.net.Administration;
 import mindustry.net.NetConnection;
 import pandorum.annotations.commands.ClientCommand;
 import pandorum.annotations.commands.ServerCommand;
@@ -10,6 +13,8 @@ import pandorum.annotations.commands.gamemodes.*;
 import pandorum.annotations.commands.gamemodes.containers.DisabledGamemodes;
 import pandorum.annotations.commands.gamemodes.containers.RequiredGamemodes;
 import pandorum.annotations.events.EventListener;
+import pandorum.annotations.filters.ActionFilter;
+import pandorum.annotations.filters.ChatFilter;
 import pandorum.annotations.handlers.PacketHandler;
 import pandorum.annotations.events.TriggerListener;
 import pandorum.comp.Config;
@@ -73,21 +78,53 @@ public class Reflection {
         );
     }
 
-    private static Seq<Method> getCommandsMethods(String basePackage, Class<? extends Annotation> annotation, Class<?>[] allowedParams) {
-        return getAnnotatedMethods(basePackage, annotation).filter(
-                method -> Modifier.isStatic(method.getModifiers()) && method.getReturnType().equals(Void.TYPE) && Arrays.equals(method.getParameterTypes(), allowedParams)
+    private static Seq<Method> getStaticAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass) {
+        return getAnnotatedMethods(basePackage, annotationClass).filter(
+                method -> Modifier.isStatic(annotationClass.getModifiers())
+        );
+    }
+
+    private static Seq<Method> getStaticAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass, Class<?>[] params) {
+        return getStaticAnnotatedMethods(basePackage, annotationClass).filter(
+                method -> Arrays.equals(method.getParameterTypes(), params)
+        );
+    }
+
+    private static Seq<Method> getStaticAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass, Class<?>[] params, Class<?> returnType) {
+        return getStaticAnnotatedMethods(basePackage, annotationClass, params).filter(
+                method -> method.getReturnType().equals(returnType)
+        );
+    }
+
+    private static Seq<Method> getStaticAnnotatedVoids(String basePackage, Class<? extends Annotation> annotationClass) {
+        return getStaticAnnotatedMethods(basePackage, annotationClass).filter(
+                method -> method.getReturnType().equals(Void.TYPE)
+        );
+    }
+
+    private static Seq<Method> getStaticAnnotatedVoids(String basePackage, Class<? extends Annotation> annotationClass, Class<?>[] params) {
+        return getStaticAnnotatedVoids(basePackage, annotationClass).filter(
+                method -> Arrays.equals(method.getParameterTypes(), params)
+        );
+    }
+
+
+
+    private static Seq<Method> getStaticAnnotatedVoidsWithoutParams(String basePackage, Class<? extends Annotation> annotationClass) {
+        return getStaticAnnotatedVoids(basePackage, annotationClass).filter(
+                method -> method.getParameterTypes().length == 0
         );
     }
 
     /** Вспомогательный метод. Получает аннотированные классы с нужными пармеметами */
     private static Seq<Method> getSuitableMethods(String basePackage, Class<? extends Annotation> annotation, ReceiverParams consumer) {
-        return getAnnotatedMethods(basePackage, annotation).filter(
-                method -> Modifier.isStatic(method.getModifiers()) && method.getReturnType().equals(Void.TYPE) && Arrays.equals(method.getParameterTypes(), consumer.Receive(method))
+        return getStaticAnnotatedVoids(basePackage, annotation).filter(
+                method -> Arrays.equals(method.getParameterTypes(), consumer.Receive(method))
         );
     }
 
     public static Seq<Method> getClientCommands(Config.Gamemode gamemode) {
-        return getCommandsMethods(PandorumPlugin.ClientCommandsBasePackage, ClientCommand.class, new Class<?>[] { String[].class, Player.class })
+        return getStaticAnnotatedVoids(PandorumPlugin.ClientCommandsBasePackage, ClientCommand.class, new Class<?>[] { String[].class, Player.class })
                 .map(method -> {
                     Seq<Config.Gamemode> disabledGamemodes = new Seq<>();
                     Seq<Config.Gamemode> reqiuredGamemodes = new Seq<>();
@@ -128,13 +165,11 @@ public class Reflection {
     }
 
     public static Seq<Method> getServerCommands() {
-        return getCommandsMethods(PandorumPlugin.ServerCommandsBasePackage, ServerCommand.class, new Class<?>[] { String[].class });
+        return getStaticAnnotatedVoids(PandorumPlugin.ServerCommandsBasePackage, ServerCommand.class, new Class<?>[] { String[].class });
     }
 
     public static Seq<Method> getTriggerListenersMethods() {
-        return getAnnotatedMethods(PandorumPlugin.TriggerListenersBasePackage, TriggerListener.class).filter(
-                method -> Modifier.isStatic(method.getModifiers()) && method.getReturnType().equals(Void.TYPE) && method.getParameterTypes().length == 0
-        );
+        return getStaticAnnotatedVoidsWithoutParams(PandorumPlugin.TriggerListenersBasePackage, TriggerListener.class);
     }
 
     public static Seq<Method> getEventListenersMethods() {
@@ -143,5 +178,13 @@ public class Reflection {
 
     public static Seq<Method> getPacketHandlersMethods() {
         return getSuitableMethods(PandorumPlugin.PacketHandlersBasePackage, PacketHandler.class, method -> new Class<?>[] { NetConnection.class, method.getAnnotation(PacketHandler.class).packetType() });
+    }
+
+    public static Seq<Method> getActionFiltersMethods() {
+        return getStaticAnnotatedMethods(PandorumPlugin.ActionFiltersBasePackage, ActionFilter.class, new Class<?>[] { Administration.PlayerAction.class }, boolean.class);
+    }
+
+    public static Seq<Method> getChatFiltersMethods() {
+        return getStaticAnnotatedMethods(PandorumPlugin.ChatFiltersBasePackage, ChatFilter.class, new Class<?>[] { Player.class, String.class }, String.class);
     }
 }

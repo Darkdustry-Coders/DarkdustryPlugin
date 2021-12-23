@@ -53,19 +53,33 @@ public class Loader {
         });
     }
 
+    private static void RegisterActionFilter(Method method) {
+        netServer.admins.addActionFilter((Administration.PlayerAction action) -> {
+            try {
+                return (boolean) method.invoke(null, action);
+            } catch (Exception e)  { Log.err(e); return true; }
+        });
+    }
+
+    private static void RegisterChatFilter(Method method) {
+        netServer.admins.addChatFilter((player, text) -> {
+            try {
+                return (String) method.invoke(null, player, text);
+            } catch (Exception e)  { Log.err(e); return text; }
+        });
+    }
+
     public static void init() {
         PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
-        net.handleServer(ConnectPacket.class, ConnectPacketHandler::handle);
-
-        netServer.admins.addActionFilter(ActionFilter::filter);
-        netServer.admins.addChatFilter(ChatFilter::filter);
         netServer.invalidHandler = InvalidCommandResponse::response;
 
         Reflection.getEventListenersMethods().each(Loader::RegisterEventListener);
         Reflection.getTriggerListenersMethods().each(Loader::RegisterTriggerListener);
         Reflection.getPacketHandlersMethods().each(Loader::RegisterPacketHandler);
+        Reflection.getActionFiltersMethods().each(Loader::RegisterActionFilter);
+        Reflection.getChatFiltersMethods().each(Loader::RegisterChatFilter);
 
         Administration.Config.motd.set("off");
         Administration.Config.interactRateWindow.set(3);
