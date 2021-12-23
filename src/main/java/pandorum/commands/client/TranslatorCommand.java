@@ -14,15 +14,17 @@ public class TranslatorCommand {
                 case "current" -> bundled(player, "commands.tr.current", playerInfo.locale);
                 case "list" -> {
                     StringBuilder builder = new StringBuilder();
-                    codeLanguages.keys().forEach(locale -> builder.append(" ").append(locale));
+                    codeLanguages.keys().toSeq().each(locale -> builder.append(" ").append(locale));
                     bundled(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {
                     playerInfo.locale = "off";
+                    playerInfo.save();
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
                     playerInfo.locale = "auto";
+                    playerInfo.save();
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
@@ -32,10 +34,10 @@ public class TranslatorCommand {
                     }
 
                     playerInfo.locale = args[0];
+                    playerInfo.save();
                     bundled(player, "commands.tr.changed", args[0]);
                 }
             }
-            playerInfo.save();
         });
     }
 }

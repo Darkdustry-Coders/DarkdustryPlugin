@@ -2,8 +2,9 @@ package pandorum.comp;
 
 import arc.struct.Seq;
 import arc.util.Strings;
-import mindustry.Vars;
 import pandorum.struct.Tuple2;
+
+import static mindustry.Vars.port;
 
 public class Config {
     /** Необходимое количество игроков для успешного завершения голосования */
@@ -15,7 +16,7 @@ public class Config {
     /** Время, через которое запись в истории тайла будет удалена. По умолчанию 30 минут. Записывается в миллисекундах */
     public long expireDelay = 1800000L;
 
-    /** Расстояние до ядер, в котором отслеживаются ториевые реакторы. */
+    /** Расстояние до ядер, в котором отслеживаются ториевые реакторы */
     public int alertsDistance = 120;
 
     /** Время голосования через /nominate. В секундах */
@@ -27,13 +28,13 @@ public class Config {
     /** Время, на которое игрок будет выгнан голосованием. В миллисекундах */
     public long kickDuration = 2700000L;
 
-    /** IP адрес хаба. */
+    /** IP адрес хаба */
     public String hubIp = "darkdustry.ml";
 
-    /** Режим игры на сервере. */
+    /** Режим игры на сервере */
     public Gamemode mode = Gamemode.survival;
 
-    /** Токен бота, привязанного к серверу. Если его не указать, сервер не запустится! */
+    /** Токен бота, привязанного к серверу. Если его не указать, сервер не запустится */
     public String discordBotToken = "token";
 
     /** ID канала в Discord, куда отправляются все сообщения */
@@ -45,18 +46,18 @@ public class Config {
     /** Префикс бота, привязанного к серверу */
     public String prefix = "prefix";
 
-    /** Ключ Anti-VPN API. */
+    /** Ключ Anti-VPN API */
     public String antiVPNAPIToken = "w7j425-826177-597253-3134u9";
 
     public Tuple2<String, Integer> hubIp() {
-        String ip = hubIp;
-        int port = Vars.port;
-        if (ip.contains(":") && Strings.canParsePositiveInt(ip.split(":")[1])) {
-            String[] parts = ip.split(":");
-            ip = parts[0];
-            port = Strings.parseInt(parts[1]);
+        String resultIp = hubIp;
+        int resultPort = port;
+        if (resultIp.contains(":") && Strings.canParsePositiveInt(resultIp.split(":")[1])) {
+            String[] parts = resultIp.split(":");
+            resultIp = parts[0];
+            resultPort = Strings.parseInt(parts[1]);
         }
-        return Tuple2.of(ip, port);
+        return Tuple2.of(resultIp, resultPort);
     }
 
     public boolean historyEnabled() {
