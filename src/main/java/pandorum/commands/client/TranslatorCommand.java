@@ -13,9 +13,9 @@ public class TranslatorCommand {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", playerInfo.locale);
                 case "list" -> {
-                    StringBuilder builder = new StringBuilder();
-                    codeLanguages.keys().toSeq().each(locale -> builder.append(" ").append(locale));
-                    bundled(player, "commands.tr.list", builder.toString());
+                    StringBuilder locales = new StringBuilder();
+                    codeLanguages.keys().toSeq().each(locale -> locales.append(" ").append(locale));
+                    bundled(player, "commands.tr.list", locales.toString());
                 }
                 case "off" -> {
                     playerInfo.locale = "off";
