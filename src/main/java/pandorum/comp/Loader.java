@@ -13,6 +13,7 @@ import pandorum.Reflection;
 import pandorum.annotations.events.EventListener;
 import pandorum.annotations.handlers.PacketHandler;
 import pandorum.annotations.events.TriggerListener;
+import pandorum.discord.BotMain;
 import pandorum.events.handlers.InvalidCommandResponse;
 import pandorum.events.handlers.MenuHandler;
 
@@ -97,6 +98,6 @@ public class Loader {
 
         MenuHandler.init();
         Icons.init();
-        //BotMain.start();
+        BotMain.start();
     }
 }
