@@ -1,91 +1,40 @@
 package pandorum.comp;
 
+import arc.struct.ObjectMap;
 import arc.struct.StringMap;
+import arc.util.Log;
 import mindustry.gen.Iconc;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 public class Icons {
-    private static StringMap icons;
+    private static ObjectMap<String, Character> icons;
 
     public static void init() {
-        icons = StringMap.of(
-                "copper", Iconc.itemCopper,
-                "lead", Iconc.itemLead,
-                "metaglass", Iconc.itemMetaglass,
-                "graphite", Iconc.itemGraphite,
-                "sand", Iconc.itemSand,
-                "coal", Iconc.itemCoal,
-                "titanium", Iconc.itemTitanium,
-                "thorium", Iconc.itemThorium,
-                "scrap", Iconc.itemScrap,
-                "silicon", Iconc.itemSilicon,
-                "plastanium", Iconc.itemPlastanium,
-                "phase-fabric", Iconc.itemPhaseFabric,
-                "surge-alloy", Iconc.itemSurgeAlloy,
-                "spore-pod", Iconc.itemSporePod,
-                "blast-compound", Iconc.itemBlastCompound,
-                "pyratite", Iconc.itemPyratite,
+        icons = new ObjectMap<>();
+        List<String> prefixes = List.of("item", "liquid", "unit", "team", "status" );
 
-                "water", Iconc.liquidWater,
-                "slag", Iconc.liquidSlag,
-                "oil", Iconc.liquidOil,
-                "cryofluid", Iconc.liquidCryofluid,
+        Arrays.stream(Iconc.class.getFields()).forEach(field ->  {
+            if (field.getType().equals(char.class) && Modifier.isStatic(field.getModifiers())) {
+                try {
+                    char value = field.getChar(null);
+                    String name = field.getName();
+                    if (prefixes.stream().anyMatch(name::startsWith))
+                        icons.put(name, value);
+                } catch (Exception e) { Log.err(e.getMessage()); }
+            }
+        });
 
-                "dagger", Iconc.unitDagger,
-                "mace", Iconc.unitMace,
-                "fortress", Iconc.unitFortress,
-                "scepter", Iconc.unitScepter,
-                "reign", Iconc.unitReign,
-
-                "nova", Iconc.unitNova,
-                "pulsar", Iconc.unitPulsar,
-                "quasar", Iconc.unitQuasar,
-                "vela", Iconc.unitVela,
-                "corvus", Iconc.unitCorvus,
-
-                "crawler", Iconc.unitCrawler,
-                "atrax", Iconc.unitAtrax,
-                "spiroct", Iconc.unitSpiroct,
-                "arkyid", Iconc.unitArkyid,
-                "toxopid", Iconc.unitToxopid,
-
-                "flare", Iconc.unitFlare,
-                "horizon", Iconc.unitHorizon,
-                "zenith", Iconc.unitZenith,
-                "antumbra", Iconc.unitAntumbra,
-                "eclipse", Iconc.unitEclipse,
-
-                "mono", Iconc.unitMono,
-                "poly", Iconc.unitPoly,
-                "mega", Iconc.unitMega,
-                "quad", Iconc.unitQuad,
-                "oct", Iconc.unitOct,
-
-                "risso", Iconc.unitRisso,
-                "minke", Iconc.unitMinke,
-                "bryde", Iconc.unitBryde,
-                "sei", Iconc.unitSei,
-                "omura", Iconc.unitOmura,
-
-                "retusa", Iconc.unitRetusa,
-                "oxynoe", Iconc.unitOxynoe,
-                "cyerce", Iconc.unitCyerce,
-                "aegires", Iconc.unitAegires,
-                "navanax", Iconc.unitNavanax,
-
-                "alpha", Iconc.unitAlpha,
-                "beta", Iconc.unitBeta,
-                "gamma", Iconc.unitGamma,
-
-                "sharded", Iconc.teamSharded,
-                "crux", Iconc.teamCrux,
-                "derelict", Iconc.teamDerelict,
-                "green", Iconc.statusElectrified,
-                "purple", Iconc.statusSporeSlowed,
-                "blue", Iconc.statusWet
-        );
+        Log.info("Loaded icons:".concat(icons.keys().toSeq().reduce("", (name, textAll) -> textAll.concat(" ").concat(name))));
     }
 
-    public static String get(String key) {
-        return icons.containsKey(key) ? icons.get(key) : "";
+    public static char get(String key) {
+        return icons.containsKey(key) ? icons.get(key) : ' ';
     }
 }

@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
@@ -46,14 +48,14 @@ public class Reflection {
 
         try {
             ZipFile zipFile = new ZipFile(pckgStr.substring("jar:file:".length(), pckgStr.lastIndexOf("!/")));
-            return Seq.with(zipFile.stream()
+            return Seq.with(
+                    zipFile.stream()
                     .filter(e -> e.getName().startsWith(packageName)
                             && e.getName().endsWith(".class"))
                     .<Class<?>>map(e -> {
                         try{
                             String name = e.getName().replace('/', '.');
                             name = name.substring(0, name.lastIndexOf('.'));
-
                             return Class.forName(name);
                         }catch(ClassNotFoundException ex){
                             Log.err(ex.getMessage());
@@ -70,17 +72,20 @@ public class Reflection {
     }
 
     private static Seq<Method> getAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass) {
-        return getClasses(basePackage).map(classObject ->
+        return getClasses(basePackage).<Stream<Method>>map(classObject ->
                 Arrays.stream(classObject.getMethods()).filter(method -> method.isAnnotationPresent(annotationClass))
         ).reduce(
                 new Seq<Method>(),
-                (Stream<Method> initial, Seq<Method> elem) -> elem.addAll(initial.toArray(Method[]::new))
+                (Stream<Method> initial, Seq<Method> elem) -> {
+                    initial.forEach(elem::add);
+                    return elem;
+                }
         );
     }
 
     private static Seq<Method> getStaticAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass) {
         return getAnnotatedMethods(basePackage, annotationClass).filter(
-                method -> Modifier.isStatic(annotationClass.getModifiers())
+                method -> Modifier.isStatic(method.getModifiers())
         );
     }
 
@@ -92,7 +97,7 @@ public class Reflection {
 
     private static Seq<Method> getStaticAnnotatedMethods(String basePackage, Class<? extends Annotation> annotationClass, Class<?>[] params, Class<?> returnType) {
         return getStaticAnnotatedMethods(basePackage, annotationClass, params).filter(
-                method -> method.getReturnType().equals(returnType)
+                method -> method.getReturnType().isAssignableFrom(returnType) //TODO: fixit
         );
     }
 
@@ -108,11 +113,9 @@ public class Reflection {
         );
     }
 
-
-
     private static Seq<Method> getStaticAnnotatedVoidsWithoutParams(String basePackage, Class<? extends Annotation> annotationClass) {
         return getStaticAnnotatedVoids(basePackage, annotationClass).filter(
-                method -> method.getParameterTypes().length == 0
+                method -> method.getParameterCount() == 0
         );
     }
 

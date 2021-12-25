@@ -29,6 +29,7 @@ import pandorum.annotations.commands.admin.RequireAdmin;
 import pandorum.annotations.commands.admin.RequireNotAdmin;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
+import pandorum.comp.Loader;
 import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
@@ -107,13 +108,11 @@ public final class PandorumPlugin extends Plugin {
 
     @Override
     public void init() {
-        //Loader.init();
+        Loader.init();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        Log.info("Server commands default length " + handler.getCommandList().size);
-
         Reflection.getServerCommands().each(method -> {
             ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
 
@@ -131,16 +130,13 @@ public final class PandorumPlugin extends Plugin {
                         } catch (Exception e) { Log.err(e.getMessage()); }
                     }
             );
-            Log.info("Registered command " + commandAnnotation.name());
         });
 
-        Log.info("Server commands " + handler.getCommandList().size);
+        Log.info("Server commands:" + handler.getCommandList().reduce("", (value, initial) -> initial.concat(" ").concat(value.text)));
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        Log.info("Client commands default length " + handler.getCommandList().size);
-
         Reflection.getClientCommands(config.mode).each(method -> {
             ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
 
@@ -161,9 +157,8 @@ public final class PandorumPlugin extends Plugin {
                         } catch (Exception e) { Log.err(e.getMessage()); }
                     }
             );
-            Log.info("Registered command " + commandAnnotation.name());
         });
 
-        Log.info("Client commands " + handler.getCommandList().size);
+        Log.info("Client commands:" + handler.getCommandList().reduce("", (value, initial) -> initial.concat(" ").concat(value.text)));
     }
 }
