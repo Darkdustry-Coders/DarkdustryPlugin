@@ -14,10 +14,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class Icons {
-    private static ObjectMap<String, Character> icons;
+    private static ObjectMap<String, Character> icons = new ObjectMap<>();
 
     public static void init() {
-        icons = new ObjectMap<>();
         List<String> prefixes = List.of("item", "liquid", "unit", "team", "status" );
 
         Arrays.stream(Iconc.class.getFields()).forEach(field ->  {
@@ -31,7 +30,7 @@ public class Icons {
             }
         });
 
-        Log.info("Loaded icons:".concat(icons.keys().toSeq().reduce("", (name, textAll) -> textAll.concat(" ").concat(name))));
+        Log.info(icons.keys().toSeq().reduce("Loaded icons:", (name, textAll) -> textAll.concat(" ").concat(name)));
     }
 
     public static char get(String key) {

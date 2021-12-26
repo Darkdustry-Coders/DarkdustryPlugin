@@ -38,6 +38,7 @@ import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import static mindustry.Vars.dataDirectory;
 
@@ -111,53 +112,55 @@ public final class PandorumPlugin extends Plugin {
         Loader.init();
     }
 
+    private static void registerServerCommand(Method method, CommandHandler handler) {
+        ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
+        if (method.isAnnotationPresent(OverrideCommand.class))
+            if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                handler.removeCommand(commandAnnotation.name());
+        handler.register(
+                commandAnnotation.name(),
+                commandAnnotation.args(),
+                commandAnnotation.description(),
+                (String[] args) -> {
+                    try {
+                        method.invoke(null, (Object) args);
+                    } catch (Exception e) { Log.err(e.getMessage()); }
+                }
+        );
+    }
+
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        Reflection.getServerCommands().each(method -> {
-            ServerCommand commandAnnotation = method.getAnnotation(ServerCommand.class);
-
-            if (method.isAnnotationPresent(OverrideCommand.class))
-                if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
-                    handler.removeCommand(commandAnnotation.name());
-
-            handler.register(
-                    commandAnnotation.name(),
-                    commandAnnotation.args(),
-                    commandAnnotation.description(),
-                    (String[] args) -> {
-                        try {
-                            method.invoke(null, (Object) args);
-                        } catch (Exception e) { Log.err(e.getMessage()); }
-                    }
-            );
-        });
+        Reflection.getServerCommands().each(method -> registerServerCommand(method, handler));
 
         Log.info("Server commands:" + handler.getCommandList().reduce("", (value, initial) -> initial.concat(" ").concat(value.text)));
     }
 
+    private static void registerClientCommand(Method method, CommandHandler handler) {
+        ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
+
+        if (method.isAnnotationPresent(OverrideCommand.class))
+            if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
+                handler.removeCommand(commandAnnotation.name());
+        boolean admin = method.isAnnotationPresent(RequireAdmin.class);
+        boolean notAdmin = method.isAnnotationPresent(RequireNotAdmin.class);
+        handler.register(
+                commandAnnotation.name(),
+                commandAnnotation.args(),
+                commandAnnotation.description(),
+                (String[] args, Player player) -> {
+                    if (admin && !player.admin) return;
+                    if (notAdmin && player.admin) return;
+                    try {
+                        method.invoke(null, args, player);
+                    } catch (Exception e) { Log.err(e.getMessage()); }
+                }
+        );
+    }
+
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        Reflection.getClientCommands(config.mode).each(method -> {
-            ClientCommand commandAnnotation = method.getAnnotation(ClientCommand.class);
-
-            if (method.isAnnotationPresent(OverrideCommand.class))
-                if (handler.getCommandList().contains(command -> command.text.equals(commandAnnotation.name())))
-                    handler.removeCommand(commandAnnotation.name());
-            boolean admin = method.isAnnotationPresent(RequireAdmin.class);
-            boolean notAdmin = method.isAnnotationPresent(RequireNotAdmin.class);
-            handler.register(
-                    commandAnnotation.name(),
-                    commandAnnotation.args(),
-                    commandAnnotation.description(),
-                    (String[] args, Player player) -> {
-                        if (admin && !player.admin) return;
-                        if (notAdmin && player.admin) return;
-                        try {
-                            method.invoke(null, args, player);
-                        } catch (Exception e) { Log.err(e.getMessage()); }
-                    }
-            );
-        });
+        Reflection.getClientCommands(config.mode).each(method -> registerClientCommand(method, handler));
 
         Log.info("Client commands:" + handler.getCommandList().reduce("", (value, initial) -> initial.concat(" ").concat(value.text)));
     }

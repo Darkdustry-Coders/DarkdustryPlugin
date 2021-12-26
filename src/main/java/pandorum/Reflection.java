@@ -1,9 +1,7 @@
 package pandorum;
 
 import arc.struct.Seq;
-import arc.struct.StringMap;
 import arc.util.Log;
-import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
 import mindustry.net.NetConnection;
@@ -13,18 +11,16 @@ import pandorum.annotations.commands.gamemodes.*;
 import pandorum.annotations.commands.gamemodes.containers.DisabledGamemodes;
 import pandorum.annotations.commands.gamemodes.containers.RequiredGamemodes;
 import pandorum.annotations.events.EventListener;
+import pandorum.annotations.events.TriggerListener;
 import pandorum.annotations.filters.ActionFilter;
 import pandorum.annotations.filters.ChatFilter;
 import pandorum.annotations.handlers.PacketHandler;
-import pandorum.annotations.events.TriggerListener;
 import pandorum.comp.Config;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;

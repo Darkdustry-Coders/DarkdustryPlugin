@@ -10,20 +10,11 @@ import pandorum.struct.Seqs;
 import java.time.Duration;
 
 import static mindustry.Vars.world;
+import static pandorum.Misc.InitializeHistory;
 
 public class WorldLoadListener {
-    @SuppressWarnings("unchecked")
     @EventListener(eventType = EventType.WorldLoadEvent.class)
     public static void call(final EventType.WorldLoadEvent event) {
-        if (PandorumPlugin.config.mode.isSimple) {
-            PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
-
-            for (Tile tile : world.tiles) {
-                PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
-                        .maximumSize(PandorumPlugin.config.historyLimit)
-                        .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
-                        .build();
-            }
-        }
+        InitializeHistory();
     }
 }

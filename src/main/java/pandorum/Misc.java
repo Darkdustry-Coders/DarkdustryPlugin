@@ -9,6 +9,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.world.Tile;
 import pandorum.annotations.commands.ClientCommand;
 import pandorum.annotations.commands.ServerCommand;
 import pandorum.annotations.commands.gamemodes.*;
@@ -18,6 +19,8 @@ import pandorum.annotations.events.EventListener;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config;
 import pandorum.comp.Icons;
+import pandorum.struct.CacheSeq;
+import pandorum.struct.Seqs;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -25,6 +28,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Stream;
@@ -93,4 +97,16 @@ public abstract class Misc {
         return format.format(time);
     }
 
+    public static void InitializeHistory() {
+        if (PandorumPlugin.config.mode.isSimple) {
+            PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
+
+            for (Tile tile : world.tiles) {
+                PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
+                        .maximumSize(PandorumPlugin.config.historyLimit)
+                        .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
+                        .build();
+            }
+        }
+    }
 }
