@@ -6,8 +6,7 @@ import mindustry.gen.Player;
 import mindustry.net.Administration;
 import pandorum.vote.VoteKickSession;
 
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findByName;
+import static pandorum.Misc.*;
 import static pandorum.PandorumPlugin.currentlyKicking;
 import static pandorum.PandorumPlugin.votekickCooldowns;
 
@@ -37,7 +36,7 @@ public class VoteKickCommand {
             return;
         }
 
-        Player target = findByName(args[0]);
+        Player target = findPlayer(args[0]);
         if (target == null) {
             bundled(player, "commands.player-not-found");
             return;

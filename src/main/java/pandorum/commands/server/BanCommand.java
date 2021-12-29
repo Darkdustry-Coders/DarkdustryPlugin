@@ -4,26 +4,20 @@ import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
-import pandorum.Misc;
 
 import static mindustry.Vars.netServer;
+import static pandorum.Misc.findPlayer;
 import static pandorum.Misc.sendToChat;
 
 public class BanCommand {
     public static void run(final String[] args) {
-        Player target;
         switch (args[0].toLowerCase()) {
-            case "id" -> {
+            case "id", "uuid" -> {
                 netServer.admins.banPlayerID(args[1]);
-                target = Groups.player.find(p -> p.uuid().equals(args[1]));
-                if (target != null) {
-                    target.kick(KickReason.banned);
-                    sendToChat("events.server.ban", target.coloredName());
-                }
                 Log.info("Игрок успешно забанен.");
             }
-            case "name" -> {
-                target = Misc.findByName(args[1]);
+            case "name", "username" -> {
+                Player target = findPlayer(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
                     target.kick(KickReason.banned);
@@ -32,17 +26,21 @@ public class BanCommand {
                 } else {
                     Log.err("Игрок не найден...");
                 }
+                return;
             }
-            case "ip" -> {
+            case "ip", "address" -> {
                 netServer.admins.banPlayerIP(args[1]);
-                target = Groups.player.find(p -> p.ip().equals(args[1]));
-                if (target != null) {
-                    target.kick(KickReason.banned);
-                    sendToChat("events.server.ban", target.coloredName());
-                }
                 Log.info("Игрок успешно забанен.");
             }
-            default -> Log.err("Неверный тип целеуказания бана.");
+            default -> {
+                Log.err("Неверный тип целеуказания бана. Выбери один из этих: id, name, ip");
+                return;
+            }
         }
+
+        Groups.player.each(p -> netServer.admins.isIDBanned(p.uuid()) || netServer.admins.isIPBanned(p.ip()), p -> {
+            p.kick(KickReason.banned);
+            sendToChat("events.server.ban", p.coloredName());
+        });
     }
 }

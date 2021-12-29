@@ -4,6 +4,7 @@ import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
+import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -23,10 +24,7 @@ import java.util.TimeZone;
 
 import static mindustry.Vars.*;
 
-public abstract class Misc {
-
-    private Misc() {
-    }
+public class Misc {
 
     public static String colorizedTeam(Team team) {
         return "[white]" + Icons.get(team.name) + "[#" + team.color + "]" + team.name;
@@ -59,12 +57,21 @@ public abstract class Misc {
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
-    public static Player findByName(String name) {
-        return Strings.canParseInt(name) ? Groups.player.find(p -> p.id == Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
+    public static Player findPlayer(String name) {
+        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripGlyphs(Strings.stripColors(p.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))) || Strings.stripGlyphs(Strings.stripColors(p.name)).contains(Strings.stripGlyphs(Strings.stripColors(name))));
     }
 
     public static Block findBlock(String name) {
         return Strings.canParseInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
+    }
+
+    public static Block findCore(String name) {
+        return switch (name.toLowerCase()) {
+            case "small", "shard", "core-shard" -> Blocks.coreShard;
+            case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
+            case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            default -> null;
+        };
     }
 
     public static UnitType findUnit(String name) {

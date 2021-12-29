@@ -6,9 +6,10 @@ import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.Misc;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
+
+import static pandorum.Misc.adminCheck;
 
 public class CommandsHelper {
 
@@ -17,7 +18,7 @@ public class CommandsHelper {
     public static void register(CommandHandler clientHandler, String text, String params, String description, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(PandorumPlugin.config.mode)) return;
         Command command = clientHandler.<Player>register(text, params, description, (args, player) -> {
-            if (adminOnly && Misc.adminCheck(player)) return;
+            if (adminOnly && adminCheck(player)) return;
             runner.accept(args, player);
         });
 

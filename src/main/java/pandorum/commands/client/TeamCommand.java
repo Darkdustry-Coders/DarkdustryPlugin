@@ -17,7 +17,7 @@ public class TeamCommand {
             return;
         }
 
-        Player target = args.length > 1 ? findByName(args[1]) : player;
+        Player target = args.length > 1 ? findPlayer(args[1]) : player;
         if (target == null) {
             bundled(player, "commands.player-not-found", args[1]);
             return;

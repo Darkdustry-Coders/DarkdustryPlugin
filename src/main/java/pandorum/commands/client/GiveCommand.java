@@ -18,7 +18,7 @@ public class GiveCommand {
             return;
         }
 
-        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1000;
+        int amount = Strings.parseInt(args[1]);
 
         Item item = findItem(args[0]);
         if (item == null) {

@@ -1,6 +1,7 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
+import arc.util.Structs;
 import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -20,17 +21,9 @@ public class SpawnCommand {
             return;
         }
 
-        int count = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (count > maxAmount || count < 1) {
+        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+        if (amount > maxAmount || amount < 1) {
             bundled(player, "commands.admin.spawn.limit", maxAmount);
-            return;
-        }
-
-        Team team = args.length > 2 ? findTeam(args[2]) : player.team();
-        if (team == null) {
-            StringBuilder teams = new StringBuilder();
-            for (Team t : Team.baseTeams) teams.append("\n[gold] - [white]").append(colorizedTeam(t));
-            bundled(player, "commands.team-not-found", teams.toString());
             return;
         }
 
@@ -42,7 +35,15 @@ public class SpawnCommand {
             return;
         }
 
-        for (int i = 0; i < count; i++) type.spawn(team, player.x, player.y);
-        bundled(player, "commands.admin.spawn.success", count, Icons.get(type.name), colorizedTeam(team));
+        Team team = args.length > 2 ? findTeam(args[2]) : player.team();
+        if (team == null) {
+            StringBuilder teams = new StringBuilder();
+            Structs.each(t -> teams.append("\n[gold] - [white]").append(colorizedTeam(t)), Team.baseTeams);
+            bundled(player, "commands.team-not-found", teams.toString());
+            return;
+        }
+
+        for (int i = 0; i < amount; i++) type.spawn(team, player.x, player.y);
+        bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), colorizedTeam(team));
     }
 }

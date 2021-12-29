@@ -10,10 +10,10 @@ public class UnbanCommand {
             netServer.admins.getBanned().each(ban -> netServer.admins.unbanPlayerID(ban.id));
             netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
             Log.info("Все игроки разбанены...");
-        } else if (netServer.admins.unbanPlayerIP(args[0]) || netServer.admins.unbanPlayerID(args[0])) {
-            Log.info("Игрок успешно разбанен: @", args[0]);
+        } else if (netServer.admins.unbanPlayerID(args[0]) || netServer.admins.unbanPlayerIP(args[0])) {
+            Log.info("Игрок успешно разбанен.");
         } else {
-            Log.err("Этого ip/uuid нет в списке банов!");
+            Log.err("Игрок не был забанен!");
         }
     }
 }
