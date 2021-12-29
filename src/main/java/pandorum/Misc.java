@@ -60,7 +60,7 @@ public abstract class Misc {
     }
 
     public static Player findByName(String name) {
-        return Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
+        return Strings.canParseInt(name) ? Groups.player.find(p -> p.id == Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripColors(p.name).equalsIgnoreCase(Strings.stripColors(name)) || Strings.stripColors(p.name).contains(Strings.stripColors(name)));
     }
 
     public static Block findBlock(String name) {
