@@ -44,7 +44,7 @@ public class MenuHandler {
                     bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
-                    player.clearUnit();
+                    if (player.unit() != null) player.unit().kill();
                     bundled(player, "commands.admin.despw.success.suicide");
                 }
             }
