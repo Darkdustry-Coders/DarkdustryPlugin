@@ -18,9 +18,9 @@ import static pandorum.PandorumPlugin.config;
 
 public class VoteKickSession {
     protected final Player target;
-    protected Seq<String> voted = new Seq<>();
-    protected VoteKickSession[] kickSession;
-    protected Task task;
+    protected final Seq<String> voted = new Seq<>();
+    protected final VoteKickSession[] kickSession;
+    protected final Task task;
     protected int votes;
 
     public VoteKickSession(VoteKickSession[] kickSession, Player target) {

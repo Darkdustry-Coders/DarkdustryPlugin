@@ -60,11 +60,9 @@ public class Translator {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JSONObject translated = new JSONObject(Objects.requireNonNull(response.body()).string());
                 String translatedText = translated.optString("result", text);
-                try {
-                    cons.get(translatedText);
-                } finally {
-                    if (response.body() != null) response.close();
-                }
+
+                cons.get(translatedText);
+                response.close();
             }
         });
     }

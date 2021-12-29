@@ -13,7 +13,7 @@ import static pandorum.Misc.adminCheck;
 
 public class CommandsHelper {
 
-    public static Seq<Command> adminOnlyCommands = new Seq<>();
+    public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
     public static void register(CommandHandler clientHandler, String text, String params, String description, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(PandorumPlugin.config.mode)) return;

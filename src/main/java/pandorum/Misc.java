@@ -70,7 +70,6 @@ public class Misc {
             case "small", "shard", "core-shard" -> Blocks.coreShard;
             case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
             case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
-            default -> null;
         };
     }
 
@@ -83,7 +82,7 @@ public class Misc {
     }
 
     public static Team findTeam(String name) {
-        return Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name) || (Strings.canParseInt(name) && team.id == Strings.parseInt(name)));
+        return Strings.canParseInt(name) ? Team.get(Strings.parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
     }
 
     public static boolean adminCheck(Player player) {

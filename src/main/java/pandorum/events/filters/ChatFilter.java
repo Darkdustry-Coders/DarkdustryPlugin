@@ -3,7 +3,6 @@ package pandorum.events.filters;
 import arc.struct.StringMap;
 import arc.util.Log;
 import arc.util.Strings;
-import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.PandorumPlugin;
@@ -21,7 +20,7 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
 
-        Groups.player.each(player -> player != author, player -> PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+        Groups.player.each(player -> player != author, player -> PlayerModel.find(player.uuid(), playerInfo -> {
             if (playerInfo.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;

@@ -7,10 +7,10 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class DataChanges {
-    public static Symbol undefined = new Symbol("undefined");
+    public static final Symbol undefined = new Symbol("undefined");
 
-    public Object previous;
-    public Object current;
+    public final Object previous;
+    public final Object current;
 
     public DataChanges(Object previous, Object current) {
         this.previous = previous;

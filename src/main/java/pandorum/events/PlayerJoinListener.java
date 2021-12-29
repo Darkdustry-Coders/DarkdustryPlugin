@@ -2,7 +2,6 @@ package pandorum.events;
 
 import arc.util.Log;
 import arc.util.Strings;
-import com.mongodb.BasicDBObject;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
@@ -33,7 +32,7 @@ public class PlayerJoinListener {
 
         Effects.onJoin(event.player);
 
-        PlayerModel.find(new BasicDBObject("UUID", event.player.uuid()), playerInfo -> {
+        PlayerModel.find(event.player.uuid(), playerInfo -> {
             if (playerInfo.hellomsg) {
                 Call.menu(event.player.con,
                         MenuHandler.welcomeMenu,

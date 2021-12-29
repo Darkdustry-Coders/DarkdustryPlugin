@@ -1,7 +1,6 @@
 package pandorum.events.handlers;
 
 import arc.Events;
-import com.mongodb.BasicDBObject;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
@@ -17,7 +16,7 @@ public class MenuHandler {
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+                PlayerModel.find(player.uuid(), playerInfo -> {
                     playerInfo.hellomsg = false;
                     playerInfo.save();
                     bundled(player, "events.hellomsg.disabled");

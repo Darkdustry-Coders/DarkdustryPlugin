@@ -8,9 +8,9 @@ import mindustry.gen.Player;
 import static pandorum.PandorumPlugin.config;
 
 public abstract class VoteSession {
-    protected Seq<String> voted = new Seq<>();
-    protected VoteSession[] session;
-    protected Task task;
+    protected final Seq<String> voted = new Seq<>();
+    protected final VoteSession[] session;
+    protected final Task task;
     protected int votes;
 
     public VoteSession(VoteSession[] session) {

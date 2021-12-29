@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import com.mongodb.BasicDBObject;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
@@ -9,7 +8,7 @@ import static pandorum.comp.Translator.codeLanguages;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+        PlayerModel.find(player.uuid(), playerInfo -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", playerInfo.locale);
                 case "list" -> {

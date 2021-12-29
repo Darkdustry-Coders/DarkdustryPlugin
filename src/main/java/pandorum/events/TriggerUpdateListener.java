@@ -1,6 +1,5 @@
 package pandorum.events;
 
-import com.mongodb.BasicDBObject;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Effects;
@@ -14,7 +13,7 @@ public class TriggerUpdateListener {
 
         if (PandorumPlugin.interval.get(1, 60f)) {
             Groups.player.each(p -> {
-                PlayerModel.find(new BasicDBObject("UUID", p.uuid()), playerInfo -> {
+                PlayerModel.find(p.uuid(), playerInfo -> {
                     playerInfo.playTime += 1000L;
                     playerInfo.save();
                 });

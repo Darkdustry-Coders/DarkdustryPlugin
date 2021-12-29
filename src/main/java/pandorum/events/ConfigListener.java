@@ -1,6 +1,5 @@
 package pandorum.events;
 
-import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.Vars;
 import mindustry.game.EventType;
@@ -27,7 +26,7 @@ public class ConfigListener {
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);
-            event.tile.tile.getLinkedTiles(new Seq<>()).each(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
+            event.tile.tile.getLinkedTiles(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
         }
     }
 

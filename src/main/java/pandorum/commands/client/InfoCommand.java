@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
@@ -20,7 +19,7 @@ public class InfoCommand {
             return;
         }
 
-        PlayerModel.find(new BasicDBObject("UUID", target.uuid()), playerInfo -> {
+        PlayerModel.find(target.uuid(), playerInfo -> {
             Rank rank = Ranks.getRank(target, playerInfo.rank);
             Call.infoMessage(player.con, Bundle.format("commands.info.content",
                     findLocale(player.locale),

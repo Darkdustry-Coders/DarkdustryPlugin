@@ -2,9 +2,7 @@ package pandorum.comp;
 
 import arc.func.Cons;
 import arc.struct.Seq;
-import arc.util.Nullable;
 import arc.util.Strings;
-import com.mongodb.BasicDBObject;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
@@ -32,7 +30,7 @@ public class Ranks {
     }
 
     public static void updateRank(Player player, Cons<Rank> cons) {
-        PlayerModel.find(new BasicDBObject("UUID", player.uuid()), playerInfo -> {
+        PlayerModel.find(player.uuid(), playerInfo -> {
             Rank current = get(playerInfo.rank);
 
             if (current.next != null && current.next.req != null && current.next.req.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
@@ -65,11 +63,11 @@ public class Ranks {
     }
 
     public static class Rank {
-        public String tag;
-        public String name;
-        public int id;
-        public @Nullable Rank next;
-        public @Nullable Requirements req;
+        public final String tag;
+        public final String name;
+        public final int id;
+        public final Rank next;
+        public final Requirements req;
 
         public Rank(String tag, String name, int id, Requirements req, Rank next) {
             this.name = name;
@@ -81,9 +79,9 @@ public class Ranks {
     }
 
     public static class Requirements {
-        public long playtime;
-        public int buildingsBuilt;
-        public int gamesPlayed;
+        public final long playtime;
+        public final int buildingsBuilt;
+        public final int gamesPlayed;
 
         public Requirements(long playtime, int buildingsBuilt, int gamesPlayed) {
             this.playtime = playtime;

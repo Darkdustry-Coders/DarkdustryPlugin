@@ -1,7 +1,7 @@
 package pandorum.models;
 
 import arc.func.Cons;
-import org.bson.conversions.Bson;
+import com.mongodb.BasicDBObject;
 import pandorum.database.MongoDataBridge;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
@@ -15,8 +15,8 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public int gamesPlayed = 0;
     public int rank = 0;
 
-    public static void find(Bson filter, Cons<PlayerModel> cons) {
-        PlayerModel.findAndApplySchema(PlayerModel.class, filter, cons);
+    public static void find(String UUID, Cons<PlayerModel> cons) {
+        findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), cons);
     }
 }
 
