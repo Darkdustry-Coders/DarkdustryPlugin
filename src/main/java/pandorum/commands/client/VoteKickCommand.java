@@ -6,7 +6,8 @@ import mindustry.gen.Player;
 import mindustry.net.Administration;
 import pandorum.vote.VoteKickSession;
 
-import static pandorum.Misc.*;
+import static pandorum.Misc.bundled;
+import static pandorum.Misc.findPlayer;
 import static pandorum.PandorumPlugin.currentlyKicking;
 import static pandorum.PandorumPlugin.votekickCooldowns;
 

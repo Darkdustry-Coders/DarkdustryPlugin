@@ -2,7 +2,6 @@ package pandorum.events;
 
 import arc.struct.Seq;
 import com.mongodb.BasicDBObject;
-import mindustry.content.Items;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.world.blocks.power.NuclearReactor;

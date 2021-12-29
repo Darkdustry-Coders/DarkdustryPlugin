@@ -17,10 +17,10 @@ public class WorldLoadListener {
             PandorumPlugin.history = new CacheSeq[world.width()][world.height()];
 
             world.tiles.eachTile(tile -> {
-               PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
-                       .maximumSize(PandorumPlugin.config.historyLimit)
-                       .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
-                       .build();
+                PandorumPlugin.history[tile.x][tile.y] = Seqs.newBuilder()
+                        .maximumSize(PandorumPlugin.config.historyLimit)
+                        .expireAfterWrite(Duration.ofMillis(PandorumPlugin.config.expireDelay))
+                        .build();
             });
         }
     }
