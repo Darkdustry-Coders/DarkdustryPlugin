@@ -15,7 +15,7 @@ public class ClientCommandsLoader {
         CommandsHelper.register(handler, "votekick", "<ID/username...>", "commands.votekick.description", false, VoteKickCommand::run);
         CommandsHelper.register(handler, "vote", "<y/n>", "commands.vote.description", false, VoteCommand::run);
         CommandsHelper.register(handler, "sync", "commands.sync.description", false, SyncCommand::run);
-        CommandsHelper.register(handler, "tr", "<off/auto/current/locale>", "commands.tr.description", false, TranslatorCommand::run);
+        CommandsHelper.register(handler, "tr", "<current/list/off/auto/locale>", "commands.tr.description", false, TranslatorCommand::run);
         CommandsHelper.register(handler, "info", "[ID/username...]", "commands.info.description", false, InfoCommand::run);
         CommandsHelper.register(handler, "rank", "commands.rank.description", false, RankCommand::run);
         CommandsHelper.register(handler, "players", "[page]", "commands.players.description", false, PlayerListCommand::run);
