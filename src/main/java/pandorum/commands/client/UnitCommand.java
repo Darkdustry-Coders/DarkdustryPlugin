@@ -25,9 +25,9 @@ public class UnitCommand {
             return;
         }
 
-        Unit unit = type.spawn(player.team(), player.x(), player.y());
-        unit.spawnedByCore(true);
+        Unit unit = type.spawn(target.team(), target.x(), target.y());
         target.unit(unit);
+        unit.spawnedByCore(true);
         bundled(target, "commands.admin.unit.success", Icons.get(type.name));
     }
 }
