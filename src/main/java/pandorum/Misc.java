@@ -70,6 +70,7 @@ public class Misc {
             case "small", "shard", "core-shard" -> Blocks.coreShard;
             case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
             case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            default -> null;
         };
     }
 
