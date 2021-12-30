@@ -2,10 +2,11 @@ package pandorum.comp;
 
 import arc.func.Cons;
 import arc.struct.StringMap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -30,10 +31,10 @@ public class Translator {
     public Translator() throws IOException {
         this.client = new OkHttpClient();
 
-        JSONArray languages = getAllLanguages();
-        for (int i = 0; i < languages.length(); i++) {
-            JSONObject language = languages.getJSONObject(i);
-            codeLanguages.put(language.getString("code_alpha_1"), language.getString("full_code"));
+        JsonArray languages = getAllLanguages();
+        for (int i = 0; i < languages.size(); i++) {
+            JsonObject language = languages.get(i).getAsJsonObject();
+            codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
         }
     }
 
@@ -58,16 +59,20 @@ public class Translator {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONObject translated = new JSONObject(Objects.requireNonNull(response.body()).string());
-                String translatedText = translated.optString("result", text);
-
+                JsonObject translated = PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class);
+                String translatedText;
+                try {
+                    translatedText = translated.get("result").getAsString();
+                } catch (NullPointerException e) {
+                    translatedText = text;
+                }
                 cons.get(translatedText);
                 response.close();
             }
         });
     }
 
-    public JSONArray getAllLanguages() throws IOException {
+    public JsonArray getAllLanguages() throws IOException {
         Request request = new Request.Builder()
                 .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
                 .get()
@@ -84,6 +89,7 @@ public class Translator {
                 .build();
 
         Response response = client.newCall(request).execute();
-        return response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") : new JSONArray("[]");
+        return response.isSuccessful() ? PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
+        //return response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") : new JSONArray("[]");
     }
 }

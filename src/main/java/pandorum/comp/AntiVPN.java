@@ -2,9 +2,10 @@ package pandorum.comp;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
+import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -53,11 +54,10 @@ public class AntiVPN {
 
             @Override
             public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
-                JSONObject body = new JSONObject(Objects.requireNonNull(response.body()).string());
-                JSONObject ipInfo = body.getJSONObject(ip);
+                JsonObject ipInfo = PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class).getAsJsonObject(ip);
 
-                int risk = ipInfo.getInt("risk");
-                String type = ipInfo.getString("type");
+                int risk = ipInfo.get("risk").getAsInt();
+                String type = ipInfo.get("type").getAsString();
 
                 boolean isDangerous = risk > 66 || Set.of(
                         "tor", "socks", "socks4", "socks4a",
