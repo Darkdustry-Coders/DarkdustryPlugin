@@ -30,11 +30,11 @@ public class SavesListCommand {
             return;
         }
 
-        StringBuilder result = new StringBuilder(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages)).append("\n");
+        StringBuilder result = new StringBuilder(Bundle.format("commands.saves.page", findLocale(player.locale), page + 1, pages));
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), savesList.size); i++) {
             Fi save = savesList.get(i);
-            result.append("[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()).append("\n");
+            result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension());
         }
 
         player.sendMessage(result.toString());
