@@ -27,7 +27,7 @@ import static mindustry.Vars.*;
 public class Misc {
 
     public static String colorizedTeam(Team team) {
-        return "[white]" + Icons.get(team.name) + "[#" + team.color + "]" + team.name;
+        return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }
 
     public static Map findMap(String name) {
