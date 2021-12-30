@@ -60,12 +60,8 @@ public class Translator {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonObject translated = PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class);
-                String translatedText;
-                try {
-                    translatedText = translated.get("result").getAsString();
-                } catch (NullPointerException e) {
-                    translatedText = text;
-                }
+                String translatedText = translated.get("result").getAsString();
+
                 cons.get(translatedText);
                 response.close();
             }
@@ -90,6 +86,5 @@ public class Translator {
 
         Response response = client.newCall(request).execute();
         return response.isSuccessful() ? PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
-        //return response.isSuccessful() ? new JSONObject(Objects.requireNonNull(response.body()).string()).getJSONArray("result") : new JSONArray("[]");
     }
 }
