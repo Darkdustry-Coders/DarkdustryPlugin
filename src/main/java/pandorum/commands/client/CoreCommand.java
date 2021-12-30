@@ -26,6 +26,6 @@ public class CoreCommand {
         }
 
         Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-        bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed", Icons.get(core.name));
+        bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed", Icons.get(core.name), colorizedTeam(team));
     }
 }
