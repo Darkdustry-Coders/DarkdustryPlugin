@@ -28,11 +28,11 @@ public class HelpCommand {
             return;
         }
 
-        StringBuilder result = new StringBuilder(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages)).append("\n");
+        StringBuilder result = new StringBuilder(Bundle.format("commands.help.page", findLocale(player.locale), page + 1, pages));
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), commandsList.size); i++) {
             Command command = commandsList.get(i);
-            result.append("[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(Bundle.format(command.description, findLocale(player.locale))).append("\n");
+            result.append("\n[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(Bundle.format(command.description, findLocale(player.locale)));
         }
 
         player.sendMessage(result.toString());
