@@ -23,13 +23,7 @@ public class PlayerJoinListener {
         Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player.join", event.player.color, event.player.getInfo().lastName);
 
-        EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                .color(BotMain.successColor)
-                .title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.getInfo().lastName)))
-                .build();
-
-        BotHandler.sendEmbed(embed);
-
+        BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.getInfo().lastName))).build());
         Effects.onJoin(event.player);
 
         PlayerModel.find(event.player.uuid(), playerInfo -> {
@@ -38,7 +32,7 @@ public class PlayerJoinListener {
                         MenuHandler.welcomeMenu,
                         Bundle.format("events.hellomsg.header", findLocale(event.player.locale)),
                         Bundle.format("events.hellomsg", findLocale(event.player.locale)),
-                        new String[][]{{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
+                        new String[][] {{Bundle.format("events.hellomsg.ok", findLocale(event.player.locale))}, {Bundle.format("events.hellomsg.disable", findLocale(event.player.locale))}}
                 );
             }
         });

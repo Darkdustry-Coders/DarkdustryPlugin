@@ -77,6 +77,8 @@ public class Icons {
                 "beta", Iconc.unitBeta,
                 "gamma", Iconc.unitGamma,
 
+                "block", Iconc.unitBlock,
+
                 "spawn", Iconc.blockSpawn,
                 "cliff", Iconc.blockCliff,
 

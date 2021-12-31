@@ -1,5 +1,6 @@
 package pandorum.commands;
 
+import arc.Core;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
@@ -19,7 +20,7 @@ public class CommandsHelper {
         if (!modes.contains(PandorumPlugin.config.mode)) return;
         Command command = clientHandler.<Player>register(text, params, description, (args, player) -> {
             if (adminOnly && adminCheck(player)) return;
-            runner.accept(args, player);
+            Core.app.post(() -> runner.accept(args, player));
         });
 
         if (adminOnly) adminOnlyCommands.add(command);

@@ -37,7 +37,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     }
 
     public Object[] toArray() {
-        return new Object[]{t1, t2};
+        return new Object[] {t1, t2};
     }
 
     @Override

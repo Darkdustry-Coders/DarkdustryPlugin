@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import mindustry.content.UnitTypes;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
@@ -14,7 +13,7 @@ public class UnitCommand {
         UnitType type = findUnit(args[0]);
         if (type == null) {
             StringBuilder units = new StringBuilder();
-            content.units().each(u -> u != UnitTypes.block, u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
+            content.units().each(u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
             bundled(player, "commands.unit-not-found", units.toString());
             return;
         }

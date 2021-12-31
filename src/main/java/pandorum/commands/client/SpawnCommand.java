@@ -2,7 +2,6 @@ package pandorum.commands.client;
 
 import arc.util.Strings;
 import arc.util.Structs;
-import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
@@ -21,17 +20,17 @@ public class SpawnCommand {
             return;
         }
 
-        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (amount > maxAmount || amount < 1) {
-            bundled(player, "commands.admin.spawn.limit", maxAmount);
-            return;
-        }
-
         UnitType type = findUnit(args[0]);
         if (type == null) {
             StringBuilder units = new StringBuilder();
-            content.units().each(u -> u != UnitTypes.block, u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
+            content.units().each(u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
             bundled(player, "commands.unit-not-found", units.toString());
+            return;
+        }
+
+        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+        if (amount > maxAmount || amount < 1) {
+            bundled(player, "commands.admin.spawn.limit", maxAmount);
             return;
         }
 

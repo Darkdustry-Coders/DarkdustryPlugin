@@ -24,13 +24,7 @@ public class PlayerLeaveListener {
         Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
         sendToChat("events.player.leave", event.player.color, event.player.getInfo().lastName);
 
-        EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                .color(BotMain.errorColor)
-                .title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.getInfo().lastName)))
-                .build();
-
-        BotHandler.sendEmbed(embed);
-
+        BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.getInfo().lastName))).build());
         Effects.onLeave(event.player);
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());

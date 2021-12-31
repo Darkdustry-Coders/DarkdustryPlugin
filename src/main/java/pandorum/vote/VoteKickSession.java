@@ -1,15 +1,11 @@
 package pandorum.vote;
 
 import arc.struct.Seq;
-import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.Timer.Task;
-import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,17 +53,7 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
             stop();
-
             target.kick(KickReason.vote, config.kickDuration);
-
-            EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                    .color(BotMain.errorColor)
-                    .author("KICK", null, "https://thumbs.dreamstime.com/b/red-cross-symbol-icon-as-delete-remove-fail-failure-incorr-incorrect-answer-89999776.jpg")
-                    .title("Игрок был выгнан с сервера голосованием!")
-                    .addField("Никнейм игрока:", Strings.stripColors(target.name), false)
-                    .build();
-
-            BotHandler.sendEmbed(embed);
             return true;
         }
         return false;

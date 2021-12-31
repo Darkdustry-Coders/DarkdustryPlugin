@@ -58,7 +58,7 @@ public class Misc {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripGlyphs(Strings.stripColors(p.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))) || Strings.stripGlyphs(Strings.stripColors(p.name)).contains(Strings.stripGlyphs(Strings.stripColors(name))));
+        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripGlyphs(Strings.stripColors(p.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))));
     }
 
     public static Block findBlock(String name) {

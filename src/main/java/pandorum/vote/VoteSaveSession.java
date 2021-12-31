@@ -1,5 +1,6 @@
 package pandorum.vote;
 
+import arc.Core;
 import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.Timer.Task;
@@ -42,7 +43,8 @@ public class VoteSaveSession extends VoteSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.save.passed", target);
             stop();
-            SaveIO.save(saveDirectory.child(Strings.format("@.@", target, saveExtension)));
+            Core.app.post(() -> SaveIO.save(saveDirectory.child(Strings.format("@.@", target, saveExtension))));
+            return true;
         }
         return false;
     }

@@ -37,7 +37,7 @@ public class Bundle {
     }
 
     public static Locale defaultLocale() {
-        return Structs.find(supportedLocales, l -> l.toString().equals("en"));
+        return Structs.find(supportedLocales, locale -> locale.toString().equals("en"));
     }
 
     public static String get(String key, Locale locale) {

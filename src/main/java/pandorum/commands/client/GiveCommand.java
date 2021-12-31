@@ -1,7 +1,6 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
-import mindustry.game.Teams.TeamData;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.comp.Icons;
@@ -18,8 +17,6 @@ public class GiveCommand {
             return;
         }
 
-        int amount = Strings.parseInt(args[1]);
-
         Item item = findItem(args[0]);
         if (item == null) {
             StringBuilder items = new StringBuilder();
@@ -28,13 +25,14 @@ public class GiveCommand {
             return;
         }
 
-        TeamData team = state.teams.get(player.team());
-        if (team.noCores()) {
+        int amount = Strings.parseInt(args[1]);
+
+        if (state.teams.get(player.team()).noCores()) {
             bundled(player, "commands.admin.give.no-core");
             return;
         }
 
-        team.core().items.add(item, amount);
+        state.teams.get(player.team()).core().items.add(item, amount);
         bundled(player, "commands.admin.give.success", amount, Icons.get(item.name));
     }
 }

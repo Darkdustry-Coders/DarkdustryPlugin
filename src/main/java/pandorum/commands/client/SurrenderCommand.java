@@ -7,11 +7,9 @@ import mindustry.content.Blocks;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.world.Tile;
-import pandorum.Misc;
 
 import static mindustry.Vars.world;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.*;
 import static pandorum.PandorumPlugin.config;
 import static pandorum.PandorumPlugin.votesSurrender;
 
@@ -26,11 +24,11 @@ public class SurrenderCommand {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = (int) Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        sendToChat("commands.surrender.vote", Misc.colorizedTeam(player.team()), player.coloredName(), cur, req);
+        sendToChat("commands.surrender.vote", colorizedTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;
 
-        sendToChat("commands.surrender.passed", Misc.colorizedTeam(player.team()));
+        sendToChat("commands.surrender.passed", colorizedTeam(player.team()));
         votesSurrender.remove(player.team());
         for (Tile tile : world.tiles) {
             if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {
