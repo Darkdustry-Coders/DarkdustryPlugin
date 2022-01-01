@@ -3,7 +3,7 @@ package pandorum.events;
 import arc.util.Log;
 import arc.util.Strings;
 import discord4j.core.spec.EmbedCreateSpec;
-import mindustry.game.EventType;
+import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
@@ -17,14 +17,15 @@ import static pandorum.Misc.*;
 
 public class PlayerJoinListener {
 
-    public static void call(final EventType.PlayerJoin event) {
-        Ranks.updateName(event.player);
-
-        Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
-        sendToChat("events.player.join", event.player.color, event.player.getInfo().lastName);
+    public static void call(final PlayerJoin event) {
+        Ranks.updateRank(event.player, rank -> {
+            event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString().toUpperCase(), event.player.getInfo().lastName));
+            Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+            sendToChat("events.player.join", event.player.coloredName());
+        });
 
         BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.getInfo().lastName))).build());
-        Effects.onJoin(event.player);
+        if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
         PlayerModel.find(event.player.uuid(), playerInfo -> {
             if (playerInfo.hellomsg) {

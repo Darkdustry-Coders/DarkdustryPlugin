@@ -72,7 +72,6 @@ public final class PandorumPlugin extends Plugin {
     public PandorumPlugin() throws IOException {
         Fi configFi = dataDirectory.child("config.json");
         if (configFi.exists()) {
-
             config = gson.fromJson(configFi.reader(), Config.class);
             Log.info("[Darkdustry] Конфигурация загружена.");
         } else {

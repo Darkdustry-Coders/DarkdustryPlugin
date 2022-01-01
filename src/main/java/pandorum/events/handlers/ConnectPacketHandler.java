@@ -7,7 +7,8 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Time;
 import mindustry.core.Version;
-import mindustry.game.EventType;
+import mindustry.game.EventType.ConnectPacketEvent;
+import mindustry.game.EventType.PlayerConnect;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -25,7 +26,7 @@ public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
-        Events.fire(new EventType.ConnectPacketEvent(con, packet));
+        Events.fire(new ConnectPacketEvent(con, packet));
 
         con.connectTime = Time.millis();
 
@@ -66,11 +67,11 @@ public class ConnectPacketHandler {
 
         if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
             StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", findLocale(locale)));
-            if (!missingMods.isEmpty()) {
+            if (missingMods.any()) {
                 reason.append(Bundle.format("events.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
             }
 
-            if (!extraMods.isEmpty()) {
+            if (extraMods.any()) {
                 reason.append(Bundle.format("events.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
             }
             con.kick(reason.toString(), 0);
@@ -80,7 +81,6 @@ public class ConnectPacketHandler {
         String usid = packet.usid;
         String ip = con.address;
         String name = fixName(packet.name);
-        Color color = new Color(packet.color).a(1f);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
@@ -120,13 +120,13 @@ public class ConnectPacketHandler {
 
         Player player = Player.create();
         player.admin = netServer.admins.isAdmin(uuid, usid);
+        player.name = name;
+        player.locale = locale;
+        player.color = new Color(packet.color).a(1f);
         player.con = con;
         player.con.usid = usid;
         player.con.uuid = uuid;
         player.con.mobile = packet.mobile;
-        player.name = name;
-        player.locale = locale;
-        player.color = color;
 
         if (!player.admin && !info.admin) {
             info.adminUsid = usid;
@@ -150,7 +150,7 @@ public class ConnectPacketHandler {
             if (isDangerous) con.kick(Bundle.format("events.vpn-ip", findLocale(locale)), 0);
         });
 
-        Events.fire(new EventType.PlayerConnect(player));
+        Events.fire(new PlayerConnect(player));
     }
 
     private static String fixName(String name) {

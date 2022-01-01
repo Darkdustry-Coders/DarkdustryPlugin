@@ -4,13 +4,12 @@ import arc.files.Fi;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import pandorum.Misc;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
 import pandorum.vote.VoteSession;
 
-import static pandorum.Misc.bundled;
+import static pandorum.Misc.*;
 import static pandorum.PandorumPlugin.current;
 import static pandorum.PandorumPlugin.nominateCooldowns;
 
@@ -32,7 +31,7 @@ public class NominateCommand {
 
         switch (args[0].toLowerCase()) {
             case "map" -> {
-                Map map = Misc.findMap(args[1]);
+                Map map = findMap(args[1]);
                 if (map == null) {
                     bundled(player, "commands.nominate.map.not-found");
                     return;
@@ -49,7 +48,7 @@ public class NominateCommand {
                 vtime.reset();
             }
             case "load" -> {
-                Fi save = Misc.findSave(args[1]);
+                Fi save = findSave(args[1]);
                 if (save == null) {
                     bundled(player, "commands.nominate.load.not-found");
                     return;

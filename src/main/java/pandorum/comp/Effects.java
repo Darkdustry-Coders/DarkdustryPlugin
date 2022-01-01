@@ -4,7 +4,6 @@ import arc.graphics.Color;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Call;
-import mindustry.gen.Player;
 
 public class Effects {
 
@@ -14,15 +13,15 @@ public class Effects {
         Call.effect(effect, x, y, 0, Color.white);
     }
 
-    public static void onMove(Player p) {
-        on(moveEffect, p.x, p.y);
+    public static void onMove(float x, float y) {
+        on(moveEffect, x, y);
     }
 
-    public static void onJoin(Player p) {
-        if (p.team().core() != null) on(joinEffect, p.team().core().x, p.team().core().y);
+    public static void onJoin(float x, float y) {
+        on(joinEffect, x, y);
     }
 
-    public static void onLeave(Player p) {
-        if (!p.dead()) on(leaveEffect, p.x, p.y);
+    public static void onLeave(float x, float y) {
+        on(leaveEffect, x, y);
     }
 }

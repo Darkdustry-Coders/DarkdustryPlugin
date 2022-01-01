@@ -30,6 +30,11 @@ public class Ranks {
     }
 
     public static void updateRank(Player player, Cons<Rank> cons) {
+        if (player.admin) {
+            cons.get(admin);
+            return;
+        }
+
         PlayerModel.find(player.uuid(), playerInfo -> {
             Rank current = get(playerInfo.rank);
 
@@ -54,11 +59,6 @@ public class Ranks {
     }
 
     public static void updateName(Player player) {
-        if (player.admin) {
-            player.name(Strings.format("@[#@]@", admin.tag, player.color.toString().toUpperCase(), player.getInfo().lastName));
-            return;
-        }
-
         updateRank(player, rank -> player.name(Strings.format("@[#@]@", rank.tag, player.color.toString().toUpperCase(), player.getInfo().lastName)));
     }
 

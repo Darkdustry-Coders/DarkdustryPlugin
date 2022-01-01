@@ -2,28 +2,13 @@ package pandorum.struct;
 
 import arc.func.Boolf;
 import arc.struct.Queue;
-import arc.util.Strings;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import static pandorum.struct.CacheSeq.UNSET_INT;
+public class Seqs {
 
-@SuppressWarnings("unchecked")
-public abstract class Seqs {
-
-    public static final Queue<?> EMPTY_QUEUE = new EmptyQueue<>();
-
-    private Seqs() {
-    }
-
-    public static void requireArgument(boolean expression, String template, Object... args) {
-        if (!expression) {
-            throw new IllegalArgumentException(Strings.format(template, args));
-        }
-    }
-
-    public static <T> SeqBuilder<T> newBuilder() {
+    public static <T> SeqBuilder<T> seqBuilder() {
         return new SeqBuilder<>();
     }
 
@@ -32,7 +17,7 @@ public abstract class Seqs {
     }
 
     public static <T> EmptyQueue<T> emptyQueue() {
-        return (EmptyQueue<T>) EMPTY_QUEUE;
+        return new EmptyQueue<>();
     }
 
     private static class SafeQueue<T> extends Queue<T> {
@@ -71,19 +56,13 @@ public abstract class Seqs {
     private static class EmptyQueue<T> extends Queue<T> {
 
         @Override
-        public void add(T object) {
-
-        }
+        public void add(T object) {}
 
         @Override
-        public void addFirst(T object) {
-
-        }
+        public void addFirst(T object) {}
 
         @Override
-        public void addLast(T object) {
-
-        }
+        public void addLast(T object) {}
 
         @Override
         public boolean remove(T value) {
@@ -142,14 +121,11 @@ public abstract class Seqs {
     }
 
     public static class SeqBuilder<T> {
-        protected long expireAfterWriteNanos = UNSET_INT;
-        protected int maximumSize = UNSET_INT;
-
-        private SeqBuilder() {
-        }
+        protected long expireAfterWriteNanos = -1;
+        protected int maximumSize = -1;
 
         public SeqBuilder<T> maximumSize(int maximumSize) {
-            requireArgument(maximumSize >= 0, "Maximum size must not be negative.");
+            if (maximumSize < 0) throw new IllegalArgumentException("Maximum size must not be negative.");
             this.maximumSize = maximumSize;
             return this;
         }
@@ -159,7 +135,7 @@ public abstract class Seqs {
         }
 
         public SeqBuilder<T> expireAfterWrite(long duration, TimeUnit unit) {
-            requireArgument(duration >= 0, "Duration must not be negative: @ @.", duration, unit);
+            if (duration < 0) throw new IllegalArgumentException("Duration must not be negative.");
             this.expireAfterWriteNanos = unit.toNanos(duration);
             return this;
         }
@@ -167,7 +143,7 @@ public abstract class Seqs {
         private long toNanosSaturated(Duration duration) {
             try {
                 return duration.toNanos();
-            } catch (ArithmeticException tooBig) {
+            } catch (ArithmeticException e) {
                 return duration.isNegative() ? Long.MIN_VALUE : Long.MAX_VALUE;
             }
         }

@@ -4,7 +4,7 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import discord4j.core.spec.EmbedCreateSpec;
-import mindustry.game.EventType;
+import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
@@ -20,12 +20,12 @@ import static pandorum.Misc.sendToChat;
 
 public class PlayerLeaveListener {
 
-    public static void call(final EventType.PlayerLeave event) {
-        Log.info("@ вышел с сервера, IP: @, ID: @", event.player.getInfo().lastName, event.player.ip(), event.player.uuid());
-        sendToChat("events.player.leave", event.player.color, event.player.getInfo().lastName);
+    public static void call(final PlayerLeave event) {
+        Log.info("@ вышел с сервера, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+        sendToChat("events.player.leave", event.player.coloredName());
 
         BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.getInfo().lastName))).build());
-        Effects.onLeave(event.player);
+        if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 
         PandorumPlugin.activeHistoryPlayers.remove(event.player.uuid());
         PandorumPlugin.spectating.remove(event.player.uuid());

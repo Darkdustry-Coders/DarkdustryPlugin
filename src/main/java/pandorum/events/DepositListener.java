@@ -1,6 +1,6 @@
 package pandorum.events;
 
-import mindustry.game.EventType;
+import mindustry.game.EventType.DepositEvent;
 import mindustry.gen.Groups;
 import mindustry.world.blocks.power.NuclearReactor;
 import pandorum.PandorumPlugin;
@@ -14,7 +14,7 @@ import static pandorum.Misc.bundled;
 
 public class DepositListener {
 
-    public static void call(final EventType.DepositEvent event) {
+    public static void call(final DepositEvent event) {
         if (state.rules.reactorExplosions && PandorumPlugin.config.alertsEnabled() && event.tile.block instanceof NuclearReactor && event.item.explosiveness > 0f && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < PandorumPlugin.config.alertsDistance)) {
             Groups.player.each(p -> p.team() == event.player.team(), p -> PlayerModel.find(p.uuid(), playerInfo -> {
                 if (playerInfo.alerts) {

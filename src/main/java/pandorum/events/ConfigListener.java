@@ -1,7 +1,7 @@
 package pandorum.events;
 
 import arc.util.Pack;
-import mindustry.game.EventType;
+import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
 import pandorum.PandorumPlugin;
 import pandorum.entry.ConfigEntry;
@@ -13,7 +13,7 @@ import static mindustry.Vars.world;
 
 public class ConfigListener {
 
-    public static void call(final EventType.ConfigEvent event) {
+    public static void call(final ConfigEvent event) {
         if (PandorumPlugin.config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
             int connections = event.tile.power != null ? event.tile.power.links.size : 0;

@@ -12,8 +12,8 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     public final T2 t2;
 
     public Tuple2(T1 t1, T2 t2) {
-        this.t1 = Objects.requireNonNull(t1);
-        this.t2 = Objects.requireNonNull(t2);
+        this.t1 = Objects.requireNonNull(t1, "t1 must not be null!");
+        this.t2 = Objects.requireNonNull(t2, "t2 must not be null!");
     }
 
     public static <T1, T2> Tuple2<T1, T2> of(T1 t1, T2 t2) {
@@ -48,8 +48,7 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tuple2<?, ?> tuple2 = (Tuple2<?, ?>) o;
+        if (!(o instanceof Tuple2<?, ?> tuple2)) return false;
         return t1.equals(tuple2.t1) && t2.equals(tuple2.t2);
     }
 

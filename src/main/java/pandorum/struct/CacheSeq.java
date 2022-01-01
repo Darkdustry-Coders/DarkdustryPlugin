@@ -7,11 +7,10 @@ import arc.util.Time;
 import java.util.Objects;
 
 public class CacheSeq<T> extends Seq<T> {
-    protected static final int UNSET_INT = -1;
 
-    private final Queue<Tuple2<T, Long>> writeQueue;
-    private final long expireAfterWriteNanos;
     private final int maximumSize;
+    private final long expireAfterWriteNanos;
+    private final Queue<Tuple2<T, Long>> writeQueue;
 
     public CacheSeq(Seqs.SeqBuilder<? super T> builder) {
         maximumSize = builder.maximumSize;

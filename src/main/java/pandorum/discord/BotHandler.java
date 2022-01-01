@@ -22,7 +22,6 @@ import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Groups;
 import mindustry.maps.Map;
-import pandorum.Misc;
 import pandorum.PandorumPlugin;
 
 import java.io.FileInputStream;
@@ -33,6 +32,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import static mindustry.Vars.*;
+import static pandorum.Misc.findMap;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
@@ -44,7 +44,7 @@ public class BotHandler {
         registerChannels();
         registerCommands();
 
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 12f);
+        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 6f);
     }
 
     public static void registerChannels() {
@@ -96,7 +96,7 @@ public class BotHandler {
             }
 
             maps.reload();
-            Map map = Misc.findMap(args[0]);
+            Map map = findMap(args[0]);
             if (map == null) {
                 err(msg.getChannel().block(), "Карта не найдена.", "Проверьте правильность ввода.");
                 return;
@@ -116,7 +116,7 @@ public class BotHandler {
             }
 
             maps.reload();
-            Map map = Misc.findMap(args[0]);
+            Map map = findMap(args[0]);
             if (map == null) {
                 err(msg.getChannel().block(), "Карта не найдена.", "Проверьте правильность ввода.");
                 return;
