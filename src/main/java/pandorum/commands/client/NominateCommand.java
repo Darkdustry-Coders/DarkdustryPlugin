@@ -24,7 +24,7 @@ public class NominateCommand {
         }
 
         Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
-        if (!vtime.get()) {
+        if (!vtime.get() && !player.admin) {
             bundled(player, "commands.nominate.cooldown", (int) (cooldownTime / 60f));
             return;
         }

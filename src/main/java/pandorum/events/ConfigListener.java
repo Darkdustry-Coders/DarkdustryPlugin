@@ -16,13 +16,11 @@ public class ConfigListener {
     public static void call(final ConfigEvent event) {
         if (PandorumPlugin.config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
-            int connections = event.tile.power != null ? event.tile.power.links.size : 0;
-            boolean connect = connections > 0;
+            boolean connect = false;
 
             if (event.tile.block instanceof PowerNode node && entries.any() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long value) {
-                boolean isBatch = entries.size >= 2 && entries.get(entries.size - 2) instanceof ConfigEntry configEntry && configEntry.value instanceof Long l && Pack.leftInt(l) != connections && content.block(configEntry.blockID) instanceof PowerNode;
-
-                connect = isBatch ? isLastUniqueCount(entries, value, node.maxNodes) : connections > Pack.leftInt(value);
+                int connections = event.tile.power.links.size;
+                connect = entries.size >= 2 && entries.get(entries.size - 2) instanceof ConfigEntry configEntry && configEntry.value instanceof Long longValue && Pack.leftInt(longValue) != connections && content.block(configEntry.blockID) instanceof PowerNode ? isLastUniqueCount(entries, value, node.maxNodes) : connections > Pack.leftInt(value);
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);

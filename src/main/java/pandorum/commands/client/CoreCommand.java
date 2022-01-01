@@ -1,6 +1,7 @@
 package pandorum.commands.client;
 
 import arc.util.Structs;
+import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -11,7 +12,7 @@ import static pandorum.Misc.*;
 
 public class CoreCommand {
     public static void run(final String[] args, final Player player) {
-        Block core = findCore(args[0]);
+        Block core = args.length > 0 ? findCore(args[0]) : Blocks.coreShard;
         if (core == null) {
             bundled(player, "commands.admin.core.core-not-found");
             return;
@@ -26,6 +27,6 @@ public class CoreCommand {
         }
 
         Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-        bundled(player, player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed", Icons.get(core.name), colorizedTeam(team));
+        bundled(player, player.tileOn() != null && player.tileOn().block() == core ? "commands.admin.core.success" : "commands.admin.core.failed", Icons.get(core.name), colorizedTeam(team));
     }
 }

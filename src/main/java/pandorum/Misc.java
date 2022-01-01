@@ -34,7 +34,7 @@ public class Misc {
         Seq<Map> mapsList = maps.customMaps();
         for (int i = 0; i < mapsList.size; i++) {
             Map map = mapsList.get(i);
-            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name)) {
+            if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name)) {
                 return map;
             }
         }
@@ -42,23 +42,23 @@ public class Misc {
     }
 
     public static Fi findSave(String name) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(f -> Objects.equals(f.extension(), saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> Objects.equals(file.extension(), saveExtension));
         for (int i = 0; i < savesList.size; i++) {
             Fi save = savesList.get(i);
-            if ((Strings.canParsePositiveInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
+            if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
                 return save;
             }
         }
         return null;
     }
 
-    public static Locale findLocale(String language) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(language) || language.startsWith(l.toString()));
+    public static Locale findLocale(String name) {
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> name.equals(l.toString()) || name.startsWith(l.toString()));
         return locale != null ? locale : Bundle.defaultLocale();
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(p -> Strings.stripGlyphs(Strings.stripColors(p.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))));
+        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Strings.stripGlyphs(Strings.stripColors(player.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))) || Strings.stripGlyphs(Strings.stripColors(player.name)).contains(Strings.stripGlyphs(Strings.stripColors(name))));
     }
 
     public static Block findBlock(String name) {
@@ -99,7 +99,7 @@ public class Misc {
     }
 
     public static void sendToChat(String key, Object... values) {
-        Groups.player.each(p -> bundled(p, key, values));
+        Groups.player.each(player -> bundled(player, key, values));
     }
 
     public static String formatTime(Date time) {

@@ -73,17 +73,14 @@ public final class PandorumPlugin extends Plugin {
         Fi configFi = dataDirectory.child("config.json");
         if (configFi.exists()) {
             config = gson.fromJson(configFi.reader(), Config.class);
-            Log.info("[Darkdustry] Конфигурация загружена.");
+            Log.info("[Darkdustry] Конфигурация загружена. (@)", configFi.absolutePath());
         } else {
             configFi.writeString(gson.toJson(config = new Config()));
-            Log.info("[Darkdustry] Файл конфигурации сгенерирован... (@)", configFi.absolutePath());
+            Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFi.absolutePath());
         }
 
         ConnectionString connString = new ConnectionString("mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry");
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(connString)
-                .retryWrites(true)
-                .build();
+        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString).retryWrites(true).build();
 
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("darkdustry");

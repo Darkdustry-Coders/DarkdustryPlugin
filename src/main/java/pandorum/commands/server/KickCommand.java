@@ -10,13 +10,13 @@ import static pandorum.Misc.sendToChat;
 public class KickCommand {
     public static void run(final String[] args) {
         Player target = findPlayer(args[0]);
-
-        if (target != null) {
-            target.kick(KickReason.kick);
-            sendToChat("events.server.kick", target.coloredName());
-            Log.info("Игрок был успешно выгнан.");
-        } else {
+        if (target == null) {
             Log.err("Игрок не найден...");
+            return;
         }
+
+        target.kick(KickReason.kick);
+        sendToChat("events.server.kick", target.coloredName());
+        Log.info("Игрок был успешно выгнан.");
     }
 }

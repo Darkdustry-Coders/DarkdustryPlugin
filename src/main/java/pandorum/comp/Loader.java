@@ -42,6 +42,7 @@ public class Loader {
         Events.on(TapEvent.class, TapListener::call);
         Events.on(WithdrawEvent.class, WithdrawListener::call);
         Events.on(WorldLoadEvent.class, WorldLoadListener::call);
+
         Events.run(Trigger.update, TriggerUpdateListener::update);
 
         Administration.Config.motd.set("off");

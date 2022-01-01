@@ -60,9 +60,9 @@ public class VoteKickSession {
     }
 
     public void stop() {
+        voted.clear();
         kickSession[0] = null;
         task.cancel();
-        voted.clear();
     }
 
     protected int votesRequired() {

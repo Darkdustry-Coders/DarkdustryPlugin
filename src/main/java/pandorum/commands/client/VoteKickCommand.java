@@ -32,7 +32,7 @@ public class VoteKickCommand {
         }
 
         Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
-        if (!vtime.get()) {
+        if (!vtime.get() && !player.admin) {
             bundled(player, "commands.votekick.cooldown", (int) (cooldownTime / 60f));
             return;
         }
@@ -48,7 +48,7 @@ public class VoteKickCommand {
             return;
         }
 
-        if (target.admin()) {
+        if (target.admin) {
             bundled(player, "commands.votekick.player-is-admin");
             return;
         }
@@ -60,7 +60,7 @@ public class VoteKickCommand {
 
         VoteKickSession session = new VoteKickSession(currentlyKicking, target);
         currentlyKicking[0] = session;
-        vtime.reset();
         session.vote(player, 1);
+        vtime.reset();
     }
 }

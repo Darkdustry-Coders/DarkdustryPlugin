@@ -18,7 +18,7 @@ public class LoginCommand {
     private static final float cooldownTime = 1200f;
 
     public static void run(final String[] args, final Player player) {
-        if (player.admin()) {
+        if (player.admin) {
             bundled(player, "commands.login.already");
             return;
         }
@@ -29,23 +29,19 @@ public class LoginCommand {
             return;
         }
 
-        EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                .color(BotMain.normalColor)
-                .author("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
-                .title("Запрос на выдачу прав администратора.")
-                .addField("Никнейм: ", player.name, true)
-                .addField("UUID: ", player.uuid(), true)
-                .footer("Нажми на кнопку чтобы подтвердить или отменить получение прав админа.", null)
-                .build();
-
         Message message = BotHandler.adminChannel.createMessage(MessageCreateSpec.builder()
-                .addEmbed(embed)
-                .addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check))
-                .build()).block();
+                .addEmbed(EmbedCreateSpec.builder()
+                        .color(BotMain.normalColor)
+                        .author("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
+                        .title("Запрос на выдачу прав администратора.")
+                        .addField("Никнейм: ", player.name, true)
+                        .addField("UUID: ", player.uuid(), true)
+                        .footer("Нажми на кнопку чтобы подтвердить или отменить получение прав админа.", null)
+                        .build()
+                ).addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check)).build()).block();
 
         Authme.loginWaiting.put(message, player);
-
-        vtime.reset();
         bundled(player, "commands.login.sent");
+        vtime.reset();
     }
 }

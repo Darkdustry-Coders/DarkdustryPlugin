@@ -12,7 +12,7 @@ public class SyncCommand {
     private static final float cooldownTime = 15f;
 
     public static void run(final String[] args, final Player player) {
-        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * cooldownTime) {
+        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * cooldownTime && !player.admin) {
             bundled(player, "commands.sync.time", cooldownTime);
             return;
         }
