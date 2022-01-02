@@ -1,5 +1,6 @@
 package pandorum.entry;
 
+import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 import pandorum.comp.Bundle;
@@ -13,7 +14,7 @@ import static pandorum.Misc.formatTime;
 
 public class RotateEntry implements HistoryEntry {
 
-    public static final String[] sides = {"\uE803", "\uE804", "\uE802", "\uE805"};
+    public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public final String name;
     public final short blockID;

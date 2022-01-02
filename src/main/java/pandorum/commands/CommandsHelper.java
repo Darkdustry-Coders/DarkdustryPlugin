@@ -10,11 +10,16 @@ import mindustry.gen.Player;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 
+import static mindustry.Vars.netServer;
 import static pandorum.Misc.adminCheck;
 
 public class CommandsHelper {
 
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
+
+    public static Seq<Command> getAvailableClientCommands(boolean admin) {
+        return admin ? netServer.clientCommands.getCommandList() : netServer.clientCommands.getCommandList().removeAll(adminOnlyCommands::contains);
+    }
 
     public static void register(CommandHandler clientHandler, String text, String params, String description, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(PandorumPlugin.config.mode)) return;

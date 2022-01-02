@@ -52,7 +52,7 @@ public class MenuHandler {
         artvMenu = Menus.registerMenu((player, option) -> {
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
-                sendToChat("commands.admin.artv.info");
+                sendToChat("commands.admin.artv.info", player.coloredName());
             }
         });
     }

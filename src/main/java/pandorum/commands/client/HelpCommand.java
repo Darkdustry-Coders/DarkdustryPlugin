@@ -8,7 +8,6 @@ import mindustry.gen.Player;
 import pandorum.commands.CommandsHelper;
 import pandorum.comp.Bundle;
 
-import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
@@ -19,7 +18,7 @@ public class HelpCommand {
             return;
         }
 
-        Seq<Command> commandsList = player.admin ? netServer.clientCommands.getCommandList() : netServer.clientCommands.getCommandList().removeAll(command -> CommandsHelper.adminOnlyCommands.contains(command));
+        Seq<Command> commandsList = CommandsHelper.getAvailableClientCommands(player.admin);
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandsList.size / 6.0f);
 

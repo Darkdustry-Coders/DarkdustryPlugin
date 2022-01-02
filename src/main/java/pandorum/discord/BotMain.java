@@ -10,6 +10,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.command.Interaction;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.rest.request.RouteMatcher;
 import discord4j.rest.response.ResponseFunction;
@@ -19,8 +20,6 @@ import discord4j.rest.util.Color;
 import mindustry.net.Administration.PlayerInfo;
 import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
-
-import java.util.Objects;
 
 import static pandorum.Misc.sendToChat;
 
@@ -44,15 +43,16 @@ public class BotMain {
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message msg = event.getMessage();
+                Member member = msg.getAuthorAsMember().block();
                 CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
                 if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
                     BotHandler.err(msg.getChannel().block(), "Неверное количество аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
                     return;
                 }
 
-                if (Objects.equals(msg.getChannel().block(), BotHandler.botChannel) && !msg.getAuthor().get().isBot() && msg.getContent().length() > 0) {
-                    sendToChat("events.discord.chat", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
-                    Log.info("[Discord] @: @", Objects.requireNonNull(msg.getAuthorAsMember().block()).getDisplayName(), msg.getContent());
+                if (msg.getChannel().block() == BotHandler.botChannel && member != null && !member.isBot() && msg.getContent().length() > 0) {
+                    sendToChat("events.discord.chat", member.getDisplayName(), msg.getContent());
+                    Log.info("[Discord] @: @", member.getDisplayName(), msg.getContent());
                 }
             }, e -> {});
 
@@ -62,13 +62,13 @@ public class BotMain {
                 if (Authme.loginWaiting.containsKey(msg)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
+                            BotHandler.text(msg.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.confirm(Authme.loginWaiting.get(msg));
                             Authme.loginWaiting.remove(msg);
                             msg.delete().block();
                         }
                         case "deny" -> {
-                            BotHandler.text(Objects.requireNonNull(msg.getChannel().block()), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
+                            BotHandler.text(msg.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
                             Authme.deny(Authme.loginWaiting.get(msg));
                             Authme.loginWaiting.remove(msg);
                             msg.delete().block();

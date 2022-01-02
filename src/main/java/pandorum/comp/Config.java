@@ -5,6 +5,7 @@ import arc.util.Strings;
 import pandorum.struct.Tuple2;
 
 import static mindustry.Vars.port;
+import static mindustry.Vars.state;
 
 public class Config {
     /** Необходимое количество игроков для успешного завершения голосования */
@@ -65,7 +66,7 @@ public class Config {
     }
 
     public boolean alertsEnabled() {
-        return alertsDistance > 0 && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+        return state.rules.reactorExplosions && alertsDistance > 0 && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public enum Gamemode {

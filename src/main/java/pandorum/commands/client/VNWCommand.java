@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.math.Mathf;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
@@ -18,7 +19,7 @@ public class VNWCommand {
 
         votesVNW.add(player.uuid());
         int cur = votesVNW.size;
-        int req = (int) Math.ceil(config.voteRatio * Groups.player.size());
+        int req = Mathf.ceil(config.voteRatio * Groups.player.size());
         sendToChat("commands.vnw.vote", player.coloredName(), cur, req);
 
         if (cur < req) return;

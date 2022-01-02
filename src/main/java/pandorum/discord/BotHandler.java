@@ -25,11 +25,11 @@ import mindustry.maps.Map;
 import pandorum.PandorumPlugin;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
@@ -67,7 +67,7 @@ public class BotHandler {
         });
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
-            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
+            if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -83,14 +83,14 @@ public class BotHandler {
                 Fi mapFile = customMapDirectory.child(a.getFilename());
                 Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile.file()));
                 maps.reload();
-                text(Objects.requireNonNull(msg.getChannel().block()), "*Карта добавлена на сервер.*");
+                text(msg.getChannel().block(), "*Карта добавлена на сервер.*");
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
             }
         });
 
         handler.<Message>register("map", "<название...>", "Получить файл карты с сервера.", (args, msg) -> {
-            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
+            if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -103,14 +103,14 @@ public class BotHandler {
             }
 
             try {
-                Objects.requireNonNull(msg.getChannel().block()).createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(map.file.name(), new FileInputStream(map.file.file()))).build()).subscribe(null, e -> {});
+                sendFile(msg.getChannel().block(), map.file);
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Возникла ошибка.", "Ошибка получения карты с сервера.");
             }
         });
 
         handler.<Message>register("removemap", "<название...>", "Удалить карту с сервера.", (args, msg) -> {
-            if (checkAdmin(Objects.requireNonNull(msg.getAuthorAsMember().block()))) {
+            if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
             }
@@ -125,7 +125,7 @@ public class BotHandler {
             try {
                 maps.removeMap(map);
                 maps.reload();
-                text(Objects.requireNonNull(msg.getChannel().block()), "*Карта удалена с сервера.*");
+                text(msg.getChannel().block(), "*Карта удалена с сервера.*");
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Возникла ошибка.", "Ошибка удаления карты с сервера.");
             }
@@ -164,12 +164,12 @@ public class BotHandler {
                     .addField("Карты:", maps.toString(), false)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
 
         handler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
             if (state.isMenu()) {
-                err(msg.getChannel().block(), "Сервер отключен.", "Попросите администратора запустить его.");
+                err(msg.getChannel().block(), "Сервер отключен.", "Попросите администраторов запустить его.");
                 return;
             }
 
@@ -177,14 +177,15 @@ public class BotHandler {
                     .color(BotMain.successColor)
                     .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
                     .title("Сервер онлайн.")
-                    .addField("Игроков:", Integer.toString(Groups.player.size()), false)
+                    .addField("Игроков:", String.valueOf(Groups.player.size()), false)
                     .addField("Карта:", state.map.name(), false)
-                    .addField("Волна:", Integer.toString(state.wave), false)
-                    .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", false)
+                    .addField("Волна:", String.valueOf(state.wave), false)
+                    .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
+                    .addField("TPS на сервере:", String.valueOf(state.serverTps), false)
                     .footer("Используй " + PandorumPlugin.config.prefix + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
 
         handler.<Message>register("players", "[страница]", "Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -213,12 +214,11 @@ public class BotHandler {
 
             EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .color(BotMain.normalColor)
-                    .author("Server players", null, "https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png")
                     .title("Список игроков на сервере (всего " + Groups.player.size() + ")")
                     .addField("Игроки:", players.toString(), false)
                     .build();
 
-            sendEmbed(Objects.requireNonNull(msg.getChannel().block()), embed);
+            sendEmbed(msg.getChannel().block(), embed);
         });
     }
 
@@ -227,7 +227,7 @@ public class BotHandler {
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
+        if (channel != null) channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
     }
 
     public static void info(MessageChannel channel, String title, String text, Object... args) {
@@ -243,7 +243,11 @@ public class BotHandler {
     }
 
     public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).subscribe(null, e -> {});
+        if (channel != null) channel.createMessage(embed).subscribe(null, e -> {});
+    }
+
+    public static void sendFile(MessageChannel channel, Fi file) throws FileNotFoundException {
+        if (channel != null) channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
     }
 
     public static InputStream download(String url) {
@@ -256,8 +260,8 @@ public class BotHandler {
         }
     }
 
-    public static boolean checkAdmin(Member member) {
-        if (member.isBot()) return true;
-        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
+    public static boolean isAdmin(Member member) {
+        if (member == null || member.isBot()) return false;
+        return member.getRoles().toStream().anyMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
     }
 }

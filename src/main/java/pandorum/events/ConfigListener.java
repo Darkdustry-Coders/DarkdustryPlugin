@@ -14,7 +14,7 @@ import static mindustry.Vars.world;
 public class ConfigListener {
 
     public static void call(final ConfigEvent event) {
-        if (PandorumPlugin.config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
+        if (PandorumPlugin.config.historyEnabled() && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
             boolean connect = false;
 

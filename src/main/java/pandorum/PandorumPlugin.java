@@ -39,12 +39,7 @@ import static mindustry.Vars.dataDirectory;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static final Gson gson = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
-            .setPrettyPrinting()
-            .serializeNulls()
-            .disableHtmlEscaping()
-            .create();
+    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     public static final VoteSession[] current = {null};
     public static final VoteKickSession[] currentlyKicking = {null};

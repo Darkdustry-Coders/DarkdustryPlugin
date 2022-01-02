@@ -1,5 +1,6 @@
 package pandorum.vote;
 
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
@@ -24,17 +25,17 @@ public abstract class VoteSession {
 
     protected abstract boolean checkPass();
 
-    public Seq<String> voted() {
-        return voted;
-    }
-
-    public int votesRequired() {
-        return (int) Math.ceil(config.voteRatio * Groups.player.size());
+    protected int votesRequired() {
+        return Mathf.ceil(config.voteRatio * Groups.player.size());
     }
 
     public void stop() {
         voted.clear();
         session[0] = null;
         task.cancel();
+    }
+
+    public Seq<String> voted() {
+        return voted;
     }
 }

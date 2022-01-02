@@ -25,14 +25,6 @@ public class VoteKickSession {
         this.task = start();
     }
 
-    public Seq<String> voted() {
-        return voted;
-    }
-
-    public Player target() {
-        return target;
-    }
-
     protected Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
@@ -59,13 +51,21 @@ public class VoteKickSession {
         return false;
     }
 
+    protected int votesRequired() {
+        return Groups.player.size() > 4 ? 3 : 2;
+    }
+
     public void stop() {
         voted.clear();
         kickSession[0] = null;
         task.cancel();
     }
 
-    protected int votesRequired() {
-        return Groups.player.size() > 4 ? 3 : 2;
+    public Seq<String> voted() {
+        return voted;
+    }
+
+    public Player target() {
+        return target;
     }
 }
