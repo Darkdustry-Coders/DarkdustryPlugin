@@ -75,8 +75,8 @@ public class BotHandler {
                 return;
             }
 
-            if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFilename().endsWith(".msav")) {
-                err(msg.getChannel().block(), "Ошибка", "Пожалуйста, прикрепи файл карты к сообщению.");
+            if (msg.getAttachments().size() != 1 || !msg.getAttachments().get(0).getFilename().endsWith(mapExtension)) {
+                err(msg.getChannel().block(), "Ошибка.", "Пожалуйста, прикрепи файл карты к сообщению.");
                 return;
             }
 
@@ -86,7 +86,7 @@ public class BotHandler {
                 Fi mapFile = customMapDirectory.child(a.getFilename());
                 Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile.file()));
                 maps.reload();
-                text(msg.getChannel().block(), "*Карта добавлена на сервер.*");
+                text(msg.getChannel().block(), "*Карта добавлена на сервер. (@)*", mapFile.absolutePath());
             } catch (Exception e) {
                 err(msg.getChannel().block(), "Ошибка добавления карты.", "Произошла непредвиденная ошибка.");
             }
@@ -126,6 +126,7 @@ public class BotHandler {
             }
 
             try {
+                sendFile(msg.getChannel().block(), map.file);
                 maps.removeMap(map);
                 maps.reload();
                 text(msg.getChannel().block(), "*Карта удалена с сервера.*");

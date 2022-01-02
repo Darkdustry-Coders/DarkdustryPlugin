@@ -5,13 +5,14 @@ import arc.struct.ObjectMap;
 import arc.struct.StringMap;
 import arc.util.Strings;
 import arc.util.Structs;
-import mindustry.Vars;
 import mindustry.gen.Iconc;
 import pandorum.PandorumPlugin;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static mindustry.Vars.mods;
 
 public class Bundle {
 
@@ -20,7 +21,7 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     static {
-        Fi[] files = Vars.mods.list().find(mod -> mod.main instanceof PandorumPlugin).root.child("bundles").list();
+        Fi[] files = mods.list().find(mod -> mod.main instanceof PandorumPlugin).root.child("bundles").list();
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");
 
@@ -64,7 +65,7 @@ public class Bundle {
         StringMap bundle = bundles.get(locale);
         if (bundle == null && locale.getDisplayName().equals("router")) {
             StringMap router = new StringMap();
-            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("[\\d\\D]", Character.toString(Iconc.blockRouter))));
+            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("\\S", String.valueOf(Iconc.blockRouter))));
             bundles.put(locale, bundle = router);
         } else if (bundle == null && Structs.contains(supportedLocales, locale)) {
             bundles.put(locale, bundle = load(locale));
