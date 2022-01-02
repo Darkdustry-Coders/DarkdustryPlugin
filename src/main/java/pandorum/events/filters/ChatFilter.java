@@ -17,7 +17,7 @@ public class ChatFilter {
         String formatted = netServer.chatFormatter.format(author, text);
         StringMap cache = new StringMap();
 
-        Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
+        Log.info("&fi&lc@: &lw@", author.name, text);
         author.sendMessage(formatted, author, text);
 
         Groups.player.each(player -> player != author, player -> PlayerModel.find(player.uuid(), playerInfo -> {

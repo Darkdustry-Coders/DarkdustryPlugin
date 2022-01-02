@@ -20,7 +20,7 @@ public class PlayerJoinListener {
     public static void call(final PlayerJoin event) {
         Ranks.updateRank(event.player, rank -> {
             event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString().toUpperCase(), event.player.getInfo().lastName));
-            Log.info("@ зашёл на сервер, IP: @, ID: @", event.player.name, event.player.ip(), event.player.uuid());
+            Log.info("&lb@&fi&lk зашел на сервер. &fi&lk[&lb@&fi&lk]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
         });
 

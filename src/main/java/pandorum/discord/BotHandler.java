@@ -22,6 +22,7 @@ import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Groups;
 import mindustry.maps.Map;
+import mindustry.net.Administration;
 import pandorum.PandorumPlugin;
 
 import java.io.FileInputStream;
@@ -65,6 +66,8 @@ public class BotHandler {
 
             info(msg.getChannel().block(), "Команды", builder.toString());
         });
+
+        handler.<Message>register("ip", "Узнать IP адрес сервера.", (args, msg) -> info(msg.getChannel().block(), "IP адрес сервера", "darkdustry.ml:@", Administration.Config.port.num()));
 
         handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
             if (!isAdmin(msg.getAuthorAsMember().block())) {

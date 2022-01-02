@@ -24,6 +24,7 @@ public class AdminCommand {
             switch (args[0].toLowerCase()) {
                 case "add" -> {
                     netServer.admins.adminPlayer(info.id, info.adminUsid);
+                    Log.info("Игрок @ теперь админ.", info.lastName);
                     if (target != null && !target.admin) {
                         target.admin(true);
                         bundled(target, "events.server.admin");
@@ -31,17 +32,14 @@ public class AdminCommand {
                 }
                 case "remove" -> {
                     netServer.admins.unAdminPlayer(info.id);
+                    Log.info("Игрок @ больше не админ.", info.lastName);
                     if (target != null && target.admin) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
                     }
                 }
-                default -> {
-                    Log.err("Второй параметр должен быть или 'add' или 'remove'.");
-                    return;
-                }
+                default -> Log.err("Второй параметр должен быть или 'add' или 'remove'.");
             }
-            Log.info("Статус игрока @ изменен.", info.lastName);
         } else {
             Log.err("Игрок с таким никнеймом или UUID не найден. Если выдаете права админа по никнейму, убедитесь, что игрок онлайн, иначе используйте его UUID.");
         }
