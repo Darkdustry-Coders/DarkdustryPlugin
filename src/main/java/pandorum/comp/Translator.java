@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import pandorum.PandorumPlugin;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Translator {
 
@@ -59,7 +58,7 @@ public class Translator {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JsonObject translated = PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class);
+                JsonObject translated = PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class);
                 String translatedText = translated.get("result").getAsString();
 
                 cons.get(translatedText);
@@ -85,6 +84,6 @@ public class Translator {
                 .build();
 
         Response response = client.newCall(request).execute();
-        return response.isSuccessful() ? PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
+        return response.isSuccessful() ? PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
     }
 }

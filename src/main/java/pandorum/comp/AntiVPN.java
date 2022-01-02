@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import pandorum.PandorumPlugin;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Set;
 
 public class AntiVPN {
@@ -54,7 +53,7 @@ public class AntiVPN {
 
             @Override
             public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
-                JsonObject ipInfo = PandorumPlugin.gson.fromJson(Objects.requireNonNull(response.body()).string(), JsonObject.class).getAsJsonObject(ip);
+                JsonObject ipInfo = PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
 
                 int risk = ipInfo.get("risk").getAsInt();
                 String type = ipInfo.get("type").getAsString();

@@ -44,7 +44,7 @@ public class CommandsHelper {
     }
 
     public static void register(CommandHandler serverHandler, String text, String params, String description, Cons<String[]> runner) {
-        serverHandler.register(text, params, description, runner);
+        serverHandler.register(text, params, description, args -> Core.app.post(() -> runner.get(args)));
     }
 
     public static void register(CommandHandler serverHandler, String text, String description, Cons<String[]> runner) {

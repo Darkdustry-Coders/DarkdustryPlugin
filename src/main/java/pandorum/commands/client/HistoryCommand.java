@@ -7,8 +7,7 @@ import static pandorum.PandorumPlugin.activeHistoryPlayers;
 
 public class HistoryCommand {
     public static void run(final String[] args, final Player player) {
-        if (activeHistoryPlayers.contains(player.uuid())) {
-            activeHistoryPlayers.remove(player.uuid());
+        if (activeHistoryPlayers.remove(player.uuid())) {
             bundled(player, "commands.history.off");
             return;
         }

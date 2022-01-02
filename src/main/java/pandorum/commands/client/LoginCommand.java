@@ -10,6 +10,8 @@ import pandorum.comp.Authme;
 import pandorum.discord.BotHandler;
 import pandorum.discord.BotMain;
 
+import java.util.concurrent.TimeUnit;
+
 import static pandorum.Misc.bundled;
 import static pandorum.PandorumPlugin.loginCooldowns;
 
@@ -25,7 +27,7 @@ public class LoginCommand {
 
         Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
         if (!vtime.get()) {
-            bundled(player, "commands.login.cooldown", (int) (cooldownTime / 60f));
+            bundled(player, "commands.login.cooldown", TimeUnit.SECONDS.toMinutes((int) cooldownTime));
             return;
         }
 

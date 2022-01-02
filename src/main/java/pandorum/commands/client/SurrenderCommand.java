@@ -23,7 +23,7 @@ public class SurrenderCommand {
 
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
-        int req = (int) Math.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
+        int req = Mathf.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
         sendToChat("commands.surrender.vote", colorizedTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;

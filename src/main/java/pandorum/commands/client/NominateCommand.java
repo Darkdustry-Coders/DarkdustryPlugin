@@ -9,6 +9,8 @@ import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
 import pandorum.vote.VoteSession;
 
+import java.util.concurrent.TimeUnit;
+
 import static pandorum.Misc.*;
 import static pandorum.PandorumPlugin.current;
 import static pandorum.PandorumPlugin.nominateCooldowns;
@@ -25,7 +27,7 @@ public class NominateCommand {
 
         Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", (int) (cooldownTime / 60f));
+            bundled(player, "commands.nominate.cooldown", TimeUnit.SECONDS.toMinutes((int) cooldownTime));
             return;
         }
 

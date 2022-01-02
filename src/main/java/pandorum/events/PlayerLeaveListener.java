@@ -1,5 +1,6 @@
 package pandorum.events;
 
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
@@ -39,16 +40,16 @@ public class PlayerLeaveListener {
         if (PandorumPlugin.config.mode == Gamemode.siege || PandorumPlugin.config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = PandorumPlugin.votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
-                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(PandorumPlugin.config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 
         if (PandorumPlugin.votesRTV.remove(event.player.uuid())) {
-            sendToChat("commands.rtv.left", event.player.coloredName(), PandorumPlugin.votesRTV.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
+            sendToChat("commands.rtv.left", event.player.coloredName(), PandorumPlugin.votesRTV.size, Mathf.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
 
         if (PandorumPlugin.votesVNW.remove(event.player.uuid())) {
-            sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, (int) Math.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
+            sendToChat("commands.vnw.left", event.player.coloredName(), PandorumPlugin.votesVNW.size, Mathf.ceil(PandorumPlugin.config.voteRatio * Groups.player.size()));
         }
     }
 }

@@ -74,12 +74,10 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                 }
 
                 @Override
-                public void onComplete() {
-                }
+                public void onComplete() {}
 
                 @Override
-                public void onError(Throwable t) {
-                }
+                public void onError(Throwable t) {}
             });
         } catch (Exception e) {
             Log.err(e);
@@ -103,12 +101,10 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             }
 
             @Override
-            public void onNext(Document t) {
-            }
+            public void onNext(Document t) {}
 
             @Override
-            public void onComplete() {
-            }
+            public void onComplete() {}
 
             @Override
             public void onError(Throwable t) {
@@ -135,8 +131,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             if (!Modifier.isPublic(field.getModifiers())) continue;
             try {
                 values.put(field.getName(), field.get(this));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
 
         return values;

@@ -20,8 +20,7 @@ public class FillCommand {
             return;
         }
 
-        int width = Strings.parseInt(args[0]);
-        int height = Strings.parseInt(args[1]);
+        int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
 
         Block block = findBlock(args[2]);
         if (block == null) {
