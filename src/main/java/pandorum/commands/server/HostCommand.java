@@ -2,11 +2,9 @@ package pandorum.commands.server;
 
 import arc.Core;
 import arc.util.Log;
-import arc.util.Reflect;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
-import mindustry.server.ServerControl;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
@@ -44,7 +42,6 @@ public class HostCommand {
         Log.info("Загружаю карту...");
 
         logic.reset();
-        Reflect.set(ServerControl.class, "lastMode", mode);
         Core.settings.put("lastServerMode", mode.name());
         try {
             world.loadMap(map, map.applyRules(mode));
