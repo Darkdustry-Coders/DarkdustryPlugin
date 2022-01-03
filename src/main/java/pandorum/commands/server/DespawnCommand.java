@@ -8,6 +8,6 @@ public class DespawnCommand {
     public static void run(final String[] args) {
         int amount = Groups.unit.size();
         Groups.unit.each(Unitc::kill);
-        Log.info("Послано нахер @ юнитов...", amount);
+        Log.info("Убито @ юнитов...", amount);
     }
 }

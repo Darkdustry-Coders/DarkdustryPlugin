@@ -14,9 +14,7 @@ public class NextMapCommand {
         Map map = findMap(args[0]);
         if (map != null) {
             for (ApplicationListener listener : Core.app.getListeners()) {
-                if (listener instanceof ServerControl control) {
-                    Reflect.set(control, "nextMapOverride", map);
-                }
+                if (listener instanceof ServerControl control) Reflect.set(control, "nextMapOverride", map);
             }
             Log.info("Следующая карта теперь '@'.", map.name());
         } else {

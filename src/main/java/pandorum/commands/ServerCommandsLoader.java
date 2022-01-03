@@ -10,15 +10,10 @@ public class ServerCommandsLoader {
         CommandsHelper.remove(handler, "pause");
         CommandsHelper.remove(handler, "fillitems");
 
-        CommandsHelper.register(handler, "version", "Displays server version info.", VersionCommand::run);
         CommandsHelper.register(handler, "exit", "Shut down the server.", ExitCommand::run);
-        CommandsHelper.register(handler, "stop", "Stop hosting the server.", StopCommand::run);
-        CommandsHelper.register(handler, "host", "[mode] [map...]", "Open the server. Will default to a random map and survival gamemode if not specified.", HostCommand::run);
         CommandsHelper.register(handler, "maps", "List of all available maps.", MapsListCommand::run);
         CommandsHelper.register(handler, "reloadmaps", "Reload all maps from disk.", ReloadMapsCommand::run);
         CommandsHelper.register(handler, "status", "Display server status.", StatusCommand::run);
-        CommandsHelper.register(handler, "mods", "Display all loaded mods.", ModsListCommand::run);
-        CommandsHelper.register(handler, "js", "<script...>", "Run arbitrary Javascript.", JavaScriptCommand::run);
         CommandsHelper.register(handler, "say", "<message...>", "Send a message to all players.", SayCommand::run);
         CommandsHelper.register(handler, "rules", "[remove/add] [name] [value...]", "List, add or remove global rules.", RulesCommand::run);
         CommandsHelper.register(handler, "config", "[name] [value...]", "Configure server settings.", ConfigCommand::run);

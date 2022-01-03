@@ -15,6 +15,6 @@ public class PardonCommand {
 
         info.lastKicked = 0;
         info.ips.each(netServer.admins.kickedIPs::remove);
-        Log.info("Игрок '@' вытащен из дурки.", info.lastName);
+        Log.info("Игрок '@' снова может зайти на сервер.", info.lastName);
     }
 }
