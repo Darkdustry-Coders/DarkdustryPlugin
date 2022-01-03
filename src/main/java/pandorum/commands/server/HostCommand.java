@@ -21,20 +21,20 @@ public class HostCommand {
 
         Gamemode mode = Gamemode.survival;
 
-        if (args.length > 0) {
+        if (args.length > 1) {
             try {
-                mode = Gamemode.valueOf(args[0]);
+                mode = Gamemode.valueOf(args[1]);
             } catch (IllegalArgumentException e) {
-                Log.err("Режим игры '@' не найден.", args[0]);
+                Log.err("Режим игры '@' не найден.", args[1]);
                 return;
             }
         }
 
         Map map;
-        if (args.length > 1) {
-            map = findMap(args[1]);
+        if (args.length > 0) {
+            map = findMap(args[0]);
             if (map == null) {
-                Log.err("Карта '@' не найдена.", args[1]);
+                Log.err("Карта '@' не найдена.", args[0]);
                 return;
             }
         } else {
