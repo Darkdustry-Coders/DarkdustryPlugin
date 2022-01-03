@@ -1,10 +1,13 @@
 package pandorum.commands.server;
 
+import arc.ApplicationListener;
 import arc.Core;
 import arc.util.Log;
+import arc.util.Reflect;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
+import mindustry.server.ServerControl;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
@@ -43,6 +46,11 @@ public class HostCommand {
 
         logic.reset();
         Core.settings.put("lastServerMode", mode.name());
+        for (ApplicationListener listener : Core.app.getListeners()) {
+            if (listener instanceof ServerControl control) {
+                Reflect.set(control, "lastMode", mode);
+            }
+        }
         try {
             world.loadMap(map, map.applyRules(mode));
             state.rules = map.applyRules(mode);
