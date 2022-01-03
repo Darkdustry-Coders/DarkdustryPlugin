@@ -11,6 +11,7 @@ public class ServerCommandsLoader {
         CommandsHelper.remove(handler, "fillitems");
 
         CommandsHelper.register(handler, "exit", "Shut down the server.", ExitCommand::run);
+        CommandsHelper.register(handler, "host", "[mode] [map...]", "Open the server. Will default to a random map and survival gamemode if not specified.", HostCommand::run);
         CommandsHelper.register(handler, "maps", "List of all available maps.", MapsListCommand::run);
         CommandsHelper.register(handler, "reloadmaps", "Reload all maps from disk.", ReloadMapsCommand::run);
         CommandsHelper.register(handler, "status", "Display server status.", StatusCommand::run);
