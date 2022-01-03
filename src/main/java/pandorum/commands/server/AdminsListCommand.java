@@ -9,7 +9,6 @@ import static mindustry.Vars.netServer;
 public class AdminsListCommand {
     public static void run(final String[] args) {
         Seq<PlayerInfo> admins = netServer.admins.getAdmins();
-
         if (admins.isEmpty()) {
             Log.info("Не найдено администраторов.");
         } else {

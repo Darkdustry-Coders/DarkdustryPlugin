@@ -17,6 +17,6 @@ public class KickCommand {
 
         target.kick(KickReason.kick);
         sendToChat("events.server.kick", target.coloredName());
-        Log.info("Игрок был успешно выгнан.");
+        Log.info("Игрок '@' был успешно сослан в Сибирь.", target.name);
     }
 }

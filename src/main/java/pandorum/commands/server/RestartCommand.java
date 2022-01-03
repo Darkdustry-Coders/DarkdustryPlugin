@@ -11,7 +11,7 @@ import static mindustry.Vars.netServer;
 
 public class RestartCommand {
     public static void run(final String[] args) {
-        Log.info("Перезапуск сервера...");
+        Log.err("Вырубаю сервер с ноги... Молись, чтобы он поднялся...");
         BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title("Сервер выключился для перезапуска!").build());
 
         netServer.kickAll(KickReason.serverRestarting);

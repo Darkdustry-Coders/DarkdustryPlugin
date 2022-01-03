@@ -8,8 +8,9 @@ import static mindustry.Vars.state;
 
 public class StopCommand {
     public static void run(final String[] args) {
+        Log.info("Сервер сдыхает...");
         net.closeServer();
         state.set(State.menu);
-        Log.info("Сервер остановлен.");
+        Log.info("Сервер сдох.");
     }
 }

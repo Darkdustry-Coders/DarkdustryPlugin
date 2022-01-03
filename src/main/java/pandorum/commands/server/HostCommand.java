@@ -38,7 +38,7 @@ public class HostCommand {
             }
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
-            Log.info("Случайным образом выбрана карта: @.", map.name());
+            Log.info("Случайным образом выбрана карта: '@'.", map.name());
         }
 
         Log.info("Загружаю карту...");

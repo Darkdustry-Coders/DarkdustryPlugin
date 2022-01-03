@@ -6,7 +6,7 @@ import static mindustry.Vars.net;
 
 public class ExitCommand {
     public static void run(final String[] args) {
-        Log.info("Выключаю сервер.");
+        Log.err("Ну все, пизда серверу...");
         net.dispose();
         System.exit(2);
     }

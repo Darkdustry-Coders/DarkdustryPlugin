@@ -9,7 +9,7 @@ import static mindustry.Vars.state;
 public class StatusCommand {
     public static void run(final String[] args) {
         if (state.isMenu()) {
-            Log.info("Статус: &rсервер отключен");
+            Log.info("Статус: &rсервер сдох");
         } else {
             Log.info("Статус:");
             Log.info("  Карта: &fi@ / Волна: @.", state.map.name(), state.wave);
