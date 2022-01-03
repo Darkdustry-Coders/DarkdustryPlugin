@@ -36,8 +36,8 @@ public class LoginCommand {
                         .color(BotMain.normalColor)
                         .author("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
                         .title("Запрос на выдачу прав администратора.")
-                        .addField("Никнейм: ", player.name, true)
-                        .addField("UUID: ", player.uuid(), true)
+                        .addField("Никнейм:", player.name, true)
+                        .addField("UUID:", player.uuid(), true)
                         .footer("Нажми на кнопку чтобы подтвердить или отменить получение прав админа.", null)
                         .build()
                 ).addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check)).build()).block();

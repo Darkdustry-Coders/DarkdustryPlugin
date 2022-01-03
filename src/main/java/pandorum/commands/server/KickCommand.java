@@ -11,7 +11,7 @@ public class KickCommand {
     public static void run(final String[] args) {
         Player target = findPlayer(args[0]);
         if (target == null) {
-            Log.err("Игрок не найден...");
+            Log.err("Игрок '@' не найден...", args[0]);
             return;
         }
 

@@ -38,15 +38,11 @@ public class ChatFilter {
             });
         }));
 
-        BotHandler.text("**@**: @", Strings.stripColors(author.name), Strings.stripColors(text));
+        BotHandler.text("**@**: @", Strings.stripColors(author.name), text);
         return null;
     }
 
     private static String formatTranslated(String formatted, String text, String translatedText) {
-        if (translatedText.equalsIgnoreCase(text) || translatedText.isBlank()) {
-            return formatted;
-        } else {
-            return Strings.format("@ [white]([gray]@[white])", formatted, translatedText);
-        }
+        return translatedText.equalsIgnoreCase(text) || translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
     }
 }

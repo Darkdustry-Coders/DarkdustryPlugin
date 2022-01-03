@@ -22,9 +22,9 @@ public class PlayerJoinListener {
             event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString().toUpperCase(), event.player.getInfo().lastName));
             Log.info("&lb@&fi&lk зашел на сервер. &fi&lk[&lb@&fi&lk]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
+            BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).build());
         });
 
-        BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.getInfo().lastName))).build());
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
         PlayerModel.find(event.player.uuid(), playerInfo -> {
