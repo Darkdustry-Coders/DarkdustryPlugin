@@ -13,6 +13,7 @@ public class ServerCommandsLoader {
         CommandsHelper.register(handler, "exit", "Shut down the server.", ExitCommand::run);
         CommandsHelper.register(handler, "host", "[map] [mode]", "Open the server. Will default to a random map and survival gamemode if not specified.", HostCommand::run);
         CommandsHelper.register(handler, "maps", "List of all available maps.", MapsListCommand::run);
+        CommandsHelper.register(handler, "saves", "List of all available saves.", SavesListCommand::run);
         CommandsHelper.register(handler, "status", "Display server status.", StatusCommand::run);
         CommandsHelper.register(handler, "say", "<message...>", "Send a message to all players.", SayCommand::run);
         CommandsHelper.register(handler, "rules", "[remove/add] [name] [value...]", "List, add or remove global rules.", RulesCommand::run);
