@@ -185,7 +185,7 @@ public class BotHandler {
                     .addField("Карта:", state.map.name(), false)
                     .addField("Волна:", String.valueOf(state.wave), false)
                     .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
-                    .addField("TPS на сервере:", String.valueOf(state.serverTps), false)
+                    .addField("TPS на сервере:", String.valueOf(state.serverTps == -1 ? 60 : state.serverTps), false)
                     .footer("Используй " + PandorumPlugin.config.prefix + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
