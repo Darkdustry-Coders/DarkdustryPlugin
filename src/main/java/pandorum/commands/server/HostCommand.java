@@ -1,16 +1,15 @@
 package pandorum.commands.server;
 
-import arc.ApplicationListener;
 import arc.Core;
 import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
-import mindustry.server.ServerControl;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
+import static pandorum.Misc.getServerControl;
 
 public class HostCommand {
     public static void run(final String[] args) {
@@ -20,7 +19,6 @@ public class HostCommand {
         }
 
         Gamemode mode = Gamemode.survival;
-
         if (args.length > 1) {
             try {
                 mode = Gamemode.valueOf(args[1]);
@@ -46,11 +44,7 @@ public class HostCommand {
 
         logic.reset();
         Core.settings.put("lastServerMode", mode.name());
-        for (ApplicationListener listener : Core.app.getListeners()) {
-            if (listener instanceof ServerControl control) {
-                Reflect.set(control, "lastMode", mode);
-            }
-        }
+        Reflect.set(getServerControl(), "lastMode", mode);
         try {
             world.loadMap(map, map.applyRules(mode));
             state.rules = map.applyRules(mode);

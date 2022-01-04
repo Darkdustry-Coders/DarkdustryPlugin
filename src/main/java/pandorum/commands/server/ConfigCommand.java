@@ -20,7 +20,7 @@ public class ConfigCommand {
         try {
             Config c = Config.valueOf(args[0]);
             if (args.length == 1) {
-                Log.info("'@' сейчас имеет значение @.", c.name(), c.get());
+                Log.info("Конфигурация '@' сейчас имеет значение @.", c.name(), c.get());
             } else {
                 if (args[1].equalsIgnoreCase("default")) {
                     c.set(c.defaultValue);
@@ -32,7 +32,7 @@ public class ConfigCommand {
                     c.set(args[1].replace("\\n", "\n"));
                 }
 
-                Log.info("'@' присвоено значение @.", c.name(), c.get());
+                Log.info("Конфигурации '@' присвоено значение @.", c.name(), c.get());
                 Core.settings.forceSave();
             }
         } catch (IllegalArgumentException e) {

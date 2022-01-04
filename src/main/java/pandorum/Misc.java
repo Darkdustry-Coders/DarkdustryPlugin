@@ -1,5 +1,6 @@
 package pandorum;
 
+import arc.Core;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
@@ -9,6 +10,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.server.ServerControl;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -19,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import static mindustry.Vars.*;
@@ -42,7 +43,7 @@ public class Misc {
     }
 
     public static Fi findSave(String name) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> Objects.equals(file.extension(), saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> file.extension().equals(saveExtension));
         for (int i = 0; i < savesList.size; i++) {
             Fi save = savesList.get(i);
             if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
@@ -106,5 +107,9 @@ public class Misc {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(time);
+    }
+
+    public static ServerControl getServerControl() {
+        return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
     }
 }

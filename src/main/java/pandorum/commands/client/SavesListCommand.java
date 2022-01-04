@@ -7,8 +7,6 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 
-import java.util.Objects;
-
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.bundled;
@@ -21,7 +19,7 @@ public class SavesListCommand {
             return;
         }
 
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(f -> Objects.equals(f.extension(), saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(f -> f.extension().equals(saveExtension));
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(savesList.size / 6.0f);
 

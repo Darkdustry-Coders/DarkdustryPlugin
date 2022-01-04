@@ -22,7 +22,7 @@ public class DepositListener {
             }));
         }
 
-        if (PandorumPlugin.config.historyEnabled()) {
+        if (PandorumPlugin.config.historyEnabled() && event.player != null) {
             HistoryEntry entry = new DepositEntry(event);
             event.tile.tile.getLinkedTiles(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
         }

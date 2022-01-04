@@ -9,7 +9,7 @@ public class PlayersListCommand {
             Log.info("На сервере нет игроков.");
         } else {
             Log.info("Игроки: (@)", Groups.player.size());
-            Groups.player.each(player -> Log.info(" &lm @ /  UUID: @ / IP: @ / Админ: @", player.name, player.uuid(), player.ip(), player.admin));
+            Groups.player.each(player -> Log.info("  &lm'@' /  UUID: '@' / IP: '@' / Админ: '@'", player.name, player.uuid(), player.ip(), player.admin));
         }
     }
 }

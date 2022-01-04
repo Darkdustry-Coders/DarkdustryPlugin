@@ -13,7 +13,7 @@ public class AdminsListCommand {
             Log.info("Не найдено администраторов.");
         } else {
             Log.info("Администраторы: (@)", admins.size);
-            admins.each(admin -> Log.info(" &lm @ /  UUID: '@' / IP: '@'", admin.lastName, admin.id, admin.lastIP));
+            admins.each(admin -> Log.info("  &lm'@' /  UUID: '@' / IP: '@'", admin.lastName, admin.id, admin.lastIP));
         }
     }
 }
