@@ -75,7 +75,7 @@ public class BotMain {
                         }
                         case "check" -> {
                             PlayerInfo info = Authme.loginWaiting.get(msg).getInfo();
-                            event.reply(Strings.format("> Информация об игроке **@**\n\nID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).withEphemeral(true).block();
+                            event.reply(Strings.format("> Информация об игроке **@**\n\nUUID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).withEphemeral(true).block();
                         }
                     }
                 }
