@@ -14,7 +14,7 @@ public class SavesListCommand {
             Log.info("На сервере нет ни одного сохранения.");
         } else {
             Log.info("Сохранения сервера: (@)", savesList.size);
-            savesList.each(save -> Log.info("  @", save.nameWithoutExtension()));
+            savesList.each(save -> Log.info("  '@'", save.nameWithoutExtension()));
         }
         Log.info("Все сохранения находятся здесь: &fi@", saveDirectory.file().getAbsoluteFile().toString());
     }

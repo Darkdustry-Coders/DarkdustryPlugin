@@ -14,7 +14,7 @@ public class BanCommand {
         switch (args[0].toLowerCase()) {
             case "id", "uuid" -> {
                 netServer.admins.banPlayerID(args[1]);
-                Log.info("Игрок успешно забанен.");
+                Log.info("Игрок '@' успешно забанен.", args[1]);
             }
             case "name", "username" -> {
                 Player target = findPlayer(args[1]);
@@ -22,15 +22,15 @@ public class BanCommand {
                     netServer.admins.banPlayer(target.uuid());
                     target.kick(KickReason.banned);
                     sendToChat("events.server.ban", target.coloredName());
-                    Log.info("Игрок успешно забанен.");
+                    Log.info("Игрок '@' успешно забанен.", target.name);
                 } else {
-                    Log.err("Игрок не найден...");
+                    Log.err("Игрок '@' не найден...", args[1]);
                 }
                 return;
             }
             case "ip", "address" -> {
                 netServer.admins.banPlayerIP(args[1]);
-                Log.info("Игрок успешно забанен.");
+                Log.info("Игрок '@' успешно забанен.", args[1]);
             }
             default -> {
                 Log.err("Неверный тип целеуказания бана. Выбери один из этих: id, name, ip");

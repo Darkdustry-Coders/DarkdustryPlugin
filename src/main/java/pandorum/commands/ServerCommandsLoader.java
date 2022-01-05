@@ -10,6 +10,7 @@ public class ServerCommandsLoader {
         CommandsHelper.remove(handler, "pause");
         CommandsHelper.remove(handler, "fillitems");
 
+        CommandsHelper.register(handler, "help", "List of all commands.", HelpCommand::run);
         CommandsHelper.register(handler, "exit", "Shut down the server.", ExitCommand::run);
         CommandsHelper.register(handler, "host", "[map] [mode]", "Open the server. Will default to a random map and survival gamemode if not specified.", HostCommand::run);
         CommandsHelper.register(handler, "maps", "List of all available maps.", MapsListCommand::run);

@@ -1,6 +1,7 @@
 package pandorum.comp;
 
 import arc.Events;
+import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
@@ -56,5 +57,7 @@ public class Loader {
         MenuHandler.init();
         Icons.init();
         BotMain.start();
+
+        Log.info("[Darkdustry] Инициализация плагина завершена...");
     }
 }

@@ -65,6 +65,8 @@ public final class PandorumPlugin extends Plugin {
     public static AntiVPN antiVPN;
 
     public PandorumPlugin() throws IOException {
+        Log.info("[Darkdustry] Плагин запускается...");
+
         Fi configFi = dataDirectory.child("config.json");
         if (configFi.exists()) {
             config = gson.fromJson(configFi.reader(), Config.class);
@@ -85,6 +87,8 @@ public final class PandorumPlugin extends Plugin {
 
         antiVPN = new AntiVPN(config.antiVPNAPIToken);
         translator = new Translator();
+
+        Log.info("[Darkdustry] Плагин запущен...");
     }
 
     @Override

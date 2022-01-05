@@ -12,54 +12,58 @@ import static mindustry.Vars.state;
 
 public class RulesCommand {
     public static void run(final String[] args) {
-        String rules = Core.settings.getString("globalrules");
-        JsonValue base = JsonIO.json.fromJson(null, rules);
-
         if (args.length == 0) {
-            Log.info("Пользовательские правила:\n@", JsonIO.print(rules));
-        } else if (args.length == 1) {
+            Log.info("Пользовательские правила:\n@", JsonIO.print(Core.settings.getString("globalrules")));
+            return;
+        }
+
+        if (args.length == 1) {
             Log.err("Неверное использование. Необходимо выбрать, какое пользовательское правило добавить или убрать.");
-        } else {
-            switch (args[0].toLowerCase()) {
-                case "add" -> {
-                    if (args.length < 3) {
-                        Log.err("Не хватает последнего аргумента. Необходимо выбрать, какое значение присвоить пользовательскому правилу.");
-                        return;
-                    }
+            return;
+        }
 
-                    try {
-                        JsonValue value = new JsonReader().parse(args[2]);
-                        value.name = args[1];
-
-                        JsonValue parent = new JsonValue(ValueType.object);
-                        parent.addChild(value);
-
-                        JsonIO.json.readField(state.rules, value.name, parent);
-                        if (base.has(value.name)) base.remove(value.name);
-                        base.addChild(args[1], value);
-                        Log.info("Пользовательское правило изменено: @", value.toString().replace("\n", " "));
-                    } catch (Exception e) {
-                        Log.err("Ошибка при изменении пользовательского правила: @", e.getMessage());
-                        return;
-                    }
+        JsonValue base = JsonIO.json.fromJson(null, Core.settings.getString("globalrules"));
+        switch (args[0].toLowerCase()) {
+            case "add" -> {
+                if (args.length < 3) {
+                    Log.err("Не хватает последнего аргумента. Необходимо выбрать, какое значение присвоить пользовательскому правилу.");
+                    return;
                 }
-                case "remove" -> {
-                    if (base.has(args[1])) {
-                        base.remove(args[1]);
-                        Log.info("Пользовательское правило '@' убрано.", args[1]);
-                    } else {
-                        Log.err("Такого пользовательского правила не существует.");
-                        return;
-                    }
-                }
-                default -> {
-                    Log.err("Второй параметр должен быть или 'add' или 'remove'.");
+
+                try {
+                    JsonValue value = new JsonReader().parse(args[2]);
+                    value.name = args[1];
+
+                    JsonValue parent = new JsonValue(ValueType.object);
+                    parent.addChild(value);
+
+                    JsonIO.json.readField(state.rules, value.name, parent);
+                    if (base.has(value.name)) base.remove(value.name);
+                    base.addChild(args[1], value);
+                    Log.info("Пользовательское правило изменено: @", value.toString().replace("\n", " "));
+                } catch (Exception e) {
+                    Log.err("Ошибка при изменении пользовательского правила: @", e.getMessage());
                     return;
                 }
             }
-
-            Core.settings.put("globalrules", base.toString());
-            Call.setRules(state.rules);
+            case "remove" -> {
+                if (base.has(args[1])) {
+                    base.remove(args[1]);
+                    Log.info("Пользовательское правило '@' убрано.", args[1]);
+                } else {
+                    Log.err("Такого пользовательского правила не существует.");
+                    return;
+                }
+            }
+            default -> {
+                Log.err("Второй параметр должен быть или 'add' или 'remove'.");
+                return;
+            }
         }
+
+
+        Core.settings.put("globalrules", base.toString());
+        Call.setRules(state.rules);
+
     }
 }
