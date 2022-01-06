@@ -3,19 +3,20 @@ package pandorum.events;
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
-import pandorum.PandorumPlugin;
 import pandorum.entry.ConfigEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.history;
 
 public class ConfigListener {
 
     public static void call(final ConfigEvent event) {
-        if (PandorumPlugin.config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
-            CacheSeq<HistoryEntry> entries = PandorumPlugin.history[event.tile.tileX()][event.tile.tileY()];
+        if (config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
+            CacheSeq<HistoryEntry> entries = history[event.tile.tileX()][event.tile.tileY()];
             boolean connect = false;
 
             if (event.tile.block instanceof PowerNode node && entries.any() && entries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long value) {
@@ -24,7 +25,7 @@ public class ConfigListener {
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);
-            event.tile.tile.getLinkedTiles(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
+            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
     }
 

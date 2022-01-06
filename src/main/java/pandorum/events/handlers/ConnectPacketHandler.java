@@ -16,11 +16,11 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
 import mindustry.net.Packets.KickReason;
-import pandorum.PandorumPlugin;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
+import static pandorum.PandorumPlugin.*;
 
 public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
@@ -133,8 +133,8 @@ public class ConnectPacketHandler {
         }
 
         try {
-            PandorumPlugin.writeBuffer.reset();
-            player.write(PandorumPlugin.outputBuffer);
+            writeBuffer.reset();
+            player.write(outputBuffer);
         } catch (Exception e) {
             con.kick(KickReason.nameEmpty);
             return;
@@ -146,7 +146,7 @@ public class ConnectPacketHandler {
 
         netServer.sendWorldData(player);
 
-        PandorumPlugin.antiVPN.checkIp(ip, isDangerous -> {
+        antiVPN.checkIp(ip, isDangerous -> {
             if (isDangerous) con.kick(Bundle.format("events.vpn-ip", findLocale(locale)), 0);
         });
 

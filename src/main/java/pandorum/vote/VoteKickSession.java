@@ -10,7 +10,7 @@ import mindustry.net.Packets.KickReason;
 import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
+import static pandorum.PluginVars.config;
 
 public class VoteKickSession {
     protected final Player target;

@@ -6,7 +6,7 @@ import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import static pandorum.PandorumPlugin.config;
+import static pandorum.PluginVars.config;
 
 public abstract class VoteSession {
     protected final Seq<String> voted = new Seq<>();

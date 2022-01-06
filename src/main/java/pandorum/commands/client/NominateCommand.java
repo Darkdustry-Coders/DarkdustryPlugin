@@ -12,22 +12,18 @@ import pandorum.vote.VoteSession;
 import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.*;
-import static pandorum.PandorumPlugin.current;
-import static pandorum.PandorumPlugin.nominateCooldowns;
+import static pandorum.PluginVars.*;
 
 public class NominateCommand {
-
-    private static final float cooldownTime = 300f;
-
     public static void run(final String[] args, final Player player) {
         if (current[0] != null) {
             bundled(player, "commands.vote-already-started");
             return;
         }
 
-        Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", TimeUnit.SECONDS.toMinutes((int) cooldownTime));
+            bundled(player, "commands.nominate.cooldown", TimeUnit.SECONDS.toMinutes(nominateCooldownTime));
             return;
         }
 

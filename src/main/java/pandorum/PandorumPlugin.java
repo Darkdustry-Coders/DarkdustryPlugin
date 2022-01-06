@@ -1,12 +1,9 @@
 package pandorum;
 
 import arc.files.Fi;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.Interval;
 import arc.util.Log;
-import arc.util.Timekeeper;
+import arc.util.Reflect;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -18,7 +15,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import mindustry.game.Team;
+import mindustry.core.NetServer;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
@@ -27,39 +24,23 @@ import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
 import pandorum.comp.Loader;
 import pandorum.comp.Translator;
-import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
-import pandorum.struct.CacheSeq;
-import pandorum.vote.VoteKickSession;
-import pandorum.vote.VoteSession;
 
 import java.io.IOException;
 
 import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.config;
 
 public final class PandorumPlugin extends Plugin {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    public static final VoteSession[] current = {null};
-    public static final VoteKickSession[] currentlyKicking = {null};
-
-    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
-    public static final ObjectMap<String, Team> spectating = new ObjectMap<>();
-    public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
-
-    public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
-
-    public static final Interval interval = new Interval(2);
-
-    public static Config config;
-    public static CacheSeq<HistoryEntry>[][] history;
-
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
 
-    public static ReusableByteOutStream writeBuffer;
-    public static Writes outputBuffer;
+    public static ReusableByteOutStream writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
+    public static Writes outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");;
 
     public static Translator translator;
     public static AntiVPN antiVPN;

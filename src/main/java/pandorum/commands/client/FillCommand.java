@@ -9,14 +9,12 @@ import pandorum.comp.Icons;
 import static mindustry.Vars.world;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findBlock;
+import static pandorum.PluginVars.maxFillSize;
 
 public class FillCommand {
-
-    private static final int maxSize = 25;
-
     public static void run(final String[] args, final Player player) {
-        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxSize || Strings.parseInt(args[1]) > maxSize) {
-            bundled(player, "commands.admin.fill.incorrect-number-format", maxSize);
+        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxFillSize || Strings.parseInt(args[1]) > maxFillSize) {
+            bundled(player, "commands.admin.fill.incorrect-number-format", maxFillSize);
             return;
         }
 

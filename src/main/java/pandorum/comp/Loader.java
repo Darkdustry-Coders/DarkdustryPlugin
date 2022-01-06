@@ -2,12 +2,9 @@ package pandorum.comp;
 
 import arc.Events;
 import arc.util.Log;
-import arc.util.Reflect;
-import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
 import mindustry.net.Packets.ConnectPacket;
-import pandorum.PandorumPlugin;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;
@@ -22,9 +19,6 @@ import static mindustry.Vars.netServer;
 public class Loader {
 
     public static void init() {
-        PandorumPlugin.writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
-        PandorumPlugin.outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
-
         net.handleServer(ConnectPacket.class, ConnectPacketHandler::handle);
 
         netServer.admins.addActionFilter(ActionFilter::filter);
@@ -51,6 +45,7 @@ public class Loader {
         Administration.Config.interactRateLimit.set(50);
         Administration.Config.interactRateKick.set(1000);
         Administration.Config.showConnectMessages.set(false);
+        Administration.Config.logging.set(true);
         Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
 

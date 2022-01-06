@@ -10,13 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findPlayer;
-import static pandorum.PandorumPlugin.currentlyKicking;
-import static pandorum.PandorumPlugin.votekickCooldowns;
+import static pandorum.PluginVars.*;
 
 public class VoteKickCommand {
-
-    private static final float cooldownTime = 300f;
-
     public static void run(final String[] args, final Player player) {
         if (!Administration.Config.enableVotekick.bool()) {
             bundled(player, "commands.votekick.disabled");
@@ -33,9 +29,9 @@ public class VoteKickCommand {
             return;
         }
 
-        Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(votekickCooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.votekick.cooldown", TimeUnit.SECONDS.toMinutes((int) cooldownTime));
+            bundled(player, "commands.votekick.cooldown", TimeUnit.SECONDS.toMinutes(votekickCooldownTime));
             return;
         }
 

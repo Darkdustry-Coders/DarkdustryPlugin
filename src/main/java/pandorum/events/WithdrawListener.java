@@ -1,16 +1,18 @@
 package pandorum.events;
 
 import mindustry.game.EventType.WithdrawEvent;
-import pandorum.PandorumPlugin;
 import pandorum.entry.HistoryEntry;
 import pandorum.entry.WithdrawEntry;
+
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.history;
 
 public class WithdrawListener {
 
     public static void call(final WithdrawEvent event) {
-        if (PandorumPlugin.config.historyEnabled() && event.player != null) {
+        if (config.historyEnabled() && event.player != null) {
             HistoryEntry entry = new WithdrawEntry(event);
-            event.tile.tile.getLinkedTiles(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
+            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
     }
 }

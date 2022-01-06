@@ -23,7 +23,6 @@ import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Groups;
 import mindustry.maps.Map;
 import mindustry.net.Administration;
-import pandorum.PandorumPlugin;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,11 +33,12 @@ import java.net.URL;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
+import static pandorum.PluginVars.config;
 import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
 
-    public static final CommandHandler handler = new CommandHandler(PandorumPlugin.config.prefix);
+    public static final CommandHandler handler = new CommandHandler(config.prefix);
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -49,15 +49,15 @@ public class BotHandler {
     }
 
     public static void registerChannels() {
-        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.discordChannelID)).block();
-        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(PandorumPlugin.config.discordAdminChannelID)).block();
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(config.discordChannelID)).block();
+        adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
     }
 
     public static void registerCommands() {
         handler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
             for (Command command : handler.getCommandList()) {
-                builder.append(PandorumPlugin.config.prefix).append("**").append(command.text).append("**");
+                builder.append(handler.getPrefix()).append("**").append(command.text).append("**");
                 if (command.params.length > 0) {
                     builder.append(" *").append(command.paramText).append("*");
                 }
@@ -186,7 +186,7 @@ public class BotHandler {
                     .addField("Волна:", String.valueOf(state.wave), false)
                     .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
                     .addField("TPS на сервере:", String.valueOf(state.serverTps == -1 ? 60 : state.serverTps), false)
-                    .footer("Используй " + PandorumPlugin.config.prefix + "players, чтобы посмотреть список всех игроков.", null)
+                    .footer("Используй " + handler.getPrefix() + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
             sendEmbed(msg.getChannel().block(), embed);

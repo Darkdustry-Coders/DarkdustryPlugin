@@ -45,14 +45,14 @@ public class ConfigEntry implements HistoryEntry {
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
-        this.blockID = event.tile.block().id;
+        this.blockID = event.tile.block.id;
         this.value = getConfig(event);
         this.connect = connect;
         this.time = new Date();
     }
 
     private Object getConfig(ConfigEvent event) {
-        if (event.tile.block() instanceof PowerNode) {
+        if (event.tile.block instanceof PowerNode) {
             return Pack.longInt(event.tile.power.links.size, (int) event.value);
         }
         return event.value;

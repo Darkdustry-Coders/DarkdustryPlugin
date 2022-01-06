@@ -13,21 +13,19 @@ import pandorum.discord.BotMain;
 import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.loginCooldowns;
+import static pandorum.PluginVars.loginCooldownTime;
+import static pandorum.PluginVars.loginCooldowns;
 
 public class LoginCommand {
-
-    private static final float cooldownTime = 1200f;
-
     public static void run(final String[] args, final Player player) {
         if (player.admin) {
             bundled(player, "commands.login.already");
             return;
         }
 
-        Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(cooldownTime));
+        Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(loginCooldownTime));
         if (!vtime.get()) {
-            bundled(player, "commands.login.cooldown", TimeUnit.SECONDS.toMinutes((int) cooldownTime));
+            bundled(player, "commands.login.cooldown", TimeUnit.SECONDS.toMinutes(loginCooldownTime));
             return;
         }
 

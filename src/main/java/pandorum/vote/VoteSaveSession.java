@@ -10,7 +10,7 @@ import mindustry.io.SaveIO;
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
+import static pandorum.PluginVars.config;
 
 public class VoteSaveSession extends VoteSession {
     protected final String target;

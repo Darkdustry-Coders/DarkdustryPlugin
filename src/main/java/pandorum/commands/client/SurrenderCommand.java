@@ -10,8 +10,8 @@ import mindustry.world.Tile;
 
 import static mindustry.Vars.world;
 import static pandorum.Misc.*;
-import static pandorum.PandorumPlugin.config;
-import static pandorum.PandorumPlugin.votesSurrender;
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.votesSurrender;
 
 public class SurrenderCommand {
     public static void run(final String[] args, final Player player) {

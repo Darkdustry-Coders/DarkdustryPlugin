@@ -1,17 +1,19 @@
 package pandorum.events;
 
 import mindustry.game.EventType.BlockBuildEndEvent;
-import pandorum.PandorumPlugin;
 import pandorum.entry.BlockEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.history;
+
 public class BlockBuildEndListener {
 
     public static void call(final BlockBuildEndEvent event) {
-        if (PandorumPlugin.config.historyEnabled()) {
+        if (config.historyEnabled()) {
             HistoryEntry entry = new BlockEntry(event);
-            event.tile.getLinkedTiles(tile -> PandorumPlugin.history[tile.x][tile.y].add(entry));
+            event.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
 
         if (event.unit.isPlayer()) {

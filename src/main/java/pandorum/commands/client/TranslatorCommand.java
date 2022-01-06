@@ -4,7 +4,7 @@ import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
-import static pandorum.comp.Translator.codeLanguages;
+import static pandorum.PluginVars.codeLanguages;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {

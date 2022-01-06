@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.activeHistoryPlayers;
+import static pandorum.PluginVars.activeHistoryPlayers;
 
 public class HistoryCommand {
     public static void run(final String[] args, final Player player) {

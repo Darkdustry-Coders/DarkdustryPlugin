@@ -19,16 +19,16 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
-    private static final Set<String> specialKeys = Set.of(
-            "_id", "__v", "DEFAULT_CODEC_REGISTRY"
-    );
+    private static final Set<String> specialKeys = Set.of("_id", "__v", "DEFAULT_CODEC_REGISTRY");
     private static MongoCollection<Document> collection;
+
     public ObjectId _id;
     public int __v;
-    private Map<String, Object> latest = new HashMap<>();
 
-    public static void setSourceCollection(MongoCollection<Document> collection) {
-        MongoDataBridge.collection = collection;
+    private static Map<String, Object> latest = new HashMap<>();
+
+    public static void setSourceCollection(MongoCollection<Document> newCollection) {
+        collection = newCollection;
     }
 
     public static <T extends MongoDataBridge<T>> void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> cons) {
@@ -114,7 +114,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     }
 
     public void resetLatest() {
-        this.latest = getDeclaredPublicFields();
+        latest = getDeclaredPublicFields();
     }
 
     @Override

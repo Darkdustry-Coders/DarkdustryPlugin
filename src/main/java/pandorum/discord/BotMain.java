@@ -18,10 +18,10 @@ import discord4j.rest.route.Routes;
 import discord4j.rest.util.AllowedMentions;
 import discord4j.rest.util.Color;
 import mindustry.net.Administration.PlayerInfo;
-import pandorum.PandorumPlugin;
 import pandorum.comp.Authme;
 
 import static pandorum.Misc.sendToChat;
+import static pandorum.PluginVars.config;
 
 public class BotMain {
 
@@ -34,7 +34,7 @@ public class BotMain {
 
     public static void start() {
         try {
-            bot = DiscordClientBuilder.create(PandorumPlugin.config.discordBotToken)
+            bot = DiscordClientBuilder.create(config.discordBotToken)
                     .onClientResponse(ResponseFunction.emptyIfNotFound())
                     .onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400))
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();

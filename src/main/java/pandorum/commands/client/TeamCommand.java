@@ -5,7 +5,7 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.*;
-import static pandorum.PandorumPlugin.spectating;
+import static pandorum.PluginVars.activeSpectatingPlayers;
 
 public class TeamCommand {
     public static void run(final String[] args, final Player player) {
@@ -23,8 +23,8 @@ public class TeamCommand {
             return;
         }
 
-        if (spectating.containsKey(target.uuid())) {
-            spectating.remove(target.uuid());
+        if (activeSpectatingPlayers.containsKey(target.uuid())) {
+            activeSpectatingPlayers.remove(target.uuid());
             bundled(target, "commands.admin.spectate.disabled");
         }
         target.team(team);

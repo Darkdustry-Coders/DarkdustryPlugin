@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PandorumPlugin.current;
+import static pandorum.PluginVars.current;
 
 public class VotingCommand {
     public static void run(final String[] args, final Player player) {

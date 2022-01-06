@@ -2,8 +2,9 @@ package pandorum.events;
 
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import pandorum.PandorumPlugin;
 import pandorum.models.PlayerModel;
+
+import static pandorum.PluginVars.*;
 
 public class GameOverListener {
 
@@ -13,10 +14,11 @@ public class GameOverListener {
             playerInfo.save();
         }));
 
-        PandorumPlugin.votesSurrender.clear();
-        PandorumPlugin.votesRTV.clear();
-        PandorumPlugin.votesVNW.clear();
+        votesSurrender.clear();
+        votesRTV.clear();
+        votesVNW.clear();
 
-        PandorumPlugin.spectating.clear();
+        activeHistoryPlayers.clear();
+        activeSpectatingPlayers.clear();
     }
 }

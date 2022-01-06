@@ -11,7 +11,7 @@ import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
+import static pandorum.PluginVars.config;
 
 public class VoteLoadSession extends VoteSession {
     protected final Fi target;

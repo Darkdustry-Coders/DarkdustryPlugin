@@ -1,21 +1,21 @@
 package pandorum.comp;
 
 import arc.func.Cons;
-import arc.struct.StringMap;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import pandorum.PandorumPlugin;
 
 import java.io.IOException;
 
+import static pandorum.PandorumPlugin.gson;
+import static pandorum.PluginVars.codeLanguages;
+
 public class Translator {
 
-    public static final StringMap codeLanguages = new StringMap();
-    private final OkHttpClient client;
-
-    private final Request.Builder requestBuilder = new Request.Builder()
+    private static final OkHttpClient client = new OkHttpClient();
+    private static final Request.Builder requestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
             .addHeader("accept-language", "ru,en;q=0.9")
@@ -28,11 +28,8 @@ public class Translator {
             .addHeader("sec-fetch-site", "cross-site");
 
     public Translator() throws IOException {
-        this.client = new OkHttpClient();
-
-        JsonArray languages = getAllLanguages();
-        for (int i = 0; i < languages.size(); i++) {
-            JsonObject language = languages.get(i).getAsJsonObject();
+        for (JsonElement languageElement : getAllLanguages()) {
+            JsonObject language = languageElement.getAsJsonObject();
             codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
         }
     }
@@ -40,15 +37,8 @@ public class Translator {
     public void translate(String text, String lang, Cons<String> cons) {
         String language = codeLanguages.get(lang, codeLanguages.get("en"));
 
-        RequestBody formBody = new FormBody.Builder()
-                .add("to", language)
-                .add("text", text)
-                .add("platform", "dp")
-                .build();
-
-        Request request = requestBuilder
-                .post(formBody)
-                .build();
+        RequestBody formBody = new FormBody.Builder().add("to", language).add("text", text).add("platform", "dp").build();
+        Request request = requestBuilder.post(formBody).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -58,8 +48,7 @@ public class Translator {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JsonObject translated = PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class);
-                String translatedText = translated.get("result").getAsString();
+                String translatedText = gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsString();
 
                 cons.get(translatedText);
                 response.close();
@@ -84,6 +73,6 @@ public class Translator {
                 .build();
 
         Response response = client.newCall(request).execute();
-        return response.isSuccessful() ? PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
+        return response.isSuccessful() ? gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
     }
 }

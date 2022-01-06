@@ -7,8 +7,8 @@ import mindustry.gen.Player;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
-import static pandorum.PandorumPlugin.votesVNW;
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.votesVNW;
 
 public class VNWCommand {
     public static void run(final String[] args, final Player player) {

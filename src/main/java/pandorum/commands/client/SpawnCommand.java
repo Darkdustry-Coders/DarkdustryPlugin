@@ -9,11 +9,9 @@ import pandorum.comp.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.*;
+import static pandorum.PluginVars.maxSpawnAmount;
 
 public class SpawnCommand {
-
-    private static final int maxAmount = 25;
-
     public static void run(final String[] args, final Player player) {
         if (args.length > 1 && !Strings.canParseInt(args[1])) {
             bundled(player, "commands.non-int");
@@ -29,8 +27,8 @@ public class SpawnCommand {
         }
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (amount > maxAmount || amount < 1) {
-            bundled(player, "commands.admin.spawn.limit", maxAmount);
+        if (amount > maxSpawnAmount || amount < 1) {
+            bundled(player, "commands.admin.spawn.limit", maxSpawnAmount);
             return;
         }
 

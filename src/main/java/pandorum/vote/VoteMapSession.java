@@ -10,7 +10,7 @@ import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
+import static pandorum.PluginVars.config;
 
 public class VoteMapSession extends VoteSession {
     protected final Map target;

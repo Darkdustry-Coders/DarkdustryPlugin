@@ -1,21 +1,21 @@
 package pandorum.events.filters;
 
-import arc.struct.StringMap;
+import arc.struct.ObjectMap;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.PandorumPlugin;
 import pandorum.discord.BotHandler;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.netServer;
+import static pandorum.PandorumPlugin.translator;
 
 public class ChatFilter {
 
     public static String filter(final Player author, final String text) {
         String formatted = netServer.chatFormatter.format(author, text);
-        StringMap cache = new StringMap();
+        ObjectMap<String, String> cache = new ObjectMap<>();
 
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
@@ -32,7 +32,7 @@ public class ChatFilter {
                 return;
             }
 
-            PandorumPlugin.translator.translate(Strings.stripColors(text), language, translated -> {
+            translator.translate(Strings.stripColors(text), language, translated -> {
                 player.sendMessage(formatTranslated(formatted, text, translated), author, text);
                 cache.put(language, translated);
             });

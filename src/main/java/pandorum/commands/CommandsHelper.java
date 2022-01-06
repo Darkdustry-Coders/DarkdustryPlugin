@@ -7,11 +7,11 @@ import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.PandorumPlugin;
 import pandorum.comp.Config.Gamemode;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.adminCheck;
+import static pandorum.PluginVars.config;
 
 public class CommandsHelper {
 
@@ -22,7 +22,7 @@ public class CommandsHelper {
     }
 
     public static void register(CommandHandler clientHandler, String text, String params, String description, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
-        if (!modes.contains(PandorumPlugin.config.mode)) return;
+        if (!modes.contains(config.mode)) return;
         Command command = clientHandler.<Player>register(text, params, description, (args, player) -> {
             if (adminOnly && adminCheck(player)) return;
             Core.app.post(() -> runner.accept(args, player));

@@ -9,8 +9,8 @@ import mindustry.gen.Player;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PandorumPlugin.config;
-import static pandorum.PandorumPlugin.votesRTV;
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.votesRTV;
 
 public class RTVCommand {
     public static void run(final String[] args, final Player player) {

@@ -2,27 +2,25 @@ package pandorum.comp;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import pandorum.PandorumPlugin;
 
 import java.io.IOException;
-import java.util.Set;
+
+import static pandorum.PandorumPlugin.gson;
 
 public class AntiVPN {
 
-    private final ObjectMap<String, Boolean> cache;
-    private final String token;
-    private final OkHttpClient client;
+    private static final ObjectMap<String, Boolean> cache = new ObjectMap<>();
+    private static final OkHttpClient client = new OkHttpClient();
+    private static final Request.Builder requestBuilder = new Request.Builder().addHeader("accept", "application/json");
 
-    private final Request.Builder requestBuilder = new Request.Builder()
-            .addHeader("accept", "application/json");
+    private static String token;
 
-    public AntiVPN(String token) {
-        this.cache = new ObjectMap<>();
-        this.client = new OkHttpClient();
-        this.token = token;
+    public AntiVPN(String newToken) {
+        token = newToken;
     }
 
     public void checkIp(String ip, Cons<Boolean> cons) {
@@ -41,9 +39,7 @@ public class AntiVPN {
                 .addQueryParameter("vpn", "1")
                 .build();
 
-        Request request = requestBuilder
-                .url(url)
-                .build();
+        Request request = requestBuilder.url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -53,12 +49,12 @@ public class AntiVPN {
 
             @Override
             public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
-                JsonObject ipInfo = PandorumPlugin.gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
+                JsonObject ipInfo = gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
 
                 int risk = ipInfo.get("risk").getAsInt();
                 String type = ipInfo.get("type").getAsString();
 
-                boolean isDangerous = risk > 66 || Set.of(
+                boolean isDangerous = risk > 66 || Seq.with(
                         "tor", "socks", "socks4", "socks4a",
                         "socks5", "socks5h", "shadowsocks",
                         "openvpn", "vpn"

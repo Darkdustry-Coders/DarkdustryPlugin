@@ -25,8 +25,8 @@ public class DataChanges {
         keys.addAll(second.keySet());
 
         keys.forEach(key -> {
-            Object firstValue = first.containsKey(key) ? first.get(key) : undefined;
-            Object secondValue = second.containsKey(key) ? second.get(key) : undefined;
+            Object firstValue = first.getOrDefault(key, undefined);
+            Object secondValue = second.getOrDefault(key, undefined);
 
             if (firstValue == secondValue) return;
 
