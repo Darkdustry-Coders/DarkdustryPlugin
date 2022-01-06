@@ -40,7 +40,7 @@ public final class PandorumPlugin extends Plugin {
     public static MongoCollection<Document> playersInfoCollection;
 
     public static ReusableByteOutStream writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
-    public static Writes outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");;
+    public static Writes outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
     public static Translator translator;
     public static AntiVPN antiVPN;
