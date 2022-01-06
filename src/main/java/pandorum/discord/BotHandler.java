@@ -251,8 +251,7 @@ public class BotHandler {
     }
 
     public static void sendFile(MessageChannel channel, Fi file) throws FileNotFoundException {
-        if (channel != null)
-            channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
+        if (channel != null) channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
     }
 
     public static InputStream download(String url) {

@@ -1,6 +1,7 @@
 package pandorum.commands.client;
 
 import arc.files.Fi;
+import arc.util.Strings;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
@@ -11,6 +12,8 @@ import pandorum.vote.VoteSession;
 
 import java.util.concurrent.TimeUnit;
 
+import static mindustry.Vars.saveDirectory;
+import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
 
@@ -40,7 +43,12 @@ public class NominateCommand {
                 vtime.reset();
             }
             case "save" -> {
-                VoteSession session = new VoteSaveSession(current, args[1]);
+                Fi save = saveDirectory.child(Strings.format("@.@", args[1], saveExtension));
+                if (save.exists()) {
+                    bundled(player, "commands.nominate.save.already-exists");
+                    return;
+                }
+                VoteSession session = new VoteSaveSession(current, save);
                 current[0] = session;
                 session.vote(player, 1);
                 vtime.reset();

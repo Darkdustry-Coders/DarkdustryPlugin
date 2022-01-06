@@ -1,21 +1,19 @@
 package pandorum.vote;
 
 import arc.Core;
-import arc.util.Strings;
+import arc.files.Fi;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static mindustry.Vars.saveDirectory;
-import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.config;
 
 public class VoteSaveSession extends VoteSession {
-    protected final String target;
+    protected final Fi target;
 
-    public VoteSaveSession(VoteSession[] session, String target) {
+    public VoteSaveSession(VoteSession[] session, Fi target) {
         super(session);
         this.target = target;
     }
@@ -43,7 +41,7 @@ public class VoteSaveSession extends VoteSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.save.passed", target);
             stop();
-            Core.app.post(() -> SaveIO.save(saveDirectory.child(Strings.format("@.@", target, saveExtension))));
+            Core.app.post(() -> SaveIO.save(target));
             return true;
         }
         return false;

@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    project.version = '1.4'
+    project.version = '1.5'
     mindustryVersion = 'v135'
 }
 
@@ -27,7 +27,7 @@ dependencies {
 
 jar {
     from {
-        configurations.runtimeClasspath.findAll {!it.path.endsWith(".pom")}.collect {it.isDirectory() ? it : zipTree(it)}
+        configurations.runtimeClasspath.findAll { !it.path.endsWith(".pom") }.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
