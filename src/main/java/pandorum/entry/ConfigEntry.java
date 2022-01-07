@@ -1,5 +1,6 @@
 package pandorum.entry;
 
+import arc.graphics.Color;
 import arc.util.Pack;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
@@ -18,6 +19,7 @@ import mindustry.world.blocks.logic.SwitchBlock;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadMassDriver;
 import mindustry.world.blocks.payloads.PayloadSource;
+import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.sandbox.LiquidSource;
@@ -80,18 +82,23 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof Door) {
-            boolean open = (boolean) value;
-            return open ? Bundle.format("history.config.door.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.door.off", locale, name, Icons.get(block.name), ftime);
+            boolean opened = (boolean) value;
+            return opened ? Bundle.format("history.config.door.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.door.off", locale, name, Icons.get(block.name), ftime);
         }
 
         if (block instanceof SwitchBlock) {
-            boolean enable = (boolean) value;
-            return enable ? Bundle.format("history.config.switch.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.switch.off", locale, name, Icons.get(block.name), ftime);
+            boolean enabled = (boolean) value;
+            return enabled ? Bundle.format("history.config.switch.on", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.config.switch.off", locale, name, Icons.get(block.name), ftime);
+        }
+
+        if (block instanceof LightBlock) {
+            Color color = new Color((int) value);
+            return Bundle.format("history.config.illuminator", locale, name, Icons.get(block.name), color.toString(), ftime);
         }
 
         if (block instanceof CommandCenter) {
             UnitCommand command = (UnitCommand) value;
-            return Bundle.format("history.config.command-center", locale, name, Icons.get(command.name()), ftime);
+            return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(command.name()), ftime);
         }
 
         if (block instanceof MessageBlock) {

@@ -18,7 +18,7 @@ public class CommandsHelper {
     private static final Seq<Command> adminOnlyCommands = new Seq<>();
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
-        return netServer.clientCommands.getCommandList().removeAll(command -> adminOnlyCommands.contains(command) && !admin);
+        return netServer.clientCommands.getCommandList().removeAll(command -> !admin && adminOnlyCommands.contains(command));
     }
 
     public static void register(CommandHandler clientHandler, String text, String params, String description, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
