@@ -15,7 +15,7 @@ import static pandorum.PluginVars.config;
 
 public class CommandsHelper {
 
-    public static final Seq<Command> adminOnlyCommands = new Seq<>();
+    private static final Seq<Command> adminOnlyCommands = new Seq<>();
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
         return netServer.clientCommands.getCommandList().removeAll(command -> adminOnlyCommands.contains(command) && !admin);
