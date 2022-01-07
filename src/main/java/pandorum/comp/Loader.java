@@ -2,6 +2,8 @@ package pandorum.comp;
 
 import arc.Events;
 import arc.util.Log;
+import arc.util.Reflect;
+import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
 import mindustry.net.Packets.ConnectPacket;
@@ -15,10 +17,15 @@ import pandorum.events.handlers.MenuHandler;
 
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
+import static pandorum.PandorumPlugin.outputBuffer;
+import static pandorum.PandorumPlugin.writeBuffer;
 
 public class Loader {
 
     public static void init() {
+        writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
+        outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
+
         net.handleServer(ConnectPacket.class, ConnectPacketHandler::handle);
 
         netServer.admins.addActionFilter(ActionFilter::filter);

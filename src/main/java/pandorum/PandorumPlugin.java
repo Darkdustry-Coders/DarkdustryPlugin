@@ -3,7 +3,6 @@ package pandorum;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -15,7 +14,6 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import mindustry.core.NetServer;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
@@ -27,7 +25,6 @@ import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
-import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.config;
 
 public final class PandorumPlugin extends Plugin {
