@@ -72,8 +72,8 @@ public class Translator {
                 .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"")
                 .build();
 
-        Response response = client.newCall(request).execute();
         try {
+            Response response = client.newCall(request).execute();
             return gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
         } catch (Exception e) {
             return new JsonArray(0);
