@@ -10,18 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import static pandorum.PandorumPlugin.gson;
+import static pandorum.PluginVars.config;
 
 public class AntiVPN {
 
     private static final ObjectMap<String, Boolean> cache = new ObjectMap<>();
     private static final OkHttpClient client = new OkHttpClient();
     private static final Request.Builder requestBuilder = new Request.Builder().addHeader("accept", "application/json");
-
-    private static String token;
-
-    public AntiVPN(String newToken) {
-        token = newToken;
-    }
 
     public void checkIp(String ip, Cons<Boolean> cons) {
         if (cache.containsKey(ip)) {
@@ -34,7 +29,7 @@ public class AntiVPN {
                 .host("proxycheck.io")
                 .addPathSegment("v2")
                 .addPathSegment(ip)
-                .addQueryParameter("key", token)
+                .addQueryParameter("key", config.antiVPNAPIToken)
                 .addQueryParameter("risk", "1")
                 .addQueryParameter("vpn", "1")
                 .build();

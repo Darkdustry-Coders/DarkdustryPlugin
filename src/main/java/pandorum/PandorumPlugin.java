@@ -61,7 +61,7 @@ public final class PandorumPlugin extends Plugin {
 
         PlayerModel.setSourceCollection(playersInfoCollection);
 
-        antiVPN = new AntiVPN(config.antiVPNAPIToken);
+        antiVPN = new AntiVPN();
         translator = new Translator();
 
         Log.info("[Darkdustry] Плагин запущен...");
