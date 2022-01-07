@@ -27,7 +27,7 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    public Translator() throws IOException {
+    public Translator() {
         for (JsonElement languageElement : getAllLanguages()) {
             JsonObject language = languageElement.getAsJsonObject();
             codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
@@ -56,7 +56,7 @@ public class Translator {
         });
     }
 
-    public JsonArray getAllLanguages() throws IOException {
+    public JsonArray getAllLanguages() {
         Request request = new Request.Builder()
                 .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
                 .get()
@@ -73,6 +73,10 @@ public class Translator {
                 .build();
 
         Response response = client.newCall(request).execute();
-        return response.isSuccessful() ? gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray() : new JsonArray(0);
+        try {
+            return gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
+        } catch (Exception e) {
+            return new JsonArray(0);
+        }
     }
 }
