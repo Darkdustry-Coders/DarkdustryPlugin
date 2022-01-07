@@ -26,8 +26,6 @@ import pandorum.comp.Loader;
 import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 
-import java.io.IOException;
-
 import static mindustry.Vars.dataDirectory;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.config;
@@ -45,7 +43,7 @@ public final class PandorumPlugin extends Plugin {
     public static Translator translator;
     public static AntiVPN antiVPN;
 
-    public PandorumPlugin() throws IOException {
+    public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин запускается...");
 
         Fi configFi = dataDirectory.child("config.json");
