@@ -15,7 +15,7 @@ import static pandorum.PluginVars.codeLanguages;
 public class Translator {
 
     private static final OkHttpClient client = new OkHttpClient();
-    private static final Request.Builder translateRequest = new Request.Builder()
+    private static final Request.Builder translatorRequestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
             .addHeader("accept-language", "ru,en;q=0.9")
@@ -27,7 +27,7 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    private static final Request.Builder languagesRequest = new Request.Builder()
+    private static final Request.Builder languagesRequestBuilder = new Request.Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
             .get()
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
@@ -49,7 +49,7 @@ public class Translator {
         String language = codeLanguages.get(lang, codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder().add("to", language).add("text", text).add("platform", "dp").build();
-        Request request = translateRequest.post(formBody).build();
+        Request request = translatorRequestBuilder.post(formBody).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -68,7 +68,7 @@ public class Translator {
     }
 
     public void getAllLanguages() {
-        Request request = languagesRequest.build();
+        Request request = languagesRequestBuilder.build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -77,6 +77,7 @@ public class Translator {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonArray languages = gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
+
                 for (JsonElement languageElement : languages) {
                     JsonObject language = languageElement.getAsJsonObject();
                     codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
