@@ -82,6 +82,6 @@ public class Translator {
                     codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
                 }
             }
-        }
-    });
+        });
+    }
 }
