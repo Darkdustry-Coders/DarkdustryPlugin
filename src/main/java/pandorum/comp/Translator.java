@@ -42,10 +42,7 @@ public class Translator {
             .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"");
 
     public Translator() {
-        for (JsonElement languageElement : getAllLanguages()) {
-            JsonObject language = languageElement.getAsJsonObject();
-            codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
-        }
+        getAllLanguages();
     }
 
     public void translate(String text, String lang, Cons<String> cons) {
@@ -70,14 +67,21 @@ public class Translator {
         });
     }
 
-    public JsonArray getAllLanguages() {
+    public void getAllLanguages() {
         Request request = languagesRequest.build();
 
-        try {
-            Response response = client.newCall(request).execute();
-            return gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
-        } catch (Exception e) {
-            return new JsonArray(0);
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                JsonArray languages = gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
+                for (JsonElement languageElement : languages) {
+                    JsonObject language = languageElement.getAsJsonObject();
+                    codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
+                }
+            }
         }
     }
 }
