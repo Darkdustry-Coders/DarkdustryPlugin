@@ -5,9 +5,6 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -28,16 +25,11 @@ import static pandorum.PluginVars.*;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
     public static MongoClient mongoClient;
     public static MongoCollection<Document> playersInfoCollection;
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
-
-    public static Translator translator;
-    public static AntiVPN antiVPN;
 
     public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин запускается...");

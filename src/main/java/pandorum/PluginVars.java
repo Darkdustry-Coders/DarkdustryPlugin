@@ -5,12 +5,17 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import discord4j.core.object.entity.Message;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Player;
+import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
+import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 import pandorum.vote.VoteKickSession;
@@ -47,6 +52,8 @@ public class PluginVars {
 
     /** Название файла с конфигурацией. */
     public static final String configFileName = "config.json";
+
+    /** Url для подключения к базе данных. Название базы данных. Название коллекции со статистикой игроков в базе данных. */
     public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry", databaseName = "darkdustry", collectionName = "players";
 
     /** Команда для наблюдателей. */
@@ -72,6 +79,11 @@ public class PluginVars {
 
     public static final Interval interval = new Interval(2);
 
+    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
+
     public static Config config;
     public static CacheSeq<HistoryEntry>[][] history;
+
+    public static Translator translator;
+    public static AntiVPN antiVPN;
 }

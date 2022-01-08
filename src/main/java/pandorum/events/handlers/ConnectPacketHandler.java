@@ -21,6 +21,7 @@ import pandorum.comp.Bundle;
 import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
 import static pandorum.PandorumPlugin.*;
+import static pandorum.PluginVars.antiVPN;
 
 public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {

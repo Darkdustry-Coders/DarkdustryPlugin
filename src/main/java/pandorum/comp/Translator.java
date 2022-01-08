@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import static pandorum.PandorumPlugin.gson;
 import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.gson;
 
 public class Translator {
 
@@ -42,7 +42,7 @@ public class Translator {
             .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"");
 
     public Translator() {
-        getAllLanguages();
+        loadLanguages();
     }
 
     public void translate(String text, String lang, Cons<String> cons) {
@@ -65,12 +65,13 @@ public class Translator {
         });
     }
 
-    public void getAllLanguages() {
+    public void loadLanguages() {
         Request request = languagesRequestBuilder.build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {

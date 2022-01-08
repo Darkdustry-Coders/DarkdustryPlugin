@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import static pandorum.PandorumPlugin.gson;
 import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.gson;
 
 public class AntiVPN {
 
