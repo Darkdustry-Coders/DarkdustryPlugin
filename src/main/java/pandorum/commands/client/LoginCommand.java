@@ -18,7 +18,7 @@ import static pandorum.PluginVars.*;
 public class LoginCommand {
     public static void run(final String[] args, final Player player) {
         if (player.admin) {
-            bundled(player, "commands.login.already");
+            bundled(player, "commands.login.already-admin");
             return;
         }
 
@@ -35,7 +35,7 @@ public class LoginCommand {
                         .title("Запрос на выдачу прав администратора.")
                         .addField("Никнейм:", player.name, true)
                         .addField("UUID:", player.uuid(), true)
-                        .footer("Нажми на кнопку чтобы подтвердить или отменить получение прав админа.", null)
+                        .footer("Нажмите на кнопку чтобы подтвердить или отменить получение прав администратора.", null)
                         .build()
                 ).addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check)).build()).block();
 

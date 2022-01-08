@@ -19,7 +19,7 @@ import static pandorum.PluginVars.*;
 
 public class NominateCommand {
     public static void run(final String[] args, final Player player) {
-        if (current[0] != null) {
+        if (currentVote[0] != null) {
             bundled(player, "commands.vote-already-started");
             return;
         }
@@ -37,8 +37,8 @@ public class NominateCommand {
                     bundled(player, "commands.nominate.map.not-found");
                     return;
                 }
-                VoteSession session = new VoteMapSession(current, map);
-                current[0] = session;
+                VoteSession session = new VoteMapSession(currentVote, map);
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }
@@ -48,8 +48,8 @@ public class NominateCommand {
                     bundled(player, "commands.nominate.save.already-exists");
                     return;
                 }
-                VoteSession session = new VoteSaveSession(current, save);
-                current[0] = session;
+                VoteSession session = new VoteSaveSession(currentVote, save);
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }
@@ -59,8 +59,8 @@ public class NominateCommand {
                     bundled(player, "commands.nominate.load.not-found");
                     return;
                 }
-                VoteSession session = new VoteLoadSession(current, save);
-                current[0] = session;
+                VoteSession session = new VoteLoadSession(currentVote, save);
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }

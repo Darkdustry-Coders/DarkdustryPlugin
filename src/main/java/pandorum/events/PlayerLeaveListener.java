@@ -31,8 +31,8 @@ public class PlayerLeaveListener {
         activeHistoryPlayers.remove(event.player.uuid());
         activeSpectatingPlayers.remove(event.player.uuid());
 
-        if (currentlyKicking[0] != null && event.player == currentlyKicking[0].target()) {
-            currentlyKicking[0].stop();
+        if (currentVotekick[0] != null && event.player == currentVotekick[0].target()) {
+            currentVotekick[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
             sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
         }

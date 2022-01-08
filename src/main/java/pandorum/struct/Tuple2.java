@@ -12,8 +12,8 @@ public class Tuple2<T1, T2> implements Iterable<Object>, Serializable {
     public final T2 t2;
 
     public Tuple2(T1 t1, T2 t2) {
-        this.t1 = Objects.requireNonNull(t1, "t1 must not be null!");
-        this.t2 = Objects.requireNonNull(t2, "t2 must not be null!");
+        this.t1 = Objects.requireNonNull(t1, "t1 must be not null!");
+        this.t2 = Objects.requireNonNull(t2, "t2 must be not null!");
     }
 
     public static <T1, T2> Tuple2<T1, T2> of(T1 t1, T2 t2) {

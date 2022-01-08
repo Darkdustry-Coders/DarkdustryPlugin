@@ -3,26 +3,26 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PluginVars.currentlyKicking;
+import static pandorum.PluginVars.currentVotekick;
 
 public class VoteCommand {
     public static void run(final String[] args, final Player player) {
-        if (currentlyKicking[0] == null) {
+        if (currentVotekick[0] == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (currentlyKicking[0].voted().contains(player.uuid())) {
+        if (currentVotekick[0].voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
 
-        if (currentlyKicking[0].target() == player) {
+        if (currentVotekick[0].target() == player) {
             bundled(player, "commands.vote.player-is-you");
             return;
         }
 
-        if (currentlyKicking[0].target().team() != player.team()) {
+        if (currentVotekick[0].target().team() != player.team()) {
             bundled(player, "commands.vote.player-is-enemy");
             return;
         }
@@ -38,6 +38,6 @@ public class VoteCommand {
             return;
         }
 
-        currentlyKicking[0].vote(player, sign);
+        currentVotekick[0].vote(player, sign);
     }
 }

@@ -49,12 +49,14 @@ public class PluginVars {
     public static final String configFileName = "config.json";
     public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry", databaseName = "darkdustry", collectionName = "players";
 
+    /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
 
+    /** Различные эффекты. */
     public static final Effect joinEffect = Fx.greenBomb, leaveEffect = Fx.greenLaserCharge, moveEffect = Fx.freezing;
 
-    public static final VoteSession[] current = {null};
-    public static final VoteKickSession[] currentlyKicking = {null};
+    public static final VoteSession[] currentVote = {null};
+    public static final VoteKickSession[] currentVotekick = {null};
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
 

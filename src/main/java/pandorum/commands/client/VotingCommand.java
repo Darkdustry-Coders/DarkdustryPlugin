@@ -3,16 +3,16 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PluginVars.current;
+import static pandorum.PluginVars.currentVote;
 
 public class VotingCommand {
     public static void run(final String[] args, final Player player) {
-        if (current[0] == null) {
+        if (currentVote[0] == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (current[0].voted().contains(player.uuid())) {
+        if (currentVote[0].voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
@@ -28,6 +28,6 @@ public class VotingCommand {
             return;
         }
 
-        current[0].vote(player, sign);
+        currentVote[0].vote(player, sign);
     }
 }

@@ -24,7 +24,7 @@ public class VoteKickCommand {
             return;
         }
 
-        if (currentlyKicking[0] != null) {
+        if (currentVotekick[0] != null) {
             bundled(player, "commands.vote-already-started");
             return;
         }
@@ -56,8 +56,8 @@ public class VoteKickCommand {
             return;
         }
 
-        VoteKickSession session = new VoteKickSession(currentlyKicking, target);
-        currentlyKicking[0] = session;
+        VoteKickSession session = new VoteKickSession(currentVotekick, target);
+        currentVotekick[0] = session;
         session.vote(player, 1);
         vtime.reset();
     }
