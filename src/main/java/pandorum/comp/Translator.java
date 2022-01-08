@@ -70,8 +70,7 @@ public class Translator {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-            }
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
