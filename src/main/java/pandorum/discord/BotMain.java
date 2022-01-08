@@ -1,7 +1,5 @@
 package pandorum.discord;
 
-import arc.util.CommandHandler.CommandResponse;
-import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
@@ -36,17 +34,16 @@ public class BotMain {
             client = bot.login().block();
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
-                Message msg = event.getMessage();
-                Member member = msg.getAuthorAsMember().block();
-                CommandResponse response = BotHandler.handler.handleMessage(msg.getContent(), msg);
-                if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
-                    BotHandler.err(msg.getChannel().block(), "Неверное количество аргументов.", "Использование : **@@** @", BotHandler.handler.getPrefix(), response.command.text, response.command.paramText);
+                Message message = event.getMessage();
+                Member member = message.getAuthorAsMember().block();
+                if (message.getContent().startsWith(BotHandler.discordCommandHandler.getPrefix())) {
+                    BotHandler.handleMessage(message);
                     return;
                 }
 
-                if (msg.getChannel().block() == BotHandler.botChannel && member != null && !member.isBot() && msg.getContent().length() > 0) {
-                    sendToChat("events.discord.chat", member.getDisplayName(), msg.getContent());
-                    Log.info("[Discord] @: @", member.getDisplayName(), msg.getContent());
+                if (message.getChannel().block() == BotHandler.botChannel && member != null && !member.isBot() && !message.getContent().isBlank()) {
+                    sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
+                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
                 }
             }, e -> {});
 

@@ -6,6 +6,8 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
+import arc.util.CommandHandler.CommandResponse;
+import arc.util.CommandHandler.ResponseType;
 import arc.util.Strings;
 import arc.util.Timer;
 import arc.util.io.Streams;
@@ -38,7 +40,7 @@ import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
 
-    public static final CommandHandler handler = new CommandHandler(config.discordBotPrefix);
+    public static final CommandHandler discordCommandHandler = new CommandHandler(config.discordBotPrefix);
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -54,10 +56,10 @@ public class BotHandler {
     }
 
     public static void registerCommands() {
-        handler.<Message>register("help", "Список команд.", (args, msg) -> {
+        discordCommandHandler.<Message>register("help", "Список команд.", (args, msg) -> {
             StringBuilder builder = new StringBuilder();
-            for (Command command : handler.getCommandList()) {
-                builder.append(handler.getPrefix()).append("**").append(command.text).append("**");
+            for (Command command : discordCommandHandler.getCommandList()) {
+                builder.append(discordCommandHandler.getPrefix()).append("**").append(command.text).append("**");
                 if (command.params.length > 0) {
                     builder.append(" *").append(command.paramText).append("*");
                 }
@@ -67,9 +69,9 @@ public class BotHandler {
             info(msg.getChannel().block(), "Команды", builder.toString());
         });
 
-        handler.<Message>register("ip", "Узнать IP адрес сервера.", (args, msg) -> info(msg.getChannel().block(), "IP адрес сервера", "darkdustry.ml:@", Administration.Config.port.num()));
+        discordCommandHandler.<Message>register("ip", "Узнать IP адрес сервера.", (args, msg) -> info(msg.getChannel().block(), "IP адрес сервера", "darkdustry.ml:@", Administration.Config.port.num()));
 
-        handler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
+        discordCommandHandler.<Message>register("addmap", "Добавить карту на сервер.", (args, msg) -> {
             if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
@@ -92,7 +94,7 @@ public class BotHandler {
             }
         });
 
-        handler.<Message>register("map", "<название...>", "Получить файл карты с сервера.", (args, msg) -> {
+        discordCommandHandler.<Message>register("map", "<название...>", "Получить файл карты с сервера.", (args, msg) -> {
             if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
@@ -112,7 +114,7 @@ public class BotHandler {
             }
         });
 
-        handler.<Message>register("removemap", "<название...>", "Удалить карту с сервера.", (args, msg) -> {
+        discordCommandHandler.<Message>register("removemap", "<название...>", "Удалить карту с сервера.", (args, msg) -> {
             if (!isAdmin(msg.getAuthorAsMember().block())) {
                 err(msg.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
                 return;
@@ -135,7 +137,7 @@ public class BotHandler {
             }
         });
 
-        handler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
+        discordCommandHandler.<Message>register("maps", "[страница]", "Список всех карт сервера.", (args, msg) -> {
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 err(msg.getChannel().block(), "Страница должна быть числом.", "Аргументы не верны.");
                 return;
@@ -171,7 +173,7 @@ public class BotHandler {
             sendEmbed(msg.getChannel().block(), embed);
         });
 
-        handler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
+        discordCommandHandler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
             if (state.isMenu()) {
                 err(msg.getChannel().block(), "Сервер отключен.", "Попросите администраторов запустить его.");
                 return;
@@ -186,13 +188,13 @@ public class BotHandler {
                     .addField("Волна:", String.valueOf(state.wave), false)
                     .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
                     .addField("TPS на сервере:", String.valueOf(state.serverTps == -1 ? 60 : state.serverTps), false)
-                    .footer("Используй " + handler.getPrefix() + "players, чтобы посмотреть список всех игроков.", null)
+                    .footer("Используй " + discordCommandHandler.getPrefix() + "players, чтобы посмотреть список всех игроков.", null)
                     .build();
 
             sendEmbed(msg.getChannel().block(), embed);
         });
 
-        handler.<Message>register("players", "[страница]", "Посмотреть список игроков на сервере.", (args, msg) -> {
+        discordCommandHandler.<Message>register("players", "[страница]", "Посмотреть список игроков на сервере.", (args, msg) -> {
             if (args.length > 0 && !Strings.canParseInt(args[0])) {
                 err(msg.getChannel().block(), "Страница должна быть числом.", "Аргументы не верны.");
                 return;
@@ -224,6 +226,13 @@ public class BotHandler {
 
             sendEmbed(msg.getChannel().block(), embed);
         });
+    }
+
+    public static void handleMessage(Message message) {
+        CommandResponse response = discordCommandHandler.handleMessage(message.getContent(), message);
+        if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
+            err(message.getChannel().block(), "Неверное количество аргументов.", "Использование : **@@** @", discordCommandHandler.getPrefix(), response.command.text, response.command.paramText);
+        }
     }
 
     public static void text(String text, Object... args) {
