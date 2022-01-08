@@ -3,13 +3,11 @@ package pandorum.discord;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
-import arc.util.Strings;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.command.Interaction;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.rest.request.RouteMatcher;
@@ -17,11 +15,11 @@ import discord4j.rest.response.ResponseFunction;
 import discord4j.rest.route.Routes;
 import discord4j.rest.util.AllowedMentions;
 import discord4j.rest.util.Color;
-import mindustry.net.Administration.PlayerInfo;
 import pandorum.comp.Authme;
 
 import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.loginWaiting;
 
 public class BotMain {
 
@@ -34,11 +32,7 @@ public class BotMain {
 
     public static void start() {
         try {
-            bot = DiscordClientBuilder.create(config.discordBotToken)
-                    .onClientResponse(ResponseFunction.emptyIfNotFound())
-                    .onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400))
-                    .setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();
-
+            bot = DiscordClientBuilder.create(config.discordBotToken).onClientResponse(ResponseFunction.emptyIfNotFound()).onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400)).setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();
             client = bot.login().block();
 
             client.on(MessageCreateEvent.class).subscribe(event -> {
@@ -57,26 +51,12 @@ public class BotMain {
             }, e -> {});
 
             client.on(ButtonInteractionEvent.class).subscribe(event -> {
-                Message msg = event.getMessage().get();
-                Interaction interaction = event.getInteraction();
-                if (Authme.loginWaiting.containsKey(msg)) {
+                Message message = event.getMessage().get();
+                if (loginWaiting.containsKey(message)) {
                     switch (event.getCustomId()) {
-                        case "confirm" -> {
-                            BotHandler.text(msg.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
-                            Authme.confirm(Authme.loginWaiting.get(msg));
-                            Authme.loginWaiting.remove(msg);
-                            msg.delete().block();
-                        }
-                        case "deny" -> {
-                            BotHandler.text(msg.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(Authme.loginWaiting.get(msg).getInfo().lastName), interaction.getUser().getUsername());
-                            Authme.deny(Authme.loginWaiting.get(msg));
-                            Authme.loginWaiting.remove(msg);
-                            msg.delete().block();
-                        }
-                        case "check" -> {
-                            PlayerInfo info = Authme.loginWaiting.get(msg).getInfo();
-                            event.reply(Strings.format("> Информация об игроке **@**\n\nUUID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).withEphemeral(true).block();
-                        }
+                        case "confirm" -> Authme.confirm(message, event);
+                        case "deny" -> Authme.deny(message, event);
+                        case "check" -> Authme.check(message, event);
                     }
                 }
             }, e -> {});

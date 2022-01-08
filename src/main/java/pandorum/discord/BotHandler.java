@@ -38,7 +38,7 @@ import static pandorum.discord.BotMain.*;
 
 public class BotHandler {
 
-    public static final CommandHandler handler = new CommandHandler(config.prefix);
+    public static final CommandHandler handler = new CommandHandler(config.discordBotPrefix);
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -49,7 +49,7 @@ public class BotHandler {
     }
 
     public static void registerChannels() {
-        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(config.discordChannelID)).block();
+        botChannel = (MessageChannel) client.getChannelById(Snowflake.of(config.discordBotChannelID)).block();
         adminChannel = (MessageChannel) client.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
     }
 
@@ -266,6 +266,6 @@ public class BotHandler {
 
     public static boolean isAdmin(Member member) {
         if (member == null || member.isBot()) return false;
-        return member.getRoles().toStream().anyMatch(role -> role.getId().equals(Snowflake.of(810760273689444385L)));
+        return member.getRoles().toStream().anyMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
     }
 }

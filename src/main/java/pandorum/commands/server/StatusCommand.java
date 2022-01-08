@@ -9,9 +9,9 @@ import static mindustry.Vars.state;
 public class StatusCommand {
     public static void run(final String[] args) {
         if (state.isMenu()) {
-            Log.info("Статус: &rсервер оффлайн");
+            Log.info("Сервер отключен. Может быть, пора запустить его командой 'host'?");
         } else {
-            Log.info("Статус:");
+            Log.info("Статус сервера:");
             Log.info("  Карта: &fi@ / Волна: @.", state.map.name(), state.wave);
 
             if (state.rules.waves) Log.info("  @ секунд до следующей волны.", (int) (state.wavetime / 60));

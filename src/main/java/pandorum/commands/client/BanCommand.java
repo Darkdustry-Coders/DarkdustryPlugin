@@ -13,6 +13,7 @@ public class BanCommand {
             bundled(player, "commands.admin.ban.success", info.lastName);
             return;
         }
+
         bundled(player, "commands.admin.ban.fail");
     }
 }

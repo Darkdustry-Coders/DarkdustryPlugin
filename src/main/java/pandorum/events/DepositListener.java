@@ -9,13 +9,12 @@ import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.*;
 
 public class DepositListener {
 
     public static void call(final DepositEvent event) {
-        if (config.alertsEnabled() && event.tile.block instanceof NuclearReactor && event.item.explosiveness > 0f && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < config.alertsDistance)) {
+        if (config.alertsEnabled() && event.tile.block instanceof NuclearReactor && event.item.explosiveness > 0f && event.player.team().cores().contains(c -> event.tile.dst(c.x, c.y) < alertsDistance)) {
             Groups.player.each(p -> p.team() == event.player.team(), p -> PlayerModel.find(p.uuid(), playerInfo -> {
                 if (playerInfo.alerts)
                     bundled(p, "events.withdraw-thorium", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());

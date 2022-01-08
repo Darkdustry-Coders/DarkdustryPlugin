@@ -1,13 +1,12 @@
 package pandorum.comp;
 
 import arc.graphics.Color;
-import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Call;
 
-public class Effects {
+import static pandorum.PluginVars.*;
 
-    public static final Effect moveEffect = Fx.freezing, leaveEffect = Fx.greenLaserCharge, joinEffect = Fx.greenBomb;
+public class Effects {
 
     public static void on(Effect effect, float x, float y) {
         Call.effect(effect, x, y, 0, Color.white);

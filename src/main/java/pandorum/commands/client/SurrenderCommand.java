@@ -6,7 +6,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 import static pandorum.Misc.*;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesSurrender;
 
 public class SurrenderCommand {
@@ -19,7 +19,7 @@ public class SurrenderCommand {
 
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
-        int req = Mathf.ceil(config.voteRatio * Groups.player.count(p -> p.team() == player.team()));
+        int req = Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == player.team()));
         sendToChat("commands.surrender.vote", colorizedTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;

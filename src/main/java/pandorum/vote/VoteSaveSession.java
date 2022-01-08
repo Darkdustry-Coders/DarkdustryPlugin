@@ -8,7 +8,7 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
 import static pandorum.Misc.sendToChat;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteDuration;
 
 public class VoteSaveSession extends VoteSession {
     protected final Fi target;
@@ -25,7 +25,7 @@ public class VoteSaveSession extends VoteSession {
                 sendToChat("commands.nominate.save.failed", target);
                 stop();
             }
-        }, config.voteDuration);
+        }, voteDuration);
     }
 
     @Override

@@ -60,9 +60,7 @@ public class Translator {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String translatedText = gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsString();
-
                 cons.get(translatedText);
-                response.close();
             }
         });
     }
@@ -77,7 +75,6 @@ public class Translator {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonArray languages = gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray();
-
                 for (JsonElement languageElement : languages) {
                     JsonObject language = languageElement.getAsJsonObject();
                     codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());

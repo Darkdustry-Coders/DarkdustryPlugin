@@ -9,7 +9,7 @@ import mindustry.gen.Player;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesRTV;
 
 public class RTVCommand {
@@ -21,7 +21,7 @@ public class RTVCommand {
 
         votesRTV.add(player.uuid());
         int cur = votesRTV.size;
-        int req = Mathf.ceil(config.voteRatio * Groups.player.size());
+        int req = Mathf.ceil(voteRatio * Groups.player.size());
         sendToChat("commands.rtv.vote", player.coloredName(), cur, req);
 
         if (cur < req) return;

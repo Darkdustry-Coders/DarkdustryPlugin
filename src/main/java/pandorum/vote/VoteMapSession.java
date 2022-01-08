@@ -10,7 +10,7 @@ import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteDuration;
 
 public class VoteMapSession extends VoteSession {
     protected final Map target;
@@ -27,7 +27,7 @@ public class VoteMapSession extends VoteSession {
                 sendToChat("commands.nominate.map.failed", target.name());
                 stop();
             }
-        }, config.voteDuration);
+        }, voteDuration);
     }
 
     @Override

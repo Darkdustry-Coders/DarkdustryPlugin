@@ -11,7 +11,7 @@ import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.sendToChat;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteDuration;
 
 public class VoteLoadSession extends VoteSession {
     protected final Fi target;
@@ -28,7 +28,7 @@ public class VoteLoadSession extends VoteSession {
                 sendToChat("commands.nominate.load.failed", target.nameWithoutExtension());
                 stop();
             }
-        }, config.voteDuration);
+        }, voteDuration);
     }
 
     @Override

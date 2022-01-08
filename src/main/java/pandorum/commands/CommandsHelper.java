@@ -11,11 +11,10 @@ import pandorum.comp.Config.Gamemode;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.adminCheck;
+import static pandorum.PluginVars.adminOnlyCommands;
 import static pandorum.PluginVars.config;
 
 public class CommandsHelper {
-
-    private static final Seq<Command> adminOnlyCommands = new Seq<>();
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
         return netServer.clientCommands.getCommandList().removeAll(command -> !admin && adminOnlyCommands.contains(command));

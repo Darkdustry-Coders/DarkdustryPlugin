@@ -33,23 +33,23 @@ public class PlayerLeaveListener {
 
         if (currentlyKicking[0] != null && event.player == currentlyKicking[0].target()) {
             currentlyKicking[0].stop();
-            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), config.kickDuration);
-            sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
+            netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
+            sendToChat("commands.votekick.left", event.player.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
         }
 
         if (config.mode == Gamemode.siege || config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
-                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(config.voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 
         if (votesRTV.remove(event.player.uuid())) {
-            sendToChat("commands.rtv.left", event.player.coloredName(), votesRTV.size, Mathf.ceil(config.voteRatio * Groups.player.size()));
+            sendToChat("commands.rtv.left", event.player.coloredName(), votesRTV.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
 
         if (votesVNW.remove(event.player.uuid())) {
-            sendToChat("commands.vnw.left", event.player.coloredName(), votesVNW.size, Mathf.ceil(config.voteRatio * Groups.player.size()));
+            sendToChat("commands.vnw.left", event.player.coloredName(), votesVNW.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
     }
 }

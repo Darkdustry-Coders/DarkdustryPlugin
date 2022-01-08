@@ -93,7 +93,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof LightBlock) {
             Color color = new Color((int) value);
-            return Bundle.format("history.config.illuminator", locale, name, Icons.get(block.name), color.toString(), ftime);
+            return Bundle.format("history.config.illuminator", locale, name, Icons.get(block.name), color.toString(), color.toString(), ftime);
         }
 
         if (block instanceof CommandCenter) {

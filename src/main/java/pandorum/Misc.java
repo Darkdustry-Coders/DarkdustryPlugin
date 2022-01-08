@@ -16,6 +16,7 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
+import pandorum.struct.Tuple2;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -24,6 +25,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static mindustry.Vars.*;
+import static pandorum.PluginVars.config;
 
 public class Misc {
 
@@ -107,6 +109,14 @@ public class Misc {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(time);
+    }
+
+    public static Tuple2<String, Integer> hubIp() {
+        if (config.hubIp.contains(":")) {
+            String[] parts = config.hubIp.split(":");
+            return Tuple2.of(parts[0], Strings.parseInt(parts[1], port));
+        }
+        return Tuple2.of(config.hubIp, port);
     }
 
     public static ServerControl getServerControl() {

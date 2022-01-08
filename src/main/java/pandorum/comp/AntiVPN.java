@@ -29,7 +29,7 @@ public class AntiVPN {
                 .host("proxycheck.io")
                 .addPathSegment("v2")
                 .addPathSegment(ip)
-                .addQueryParameter("key", config.antiVPNAPIToken)
+                .addQueryParameter("key", config.antiVpnToken)
                 .addQueryParameter("risk", "1")
                 .addQueryParameter("vpn", "1")
                 .build();

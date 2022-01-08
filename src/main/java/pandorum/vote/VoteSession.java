@@ -6,7 +6,7 @@ import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.voteRatio;
 
 public abstract class VoteSession {
     protected final Seq<String> voted = new Seq<>();
@@ -26,7 +26,7 @@ public abstract class VoteSession {
     protected abstract boolean checkPass();
 
     protected int votesRequired() {
-        return Mathf.ceil(config.voteRatio * Groups.player.size());
+        return Mathf.ceil(voteRatio * Groups.player.size());
     }
 
     public void stop() {

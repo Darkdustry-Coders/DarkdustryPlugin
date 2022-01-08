@@ -13,8 +13,7 @@ import pandorum.discord.BotMain;
 import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.bundled;
-import static pandorum.PluginVars.loginCooldownTime;
-import static pandorum.PluginVars.loginCooldowns;
+import static pandorum.PluginVars.*;
 
 public class LoginCommand {
     public static void run(final String[] args, final Player player) {
@@ -40,7 +39,7 @@ public class LoginCommand {
                         .build()
                 ).addComponent(ActionRow.of(Authme.confirm, Authme.deny, Authme.check)).build()).block();
 
-        Authme.loginWaiting.put(message, player);
+        loginWaiting.put(message, player);
         bundled(player, "commands.login.sent");
         vtime.reset();
     }

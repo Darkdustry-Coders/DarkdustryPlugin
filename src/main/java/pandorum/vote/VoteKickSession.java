@@ -10,7 +10,8 @@ import mindustry.net.Packets.KickReason;
 import java.util.concurrent.TimeUnit;
 
 import static pandorum.Misc.sendToChat;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.kickDuration;
+import static pandorum.PluginVars.votekickDuration;
 
 public class VoteKickSession {
     protected final Player target;
@@ -31,7 +32,7 @@ public class VoteKickSession {
                 sendToChat("commands.votekick.failed", target.coloredName());
                 stop();
             }
-        }, config.votekickDuration);
+        }, votekickDuration);
     }
 
     public void vote(Player player, int sign) {
@@ -43,9 +44,9 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(config.kickDuration));
+            sendToChat("commands.votekick.passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
             stop();
-            target.kick(KickReason.vote, config.kickDuration);
+            target.kick(KickReason.vote, kickDuration);
             return true;
         }
         return false;

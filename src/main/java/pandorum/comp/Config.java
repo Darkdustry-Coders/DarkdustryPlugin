@@ -1,72 +1,41 @@
 package pandorum.comp;
 
 import arc.struct.Seq;
-import arc.util.Strings;
-import pandorum.struct.Tuple2;
 
-import static mindustry.Vars.port;
 import static mindustry.Vars.state;
 
 public class Config {
-    /** Необходимое количество игроков для успешного завершения голосования */
-    public float voteRatio = 0.6f;
 
-    /** Ёмкость массива, хранящего информацию о действиях с тайлом. Может сильно влиять на трату ОЗУ */
-    public int historyLimit = 6;
-
-    /** Время, через которое запись в истории тайла будет удалена. По умолчанию 30 минут. Записывается в миллисекундах */
-    public long expireDelay = 1800000L;
-
-    /** Расстояние до ядер, в котором отслеживаются ториевые реакторы */
-    public int alertsDistance = 120;
-
-    /** Время голосования через /nominate. В секундах */
-    public float voteDuration = 150f;
-
-    /** Время голосования через /votekick. В секундах */
-    public float votekickDuration = 40f;
-
-    /** Время, на которое игрок будет выгнан голосованием. В миллисекундах */
-    public long kickDuration = 2700000L;
-
-    /** IP адрес хаба */
+    /** IP адрес хаба. Порт по умолчанию - 6567. */
     public String hubIp = "darkdustry.ml";
 
-    /** Режим игры на сервере */
+    /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
 
-    /** Токен бота, привязанного к серверу. Если его не указать, сервер не запустится */
+    /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /** ID канала в Discord, куда отправляются все сообщения */
-    public long discordChannelID = 0L;
+    /** Префикс бота, привязанного к серверу. */
+    public String discordBotPrefix = "prefix";
 
-    /** ID канала в Discord, куда отправляются подтверждения для администраторов */
+    /** ID канала в Discord, куда отправляются все сообщения. */
+    public long discordBotChannelID = 0L;
+
+    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
     public long discordAdminChannelID = 0L;
 
-    /** Префикс бота, привязанного к серверу */
-    public String prefix = "prefix";
+    /** ID роли администраторов в Discord. */
+    public long discordAdminRoleID = 0L;
 
     /** Ключ Anti-VPN API */
-    public String antiVPNAPIToken = "w7j425-826177-597253-3134u9";
-
-    public Tuple2<String, Integer> hubIp() {
-        String resultIp = hubIp;
-        int resultPort = port;
-        if (resultIp.contains(":") && Strings.canParsePositiveInt(resultIp.split(":")[1])) {
-            String[] parts = resultIp.split(":");
-            resultIp = parts[0];
-            resultPort = Strings.parseInt(parts[1]);
-        }
-        return Tuple2.of(resultIp, resultPort);
-    }
+    public String antiVpnToken = "w7j425-826177-597253-3134u9";
 
     public boolean historyEnabled() {
         return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public boolean alertsEnabled() {
-        return state.rules.reactorExplosions && alertsDistance > 0 && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+        return state.rules.reactorExplosions && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public enum Gamemode {

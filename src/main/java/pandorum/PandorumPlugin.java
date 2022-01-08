@@ -13,7 +13,6 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
@@ -25,7 +24,7 @@ import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
-import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.*;
 
 public final class PandorumPlugin extends Plugin {
 
@@ -43,21 +42,20 @@ public final class PandorumPlugin extends Plugin {
     public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин запускается...");
 
-        Fi configFi = dataDirectory.child("config.json");
-        if (configFi.exists()) {
-            config = gson.fromJson(configFi.reader(), Config.class);
-            Log.info("[Darkdustry] Конфигурация загружена. (@)", configFi.absolutePath());
+        Fi configFile = dataDirectory.child(configFileName);
+        if (configFile.exists()) {
+            config = gson.fromJson(configFile.reader(), Config.class);
+            Log.info("[Darkdustry] Конфигурация загружена. (@)", configFile.absolutePath());
         } else {
-            configFi.writeString(gson.toJson(config = new Config()));
-            Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFi.absolutePath());
+            configFile.writeString(gson.toJson(config = new Config()));
+            Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
 
-        ConnectionString connString = new ConnectionString("mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry");
-        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString).retryWrites(true).build();
+        ConnectionString connectionString = new ConnectionString(connectionStringUrl);
+        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).retryWrites(true).build();
 
         mongoClient = MongoClients.create(settings);
-        MongoDatabase database = mongoClient.getDatabase("darkdustry");
-        playersInfoCollection = database.getCollection("players");
+        playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
 
         PlayerModel.setSourceCollection(playersInfoCollection);
 

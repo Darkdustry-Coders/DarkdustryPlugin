@@ -11,6 +11,7 @@ public class HistoryCommand {
             bundled(player, "commands.history.off");
             return;
         }
+
         activeHistoryPlayers.add(player.uuid());
         bundled(player, "commands.history.on");
     }
