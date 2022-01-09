@@ -5,6 +5,8 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
+import arc.util.io.ReusableByteOutStream;
+import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,7 +33,7 @@ public class PluginVars {
     /**
      * Время кулдауна для различных команд. В секундах.
      */
-    public static final int nominateCooldownTime = 300, votekickCooldownTime = 300, loginCooldownTime = 1200;
+    public static final int nominateCooldownTime = 300, votekickCooldownTime = 300, loginCooldownTime = 1200, syncCooldownTime = 15;
 
     /**
      * Необходимое количество игроков для успешного завершения голосования.
@@ -67,6 +69,11 @@ public class PluginVars {
      * Время, на которое игрок будет выгнан голосованием. В миллисекундах.
      */
     public static final long kickDuration = 2700000L;
+
+    /**
+     * Локаль по умолчанию.
+     */
+    public static final String defaultLocale = "en";
 
     /**
      * Название файла с конфигурацией.
@@ -112,4 +119,7 @@ public class PluginVars {
 
     public static Translator translator;
     public static AntiVPN antiVPN;
+
+    public static ReusableByteOutStream writeBuffer;
+    public static Writes outputBuffer;
 }

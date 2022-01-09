@@ -3,8 +3,6 @@ package pandorum;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
-import arc.util.io.ReusableByteOutStream;
-import arc.util.io.Writes;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -25,12 +23,6 @@ import static pandorum.PluginVars.*;
 
 public final class PandorumPlugin extends Plugin {
 
-    public static MongoClient mongoClient;
-    public static MongoCollection<Document> playersInfoCollection;
-
-    public static ReusableByteOutStream writeBuffer;
-    public static Writes outputBuffer;
-
     public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин запускается...");
 
@@ -46,8 +38,8 @@ public final class PandorumPlugin extends Plugin {
         ConnectionString connectionString = new ConnectionString(connectionStringUrl);
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).retryWrites(true).build();
 
-        mongoClient = MongoClients.create(settings);
-        playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
+        MongoClient mongoClient = MongoClients.create(settings);
+        MongoCollection<Document> playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
 
         PlayerModel.setSourceCollection(playersInfoCollection);
 

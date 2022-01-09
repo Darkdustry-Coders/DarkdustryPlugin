@@ -7,9 +7,8 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
-import java.util.concurrent.TimeUnit;
-
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.millisecondsToMinutes;
 
 public class Ranks {
 
@@ -43,7 +42,7 @@ public class Ranks {
                         findLocale(player.locale),
                         current.next.tag,
                         current.next.name,
-                        TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
+                        millisecondsToMinutes(playerInfo.playTime),
                         playerInfo.buildingsBuilt,
                         playerInfo.gamesPlayed
                 ));

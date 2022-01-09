@@ -7,8 +7,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
 
-import java.util.concurrent.TimeUnit;
-
+import static pandorum.Misc.millisecondsToMinutes;
 import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.kickDuration;
 import static pandorum.PluginVars.votekickDuration;
@@ -44,7 +43,7 @@ public class VoteKickSession {
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), TimeUnit.MILLISECONDS.toMinutes(kickDuration));
+            sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
             stop();
             target.kick(KickReason.vote, kickDuration);
             return true;

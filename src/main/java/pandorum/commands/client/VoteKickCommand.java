@@ -6,10 +6,7 @@ import mindustry.gen.Player;
 import mindustry.net.Administration;
 import pandorum.vote.VoteKickSession;
 
-import java.util.concurrent.TimeUnit;
-
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findPlayer;
+import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
 
 public class VoteKickCommand {
@@ -31,7 +28,7 @@ public class VoteKickCommand {
 
         Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(votekickCooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.votekick.cooldown", TimeUnit.SECONDS.toMinutes(votekickCooldownTime));
+            bundled(player, "commands.votekick.cooldown", secondsToMinutes(votekickCooldownTime));
             return;
         }
 

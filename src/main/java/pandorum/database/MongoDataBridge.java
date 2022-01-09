@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
+
     private static final Set<String> specialKeys = Set.of("_id", "__v", "DEFAULT_CODEC_REGISTRY");
     private static MongoCollection<Document> collection;
     private static Map<String, Object> latest = new HashMap<>();

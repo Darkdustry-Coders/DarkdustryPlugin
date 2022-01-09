@@ -23,6 +23,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.config;
@@ -109,6 +110,14 @@ public class Misc {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(time);
+    }
+
+    public static long millisecondsToMinutes(long duration) {
+        return TimeUnit.MILLISECONDS.toMinutes(duration);
+    }
+
+    public static long secondsToMinutes(long duration) {
+        return TimeUnit.SECONDS.toMinutes(duration);
     }
 
     public static Tuple2<String, Integer> hubIp() {

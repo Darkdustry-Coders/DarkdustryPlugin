@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static mindustry.Vars.mods;
+import static pandorum.PluginVars.defaultLocale;
 
 public class Bundle {
 
@@ -38,7 +39,7 @@ public class Bundle {
     }
 
     public static Locale defaultLocale() {
-        return Structs.find(supportedLocales, locale -> locale.toString().equals("en"));
+        return Structs.find(supportedLocales, locale -> locale.toString().equals(defaultLocale));
     }
 
     public static String get(String key, Locale locale) {

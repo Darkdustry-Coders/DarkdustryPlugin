@@ -10,8 +10,6 @@ import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
 import pandorum.vote.VoteSession;
 
-import java.util.concurrent.TimeUnit;
-
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.*;
@@ -26,7 +24,7 @@ public class NominateCommand {
 
         Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", TimeUnit.SECONDS.toMinutes(nominateCooldownTime));
+            bundled(player, "commands.nominate.cooldown", secondsToMinutes(nominateCooldownTime));
             return;
         }
 

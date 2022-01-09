@@ -7,8 +7,6 @@ import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 
-import java.util.concurrent.TimeUnit;
-
 import static pandorum.Misc.*;
 
 public class InfoCommand {
@@ -26,7 +24,7 @@ public class InfoCommand {
                     target.coloredName(),
                     rank.tag,
                     rank.name,
-                    TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
+                    millisecondsToMinutes(playerInfo.playTime),
                     playerInfo.buildingsBuilt,
                     playerInfo.buildingsDeconstructed,
                     playerInfo.gamesPlayed

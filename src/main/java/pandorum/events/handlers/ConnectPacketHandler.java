@@ -9,7 +9,6 @@ import arc.util.Time;
 import mindustry.core.Version;
 import mindustry.game.EventType.ConnectPacketEvent;
 import mindustry.game.EventType.PlayerConnect;
-import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
@@ -20,56 +19,47 @@ import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.findLocale;
-import static pandorum.PandorumPlugin.*;
-import static pandorum.PluginVars.antiVPN;
+import static pandorum.Misc.millisecondsToMinutes;
+import static pandorum.PluginVars.*;
 
 public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
-        if (con.kicked) return;
+        if (con.kicked || netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
 
         Events.fire(new ConnectPacketEvent(con, packet));
 
         con.connectTime = Time.millis();
+        String locale = packet.locale != null ? packet.locale : defaultLocale;
 
-        if (netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
-
-        if (con.hasBegunConnecting) {
-            con.kick(KickReason.idInUse);
+        if (con.hasBegunConnecting || packet.uuid == null || packet.usid == null) {
+            con.kick(Bundle.format("events.already-connected", findLocale(locale)), 0);
             return;
         }
 
         con.hasBegunConnecting = true;
 
-        if (packet.uuid == null || packet.usid == null) {
-            con.kick(KickReason.idInUse);
-            return;
-        }
-
         if (netServer.admins.isIDBanned(packet.uuid)) {
-            con.kick(KickReason.banned);
+            con.kick(Bundle.format("events.banned", findLocale(locale)), 0);
             return;
         }
 
         if (Time.millis() < netServer.admins.getKickTime(packet.uuid, con.address)) {
-            con.kick(KickReason.recentKick);
+            con.kick(Bundle.format("events.recent-kick", findLocale(locale), millisecondsToMinutes(netServer.admins.getKickTime(packet.uuid, con.address) - Time.millis())), 0);
             return;
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            con.kick(KickReason.playerLimit);
+            con.kick(Bundle.format("events.player-limit", findLocale(locale)), 0);
             return;
         }
-
-        if (packet.locale == null) packet.locale = "en";
-        String locale = packet.locale;
 
         Seq<String> extraMods = packet.mods.copy();
         Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
-        if (!extraMods.isEmpty() || !missingMods.isEmpty()) {
+        if (extraMods.any() || missingMods.any()) {
             StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", findLocale(locale)));
             if (missingMods.any()) {
-                reason.append(Bundle.format("events.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> ")).append("[]\n");
+                reason.append(Bundle.format("events.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
             }
 
             if (extraMods.any()) {
@@ -88,36 +78,33 @@ public class ConnectPacketHandler {
             info.lastName = name;
             info.lastIP = ip;
             info.adminUsid = usid;
-            if (!info.names.contains(name, false)) info.names.add(name);
-            if (!info.ips.contains(ip, false)) info.ips.add(ip);
-            Call.infoMessage(con, Bundle.format("events.not-whitelisted", findLocale(locale)));
-            con.kick(KickReason.whitelist);
+            if (!info.names.contains(name)) info.names.add(name);
+            if (!info.ips.contains(ip)) info.ips.add(ip);
+            con.kick(Bundle.format("events.not-whitelisted", findLocale(locale)), 0);
             return;
         }
 
-        if (packet.versionType == null || ((packet.version == -1 || !packet.versionType.equals(Version.type)) && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
-            con.kick(Version.type.equals(packet.versionType) ? KickReason.customClient : KickReason.typeMismatch);
+        if (packet.versionType == null || (packet.version == -1 && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
+            con.kick(Bundle.format("events.custom-client", findLocale(locale)), 0);
             return;
         }
 
         if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            con.kick(KickReason.idInUse);
+            con.kick(Bundle.format("events.already-connected", findLocale(locale)), 0);
             return;
         }
 
         if (name.trim().length() <= 0) {
-            con.kick(KickReason.nameEmpty);
+            con.kick(Bundle.format("events.name-is-empty", findLocale(locale)), 0);
             return;
         }
 
-        netServer.admins.updatePlayerJoined(uuid, ip, name);
-
-        if (packet.version != Version.build && Version.build != -1 && packet.version != -1) {
+        if (packet.version != Version.build && packet.version != -1 && Version.build != -1 && !packet.versionType.equals("bleeding-edge")) {
             con.kick(packet.version > Version.build ? KickReason.serverOutdated : KickReason.clientOutdated);
             return;
         }
 
-        if (packet.version == -1) con.modclient = true;
+        netServer.admins.updatePlayerJoined(uuid, ip, name);
 
         Player player = Player.create();
         player.admin = netServer.admins.isAdmin(uuid, usid);
@@ -128,16 +115,15 @@ public class ConnectPacketHandler {
         player.con.usid = usid;
         player.con.uuid = uuid;
         player.con.mobile = packet.mobile;
+        player.con.modclient = packet.version == -1;
 
-        if (!player.admin && !info.admin) {
-            info.adminUsid = usid;
-        }
+        if (!player.admin && !info.admin) info.adminUsid = usid;
 
         try {
             writeBuffer.reset();
             player.write(outputBuffer);
         } catch (Exception e) {
-            con.kick(KickReason.nameEmpty);
+            con.kick(Bundle.format("events.name-is-empty", findLocale(locale)), 0);
             return;
         }
 
@@ -177,7 +163,7 @@ public class ConnectPacketHandler {
         return result.toString();
     }
 
-    public static String checkColor(String str) {
+    private static String checkColor(String str) {
         for (int i = 1; i < str.length(); i++) {
             if (str.charAt(i) == ']') {
                 String color = str.substring(1, i);

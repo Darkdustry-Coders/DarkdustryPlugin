@@ -17,8 +17,8 @@ import pandorum.events.handlers.MenuHandler;
 
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
-import static pandorum.PandorumPlugin.outputBuffer;
-import static pandorum.PandorumPlugin.writeBuffer;
+import static pandorum.PluginVars.outputBuffer;
+import static pandorum.PluginVars.writeBuffer;
 
 public class Loader {
 

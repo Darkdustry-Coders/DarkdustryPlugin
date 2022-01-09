@@ -6,14 +6,12 @@ import mindustry.gen.Player;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
+import static pandorum.PluginVars.syncCooldownTime;
 
 public class SyncCommand {
-
-    private static final float cooldownTime = 15f;
-
     public static void run(final String[] args, final Player player) {
-        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * cooldownTime && !player.admin) {
-            bundled(player, "commands.sync.time", cooldownTime);
+        if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < 1000 * syncCooldownTime && !player.admin) {
+            bundled(player, "commands.sync.time", syncCooldownTime);
             return;
         }
 

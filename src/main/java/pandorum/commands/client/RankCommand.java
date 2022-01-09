@@ -7,9 +7,8 @@ import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 
-import java.util.concurrent.TimeUnit;
-
 import static pandorum.Misc.findLocale;
+import static pandorum.Misc.millisecondsToMinutes;
 
 public class RankCommand {
     public static void run(final String[] args, final Player player) {
@@ -26,8 +25,8 @@ public class RankCommand {
                         findLocale(player.locale),
                         rank.next.tag,
                         rank.next.name,
-                        TimeUnit.MILLISECONDS.toMinutes(playerInfo.playTime),
-                        TimeUnit.MILLISECONDS.toMinutes(rank.next.req.playtime),
+                        millisecondsToMinutes(playerInfo.playTime),
+                        millisecondsToMinutes(rank.next.req.playtime),
                         playerInfo.buildingsBuilt,
                         rank.next.req.buildingsBuilt,
                         playerInfo.gamesPlayed,
