@@ -14,7 +14,7 @@ import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
-import pandorum.comp.Loader;
+import pandorum.events.Loader;
 import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 

@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.listeners;
 
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;

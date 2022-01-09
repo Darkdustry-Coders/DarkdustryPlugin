@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.listeners;
 
 import arc.util.Log;
 import discord4j.core.spec.EmbedCreateSpec;

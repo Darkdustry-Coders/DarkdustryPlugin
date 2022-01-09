@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.listeners;
 
 import mindustry.game.EventType.TapEvent;
 import pandorum.comp.Bundle;

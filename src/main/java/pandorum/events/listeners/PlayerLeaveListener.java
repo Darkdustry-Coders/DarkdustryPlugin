@@ -1,4 +1,4 @@
-package pandorum.events;
+package pandorum.events.listeners;
 
 import arc.math.Mathf;
 import arc.struct.Seq;
