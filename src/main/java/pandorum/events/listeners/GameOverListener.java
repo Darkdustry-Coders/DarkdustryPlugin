@@ -20,5 +20,7 @@ public class GameOverListener {
 
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();
+
+        currentVote[0].stop();
     }
 }
