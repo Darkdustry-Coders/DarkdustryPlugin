@@ -6,11 +6,13 @@ import arc.util.Reflect;
 import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
+import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.discord.BotMain;
 import pandorum.events.*;
 import pandorum.events.filters.ActionFilter;
 import pandorum.events.filters.ChatFilter;
+import pandorum.events.handlers.ConnectHandler;
 import pandorum.events.handlers.ConnectPacketHandler;
 import pandorum.events.handlers.InvalidCommandResponse;
 import pandorum.events.handlers.MenuHandler;
@@ -26,6 +28,7 @@ public class Loader {
         writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
+        net.handleServer(Connect.class, ConnectHandler::handle);
         net.handleServer(ConnectPacket.class, ConnectPacketHandler::handle);
 
         netServer.admins.addActionFilter(ActionFilter::filter);

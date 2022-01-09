@@ -24,7 +24,7 @@ import static pandorum.PluginVars.*;
 
 public class ConnectPacketHandler {
     public static void handle(NetConnection con, ConnectPacket packet) {
-        if (con.kicked || netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) return;
+        if (con.kicked) return;
 
         Events.fire(new ConnectPacketEvent(con, packet));
 
@@ -38,7 +38,7 @@ public class ConnectPacketHandler {
 
         con.hasBegunConnecting = true;
 
-        if (netServer.admins.isIDBanned(packet.uuid)) {
+        if (netServer.admins.isIDBanned(packet.uuid) || netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) {
             con.kick(Bundle.format("events.banned", findLocale(locale)), 0);
             return;
         }
