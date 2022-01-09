@@ -2,10 +2,10 @@ package pandorum.commands.server;
 
 import arc.util.Log;
 import mindustry.gen.Player;
-import mindustry.net.Packets.KickReason;
+import pandorum.comp.Bundle;
 
-import static pandorum.Misc.findPlayer;
-import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.*;
+import static pandorum.PluginVars.kickDuration;
 
 public class KickCommand {
     public static void run(final String[] args) {
@@ -15,8 +15,8 @@ public class KickCommand {
             return;
         }
 
-        target.kick(KickReason.kick);
-        sendToChat("events.server.kick", target.coloredName());
+        target.kick(Bundle.format("events.kicked", findLocale(target.locale), millisecondsToMinutes(kickDuration)), kickDuration);
         Log.info("Игрок '@' был выгнан с сервера.", target.name);
+        sendToChat("events.server.kick", target.coloredName());
     }
 }

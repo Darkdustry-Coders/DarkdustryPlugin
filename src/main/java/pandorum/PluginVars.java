@@ -66,7 +66,7 @@ public class PluginVars {
     public static final float votekickDuration = 40f;
 
     /**
-     * Время, на которое игрок будет выгнан голосованием. В миллисекундах.
+     * Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах.
      */
     public static final long kickDuration = 2700000L;
 

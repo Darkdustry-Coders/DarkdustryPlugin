@@ -3,7 +3,7 @@ package pandorum.commands;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import pandorum.commands.client.*;
-import pandorum.comp.Config;
+import pandorum.comp.Config.Gamemode;
 
 public class ClientCommandsLoader {
 
@@ -20,32 +20,30 @@ public class ClientCommandsLoader {
         CommandsHelper.register(handler, "rank", "commands.rank.description", false, RankCommand::run);
         CommandsHelper.register(handler, "players", "[page]", "commands.players.description", false, PlayerListCommand::run);
 
-        CommandsHelper.register(handler, "ban", "<uuid...>", "commands.ban.description", true, BanCommand::run);
-        CommandsHelper.register(handler, "unban", "<uuid...>", "commands.unban.description", true, UnbanCommand::run);
         CommandsHelper.register(handler, "despw", "commands.despw.description", true, DespwCommand::run);
         CommandsHelper.register(handler, "unit", "<unit> [ID/username...]", "commands.unit.description", true, UnitCommand::run);
         CommandsHelper.register(handler, "login", "commands.login.description", false, LoginCommand::run);
 
-        CommandsHelper.register(handler, "hub", "commands.hub.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.castle, Config.Gamemode.crawler, Config.Gamemode.hexed, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), HubCommand::run);
+        CommandsHelper.register(handler, "hub", "commands.hub.description", false, Seq.with(Gamemode.attack, Gamemode.castle, Gamemode.crawler, Gamemode.hexed, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), HubCommand::run);
 
-        CommandsHelper.register(handler, "rtv", "commands.rtv.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), RTVCommand::run);
-        CommandsHelper.register(handler, "vnw", "commands.vnw.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.sandbox, Config.Gamemode.survival, Config.Gamemode.tower), VNWCommand::run);
-        CommandsHelper.register(handler, "surrender", "commands.surrender.description", false, Seq.with(Config.Gamemode.pvp, Config.Gamemode.siege), SurrenderCommand::run);
+        CommandsHelper.register(handler, "rtv", "commands.rtv.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), RTVCommand::run);
+        CommandsHelper.register(handler, "vnw", "commands.vnw.description", false, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), VNWCommand::run);
+        CommandsHelper.register(handler, "surrender", "commands.surrender.description", false, Seq.with(Gamemode.pvp), SurrenderCommand::run);
 
-        CommandsHelper.register(handler, "history", "commands.history.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), HistoryCommand::run);
-        CommandsHelper.register(handler, "alert", "commands.alert.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), AlertCommand::run);
-        CommandsHelper.register(handler, "map", "commands.map.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), MapCommand::run);
-        CommandsHelper.register(handler, "maps", "[page]", "commands.maps.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), MapsListCommand::run);
-        CommandsHelper.register(handler, "saves", "[page]", "commands.saves.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), SavesListCommand::run);
-        CommandsHelper.register(handler, "nominate", "<map/save/load> <name...>", "commands.nominate.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), NominateCommand::run);
-        CommandsHelper.register(handler, "voting", "<y/n>", "commands.voting.description", false, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), VotingCommand::run);
+        CommandsHelper.register(handler, "history", "commands.history.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), HistoryCommand::run);
+        CommandsHelper.register(handler, "alert", "commands.alert.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), AlertCommand::run);
+        CommandsHelper.register(handler, "map", "commands.map.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), MapCommand::run);
+        CommandsHelper.register(handler, "maps", "[page]", "commands.maps.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), MapsListCommand::run);
+        CommandsHelper.register(handler, "saves", "[page]", "commands.saves.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SavesListCommand::run);
+        CommandsHelper.register(handler, "nominate", "<map/save/load> <name...>", "commands.nominate.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), NominateCommand::run);
+        CommandsHelper.register(handler, "voting", "<y/n>", "commands.voting.description", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), VotingCommand::run);
 
-        CommandsHelper.register(handler, "spawn", "<unit> [amount] [team]", "commands.spawn.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), SpawnCommand::run);
-        CommandsHelper.register(handler, "artv", "commands.artv.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), ARTVCommand::run);
-        CommandsHelper.register(handler, "core", "[small/medium/big] [team]", "commands.core.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), CoreCommand::run);
-        CommandsHelper.register(handler, "give", "<item> <amount>", "commands.give.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), GiveCommand::run);
+        CommandsHelper.register(handler, "spawn", "<unit> [amount] [team]", "commands.spawn.description", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SpawnCommand::run);
+        CommandsHelper.register(handler, "artv", "commands.artv.description", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), ARTVCommand::run);
+        CommandsHelper.register(handler, "core", "[small/medium/big] [team]", "commands.core.description", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), CoreCommand::run);
+        CommandsHelper.register(handler, "give", "<item> <amount>", "commands.give.description", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), GiveCommand::run);
         CommandsHelper.register(handler, "team", "<team> [ID/username...]", "commands.team.description", true, TeamCommand::run);
-        CommandsHelper.register(handler, "spectate", "commands.spectate.description", true, Seq.with(Config.Gamemode.attack, Config.Gamemode.pvp, Config.Gamemode.sandbox, Config.Gamemode.siege, Config.Gamemode.survival, Config.Gamemode.tower), SpectateCommand::run);
-        CommandsHelper.register(handler, "fill", "<width> <height> <block>", "commands.fill.description", true, Seq.with(Config.Gamemode.sandbox), FillCommand::run);
+        CommandsHelper.register(handler, "spectate", "[ID/username...]", "commands.spectate.description", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SpectateCommand::run);
+        CommandsHelper.register(handler, "fill", "<width> <height> <block>", "commands.fill.description", true, Seq.with(Gamemode.sandbox), FillCommand::run);
     }
 }

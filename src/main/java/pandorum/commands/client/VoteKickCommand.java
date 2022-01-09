@@ -53,7 +53,7 @@ public class VoteKickCommand {
             return;
         }
 
-        VoteKickSession session = new VoteKickSession(currentVotekick, target);
+        VoteKickSession session = new VoteKickSession(currentVotekick, player, target);
         currentVotekick[0] = session;
         session.vote(player, 1);
         vtime.reset();

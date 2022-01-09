@@ -5,22 +5,23 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.Packets.KickReason;
+import pandorum.comp.Bundle;
 
-import static pandorum.Misc.millisecondsToMinutes;
-import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.*;
 import static pandorum.PluginVars.kickDuration;
 import static pandorum.PluginVars.votekickDuration;
 
 public class VoteKickSession {
+    protected final Player player;
     protected final Player target;
     protected final Seq<String> voted = new Seq<>();
     protected final VoteKickSession[] kickSession;
     protected final Task task;
     protected int votes;
 
-    public VoteKickSession(VoteKickSession[] kickSession, Player target) {
+    public VoteKickSession(VoteKickSession[] kickSession, Player player, Player target) {
         this.kickSession = kickSession;
+        this.player = player;
         this.target = target;
         this.task = start();
     }
@@ -45,7 +46,7 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
             stop();
-            target.kick(KickReason.vote, kickDuration);
+            target.kick(Bundle.format("events.votekicked", findLocale(target.locale), player.coloredName(), millisecondsToMinutes(kickDuration)), kickDuration);
             return true;
         }
         return false;

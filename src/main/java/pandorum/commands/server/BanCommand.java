@@ -4,10 +4,10 @@ import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Packets.KickReason;
+import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;
-import static pandorum.Misc.findPlayer;
-import static pandorum.Misc.sendToChat;
+import static pandorum.Misc.*;
 
 public class BanCommand {
     public static void run(final String[] args) {
@@ -20,9 +20,9 @@ public class BanCommand {
                 Player target = findPlayer(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
-                    target.kick(KickReason.banned);
-                    sendToChat("events.server.ban", target.coloredName());
+                    target.kick(Bundle.format("events.banned", findLocale(target.locale)), 0);
                     Log.info("Игрок '@' успешно забанен.", target.name);
+                    sendToChat("events.server.ban", target.coloredName());
                 } else {
                     Log.err("Игрок '@' не найден...", args[1]);
                 }
@@ -39,7 +39,7 @@ public class BanCommand {
         }
 
         Groups.player.each(p -> netServer.admins.isIDBanned(p.uuid()) || netServer.admins.isIPBanned(p.ip()), p -> {
-            p.kick(KickReason.banned);
+            p.kick(Bundle.format("events.banned", findLocale(p.locale)), 0);
             sendToChat("events.server.ban", p.coloredName());
         });
     }

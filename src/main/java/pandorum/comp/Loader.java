@@ -1,5 +1,6 @@
 package pandorum.comp;
 
+import arc.Core;
 import arc.Events;
 import arc.util.Log;
 import arc.util.Reflect;
@@ -28,6 +29,9 @@ public class Loader {
         writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
+        Core.app.removeListener(netServer);
+        Core.app.addListener(netServer = new CustomNetServer());
+
         net.handleServer(Connect.class, ConnectHandler::handle);
         net.handleServer(ConnectPacket.class, ConnectPacketHandler::handle);
 
@@ -35,7 +39,6 @@ public class Loader {
         netServer.admins.addChatFilter(ChatFilter::filter);
         netServer.invalidHandler = InvalidCommandResponse::response;
 
-        Events.on(AdminRequestEvent.class, AdminRequestListener::call);
         Events.on(BlockBuildEndEvent.class, BlockBuildEndListener::call);
         Events.on(BuildSelectEvent.class, BuildSelectListener::call);
         Events.on(ConfigEvent.class, ConfigListener::call);

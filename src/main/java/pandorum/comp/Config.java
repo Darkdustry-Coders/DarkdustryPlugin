@@ -47,11 +47,11 @@ public class Config {
     public String antiVpnToken = "w7j425-826177-597253-3134u9";
 
     public boolean historyEnabled() {
-        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public boolean alertsEnabled() {
-        return state.rules.reactorExplosions && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.siege, Gamemode.survival, Gamemode.tower).contains(mode);
+        return state.rules.reactorExplosions && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public enum Gamemode {
@@ -62,7 +62,6 @@ public class Config {
         hub,
         pvp,
         sandbox,
-        siege,
         survival,
         tower
     }
