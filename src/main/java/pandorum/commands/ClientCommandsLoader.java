@@ -18,7 +18,7 @@ public class ClientCommandsLoader {
         CommandsHelper.register(handler, "tr", "<current/list/off/auto/locale>", "commands.tr.description", false, TranslatorCommand::run);
         CommandsHelper.register(handler, "info", "[ID/username...]", "commands.info.description", false, InfoCommand::run);
         CommandsHelper.register(handler, "rank", "commands.rank.description", false, RankCommand::run);
-        CommandsHelper.register(handler, "players", "[page]", "commands.players.description", false, PlayerListCommand::run);
+        CommandsHelper.register(handler, "players", "[page]", "commands.players.description", false, PlayersListCommand::run);
 
         CommandsHelper.register(handler, "despw", "commands.despw.description", true, DespwCommand::run);
         CommandsHelper.register(handler, "unit", "<unit> [ID/username...]", "commands.unit.description", true, UnitCommand::run);

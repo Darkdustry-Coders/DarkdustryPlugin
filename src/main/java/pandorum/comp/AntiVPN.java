@@ -38,22 +38,18 @@ public class AntiVPN {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call request, @NotNull IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 cons.get(false);
             }
 
             @Override
-            public void onResponse(@NotNull Call request, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonObject ipInfo = gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
 
                 int risk = ipInfo.get("risk").getAsInt();
                 String type = ipInfo.get("type").getAsString();
 
-                boolean isDangerous = risk > 66 || Seq.with(
-                        "tor", "socks", "socks4", "socks4a",
-                        "socks5", "socks5h", "shadowsocks",
-                        "openvpn", "vpn"
-                ).contains(type.toLowerCase());
+                boolean isDangerous = risk > 66 || Seq.with("tor", "socks", "socks4", "socks4a", "socks5", "socks5h", "shadowsocks", "openvpn", "vpn").contains(type.toLowerCase());
 
                 cache.put(ip, isDangerous);
                 cons.get(isDangerous);

@@ -17,18 +17,18 @@ public class WithdrawEntry implements HistoryEntry {
     public final short blockID;
     public final short itemID;
     public final int amount;
-    public final Date time;
+    public final Date date;
 
     public WithdrawEntry(WithdrawEvent event) {
         this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
         this.itemID = event.item.id;
         this.amount = event.amount;
-        this.time = new Date();
+        this.date = new Date();
     }
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.withdraw", findLocale(player.locale), name, amount, Icons.get(content.item(itemID).name), Icons.get(content.block(blockID).name), formatTime(time));
+        return Bundle.format("history.withdraw", findLocale(player.locale), name, amount, Icons.get(content.item(itemID).name), Icons.get(content.block(blockID).name), formatTime(date));
     }
 }

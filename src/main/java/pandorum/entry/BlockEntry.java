@@ -21,7 +21,7 @@ public class BlockEntry implements HistoryEntry {
     public final short blockID;
     public final int rotation;
     public final boolean breaking;
-    public final Date time;
+    public final Date date;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getControllerName();
@@ -29,21 +29,21 @@ public class BlockEntry implements HistoryEntry {
         this.blockID = event.breaking ? -1 : event.tile.build.block.id;
         this.rotation = event.breaking ? -1 : event.tile.build.rotation;
         this.breaking = event.breaking;
-        this.time = new Date();
+        this.date = new Date();
     }
 
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         UnitType unit = content.unit(unitID);
-        String ftime = formatTime(time);
+        String time = formatTime(date);
         Locale locale = findLocale(player.locale);
 
         if (breaking) {
-            return name != null ? Bundle.format("history.block.destroy.player", locale, name, ftime) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), ftime);
+            return name != null ? Bundle.format("history.block.destroy.player", locale, name, time) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), time);
         }
 
-        String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), ftime) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), ftime);
+        String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), time) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), time);
         if (block.rotate) base += Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]);
 
         return base;
