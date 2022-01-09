@@ -34,7 +34,7 @@ public class PlayerLeaveListener {
             sendToChat("commands.votekick.left", event.player.coloredName(), millisecondsToMinutes(kickDuration));
         }
 
-        if (config.mode == Gamemode.siege || config.mode == Gamemode.pvp) {
+        if (config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
                 sendToChat("commands.surrender.left", colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
