@@ -22,7 +22,7 @@ public class VoteSaveSession extends VoteSession {
     protected Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
-                sendToChat("commands.nominate.save.failed", target);
+                sendToChat("commands.nominate.save.failed", target.nameWithoutExtension());
                 stop();
             }
         }, voteDuration);
@@ -32,14 +32,14 @@ public class VoteSaveSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.nominate.save.vote", player.coloredName(), target, votes, votesRequired());
+        sendToChat("commands.nominate.save.vote", player.coloredName(), target.nameWithoutExtension(), votes, votesRequired());
         checkPass();
     }
 
     @Override
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.nominate.save.passed", target);
+            sendToChat("commands.nominate.save.passed", target.nameWithoutExtension());
             stop();
             Core.app.post(() -> SaveIO.save(target));
             return true;
