@@ -9,6 +9,7 @@ import mindustry.net.Administration;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Icons;
+import pandorum.comp.Translator;
 import pandorum.discord.BotMain;
 import pandorum.events.filters.ActionFilter;
 import pandorum.events.filters.ChatFilter;
@@ -59,6 +60,8 @@ public class Loader {
         Administration.Config.logging.set(true);
         Administration.Config.strict.set(true);
         Administration.Config.enableVotekick.set(true);
+
+        Translator.loadLanguages();
 
         MenuHandler.init();
         Icons.init();

@@ -1,26 +1,23 @@
 package pandorum.comp;
 
 import arc.func.Cons;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import com.google.gson.JsonObject;
 import okhttp3.*;
+import okhttp3.Request.Builder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.gson;
+import static pandorum.PluginVars.*;
 
 public class AntiVPN {
 
-    private static final ObjectMap<String, Boolean> cache = new ObjectMap<>();
-    private static final OkHttpClient client = new OkHttpClient();
-    private static final Request.Builder requestBuilder = new Request.Builder().addHeader("accept", "application/json");
+    private static final Builder antiVpnRequest = new Builder().addHeader("accept", "application/json");
 
-    public void checkIp(String ip, Cons<Boolean> cons) {
-        if (cache.containsKey(ip)) {
-            cons.get(cache.get(ip));
+    public static void checkIp(String ip, Cons<Boolean> cons) {
+        if (antiVpnCache.containsKey(ip)) {
+            cons.get(antiVpnCache.get(ip));
             return;
         }
 
@@ -34,7 +31,7 @@ public class AntiVPN {
                 .addQueryParameter("vpn", "1")
                 .build();
 
-        Request request = requestBuilder.url(url).build();
+        Request request = antiVpnRequest.url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -46,12 +43,9 @@ public class AntiVPN {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonObject ipInfo = gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
 
-                int risk = ipInfo.get("risk").getAsInt();
-                String type = ipInfo.get("type").getAsString();
+                boolean isDangerous = ipInfo.get("risk").getAsInt() > 66 || Seq.with("tor", "socks", "socks4", "socks4a", "socks5", "socks5h", "shadowsocks", "openvpn", "vpn").contains(ipInfo.get("type").getAsString().toLowerCase());
 
-                boolean isDangerous = risk > 66 || Seq.with("tor", "socks", "socks4", "socks4a", "socks5", "socks5h", "shadowsocks", "openvpn", "vpn").contains(type.toLowerCase());
-
-                cache.put(ip, isDangerous);
+                antiVpnCache.put(ip, isDangerous);
                 cons.get(isDangerous);
             }
         });

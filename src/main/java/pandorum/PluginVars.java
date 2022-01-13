@@ -15,9 +15,8 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import pandorum.comp.AntiVPN;
+import okhttp3.OkHttpClient;
 import pandorum.comp.Config;
-import pandorum.comp.Translator;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 import pandorum.vote.VoteKickSession;
@@ -106,6 +105,8 @@ public class PluginVars {
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
+    public static final ObjectMap<String, Boolean> antiVpnCache = new ObjectMap<>();
+
     public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
@@ -114,11 +115,10 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
+    public static final OkHttpClient client = new OkHttpClient();
+
     public static Config config;
     public static CacheSeq<HistoryEntry>[][] history;
-
-    public static Translator translator;
-    public static AntiVPN antiVPN;
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;

@@ -5,11 +5,11 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import pandorum.comp.Translator;
 import pandorum.discord.BotHandler;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.translator;
 
 public class ChatFilter {
 
@@ -32,7 +32,7 @@ public class ChatFilter {
                 return;
             }
 
-            translator.translate(Strings.stripColors(text), language, translated -> {
+            Translator.translate(Strings.stripColors(text), language, translated -> {
                 player.sendMessage(formatTranslated(formatted, text, translated), author, text);
                 cache.put(language, translated);
             });

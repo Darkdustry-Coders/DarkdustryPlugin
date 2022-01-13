@@ -5,17 +5,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import okhttp3.*;
+import okhttp3.Request.Builder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import static pandorum.PluginVars.codeLanguages;
-import static pandorum.PluginVars.gson;
+import static pandorum.PluginVars.*;
 
 public class Translator {
 
-    private static final OkHttpClient client = new OkHttpClient();
-    private static final Request.Builder translatorRequestBuilder = new Request.Builder()
+    private static final Builder translatorRequest = new Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
             .addHeader("accept-language", "ru,en;q=0.9")
@@ -27,7 +26,7 @@ public class Translator {
             .addHeader("sec-fetch-mode", "cors")
             .addHeader("sec-fetch-site", "cross-site");
 
-    private static final Request.Builder languagesRequestBuilder = new Request.Builder()
+    private static final Builder languagesRequest = new Builder()
             .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
             .get()
             .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
@@ -41,15 +40,11 @@ public class Translator {
             .addHeader("sec-fetch-site", "cross-site")
             .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"");
 
-    public Translator() {
-        loadLanguages();
-    }
-
-    public void translate(String text, String lang, Cons<String> cons) {
+    public static void translate(String text, String lang, Cons<String> cons) {
         String language = codeLanguages.get(lang, codeLanguages.get("en"));
 
         RequestBody formBody = new FormBody.Builder().add("to", language).add("text", text).add("platform", "dp").build();
-        Request request = translatorRequestBuilder.post(formBody).build();
+        Request request = translatorRequest.post(formBody).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -65,8 +60,8 @@ public class Translator {
         });
     }
 
-    public void loadLanguages() {
-        Request request = languagesRequestBuilder.build();
+    public static void loadLanguages() {
+        Request request = languagesRequest.build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override

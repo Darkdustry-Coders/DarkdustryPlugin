@@ -12,10 +12,8 @@ import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
-import pandorum.comp.AntiVPN;
 import pandorum.comp.Config;
 import pandorum.events.Loader;
-import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
@@ -42,9 +40,6 @@ public final class PandorumPlugin extends Plugin {
         MongoCollection<Document> playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
 
         PlayerModel.setSourceCollection(playersInfoCollection);
-
-        antiVPN = new AntiVPN();
-        translator = new Translator();
 
         Log.info("[Darkdustry] Плагин запущен...");
     }
