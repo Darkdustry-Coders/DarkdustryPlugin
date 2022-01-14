@@ -1,6 +1,7 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
+import mindustry.content.Blocks;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -31,6 +32,7 @@ public class FillCommand {
                 Tile tile = world.tile(x, y);
                 if (tile != null) {
                     if (block.isFloor()) tile.setFloorNet(block);
+                    else if (block.isOverlay()) tile.setFloorNet(Blocks.air, block);
                     else tile.setNet(block, player.team(), 0);
                 }
             }
