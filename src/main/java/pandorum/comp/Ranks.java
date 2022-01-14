@@ -12,11 +12,11 @@ import static pandorum.Misc.millisecondsToMinutes;
 
 public class Ranks {
 
-    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4, null, null);
+    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4);
     public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(100000000L, 100000, 100), null);
     public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(50000000L, 50000, 30), veteran);
     public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(25000000L, 25000, 15), activePlus);
-    public static final Rank player = new Rank("", "[accent]Player", 0, null, active);
+    public static final Rank player = new Rank("[accent]Player", 0, null, active);
 
     private static final Seq<Rank> ranks = Seq.with(player, active, activePlus, veteran, admin);
 
@@ -74,6 +74,14 @@ public class Ranks {
             this.id = id;
             this.req = req;
             this.next = next;
+        }
+
+        public Rank(String name, int id, Requirements req, Rank next) {
+            this("", name, id, req, next);
+        }
+
+        public Rank(String tag, String name, int id) {
+            this(tag, name, id, null, null);
         }
     }
 

@@ -43,8 +43,12 @@ public class Bundle {
     }
 
     public static String get(String key, Locale locale) {
+        return get(key, key, locale);
+    }
+
+    public static String get(String key, String defaultValue, Locale locale) {
         StringMap bundle = getOrLoad(locale);
-        return bundle != null ? bundle.get(key, key) : key;
+        return bundle != null ? bundle.get(key, defaultValue) : defaultValue;
     }
 
     public static String format(String key, Locale locale, Object... values) {

@@ -31,7 +31,7 @@ public class HelpCommand {
 
         for (int i = 6 * page; i < Math.min(6 * (page + 1), commandsList.size); i++) {
             Command command = commandsList.get(i);
-            result.append("\n[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(Bundle.format(command.description, findLocale(player.locale)));
+            result.append("\n[orange] /").append(command.text).append("[white] ").append(command.paramText).append("[lightgray] - ").append(Bundle.get(Strings.format("commands.@.description", command.text), command.description, findLocale(player.locale)));
         }
 
         player.sendMessage(result.toString());
