@@ -7,15 +7,22 @@ import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.millisecondsToMinutes;
+import static pandorum.Misc.*;
+import static pandorum.Misc.bundled;
 
 public class RankCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(player.uuid(), playerInfo -> {
-            Rank rank = Ranks.getRank(player, playerInfo.rank);
+        Player target = args.length > 0 ? findPlayer(args[0]) : player;
+        if (target == null) {
+            bundled(player, "commands.player-not-found", args[0]);
+            return;
+        }
+
+        PlayerModel.find(target.uuid(), playerInfo -> {
+            Rank rank = Ranks.getRank(target, playerInfo.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.info",
                     findLocale(player.locale),
+                    target.coloredName(),
                     rank.tag,
                     rank.name
             ));
