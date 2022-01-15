@@ -17,17 +17,17 @@ public class InfoCommand {
             return;
         }
 
-        PlayerModel.find(target.uuid(), playerInfo -> {
-            Rank rank = Ranks.getRank(target, playerInfo.rank);
+        PlayerModel.find(target.uuid(), playerModel -> {
+            Rank rank = Ranks.getRank(target, playerModel.rank);
             Call.infoMessage(player.con, Bundle.format("commands.info.content",
                     findLocale(player.locale),
                     target.coloredName(),
                     rank.tag,
                     rank.name,
-                    millisecondsToMinutes(playerInfo.playTime),
-                    playerInfo.buildingsBuilt,
-                    playerInfo.buildingsDeconstructed,
-                    playerInfo.gamesPlayed
+                    millisecondsToMinutes(playerModel.playTime),
+                    playerModel.buildingsBuilt,
+                    playerModel.buildingsDeconstructed,
+                    playerModel.gamesPlayed
             ));
         });
     }

@@ -20,13 +20,13 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
 
-        Groups.player.each(player -> player != author, player -> PlayerModel.find(player.uuid(), playerInfo -> {
-            if (playerInfo.locale.equals("off")) {
+        Groups.player.each(player -> player != author, player -> PlayerModel.find(player.uuid(), playerModel -> {
+            if (playerModel.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;
             }
 
-            String language = playerInfo.locale.equals("auto") ? player.locale : playerInfo.locale;
+            String language = playerModel.locale.equals("auto") ? player.locale : playerModel.locale;
             if (cache.containsKey(language)) {
                 player.sendMessage(formatTranslated(formatted, text, cache.get(language)), author, text);
                 return;

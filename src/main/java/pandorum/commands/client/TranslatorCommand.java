@@ -8,22 +8,22 @@ import static pandorum.PluginVars.codeLanguages;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(player.uuid(), playerInfo -> {
+        PlayerModel.find(player.uuid(), playerModel -> {
             switch (args[0].toLowerCase()) {
-                case "current" -> bundled(player, "commands.tr.current", playerInfo.locale);
+                case "current" -> bundled(player, "commands.tr.current", playerModel.locale);
                 case "list" -> {
                     StringBuilder locales = new StringBuilder();
                     codeLanguages.keys().toSeq().each(locale -> locales.append(" ").append(locale));
                     bundled(player, "commands.tr.list", locales.toString());
                 }
                 case "off" -> {
-                    playerInfo.locale = "off";
-                    playerInfo.save();
+                    playerModel.locale = "off";
+                    playerModel.save();
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
-                    playerInfo.locale = "auto";
-                    playerInfo.save();
+                    playerModel.locale = "auto";
+                    playerModel.save();
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
@@ -32,8 +32,8 @@ public class TranslatorCommand {
                         break;
                     }
 
-                    playerInfo.locale = args[0];
-                    playerInfo.save();
+                    playerModel.locale = args[0];
+                    playerModel.save();
                     bundled(player, "commands.tr.changed", args[0]);
                 }
             }

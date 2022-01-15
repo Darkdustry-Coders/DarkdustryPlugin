@@ -34,21 +34,21 @@ public class Ranks {
             return;
         }
 
-        PlayerModel.find(player.uuid(), playerInfo -> {
-            Rank current = get(playerInfo.rank);
+        PlayerModel.find(player.uuid(), playerModel -> {
+            Rank current = get(playerModel.rank);
 
-            if (current.next != null && current.next.req != null && current.next.req.check(playerInfo.playTime, playerInfo.buildingsBuilt, playerInfo.gamesPlayed)) {
+            if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
                 Call.infoMessage(player.con, Bundle.format("events.rank-increase",
                         findLocale(player.locale),
                         current.next.tag,
                         current.next.name,
-                        millisecondsToMinutes(playerInfo.playTime),
-                        playerInfo.buildingsBuilt,
-                        playerInfo.gamesPlayed
+                        millisecondsToMinutes(playerModel.playTime),
+                        playerModel.buildingsBuilt,
+                        playerModel.gamesPlayed
                 ));
 
-                playerInfo.rank = current.next.id;
-                playerInfo.save();
+                playerModel.rank = current.next.id;
+                playerModel.save();
                 cons.get(current.next);
                 return;
             }

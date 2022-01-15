@@ -16,9 +16,9 @@ public class MenuHandler {
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerModel.find(player.uuid(), playerInfo -> {
-                    playerInfo.hellomsg = false;
-                    playerInfo.save();
+                PlayerModel.find(player.uuid(), playerModel -> {
+                    playerModel.hellomsg = false;
+                    playerModel.save();
                     bundled(player, "events.welcome.disabled");
                 });
             }
@@ -35,15 +35,15 @@ public class MenuHandler {
                     bundled(player, "commands.admin.despw.success.players");
                 }
                 case 3 -> {
-                    Groups.unit.each(u -> u.team == state.rules.defaultTeam, Unitc::kill);
+                    Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
                     bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
-                    Groups.unit.each(u -> u.team == state.rules.waveTeam, Unitc::kill);
+                    Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
                     bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
-                    if (player.unit() != null) player.unit().kill();
+                    if (!player.dead()) player.unit().kill();
                     bundled(player, "commands.admin.despw.success.suicide");
                 }
             }

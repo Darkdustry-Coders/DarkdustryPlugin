@@ -154,7 +154,7 @@ public class BotHandler {
             int pages = Mathf.ceil(mapsList.size / 20f);
 
             if (--page >= pages || page < 0) {
-                err(msg.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
+                err(msg.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
                 return;
             }
 
@@ -163,35 +163,7 @@ public class BotHandler {
                 maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(mapsList.get(i).name())).append("\n");
             }
 
-            EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                    .color(BotMain.normalColor)
-                    .author("Server maps", null, "https://cdn.iconscout.com/icon/free/png-256/map-and-location-2569358-2148268.png")
-                    .title("Список карт сервера (страница " + (page + 1) + " из " + pages + ")")
-                    .addField("Карты:", maps.toString(), false)
-                    .build();
-
-            sendEmbed(msg.getChannel().block(), embed);
-        });
-
-        discordCommandHandler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
-            if (state.isMenu()) {
-                err(msg.getChannel().block(), "Сервер отключен.", "Попросите администраторов запустить его.");
-                return;
-            }
-
-            EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                    .color(BotMain.successColor)
-                    .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
-                    .title("Сервер онлайн.")
-                    .addField("Игроков:", String.valueOf(Groups.player.size()), false)
-                    .addField("Карта:", state.map.name(), false)
-                    .addField("Волна:", String.valueOf(state.wave), false)
-                    .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
-                    .addField("TPS на сервере:", String.valueOf(state.serverTps == -1 ? 60 : state.serverTps), false)
-                    .footer("Используй " + discordCommandHandler.getPrefix() + "players, чтобы посмотреть список всех игроков.", null)
-                    .build();
-
-            sendEmbed(msg.getChannel().block(), embed);
+            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(BotMain.normalColor).author("Server maps", null, "https://cdn.iconscout.com/icon/free/png-256/map-and-location-2569358-2148268.png").title("Список карт сервера (страница " + (page + 1) + " из " + pages + ")").addField("Карты:", maps.toString(), false).build());
         });
 
         discordCommandHandler.<Message>register("players", "[страница]", "Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -209,7 +181,7 @@ public class BotHandler {
             int pages = Mathf.ceil(Groups.player.size() / 20f);
 
             if (--page >= pages || page < 0) {
-                err(msg.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до " + pages);
+                err(msg.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
                 return;
             }
 
@@ -218,13 +190,26 @@ public class BotHandler {
                 players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(Groups.player.index(i).name)).append("\n");
             }
 
-            EmbedCreateSpec embed = EmbedCreateSpec.builder()
-                    .color(BotMain.normalColor)
-                    .title("Список игроков на сервере (всего " + Groups.player.size() + ")")
-                    .addField("Игроки:", players.toString(), false)
-                    .build();
+            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(BotMain.normalColor).title("Список игроков на сервере (всего " + Groups.player.size() + ")").addField("Игроки:", players.toString(), false).build());
+        });
 
-            sendEmbed(msg.getChannel().block(), embed);
+        discordCommandHandler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
+            if (state.isMenu()) {
+                err(msg.getChannel().block(), "Сервер отключен.", "Попросите администраторов запустить его.");
+                return;
+            }
+
+            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder()
+                    .color(BotMain.successColor)
+                    .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
+                    .title("Сервер онлайн.")
+                    .addField("Игроков:", String.valueOf(Groups.player.size()), false)
+                    .addField("Карта:", state.map.name(), false)
+                    .addField("Волна:", String.valueOf(state.wave), false)
+                    .addField("Потребление ОЗУ:", Strings.format("@ MB", Core.app.getJavaHeap() / 1024 / 1024), false)
+                    .addField("TPS на сервере:", String.valueOf(state.serverTps == -1 ? 60 : state.serverTps), false)
+                    .footer("Используй " + discordCommandHandler.getPrefix() + "players, чтобы посмотреть список всех игроков.", null)
+                    .build());
         });
     }
 

@@ -7,11 +7,11 @@ import static pandorum.Misc.bundled;
 
 public class AlertCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(player.uuid(), playerInfo -> {
-            playerInfo.alerts = !playerInfo.alerts;
-            playerInfo.save();
+        PlayerModel.find(player.uuid(), playerModel -> {
+            playerModel.alerts = !playerModel.alerts;
+            playerModel.save();
 
-            bundled(player, playerInfo.alerts ? "commands.alert.on" : "commands.alert.off");
+            bundled(player, playerModel.alerts ? "commands.alert.on" : "commands.alert.off");
         });
     }
 }

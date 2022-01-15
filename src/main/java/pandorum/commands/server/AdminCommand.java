@@ -17,7 +17,7 @@ public class AdminCommand {
             info = target.getInfo();
         } else {
             info = netServer.admins.getInfoOptional(args[1]);
-            target = Groups.player.find(p -> p.getInfo() == info);
+            target = Groups.player.find(player -> player.getInfo() == info);
         }
 
         if (info != null) {

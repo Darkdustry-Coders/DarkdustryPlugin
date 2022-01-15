@@ -9,9 +9,9 @@ import static pandorum.PluginVars.*;
 public class GameOverListener {
 
     public static void call(final GameOverEvent event) {
-        Groups.player.each(p -> PlayerModel.find(p.uuid(), playerInfo -> {
-            playerInfo.gamesPlayed++;
-            playerInfo.save();
+        Groups.player.each(player -> PlayerModel.find(player.uuid(), playerModel -> {
+            playerModel.gamesPlayed++;
+            playerModel.save();
         }));
 
         votesSurrender.clear();
@@ -23,7 +23,7 @@ public class GameOverListener {
     }
 
     public static void call() {
-        Groups.player.each(p -> PlayerModel.find(p.uuid(), playerInfo -> {
+        Groups.player.each(player -> PlayerModel.find(player.uuid(), playerInfo -> {
             playerInfo.gamesPlayed++;
             playerInfo.save();
         }));

@@ -27,7 +27,7 @@ public class PlayerJoinListener {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
-        PlayerModel.find(event.player.uuid(), playerInfo -> playerInfo.hellomsg, playerInfo -> {
+        PlayerModel.find(event.player.uuid(), playerModel -> playerModel.hellomsg, playerInfo -> {
             Call.menu(event.player.con,
                     MenuHandler.welcomeMenu,
                     Bundle.format("events.welcome.header", findLocale(event.player.locale)),

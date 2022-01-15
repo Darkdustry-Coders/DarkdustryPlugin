@@ -18,8 +18,8 @@ public class RankCommand {
             return;
         }
 
-        PlayerModel.find(target.uuid(), playerInfo -> {
-            Rank rank = Ranks.getRank(target, playerInfo.rank);
+        PlayerModel.find(target.uuid(), playerModel -> {
+            Rank rank = Ranks.getRank(target, playerModel.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.info",
                     findLocale(player.locale),
                     target.coloredName(),
@@ -32,11 +32,11 @@ public class RankCommand {
                         findLocale(player.locale),
                         rank.next.tag,
                         rank.next.name,
-                        millisecondsToMinutes(playerInfo.playTime),
+                        millisecondsToMinutes(playerModel.playTime),
                         millisecondsToMinutes(rank.next.req.playtime),
-                        playerInfo.buildingsBuilt,
+                        playerModel.buildingsBuilt,
                         rank.next.req.buildingsBuilt,
-                        playerInfo.gamesPlayed,
+                        playerModel.gamesPlayed,
                         rank.next.req.gamesPlayed
                 ));
             }

@@ -17,10 +17,10 @@ public class BlockBuildEndListener {
         }
 
         if (event.unit.isPlayer()) {
-            PlayerModel.find(event.unit.getPlayer().uuid(), playerInfo -> {
-                if (event.breaking) playerInfo.buildingsDeconstructed++;
-                else playerInfo.buildingsBuilt++;
-                playerInfo.save();
+            PlayerModel.find(event.unit.getPlayer().uuid(), playerModel -> {
+                if (event.breaking) playerModel.buildingsDeconstructed++;
+                else playerModel.buildingsBuilt++;
+                playerModel.save();
             });
         }
     }

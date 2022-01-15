@@ -10,16 +10,16 @@ import static pandorum.PluginVars.interval;
 public class TriggerUpdateListener {
 
     public static void update() {
-        Groups.player.each(p -> p.unit().moving(), p -> Effects.onMove(p.x, p.y));
+        Groups.player.each(player -> player.unit().moving(), p -> Effects.onMove(p.x, p.y));
 
         if (interval.get(1, 60f)) {
-            Groups.player.each(p -> {
-                PlayerModel.find(p.uuid(), playerInfo -> {
-                    playerInfo.playTime += 1000L;
-                    playerInfo.save();
+            Groups.player.each(player -> {
+                PlayerModel.find(player.uuid(), playerModel -> {
+                    playerModel.playTime += 1000L;
+                    playerModel.save();
                 });
 
-                Ranks.updateName(p);
+                Ranks.updateName(player);
             });
         }
     }

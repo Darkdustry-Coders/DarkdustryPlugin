@@ -39,9 +39,9 @@ public class BanCommand {
             }
         }
 
-        Groups.player.each(p -> netServer.admins.isIDBanned(p.uuid()) || netServer.admins.isIPBanned(p.ip()), p -> {
-            p.kick(Bundle.format("kick.banned", findLocale(p.locale), discordServerUrl), 0);
-            sendToChat("events.server.ban", p.coloredName());
+        Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
+            player.kick(Bundle.format("kick.banned", findLocale(player.locale), discordServerUrl), 0);
+            sendToChat("events.server.ban", player.coloredName());
         });
     }
 }

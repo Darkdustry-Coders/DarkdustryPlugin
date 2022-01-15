@@ -8,7 +8,7 @@ import pandorum.database.MongoDataBridge;
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String UUID;
     public String locale = "off";
-    public boolean hellomsg = true;
+    public Boolean hellomsg = true;
     public boolean alerts = true;
     public long playTime = 0L;
     public int buildingsBuilt = 0;
@@ -21,8 +21,8 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     }
 
     public static void find(String UUID, Boolf<PlayerModel> boolf, Cons<PlayerModel> cons) {
-        findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), playerInfo -> {
-            if (boolf.get(playerInfo)) cons.get(playerInfo);
+        find(UUID, playerModel -> {
+            if (boolf.get(playerModel)) cons.get(playerModel);
         });
     }
 }

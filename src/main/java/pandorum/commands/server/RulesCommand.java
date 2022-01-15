@@ -64,6 +64,5 @@ public class RulesCommand {
 
         Core.settings.put("globalrules", base.toString());
         Call.setRules(state.rules);
-
     }
 }
