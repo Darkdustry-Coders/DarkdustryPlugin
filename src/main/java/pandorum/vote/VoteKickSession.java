@@ -8,8 +8,7 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 
 import static pandorum.Misc.*;
-import static pandorum.PluginVars.kickDuration;
-import static pandorum.PluginVars.votekickDuration;
+import static pandorum.PluginVars.*;
 
 public class VoteKickSession {
 
@@ -47,7 +46,7 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
             stop();
-            target.kick(Bundle.format("events.votekicked", findLocale(target.locale), player.coloredName(), millisecondsToMinutes(kickDuration)), kickDuration);
+            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), player.coloredName(), millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
             return true;
         }
         return false;

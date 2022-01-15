@@ -20,9 +20,9 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
         findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), cons);
     }
 
-    public static void find(String UUID, Boolf<PlayerModel> filter, Cons<PlayerModel> cons) {
+    public static void find(String UUID, Boolf<PlayerModel> boolf, Cons<PlayerModel> cons) {
         findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), playerInfo -> {
-            if (filter.get(playerInfo)) cons.get(playerInfo);
+            if (boolf.get(playerInfo)) cons.get(playerInfo);
         });
     }
 }

@@ -14,7 +14,6 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
-import mindustry.net.Packets.KickReason;
 import pandorum.comp.AntiVPN;
 import pandorum.comp.Bundle;
 
@@ -33,24 +32,24 @@ public class ConnectPacketHandler {
         String locale = packet.locale != null ? packet.locale : defaultLocale;
 
         if (con.hasBegunConnecting || packet.uuid == null || packet.usid == null) {
-            con.kick(Bundle.format("events.already-connected", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.already-connected", findLocale(locale)), 0);
             return;
         }
 
         con.hasBegunConnecting = true;
 
         if (netServer.admins.isIDBanned(packet.uuid) || netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) {
-            con.kick(Bundle.format("events.banned", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.banned", findLocale(locale), discordServerUrl), 0);
             return;
         }
 
         if (Time.millis() < netServer.admins.getKickTime(packet.uuid, con.address)) {
-            con.kick(Bundle.format("events.recent-kick", findLocale(locale), millisecondsToMinutes(netServer.admins.getKickTime(packet.uuid, con.address) - Time.millis())), 0);
+            con.kick(Bundle.format("kick.recent-kick", findLocale(locale), millisecondsToMinutes(netServer.admins.getKickTime(packet.uuid, con.address) - Time.millis()), discordServerUrl), 0);
             return;
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            con.kick(Bundle.format("events.player-limit", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.player-limit", findLocale(locale)), 0);
             return;
         }
 
@@ -58,13 +57,13 @@ public class ConnectPacketHandler {
         Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any() || missingMods.any()) {
-            StringBuilder reason = new StringBuilder(Bundle.format("events.incompatible-mods", findLocale(locale)));
+            StringBuilder reason = new StringBuilder(Bundle.format("kick.incompatible-mods", findLocale(locale)));
             if (missingMods.any()) {
-                reason.append(Bundle.format("events.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
+                reason.append(Bundle.format("kick.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
             }
 
             if (extraMods.any()) {
-                reason.append(Bundle.format("events.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
+                reason.append(Bundle.format("kick.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
             }
             con.kick(reason.toString(), 0);
         }
@@ -81,27 +80,27 @@ public class ConnectPacketHandler {
             info.adminUsid = usid;
             if (!info.names.contains(name)) info.names.add(name);
             if (!info.ips.contains(ip)) info.ips.add(ip);
-            con.kick(Bundle.format("events.not-whitelisted", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.not-whitelisted", findLocale(locale), discordServerUrl), 0);
             return;
         }
 
         if (packet.versionType == null || (packet.version == -1 && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
-            con.kick(Bundle.format("events.custom-client", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.custom-client", findLocale(locale)), 0);
             return;
         }
 
         if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            con.kick(Bundle.format("events.already-connected", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.already-connected", findLocale(locale)), 0);
             return;
         }
 
         if (name.trim().length() <= 0) {
-            con.kick(Bundle.format("events.name-is-empty", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.name-is-empty", findLocale(locale)), 0);
             return;
         }
 
         if (packet.version != Version.build && packet.version != -1 && Version.build != -1 && !packet.versionType.equals("bleeding-edge")) {
-            con.kick(packet.version > Version.build ? KickReason.serverOutdated : KickReason.clientOutdated);
+            con.kick(Bundle.format(packet.version > Version.build ? "kick.server-outdated" : "kick.client-outdated", findLocale(locale), packet.version, Version.build));
             return;
         }
 
@@ -124,7 +123,7 @@ public class ConnectPacketHandler {
             writeBuffer.reset();
             player.write(outputBuffer);
         } catch (Exception e) {
-            con.kick(Bundle.format("events.name-is-empty", findLocale(locale)), 0);
+            con.kick(Bundle.format("kick.name-is-empty", findLocale(locale)), 0);
             return;
         }
 
@@ -135,7 +134,7 @@ public class ConnectPacketHandler {
         netServer.sendWorldData(player);
 
         AntiVPN.checkIp(ip, isDangerous -> {
-            if (isDangerous) con.kick(Bundle.format("events.vpn-ip", findLocale(locale)), 0);
+            if (isDangerous) con.kick(Bundle.format("kick.vpn-ip", findLocale(locale)), 0);
         });
 
         Events.fire(new PlayerConnect(player));

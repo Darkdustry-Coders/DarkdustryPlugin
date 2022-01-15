@@ -19,7 +19,7 @@ public class MenuHandler {
                 PlayerModel.find(player.uuid(), playerInfo -> {
                     playerInfo.hellomsg = false;
                     playerInfo.save();
-                    bundled(player, "events.hellomsg.disabled");
+                    bundled(player, "events.welcome.disabled");
                 });
             }
         });

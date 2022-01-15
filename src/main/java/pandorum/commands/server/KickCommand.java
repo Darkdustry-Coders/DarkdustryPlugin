@@ -5,6 +5,7 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 
 import static pandorum.Misc.*;
+import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.kickDuration;
 
 public class KickCommand {
@@ -15,7 +16,7 @@ public class KickCommand {
             return;
         }
 
-        target.kick(Bundle.format("events.kicked", findLocale(target.locale), millisecondsToMinutes(kickDuration)), kickDuration);
+        target.kick(Bundle.format("kick.kicked", findLocale(target.locale), millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
         Log.info("Игрок '@' был выгнан с сервера.", target.name);
         sendToChat("events.server.kick", target.coloredName());
     }

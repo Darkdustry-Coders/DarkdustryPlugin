@@ -75,6 +75,11 @@ public class PluginVars {
     public static final String defaultLocale = "en";
 
     /**
+     * Ссылка на наш Discord сервер
+     */
+    public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
+
+    /**
      * Название файла с конфигурацией.
      */
     public static final String configFileName = "config.json";

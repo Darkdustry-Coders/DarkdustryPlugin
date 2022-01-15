@@ -8,6 +8,7 @@ import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
+import static pandorum.PluginVars.discordServerUrl;
 
 public class BanCommand {
     public static void run(final String[] args) {
@@ -20,7 +21,7 @@ public class BanCommand {
                 Player target = findPlayer(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
-                    target.kick(Bundle.format("events.banned", findLocale(target.locale)), 0);
+                    target.kick(Bundle.format("kick.banned", findLocale(target.locale), discordServerUrl), 0);
                     Log.info("Игрок '@' успешно забанен.", target.name);
                     sendToChat("events.server.ban", target.coloredName());
                 } else {
@@ -39,7 +40,7 @@ public class BanCommand {
         }
 
         Groups.player.each(p -> netServer.admins.isIDBanned(p.uuid()) || netServer.admins.isIPBanned(p.ip()), p -> {
-            p.kick(Bundle.format("events.banned", findLocale(p.locale)), 0);
+            p.kick(Bundle.format("kick.banned", findLocale(p.locale), discordServerUrl), 0);
             sendToChat("events.server.ban", p.coloredName());
         });
     }
