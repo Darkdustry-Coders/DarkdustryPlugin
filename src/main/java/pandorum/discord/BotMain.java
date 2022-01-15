@@ -41,7 +41,7 @@ public class BotMain {
                     return;
                 }
 
-                if (message.getChannel().block() == BotHandler.botChannel && member != null && !member.isBot() && !message.getContent().isBlank()) {
+                if (message.getChannelId().equals(BotHandler.botChannel.getId()) && member != null && !member.isBot() && !message.getContent().isBlank()) {
                     sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
                     Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
                 }
