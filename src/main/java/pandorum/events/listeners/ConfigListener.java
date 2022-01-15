@@ -29,7 +29,7 @@ public class ConfigListener {
         }
     }
 
-    private static boolean isLastUniqueCount(CacheSeq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
+    public static boolean isLastUniqueCount(CacheSeq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
         for (int i = entries.size - 2; i >= maxSearchBound; i--) {
             if (entries.get(i) instanceof ConfigEntry configEntry && configEntry.value instanceof Long value) {
                 if (Pack.leftInt(lastCount) > Pack.leftInt(value)) return true;

@@ -51,6 +51,8 @@ public class Loader {
         Events.on(WorldLoadEvent.class, WorldLoadListener::call);
 
         Events.run(Trigger.update, TriggerUpdateListener::update);
+        Events.run("HexedGameOver", GameOverListener::call);
+        Events.run("CastleGameOver", GameOverListener::call);
 
         Administration.Config.motd.set("off");
         Administration.Config.interactRateWindow.set(3);

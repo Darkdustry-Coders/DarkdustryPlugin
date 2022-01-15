@@ -13,9 +13,9 @@ public class CacheSeq<T> extends Seq<T> {
     private final Queue<Tuple2<T, Long>> writeQueue;
 
     public CacheSeq(Seqs.SeqBuilder<? super T> builder) {
-        maximumSize = builder.maximumSize;
-        expireAfterWriteNanos = builder.expireAfterWriteNanos;
-        writeQueue = expiresAfterWrite() ? Seqs.safeQueue() : Seqs.emptyQueue();
+        this.maximumSize = builder.maximumSize;
+        this.expireAfterWriteNanos = builder.expireAfterWriteNanos;
+        this.writeQueue = expiresAfterWrite() ? Seqs.safeQueue() : Seqs.emptyQueue();
     }
 
     @Override

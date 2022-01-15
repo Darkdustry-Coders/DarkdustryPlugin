@@ -14,6 +14,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.voteDuration;
 
 public class VoteLoadSession extends VoteSession {
+
     protected final Fi target;
 
     public VoteLoadSession(VoteSession[] session, Fi target) {

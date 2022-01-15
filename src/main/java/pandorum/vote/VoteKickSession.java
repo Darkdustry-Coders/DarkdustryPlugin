@@ -12,6 +12,7 @@ import static pandorum.PluginVars.kickDuration;
 import static pandorum.PluginVars.votekickDuration;
 
 public class VoteKickSession {
+
     protected final Player player;
     protected final Player target;
     protected final Seq<String> voted = new Seq<>();

@@ -13,6 +13,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.voteDuration;
 
 public class VoteMapSession extends VoteSession {
+
     protected final Map target;
 
     public VoteMapSession(VoteSession[] session, Map target) {

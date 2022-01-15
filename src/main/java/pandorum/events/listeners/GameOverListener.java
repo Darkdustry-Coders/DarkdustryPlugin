@@ -20,7 +20,12 @@ public class GameOverListener {
 
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();
+    }
 
-        currentVote[0].stop();
+    public static void call() {
+        Groups.player.each(p -> PlayerModel.find(p.uuid(), playerInfo -> {
+            playerInfo.gamesPlayed++;
+            playerInfo.save();
+        }));
     }
 }
