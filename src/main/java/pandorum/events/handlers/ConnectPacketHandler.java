@@ -29,22 +29,26 @@ public class ConnectPacketHandler {
         Events.fire(new ConnectPacketEvent(con, packet));
 
         con.connectTime = Time.millis();
-        String locale = packet.locale != null ? packet.locale : defaultLocale;
+        String locale = packet.locale;
+        String uuid = packet.uuid;
+        String usid = packet.usid;
+        String ip = con.address;
+        String name = fixName(packet.name);
 
-        if (con.hasBegunConnecting || packet.uuid == null || packet.usid == null) {
+        if (con.hasBegunConnecting || uuid == null || usid == null || locale == null) {
             con.kick(Bundle.format("kick.already-connected", findLocale(locale)), 0);
             return;
         }
 
         con.hasBegunConnecting = true;
 
-        if (netServer.admins.isIDBanned(packet.uuid) || netServer.admins.isIPBanned(con.address) || netServer.admins.isSubnetBanned(con.address)) {
+        if (netServer.admins.isIDBanned(uuid) || netServer.admins.isIPBanned(ip) || netServer.admins.isSubnetBanned(ip)) {
             con.kick(Bundle.format("kick.banned", findLocale(locale), discordServerUrl), 0);
             return;
         }
 
-        if (Time.millis() < netServer.admins.getKickTime(packet.uuid, con.address)) {
-            con.kick(Bundle.format("kick.recent-kick", findLocale(locale), millisecondsToMinutes(netServer.admins.getKickTime(packet.uuid, con.address) - Time.millis()), discordServerUrl), 0);
+        if (Time.millis() < netServer.admins.getKickTime(uuid, ip)) {
+            con.kick(Bundle.format("kick.recent-kick", findLocale(locale), millisecondsToMinutes(netServer.admins.getKickTime(uuid, ip) - Time.millis()), discordServerUrl), 0);
             return;
         }
 
@@ -68,10 +72,6 @@ public class ConnectPacketHandler {
             con.kick(reason.toString(), 0);
         }
 
-        String uuid = packet.uuid;
-        String usid = packet.usid;
-        String ip = con.address;
-        String name = fixName(packet.name);
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
