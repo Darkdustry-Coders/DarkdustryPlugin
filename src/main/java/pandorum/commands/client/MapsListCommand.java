@@ -8,6 +8,7 @@ import mindustry.maps.Map;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.maps;
+import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
@@ -34,7 +35,7 @@ public class MapsListCommand {
             result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name());
         }
 
-        // TODO result.append(Bundle.format("commands.maps.current", findLocale(player.locale)));
+        result.append(Bundle.format("commands.maps.current", findLocale(player.locale), state.map.tags.get("name", Bundle.format("commands.maps.unknown", findLocale(player.locale)))));
 
         player.sendMessage(result.toString());
     }

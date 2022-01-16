@@ -71,7 +71,7 @@ public class CacheSeq<T> extends Seq<T> {
     }
 
     public boolean evictsBySize() {
-        return maximumSize >= 0;
+        return maximumSize > 0;
     }
 
     public void cleanUp() {

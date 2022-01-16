@@ -33,7 +33,7 @@ public class PlayersListCommand {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
             if (p.admin) result.append(Iconc.admin).append(" ");
-            result.append(p.coloredName()).append("[accent] / [cyan]").append(Bundle.format("commands.players.id", findLocale(player.locale))).append(p.id).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale))).append(p.locale);
+            result.append(p.coloredName()).append("[accent] / [cyan]").append(Bundle.format("commands.players.id", findLocale(player.locale), p.id)).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale), p.locale));
         }
 
         player.sendMessage(result.toString());
