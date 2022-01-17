@@ -40,20 +40,18 @@ public class Authme {
     public static void confirm(Message message, ButtonInteractionEvent event) {
         BotHandler.text(message.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
-        if (player != null) {
-            netServer.admins.adminPlayer(player.uuid(), player.usid());
-            player.admin(true);
-            bundled(player, "commands.login.success");
-        }
+
+        netServer.admins.adminPlayer(player.uuid(), player.usid());
+        player.admin(true);
+        bundled(player, "commands.login.success");
         message.delete().block();
     }
 
     public static void deny(Message message, ButtonInteractionEvent event) {
         BotHandler.text(message.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
-        if (player != null) {
-            bundled(player, "commands.login.ignore");
-        }
+
+        bundled(player, "commands.login.ignore");
         message.delete().block();
     }
 

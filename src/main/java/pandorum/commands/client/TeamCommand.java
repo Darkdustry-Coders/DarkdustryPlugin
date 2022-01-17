@@ -29,5 +29,6 @@ public class TeamCommand {
         }
         target.team(team);
         bundled(target, "commands.admin.team.success", colorizedTeam(team));
+        if (target != player) bundled(player, "commands.admin.team.changed", target.coloredName(), colorizedTeam(team));
     }
 }

@@ -21,16 +21,7 @@ public class AntiVPN {
             return;
         }
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("https")
-                .host("proxycheck.io")
-                .addPathSegment("v2")
-                .addPathSegment(ip)
-                .addQueryParameter("key", config.antiVpnToken)
-                .addQueryParameter("risk", "1")
-                .addQueryParameter("vpn", "1")
-                .build();
-
+        HttpUrl url = new HttpUrl.Builder().scheme("https").host("proxycheck.io").addPathSegment("v2").addPathSegment(ip).addQueryParameter("key", config.antiVpnToken).addQueryParameter("risk", "1").addQueryParameter("vpn", "1").build();
         Request request = antiVpnRequest.url(url).build();
 
         client.newCall(request).enqueue(new Callback() {

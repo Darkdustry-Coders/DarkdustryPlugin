@@ -25,5 +25,6 @@ public class SpectateCommand {
         target.clearUnit();
         target.team(spectateTeam);
         bundled(target, "commands.admin.spectate.enabled");
+        // TODO if (target != player)
     }
 }
