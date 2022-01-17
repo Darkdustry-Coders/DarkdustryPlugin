@@ -17,14 +17,13 @@ public class SpectateCommand {
 
         if (activeSpectatingPlayers.containsKey(target.uuid())) {
             target.team(activeSpectatingPlayers.remove(target.uuid()));
-            bundled(target, "commands.admin.spectate.disabled");
-            return;
+        } else {
+            activeSpectatingPlayers.put(target.uuid(), target.team());
+            target.clearUnit();
+            target.team(spectateTeam);
         }
 
-        activeSpectatingPlayers.put(target.uuid(), target.team());
-        target.clearUnit();
-        target.team(spectateTeam);
-        bundled(target, "commands.admin.spectate.enabled");
-        // TODO if (target != player)
+        bundled(target, activeSpectatingPlayers.containsKey(target.uuid()) ? "commands.admin.spectate.success.enabled" : "commands.admin.spectate.success.disabled");
+        if (target != player) bundled(player, activeSpectatingPlayers.containsKey(target.uuid()) ? "commands.admin.spectate.changed.enabled" : "commands.admin.spectate.changed.disabled", target.coloredName());
     }
 }

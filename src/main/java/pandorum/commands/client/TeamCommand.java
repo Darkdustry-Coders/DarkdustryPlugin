@@ -25,7 +25,7 @@ public class TeamCommand {
 
         if (activeSpectatingPlayers.containsKey(target.uuid())) {
             activeSpectatingPlayers.remove(target.uuid());
-            bundled(target, "commands.admin.spectate.disabled");
+            bundled(target, "commands.admin.spectate.success.disabled");
         }
         target.team(team);
         bundled(target, "commands.admin.team.success", colorizedTeam(team));
