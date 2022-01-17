@@ -16,6 +16,6 @@ public class MapsListCommand {
             Log.info("Карты сервера: (@)", mapsList.size);
             mapsList.each(map -> Log.info("  '@' (@): / @x@", map.name(), map.file.name(), map.width, map.height));
         }
-        Log.info("Все карты находятся здесь: &fi@", customMapDirectory.file().getAbsoluteFile().toString());
+        Log.info("Все карты находятся здесь: &fi@", customMapDirectory.absolutePath());
     }
 }

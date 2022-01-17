@@ -18,6 +18,7 @@ import static pandorum.PluginVars.defaultLocale;
 public class Bundle {
 
     public static final Locale[] supportedLocales;
+
     private static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 

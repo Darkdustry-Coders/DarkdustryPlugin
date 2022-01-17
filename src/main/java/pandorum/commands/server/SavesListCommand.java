@@ -16,6 +16,6 @@ public class SavesListCommand {
             Log.info("Сохранения сервера: (@)", savesList.size);
             savesList.each(save -> Log.info("  '@'", save.nameWithoutExtension()));
         }
-        Log.info("Все сохранения находятся здесь: &fi@", saveDirectory.file().getAbsoluteFile().toString());
+        Log.info("Все сохранения находятся здесь: &fi@", saveDirectory.absolutePath());
     }
 }
