@@ -20,9 +20,7 @@ public class HostCommand {
             return;
         }
 
-        Gamemode mode = args.length > 1 ?
-            Structs.find(Gamemode.all, m -> m.toString().equalsIgnoreCase(args[1])) :
-            Gamemode.survival;
+        Gamemode mode = args.length > 1 ? Structs.find(Gamemode.all, m -> m.toString().equalsIgnoreCase(args[1])) : Gamemode.survival;
         if (mode == null) {
             Log.err("Режим игры '@' не найден.", args[1]);
             return;
