@@ -1,9 +1,10 @@
 package pandorum.commands.server;
 
 import arc.Core;
+import arc.struct.Seq;
 import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.Structs;
+import arc.util.Reflect;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
@@ -19,15 +20,13 @@ public class HostCommand {
             return;
         }
 
-        Gamemode mode;
-        if (args.length > 1) {
-            mode = Structs.find(Gamemode.all, m -> m.toString().equalsIgnoreCase(args[1]));
-            if (mode == null) {
-                Log.err("Режим игры '@' не найден.", args[1]);
-                return;
-            }
-        } else {
-            mode = Gamemode.survival;
+        final Gamemode mode = args.length > 1 ?
+            Structs.find(Gamemode.all, gameMode -> gameMode.name() == args[1]) :
+            Gamemode.survival;
+
+        if (mode == null) {
+            Log.err("Режим игры '@' не найден", args[1]);
+            return;
         }
 
         Map map;
