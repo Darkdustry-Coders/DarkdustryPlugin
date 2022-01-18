@@ -13,7 +13,7 @@ import static pandorum.Misc.bundled;
 
 public class RestartCommand {
     public static void run(final String[] args) {
-        boolean isCarefullyRestart = args[0] == "force" ? false : true;
+        boolean isCarefullyRestart = args.length > 0 && args[0] == "force" ? false : true;
 
         BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title("Сервер выключился для перезапуска!").build());
 
