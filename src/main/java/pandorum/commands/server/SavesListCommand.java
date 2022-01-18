@@ -3,13 +3,13 @@ package pandorum.commands.server;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Log;
+import mindustry.io.SaveIO;
 
 import static mindustry.Vars.saveDirectory;
-import static mindustry.Vars.saveExtension;
 
 public class SavesListCommand {
     public static void run(final String[] args) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> file.extension().equals(saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
         if (savesList.isEmpty()) {
             Log.info("На сервере нет ни одного сохранения.");
         } else {
