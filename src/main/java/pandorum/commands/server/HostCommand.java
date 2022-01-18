@@ -1,7 +1,6 @@
 package pandorum.commands.server;
 
 import arc.Core;
-import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.game.Gamemode;
@@ -12,24 +11,10 @@ import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
 import static pandorum.Misc.getServerControl;
 
-import java.util.Set;
-
 public class HostCommand {
     public static void run(final String[] args) {
         if (!state.isMenu()) {
             Log.err("Сервер уже запущен. Используй 'stop', чтобы остановить его.");
-            return;
-        }
-
-        final Gamemode mode = args.length > 1 ?
-            Seq.select(
-                Gamemode.values(),
-                (enumValue) -> enumValue.name().equals(args[1])
-            ).firstOpt() :
-            Gamemode.survival;
-
-        if (mode == null) {
-            Log.err("Режим игры '@' не найден", args[1]);
             return;
         }
 
@@ -43,6 +28,18 @@ public class HostCommand {
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
             Log.info("Случайным образом выбрана карта: '@'.", map.name());
+        }
+
+        Gamemode mode;
+        if (args.length > 1) {
+            try {
+                mode = Gamemode.valueOf(args[1]);
+            } catch (IllegalArgumentException e) {
+                Log.err("Режим игры '@' не найден.", args[1]);
+                return;
+            }
+        } else {
+            mode = Gamemode.survival;
         }
 
         Log.info("Загружаю карту...");
