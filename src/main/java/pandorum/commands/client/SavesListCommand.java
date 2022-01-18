@@ -5,10 +5,10 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Player;
+import mindustry.io.SaveIO;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.saveDirectory;
-import static mindustry.Vars.saveExtension;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findLocale;
 
@@ -19,7 +19,7 @@ public class SavesListCommand {
             return;
         }
 
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(f -> f.extension().equals(saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(savesList.size / 6.0f);
 
