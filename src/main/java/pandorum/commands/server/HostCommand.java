@@ -32,7 +32,7 @@ public class HostCommand {
         }
 
         Gamemode mode;
-        if (args.length > 1)
+        if (args.length > 1) {
             mode = Structs.find(Gamemode.all, mode -> mode.toString().equalsIgnoreCase(args[1]));
             if (mode == null) {
                 Log.err("Режим игры '@' не найден.", args[1]);
