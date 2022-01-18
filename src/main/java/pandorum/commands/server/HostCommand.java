@@ -45,16 +45,19 @@ public class HostCommand {
         logic.reset();
         Core.settings.put("lastServerMode", mode.name());
         Reflect.set(getServerControl(), "lastMode", mode);
-        try {
-            world.loadMap(map, map.applyRules(mode));
-            state.rules = map.applyRules(mode);
-            logic.play();
 
-            Log.info("Карта загружена.");
+        Core.app.post(() -> {
+            try {
+                world.loadMap(map, map.applyRules(mode));
+                state.rules = map.applyRules(mode);
+                logic.play();
 
-            netServer.openServer();
-        } catch (MapException e) {
-            Log.err("@: @", e.map.name(), e.getMessage());
-        }
+                Log.info("Карта загружена.");
+
+                netServer.openServer();
+            } catch (MapException e) {
+                Log.err("@: @", e.map.name(), e.getMessage());
+            }
+        });
     }
 }
