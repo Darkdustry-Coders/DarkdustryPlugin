@@ -19,6 +19,17 @@ public class HostCommand {
             return;
         }
 
+        Gamemode mode;
+        if (args.length > 1) {
+            mode = Structs.find(Gamemode.all, mode -> mode.toString().equalsIgnoreCase(args[1]));
+            if (mode == null) {
+                Log.err("Режим игры '@' не найден.", args[1]);
+                return;
+            }
+        } else {
+            mode = Gamemode.survival;
+        }
+
         Map map;
         if (args.length > 0) {
             map = findMap(args[0]);
@@ -29,17 +40,6 @@ public class HostCommand {
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
             Log.info("Случайным образом выбрана карта: '@'.", map.name());
-        }
-
-        Gamemode mode;
-        if (args.length > 1) {
-            mode = Structs.find(Gamemode.all, mode -> mode.toString().equalsIgnoreCase(args[1]));
-            if (mode == null) {
-                Log.err("Режим игры '@' не найден.", args[1]);
-                return;
-            }
-        } else {
-            mode = Gamemode.survival;
         }
 
         Log.info("Загружаю карту...");
