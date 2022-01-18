@@ -12,8 +12,6 @@ import static mindustry.Vars.*;
 import static pandorum.Misc.findMap;
 import static pandorum.Misc.getServerControl;
 
-import java.util.Set;
-
 public class HostCommand {
     public static void run(final String[] args) {
         if (!state.isMenu()) {
