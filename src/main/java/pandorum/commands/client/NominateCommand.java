@@ -4,6 +4,7 @@ import arc.files.Fi;
 import arc.util.Strings;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
+import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
@@ -42,7 +43,7 @@ public class NominateCommand {
             }
             case "save" -> {
                 Fi save = saveDirectory.child(Strings.format("@.@", args[1], saveExtension));
-                if (save.exists()) {
+                if (SaveIO.isSaveValid(save)) {
                     bundled(player, "commands.nominate.save.already-exists");
                     return;
                 }
