@@ -35,7 +35,7 @@ public class HostCommand {
         if (args.length > 1)
             mode = Structs.find(Gamemode.all, mode -> mode.toString().equalsIgnoreCase(args[1]));
             if (mode == null) {
-                Log.err("Режим игры '@' не найден", args[1]);
+                Log.err("Режим игры '@' не найден.", args[1]);
                 return;
             }
         } else {
