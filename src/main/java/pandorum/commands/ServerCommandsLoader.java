@@ -30,6 +30,6 @@ public class ServerCommandsLoader {
         CommandsHelper.register(handler, "players", "List of all online players.", PlayersListCommand::run);
 
         CommandsHelper.register(handler, "despawn", "Kill all units.", DespawnCommand::run);
-        CommandsHelper.register(handler, "restart", "Restart the server.", RestartCommand::run);
+        CommandsHelper.register(handler, "restart", "[carefully/force]", "Restart the server.", RestartCommand::run);
     }
 }
