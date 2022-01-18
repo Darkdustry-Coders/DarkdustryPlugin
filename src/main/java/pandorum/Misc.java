@@ -9,6 +9,7 @@ import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.server.ServerControl;
 import mindustry.type.Item;
@@ -46,7 +47,7 @@ public class Misc {
     }
 
     public static Fi findSave(String name) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> file.extension().equals(saveExtension));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
         for (int i = 0; i < savesList.size; i++) {
             Fi save = savesList.get(i);
             if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
