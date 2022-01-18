@@ -1,7 +1,6 @@
 package pandorum.commands.server;
 
 import arc.Core;
-import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.game.Gamemode;
@@ -19,18 +18,6 @@ public class HostCommand {
             return;
         }
 
-        final Gamemode mode = args.length > 1 ?
-            Seq.select(
-                Gamemode.values(),
-                (enumValue) -> enumValue.name().equals(args[1])
-            ).firstOpt() :
-            Gamemode.survival;
-
-        if (mode == null) {
-            Log.err("Режим игры '@' не найден", args[1]);
-            return;
-        }
-
         Map map;
         if (args.length > 0) {
             map = findMap(args[0]);
@@ -41,6 +28,18 @@ public class HostCommand {
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
             Log.info("Случайным образом выбрана карта: '@'.", map.name());
+        }
+
+        Gamemode mode;
+        if (args.length > 1) {
+            try {
+                mode = Gamemode.valueOf(args[1]);
+            } catch (IllegalArgumentException e) {
+                Log.err("Режим игры '@' не найден.", args[1]);
+                return;
+            }
+        } else {
+            mode = Gamemode.survival;
         }
 
         Log.info("Загружаю карту...");
