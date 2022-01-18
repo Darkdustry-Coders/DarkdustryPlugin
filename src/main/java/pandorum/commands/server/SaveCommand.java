@@ -20,6 +20,6 @@ public class SaveCommand {
         Fi save = saveDirectory.child(Strings.format("@.@", args[0], saveExtension));
 
         Core.app.post(() -> SaveIO.save(save));
-        Log.info("Карта сохранена в @", save.getAbsolutePath());
+        Log.info("Карта сохранена в @", save.absolutePath());
     }
 }
