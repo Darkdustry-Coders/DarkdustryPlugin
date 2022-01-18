@@ -34,8 +34,9 @@ public class ConnectPacketHandler {
         String usid = packet.usid;
         String ip = con.address;
         String name = fixName(packet.name);
+        boolean isConnected = Groups.player.contains((Player player) -> player.ip() == ip);
 
-        if (con.hasBegunConnecting || uuid == null || usid == null || locale == null) {
+        if (con.hasBegunConnecting || isConnected || uuid == null || usid == null || locale == null) {
             con.kick(Bundle.format("kick.already-connected", findLocale(locale)), 0);
             return;
         }
