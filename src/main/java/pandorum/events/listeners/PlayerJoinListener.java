@@ -15,7 +15,7 @@ import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.*;
-import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.PluginVars.*;
 
 public class PlayerJoinListener {
 
