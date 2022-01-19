@@ -75,7 +75,9 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                 public void onComplete() {}
 
                 @Override
-                public void onError(Throwable t) {}
+                public void onError(Throwable t) {
+                    Log.err(t);
+                }
             });
         } catch (Exception e) {
             Log.err(e);
