@@ -25,6 +25,7 @@ public class PlayerLeaveListener {
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 
+        updateTimers.remove(event.player.uuid()).cancel();
         activeHistoryPlayers.remove(event.player.uuid());
         activeSpectatingPlayers.remove(event.player.uuid());
 
