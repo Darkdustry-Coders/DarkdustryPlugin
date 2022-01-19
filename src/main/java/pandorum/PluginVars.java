@@ -119,7 +119,7 @@ public class PluginVars {
 
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
-    public static final Interval interval = new Interval(2);
+    public static final Interval interval = new Interval();
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
