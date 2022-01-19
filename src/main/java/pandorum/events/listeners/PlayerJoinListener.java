@@ -20,11 +20,11 @@ import static pandorum.PluginVars.*;
 public class PlayerJoinListener {
 
     public static void call(final PlayerJoin event) {
-        Ranks.updateRank(event.player, rank -> {
-            event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString(), event.player.getInfo().lastName));
-            Log.info("@ зашел на сервер. [@]", event.player.name, event.player.uuid());
-            sendToChat("events.player.join", event.player.coloredName());
-            BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).build());
+        Ranks.updateName(event.player, name -> {
+            event.player.name(name);
+            Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
+            sendToChat("events.player.join", name);
+            BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(name))).build());
         });
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
