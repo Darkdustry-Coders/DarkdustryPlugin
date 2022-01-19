@@ -2,6 +2,7 @@ package pandorum.events.listeners;
 
 import arc.util.Log;
 import arc.util.Strings;
+import arc.util.Timer;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
@@ -20,11 +21,19 @@ public class PlayerJoinListener {
 
     public static void call(final PlayerJoin event) {
         Ranks.updateRank(event.player, rank -> {
-            event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString().toUpperCase(), event.player.getInfo().lastName));
+            event.player.name(Strings.format("@[#@]@", rank.tag, event.player.color.toString(), event.player.getInfo().lastName));
             Log.info("@ зашел на сервер. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
             BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).build());
         });
+
+        updateTimers.put(event.player.uuid(), Timer.schedule(() -> {
+            PlayerModel.find(event.player.uuid(), playerModel -> {
+                playerModel.playTime += 1000;
+                playerModel.save();
+                Ranks.updateName(event.player);
+            });
+        }, 0f, 1f));
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
