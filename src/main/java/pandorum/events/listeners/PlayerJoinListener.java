@@ -27,6 +27,8 @@ public class PlayerJoinListener {
             BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).build());
         });
 
+        if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
+
         updateTimers.put(event.player.uuid(), Timer.schedule(() -> {
             PlayerModel.find(event.player.uuid(), playerModel -> {
                 playerModel.playTime += 1000;
@@ -34,8 +36,6 @@ public class PlayerJoinListener {
                 Ranks.updateName(event.player);
             });
         }, 0f, 1f));
-
-        if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
         PlayerModel.find(event.player.uuid(), playerModel -> playerModel.hellomsg, playerInfo -> Call.menu(event.player.con,
                 MenuHandler.welcomeMenu,
