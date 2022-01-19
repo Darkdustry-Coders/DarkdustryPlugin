@@ -61,6 +61,10 @@ public class Ranks {
         updateRank(player, rank -> cons.get(Strings.format("@[#@]@", rank.tag, player.color.toString(), player.getInfo().lastName)));
     }
 
+    public static void updateName(Player player) {
+        updateName(player, name -> player.name(name));
+    }
+
     public static class Rank {
         public final String tag;
         public final String name;
