@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
+import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -106,6 +107,8 @@ public class PluginVars {
 
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
+
+    public static final ObjectMap<String, Task> updateTimers = new ObjectMap<>();
 
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
