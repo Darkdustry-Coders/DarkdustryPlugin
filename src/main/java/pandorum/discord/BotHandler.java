@@ -47,7 +47,7 @@ public class BotHandler {
         registerChannels();
         registerCommands();
 
-        Timer.schedule(() -> BotMain.client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 6f);
+        Timer.schedule(() -> client.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 1f);
     }
 
     public static void registerChannels() {
@@ -163,7 +163,7 @@ public class BotHandler {
                 maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(mapsList.get(i).name())).append("\n");
             }
 
-            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(BotMain.normalColor).author("Server maps", null, "https://cdn.iconscout.com/icon/free/png-256/map-and-location-2569358-2148268.png").title("Список карт сервера (страница " + (page + 1) + " из " + pages + ")").addField("Карты:", maps.toString(), false).build());
+            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(normalColor).author("Server maps", null, "https://cdn.iconscout.com/icon/free/png-256/map-and-location-2569358-2148268.png").title("Список карт сервера (страница " + (page + 1) + " из " + pages + ")").addField("Карты:", maps.toString(), false).build());
         });
 
         discordCommandHandler.<Message>register("players", "[страница]", "Посмотреть список игроков на сервере.", (args, msg) -> {
@@ -190,7 +190,7 @@ public class BotHandler {
                 players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(Groups.player.index(i).name)).append("\n");
             }
 
-            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(BotMain.normalColor).title("Список игроков на сервере (всего " + Groups.player.size() + ")").addField("Игроки:", players.toString(), false).build());
+            sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder().color(normalColor).title("Список игроков на сервере (всего " + Groups.player.size() + ")").addField("Игроки:", players.toString(), false).build());
         });
 
         discordCommandHandler.<Message>register("status", "Узнать статус сервера.", (args, msg) -> {
@@ -200,7 +200,7 @@ public class BotHandler {
             }
 
             sendEmbed(msg.getChannel().block(), EmbedCreateSpec.builder()
-                    .color(BotMain.successColor)
+                    .color(successColor)
                     .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
                     .title("Сервер онлайн.")
                     .addField("Игроков:", String.valueOf(Groups.player.size()), false)
