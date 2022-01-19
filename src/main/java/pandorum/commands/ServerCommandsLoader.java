@@ -35,4 +35,3 @@ public class ServerCommandsLoader {
         CommandsHelper.register(handler, "restart", "Restart the server.", RestartCommand::run);
     }
 }
-Save game state to a slot.
