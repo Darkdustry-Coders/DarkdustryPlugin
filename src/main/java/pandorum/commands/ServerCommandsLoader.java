@@ -28,8 +28,11 @@ public class ServerCommandsLoader {
         CommandsHelper.register(handler, "admin", "<add/remove> <uuid/username...>", "Make an online user admin.", AdminCommand::run);
         CommandsHelper.register(handler, "admins", "List of all admins.", AdminsListCommand::run);
         CommandsHelper.register(handler, "players", "List of all online players.", PlayersListCommand::run);
+        CommandsHelper.register(handler, "save", "<save...>", "Save game state to a slot.", SaveCommand::run);
+        CommandsHelper.register(handler, "load", "<save...>", "Load a save from a slot.", LoadCommand::run);
 
         CommandsHelper.register(handler, "despawn", "Kill all units.", DespawnCommand::run);
-        CommandsHelper.register(handler, "restart", "[carefully/force]", "Restart the server.", RestartCommand::run);
+        CommandsHelper.register(handler, "restart", "Restart the server.", RestartCommand::run);
     }
 }
+Save game state to a slot.
