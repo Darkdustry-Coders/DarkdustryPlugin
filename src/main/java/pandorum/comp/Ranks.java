@@ -57,8 +57,8 @@ public class Ranks {
         });
     }
 
-    public static void updateName(Player player) {
-        updateRank(player, rank -> player.name(Strings.format("@[#@]@", rank.tag, player.color.toString().toUpperCase(), player.getInfo().lastName)));
+    public static void updateName(Player player, Cons<String> cons) {
+        updateRank(player, rank -> cons.get(Strings.format("@[#@]@", rank.tag, player.color.toString(), player.getInfo().lastName)));
     }
 
     public static class Rank {
