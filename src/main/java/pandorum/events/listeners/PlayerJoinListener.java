@@ -14,6 +14,7 @@ import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.*;
+import static pandorum.PluginVars.discordServerUrl;
 
 public class PlayerJoinListener {
 
@@ -30,7 +31,7 @@ public class PlayerJoinListener {
         PlayerModel.find(event.player.uuid(), playerModel -> playerModel.hellomsg, playerInfo -> Call.menu(event.player.con,
                 MenuHandler.welcomeMenu,
                 Bundle.format("events.welcome.header", findLocale(event.player.locale)),
-                Bundle.format("events.welcome.message", findLocale(event.player.locale)),
+                Bundle.format("events.welcome.message", findLocale(event.player.locale), discordServerUrl),
                 new String[][] {{Bundle.format("events.welcome.ok", findLocale(event.player.locale))}, {Bundle.format("events.welcome.disable", findLocale(event.player.locale))}}
         ));
 
