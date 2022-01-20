@@ -16,7 +16,7 @@ public class StatusCommand {
 
             if (state.rules.waves) Log.info("  @ секунд до следующей волны.", (int) (state.wavetime / 60));
             Log.info("  @ юнитов / @ вражеских юнитов.", Groups.unit.size(), state.enemies);
-            Log.info("  @ TPS, @ MB памяти занято.", state.serverTps == -1 ? 60 : state.serverTps, Core.app.getJavaHeap() / 1024 / 1024);
+            Log.info("  @ TPS, @ MB памяти занято.", Core.graphics.framesPerSecond, Core.app.getJavaHeap() / 1024 / 1024);
 
             if (Groups.player.size() > 0) {
                 Log.info("  Игроки: (@)", Groups.player.size());
