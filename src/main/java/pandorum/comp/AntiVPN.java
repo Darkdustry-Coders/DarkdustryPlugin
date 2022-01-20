@@ -2,6 +2,7 @@ package pandorum.comp;
 
 import arc.func.Cons;
 import arc.struct.Seq;
+import arc.util.Log;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import okhttp3.Request.Builder;
@@ -34,7 +35,11 @@ public class AntiVPN {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JsonObject ipInfo = gson.fromJson(response.body().string(), JsonObject.class).getAsJsonObject(ip);
 
-                boolean isDangerous = ipInfo.get("risk").getAsInt() > 66 || Seq.with("tor", "socks", "socks4", "socks4a", "socks5", "socks5h", "shadowsocks", "openvpn", "vpn").contains(ipInfo.get("type").getAsString().toLowerCase());
+                int risk = ipInfo.get("risk").getAsInt();
+                String type = ipInfo.get("type").getAsString();
+                boolean isDangerous = risk > 66 || Seq.with("tor", "openvpn", "vpn").contains(t -> t.equalsIgnoreCase(type));
+
+                Log.info("@, @, @", risk, type, isDangerous);
 
                 antiVpnCache.put(ip, isDangerous);
                 cons.get(isDangerous);
