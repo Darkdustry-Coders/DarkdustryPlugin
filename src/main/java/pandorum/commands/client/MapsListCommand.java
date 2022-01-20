@@ -21,7 +21,7 @@ public class MapsListCommand {
 
         Seq<Map> mapsList = maps.customMaps();
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-        int pages = Mathf.ceil(mapsList.size / 6.0f);
+        int pages = Mathf.ceil(mapsList.size / 8f);
 
         if (--page >= pages || page < 0) {
             bundled(player, "commands.under-page", pages);
@@ -30,7 +30,7 @@ public class MapsListCommand {
 
         StringBuilder result = new StringBuilder(Bundle.format("commands.maps.page", findLocale(player.locale), page + 1, pages));
 
-        for (int i = 6 * page; i < Math.min(6 * (page + 1), mapsList.size); i++) {
+        for (int i = 8 * page; i < Math.min(8 * (page + 1), mapsList.size); i++) {
             Map map = mapsList.get(i);
             result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name());
         }
