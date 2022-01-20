@@ -20,7 +20,7 @@ public class PlayersListCommand {
 
         Seq<Player> playersList = Groups.player.copy(new Seq<>());
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-        int pages = Mathf.ceil(playersList.size / 6.0f);
+        int pages = Mathf.ceil(playersList.size / 8f);
 
         if (--page >= pages || page < 0) {
             bundled(player, "commands.under-page", pages);
@@ -29,7 +29,7 @@ public class PlayersListCommand {
 
         StringBuilder result = new StringBuilder(Bundle.format("commands.players.page", findLocale(player.locale), page + 1, pages));
 
-        for (int i = 6 * page; i < Math.min(6 * (page + 1), playersList.size); i++) {
+        for (int i = 8 * page; i < Math.min(8 * (page + 1), playersList.size); i++) {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
             if (p.admin) result.append(Iconc.admin).append(" ");
