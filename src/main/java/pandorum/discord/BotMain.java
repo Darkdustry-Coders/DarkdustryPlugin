@@ -36,10 +36,7 @@ public class BotMain {
             client.on(MessageCreateEvent.class).subscribe(event -> {
                 Message message = event.getMessage();
                 Member member = message.getAuthorAsMember().block();
-                if (message.getContent().startsWith(BotHandler.discordCommandHandler.getPrefix())) {
-                    BotHandler.handleMessage(message);
-                    return;
-                }
+                BotHandler.handleMessage(message);
 
                 if (message.getChannelId().equals(BotHandler.botChannel.getId()) && member != null && !member.isBot() && !message.getContent().isBlank()) {
                     sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
