@@ -39,7 +39,7 @@ public class MapsListCommand {
         sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder()
                 .color(normalColor)
                 .title(Strings.format("Список карт сервера (страница @ из @)", page + 1, pages))
-                .addField("Карты:", maps.toString(), false)
+                .addField(Strings.format("Всего карт: @", mapsList.size), maps.toString(), false)
                 .build()
         );
     }

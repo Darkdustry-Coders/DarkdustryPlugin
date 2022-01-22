@@ -1,7 +1,12 @@
 package pandorum.comp;
 
 import arc.struct.StringMap;
+import arc.util.Structs;
+import mindustry.game.Team;
 import mindustry.gen.Iconc;
+
+import static mindustry.Vars.content;
+import static pandorum.Misc.colorizedTeam;
 
 public class Icons {
 
@@ -353,5 +358,23 @@ public class Icons {
 
     public static String get(String key, String defaultValue) {
         return icons.get(key, defaultValue);
+    }
+
+    public static String unitsList() {
+        StringBuilder units = new StringBuilder();
+        content.units().each(unit -> units.append(" ").append(get(unit.name)).append(unit.name));
+        return units.toString();
+    }
+
+    public static String itemsList() {
+        StringBuilder items = new StringBuilder();
+        content.items().each(item -> items.append(" ").append(get(item.name)).append(item.name));
+        return items.toString();
+    }
+
+    public static String teamsList() {
+        StringBuilder teams = new StringBuilder();
+        Structs.each(team -> teams.append("\n[gold] - [white]").append(colorizedTeam(team)), Team.baseTeams);
+        return teams.toString();
     }
 }

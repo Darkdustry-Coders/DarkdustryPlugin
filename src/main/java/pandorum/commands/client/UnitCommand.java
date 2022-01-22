@@ -5,16 +5,13 @@ import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 
-import static mindustry.Vars.content;
 import static pandorum.Misc.*;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {
         UnitType type = findUnit(args[0]);
         if (type == null) {
-            StringBuilder units = new StringBuilder();
-            content.units().each(u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
-            bundled(player, "commands.unit-not-found", units.toString());
+            bundled(player, "commands.unit-not-found", Icons.unitsList());
             return;
         }
 

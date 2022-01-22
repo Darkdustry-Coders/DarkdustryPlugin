@@ -1,13 +1,11 @@
 package pandorum.commands.client;
 
 import arc.util.Strings;
-import arc.util.Structs;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 
-import static mindustry.Vars.content;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.maxSpawnAmount;
 
@@ -20,9 +18,7 @@ public class SpawnCommand {
 
         UnitType type = findUnit(args[0]);
         if (type == null) {
-            StringBuilder units = new StringBuilder();
-            content.units().each(u -> units.append(" ").append(Icons.get(u.name)).append(u.name));
-            bundled(player, "commands.unit-not-found", units.toString());
+            bundled(player, "commands.unit-not-found", Icons.unitsList());
             return;
         }
 
@@ -34,9 +30,7 @@ public class SpawnCommand {
 
         Team team = args.length > 2 ? findTeam(args[2]) : player.team();
         if (team == null) {
-            StringBuilder teams = new StringBuilder();
-            Structs.each(t -> teams.append("\n[gold] - [white]").append(colorizedTeam(t)), Team.baseTeams);
-            bundled(player, "commands.team-not-found", teams.toString());
+            bundled(player, "commands.team-not-found", Icons.teamsList());
             return;
         }
 

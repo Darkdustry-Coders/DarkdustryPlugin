@@ -1,10 +1,12 @@
 package pandorum.commands.discord;
 
 import arc.math.Mathf;
+import arc.struct.Seq;
 import arc.util.Strings;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 
 import static pandorum.discord.Bot.*;
 
@@ -15,28 +17,29 @@ public class PlayersListCommand {
             return;
         }
 
-        if (Groups.player.isEmpty()) {
+        Seq<Player> playersList = Groups.player.copy(new Seq<>());
+        if (playersList.isEmpty()) {
             err(message.getChannel().block(), "На сервере нет игроков.", "Список игроков пуст.");
             return;
         }
 
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-        int pages = Mathf.ceil(Groups.player.size() / 20f);
+        int pages = Mathf.ceil(playersList.size / 20f);
 
         if (--page >= pages || page < 0) {
-            err(message.getChannel().block(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
+            err(message.getChannel().block(), "Указана неверная страница списка игроков.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
         StringBuilder players = new StringBuilder();
-        for (int i = 20 * page; i < Math.min(20 * (page + 1), Groups.player.size()); i++) {
-            players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(Groups.player.index(i).name)).append("\n");
+        for (int i = 20 * page; i < Math.min(20 * (page + 1), playersList.size); i++) {
+            players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(playersList.get(i).name)).append("\n");
         }
 
         sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder()
                 .color(normalColor)
                 .title(Strings.format("Список игроков сервера (страница @ из @)", page + 1, pages))
-                .addField("Игроки:", players.toString(), false)
+                .addField(Strings.format("Всего игроков: @", playersList.size), players.toString(), false)
                 .build()
         );
     }

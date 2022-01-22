@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import arc.util.Structs;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -20,9 +19,7 @@ public class CoreCommand {
 
         Team team = args.length > 1 ? findTeam(args[1]) : player.team();
         if (team == null) {
-            StringBuilder teams = new StringBuilder();
-            Structs.each(t -> teams.append("\n[gold] - [white]").append(colorizedTeam(t)), Team.baseTeams);
-            bundled(player, "commands.team-not-found", teams.toString());
+            bundled(player, "commands.team-not-found", Icons.teamsList());
             return;
         }
 

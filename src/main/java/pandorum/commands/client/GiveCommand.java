@@ -5,7 +5,6 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.comp.Icons;
 
-import static mindustry.Vars.content;
 import static mindustry.Vars.state;
 import static pandorum.Misc.bundled;
 import static pandorum.Misc.findItem;
@@ -19,9 +18,7 @@ public class GiveCommand {
 
         Item item = findItem(args[0]);
         if (item == null) {
-            StringBuilder items = new StringBuilder();
-            content.items().each(i -> items.append(" ").append(Icons.get(i.name)).append(i.name));
-            bundled(player, "commands.item-not-found", items.toString());
+            bundled(player, "commands.item-not-found", Icons.itemsList());
             return;
         }
 

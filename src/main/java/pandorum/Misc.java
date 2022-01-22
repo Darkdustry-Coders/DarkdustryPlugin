@@ -40,24 +40,12 @@ public class Misc {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        for (int i = 0; i < mapsList.size; i++) {
-            Map map = mapsList.get(i);
-            if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name)) {
-                return map;
-            }
-        }
-        return null;
+        return Strings.canParseInt(name) ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        for (int i = 0; i < savesList.size; i++) {
-            Fi save = savesList.get(i);
-            if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
-                return save;
-            }
-        }
-        return null;
+        return Strings.canParseInt(name) ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name));
     }
 
     public static Locale findLocale(String name) {
