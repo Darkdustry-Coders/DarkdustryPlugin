@@ -19,7 +19,7 @@ public class SavesListCommand {
             return;
         }
 
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(savesList.size / 8f);
 

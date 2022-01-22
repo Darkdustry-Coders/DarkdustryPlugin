@@ -9,19 +9,19 @@ import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
+import static pandorum.discord.BotHandler.errorColor;
+import static pandorum.discord.BotHandler.sendEmbed;
 
 public class PlayerLeaveListener {
 
     public static void call(final PlayerLeave event) {
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
         sendToChat("events.player.leave", event.player.coloredName());
-        BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name))).build());
+        sendEmbed(EmbedCreateSpec.builder().color(errorColor).title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name))).build());
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 

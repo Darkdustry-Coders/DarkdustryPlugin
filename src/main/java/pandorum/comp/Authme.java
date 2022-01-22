@@ -9,12 +9,11 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 import static pandorum.PluginVars.loginWaiting;
+import static pandorum.discord.BotHandler.*;
 
 public class Authme {
 
@@ -23,9 +22,9 @@ public class Authme {
     public static final Button check = Button.primary("check", "Информация");
 
     public static void sendConfirmation(Player player) {
-        Message message = BotHandler.adminChannel.createMessage(MessageCreateSpec.builder()
+        Message message = adminChannel.createMessage(MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()
-                        .color(BotMain.normalColor)
+                        .color(normalColor)
                         .author("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
                         .title("Запрос на выдачу прав администратора.")
                         .addField("Никнейм:", player.name, true)
@@ -38,7 +37,7 @@ public class Authme {
     }
 
     public static void confirm(Message message, ButtonInteractionEvent event) {
-        BotHandler.text(message.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
+        text(message.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
 
         netServer.admins.adminPlayer(player.uuid(), player.usid());
@@ -48,7 +47,7 @@ public class Authme {
     }
 
     public static void deny(Message message, ButtonInteractionEvent event) {
-        BotHandler.text(message.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
+        text(message.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
 
         bundled(player, "commands.login.ignore");

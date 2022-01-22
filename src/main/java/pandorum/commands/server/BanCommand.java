@@ -3,7 +3,6 @@ package pandorum.commands.server;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.Packets.KickReason;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;

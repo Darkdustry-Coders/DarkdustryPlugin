@@ -6,10 +6,10 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.comp.Translator;
-import pandorum.discord.BotHandler;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.netServer;
+import static pandorum.discord.BotHandler.text;
 
 public class ChatFilter {
 
@@ -38,7 +38,7 @@ public class ChatFilter {
             });
         }));
 
-        BotHandler.text("**@**: @", Strings.stripColors(author.name), text);
+        text("**@**: @", Strings.stripColors(author.name), text);
         return null;
     }
 

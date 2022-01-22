@@ -8,7 +8,6 @@ import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.*;
-import static pandorum.Misc.bundled;
 
 public class RankCommand {
     public static void run(final String[] args, final Player player) {

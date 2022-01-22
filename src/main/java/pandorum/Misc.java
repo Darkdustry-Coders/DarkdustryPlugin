@@ -19,6 +19,9 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 import pandorum.struct.Tuple2;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
@@ -47,7 +50,7 @@ public class Misc {
     }
 
     public static Fi findSave(String name) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
         for (int i = 0; i < savesList.size; i++) {
             Fi save = savesList.get(i);
             if ((Strings.canParseInt(name) && i == Strings.parseInt(name) - 1) || save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name)) {
@@ -131,5 +134,15 @@ public class Misc {
 
     public static ServerControl getServerControl() {
         return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
+    }
+
+    public static InputStream download(String url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
+            return connection.getInputStream();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

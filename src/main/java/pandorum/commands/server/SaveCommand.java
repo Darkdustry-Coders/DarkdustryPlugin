@@ -6,9 +6,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.io.SaveIO;
 
-import static mindustry.Vars.saveDirectory;
-import static mindustry.Vars.saveExtension;
-import static mindustry.Vars.state;
+import static mindustry.Vars.*;
 
 public class SaveCommand {
     public static void run(final String[] args) {

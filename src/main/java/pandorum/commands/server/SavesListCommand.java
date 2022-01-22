@@ -9,7 +9,7 @@ import static mindustry.Vars.saveDirectory;
 
 public class SavesListCommand {
     public static void run(final String[] args) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(file -> SaveIO.isSaveValid(file));
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
         if (savesList.isEmpty()) {
             Log.info("На сервере нет ни одного сохранения.");
         } else {

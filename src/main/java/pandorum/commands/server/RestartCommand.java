@@ -4,15 +4,15 @@ import arc.util.Log;
 import arc.util.Time;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.net.Packets.KickReason;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 
 import static mindustry.Vars.netServer;
+import static pandorum.discord.BotHandler.errorColor;
+import static pandorum.discord.BotHandler.sendEmbed;
 
 public class RestartCommand {
     public static void run(final String[] args) {
         Log.info("Сервер перезапускается...");
-        BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.errorColor).title("Сервер выключается для перезапуска!").build());
+        sendEmbed(EmbedCreateSpec.builder().color(errorColor).title("Сервер выключается для перезапуска!").build());
 
         netServer.kickAll(KickReason.serverRestarting);
         Time.runTask(60f, () -> System.exit(2));

@@ -7,7 +7,7 @@ import pandorum.events.handlers.MenuHandler;
 
 import static pandorum.Misc.findLocale;
 
-public class ARTVCommand {
+public class ArtvCommand {
     public static void run(final String[] args, final Player player) {
         Call.menu(player.con,
                 MenuHandler.artvMenu,

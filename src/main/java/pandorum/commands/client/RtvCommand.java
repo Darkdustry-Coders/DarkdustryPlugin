@@ -12,7 +12,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesRTV;
 
-public class RTVCommand {
+public class RtvCommand {
     public static void run(final String[] args, final Player player) {
         if (votesRTV.contains(player.uuid())) {
             bundled(player, "commands.already-voted");

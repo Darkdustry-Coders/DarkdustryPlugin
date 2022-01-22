@@ -10,7 +10,7 @@ import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesVNW;
 
-public class VNWCommand {
+public class VnwCommand {
     public static void run(final String[] args, final Player player) {
         if (votesVNW.contains(player.uuid())) {
             bundled(player, "commands.already-voted");

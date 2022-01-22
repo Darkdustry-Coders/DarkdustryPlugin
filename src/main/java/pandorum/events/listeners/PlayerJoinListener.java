@@ -9,13 +9,14 @@ import mindustry.gen.Call;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
-import pandorum.discord.BotHandler;
-import pandorum.discord.BotMain;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
 import static pandorum.Misc.*;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.PluginVars.updateTimers;
+import static pandorum.discord.BotHandler.sendEmbed;
+import static pandorum.discord.BotHandler.successColor;
 
 public class PlayerJoinListener {
 
@@ -24,7 +25,7 @@ public class PlayerJoinListener {
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
             sendToChat("events.player.join", name);
-            BotHandler.sendEmbed(EmbedCreateSpec.builder().color(BotMain.successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(name))).build());
+            sendEmbed(EmbedCreateSpec.builder().color(successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(name))).build());
         });
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
