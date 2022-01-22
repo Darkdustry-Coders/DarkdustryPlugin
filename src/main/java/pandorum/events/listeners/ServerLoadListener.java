@@ -4,8 +4,8 @@ import arc.util.Log;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.ServerLoadEvent;
 
-import static pandorum.discord.BotHandler.normalColor;
-import static pandorum.discord.BotHandler.sendEmbed;
+import static pandorum.discord.Bot.normalColor;
+import static pandorum.discord.Bot.sendEmbed;
 
 public class ServerLoadListener {
 

@@ -9,7 +9,7 @@ import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.netServer;
-import static pandorum.discord.BotHandler.text;
+import static pandorum.discord.Bot.text;
 
 public class ChatFilter {
 

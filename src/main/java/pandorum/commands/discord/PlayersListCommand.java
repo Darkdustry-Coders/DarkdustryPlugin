@@ -6,7 +6,7 @@ import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.gen.Groups;
 
-import static pandorum.discord.BotHandler.*;
+import static pandorum.discord.Bot.*;
 
 public class PlayersListCommand {
     public static void run(final String[] args, final Message message) {

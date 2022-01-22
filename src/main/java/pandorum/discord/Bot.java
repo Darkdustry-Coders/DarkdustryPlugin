@@ -4,9 +4,15 @@ import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
+import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Timer;
 import discord4j.common.util.Snowflake;
+import discord4j.core.DiscordClient;
+import discord4j.core.DiscordClientBuilder;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
@@ -16,30 +22,70 @@ import discord4j.core.object.presence.Status;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.MessageCreateSpec;
+import discord4j.rest.request.RouteMatcher;
+import discord4j.rest.response.ResponseFunction;
+import discord4j.rest.route.Routes;
+import discord4j.rest.util.AllowedMentions;
 import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import pandorum.commands.DiscordCommandsLoader;
+import pandorum.comp.Authme;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.config;
-import static pandorum.discord.BotMain.gatewayDiscordClient;
+import static pandorum.PluginVars.loginWaiting;
 
-public class BotHandler {
+public class Bot {
 
     public static final CommandHandler discordHandler = new CommandHandler(config.discordBotPrefix);
     public static final Color normalColor = Color.ORANGE, successColor = Color.GREEN, errorColor = Color.RED;
 
+    public static DiscordClient discordClient;
+    public static GatewayDiscordClient gatewayDiscordClient;
+
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
-        DiscordCommandsLoader.registerDiscordCommands(discordHandler);
+        try {
+            discordClient = DiscordClientBuilder.create(config.discordBotToken).onClientResponse(ResponseFunction.emptyIfNotFound()).onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400)).setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();
+            gatewayDiscordClient = discordClient.login().block();
 
-        botChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordBotChannelID)).block();
-        adminChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
+            gatewayDiscordClient.on(MessageCreateEvent.class).subscribe(event -> {
+                Message message = event.getMessage();
+                Member member = message.getAuthorAsMember().block();
+                handleMessage(message);
 
-        Timer.schedule(() -> gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 1f);
+                if (message.getChannelId().equals(botChannel.getId()) && member != null && !member.isBot() && !message.getContent().isBlank()) {
+                    sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
+                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
+                }
+            }, e -> {});
+
+            gatewayDiscordClient.on(ButtonInteractionEvent.class).subscribe(event -> {
+                Message message = event.getMessage().get();
+                if (loginWaiting.containsKey(message)) {
+                    switch (event.getCustomId()) {
+                        case "confirm" -> Authme.confirm(message, event);
+                        case "deny" -> Authme.deny(message, event);
+                        case "check" -> Authme.check(message, event);
+                    }
+                }
+            }, e -> {});
+
+            botChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordBotChannelID)).block();
+            adminChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
+
+            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
+            Timer.schedule(() -> gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 1f);
+
+            Log.info("[Darkdustry] Бот успешно запущен...");
+        } catch (Exception e) {
+            Log.err("[Darkdustry] Ошибка запуска бота...");
+            throw new RuntimeException(e);
+        }
     }
 
     public static void handleMessage(Message message) {

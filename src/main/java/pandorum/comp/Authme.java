@@ -13,7 +13,7 @@ import mindustry.net.Administration.PlayerInfo;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.bundled;
 import static pandorum.PluginVars.loginWaiting;
-import static pandorum.discord.BotHandler.*;
+import static pandorum.discord.Bot.*;
 
 public class Authme {
 

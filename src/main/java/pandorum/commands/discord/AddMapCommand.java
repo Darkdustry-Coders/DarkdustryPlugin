@@ -9,8 +9,8 @@ import java.io.FileOutputStream;
 
 import static mindustry.Vars.*;
 import static pandorum.Misc.download;
-import static pandorum.discord.BotHandler.err;
-import static pandorum.discord.BotHandler.text;
+import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.text;
 
 public class AddMapCommand {
     public static void run(final String[] args, final Message message) {

@@ -6,8 +6,8 @@ import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.net.Packets.KickReason;
 
 import static mindustry.Vars.netServer;
-import static pandorum.discord.BotHandler.errorColor;
-import static pandorum.discord.BotHandler.sendEmbed;
+import static pandorum.discord.Bot.errorColor;
+import static pandorum.discord.Bot.sendEmbed;
 
 public class RestartCommand {
     public static void run(final String[] args) {

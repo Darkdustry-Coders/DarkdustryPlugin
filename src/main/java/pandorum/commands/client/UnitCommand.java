@@ -28,7 +28,6 @@ public class UnitCommand {
         target.unit(unit);
         unit.spawnedByCore(true);
         bundled(target, "commands.admin.unit.success", Icons.get(type.name));
-        if (target != player)
-            bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
+        if (target != player) bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
     }
 }

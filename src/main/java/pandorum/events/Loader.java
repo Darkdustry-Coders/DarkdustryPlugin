@@ -10,7 +10,7 @@ import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Icons;
 import pandorum.comp.Translator;
-import pandorum.discord.BotMain;
+import pandorum.discord.Bot;
 import pandorum.events.filters.ActionFilter;
 import pandorum.events.filters.ChatFilter;
 import pandorum.events.handlers.ConnectHandler;
@@ -67,7 +67,7 @@ public class Loader {
 
         MenuHandler.init();
         Icons.init();
-        BotMain.start();
+        Bot.init();
 
         Log.info("[Darkdustry] Инициализация плагина завершена...");
     }

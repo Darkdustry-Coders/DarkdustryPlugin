@@ -4,8 +4,8 @@ import discord4j.core.object.entity.Message;
 import mindustry.maps.Map;
 
 import static pandorum.Misc.findMap;
-import static pandorum.discord.BotHandler.err;
-import static pandorum.discord.BotHandler.sendFile;
+import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.sendFile;
 
 public class GetMapCommand {
     public static void run(final String[] args, final Message message) {

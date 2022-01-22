@@ -16,8 +16,8 @@ import static mindustry.Vars.netServer;
 import static pandorum.Misc.adminCheck;
 import static pandorum.PluginVars.adminOnlyCommands;
 import static pandorum.PluginVars.config;
-import static pandorum.discord.BotHandler.adminCheck;
-import static pandorum.discord.BotHandler.err;
+import static pandorum.discord.Bot.adminCheck;
+import static pandorum.discord.Bot.err;
 
 public class CommandsHelper {
 

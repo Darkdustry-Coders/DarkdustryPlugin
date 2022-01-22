@@ -13,8 +13,8 @@ import pandorum.comp.Effects;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
-import static pandorum.discord.BotHandler.errorColor;
-import static pandorum.discord.BotHandler.sendEmbed;
+import static pandorum.discord.Bot.errorColor;
+import static pandorum.discord.Bot.sendEmbed;
 
 public class PlayerLeaveListener {
 

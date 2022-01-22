@@ -15,8 +15,8 @@ import pandorum.models.PlayerModel;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.updateTimers;
-import static pandorum.discord.BotHandler.sendEmbed;
-import static pandorum.discord.BotHandler.successColor;
+import static pandorum.discord.Bot.sendEmbed;
+import static pandorum.discord.Bot.successColor;
 
 public class PlayerJoinListener {
 

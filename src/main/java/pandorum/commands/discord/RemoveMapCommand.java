@@ -5,8 +5,8 @@ import mindustry.maps.Map;
 
 import static mindustry.Vars.maps;
 import static pandorum.Misc.findMap;
-import static pandorum.discord.BotHandler.err;
-import static pandorum.discord.BotHandler.text;
+import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.text;
 
 public class RemoveMapCommand {
     public static void run(final String[] args, final Message message) {

@@ -2,8 +2,8 @@ package pandorum.commands.discord;
 
 import discord4j.core.object.entity.Message;
 
-import static pandorum.discord.BotHandler.discordHandler;
-import static pandorum.discord.BotHandler.info;
+import static pandorum.discord.Bot.discordHandler;
+import static pandorum.discord.Bot.info;
 
 public class HelpCommand {
     public static void run(final String[] args, final Message message) {
