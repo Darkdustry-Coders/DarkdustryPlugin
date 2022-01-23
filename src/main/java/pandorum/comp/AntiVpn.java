@@ -1,7 +1,6 @@
 package pandorum.comp;
 
 import arc.func.Cons;
-import arc.struct.Seq;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import okhttp3.Request.Builder;
@@ -11,7 +10,7 @@ import java.io.IOException;
 
 import static pandorum.PluginVars.*;
 
-public class AntiVPN {
+public class AntiVpn {
 
     private static final Builder antiVpnRequest = new Builder().addHeader("accept", "application/json");
 
@@ -36,7 +35,7 @@ public class AntiVPN {
 
                 int risk = ipInfo.get("risk").getAsInt();
                 String type = ipInfo.get("type").getAsString();
-                boolean isDangerous = risk > 66 || Seq.with("tor", "openvpn", "vpn").contains(t -> t.equalsIgnoreCase(type));
+                boolean isDangerous = risk > 66 || type.equalsIgnoreCase("vpn") || type.equalsIgnoreCase("openvpn");
 
                 antiVpnCache.put(ip, isDangerous);
                 cons.get(isDangerous);
