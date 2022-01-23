@@ -115,7 +115,7 @@ public class PluginVars {
 
     public static final ObjectMap<String, Boolean> antiVpnCache = new ObjectMap<>();
 
-    public static final Seq<String> votesRTV = new Seq<>(), votesVNW = new Seq<>(), activeHistoryPlayers = new Seq<>();
+    public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 

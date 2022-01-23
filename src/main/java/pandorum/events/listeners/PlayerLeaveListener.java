@@ -42,12 +42,12 @@ public class PlayerLeaveListener {
             }
         }
 
-        if (votesRTV.remove(event.player.uuid())) {
-            sendToChat("commands.rtv.left", event.player.coloredName(), votesRTV.size, Mathf.ceil(voteRatio * Groups.player.size()));
+        if (votesRtv.remove(event.player.uuid())) {
+            sendToChat("commands.rtv.left", event.player.coloredName(), votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
 
-        if (votesVNW.remove(event.player.uuid())) {
-            sendToChat("commands.vnw.left", event.player.coloredName(), votesVNW.size, Mathf.ceil(voteRatio * Groups.player.size()));
+        if (votesVnw.remove(event.player.uuid())) {
+            sendToChat("commands.vnw.left", event.player.coloredName(), votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
     }
 }

@@ -77,10 +77,9 @@ public class Bot {
 
             botChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordBotChannelID)).block();
             adminChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
-
-            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
             Timer.schedule(() -> gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 1f);
 
+            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");

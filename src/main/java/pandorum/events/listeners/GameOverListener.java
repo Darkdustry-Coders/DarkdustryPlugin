@@ -15,8 +15,8 @@ public class GameOverListener {
         }));
 
         votesSurrender.clear();
-        votesRTV.clear();
-        votesVNW.clear();
+        votesRtv.clear();
+        votesVnw.clear();
 
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();
