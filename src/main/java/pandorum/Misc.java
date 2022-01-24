@@ -115,9 +115,9 @@ public class Misc {
     public static Tuple2<String, Integer> hubIp() {
         if (config.hubIp.contains(":")) {
             String[] parts = config.hubIp.split(":");
-            return Tuple2.of(parts[0], Strings.parseInt(parts[1], port));
+            return new Tuple2(parts[0], Strings.parseInt(parts[1], port));
         }
-        return Tuple2.of(config.hubIp, port);
+        return new Tuple2(config.hubIp, port);
     }
 
     public static ServerControl getServerControl() {
