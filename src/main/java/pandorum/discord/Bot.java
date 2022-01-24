@@ -106,8 +106,8 @@ public class Bot {
      * Различные методы для отправки сообщений и эмбедов.
      */
 
-    public static void updateStatus() {
-        gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {});
+    public static void updateBotStatus() {
+        gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(Strings.format("Игроков на сервере: @", Groups.player.size())))).subscribe(null, e -> {});
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {

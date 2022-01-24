@@ -2,13 +2,16 @@ package pandorum.events.listeners;
 
 import arc.util.Log;
 import arc.util.Strings;
+import arc.util.Time;
 import arc.util.Timer;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
+import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
@@ -29,13 +32,11 @@ public class PlayerJoinListener {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
-        updateTimers.put(event.player.uuid(), Timer.schedule(() -> {
-            PlayerModel.find(event.player.uuid(), playerModel -> {
-                playerModel.playTime += 1000;
-                playerModel.save();
-                Ranks.updateName(event.player);
-            });
-        }, 0f, 1f));
+        updateTimers.put(event.player.uuid(), Timer.schedule(() -> PlayerModel.find(event.player.uuid(), playerModel -> {
+            playerModel.playTime += 1000;
+            playerModel.save();
+            Ranks.updateName(event.player);
+        }), 0f, 1f));
 
         PlayerModel.find(event.player.uuid(), playerModel -> playerModel.hellomsg, playerInfo -> Call.menu(event.player.con,
                 MenuHandler.welcomeMenu,
@@ -46,6 +47,6 @@ public class PlayerJoinListener {
 
         bundled(event.player, "events.motd");
 
-        updateStatus();
+        Time.runTask(30f, Bot::updateBotStatus);
     }
 }

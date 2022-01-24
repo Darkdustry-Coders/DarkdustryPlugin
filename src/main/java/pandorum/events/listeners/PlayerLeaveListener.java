@@ -4,11 +4,13 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
+import arc.util.Time;
 import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
+import pandorum.discord.Bot;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
@@ -49,6 +51,6 @@ public class PlayerLeaveListener {
             sendToChat("commands.vnw.left", event.player.coloredName(), votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
 
-        updateStatus();
+        Time.runTask(30f, Bot::updateBotStatus);
     }
 }
