@@ -17,7 +17,7 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
-import pandorum.struct.Tuple2;
+import reactor.util.function.Tuple2;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
