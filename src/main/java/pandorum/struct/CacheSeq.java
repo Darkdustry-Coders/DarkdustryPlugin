@@ -79,7 +79,7 @@ public class CacheSeq<T> extends Seq<T> {
     public void cleanUp() {
         Tuple2<T, Long> t;
         while ((t = writeQueue.last()) != null && isExpired(t.getT2())) {
-            remove(t.getT2());
+            remove(t.getT1());
         }
     }
 
