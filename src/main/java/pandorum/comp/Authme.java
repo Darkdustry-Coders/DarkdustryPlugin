@@ -37,7 +37,7 @@ public class Authme {
     }
 
     public static void confirm(Message message, ButtonInteractionEvent event) {
-        text(message.getChannel().block(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
+        text(message, "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
 
         netServer.admins.adminPlayer(player.uuid(), player.usid());
@@ -47,7 +47,7 @@ public class Authme {
     }
 
     public static void deny(Message message, ButtonInteractionEvent event) {
-        text(message.getChannel().block(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
+        text(message, "Запрос игрока **@** был отклонен **@**", Strings.stripColors(loginWaiting.get(message).getInfo().lastName), event.getInteraction().getUser().getUsername());
         Player player = loginWaiting.remove(message);
 
         bundled(player, "commands.login.ignore");

@@ -12,14 +12,13 @@ import static pandorum.discord.Bot.*;
 public class StatusCommand {
     public static void run(final String[] args, final Message message) {
         if (state.isMenu()) {
-            err(message.getChannel().block(), "Сервер отключен.", "Попросите администраторов запустить его.");
+            err(message, "Сервер отключен.", "Попросите администраторов запустить его.");
             return;
         }
 
-        sendEmbed(message.getChannel().block(), EmbedCreateSpec.builder()
+        sendEmbed(message, EmbedCreateSpec.builder()
                 .color(successColor)
-                .author("Статус сервера", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
-                .title("Сервер онлайн.")
+                .title("Статус сервера:")
                 .addField("Игроков:", String.valueOf(Groups.player.size()), false)
                 .addField("Карта:", state.map.name(), false)
                 .addField("Волна:", String.valueOf(state.wave), false)

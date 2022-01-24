@@ -13,8 +13,7 @@ import pandorum.comp.Effects;
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
-import static pandorum.discord.Bot.errorColor;
-import static pandorum.discord.Bot.sendEmbed;
+import static pandorum.discord.Bot.*;
 
 public class PlayerLeaveListener {
 
@@ -49,5 +48,7 @@ public class PlayerLeaveListener {
         if (votesVnw.remove(event.player.uuid())) {
             sendToChat("commands.vnw.left", event.player.coloredName(), votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
+
+        updateStatus();
     }
 }

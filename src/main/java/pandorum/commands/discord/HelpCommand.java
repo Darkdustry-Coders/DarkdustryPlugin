@@ -16,6 +16,6 @@ public class HelpCommand {
             commands.append(" - ").append(command.description).append("\n");
         });
 
-        info(message.getChannel().block(), "Команды", commands.toString());
+        info(message, "Команды:", commands.toString());
     }
 }

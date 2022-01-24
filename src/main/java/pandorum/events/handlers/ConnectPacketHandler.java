@@ -14,7 +14,6 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
-import pandorum.comp.AntiVpn;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
@@ -130,12 +129,7 @@ public class ConnectPacketHandler {
         con.player = player;
 
         player.team(netServer.assignTeam(player));
-
         netServer.sendWorldData(player);
-
-        AntiVpn.checkIp(ip, isDangerous -> {
-            if (isDangerous) con.kick(Bundle.format("kick.vpn-ip", findLocale(locale)), 0);
-        });
 
         Events.fire(new PlayerConnect(player));
     }

@@ -41,11 +41,6 @@ public class Config {
      */
     public long discordAdminRoleID = 0L;
 
-    /**
-     * Ключ Anti-VPN API
-     */
-    public String antiVpnToken = "w7j425-826177-597253-3134u9";
-
     public boolean historyEnabled() {
         return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
     }

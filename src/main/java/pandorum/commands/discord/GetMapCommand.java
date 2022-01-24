@@ -11,14 +11,14 @@ public class GetMapCommand {
     public static void run(final String[] args, final Message message) {
         Map map = findMap(args[0]);
         if (map == null) {
-            err(message.getChannel().block(), "Карта не найдена.", "Проверьте правильность ввода.");
+            err(message, "Карта не найдена.", "Проверьте правильность ввода.");
             return;
         }
 
         try {
-            sendFile(message.getChannel().block(), map.file);
+            sendFile(message, map.file);
         } catch (Exception e) {
-            err(message.getChannel().block(), "Ошибка.", "Получить карту с сервера не удалось.");
+            err(message, "Ошибка.", "Получить карту с сервера не удалось.");
         }
     }
 }

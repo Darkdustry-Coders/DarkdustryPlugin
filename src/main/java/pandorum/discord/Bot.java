@@ -6,7 +6,6 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
-import arc.util.Timer;
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
@@ -33,6 +32,7 @@ import pandorum.comp.Authme;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.config;
@@ -75,55 +75,86 @@ public class Bot {
                 }
             }, e -> {});
 
-            botChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordBotChannelID)).block();
-            adminChannel = (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(config.discordAdminChannelID)).block();
-            Timer.schedule(() -> gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {}), 0f, 1f);
-
+            botChannel = getChannelByID(config.discordBotChannelID);
+            adminChannel = getChannelByID(config.discordAdminChannelID);
             DiscordCommandsLoader.registerDiscordCommands(discordHandler);
+
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
-            throw new RuntimeException(e);
+            Log.err(e);
         }
     }
 
     public static void handleMessage(Message message) {
         CommandResponse response = discordHandler.handleMessage(message.getContent(), message);
         if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
-            err(message.getChannel().block(), "Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            err(message, "Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
+    }
+
+    public static boolean adminCheck(Member member) {
+        if (member == null || member.isBot()) return true;
+        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
+    }
+
+    public static MessageChannel getChannelByID(long id) {
+        return (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(id)).block();
+    }
+
+    /**
+     * Различные методы для отправки сообщений и эмбедов.
+     */
+
+    public static void updateStatus() {
+        gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching("Игроков на сервере: " + Groups.player.size()))).subscribe(null, e -> {});
+    }
+
+    public static void text(MessageChannel channel, String text, Object... args) {
+        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
     }
 
     public static void text(String text, Object... args) {
         text(botChannel, text, args);
     }
 
-    public static void text(MessageChannel channel, String text, Object... args) {
-        if (channel != null) channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
+    public static void text(Message message, String text, Object... args) {
+        text(Objects.requireNonNull(message.getChannel().block()), text, args);
     }
 
-    public static void info(MessageChannel channel, String title, String text, Object... args) {
-        sendEmbed(channel, EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
-    }
-
-    public static void err(MessageChannel channel, String title, String text, Object... args) {
-        sendEmbed(channel, EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
+    public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
+        channel.createMessage(embed).subscribe(null, e -> {});
     }
 
     public static void sendEmbed(EmbedCreateSpec embed) {
         sendEmbed(botChannel, embed);
     }
 
-    public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        if (channel != null) channel.createMessage(embed).subscribe(null, e -> {});
+    public static void sendEmbed(Message message, EmbedCreateSpec embed) {
+        sendEmbed(Objects.requireNonNull(message.getChannel().block()), embed);
+    }
+
+    public static void info(MessageChannel channel, String title, String text, Object... args) {
+        sendEmbed(channel, EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
+    }
+
+    public static void info(Message message, String title, String text, Object... args) {
+        info(message.getChannel().block(), title, text, args);
+    }
+
+    public static void err(MessageChannel channel, String title, String text, Object... args) {
+        sendEmbed(channel, EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
+    }
+
+    public static void err(Message message, String title, String text, Object... args) {
+        err(message.getChannel().block(), title, text, args);
     }
 
     public static void sendFile(MessageChannel channel, Fi file) throws FileNotFoundException {
-        if (channel != null) channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
+        channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
     }
 
-    public static boolean adminCheck(Member member) {
-        if (member == null || member.isBot()) return true;
-        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
+    public static void sendFile(Message message, Fi file) throws FileNotFoundException {
+        sendFile(Objects.requireNonNull(message.getChannel().block()), file);
     }
 }

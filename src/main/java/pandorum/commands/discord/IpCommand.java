@@ -7,6 +7,6 @@ import static pandorum.discord.Bot.info;
 
 public class IpCommand {
     public static void run(final String[] args, final Message message) {
-        info(message.getChannel().block(), "IP адрес сервера", "darkdustry.ml:@", Administration.Config.port.num());
+        info(message, "IP адрес сервера:", "darkdustry.ml:@", Administration.Config.port.num());
     }
 }
