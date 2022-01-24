@@ -7,7 +7,6 @@ import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
 import discord4j.common.util.Snowflake;
-import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
@@ -44,22 +43,24 @@ public class Bot {
     public static final CommandHandler discordHandler = new CommandHandler(config.discordBotPrefix);
     public static final Color normalColor = Color.ORANGE, successColor = Color.GREEN, errorColor = Color.RED;
 
-    public static DiscordClient discordClient;
-    public static GatewayDiscordClient gatewayDiscordClient;
+    public static GatewayDiscordClient discordClient;
 
     public static Guild guild;
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
         try {
-            discordClient = DiscordClientBuilder.create(config.discordBotToken).onClientResponse(ResponseFunction.emptyIfNotFound()).onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400)).setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();
-            gatewayDiscordClient = discordClient.login().block();
+            discordClient = DiscordClientBuilder.create(config.discordBotToken)
+                    .onClientResponse(ResponseFunction.emptyIfNotFound())
+                    .onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400))
+                    .setDefaultAllowedMentions(AllowedMentions.suppressAll())
+                    .build().login().block();
 
-            guild = gatewayDiscordClient.getGuildById(Snowflake.of(config.discordServerID)).block();
+            guild = discordClient.getGuildById(Snowflake.of(config.discordServerID)).block();
             botChannel = getMessageChannelByID(guild, config.discordBotChannelID);
             adminChannel = getMessageChannelByID(guild, config.discordAdminChannelID);
 
-            gatewayDiscordClient.on(MessageCreateEvent.class).subscribe(event -> {
+            discordClient.on(MessageCreateEvent.class).subscribe(event -> {
                 Message message = event.getMessage();
                 Member member = message.getAuthorAsMember().block();
                 handleMessage(message);
@@ -70,7 +71,7 @@ public class Bot {
                 }
             }, e -> {});
 
-            gatewayDiscordClient.on(ButtonInteractionEvent.class).subscribe(event -> {
+            discordClient.on(ButtonInteractionEvent.class).subscribe(event -> {
                 Message message = event.getMessage().orElse(null);
                 if (loginWaiting.containsKey(message)) {
                     switch (event.getCustomId()) {
@@ -115,7 +116,7 @@ public class Bot {
      */
 
     public static void updateBotStatus() {
-        gatewayDiscordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(Strings.format("Игроков на сервере: @", Groups.player.size())))).subscribe(null, e -> {});
+        discordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(Strings.format("Игроков на сервере: @", Groups.player.size())))).subscribe(null, e -> {});
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
