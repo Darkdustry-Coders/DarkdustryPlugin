@@ -8,7 +8,6 @@ import pandorum.database.MongoDataBridge;
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
 
     public String UUID;
-    public long discordUserID = 0L;
 
     public String locale = "off";
     public boolean hellomsg = true;

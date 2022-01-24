@@ -27,11 +27,6 @@ public class Config {
     public String discordBotPrefix = "prefix";
 
     /**
-     * ID сервера в Discord.
-     */
-    public long discordServerID = 0L;
-
-    /**
      * ID канала в Discord, куда отправляются все сообщения.
      */
     public long discordBotChannelID = 0L;

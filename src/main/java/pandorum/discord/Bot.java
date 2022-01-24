@@ -11,7 +11,6 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
@@ -45,7 +44,6 @@ public class Bot {
 
     public static GatewayDiscordClient discordClient;
 
-    public static Guild guild;
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -56,9 +54,8 @@ public class Bot {
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll())
                     .build().login().block();
 
-            guild = discordClient.getGuildById(Snowflake.of(config.discordServerID)).block();
-            botChannel = getMessageChannelByID(guild, config.discordBotChannelID);
-            adminChannel = getMessageChannelByID(guild, config.discordAdminChannelID);
+            botChannel = getMessageChannelByID(config.discordBotChannelID);
+            adminChannel = getMessageChannelByID(config.discordAdminChannelID);
 
             discordClient.on(MessageCreateEvent.class).subscribe(event -> {
                 Message message = event.getMessage();
@@ -103,12 +100,8 @@ public class Bot {
         return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
     }
 
-    public static MessageChannel getMessageChannelByID(Guild guild, long id) {
-        return (MessageChannel) guild.getChannelById(Snowflake.of(id)).block();
-    }
-
-    public static Member getMemberByID(Guild guild, long id) {
-        return guild.getMemberById(Snowflake.of(id)).block();
+    public static MessageChannel getMessageChannelByID(long id) {
+        return (MessageChannel) discordClient.getChannelById(Snowflake.of(id)).block();
     }
 
     /**
