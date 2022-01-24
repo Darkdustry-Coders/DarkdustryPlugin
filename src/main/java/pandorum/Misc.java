@@ -18,6 +18,7 @@ import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -115,9 +116,9 @@ public class Misc {
     public static Tuple2<String, Integer> hubIp() {
         if (config.hubIp.contains(":")) {
             String[] parts = config.hubIp.split(":");
-            return new Tuple2(parts[0], Strings.parseInt(parts[1], port));
+            return Tuples.of(parts[0], Strings.parseInt(parts[1], port));
         }
-        return new Tuple2(config.hubIp, port);
+        return Tuples.of(config.hubIp, port);
     }
 
     public static ServerControl getServerControl() {
