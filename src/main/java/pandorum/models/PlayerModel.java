@@ -6,9 +6,12 @@ import com.mongodb.BasicDBObject;
 import pandorum.database.MongoDataBridge;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
+
     public String UUID;
+    public long discordUserID = 0L;
+
     public String locale = "off";
-    public Boolean hellomsg = true;
+    public boolean hellomsg = true;
     public boolean alerts = true;
     public long playTime = 0L;
     public int buildingsBuilt = 0;
@@ -20,9 +23,9 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
         findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), cons);
     }
 
-    public static void find(String UUID, Boolf<PlayerModel> boolf, Cons<PlayerModel> cons) {
+    public static void find(String UUID, Boolf<PlayerModel> filter, Cons<PlayerModel> cons) {
         find(UUID, playerModel -> {
-            if (boolf.get(playerModel)) cons.get(playerModel);
+            if (filter.get(playerModel)) cons.get(playerModel);
         });
     }
 }

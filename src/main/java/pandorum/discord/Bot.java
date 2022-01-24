@@ -12,6 +12,7 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
@@ -46,6 +47,7 @@ public class Bot {
     public static DiscordClient discordClient;
     public static GatewayDiscordClient gatewayDiscordClient;
 
+    public static Guild guild;
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
@@ -53,19 +55,23 @@ public class Bot {
             discordClient = DiscordClientBuilder.create(config.discordBotToken).onClientResponse(ResponseFunction.emptyIfNotFound()).onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400)).setDefaultAllowedMentions(AllowedMentions.suppressAll()).build();
             gatewayDiscordClient = discordClient.login().block();
 
+            guild = gatewayDiscordClient.getGuildById(Snowflake.of(config.discordServerID)).block();
+            botChannel = getMessageChannelByID(guild, config.discordBotChannelID);
+            adminChannel = getMessageChannelByID(guild, config.discordAdminChannelID);
+
             gatewayDiscordClient.on(MessageCreateEvent.class).subscribe(event -> {
                 Message message = event.getMessage();
                 Member member = message.getAuthorAsMember().block();
                 handleMessage(message);
 
-                if (message.getChannelId().equals(botChannel.getId()) && member != null && !member.isBot() && !message.getContent().isBlank()) {
+                if (message.getChannelId().equals(botChannel.getId()) && !member.isBot() && !message.getContent().isBlank()) {
                     sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
                     Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
                 }
             }, e -> {});
 
             gatewayDiscordClient.on(ButtonInteractionEvent.class).subscribe(event -> {
-                Message message = event.getMessage().get();
+                Message message = event.getMessage().orElse(null);
                 if (loginWaiting.containsKey(message)) {
                     switch (event.getCustomId()) {
                         case "confirm" -> Authme.confirm(message, event);
@@ -75,8 +81,6 @@ public class Bot {
                 }
             }, e -> {});
 
-            botChannel = getChannelByID(config.discordBotChannelID);
-            adminChannel = getChannelByID(config.discordAdminChannelID);
             DiscordCommandsLoader.registerDiscordCommands(discordHandler);
 
             Log.info("[Darkdustry] Бот успешно запущен...");
@@ -94,12 +98,16 @@ public class Bot {
     }
 
     public static boolean adminCheck(Member member) {
-        if (member == null || member.isBot()) return true;
+        if (member.isBot()) return true;
         return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
     }
 
-    public static MessageChannel getChannelByID(long id) {
-        return (MessageChannel) gatewayDiscordClient.getChannelById(Snowflake.of(id)).block();
+    public static MessageChannel getMessageChannelByID(Guild guild, long id) {
+        return (MessageChannel) guild.getChannelById(Snowflake.of(id)).block();
+    }
+
+    public static Member getMemberByID(Guild guild, long id) {
+        return guild.getMemberById(Snowflake.of(id)).block();
     }
 
     /**
