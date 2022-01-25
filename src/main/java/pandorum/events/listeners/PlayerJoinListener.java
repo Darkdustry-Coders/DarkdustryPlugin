@@ -13,10 +13,11 @@ import pandorum.comp.Ranks;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
+import pandorum.utils.Utils;
 
 import java.awt.*;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.updateTimers;
 import static pandorum.discord.Bot.botChannel;
@@ -27,7 +28,7 @@ public class PlayerJoinListener {
         Ranks.updateName(event.player, name -> {
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
-            sendToChat("events.player.join", name);
+            Utils.sendToChat("events.player.join", name);
             botChannel.sendMessageEmbeds(new EmbedBuilder().setTitle(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).setColor(Color.green).build()).queue();
         });
 
@@ -46,7 +47,7 @@ public class PlayerJoinListener {
                 new String[][] {{Bundle.format("events.welcome.ok", findLocale(event.player.locale))}, {Bundle.format("events.welcome.disable", findLocale(event.player.locale))}}
         ));
 
-        bundled(event.player, "events.motd");
+        Utils.bundled(event.player, "events.motd");
 
         Time.runTask(30f, Bot::updateBotStatus);
     }

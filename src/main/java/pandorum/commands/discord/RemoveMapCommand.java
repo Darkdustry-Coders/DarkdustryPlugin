@@ -4,7 +4,7 @@ import mindustry.maps.Map;
 import net.dv8tion.jda.api.entities.Message;
 
 import static mindustry.Vars.maps;
-import static pandorum.Misc.findMap;
+import static pandorum.utils.Search.findMap;
 import static pandorum.discord.Bot.err;
 import static pandorum.discord.Bot.text;
 

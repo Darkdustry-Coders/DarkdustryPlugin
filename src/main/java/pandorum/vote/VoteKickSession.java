@@ -6,8 +6,9 @@ import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
+import pandorum.utils.Utils;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 import static pandorum.PluginVars.*;
 
 public class VoteKickSession {
@@ -29,7 +30,7 @@ public class VoteKickSession {
     protected Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
-                sendToChat("commands.votekick.failed", target.coloredName());
+                Utils.sendToChat("commands.votekick.failed", target.coloredName());
                 stop();
             }
         }, votekickDuration);
@@ -38,15 +39,15 @@ public class VoteKickSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes, votesRequired());
+        Utils.sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes, votesRequired());
         checkPass();
     }
 
     protected boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
+            Utils.sendToChat("commands.votekick.passed", target.coloredName(), Utils.millisecondsToMinutes(kickDuration));
             stop();
-            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), player.coloredName(), millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
+            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), player.coloredName(), Utils.millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
             return true;
         }
         return false;

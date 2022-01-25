@@ -5,8 +5,8 @@ import mindustry.gen.Player;
 import pandorum.struct.Tuple2;
 
 import static mindustry.Vars.net;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.hubIp;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Utils.hubIp;
 
 public class HubCommand {
     public static void run(final String[] args, final Player player) {

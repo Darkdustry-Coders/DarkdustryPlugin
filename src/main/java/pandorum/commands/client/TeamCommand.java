@@ -3,30 +3,31 @@ package pandorum.commands.client;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import pandorum.comp.Icons;
+import pandorum.utils.Utils;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 import static pandorum.PluginVars.activeSpectatingPlayers;
 
 public class TeamCommand {
     public static void run(final String[] args, final Player player) {
         Team team = findTeam(args[0]);
         if (team == null) {
-            bundled(player, "commands.team-not-found", Icons.teamsList());
+            Utils.bundled(player, "commands.team-not-found", Icons.teamsList());
             return;
         }
 
         Player target = args.length > 1 ? findPlayer(args[1]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found", args[1]);
+            Utils.bundled(player, "commands.player-not-found", args[1]);
             return;
         }
 
         if (activeSpectatingPlayers.containsKey(target.uuid())) {
             activeSpectatingPlayers.remove(target.uuid());
-            bundled(target, "commands.admin.spectate.success.disabled");
+            Utils.bundled(target, "commands.admin.spectate.success.disabled");
         }
         target.team(team);
-        bundled(target, "commands.admin.team.success", colorizedTeam(team));
-        if (target != player) bundled(player, "commands.admin.team.changed", target.coloredName(), colorizedTeam(team));
+        Utils.bundled(target, "commands.admin.team.success", Utils.colorizedTeam(team));
+        if (target != player) Utils.bundled(player, "commands.admin.team.changed", target.coloredName(), Utils.colorizedTeam(team));
     }
 }

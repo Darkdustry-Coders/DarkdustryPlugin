@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
-import static pandorum.Misc.bundled;
+import static pandorum.utils.Utils.bundled;
 
 public class AlertCommand {
     public static void run(final String[] args, final Player player) {

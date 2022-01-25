@@ -6,8 +6,8 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 
 import static mindustry.Vars.netServer;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findPlayer;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Search.findPlayer;
 
 public class AdminCommand {
     public static void run(final String[] args) {

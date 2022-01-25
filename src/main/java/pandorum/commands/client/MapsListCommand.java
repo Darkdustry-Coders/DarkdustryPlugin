@@ -9,8 +9,8 @@ import pandorum.comp.Bundle;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.state;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findLocale;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Search.findLocale;
 
 public class MapsListCommand {
     public static void run(final String[] args, final Player player) {

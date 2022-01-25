@@ -8,8 +8,8 @@ import mindustry.world.Tile;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.world;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findBlock;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Search.findBlock;
 import static pandorum.PluginVars.maxFillSize;
 
 public class FillCommand {

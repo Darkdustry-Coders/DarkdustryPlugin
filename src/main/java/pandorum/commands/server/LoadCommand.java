@@ -7,7 +7,7 @@ import mindustry.io.SaveIO;
 import mindustry.io.SaveIO.SaveException;
 
 import static mindustry.Vars.*;
-import static pandorum.Misc.findSave;
+import static pandorum.utils.Search.findSave;
 
 public class LoadCommand {
     public static void run(final String[] args) {

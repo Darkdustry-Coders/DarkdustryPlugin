@@ -19,8 +19,7 @@ public class AddMapCommand {
 
         try {
             Fi mapFile = customMapDirectory.child(attachment.getFileName());
-            attachment.downloadToFile(mapFile.file());
-            maps.reload();
+            attachment.downloadToFile(mapFile.file()).thenAccept(file -> maps.reload());
             text(message.getChannel(), ":white_check_mark: Карта добавлена на сервер. ||(@)||", mapFile.absolutePath());
         } catch (Exception e) {
             err(message.getChannel(), ":x: Ошибка.", "Добавить карту на сервер не удалось.");

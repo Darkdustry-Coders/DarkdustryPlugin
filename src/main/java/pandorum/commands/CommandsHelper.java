@@ -13,8 +13,8 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Config.Gamemode;
 
 import static mindustry.Vars.netServer;
-import static pandorum.Misc.adminCheck;
-import static pandorum.Misc.bundled;
+import static pandorum.utils.Utils.adminCheck;
+import static pandorum.utils.Utils.bundled;
 import static pandorum.PluginVars.adminOnlyCommands;
 import static pandorum.PluginVars.config;
 import static pandorum.discord.Bot.adminCheck;

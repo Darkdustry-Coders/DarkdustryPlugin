@@ -7,8 +7,8 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.millisecondsToMinutes;
+import static pandorum.utils.Search.findLocale;
+import static pandorum.utils.Utils.millisecondsToMinutes;
 
 public class Ranks {
 

@@ -6,14 +6,15 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
+import pandorum.utils.Utils;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 
 public class RankCommand {
     public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findPlayer(args[0]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found", args[0]);
+            Utils.bundled(player, "commands.player-not-found", args[0]);
             return;
         }
 
@@ -31,8 +32,8 @@ public class RankCommand {
                         findLocale(player.locale),
                         rank.next.tag,
                         rank.next.name,
-                        millisecondsToMinutes(playerModel.playTime),
-                        millisecondsToMinutes(rank.next.req.playtime),
+                        Utils.millisecondsToMinutes(playerModel.playTime),
+                        Utils.millisecondsToMinutes(rank.next.req.playtime),
                         playerModel.buildingsBuilt,
                         rank.next.req.buildingsBuilt,
                         playerModel.gamesPlayed,

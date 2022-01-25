@@ -4,7 +4,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Log;
 
-import static pandorum.Misc.getServerControl;
+import static pandorum.utils.Utils.getServerControl;
 
 public class HelpCommand {
     public static void run(final String[] args) {

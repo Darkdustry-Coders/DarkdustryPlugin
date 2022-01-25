@@ -6,11 +6,12 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.models.PlayerModel;
+import pandorum.utils.Utils;
 
 import static mindustry.Vars.state;
-import static pandorum.Misc.*;
 
 public class MenuHandler {
+
     public static int welcomeMenu, despwMenu, artvMenu;
 
     public static void init() {
@@ -19,7 +20,7 @@ public class MenuHandler {
                 PlayerModel.find(player.uuid(), playerModel -> {
                     playerModel.hellomsg = false;
                     playerModel.save();
-                    bundled(player, "events.welcome.disabled");
+                    Utils.bundled(player, "events.welcome.disabled");
                 });
             }
         });
@@ -28,23 +29,23 @@ public class MenuHandler {
             switch (option) {
                 case 0 -> {
                     Groups.unit.each(Unitc::kill);
-                    bundled(player, "commands.admin.despw.success.all");
+                    Utils.bundled(player, "commands.admin.despw.success.all");
                 }
                 case 2 -> {
                     Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                    bundled(player, "commands.admin.despw.success.players");
+                    Utils.bundled(player, "commands.admin.despw.success.players");
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.defaultTeam));
+                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.colorizedTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    bundled(player, "commands.admin.despw.success.team", colorizedTeam(state.rules.waveTeam));
+                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.colorizedTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     if (!player.dead()) player.unit().kill();
-                    bundled(player, "commands.admin.despw.success.suicide");
+                    Utils.bundled(player, "commands.admin.despw.success.suicide");
                 }
             }
         });
@@ -52,7 +53,7 @@ public class MenuHandler {
         artvMenu = Menus.registerMenu((player, option) -> {
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
-                sendToChat("commands.admin.artv.info", player.coloredName());
+                Utils.sendToChat("commands.admin.artv.info", player.coloredName());
             }
         });
     }

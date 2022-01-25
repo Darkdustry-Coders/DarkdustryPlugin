@@ -6,7 +6,7 @@ import mindustry.game.Team;
 import mindustry.gen.Iconc;
 
 import static mindustry.Vars.content;
-import static pandorum.Misc.colorizedTeam;
+import static pandorum.utils.Utils.colorizedTeam;
 
 public class Icons {
 

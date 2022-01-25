@@ -6,8 +6,8 @@ import mindustry.type.Item;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.state;
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.findItem;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Search.findItem;
 
 public class GiveCommand {
     public static void run(final String[] args, final Player player) {

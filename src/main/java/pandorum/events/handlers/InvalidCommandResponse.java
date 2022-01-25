@@ -8,9 +8,10 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;
-import static pandorum.Misc.findLocale;
+import static pandorum.utils.Search.findLocale;
 
 public class InvalidCommandResponse {
+
     public static String response(Player player, CommandResponse response) {
         if (response.type == ResponseType.manyArguments) {
             return Bundle.format("commands.unknown.many-arguments", findLocale(player.locale), response.command.text, response.command.paramText);

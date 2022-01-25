@@ -3,8 +3,8 @@ package pandorum.commands.client;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 
-import static pandorum.Misc.bundled;
-import static pandorum.Misc.secondsToMinutes;
+import static pandorum.utils.Utils.bundled;
+import static pandorum.utils.Utils.secondsToMinutes;
 import static pandorum.PluginVars.loginCooldownTime;
 import static pandorum.PluginVars.loginCooldowns;
 import static pandorum.comp.Authme.sendConfirmation;

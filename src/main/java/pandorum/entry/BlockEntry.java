@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static mindustry.Vars.content;
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.formatTime;
+import static pandorum.utils.Search.findLocale;
+import static pandorum.utils.Utils.formatTime;
 
 public class BlockEntry implements HistoryEntry {
 

@@ -6,14 +6,15 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
+import pandorum.utils.Utils;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 
 public class InfoCommand {
     public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findPlayer(args[0]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found", args[0]);
+            Utils.bundled(player, "commands.player-not-found", args[0]);
             return;
         }
 
@@ -24,7 +25,7 @@ public class InfoCommand {
                     target.coloredName(),
                     rank.tag,
                     rank.name,
-                    millisecondsToMinutes(playerModel.playTime),
+                    Utils.millisecondsToMinutes(playerModel.playTime),
                     playerModel.buildingsBuilt,
                     playerModel.buildingsDeconstructed,
                     playerModel.gamesPlayed

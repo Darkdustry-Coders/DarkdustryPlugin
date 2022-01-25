@@ -2,7 +2,7 @@ package pandorum.events.listeners;
 
 import mindustry.game.EventType.AdminRequestEvent;
 
-import static pandorum.Misc.sendToChat;
+import static pandorum.utils.Utils.sendToChat;
 
 public class AdminRequestListener {
 

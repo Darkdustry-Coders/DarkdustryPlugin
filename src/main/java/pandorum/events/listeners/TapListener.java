@@ -5,7 +5,7 @@ import pandorum.comp.Bundle;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
 
-import static pandorum.Misc.findLocale;
+import static pandorum.utils.Search.findLocale;
 import static pandorum.PluginVars.*;
 
 public class TapListener {

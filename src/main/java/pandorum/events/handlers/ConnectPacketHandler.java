@@ -17,11 +17,12 @@ import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
-import static pandorum.Misc.findLocale;
-import static pandorum.Misc.millisecondsToMinutes;
+import static pandorum.utils.Search.findLocale;
+import static pandorum.utils.Utils.millisecondsToMinutes;
 import static pandorum.PluginVars.*;
 
 public class ConnectPacketHandler {
+
     public static void handle(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 

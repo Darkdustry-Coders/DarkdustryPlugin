@@ -4,27 +4,28 @@ import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.comp.Icons;
+import pandorum.utils.Utils;
 
-import static pandorum.Misc.*;
+import static pandorum.utils.Search.*;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {
         UnitType type = findUnit(args[0]);
         if (type == null) {
-            bundled(player, "commands.unit-not-found", Icons.unitsList());
+            Utils.bundled(player, "commands.unit-not-found", Icons.unitsList());
             return;
         }
 
         Player target = args.length > 1 ? findPlayer(args[1]) : player;
         if (target == null) {
-            bundled(player, "commands.player-not-found", args[1]);
+            Utils.bundled(player, "commands.player-not-found", args[1]);
             return;
         }
 
         Unit unit = type.spawn(target.team(), target.x(), target.y());
         target.unit(unit);
         unit.spawnedByCore(true);
-        bundled(target, "commands.admin.unit.success", Icons.get(type.name));
-        if (target != player) bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
+        Utils.bundled(target, "commands.admin.unit.success", Icons.get(type.name));
+        if (target != player) Utils.bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
     }
 }

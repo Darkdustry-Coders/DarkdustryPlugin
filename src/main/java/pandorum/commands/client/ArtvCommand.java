@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
-import static pandorum.Misc.findLocale;
+import static pandorum.utils.Search.findLocale;
 
 public class ArtvCommand {
     public static void run(final String[] args, final Player player) {

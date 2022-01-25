@@ -1,6 +1,5 @@
-package pandorum;
+package pandorum.utils;
 
-import arc.Core;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
@@ -11,32 +10,16 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
-import mindustry.server.ServerControl;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
-import pandorum.struct.Tuple2;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.*;
-import static pandorum.PluginVars.config;
 
-public class Misc {
-
-    public static String colorizedTeam(Team team) {
-        return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
-    }
+public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
@@ -80,53 +63,5 @@ public class Misc {
 
     public static Team findTeam(String name) {
         return Strings.canParseInt(name) ? Team.get(Strings.parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
-    }
-
-    public static boolean adminCheck(Player player) {
-        return player.admin;
-    }
-
-    public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
-    }
-
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(player -> bundled(player, key, values));
-    }
-
-    public static String formatTime(Date time) {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        return format.format(time);
-    }
-
-    public static long millisecondsToMinutes(long duration) {
-        return TimeUnit.MILLISECONDS.toMinutes(duration);
-    }
-
-    public static long secondsToMinutes(long duration) {
-        return TimeUnit.SECONDS.toMinutes(duration);
-    }
-
-    public static Tuple2<String, Integer> hubIp() {
-        if (config.hubIp.contains(":")) {
-            String[] parts = config.hubIp.split(":");
-            return Tuple2.of(parts[0], Strings.parseInt(parts[1], port));
-        }
-        return Tuple2.of(config.hubIp, port);
-    }
-
-    public static ServerControl getServerControl() {
-        return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
-    }
-
-    public static InputStream download(String url) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
-            return connection.getInputStream();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
