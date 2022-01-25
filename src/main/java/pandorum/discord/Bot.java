@@ -15,6 +15,7 @@ import java.awt.*;
 import static pandorum.PluginVars.config;
 
 public class Bot {
+
     public static final CommandHandler discordHandler = new CommandHandler(config.discordBotPrefix);
 
     public static JDA jda;
@@ -25,7 +26,7 @@ public class Bot {
 
     public static void init() {
         try {
-            jda = JDABuilder.createDefault(config.discordBotToken).addEventListeners(new BotListener()).build();
+            jda = JDABuilder.createDefault(config.discordBotToken).addEventListeners(new BotListener()).build().awaitReady();
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
