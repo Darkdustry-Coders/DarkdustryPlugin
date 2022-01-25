@@ -3,7 +3,8 @@ package pandorum.events.listeners;
 import mindustry.game.EventType.TapEvent;
 import pandorum.comp.Bundle;
 import pandorum.entry.HistoryEntry;
-import pandorum.struct.CacheSeq;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import static pandorum.Misc.findLocale;
 import static pandorum.PluginVars.*;
@@ -13,7 +14,7 @@ public class TapListener {
     public static void call(final TapEvent event) {
         if (config.historyEnabled() && activeHistoryPlayers.contains(event.player.uuid()) && event.tile != null) {
             CacheSeq<HistoryEntry> entries = history[event.tile.x][event.tile.y];
-            entries.cleanUp();
+
             StringBuilder history = new StringBuilder(Bundle.format("history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
 
             if (entries.isOverflown()) {

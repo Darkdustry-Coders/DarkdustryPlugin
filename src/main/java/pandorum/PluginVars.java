@@ -1,5 +1,6 @@
 package pandorum;
 
+import arc.math.geom.Vec2;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
@@ -8,6 +9,11 @@ import arc.util.Timekeeper;
 import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
+
+import java.util.concurrent.TimeUnit;
+
+import com.github.benmanes.caffeine.cache.AsyncCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,8 +24,7 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import okhttp3.OkHttpClient;
 import pandorum.comp.Config;
-import pandorum.entry.HistoryEntry;
-import pandorum.struct.CacheSeq;
+import pandorum.entry.CacheEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
@@ -41,14 +46,14 @@ public class PluginVars {
     public static final float voteRatio = 0.6f;
 
     /**
-     * Ёмкость массива, хранящего информацию о действиях с тайлом. Может сильно влиять на трату ОЗУ.
+     * Ёмкость кэша, хранящего историю.
      */
-    public static final int historyLimit = 6;
+    public static final int historySize = 10000;
 
     /**
-     * Время, через которое запись в истории тайла будет удалена. В миллисекундах.
+     * Время, через которое запись в истории тайла будет удалена. В минутах.
      */
-    public static final long expireDelay = 1800000L;
+    public static final long expireDelay = 30L;
 
     /**
      * Расстояние до ядер, в котором отслеживаются ториевые реакторы.
@@ -126,7 +131,10 @@ public class PluginVars {
     public static final OkHttpClient client = new OkHttpClient();
 
     public static Config config;
-    public static CacheSeq<HistoryEntry>[][] history;
+    public static AsyncCache<Vec2, CacheEntry> history = Caffeine.newBuilder()
+        .expireAfterWrite(expireDelay, TimeUnit.MINUTES)
+        .maximumSize(historySize)
+        .buildAsync();
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
