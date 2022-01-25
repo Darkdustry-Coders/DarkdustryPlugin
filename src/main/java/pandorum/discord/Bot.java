@@ -5,6 +5,7 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
+import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -43,6 +44,7 @@ public class Bot {
             Log.err(e);
         }
     }
+
     public static void handleMessage(Message message) {
         CommandResponse response = discordHandler.handleMessage(message.getContentRaw(), message);
         if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
@@ -59,7 +61,7 @@ public class Bot {
      */
 
     public static void updateBotStatus() {
-
+        jda.getPresence().setActivity(Activity.playing(Strings.format("Игроков на сервере: @", Groups.player.size())));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
