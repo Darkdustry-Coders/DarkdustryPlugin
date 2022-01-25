@@ -3,8 +3,6 @@ package pandorum.struct;
 import arc.struct.Queue;
 import arc.struct.Seq;
 import arc.util.Time;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 import java.util.Objects;
 
@@ -25,7 +23,7 @@ public class CacheSeq<T> extends Seq<T> {
         if (value == null) return;
 
         super.add(value);
-        writeQueue.add(Tuples.of(value, Time.nanos()));
+        writeQueue.add(Tuple2.of(value, Time.nanos()));
 
         cleanUpBySize();
         cleanUp();
@@ -60,7 +58,7 @@ public class CacheSeq<T> extends Seq<T> {
 
     @Override
     public boolean remove(T value) {
-        writeQueue.remove(t -> Objects.equals(t.getT1(), value));
+        writeQueue.remove(t -> Objects.equals(t.t1, value));
         return super.remove(value);
     }
 
@@ -77,9 +75,8 @@ public class CacheSeq<T> extends Seq<T> {
     }
 
     public void cleanUp() {
-        Tuple2<T, Long> t;
-        while ((t = writeQueue.last()) != null && isExpired(t.getT2())) {
-            remove(t.getT1());
+        while (!writeQueue.isEmpty() && isExpired(writeQueue.last().t2)) {
+            remove(writeQueue.last().t1);
         }
     }
 

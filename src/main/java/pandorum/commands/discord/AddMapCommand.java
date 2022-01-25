@@ -1,32 +1,29 @@
 package pandorum.commands.discord;
 
 import arc.files.Fi;
-import arc.util.io.Streams;
-import discord4j.core.object.entity.Attachment;
-import discord4j.core.object.entity.Message;
-
-import java.io.FileOutputStream;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 
 import static mindustry.Vars.*;
-import static pandorum.Misc.download;
-import static pandorum.discord.Bot.*;
+import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.text;
 
 public class AddMapCommand {
     public static void run(final String[] args, final Message message) {
-        if (message.getAttachments().size() != 1 || !message.getAttachments().get(0).getFilename().endsWith(mapExtension)) {
-            err(message, "Ошибка.", "Пожалуйста, прикрепи файл карты к сообщению.");
+        if (message.getAttachments().size() != 1 || !message.getAttachments().get(0).getFileName().endsWith(mapExtension)) {
+            err(message.getChannel(), "Ошибка.", "Пожалуйста, прикрепи файл карты к сообщению.");
             return;
         }
 
-        Attachment a = message.getAttachments().get(0);
+        Attachment attachment = message.getAttachments().get(0);
 
         try {
-            Fi mapFile = customMapDirectory.child(a.getFilename());
-            Streams.copy(download(a.getUrl()), new FileOutputStream(mapFile.file()));
+            Fi mapFile = customMapDirectory.child(attachment.getFileName());
+            attachment.downloadToFile(mapFile.file());
             maps.reload();
-            text(message, "*Карта добавлена на сервер. (@)*", mapFile.absolutePath());
+            text(message.getChannel(), "*Карта добавлена на сервер. (@)*", mapFile.absolutePath());
         } catch (Exception e) {
-            err(message, "Ошибка.", "Добавить карту не удалось.");
+            err(message.getChannel(), "Ошибка.", "Добавить карту не удалось.");
         }
     }
 }

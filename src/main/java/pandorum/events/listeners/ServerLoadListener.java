@@ -1,16 +1,17 @@
 package pandorum.events.listeners;
 
 import arc.util.Log;
-import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.ServerLoadEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-import static pandorum.discord.Bot.normalColor;
-import static pandorum.discord.Bot.sendEmbed;
+import java.awt.*;
+
+import static pandorum.discord.Bot.botChannel;
 
 public class ServerLoadListener {
 
     public static void call(final ServerLoadEvent event) {
         Log.info("[Darkdustry]: Сервер готов к работе...");
-        sendEmbed(EmbedCreateSpec.builder().color(normalColor).title("Сервер запущен!").build());
+        botChannel.sendMessageEmbeds(new EmbedBuilder().setTitle("Сервер запущен!").setColor(Color.green).build()).queue();
     }
 }

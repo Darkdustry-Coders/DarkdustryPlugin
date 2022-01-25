@@ -22,7 +22,7 @@ import static pandorum.PluginVars.*;
 public final class PandorumPlugin extends Plugin {
 
     public PandorumPlugin() {
-        Log.info("[Darkdustry] Плагин запускается...");
+        Log.info("[Darkdustry] Плагин загружается...");
 
         Fi configFile = dataDirectory.child(configFileName);
         if (configFile.exists()) {
@@ -41,7 +41,7 @@ public final class PandorumPlugin extends Plugin {
 
         PlayerModel.setSourceCollection(playersInfoCollection);
 
-        Log.info("[Darkdustry] Плагин запущен...");
+        Log.info("[Darkdustry] Плагин загружен...");
     }
 
     @Override

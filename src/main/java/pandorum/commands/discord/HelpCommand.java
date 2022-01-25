@@ -1,6 +1,6 @@
 package pandorum.commands.discord;
 
-import discord4j.core.object.entity.Message;
+import net.dv8tion.jda.api.entities.Message;
 
 import static pandorum.discord.Bot.discordHandler;
 import static pandorum.discord.Bot.info;
@@ -16,6 +16,6 @@ public class HelpCommand {
             commands.append(" - ").append(command.description).append("\n");
         });
 
-        info(message, "Команды:", commands.toString());
+        info(message.getChannel(), "Команды:", commands.toString());
     }
 }

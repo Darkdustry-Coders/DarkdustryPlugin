@@ -7,13 +7,14 @@ import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
-import discord4j.core.object.entity.Message;
 import mindustry.gen.Player;
+import net.dv8tion.jda.api.entities.Message;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.Gamemode;
 
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.adminCheck;
+import static pandorum.Misc.bundled;
 import static pandorum.PluginVars.adminOnlyCommands;
 import static pandorum.PluginVars.config;
 import static pandorum.discord.Bot.adminCheck;
@@ -36,7 +37,10 @@ public class CommandsHelper {
     public static void registerClient(CommandHandler clientHandler, String text, String params, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(config.mode)) return;
         Command command = clientHandler.<Player>register(text, params, Bundle.get(Strings.format("commands.@.description", text), Bundle.defaultLocale()), (args, player) -> {
-            if (adminOnly && adminCheck(player)) return;
+            if (adminOnly && !adminCheck(player)) {
+                bundled(player, "commands.permission-denied");
+                return;
+            }
             Core.app.post(() -> runner.accept(args, player));
         });
 
@@ -73,8 +77,8 @@ public class CommandsHelper {
 
     public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Message> runner) {
         discordHandler.<Message>register(text, params, description, (args, message) -> {
-            if (adminOnly && adminCheck(message.getAuthorAsMember().block())) {
-                err(message.getChannel().block(), "Эта команда недоступна для тебя.", "У тебя нет прав на ее использование.");
+            if (adminOnly && adminCheck(message.getMember())) {
+                err(message.getChannel(), "Эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }
 

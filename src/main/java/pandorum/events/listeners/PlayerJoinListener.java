@@ -4,10 +4,9 @@ import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
 import arc.util.Timer;
-import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
-import mindustry.gen.Groups;
+import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
@@ -15,10 +14,12 @@ import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 
+import java.awt.*;
+
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.updateTimers;
-import static pandorum.discord.Bot.*;
+import static pandorum.discord.Bot.botChannel;
 
 public class PlayerJoinListener {
 
@@ -27,7 +28,7 @@ public class PlayerJoinListener {
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
             sendToChat("events.player.join", name);
-            sendEmbed(EmbedCreateSpec.builder().color(successColor).title(Strings.format("@ зашел на сервер.", Strings.stripColors(name))).build());
+            botChannel.sendMessageEmbeds(new EmbedBuilder().setTitle(Strings.format("@ зашел на сервер.", Strings.stripColors(event.player.name))).setColor(Color.green).build()).queue();
         });
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);

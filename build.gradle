@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    project.version = '1.5'
+    project.version = '1.6'
     mindustryVersion = 'v135'
 }
 
@@ -18,11 +18,10 @@ dependencies {
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:server:$mindustryVersion"
 
-    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.4.0'
-    implementation 'org.slf4j:slf4j-log4j12:2.0.0-alpha4'
+    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.4.1'
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.discord4j:discord4j-core:3.2.1'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.2'
 }
 
 jar {

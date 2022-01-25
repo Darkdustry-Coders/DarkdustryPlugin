@@ -1,107 +1,46 @@
 package pandorum.discord;
 
-import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
-import discord4j.common.util.Snowflake;
-import discord4j.core.DiscordClientBuilder;
-import discord4j.core.GatewayDiscordClient;
-import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
-import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Member;
-import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.channel.MessageChannel;
-import discord4j.core.object.presence.ClientActivity;
-import discord4j.core.object.presence.ClientPresence;
-import discord4j.core.object.presence.Status;
-import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.MessageCreateFields;
-import discord4j.core.spec.MessageCreateSpec;
-import discord4j.rest.request.RouteMatcher;
-import discord4j.rest.response.ResponseFunction;
-import discord4j.rest.route.Routes;
-import discord4j.rest.util.AllowedMentions;
-import discord4j.rest.util.Color;
-import mindustry.gen.Groups;
-import pandorum.commands.DiscordCommandsLoader;
-import pandorum.comp.Authme;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Objects;
+import java.awt.*;
 
-import static pandorum.Misc.sendToChat;
 import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.loginWaiting;
 
 public class Bot {
-
     public static final CommandHandler discordHandler = new CommandHandler(config.discordBotPrefix);
-    public static final Color normalColor = Color.ORANGE, successColor = Color.GREEN, errorColor = Color.RED;
 
-    public static GatewayDiscordClient discordClient;
+    public static JDA jda;
 
+    public static Guild guild;
+    public static Role adminRole;
     public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
         try {
-            discordClient = DiscordClientBuilder.create(config.discordBotToken)
-                    .onClientResponse(ResponseFunction.emptyIfNotFound())
-                    .onClientResponse(ResponseFunction.emptyOnErrorStatus(RouteMatcher.route(Routes.REACTION_CREATE), 400))
-                    .setDefaultAllowedMentions(AllowedMentions.suppressAll())
-                    .build().login().block();
-
-            botChannel = getMessageChannelByID(config.discordBotChannelID);
-            adminChannel = getMessageChannelByID(config.discordAdminChannelID);
-
-            discordClient.on(MessageCreateEvent.class).subscribe(event -> {
-                Message message = event.getMessage();
-                Member member = message.getAuthorAsMember().block();
-                handleMessage(message);
-
-                if (message.getChannelId().equals(botChannel.getId()) && !member.isBot() && !message.getContent().isBlank()) {
-                    sendToChat("events.discord.chat", member.getDisplayName(), message.getContent());
-                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                }
-            }, e -> {});
-
-            discordClient.on(ButtonInteractionEvent.class).subscribe(event -> {
-                Message message = event.getMessage().orElse(null);
-                if (loginWaiting.containsKey(message)) {
-                    switch (event.getCustomId()) {
-                        case "confirm" -> Authme.confirm(message, event);
-                        case "deny" -> Authme.deny(message, event);
-                        case "check" -> Authme.check(message, event);
-                    }
-                }
-            }, e -> {});
-
-            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
-
+            jda = JDABuilder.createDefault(config.discordBotToken).addEventListeners(new BotListener()).build();
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
             Log.err(e);
         }
     }
-
     public static void handleMessage(Message message) {
-        CommandResponse response = discordHandler.handleMessage(message.getContent(), message);
+        CommandResponse response = discordHandler.handleMessage(message.getContentRaw(), message);
         if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
-            err(message, "Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            err(message.getChannel(), "Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 
     public static boolean adminCheck(Member member) {
-        if (member.isBot()) return true;
-        return member.getRoles().toStream().noneMatch(role -> role.getId().equals(Snowflake.of(config.discordAdminRoleID)));
-    }
-
-    public static MessageChannel getMessageChannelByID(long id) {
-        return (MessageChannel) discordClient.getChannelById(Snowflake.of(id)).block();
+        return member.getRoles().contains(adminRole);
     }
 
     /**
@@ -109,54 +48,22 @@ public class Bot {
      */
 
     public static void updateBotStatus() {
-        discordClient.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(Strings.format("Игроков на сервере: @", Groups.player.size())))).subscribe(null, e -> {});
+
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.createMessage(Strings.format(text, args)).subscribe(null, e -> {});
+        channel.sendMessage(Strings.format(text, args)).queue();
     }
 
     public static void text(String text, Object... args) {
         text(botChannel, text, args);
     }
 
-    public static void text(Message message, String text, Object... args) {
-        text(Objects.requireNonNull(message.getChannel().block()), text, args);
-    }
-
-    public static void sendEmbed(MessageChannel channel, EmbedCreateSpec embed) {
-        channel.createMessage(embed).subscribe(null, e -> {});
-    }
-
-    public static void sendEmbed(EmbedCreateSpec embed) {
-        sendEmbed(botChannel, embed);
-    }
-
-    public static void sendEmbed(Message message, EmbedCreateSpec embed) {
-        sendEmbed(Objects.requireNonNull(message.getChannel().block()), embed);
-    }
-
     public static void info(MessageChannel channel, String title, String text, Object... args) {
-        sendEmbed(channel, EmbedCreateSpec.builder().color(normalColor).addField(title, Strings.format(text, args), true).build());
-    }
-
-    public static void info(Message message, String title, String text, Object... args) {
-        info(message.getChannel().block(), title, text, args);
+        channel.sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(Color.orange).build()).queue();
     }
 
     public static void err(MessageChannel channel, String title, String text, Object... args) {
-        sendEmbed(channel, EmbedCreateSpec.builder().color(errorColor).addField(title, Strings.format(text, args), true).build());
-    }
-
-    public static void err(Message message, String title, String text, Object... args) {
-        err(message.getChannel().block(), title, text, args);
-    }
-
-    public static void sendFile(MessageChannel channel, Fi file) throws FileNotFoundException {
-        channel.createMessage(MessageCreateSpec.builder().addFile(MessageCreateFields.File.of(file.name(), new FileInputStream(file.file()))).build()).subscribe(null, e -> {});
-    }
-
-    public static void sendFile(Message message, Fi file) throws FileNotFoundException {
-        sendFile(Objects.requireNonNull(message.getChannel().block()), file);
+        channel.sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(Color.red).build()).queue();
     }
 }

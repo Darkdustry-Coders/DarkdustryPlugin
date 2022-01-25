@@ -5,24 +5,26 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
-import discord4j.core.spec.EmbedCreateSpec;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
+import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
 import pandorum.discord.Bot;
 
+import java.awt.*;
+
 import static mindustry.Vars.netServer;
 import static pandorum.Misc.*;
 import static pandorum.PluginVars.*;
-import static pandorum.discord.Bot.*;
+import static pandorum.discord.Bot.botChannel;
 
 public class PlayerLeaveListener {
 
     public static void call(final PlayerLeave event) {
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
         sendToChat("events.player.leave", event.player.coloredName());
-        sendEmbed(EmbedCreateSpec.builder().color(errorColor).title(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name))).build());
+        botChannel.sendMessageEmbeds(new EmbedBuilder().setTitle(Strings.format("@ вышел с сервера.", Strings.stripColors(event.player.name))).setColor(Color.red).build()).queue();
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 

@@ -17,8 +17,7 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
+import pandorum.struct.Tuple2;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -84,11 +83,7 @@ public class Misc {
     }
 
     public static boolean adminCheck(Player player) {
-        if (!player.admin) {
-            bundled(player, "commands.permission-denied");
-            return true;
-        }
-        return false;
+        return player.admin;
     }
 
     public static void bundled(Player player, String key, Object... values) {
@@ -116,9 +111,9 @@ public class Misc {
     public static Tuple2<String, Integer> hubIp() {
         if (config.hubIp.contains(":")) {
             String[] parts = config.hubIp.split(":");
-            return Tuples.of(parts[0], Strings.parseInt(parts[1], port));
+            return Tuple2.of(parts[0], Strings.parseInt(parts[1], port));
         }
-        return Tuples.of(config.hubIp, port);
+        return Tuple2.of(config.hubIp, port);
     }
 
     public static ServerControl getServerControl() {

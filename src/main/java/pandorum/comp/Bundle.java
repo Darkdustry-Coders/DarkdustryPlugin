@@ -44,10 +44,10 @@ public class Bundle {
     }
 
     public static String get(String key, Locale locale) {
-        return get(key, key, locale);
+        return getOrDefault(key, key, locale);
     }
 
-    public static String get(String key, String defaultValue, Locale locale) {
+    public static String getOrDefault(String key, String defaultValue, Locale locale) {
         StringMap bundle = getOrLoad(locale);
         return bundle != null ? bundle.get(key, defaultValue) : defaultValue;
     }

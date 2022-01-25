@@ -1,7 +1,7 @@
 package pandorum.commands.discord;
 
-import discord4j.core.object.entity.Message;
 import mindustry.maps.Map;
+import net.dv8tion.jda.api.entities.Message;
 
 import static mindustry.Vars.maps;
 import static pandorum.Misc.findMap;
@@ -12,16 +12,16 @@ public class RemoveMapCommand {
     public static void run(final String[] args, final Message message) {
         Map map = findMap(args[0]);
         if (map == null) {
-            err(message, "Карта не найдена.", "Проверьте правильность ввода.");
+            err(message.getChannel(), "Карта не найдена.", "Проверьте правильность ввода.");
             return;
         }
 
         try {
             maps.removeMap(map);
             maps.reload();
-            text(message, "*Карта удалена с сервера.*");
+            text(message.getChannel(), "*Карта удалена с сервера.*");
         } catch (Exception e) {
-            err(message, "Ошибка.", "Удалить карту с сервера не удалось.");
+            err(message.getChannel(), "Ошибка.", "Удалить карту с сервера не удалось.");
         }
     }
 }
