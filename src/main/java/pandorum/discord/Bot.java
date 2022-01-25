@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
+import pandorum.commands.DiscordCommandsLoader;
 
 import java.awt.*;
 
@@ -26,7 +27,16 @@ public class Bot {
 
     public static void init() {
         try {
-            jda = JDABuilder.createDefault(config.discordBotToken).addEventListeners(new BotListener()).build().awaitReady();
+            jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady();
+            jda.addEventListener(new BotListener());
+
+            guild = jda.getGuildById(config.discordGuildID);
+            adminRole = guild.getRoleById(config.discordAdminRoleID);
+            botChannel = guild.getTextChannelById(config.discordBotChannelID);
+            adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
+
+            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
+
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");
