@@ -55,7 +55,7 @@ public class Bot {
     public static void handleMessage(Message message) {
         CommandResponse response = discordHandler.handleMessage(message.getContentRaw(), message);
         if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
-            err(message.getChannel(), "Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            err(message.getChannel(), ":interrobang: Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 
