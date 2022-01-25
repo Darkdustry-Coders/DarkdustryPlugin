@@ -45,7 +45,6 @@ public class Loader {
         Events.on(GameOverEvent.class, GameOverListener::call);
         Events.on(PlayerJoin.class, PlayerJoinListener::call);
         Events.on(PlayerLeave.class, PlayerLeaveListener::call);
-        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
         Events.on(TapEvent.class, TapListener::call);
         Events.on(WithdrawEvent.class, WithdrawListener::call);
         Events.on(WorldLoadEvent.class, WorldLoadListener::call);
