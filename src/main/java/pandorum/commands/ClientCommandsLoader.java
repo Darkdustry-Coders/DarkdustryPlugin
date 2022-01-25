@@ -16,7 +16,7 @@ public class ClientCommandsLoader {
         CommandsHelper.registerClient(handler, "vote", "<y/n>", false, VoteCommand::run);
         CommandsHelper.registerClient(handler, "sync", false, SyncCommand::run);
         CommandsHelper.registerClient(handler, "tr", "<current/list/off/auto/locale>", false, TranslatorCommand::run);
-        CommandsHelper.registerClient(handler, "info", "[ID/username...]", false, InfoCommand::run);
+        CommandsHelper.registerClient(handler, "stats", "[ID/username...]", false, StatsCommand::run);
         CommandsHelper.registerClient(handler, "rank", "[ID/username...]", false, RankCommand::run);
         CommandsHelper.registerClient(handler, "players", "[page]", false, PlayersListCommand::run);
 
