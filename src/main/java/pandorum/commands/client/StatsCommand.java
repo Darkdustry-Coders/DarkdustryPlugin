@@ -9,12 +9,13 @@ import pandorum.models.PlayerModel;
 import pandorum.utils.Utils;
 
 import static pandorum.utils.Search.*;
+import static pandorum.utils.Utils.bundled;
 
-public class InfoCommand {
+public class StatsCommand {
     public static void run(final String[] args, final Player player) {
         Player target = args.length > 0 ? findPlayer(args[0]) : player;
         if (target == null) {
-            Utils.bundled(player, "commands.player-not-found", args[0]);
+            bundled(player, "commands.player-not-found", args[0]);
             return;
         }
 
