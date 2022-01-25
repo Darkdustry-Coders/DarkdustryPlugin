@@ -15,7 +15,7 @@ import static pandorum.discord.Bot.err;
 public class PlayersListCommand {
     public static void run(final String[] args, final Message message) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            err(message.getChannel(), "Ошибка.", "Страница должна быть числом.");
+            err(message.getChannel(), ":interrobang: Ошибка.", "Страница должна быть числом.");
             return;
         }
 
@@ -24,7 +24,7 @@ public class PlayersListCommand {
         int pages = Mathf.ceil(playersList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            err(message.getChannel(), "Указана неверная страница списка игроков.", "Страница должна быть числом от 1 до @", pages);
+            err(message.getChannel(), ":interrobang: Указана неверная страница списка игроков.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
@@ -36,7 +36,7 @@ public class PlayersListCommand {
 
         message.getChannel().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.orange)
-                .setTitle(Strings.format("Список игроков сервера (страница @ из @)", page + 1, pages))
+                .setTitle(Strings.format(":satellite: Список игроков сервера (страница @ из @)", page + 1, pages))
                 .addField(Strings.format("Всего игроков @", playersList.size), players.toString(), false)
                 .build()).queue();
     }

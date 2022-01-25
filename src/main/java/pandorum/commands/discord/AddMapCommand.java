@@ -11,7 +11,7 @@ import static pandorum.discord.Bot.text;
 public class AddMapCommand {
     public static void run(final String[] args, final Message message) {
         if (message.getAttachments().size() != 1 || !message.getAttachments().get(0).getFileName().endsWith(mapExtension)) {
-            err(message.getChannel(), "Ошибка.", "Пожалуйста, прикрепи файл карты к сообщению.");
+            err(message.getChannel(), ":x: Ошибка.", "Пожалуйста, прикрепи один файл карты к сообщению.");
             return;
         }
 
@@ -21,9 +21,9 @@ public class AddMapCommand {
             Fi mapFile = customMapDirectory.child(attachment.getFileName());
             attachment.downloadToFile(mapFile.file());
             maps.reload();
-            text(message.getChannel(), "*Карта добавлена на сервер. (@)*", mapFile.absolutePath());
+            text(message.getChannel(), ":white_check_mark: Карта добавлена на сервер. ||(@)||", mapFile.absolutePath());
         } catch (Exception e) {
-            err(message.getChannel(), "Ошибка.", "Добавить карту не удалось.");
+            err(message.getChannel(), ":x: Ошибка.", "Добавить карту на сервер не удалось.");
         }
     }
 }

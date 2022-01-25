@@ -15,7 +15,7 @@ import static pandorum.discord.Bot.err;
 public class MapsListCommand {
     public static void run(final String[] args, final Message message) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            err(message.getChannel(), "Ошибка.", "Страница должна быть числом.");
+            err(message.getChannel(), ":interrobang: Ошибка.", "Страница должна быть числом.");
             return;
         }
 
@@ -24,7 +24,7 @@ public class MapsListCommand {
         int pages = Mathf.ceil(mapsList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            err(message.getChannel(), "Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
+            err(message.getChannel(), ":interrobang: Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
@@ -36,7 +36,7 @@ public class MapsListCommand {
 
         message.getChannel().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.orange)
-                .setTitle(Strings.format("Список карт сервера (страница @ из @)", page + 1, pages))
+                .setTitle(Strings.format(":map: Список карт сервера (страница @ из @)", page + 1, pages))
                 .addField(Strings.format("Всего карт: @", mapsList.size), maps.toString(), false)
                 .build()).queue();
     }

@@ -9,10 +9,15 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.utils.AllowedMentions;
+import net.dv8tion.jda.internal.entities.EntityBuilder;
 import pandorum.commands.DiscordCommandsLoader;
 
 import java.awt.*;
+import java.util.EnumSet;
 
 import static pandorum.PluginVars.config;
 
@@ -24,7 +29,7 @@ public class Bot {
 
     public static Guild guild;
     public static Role adminRole;
-    public static MessageChannel botChannel, mapReviewChannel, adminChannel;
+    public static MessageChannel botChannel, adminChannel;
 
     public static void init() {
         try {
@@ -34,10 +39,11 @@ public class Bot {
             guild = jda.getGuildById(config.discordGuildID);
             adminRole = guild.getRoleById(config.discordAdminRoleID);
             botChannel = guild.getTextChannelById(config.discordBotChannelID);
-            mapReviewChannel = guild.getTextChannelById(config.discordMapReviewChannelID);
             adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
 
             DiscordCommandsLoader.registerDiscordCommands(discordHandler);
+            EnumSet<MentionType> deny = EnumSet.of(MentionType.EVERYONE, MentionType.HERE);
+            AllowedMentions.setDefaultMentions(EnumSet.complementOf(deny));
 
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
@@ -62,7 +68,7 @@ public class Bot {
      */
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(Activity.playing(Strings.format("Игроков на сервере: @", Groups.player.size())));
+        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игрок(ов) на сервере", Groups.player.size()), null, ActivityType.STREAMING));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {

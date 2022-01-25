@@ -37,11 +37,6 @@ public class Config {
     public long discordBotChannelID = 0L;
 
     /**
-     * ID канала в Discord, куда отправляются карты для подтверждения.
-     */
-    public long discordMapReviewChannelID = 0L;
-
-    /**
      * ID канала в Discord, куда отправляются подтверждения для администраторов.
      */
     public long discordAdminChannelID = 0L;
