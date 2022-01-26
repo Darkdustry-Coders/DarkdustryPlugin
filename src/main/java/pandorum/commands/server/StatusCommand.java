@@ -17,7 +17,7 @@ public class StatusCommand {
         } else {
             Log.info("Статус сервера:");
             Log.info("  Сервер онлайн уже: @", formatDuration(Time.timeSinceMillis(serverUptime)));
-            Log.info("  Карта: &@", state.map.name());
+            Log.info("  Карта: @", state.map.name());
             Log.info("  Время игры на этой карте: @", formatDuration(Time.timeSinceMillis(mapPlaytime)));
 
             if (state.rules.waves) Log.info("  @ волна, @ секунд до следующей волны.", state.wave, (int) (state.wavetime / 60));
