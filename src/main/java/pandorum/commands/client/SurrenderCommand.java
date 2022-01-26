@@ -4,7 +4,7 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
 import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesSurrender;

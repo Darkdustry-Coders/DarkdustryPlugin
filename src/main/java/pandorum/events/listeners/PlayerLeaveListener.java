@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
 import pandorum.discord.Bot;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
 import java.awt.*;
 

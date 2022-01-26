@@ -1,4 +1,4 @@
-package pandorum.utils;
+package pandorum.util;
 
 import arc.files.Fi;
 import arc.struct.Seq;

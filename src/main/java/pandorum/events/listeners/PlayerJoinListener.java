@@ -13,11 +13,11 @@ import pandorum.comp.Ranks;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
 import java.awt.*;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.updateTimers;
 import static pandorum.discord.Bot.botChannel;

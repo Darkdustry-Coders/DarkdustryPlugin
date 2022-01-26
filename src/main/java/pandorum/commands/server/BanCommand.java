@@ -4,10 +4,10 @@ import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
 
 public class BanCommand {

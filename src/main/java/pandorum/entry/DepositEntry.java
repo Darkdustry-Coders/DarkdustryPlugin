@@ -8,8 +8,8 @@ import pandorum.comp.Icons;
 import java.util.Date;
 
 import static mindustry.Vars.content;
-import static pandorum.utils.Search.findLocale;
-import static pandorum.utils.Utils.formatTime;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.formatDate;
 
 public class DepositEntry implements HistoryEntry {
 
@@ -29,6 +29,6 @@ public class DepositEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.deposit", findLocale(player.locale), name, amount, Icons.get(content.item(itemID).name), Icons.get(content.block(blockID).name), formatTime(date));
+        return Bundle.format("history.deposit", findLocale(player.locale), name, amount, Icons.get(content.item(itemID).name), Icons.get(content.block(blockID).name), formatDate(date));
     }
 }

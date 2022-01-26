@@ -17,8 +17,8 @@ import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.*;
-import static pandorum.utils.Search.findLocale;
-import static pandorum.utils.Utils.millisecondsToMinutes;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.millisecondsToMinutes;
 import static pandorum.PluginVars.*;
 
 public class ConnectPacketHandler {

@@ -9,8 +9,8 @@ import pandorum.comp.Icons;
 import java.util.Date;
 
 import static mindustry.Vars.content;
-import static pandorum.utils.Search.findLocale;
-import static pandorum.utils.Utils.formatTime;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.formatDate;
 
 public class RotateEntry implements HistoryEntry {
 
@@ -30,6 +30,6 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatTime(date));
+        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatDate(date));
     }
 }

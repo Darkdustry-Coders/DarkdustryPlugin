@@ -26,6 +26,11 @@ import pandorum.vote.VoteSession;
 public class PluginVars {
 
     /**
+     *  Время непрерывной работы сервера. Время, проведенное на текущей карте.
+     */
+    public static long serverUptime = 0, mapPlaytime = 0;
+
+    /**
      * Максимальный размер заполняемого пространства через /fill. Максимальное количество заспавненных юнитов через /spawn.
      */
     public static final int maxFillSize = 25, maxSpawnAmount = 25;

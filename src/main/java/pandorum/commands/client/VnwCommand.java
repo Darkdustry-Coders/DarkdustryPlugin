@@ -5,8 +5,8 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 import static mindustry.Vars.state;
-import static pandorum.utils.Utils.bundled;
-import static pandorum.utils.Utils.sendToChat;
+import static pandorum.util.Utils.bundled;
+import static pandorum.util.Utils.sendToChat;
 import static pandorum.PluginVars.voteRatio;
 import static pandorum.PluginVars.votesVnw;
 

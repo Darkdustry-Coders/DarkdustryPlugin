@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static mindustry.Vars.content;
-import static pandorum.utils.Search.findLocale;
-import static pandorum.utils.Utils.formatTime;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.formatDate;
 
 public class BlockEntry implements HistoryEntry {
 
@@ -36,7 +36,7 @@ public class BlockEntry implements HistoryEntry {
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         UnitType unit = content.unit(unitID);
-        String time = formatTime(date);
+        String time = formatDate(date);
         Locale locale = findLocale(player.locale);
 
         if (breaking) {

@@ -34,8 +34,8 @@ import java.util.Locale;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
-import static pandorum.utils.Search.findLocale;
-import static pandorum.utils.Utils.formatTime;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.formatDate;
 
 public class ConfigEntry implements HistoryEntry {
 
@@ -63,7 +63,7 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
-        String time = formatTime(date);
+        String time = formatDate(date);
         Locale locale = findLocale(player.locale);
 
         if (block instanceof PowerNode) {

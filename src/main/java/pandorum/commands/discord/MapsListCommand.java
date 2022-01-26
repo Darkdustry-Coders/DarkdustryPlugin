@@ -11,6 +11,7 @@ import java.awt.*;
 
 import static mindustry.Vars.maps;
 import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.info;
 
 public class MapsListCommand {
     public static void run(final String[] args, final Message message) {
@@ -20,6 +21,11 @@ public class MapsListCommand {
         }
 
         Seq<Map> mapsList = maps.customMaps();
+        if (mapsList.isEmpty()) {
+            info(message.getChannel(), ":map: На сервере нет карт.", "Список карт пуст.");
+            return;
+        }
+
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(mapsList.size / 16f);
 

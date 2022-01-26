@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import java.awt.*;
 
 import static mindustry.Vars.netServer;
-import static pandorum.utils.Utils.bundled;
+import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.discord.Bot.text;

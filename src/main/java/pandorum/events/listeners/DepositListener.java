@@ -8,7 +8,7 @@ import pandorum.entry.DepositEntry;
 import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
-import static pandorum.utils.Utils.bundled;
+import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.*;
 
 public class DepositListener {

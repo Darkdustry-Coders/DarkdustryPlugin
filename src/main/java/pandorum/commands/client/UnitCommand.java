@@ -4,9 +4,9 @@ import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.comp.Icons;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {

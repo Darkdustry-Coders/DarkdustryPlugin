@@ -4,10 +4,10 @@ import arc.util.Timekeeper;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 import pandorum.vote.VoteKickSession;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 import static pandorum.PluginVars.*;
 
 public class VoteKickCommand {

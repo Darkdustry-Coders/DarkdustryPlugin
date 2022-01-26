@@ -3,7 +3,7 @@ package pandorum.commands.discord;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.entities.Message;
 
-import static pandorum.utils.Search.findMap;
+import static pandorum.util.Search.findMap;
 import static pandorum.discord.Bot.err;
 
 public class GetMapCommand {

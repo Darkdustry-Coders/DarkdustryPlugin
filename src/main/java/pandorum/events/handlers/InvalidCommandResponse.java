@@ -8,7 +8,7 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 
 import static mindustry.Vars.netServer;
-import static pandorum.utils.Search.findLocale;
+import static pandorum.util.Search.findLocale;
 
 public class InvalidCommandResponse {
 

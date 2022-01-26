@@ -5,9 +5,9 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.comp.Icons;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 import static pandorum.PluginVars.maxSpawnAmount;
 
 public class SpawnCommand {

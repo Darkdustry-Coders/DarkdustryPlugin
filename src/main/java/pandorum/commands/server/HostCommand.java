@@ -9,8 +9,8 @@ import mindustry.maps.Map;
 import mindustry.maps.MapException;
 
 import static mindustry.Vars.*;
-import static pandorum.utils.Search.findMap;
-import static pandorum.utils.Utils.getServerControl;
+import static pandorum.util.Search.findMap;
+import static pandorum.util.Utils.getServerControl;
 
 public class HostCommand {
     public static void run(final String[] args) {

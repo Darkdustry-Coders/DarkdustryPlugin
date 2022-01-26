@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 import mindustry.graphics.Pal;
 import pandorum.comp.Bundle;
 
-import static pandorum.utils.Search.findLocale;
+import static pandorum.util.Search.findLocale;
 
 public class AdminChatCommand {
     public static void run(final String[] args, final Player player) {

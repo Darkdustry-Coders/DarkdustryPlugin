@@ -4,8 +4,8 @@ import arc.util.Log;
 import arc.util.Reflect;
 import mindustry.maps.Map;
 
-import static pandorum.utils.Search.findMap;
-import static pandorum.utils.Utils.getServerControl;
+import static pandorum.util.Search.findMap;
+import static pandorum.util.Utils.getServerControl;
 
 public class NextMapCommand {
     public static void run(final String[] args) {

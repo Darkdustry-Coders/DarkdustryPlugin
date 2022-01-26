@@ -3,9 +3,9 @@ package pandorum.commands.server;
 import arc.util.Log;
 import mindustry.gen.Player;
 import pandorum.comp.Bundle;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.kickDuration;
 

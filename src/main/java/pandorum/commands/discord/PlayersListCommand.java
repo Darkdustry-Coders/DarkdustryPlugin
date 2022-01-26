@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Message;
 import java.awt.*;
 
 import static pandorum.discord.Bot.err;
+import static pandorum.discord.Bot.info;
 
 public class PlayersListCommand {
     public static void run(final String[] args, final Message message) {
@@ -20,6 +21,11 @@ public class PlayersListCommand {
         }
 
         Seq<Player> playersList = Groups.player.copy(new Seq<>());
+        if (playersList.isEmpty()) {
+            info(message.getChannel(), ":satellite: На сервере нет игроков.", "Список игроков пуст.");
+            return;
+        }
+
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(playersList.size / 16f);
 

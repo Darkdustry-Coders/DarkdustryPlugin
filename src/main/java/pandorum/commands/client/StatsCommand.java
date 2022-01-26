@@ -6,10 +6,10 @@ import pandorum.comp.Bundle;
 import pandorum.comp.Ranks;
 import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
-import static pandorum.utils.Search.*;
-import static pandorum.utils.Utils.bundled;
+import static pandorum.util.Search.*;
+import static pandorum.util.Utils.bundled;
 
 public class StatsCommand {
     public static void run(final String[] args, final Player player) {

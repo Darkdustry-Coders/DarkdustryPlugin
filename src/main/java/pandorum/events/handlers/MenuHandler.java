@@ -6,7 +6,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.models.PlayerModel;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 

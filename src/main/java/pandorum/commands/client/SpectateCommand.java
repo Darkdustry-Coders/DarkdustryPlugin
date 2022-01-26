@@ -2,8 +2,8 @@ package pandorum.commands.client;
 
 import mindustry.gen.Player;
 
-import static pandorum.utils.Utils.bundled;
-import static pandorum.utils.Search.findPlayer;
+import static pandorum.util.Utils.bundled;
+import static pandorum.util.Search.findPlayer;
 import static pandorum.PluginVars.activeSpectatingPlayers;
 import static pandorum.PluginVars.spectateTeam;
 

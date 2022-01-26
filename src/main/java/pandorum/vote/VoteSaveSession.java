@@ -7,7 +7,7 @@ import arc.util.Timer.Task;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static pandorum.utils.Utils.sendToChat;
+import static pandorum.util.Utils.sendToChat;
 import static pandorum.PluginVars.voteDuration;
 
 public class VoteSaveSession extends VoteSession {

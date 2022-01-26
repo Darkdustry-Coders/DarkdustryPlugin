@@ -10,7 +10,7 @@ import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
-import static pandorum.utils.Utils.sendToChat;
+import static pandorum.util.Utils.sendToChat;
 import static pandorum.PluginVars.voteDuration;
 
 public class VoteLoadSession extends VoteSession {

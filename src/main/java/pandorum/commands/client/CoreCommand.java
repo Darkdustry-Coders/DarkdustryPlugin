@@ -6,9 +6,9 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import pandorum.comp.Icons;
-import pandorum.utils.Utils;
+import pandorum.util.Utils;
 
-import static pandorum.utils.Search.*;
+import static pandorum.util.Search.*;
 
 public class CoreCommand {
     public static void run(final String[] args, final Player player) {

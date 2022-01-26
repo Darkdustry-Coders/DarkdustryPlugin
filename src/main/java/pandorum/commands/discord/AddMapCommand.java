@@ -1,8 +1,11 @@
 package pandorum.commands.discord;
 
 import arc.files.Fi;
+import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
+
+import java.io.File;
 
 import static mindustry.Vars.*;
 import static pandorum.discord.Bot.err;
@@ -18,9 +21,18 @@ public class AddMapCommand {
         Attachment attachment = message.getAttachments().get(0);
 
         try {
-            Fi mapFile = customMapDirectory.child(attachment.getFileName());
-            attachment.downloadToFile(mapFile.file()).thenAccept(file -> maps.reload());
-            text(message.getChannel(), ":white_check_mark: Карта добавлена на сервер. ||(@)||", mapFile.absolutePath());
+            File mapFile = customMapDirectory.child(attachment.getFileName()).file();
+            attachment.downloadToFile(mapFile).thenAccept(file -> {
+                Fi mapFi = new Fi(file);
+                if (!SaveIO.isSaveValid(mapFi)) {
+                    err(message.getChannel(), ":x: Ошибка.", "Кажется, файл карты поврежден.");
+                    mapFi.delete();
+                    return;
+                }
+
+                maps.reload();
+                text(message.getChannel(), ":white_check_mark: Карта добавлена на сервер. ||(@)||", mapFi.absolutePath());
+            });
         } catch (Exception e) {
             err(message.getChannel(), ":x: Ошибка.", "Добавить карту на сервер не удалось.");
         }

@@ -7,8 +7,8 @@ import pandorum.comp.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
 import static mindustry.Vars.state;
-import static pandorum.utils.Utils.colorizedTeam;
-import static pandorum.utils.Search.findLocale;
+import static pandorum.util.Utils.colorizedTeam;
+import static pandorum.util.Search.findLocale;
 
 public class DespwCommand {
     public static void run(final String[] args, final Player player) {
