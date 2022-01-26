@@ -27,7 +27,6 @@ public class StatusCommand {
                 .addField("Волна:", String.valueOf(state.wave), false)
                 .addField("Сервер онлайн уже:", formatDuration(serverUptime), false)
                 .addField("Времы игры на текущей карте:", formatDuration(mapPlaytime), false)
-                .addField("", "", false)
                 .build()).queue();
     }
 }
