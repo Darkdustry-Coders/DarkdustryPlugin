@@ -1,5 +1,6 @@
 package pandorum.commands.discord;
 
+import arc.util.Time;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,8 +26,8 @@ public class StatusCommand {
                 .addField("Игроков:", String.valueOf(Groups.player.size()), false)
                 .addField("Карта:", state.map.name(), false)
                 .addField("Волна:", String.valueOf(state.wave), false)
-                .addField("Сервер онлайн уже:", formatDuration(serverUptime), false)
-                .addField("Времы игры на текущей карте:", formatDuration(mapPlaytime), false)
+                .addField("Сервер онлайн уже:", formatDuration(Time.timeSinceMillis(serverUptime)), false)
+                .addField("Времы игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapPlaytime)), false)
                 .build()).queue();
     }
 }

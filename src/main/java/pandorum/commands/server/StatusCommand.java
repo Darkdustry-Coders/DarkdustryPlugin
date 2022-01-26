@@ -2,6 +2,7 @@ package pandorum.commands.server;
 
 import arc.Core;
 import arc.util.Log;
+import arc.util.Time;
 import mindustry.gen.Groups;
 
 import static mindustry.Vars.state;
@@ -15,9 +16,9 @@ public class StatusCommand {
             Log.info("Сервер отключен. Может быть, пора запустить его командой 'host'?");
         } else {
             Log.info("Статус сервера:");
-            Log.info("  Сервер онлайн уже: @", formatDuration(serverUptime));
+            Log.info("  Сервер онлайн уже: @", formatDuration(Time.timeSinceMillis(serverUptime)));
             Log.info("  Карта: &@", state.map.name());
-            Log.info("  Время игры на этой карте: @", formatDuration(mapPlaytime));
+            Log.info("  Время игры на этой карте: @", formatDuration(Time.timeSinceMillis(mapPlaytime)));
 
             if (state.rules.waves) Log.info("  @ волна, @ секунд до следующей волны.", state.wave, (int) (state.wavetime / 60));
             Log.info("  @ юнитов / @ вражеских юнитов.", Groups.unit.size(), state.enemies);
