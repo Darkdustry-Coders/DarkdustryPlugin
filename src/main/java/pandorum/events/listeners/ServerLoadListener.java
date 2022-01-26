@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-import static pandorum.PluginVars.serverUptime;
 import static pandorum.discord.Bot.botChannel;
+import static pandorum.PluginVars.serverUptime;
 
 public class ServerLoadListener {
 
