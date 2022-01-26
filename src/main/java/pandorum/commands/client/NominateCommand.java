@@ -15,19 +15,18 @@ import pandorum.vote.VoteSession;
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
 import static pandorum.utils.Search.*;
-import static pandorum.utils.Utils.bundled;
 import static pandorum.PluginVars.*;
 
 public class NominateCommand {
     public static void run(final String[] args, final Player player) {
         if (currentVote[0] != null) {
-            bundled(player, "commands.vote-already-started");
+            Utils.bundled(player, "commands.vote-already-started");
             return;
         }
 
         Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!vtime.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
+            Utils.bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
             return;
         }
 
@@ -35,7 +34,7 @@ public class NominateCommand {
             case "map" -> {
                 Map map = findMap(args[1]);
                 if (map == null) {
-                    bundled(player, "commands.nominate.map.not-found");
+                    Utils.bundled(player, "commands.nominate.map.not-found");
                     return;
                 }
                 VoteSession session = new VoteMapSession(currentVote, map);
@@ -53,7 +52,7 @@ public class NominateCommand {
             case "load" -> {
                 Fi save = findSave(args[1]);
                 if (save == null) {
-                    bundled(player, "commands.nominate.load.not-found");
+                    Utils.bundled(player, "commands.nominate.load.not-found");
                     return;
                 }
                 VoteSession session = new VoteLoadSession(currentVote, save);
@@ -61,7 +60,7 @@ public class NominateCommand {
                 session.vote(player, 1);
                 vtime.reset();
             }
-            default -> bundled(player, "commands.nominate.incorrect-mode");
+            default -> Utils.bundled(player, "commands.nominate.incorrect-mode");
         }
     }
 }
