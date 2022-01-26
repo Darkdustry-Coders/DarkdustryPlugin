@@ -12,24 +12,23 @@ import static mindustry.Vars.content;
 import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
-public class RotateEntry implements HistoryEntry {
-
+public class RotateEntry implements CacheEntry {
     public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public final String name;
     public final short blockID;
     public final int rotation;
-    public final Date date;
+    public final long date;
 
     public RotateEntry(PlayerAction action) {
         this.name = action.player.coloredName();
         this.blockID = action.tile.build.block.id;
         this.rotation = action.rotation;
-        this.date = new Date();
+        this.date = new Date().getTime();
     }
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatTime(date));
+        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatTime(new Date(date)));
     }
 }

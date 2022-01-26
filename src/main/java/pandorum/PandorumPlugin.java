@@ -9,6 +9,8 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
+
+import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
@@ -22,24 +24,30 @@ import pandorum.models.PlayerModel;
 import static mindustry.Vars.dataDirectory;
 import static pandorum.PluginVars.*;
 
+import java.util.Date;
+
 public final class PandorumPlugin extends Plugin {
     public static void main(String[] args) throws InterruptedException {
+        var t = new Date();
         TilesHistory<CacheEntry> history = new TilesHistory<>((byte) 8, 30, 100_000);
 
-        for (int i = 0; i < 100_000; i++) {
+        for (int i = 0; i < 10_00; i++) {
             history.put((short) 10, (short) 10, new CacheEntry() {
                 public final String name = "AUF AUFOVICH";
                 public final short blockID = 6353;
                 public final Object value = new Object() {public String meow = "MIOW MOTHER FUCKER";};
                 public final boolean connect = true;
+
+                @Override
+                public String getMessage(Player player) {
+                    return null;
+                }
             });
         }
 
         history.getAll((short) 10, (short) 10, action -> {
-            System.out.println(action.values());
+            System.out.println(action.size);
         });
-
-        Thread.sleep(1000 * 60);
     }
 
     public PandorumPlugin() {

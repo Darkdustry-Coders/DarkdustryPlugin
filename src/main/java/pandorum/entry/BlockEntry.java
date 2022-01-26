@@ -9,43 +9,52 @@ import pandorum.comp.Icons;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static mindustry.Vars.content;
 import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
-public class BlockEntry implements HistoryEntry {
-
+public class BlockEntry implements CacheEntry {
     public final String name;
     public final short unitID;
     public final short blockID;
-    public final int rotation;
+    public final byte rotation;
     public final boolean breaking;
-    public final Date date;
+    public final long date;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getControllerName();
         this.unitID = event.unit.type.id;
         this.blockID = event.breaking ? -1 : event.tile.build.block.id;
-        this.rotation = event.breaking ? -1 : event.tile.build.rotation;
+        this.rotation = (byte) (event.breaking ? -1 : event.tile.build.rotation);
         this.breaking = event.breaking;
-        this.date = new Date();
+        this.date = new Date().getTime();
     }
 
-    @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         UnitType unit = content.unit(unitID);
-        String time = formatTime(date);
+        String time = formatTime(new Date(date));
         Locale locale = findLocale(player.locale);
 
-        if (breaking) {
-            return name != null ? Bundle.format("history.block.destroy.player", locale, name, time) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), time);
-        }
+        if (breaking)
+            return Bundle.format(
+                name != null ? "history.block.destroy.player" : "history.block.destroy.unit",
+                locale,
+                Objects.requireNonNullElse(name, Icons.get(unit.name)),
+                time
+            );
 
-        String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), time) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), time);
+        String base = Bundle.format(
+            name != null ? "history.block.construct.player" : "history.block.construct.unit",
+            locale,
+            Objects.requireNonNullElse(name, Icons.get(unit.name)),
+            Icons.get(block.name),
+            time
+        );
+
         if (block.rotate) base += Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]);
-
         return base;
     }
 }

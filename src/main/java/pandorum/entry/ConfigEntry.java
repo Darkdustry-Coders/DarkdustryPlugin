@@ -37,20 +37,19 @@ import static mindustry.Vars.world;
 import static pandorum.Misc.findLocale;
 import static pandorum.Misc.formatTime;
 
-public class ConfigEntry implements HistoryEntry {
-
+public class ConfigEntry implements CacheEntry {
     public final String name;
     public final short blockID;
     public final Object value;
     public final boolean connect;
-    public final Date date;
+    public final long date;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
         this.value = getConfig(event);
         this.connect = connect;
-        this.date = new Date();
+        this.date = new Date().getTime();
     }
 
     private Object getConfig(ConfigEvent event) {
@@ -63,7 +62,7 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
-        String time = formatTime(date);
+        String time = formatTime(new Date(date));
         Locale locale = findLocale(player.locale);
 
         if (block instanceof PowerNode) {
