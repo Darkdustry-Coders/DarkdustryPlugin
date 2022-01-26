@@ -68,7 +68,7 @@ public class Bot {
      */
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игрок(ов) на сервере", Groups.player.size()), null, ActivityType.STREAMING));
+        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игроков на сервере", Groups.player.size()), null, ActivityType.STREAMING));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
