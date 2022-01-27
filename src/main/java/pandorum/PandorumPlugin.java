@@ -62,19 +62,3 @@ public final class PandorumPlugin extends Plugin {
         ClientCommandsLoader.registerClientCommands(handler);
     }
 }
-
-class Test implements CacheEntry {
-    public final String name = "AUF AUFOVICH";
-    public long blockID = 6353;
-    public final Object value = new Object() {public String meow = "MIOW MOTHER FUCKER";};
-    public final boolean connect = true;
-
-    public Test(long a) {
-        this.blockID = a;
-    }
-
-    @Override
-    public String getMessage(Player player) {
-        return "null";
-    }
-}

@@ -44,7 +44,7 @@ public class PluginVars {
     /**
      * Ёмкость кэша, хранящего историю.
      */
-    public static final int historySize = 10000;
+    public static final int historySize = 40000;
 
     /**
      * Максимальное количество записей на один тайл
