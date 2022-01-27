@@ -13,6 +13,7 @@ import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.Config;
+import pandorum.database.MongoDataBridge;
 import pandorum.events.Loader;
 import pandorum.models.MapModel;
 import pandorum.models.PlayerModel;
@@ -21,6 +22,7 @@ import static mindustry.Vars.dataDirectory;
 import static pandorum.PluginVars.*;
 
 public final class PandorumPlugin extends Plugin {
+    public static void main(String[] args) {}
 
     public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин загружается...");

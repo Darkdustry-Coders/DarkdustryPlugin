@@ -16,11 +16,11 @@ public class MapModel extends MongoDataBridge<MapModel> {
     public int gamesPlayed = 0;
     public int bestWave = 0;
 
-    public static void find(Map map, Cons<MapModel> cons) {
+    public void find(Map map, Cons<MapModel> cons) {
         if (map != null) find(map.name(), cons);
     }
 
-    public static void find(String name, Cons<MapModel> cons) {
+    public void find(String name, Cons<MapModel> cons) {
         findAndApplySchema(MapModel.class, new BasicDBObject("name", name), cons);
     }
 }
