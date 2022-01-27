@@ -35,7 +35,7 @@ public class MapsListCommand {
             result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name());
         }
 
-        result.append(Bundle.format("commands.maps.current", findLocale(player.locale), state.map.tags.get("name", Bundle.format("commands.maps.unknown", findLocale(player.locale)))));
+        result.append(Bundle.format("commands.maps.current", findLocale(player.locale), state.map.name()));
 
         player.sendMessage(result.toString());
     }

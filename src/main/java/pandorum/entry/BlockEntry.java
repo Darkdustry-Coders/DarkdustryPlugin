@@ -1,5 +1,6 @@
 package pandorum.entry;
 
+import arc.util.Time;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
@@ -7,7 +8,6 @@ import mindustry.world.Block;
 import pandorum.comp.Bundle;
 import pandorum.comp.Icons;
 
-import java.util.Date;
 import java.util.Locale;
 
 import static mindustry.Vars.content;
@@ -21,7 +21,7 @@ public class BlockEntry implements HistoryEntry {
     public final short blockID;
     public final int rotation;
     public final boolean breaking;
-    public final Date date;
+    public final long time;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getControllerName();
@@ -29,21 +29,21 @@ public class BlockEntry implements HistoryEntry {
         this.blockID = event.breaking ? -1 : event.tile.build.block.id;
         this.rotation = event.breaking ? -1 : event.tile.build.rotation;
         this.breaking = event.breaking;
-        this.date = new Date();
+        this.time = Time.millis();
     }
 
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         UnitType unit = content.unit(unitID);
-        String time = formatDate(date);
+        String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
         if (breaking) {
-            return name != null ? Bundle.format("history.block.destroy.player", locale, name, time) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), time);
+            return name != null ? Bundle.format("history.block.destroy.player", locale, name, date) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), date);
         }
 
-        String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), time) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), time);
+        String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), date) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), date);
         if (block.rotate) base += Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]);
 
         return base;

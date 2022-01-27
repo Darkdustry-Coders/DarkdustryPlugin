@@ -34,7 +34,7 @@ public class Ranks {
             return;
         }
 
-        PlayerModel.find(player.uuid(), playerModel -> {
+        PlayerModel.find(player, playerModel -> {
             Rank current = get(playerModel.rank);
 
             if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {

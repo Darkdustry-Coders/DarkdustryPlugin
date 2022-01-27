@@ -40,12 +40,14 @@ public class PlayerJoinListener {
             Ranks.updateName(event.player);
         }), 0f, 1f));
 
-        PlayerModel.find(event.player.uuid(), playerModel -> playerModel.hellomsg, playerInfo -> Call.menu(event.player.con,
-                MenuHandler.welcomeMenu,
-                Bundle.format("events.welcome.header", findLocale(event.player.locale)),
-                Bundle.format("events.welcome.message", findLocale(event.player.locale), discordServerUrl),
-                new String[][] {{Bundle.format("events.welcome.ok", findLocale(event.player.locale))}, {Bundle.format("events.welcome.disable", findLocale(event.player.locale))}}
-        ));
+        PlayerModel.find(event.player, playerInfo -> {
+            if (playerInfo.welcomeMessage) Call.menu(event.player.con,
+                    MenuHandler.welcomeMenu,
+                    Bundle.format("events.welcome.header", findLocale(event.player.locale)),
+                    Bundle.format("events.welcome.message", findLocale(event.player.locale), discordServerUrl),
+                    new String[][] {{Bundle.format("events.welcome.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.disable", findLocale(event.player.locale))}}
+            );
+        });
 
         Utils.bundled(event.player, "events.motd");
 

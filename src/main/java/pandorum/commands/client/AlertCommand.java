@@ -7,7 +7,7 @@ import static pandorum.util.Utils.bundled;
 
 public class AlertCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(player.uuid(), playerModel -> {
+        PlayerModel.find(player, playerModel -> {
             playerModel.alerts = !playerModel.alerts;
             playerModel.save();
 

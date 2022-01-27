@@ -18,7 +18,7 @@ public class RankCommand {
             return;
         }
 
-        PlayerModel.find(target.uuid(), playerModel -> {
+        PlayerModel.find(target, playerModel -> {
             Rank rank = Ranks.getRank(target, playerModel.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.info",
                     findLocale(player.locale),

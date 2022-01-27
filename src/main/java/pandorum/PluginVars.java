@@ -91,9 +91,9 @@ public class PluginVars {
     public static final String configFileName = "config.json";
 
     /**
-     * Url для подключения к базе данных. Название базы данных. Название коллекции со статистикой игроков в базе данных.
+     * Url для подключения к базе данных. Название базы данных. Название коллекции со статистикой игроков в базе данных. Название коллекции со статистикой карт в базе данных.
      */
-    public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry", databaseName = "darkdustry", collectionName = "players";
+    public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry", databaseName = "darkdustry", playersCollectionName = "players", mapsCollectionName = "maps";
 
     /**
      * Команда для наблюдателей.

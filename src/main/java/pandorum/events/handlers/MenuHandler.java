@@ -12,13 +12,13 @@ import static mindustry.Vars.state;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despwMenu, artvMenu;
+    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu;
 
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 PlayerModel.find(player.uuid(), playerModel -> {
-                    playerModel.hellomsg = false;
+                    playerModel.welcomeMessage = false;
                     playerModel.save();
                     Utils.bundled(player, "events.welcome.disabled");
                 });
@@ -54,6 +54,14 @@ public class MenuHandler {
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
                 Utils.sendToChat("commands.admin.artv.info", player.coloredName());
+            }
+        });
+
+        mapRateMenu = Menus.registerMenu((player, option) -> {
+            if (option == 0) {
+
+            } else if (option == 1) {
+
             }
         });
     }

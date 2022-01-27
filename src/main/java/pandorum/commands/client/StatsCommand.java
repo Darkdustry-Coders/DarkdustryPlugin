@@ -19,7 +19,7 @@ public class StatsCommand {
             return;
         }
 
-        PlayerModel.find(target.uuid(), playerModel -> {
+        PlayerModel.find(target, playerModel -> {
             Rank rank = Ranks.getRank(target, playerModel.rank);
             Call.infoMessage(player.con, Bundle.format("commands.stats.content",
                     findLocale(player.locale),

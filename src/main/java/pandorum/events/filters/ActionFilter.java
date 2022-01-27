@@ -11,7 +11,7 @@ import static pandorum.PluginVars.history;
 public class ActionFilter {
 
     public static boolean filter(final PlayerAction action) {
-        if (config.historyEnabled() && action.player != null && action.type == ActionType.rotate) {
+        if (config.historyEnabled() && action.type == ActionType.rotate) {
             HistoryEntry entry = new RotateEntry(action);
             action.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }

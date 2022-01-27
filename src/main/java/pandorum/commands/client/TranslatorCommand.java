@@ -8,7 +8,7 @@ import static pandorum.PluginVars.codeLanguages;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerModel.find(player.uuid(), playerModel -> {
+        PlayerModel.find(player, playerModel -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", playerModel.locale);
                 case "list" -> {

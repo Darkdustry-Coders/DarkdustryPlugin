@@ -14,6 +14,7 @@ import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.Config;
 import pandorum.events.Loader;
+import pandorum.models.MapModel;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
@@ -33,13 +34,14 @@ public final class PandorumPlugin extends Plugin {
             Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
 
-        ConnectionString connectionString = new ConnectionString(connectionStringUrl);
-        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).retryWrites(true).build();
-
+        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(connectionStringUrl)).retryWrites(true).build();
         MongoClient mongoClient = MongoClients.create(settings);
-        MongoCollection<Document> playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
 
+        MongoCollection<Document> playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(playersCollectionName);
         PlayerModel.setSourceCollection(playersInfoCollection);
+
+        MongoCollection<Document> mapsInfoCollection = mongoClient.getDatabase(databaseName).getCollection(mapsCollectionName);
+        MapModel.setSourceCollection(mapsInfoCollection);
 
         Log.info("[Darkdustry] Плагин загружен...");
     }

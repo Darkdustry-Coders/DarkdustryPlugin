@@ -38,10 +38,10 @@ public class Utils {
         Groups.player.each(player -> bundled(player, key, values));
     }
 
-    public static String formatDate(Date date) {
+    public static String formatDate(long time) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
-        return format.format(date);
+        return format.format(new Date(time));
     }
 
     public static String formatDuration(long time) {

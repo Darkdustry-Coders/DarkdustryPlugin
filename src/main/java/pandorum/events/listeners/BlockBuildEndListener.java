@@ -16,12 +16,10 @@ public class BlockBuildEndListener {
             event.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
 
-        if (event.unit.isPlayer()) {
-            PlayerModel.find(event.unit.getPlayer().uuid(), playerModel -> {
-                if (event.breaking) playerModel.buildingsDeconstructed++;
-                else playerModel.buildingsBuilt++;
-                playerModel.save();
-            });
-        }
+        PlayerModel.find(event.unit.getPlayer(), playerModel -> {
+            if (event.breaking) playerModel.buildingsDeconstructed++;
+            else playerModel.buildingsBuilt++;
+            playerModel.save();
+        });
     }
 }
