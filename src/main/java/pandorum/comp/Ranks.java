@@ -8,14 +8,14 @@ import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.millisecondsToMinutes;
+import static pandorum.util.Utils.secondsToMinutes;
 
 public class Ranks {
 
     public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4);
-    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(1500 * 60 * 1000L, 100000, 100), null);
-    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(750 * 60 * 1000L, 50000, 30), veteran);
-    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(250 * 60 * 1000L, 25000, 15), activePlus);
+    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(1500 * 60, 100000, 100), null);
+    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(750 * 60, 50000, 30), veteran);
+    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(250 * 60, 25000, 15), activePlus);
     public static final Rank player = new Rank("[accent]Player", 0, null, active);
 
     private static final Seq<Rank> ranks = Seq.with(player, active, activePlus, veteran, admin);
@@ -42,7 +42,7 @@ public class Ranks {
                         findLocale(player.locale),
                         current.next.tag,
                         current.next.name,
-                        millisecondsToMinutes(playerModel.playTime),
+                        secondsToMinutes(playerModel.playTime),
                         playerModel.buildingsBuilt,
                         playerModel.gamesPlayed
                 ));
@@ -90,18 +90,18 @@ public class Ranks {
     }
 
     public static class Requirements {
-        public final long playtime;
+        public final int playTime;
         public final int buildingsBuilt;
         public final int gamesPlayed;
 
-        public Requirements(long playtime, int buildingsBuilt, int gamesPlayed) {
-            this.playtime = playtime;
+        public Requirements(int playTime, int buildingsBuilt, int gamesPlayed) {
+            this.playTime = playTime;
             this.buildingsBuilt = buildingsBuilt;
             this.gamesPlayed = gamesPlayed;
         }
 
-        public boolean check(long time, int built, int games) {
-            return time >= playtime && built >= buildingsBuilt && games >= gamesPlayed;
+        public boolean check(int playTime, int buildingsBuilt, int gamesPlayed) {
+            return playTime >= this.playTime && buildingsBuilt >= this.buildingsBuilt && gamesPlayed >= this.gamesPlayed;
         }
     }
 }

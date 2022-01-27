@@ -26,7 +26,7 @@ public class StatsCommand {
                     target.coloredName(),
                     rank.tag,
                     rank.name,
-                    Utils.millisecondsToMinutes(playerModel.playTime),
+                    Utils.secondsToMinutes(playerModel.playTime),
                     playerModel.buildingsBuilt,
                     playerModel.buildingsDeconstructed,
                     playerModel.gamesPlayed

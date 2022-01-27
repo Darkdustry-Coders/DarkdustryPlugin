@@ -79,7 +79,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         }
     }
 
-    public void save() {
+    public void save(MongoCollection<Document> collection) {
         Map<String, Object> values = getDeclaredPublicFields();
         BasicDBObject operations = toBsonOperations(latest, values);
 

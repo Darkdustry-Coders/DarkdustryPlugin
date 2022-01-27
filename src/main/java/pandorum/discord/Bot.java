@@ -63,10 +63,6 @@ public class Bot {
         return member.getRoles().contains(adminRole);
     }
 
-    /**
-     * Различные методы для отправки сообщений и эмбедов.
-     */
-
     public static void updateBotStatus() {
         jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игроков на сервере", Groups.player.size()), null, ActivityType.STREAMING));
     }

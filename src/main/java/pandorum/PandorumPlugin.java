@@ -13,6 +13,8 @@ import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.Config;
 import pandorum.events.Loader;
+import pandorum.models.MapModel;
+import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
 import static pandorum.PluginVars.*;
@@ -35,8 +37,8 @@ public final class PandorumPlugin extends Plugin {
         MongoClient client = MongoClients.create(settings);
         MongoDatabase database = client.getDatabase(databaseName);
 
-        playersInfoCollection = database.getCollection(playersCollectionName);
-        mapsInfoCollection = database.getCollection(mapsCollectionName);
+        PlayerModel.playersInfoCollection = database.getCollection(playersCollectionName);
+        MapModel.mapsInfoCollection = database.getCollection(mapsCollectionName);
 
         Log.info("[Darkdustry] Плагин загружен...");
     }

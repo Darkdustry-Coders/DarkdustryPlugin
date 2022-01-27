@@ -5,20 +5,17 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
-import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.entities.Message;
 import okhttp3.OkHttpClient;
-import org.bson.Document;
 import pandorum.comp.Config;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
@@ -30,7 +27,7 @@ public class PluginVars {
     /**
      *  Время непрерывной работы сервера. Время, проведенное на текущей карте.
      */
-    public static long serverUptime = 0, mapPlaytime = 0;
+    public static int serverUpTime = 0, mapPlayTime = 0;
 
     /**
      * Максимальный размер заполняемого пространства через /fill. Максимальное количество заспавненных юнитов через /spawn.
@@ -115,8 +112,6 @@ public class PluginVars {
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
 
-    public static final ObjectMap<String, Task> updateTimers = new ObjectMap<>();
-
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
@@ -127,8 +122,6 @@ public class PluginVars {
     public static final Interval interval = new Interval();
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
-    public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
 
     public static final OkHttpClient client = new OkHttpClient();
 

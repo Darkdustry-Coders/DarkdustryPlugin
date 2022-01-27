@@ -1,6 +1,5 @@
 package pandorum.events.listeners;
 
-import arc.util.Time;
 import mindustry.game.EventType.WorldLoadEvent;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
@@ -19,6 +18,6 @@ public class WorldLoadListener {
             world.tiles.eachTile(tile -> history[tile.x][tile.y] = Seqs.seqBuilder().maximumSize(historyLimit).expireAfterWrite(Duration.ofMillis(expireDelay)).build());
         }
 
-        mapPlaytime = Time.millis();
+        mapPlayTime = 0;
     }
 }

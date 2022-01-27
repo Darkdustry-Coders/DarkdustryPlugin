@@ -3,6 +3,7 @@ package pandorum.events;
 import arc.Events;
 import arc.util.Log;
 import arc.util.Reflect;
+import arc.util.Timer;
 import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
@@ -68,6 +69,8 @@ public class Loader {
         MenuHandler.init();
         Icons.init();
         Bot.init();
+
+        Timer.schedule(StateUpdater::update, 0f, 1f);
 
         Log.info("[Darkdustry] Инициализация плагина завершена...");
     }

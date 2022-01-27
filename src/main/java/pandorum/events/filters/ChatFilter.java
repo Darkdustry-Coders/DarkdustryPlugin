@@ -20,7 +20,7 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
 
-        Groups.player.each(player -> player != author, player -> PlayerModel.find(player.uuid(), playerModel -> {
+        Groups.player.each(player -> player != author, player -> PlayerModel.find(player, playerModel -> {
             if (playerModel.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;

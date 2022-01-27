@@ -4,13 +4,11 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
-import arc.util.Time;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.comp.Config.Gamemode;
 import pandorum.comp.Effects;
-import pandorum.discord.Bot;
 import pandorum.util.Utils;
 
 import java.awt.*;
@@ -28,7 +26,6 @@ public class PlayerLeaveListener {
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 
-        updateTimers.remove(event.player.uuid()).cancel();
         activeHistoryPlayers.remove(event.player.uuid());
         activeSpectatingPlayers.remove(event.player.uuid());
 
@@ -52,7 +49,5 @@ public class PlayerLeaveListener {
         if (votesVnw.remove(event.player.uuid())) {
             Utils.sendToChat("commands.vnw.left", event.player.coloredName(), votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
-
-        Time.runTask(30f, Bot::updateBotStatus);
     }
 }

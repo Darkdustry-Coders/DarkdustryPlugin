@@ -2,12 +2,11 @@ package pandorum.commands.server;
 
 import arc.Core;
 import arc.util.Log;
-import arc.util.Time;
 import mindustry.gen.Groups;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.mapPlaytime;
-import static pandorum.PluginVars.serverUptime;
+import static pandorum.PluginVars.mapPlayTime;
+import static pandorum.PluginVars.serverUpTime;
 import static pandorum.util.Utils.formatDuration;
 
 public class StatusCommand {
@@ -16,11 +15,11 @@ public class StatusCommand {
             Log.info("Сервер отключен. Может быть, пора запустить его командой 'host'?");
         } else {
             Log.info("Статус сервера:");
-            Log.info("  Сервер онлайн уже: @", formatDuration(Time.timeSinceMillis(serverUptime)));
+            Log.info("  Сервер онлайн уже: @.", formatDuration(serverUpTime * 1000L));
             Log.info("  Карта: @", state.map.name());
-            Log.info("  Время игры на этой карте: @", formatDuration(Time.timeSinceMillis(mapPlaytime)));
+            Log.info("  Время игры на этой карте: @.", formatDuration(mapPlayTime * 1000L));
 
-            if (state.rules.waves) Log.info("  @ волна, @ секунд до следующей волны.", state.wave, (int) (state.wavetime / 60));
+            if (state.rules.waves) Log.info("  @ волна, следующая волна через @.", state.wave, formatDuration((int) state.wavetime / 60 * 1000L));
             Log.info("  @ юнитов / @ вражеских юнитов.", Groups.unit.size(), state.enemies);
             Log.info("  @ TPS, @ MB памяти занято.", Core.graphics.getFramesPerSecond(), Core.app.getJavaHeap() / 1024 / 1024);
 

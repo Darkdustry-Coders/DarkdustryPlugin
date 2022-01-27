@@ -2,25 +2,21 @@ package pandorum.events.listeners;
 
 import arc.util.Log;
 import arc.util.Strings;
-import arc.util.Time;
-import arc.util.Timer;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.comp.Bundle;
 import pandorum.comp.Effects;
 import pandorum.comp.Ranks;
-import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.models.PlayerModel;
 import pandorum.util.Utils;
 
 import java.awt.*;
 
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
-import static pandorum.PluginVars.updateTimers;
 import static pandorum.discord.Bot.botChannel;
+import static pandorum.util.Search.findLocale;
 
 public class PlayerJoinListener {
 
@@ -34,23 +30,15 @@ public class PlayerJoinListener {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
-        updateTimers.put(event.player.uuid(), Timer.schedule(() -> PlayerModel.find(event.player.uuid(), playerModel -> {
-            playerModel.playTime += 1000;
-            playerModel.save();
-            Ranks.updateName(event.player);
-        }), 0f, 1f));
-
         PlayerModel.find(event.player, playerInfo -> {
             if (playerInfo.welcomeMessage) Call.menu(event.player.con,
                     MenuHandler.welcomeMenu,
-                    Bundle.format("events.welcome.header", findLocale(event.player.locale)),
-                    Bundle.format("events.welcome.message", findLocale(event.player.locale), discordServerUrl),
-                    new String[][] {{Bundle.format("events.welcome.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.disable", findLocale(event.player.locale))}}
+                    Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
+                    Bundle.format("events.welcome.menu.message", findLocale(event.player.locale), discordServerUrl),
+                    new String[][] {{Bundle.format("events.welcome.menu.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
             );
         });
 
-        Utils.bundled(event.player, "events.motd");
-
-        Time.runTask(30f, Bot::updateBotStatus);
+        Utils.bundled(event.player, "events.welcome.message", discordServerUrl);
     }
 }
