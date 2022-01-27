@@ -19,22 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
-    private final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
-    private MongoCollection<Document> collection;
-    private Map<String, Object> latest = new HashMap<>();
+
+    private static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
+    private static MongoCollection<Document> collection;
+    private static Map<String, Object> latest = new HashMap<>();
 
     public ObjectId _id;
     public int __v;
 
-    public MongoDataBridge() {
-
-    }
-
-    public void setSourceCollection(MongoCollection<Document> newCollection) {
+    public static void setSourceCollection(MongoCollection<Document> newCollection) {
         collection = newCollection;
     }
 
-    public void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> cons) {
+    public static <T extends MongoDataBridge<T>> void findAndApplySchema(Class<T> sourceClass, Bson filter, Cons<T> cons) {
         try {
             T dataClass = sourceClass.getConstructor().newInstance();
 
