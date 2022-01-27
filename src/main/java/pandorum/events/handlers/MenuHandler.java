@@ -59,6 +59,7 @@ public class MenuHandler {
         });
 
         mapRateMenu = Menus.registerMenu((player, option) -> {
+            // TODO 1 раз на игру
             if (option == 0) {
                 MapModel.find(state.map, mapModel -> {
                     mapModel.upVotes++;
