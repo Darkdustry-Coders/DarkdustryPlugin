@@ -2,14 +2,12 @@ package pandorum.models;
 
 import arc.func.Cons;
 import com.mongodb.BasicDBObject;
-import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.gen.Player;
-import org.bson.Document;
 import pandorum.database.MongoDataBridge;
 
-public class PlayerModel extends MongoDataBridge<PlayerModel> {
+import static pandorum.PluginVars.playersInfoCollection;
 
-    public static MongoCollection<Document> playersInfoCollection;
+public class PlayerModel extends MongoDataBridge<PlayerModel> {
 
     public String UUID;
 

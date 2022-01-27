@@ -2,14 +2,12 @@ package pandorum.models;
 
 import arc.func.Cons;
 import com.mongodb.BasicDBObject;
-import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.maps.Map;
-import org.bson.Document;
 import pandorum.database.MongoDataBridge;
 
-public class MapModel extends MongoDataBridge<MapModel> {
+import static pandorum.PluginVars.mapsInfoCollection;
 
-    public static MongoCollection<Document> mapsInfoCollection;
+public class MapModel extends MongoDataBridge<MapModel> {
 
     public String name;
 
