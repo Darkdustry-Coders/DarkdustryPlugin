@@ -5,6 +5,8 @@ import com.mongodb.BasicDBObject;
 import mindustry.gen.Player;
 import pandorum.database.MongoDataBridge;
 
+import static pandorum.PluginVars.playersInfoCollection;
+
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
 
     public String UUID;
@@ -23,7 +25,7 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     }
 
     public static void find(String UUID, Cons<PlayerModel> cons) {
-        findAndApplySchema(PlayerModel.class, new BasicDBObject("UUID", UUID), cons);
+        findAndApplySchema(playersInfoCollection, PlayerModel.class, new BasicDBObject("UUID", UUID), cons);
     }
 }
 

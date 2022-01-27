@@ -5,6 +5,8 @@ import com.mongodb.BasicDBObject;
 import mindustry.maps.Map;
 import pandorum.database.MongoDataBridge;
 
+import static pandorum.PluginVars.mapsInfoCollection;
+
 public class MapModel extends MongoDataBridge<MapModel> {
 
     public String name;
@@ -21,6 +23,6 @@ public class MapModel extends MongoDataBridge<MapModel> {
     }
 
     public static void find(String name, Cons<MapModel> cons) {
-        findAndApplySchema(MapModel.class, new BasicDBObject("name", name), cons);
+        findAndApplySchema(mapsInfoCollection, MapModel.class, new BasicDBObject("name", name), cons);
     }
 }

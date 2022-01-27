@@ -7,15 +7,12 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
-import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.mod.Plugin;
-import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.Config;
 import pandorum.events.Loader;
-import pandorum.models.MapModel;
-import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.dataDirectory;
 import static pandorum.PluginVars.*;
@@ -35,13 +32,11 @@ public final class PandorumPlugin extends Plugin {
         }
 
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(connectionStringUrl)).retryWrites(true).build();
-        MongoClient mongoClient = MongoClients.create(settings);
+        MongoClient client = MongoClients.create(settings);
+        MongoDatabase database = client.getDatabase(databaseName);
 
-        MongoCollection<Document> playersInfoCollection = mongoClient.getDatabase(databaseName).getCollection(playersCollectionName);
-        PlayerModel.setSourceCollection(playersInfoCollection);
-
-        MongoCollection<Document> mapsInfoCollection = mongoClient.getDatabase(databaseName).getCollection(mapsCollectionName);
-        MapModel.setSourceCollection(mapsInfoCollection);
+        playersInfoCollection = database.getCollection(playersCollectionName);
+        mapsInfoCollection = database.getCollection(mapsCollectionName);
 
         Log.info("[Darkdustry] Плагин загружен...");
     }

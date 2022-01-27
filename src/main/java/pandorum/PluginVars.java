@@ -11,12 +11,14 @@ import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.entities.Message;
 import okhttp3.OkHttpClient;
+import org.bson.Document;
 import pandorum.comp.Config;
 import pandorum.entry.HistoryEntry;
 import pandorum.struct.CacheSeq;
@@ -125,6 +127,8 @@ public class PluginVars {
     public static final Interval interval = new Interval();
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
+
+    public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
 
     public static final OkHttpClient client = new OkHttpClient();
 

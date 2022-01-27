@@ -22,7 +22,7 @@ public class UnitCommand {
             return;
         }
 
-        Unit unit = type.spawn(target.team(), target.x(), target.y());
+        Unit unit = type.spawn(target.team(), target.x, target.y);
         target.unit(unit);
         unit.spawnedByCore(true);
         Utils.bundled(target, "commands.admin.unit.success", Icons.get(type.name));
