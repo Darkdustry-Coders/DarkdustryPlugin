@@ -82,8 +82,8 @@ public class TilesHistory <T extends CacheEntry> {
                     keys.set(index, key);
                     values.set(index, value);
                 });
-        if (valuesFunction != null) valuesFunction.accept(values);
-        if (keysFunction != null) keysFunction.accept(keys);
+        if (valuesFunction != null) valuesFunction.accept(deleteNull(values));
+        if (keysFunction != null) keysFunction.accept(deleteNull(keys));
     }
 
     /**
@@ -142,5 +142,9 @@ public class TilesHistory <T extends CacheEntry> {
             historyCache.asMap().remove(keys.get(0));
             keys.forEach(key -> key.serialNumber--);
         });
+    }
+
+    private <N> Seq<N> deleteNull(Seq<N> seq) {
+        return seq.filter(value -> value != null);
     }
 }

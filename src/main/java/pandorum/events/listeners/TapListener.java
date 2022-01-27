@@ -17,8 +17,6 @@ public class TapListener {
                 for (CacheEntry entry : historyEntries)
                     historyString.append("\n").append(entry.getMessage(event.player));
 
-                System.out.println(historyEntries.size);
-
                 if (historyEntries.isEmpty())
                     historyString.append(Bundle.format("history.empty", findLocale(event.player.locale)));
 
