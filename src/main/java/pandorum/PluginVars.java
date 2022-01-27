@@ -8,6 +8,7 @@ import arc.util.Timekeeper;
 import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
+import darkdustry.mindustry.effects.utils.Engine;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -136,4 +137,7 @@ public class PluginVars {
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
+
+    public static Engine staticAnimationEngine = new Engine();
+    public static Engine dynamicAnimationEngine = new Engine();
 }
