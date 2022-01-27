@@ -1,8 +1,5 @@
 package pandorum.comp;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -11,6 +8,7 @@ import java.util.stream.Collectors;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import arc.math.Mathf;
 import arc.struct.Seq;
 import pandorum.entry.CacheEntry;
 
@@ -41,25 +39,27 @@ public class TilesHistory <T extends CacheEntry> {
      * 
      * @param x Позиция тайла по x
      * @param y Позиция тайла по y
-     * @param action Функция, аргументом которой передаётся список найденных значений
+     * @param valuesFunction Функция, аргументом которой передаётся сортированный список найденных значений
+     * @param keysFunction Функция, аргументом которой передаётся сортированный список ключей
      * 
      * @example
      * 
      * <pre>
      * var history = new TilesHistory<CacheEntry>((byte) 8, 30, 100_000);
      * 
-     * history.getAll((short) x, (short) y, data -> {
-     *     System.out.println(data.values());
+     * history.getAll((short) x, (short) y, history -> {
+     *     System.out.println(history.size);
+     * }, keys -> {
+     *     System.out.println(keys.size);
      * });
      * </pre>
      */
-    public void getAll(short x, short y, Consumer<Seq<T>> action) {
-        Seq<T> result = new Seq<T>();
+    public void getAll(short x, short y, Consumer<Seq<T>> valuesFunction, Consumer<Seq<TileKey>> keysFunction) {
+        Seq<T> values = new Seq<T>();
+        values.setSize(maxTileHistoryCapacity);
 
-        result.setSize(maxTileHistoryCapacity);
-
-        // for (int i = 0; i < maxTileHistoryCapacity; i++)
-        //     result.add(null);
+        Seq<TileKey> keys = new Seq<TileKey>();
+        keys.setSize(maxTileHistoryCapacity);
 
         historyCache
             .asMap()
@@ -77,9 +77,34 @@ public class TilesHistory <T extends CacheEntry> {
                 valueMapper -> valueMapper.getValue().join()
             )).forEach(
                 (key, value) -> {
-                    result.set((int) key.serialNumber, value);
+                    int index = key.serialNumber;
+                    
+                    keys.set(index, key);
+                    values.set(index, value);
                 });
-        action.accept(result);
+        if (valuesFunction != null) valuesFunction.accept(values);
+        if (keysFunction != null) keysFunction.accept(keys);
+    }
+
+    /**
+     * Получить все записи о тайле по x и y, действует ограничение {@code maxTileHistoryCapacity}
+     * 
+     * @param x Позиция тайла по x
+     * @param y Позиция тайла по y
+     * @param valuesFunction Функция, аргументом которой передаётся сортированный список найденных значений
+     * 
+     * @example
+     * 
+     * <pre>
+     * var history = new TilesHistory<CacheEntry>((byte) 8, 30, 100_000);
+     * 
+     * history.getAll((short) x, (short) y, history -> {
+     *     System.out.println(history.size);
+     * });
+     * </pre>
+     */
+    public void getAll(short x, short y, Consumer<Seq<T>> valuesFunction) {
+        getAll(x, y, valuesFunction, null);
     }
 
     /**
@@ -99,12 +124,23 @@ public class TilesHistory <T extends CacheEntry> {
      */
     public void put(short x, short y, T cacheEntry) {
         getAll(x, y, data -> {
-            byte serialNumber = (byte) data.count(value -> value != null);
+            byte serialNumber = (byte) Mathf.clamp(
+                data.count(value -> value != null),
+                0,
+                maxTileHistoryCapacity - 1
+            );
 
             historyCache.put(
                 new TileKey(x, y, serialNumber),
                 CompletableFuture.completedFuture(cacheEntry)
             );
+        }, keys -> {
+            if (
+                keys.count(key -> key != null) < maxTileHistoryCapacity
+            ) return;
+            
+            historyCache.asMap().remove(keys.get(0));
+            keys.forEach(key -> key.serialNumber--);
         });
     }
 }

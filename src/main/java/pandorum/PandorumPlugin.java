@@ -16,7 +16,6 @@ import org.bson.Document;
 import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
 import pandorum.comp.Config;
-import pandorum.comp.TilesHistory;
 import pandorum.entry.CacheEntry;
 import pandorum.events.Loader;
 import pandorum.models.PlayerModel;
@@ -24,32 +23,7 @@ import pandorum.models.PlayerModel;
 import static mindustry.Vars.dataDirectory;
 import static pandorum.PluginVars.*;
 
-import java.util.Date;
-
 public final class PandorumPlugin extends Plugin {
-    public static void main(String[] args) throws InterruptedException {
-        var t = new Date();
-        TilesHistory<CacheEntry> history = new TilesHistory<>((byte) 8, 30, 100_000);
-
-        for (int i = 0; i < 10_00; i++) {
-            history.put((short) 10, (short) 10, new CacheEntry() {
-                public final String name = "AUF AUFOVICH";
-                public final short blockID = 6353;
-                public final Object value = new Object() {public String meow = "MIOW MOTHER FUCKER";};
-                public final boolean connect = true;
-
-                @Override
-                public String getMessage(Player player) {
-                    return null;
-                }
-            });
-        }
-
-        history.getAll((short) 10, (short) 10, action -> {
-            System.out.println(action.size);
-        });
-    }
-
     public PandorumPlugin() {
         Log.info("[Darkdustry] Плагин запускается...");
 
@@ -86,5 +60,21 @@ public final class PandorumPlugin extends Plugin {
     @Override
     public void registerClientCommands(CommandHandler handler) {
         ClientCommandsLoader.registerClientCommands(handler);
+    }
+}
+
+class Test implements CacheEntry {
+    public final String name = "AUF AUFOVICH";
+    public long blockID = 6353;
+    public final Object value = new Object() {public String meow = "MIOW MOTHER FUCKER";};
+    public final boolean connect = true;
+
+    public Test(long a) {
+        this.blockID = a;
+    }
+
+    @Override
+    public String getMessage(Player player) {
+        return "null";
     }
 }

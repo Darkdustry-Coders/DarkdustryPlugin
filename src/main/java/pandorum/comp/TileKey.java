@@ -10,4 +10,12 @@ public class TileKey {
         this.y = y;
         this.serialNumber = serialNumber;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TileKey tileKey &&
+            tileKey.x == this.x &&
+            tileKey.y == this.y &&
+            tileKey.serialNumber == this.serialNumber;
+    }
 }
