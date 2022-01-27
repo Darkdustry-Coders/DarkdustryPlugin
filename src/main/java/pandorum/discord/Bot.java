@@ -1,6 +1,5 @@
 package pandorum.discord;
 
-import arc.math.Mathf;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
@@ -66,9 +65,6 @@ public class Bot {
 
     public static void updateBotStatus() {
         jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игроков на сервере", Groups.player.size()), null, ActivityType.STREAMING));
-
-        // TODO remove
-        if (Mathf.chance(0.01d)) adminChannel.sendMessage(":dagger: РЕЗНЯ").queue();
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
