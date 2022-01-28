@@ -76,10 +76,12 @@ public class MenuHandler {
                     if (option == 0) {
                         mapModel.upVotes++;
                         mapModel.save();
+                        mapRateVotes.put(player.uuid());
                         Utils.bundled(player, "commands.map.upvoted");
                     } else {
                         mapModel.downVotes++;
                         mapModel.save();
+                        mapRateVotes.put(player.uuid());
                         Utils.bundled(player, "commands.map.downvoted");
                     }
                 });
