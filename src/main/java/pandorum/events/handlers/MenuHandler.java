@@ -10,6 +10,7 @@ import pandorum.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
+import static pandorum.PluginVars.canVote;
 import static pandorum.PluginVars.mapRateVotes;
 
 public class MenuHandler {
@@ -63,6 +64,11 @@ public class MenuHandler {
             if ((option == 0 || option == 1)) {
                 if (mapRateVotes.contains(player.uuid())) {
                     Utils.bundled(player, "commands.map.already-voted");
+                    return;
+                }
+
+                if (!canVote) {
+                    Utils.bundled(player, "commands.can-not-vote");
                     return;
                 }
 

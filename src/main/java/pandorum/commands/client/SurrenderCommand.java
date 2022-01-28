@@ -6,14 +6,18 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.util.Utils;
 
-import static pandorum.PluginVars.voteRatio;
-import static pandorum.PluginVars.votesSurrender;
+import static pandorum.PluginVars.*;
 
 public class SurrenderCommand {
     public static void run(final String[] args, final Player player) {
         Seq<String> teamVotes = votesSurrender.get(player.team(), Seq::new);
         if (teamVotes.contains(player.uuid())) {
             Utils.bundled(player, "commands.already-voted");
+            return;
+        }
+
+        if (!canVote) {
+            Utils.bundled(player, "commands.can-not-vote");
             return;
         }
 

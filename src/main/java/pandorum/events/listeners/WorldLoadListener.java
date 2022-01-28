@@ -1,6 +1,5 @@
 package pandorum.events.listeners;
 
-import mindustry.game.EventType.WorldLoadEvent;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 
@@ -12,12 +11,19 @@ import static pandorum.PluginVars.*;
 public class WorldLoadListener {
 
     @SuppressWarnings("unchecked")
-    public static void call(final WorldLoadEvent event) {
+    public static void call() {
         if (config.historyEnabled()) {
             history = new CacheSeq[world.width()][world.height()];
             world.tiles.eachTile(tile -> history[tile.x][tile.y] = Seqs.seqBuilder().maximumSize(historyLimit).expireAfterWrite(Duration.ofMillis(expireDelay)).build());
         }
 
+        votesSurrender.clear();
+        votesRtv.clear();
+        votesVnw.clear();
+
+        mapRateVotes.clear();
+
         mapPlayTime = 0;
+        canVote = true;
     }
 }

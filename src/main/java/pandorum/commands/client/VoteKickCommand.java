@@ -1,24 +1,18 @@
 package pandorum.commands.client;
 
 import arc.util.Timekeeper;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration;
 import pandorum.util.Utils;
 import pandorum.vote.VoteKickSession;
 
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.*;
+import static pandorum.util.Search.findPlayer;
 
 public class VoteKickCommand {
     public static void run(final String[] args, final Player player) {
         if (!Administration.Config.enableVotekick.bool()) {
             Utils.bundled(player, "commands.votekick.disabled");
-            return;
-        }
-
-        if (Groups.player.size() < 3) {
-            Utils.bundled(player, "commands.votekick.not-enough-players");
             return;
         }
 

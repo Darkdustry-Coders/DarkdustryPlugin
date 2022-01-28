@@ -43,13 +43,14 @@ public class Loader {
         Events.on(BuildSelectEvent.class, BuildSelectListener::call);
         Events.on(ConfigEvent.class, ConfigListener::call);
         Events.on(DepositEvent.class, DepositListener::call);
-        Events.on(GameOverEvent.class, GameOverListener::call);
         Events.on(PlayerJoin.class, PlayerJoinListener::call);
         Events.on(PlayerLeave.class, PlayerLeaveListener::call);
-        Events.on(ServerLoadEvent.class, ServerLoadListener::call);
         Events.on(TapEvent.class, TapListener::call);
         Events.on(WithdrawEvent.class, WithdrawListener::call);
-        Events.on(WorldLoadEvent.class, WorldLoadListener::call);
+
+        Events.on(GameOverEvent.class, event -> GameOverListener.call());
+        Events.on(ServerLoadEvent.class, event -> ServerLoadListener.call());
+        Events.on(WorldLoadEvent.class, event -> WorldLoadListener.call());
 
         Events.run(Trigger.update, TriggerUpdateListener::update);
         Events.run("HexedGameOver", GameOverListener::call);

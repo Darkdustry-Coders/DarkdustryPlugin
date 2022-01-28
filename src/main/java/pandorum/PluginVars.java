@@ -31,6 +31,9 @@ public class PluginVars {
             /** Время, проведенное на текущей карте. */
             mapPlayTime = 0;
 
+    /** Могут ли игроки голосовать в данный момент. */
+    public static boolean canVote = false;
+
     /** Максимальный размер заполняемого пространства через /fill. */
     public static final int maxFillSize = 25,
             /** Максимальное количество заспавненных юнитов через /spawn. */

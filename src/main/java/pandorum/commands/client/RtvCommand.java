@@ -5,17 +5,22 @@ import arc.math.Mathf;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
+import static pandorum.PluginVars.*;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.sendToChat;
-import static pandorum.PluginVars.voteRatio;
-import static pandorum.PluginVars.votesRtv;
 
 public class RtvCommand {
     public static void run(final String[] args, final Player player) {
         if (votesRtv.contains(player.uuid())) {
             bundled(player, "commands.already-voted");
+            return;
+        }
+
+        if (!canVote) {
+            Utils.bundled(player, "commands.can-not-vote");
             return;
         }
 
