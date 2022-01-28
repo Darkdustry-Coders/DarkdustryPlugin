@@ -10,6 +10,7 @@ import pandorum.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
+import static pandorum.PluginVars.mapRateVotes;
 
 public class MenuHandler {
 
@@ -59,18 +60,22 @@ public class MenuHandler {
         });
 
         mapRateMenu = Menus.registerMenu((player, option) -> {
-            // TODO 1 раз на игру
-            if (option == 0) {
+            if ((option == 0 || option == 1)) {
+                if (mapRateVotes.contains(player.uuid())) {
+                    Utils.bundled(player, "commands.map.already-voted");
+                    return;
+                }
+
                 MapModel.find(state.map, mapModel -> {
-                    mapModel.upVotes++;
-                    mapModel.save();
-                    Utils.bundled(player, "commands.map.upvoted");
-                });
-            } else if (option == 1) {
-                MapModel.find(state.map, mapModel -> {
-                    mapModel.downVotes++;
-                    mapModel.save();
-                    Utils.bundled(player, "commands.map.downvoted");
+                    if (option == 0) {
+                        mapModel.upVotes++;
+                        mapModel.save();
+                        Utils.bundled(player, "commands.map.upvoted");
+                    } else {
+                        mapModel.downVotes++;
+                        mapModel.save();
+                        Utils.bundled(player, "commands.map.downvoted");
+                    }
                 });
             }
         });

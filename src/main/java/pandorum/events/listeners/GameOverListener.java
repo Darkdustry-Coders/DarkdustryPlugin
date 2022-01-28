@@ -11,26 +11,18 @@ import static pandorum.PluginVars.*;
 public class GameOverListener {
 
     public static void call(final GameOverEvent event) {
+        call();
+    }
+
+    public static void call() {
         votesSurrender.clear();
         votesRtv.clear();
         votesVnw.clear();
 
+        mapRateVotes.clear();
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();
 
-        Groups.player.each(player -> PlayerModel.find(player.uuid(), playerModel -> {
-            playerModel.gamesPlayed++;
-            playerModel.save();
-        }));
-
-        MapModel.find(state.map, mapModel -> {
-            mapModel.gamesPlayed++;
-            mapModel.bestWave = Math.max(mapModel.bestWave, state.wave);
-            mapModel.save();
-        });
-    }
-
-    public static void call() {
         Groups.player.each(player -> PlayerModel.find(player.uuid(), playerInfo -> {
             playerInfo.gamesPlayed++;
             playerInfo.save();

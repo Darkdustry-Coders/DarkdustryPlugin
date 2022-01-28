@@ -101,7 +101,7 @@ public class PluginVars {
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
-    public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
+    public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
