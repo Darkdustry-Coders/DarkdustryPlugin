@@ -7,8 +7,11 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.comp.Translator;
 import pandorum.models.PlayerModel;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.defaultLocale;
 import static pandorum.discord.Bot.text;
 
 public class ChatFilter {
@@ -26,15 +29,15 @@ public class ChatFilter {
                 return;
             }
 
-            String language = playerModel.locale.equals("auto") ? player.locale : playerModel.locale;
-            if (cache.containsKey(language)) {
-                player.sendMessage(formatTranslated(formatted, text, cache.get(language)), author, text);
+            String locale = playerModel.locale.equals("auto") ? Utils.notNullElse(codeLanguages.keys().toSeq().find(key -> player.locale.equalsIgnoreCase(key) || player.locale.startsWith(key)), defaultLocale) : playerModel.locale;
+            if (cache.containsKey(locale)) {
+                player.sendMessage(formatTranslated(formatted, text, cache.get(locale)), author, text);
                 return;
             }
 
-            Translator.translate(Strings.stripColors(text), language, translated -> {
+            Translator.translate(Strings.stripColors(text), locale, translated -> {
                 player.sendMessage(formatTranslated(formatted, text, translated), author, text);
-                cache.put(language, translated);
+                cache.put(locale, translated);
             });
         }));
 

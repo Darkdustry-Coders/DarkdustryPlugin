@@ -22,6 +22,10 @@ import static pandorum.PluginVars.config;
 
 public class Utils {
 
+    public static <T> T notNullElse(T value, T defaultValue) {
+        return value != null ? value : defaultValue;
+    }
+
     public static String colorizedTeam(Team team) {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }

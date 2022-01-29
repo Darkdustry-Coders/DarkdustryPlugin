@@ -15,6 +15,7 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Bundle;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.*;
 import static pandorum.util.Search.findLocale;
@@ -29,13 +30,14 @@ public class ConnectPacketHandler {
         Events.fire(new ConnectPacketEvent(con, packet));
 
         con.connectTime = Time.millis();
-        String locale = packet.locale;
+
+        String locale = Utils.notNullElse(packet.locale, defaultLocale);
         String uuid = packet.uuid;
         String usid = packet.usid;
         String ip = con.address;
         String name = fixName(packet.name);
 
-        if (con.hasBegunConnecting || uuid == null || usid == null || locale == null) {
+        if (con.hasBegunConnecting || uuid == null || usid == null) {
             con.kick(Bundle.format("kick.already-connected", findLocale(locale)), 0);
             return;
         }

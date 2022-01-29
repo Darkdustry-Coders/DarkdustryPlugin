@@ -3,8 +3,8 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 import pandorum.models.PlayerModel;
 
-import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.codeLanguages;
+import static pandorum.util.Utils.bundled;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
@@ -27,12 +27,13 @@ public class TranslatorCommand {
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
-                    if (!codeLanguages.containsKey(args[0])) {
+                    String locale = codeLanguages.keys().toSeq().find(key -> args[0].equalsIgnoreCase(key) || args[0].startsWith(key));
+                    if (locale == null) {
                         bundled(player, "commands.tr.incorrect");
-                        break;
+                        return;
                     }
 
-                    playerModel.locale = args[0];
+                    playerModel.locale = locale;
                     playerModel.save();
                     bundled(player, "commands.tr.changed", args[0], codeLanguages.get(args[0]));
                 }

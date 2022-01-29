@@ -33,7 +33,7 @@ public class Search {
 
     public static Locale findLocale(String name) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> name.equals(l.toString()) || name.startsWith(l.toString()));
-        return locale != null ? locale : Bundle.defaultLocale();
+        return Utils.notNullElse(locale, Bundle.defaultLocale());
     }
 
     public static Player findPlayer(String name) {
