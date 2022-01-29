@@ -23,12 +23,12 @@ public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        return Strings.canParseInt(name) ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name));
+        return Strings.canParsePositiveInt(name) ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return Strings.canParseInt(name) ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name));
+        return Strings.canParsePositiveInt(name) ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name));
     }
 
     public static Locale findLocale(String name) {
@@ -37,11 +37,11 @@ public class Search {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParseInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Strings.stripGlyphs(Strings.stripColors(player.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))));
+        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Strings.stripGlyphs(Strings.stripColors(player.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))));
     }
 
     public static Block findBlock(String name) {
-        return Strings.canParseInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
 
     public static Block findCore(String name) {
@@ -54,14 +54,14 @@ public class Search {
     }
 
     public static UnitType findUnit(String name) {
-        return Strings.canParseInt(name) ? content.unit(Strings.parseInt(name)) : content.units().find(unit -> unit.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? content.unit(Strings.parseInt(name)) : content.units().find(unit -> unit.name.equalsIgnoreCase(name));
     }
 
     public static Item findItem(String name) {
-        return Strings.canParseInt(name) ? content.item(Strings.parseInt(name)) : content.items().find(item -> item.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? content.item(Strings.parseInt(name)) : content.items().find(item -> item.name.equalsIgnoreCase(name));
     }
 
     public static Team findTeam(String name) {
-        return Strings.canParseInt(name) ? Team.get(Strings.parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? Team.get(Strings.parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
     }
 }
