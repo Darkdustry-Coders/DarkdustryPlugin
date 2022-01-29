@@ -90,9 +90,12 @@ public class PluginVars {
     /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
 
-    /** Различные эффекты. */
-    public static final Effect joinEffect = Fx.greenBomb, leaveEffect = Fx.greenLaserCharge, moveEffect = Fx.freezing;
-
+    /** Эффект при входе на сервер. */
+    public static final Effect joinEffect = Fx.greenBomb,
+            /** Эффект при выходе с сервера. */
+            leaveEffect = Fx.greenLaserCharge,
+            /** Эффект при движении игрока. */
+            moveEffect = Fx.freezing;
     public static final VoteSession[] currentVote = {null};
     public static final VoteKickSession[] currentVotekick = {null};
 
