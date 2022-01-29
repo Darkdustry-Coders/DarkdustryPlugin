@@ -50,6 +50,7 @@ public class Loader {
 
         Events.on(GameOverEvent.class, event -> GameOverListener.call());
         Events.on(ServerLoadEvent.class, event -> ServerLoadListener.call());
+        Events.on(WaveEvent.class, event -> WaveListener.call());
         Events.on(WorldLoadEvent.class, event -> WorldLoadListener.call());
 
         Events.run(Trigger.update, TriggerUpdateListener::update);
