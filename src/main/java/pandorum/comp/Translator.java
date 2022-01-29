@@ -41,7 +41,7 @@ public class Translator {
             .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"");
 
     public static void translate(String text, String language, Cons<String> cons) {
-        RequestBody formBody = new FormBody.Builder().add("to", language).add("text", text).add("platform", "dp").build();
+        RequestBody formBody = new FormBody.Builder().add("to", codeLanguages.get(language)).add("text", text).add("platform", "dp").build();
         Request request = translatorRequest.post(formBody).build();
 
         client.newCall(request).enqueue(new Callback() {

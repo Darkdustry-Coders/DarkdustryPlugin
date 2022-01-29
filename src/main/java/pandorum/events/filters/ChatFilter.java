@@ -46,6 +46,6 @@ public class ChatFilter {
     }
 
     private static String formatTranslated(String formatted, String text, String translatedText) {
-        return translatedText.equalsIgnoreCase(text) || translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
+        return translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
     }
 }

@@ -7,6 +7,7 @@ import java.time.Duration;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
+import static pandorum.util.Utils.sendToChat;
 
 public class WorldLoadListener {
 
@@ -25,5 +26,7 @@ public class WorldLoadListener {
 
         mapPlayTime = 0;
         canVote = true;
+
+        sendToChat("events.world-loaded");
     }
 }

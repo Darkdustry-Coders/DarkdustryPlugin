@@ -12,16 +12,16 @@ public class RemoveMapCommand {
     public static void run(final String[] args, final Message message) {
         Map map = findMap(args[0]);
         if (map == null) {
-            err(message.getChannel(), ":interrobang: Карта не найдена.", "Проверьте правильность ввода.");
+            err(message.getChannel(), ":mag: карта не найдена.", "Проверьте правильность ввода.");
             return;
         }
 
         try {
             maps.removeMap(map);
             maps.reload();
-            text(message.getChannel(), ":white_check_mark: Карта удалена с сервера.");
+            text(message.getChannel(), "Карта удалена с сервера.");
         } catch (Exception e) {
-            err(message.getChannel(), ":x: Ошибка.", "Удалить карту с сервера не удалось.");
+            err(message.getChannel(), ":x: ошибка.", "Удалить карту с сервера не удалось.");
         }
     }
 }

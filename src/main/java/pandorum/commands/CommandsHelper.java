@@ -78,7 +78,7 @@ public class CommandsHelper {
     public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Message> runner) {
         discordHandler.<Message>register(text, params, description, (args, message) -> {
             if (adminOnly && !adminCheck(message.getMember())) {
-                err(message.getChannel(), ":x: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+                err(message.getChannel(), ":x: эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }
 
