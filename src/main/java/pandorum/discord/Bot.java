@@ -10,8 +10,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import net.dv8tion.jda.internal.entities.EntityBuilder;
 import pandorum.commands.DiscordCommandsLoader;
@@ -52,10 +55,12 @@ public class Bot {
         }
     }
 
-    public static void handleMessage(Message message) {
-        CommandResponse response = discordHandler.handleMessage(message.getContentRaw(), message);
-        if (response.type == ResponseType.fewArguments || response.type == ResponseType.manyArguments) {
-            err(message.getChannel(), ":interrobang: Неверное количество аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+    public static void handleMessage(Context context) {
+        CommandResponse response = discordHandler.handleMessage(context.content, context.message);
+        if (response.type == ResponseType.fewArguments) {
+            context.err(":interrobang: Слишком мало аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+        } else if (response.type == ResponseType.manyArguments) {
+            context.err(":interrobang: Слишком много аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 
@@ -75,11 +80,11 @@ public class Bot {
         text(botChannel, text, args);
     }
 
-    public static void info(MessageChannel channel, String title, String text, Object... args) {
-        channel.sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(Color.orange).build()).queue();
+    public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
+        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(text, args)).build()).queue();
     }
 
-    public static void err(MessageChannel channel, String title, String text, Object... args) {
-        channel.sendMessageEmbeds(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(Color.red).build()).queue();
+    public static void sendEmbed(Color color, String text, Object... args) {
+        sendEmbed(botChannel, color, text, args);
     }
 }

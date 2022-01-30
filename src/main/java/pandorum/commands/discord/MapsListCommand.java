@@ -5,24 +5,22 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import pandorum.discord.Context;
 
 import java.awt.*;
 
 import static mindustry.Vars.maps;
-import static pandorum.discord.Bot.err;
-import static pandorum.discord.Bot.info;
 
 public class MapsListCommand {
-    public static void run(final String[] args, final Message message) {
+    public static void run(final String[] args, final Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            err(message.getChannel(), ":interrobang: Ошибка.", "Страница должна быть числом.");
+            context.err(":interrobang: Ошибка.", "Страница должна быть числом.");
             return;
         }
 
         Seq<Map> mapsList = maps.customMaps();
         if (mapsList.isEmpty()) {
-            info(message.getChannel(), ":map: На сервере нет карт.", "Список карт пуст.");
+            context.info(":map: На сервере нет карт.", "Список карт пуст.");
             return;
         }
 
@@ -30,7 +28,7 @@ public class MapsListCommand {
         int pages = Mathf.ceil(mapsList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            err(message.getChannel(), ":interrobang: Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
+            context.err(":interrobang: Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
@@ -40,10 +38,10 @@ public class MapsListCommand {
             maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append("\n");
         }
 
-        message.getChannel().sendMessageEmbeds(new EmbedBuilder()
-                .setColor(Color.blue)
+        context.sendEmbed(new EmbedBuilder()
+                .setColor(Color.cyan)
                 .setTitle(Strings.format(":map: Список карт сервера (страница @ из @)", page + 1, pages))
                 .addField(Strings.format("Всего карт: @", mapsList.size), maps.toString(), false)
-                .build()).queue();
+                .build());
     }
 }

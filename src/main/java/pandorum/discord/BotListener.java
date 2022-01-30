@@ -17,16 +17,15 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        Message message = event.getMessage();
-        Member member = message.getMember();
+        Context context = new Context(event);
 
-        if (member.getUser().getIdLong() == jda.getSelfUser().getIdLong() || event.isFromType(ChannelType.PRIVATE)) return;
+        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE) return;
 
-        handleMessage(message);
+        handleMessage(context);
 
-        if (message.getChannel().getIdLong() == botChannel.getIdLong() && !message.getContentRaw().isBlank()) {
-            sendToChat("events.discord.chat", member.getNickname(), message.getContentRaw());
-            Log.info("[Discord] @: @", member.getNickname(), message.getContentRaw());
+        if (context.channel.getIdLong() == botChannel.getIdLong() && context.content.length() > 0) {
+            sendToChat("events.discord.chat", context.nickname, context.content);
+            Log.info("[Discord] @: @", context.nickname, context.content);
         }
     }
 

@@ -8,17 +8,16 @@ import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import mindustry.gen.Player;
-import net.dv8tion.jda.api.entities.Message;
 import pandorum.comp.Bundle;
 import pandorum.comp.Config.Gamemode;
+import pandorum.discord.Context;
 
 import static mindustry.Vars.netServer;
-import static pandorum.util.Utils.adminCheck;
-import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.adminOnlyCommands;
 import static pandorum.PluginVars.config;
 import static pandorum.discord.Bot.adminCheck;
-import static pandorum.discord.Bot.err;
+import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.bundled;
 
 public class CommandsHelper {
 
@@ -75,18 +74,18 @@ public class CommandsHelper {
      * Методы для команд для Discord.
      */
 
-    public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Message> runner) {
-        discordHandler.<Message>register(text, params, description, (args, message) -> {
-            if (adminOnly && !adminCheck(message.getMember())) {
-                err(message.getChannel(), ":x: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+    public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Context> runner) {
+        discordHandler.<Context>register(text, params, description, (args, context) -> {
+            if (adminOnly && !adminCheck(context.member)) {
+                context.err(":x: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }
 
-            Core.app.post(() -> runner.accept(args, message));
+            Core.app.post(() -> runner.accept(args, context));
         });
     }
 
-    public static void registerDiscord(CommandHandler discordHandler, String text, String description, boolean adminOnly, CommandRunner<Message> runner) {
+    public static void registerDiscord(CommandHandler discordHandler, String text, String description, boolean adminOnly, CommandRunner<Context> runner) {
         registerDiscord(discordHandler, text, "", description, adminOnly, runner);
     }
 }

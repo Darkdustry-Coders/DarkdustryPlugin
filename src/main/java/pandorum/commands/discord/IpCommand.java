@@ -1,12 +1,10 @@
 package pandorum.commands.discord;
 
 import mindustry.net.Administration;
-import net.dv8tion.jda.api.entities.Message;
-
-import static pandorum.discord.Bot.info;
+import pandorum.discord.Context;
 
 public class IpCommand {
-    public static void run(final String[] args, final Message message) {
-        info(message.getChannel(), ":desktop: IP адрес сервера:", "darkdustry.ml:@", Administration.Config.port.num());
+    public static void run(final String[] args, final Context context) {
+        context.info(":satellite: IP адрес сервера:", "darkdustry.ml:@", Administration.Config.port.num());
     }
 }
