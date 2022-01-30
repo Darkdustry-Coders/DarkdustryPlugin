@@ -1,5 +1,6 @@
 package pandorum.events.listeners;
 
+import arc.util.Time;
 import pandorum.struct.CacheSeq;
 import pandorum.struct.Seqs;
 
@@ -27,6 +28,6 @@ public class WorldLoadListener {
         mapPlayTime = 0;
         canVote = true;
 
-        sendToChat("events.world-loaded");
+        Time.runTask(600f, () -> sendToChat("events.world-loaded"));
     }
 }

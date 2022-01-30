@@ -14,7 +14,7 @@ public class GameOverListener {
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();
 
-        Groups.player.each(player -> PlayerModel.find(player.uuid(), playerInfo -> {
+        Groups.player.each(player -> PlayerModel.find(player, playerInfo -> {
             playerInfo.gamesPlayed++;
             playerInfo.save();
         }));
