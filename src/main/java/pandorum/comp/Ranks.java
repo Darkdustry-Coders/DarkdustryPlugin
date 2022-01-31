@@ -90,17 +90,17 @@ public class Ranks {
     }
 
     public static class Requirements {
-        public final int playTime;
+        public final long playTime;
         public final int buildingsBuilt;
         public final int gamesPlayed;
 
-        public Requirements(int playTime, int buildingsBuilt, int gamesPlayed) {
+        public Requirements(long playTime, int buildingsBuilt, int gamesPlayed) {
             this.playTime = playTime;
             this.buildingsBuilt = buildingsBuilt;
             this.gamesPlayed = gamesPlayed;
         }
 
-        public boolean check(int playTime, int buildingsBuilt, int gamesPlayed) {
+        public boolean check(long playTime, int buildingsBuilt, int gamesPlayed) {
             return playTime >= this.playTime && buildingsBuilt >= this.buildingsBuilt && gamesPlayed >= this.gamesPlayed;
         }
     }
