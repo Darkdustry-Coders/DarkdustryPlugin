@@ -7,22 +7,22 @@ import static pandorum.PluginVars.currentVotekick;
 
 public class VoteCommand {
     public static void run(final String[] args, final Player player) {
-        if (currentVotekick[0] == null) {
+        if (currentVotekick == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (currentVotekick[0].voted().contains(player.uuid())) {
+        if (currentVotekick.voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
 
-        if (currentVotekick[0].target() == player) {
+        if (currentVotekick.target() == player) {
             bundled(player, "commands.vote.player-is-you");
             return;
         }
 
-        if (currentVotekick[0].target().team() != player.team()) {
+        if (currentVotekick.target().team() != player.team()) {
             bundled(player, "commands.vote.player-is-enemy");
             return;
         }
@@ -38,6 +38,6 @@ public class VoteCommand {
             return;
         }
 
-        currentVotekick[0].vote(player, sign);
+        currentVotekick.vote(player, sign);
     }
 }

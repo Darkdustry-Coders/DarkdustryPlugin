@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
+import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -96,8 +97,11 @@ public class PluginVars {
             leaveEffect = Fx.greenLaserCharge,
             /** Эффект при движении игрока. */
             moveEffect = Fx.freezing;
-    public static final VoteSession[] currentVote = {null};
-    public static final VoteKickSession[] currentVotekick = {null};
+
+    public static VoteSession currentVote = null;
+    public static VoteKickSession currentVotekick = null;
+
+    public static Task worldLoadTask = null;
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
 

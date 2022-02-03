@@ -11,12 +11,13 @@ import static pandorum.PluginVars.voteRatio;
 public abstract class VoteSession {
 
     protected final Seq<String> voted = new Seq<>();
-    protected final VoteSession[] session;
     protected final Task task;
+
+    protected VoteSession voteSession;
     protected int votes;
 
-    public VoteSession(VoteSession[] session) {
-        this.session = session;
+    public VoteSession(VoteSession voteSession) {
+        this.voteSession = voteSession;
         this.task = start();
     }
 
@@ -32,7 +33,7 @@ public abstract class VoteSession {
 
     public void stop() {
         voted.clear();
-        session[0] = null;
+        voteSession = null;
         task.cancel();
     }
 

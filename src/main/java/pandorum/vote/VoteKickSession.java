@@ -16,12 +16,13 @@ public class VoteKickSession {
     protected final Player player;
     protected final Player target;
     protected final Seq<String> voted = new Seq<>();
-    protected final VoteKickSession[] kickSession;
     protected final Task task;
+
+    protected VoteKickSession voteKickSession;
     protected int votes;
 
-    public VoteKickSession(VoteKickSession[] kickSession, Player player, Player target) {
-        this.kickSession = kickSession;
+    public VoteKickSession(VoteKickSession voteKickSession, Player player, Player target) {
+        this.voteKickSession = voteKickSession;
         this.player = player;
         this.target = target;
         this.task = start();
@@ -59,7 +60,7 @@ public class VoteKickSession {
 
     public void stop() {
         voted.clear();
-        kickSession[0] = null;
+        voteKickSession = null;
         task.cancel();
     }
 

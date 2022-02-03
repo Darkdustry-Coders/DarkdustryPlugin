@@ -16,8 +16,8 @@ public class VoteMapSession extends VoteSession {
 
     protected final Map target;
 
-    public VoteMapSession(VoteSession[] session, Map target) {
-        super(session);
+    public VoteMapSession(VoteSession voteSession, Map target) {
+        super(voteSession);
         this.target = target;
     }
 
