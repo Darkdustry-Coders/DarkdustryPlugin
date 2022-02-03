@@ -7,12 +7,12 @@ import static pandorum.PluginVars.currentVote;
 
 public class VotingCommand {
     public static void run(final String[] args, final Player player) {
-        if (currentVote == null) {
+        if (currentVote[0] == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (currentVote.voted().contains(player.uuid())) {
+        if (currentVote[0].voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
@@ -28,6 +28,6 @@ public class VotingCommand {
             return;
         }
 
-        currentVote.vote(player, sign);
+        currentVote[0].vote(player, sign);
     }
 }

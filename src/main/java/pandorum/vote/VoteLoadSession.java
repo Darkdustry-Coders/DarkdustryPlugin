@@ -17,7 +17,7 @@ public class VoteLoadSession extends VoteSession {
 
     protected final Fi target;
 
-    public VoteLoadSession(VoteSession voteSession, Fi target) {
+    public VoteLoadSession(VoteSession[] voteSession, Fi target) {
         super(voteSession);
         this.target = target;
     }

@@ -13,10 +13,10 @@ public abstract class VoteSession {
     protected final Seq<String> voted = new Seq<>();
     protected final Task task;
 
-    protected VoteSession voteSession;
+    protected final VoteSession[] voteSession;
     protected int votes;
 
-    public VoteSession(VoteSession voteSession) {
+    public VoteSession(VoteSession[] voteSession) {
         this.voteSession = voteSession;
         this.task = start();
     }
@@ -33,8 +33,8 @@ public abstract class VoteSession {
 
     public void stop() {
         voted.clear();
-        voteSession = null;
         task.cancel();
+        voteSession[0] = null;
     }
 
     public Seq<String> voted() {

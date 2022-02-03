@@ -18,10 +18,10 @@ public class VoteKickSession {
     protected final Seq<String> voted = new Seq<>();
     protected final Task task;
 
-    protected VoteKickSession voteKickSession;
+    protected final VoteKickSession[] voteKickSession;
     protected int votes;
 
-    public VoteKickSession(VoteKickSession voteKickSession, Player player, Player target) {
+    public VoteKickSession(VoteKickSession[] voteKickSession, Player player, Player target) {
         this.voteKickSession = voteKickSession;
         this.player = player;
         this.target = target;
@@ -60,8 +60,8 @@ public class VoteKickSession {
 
     public void stop() {
         voted.clear();
-        voteKickSession = null;
         task.cancel();
+        voteKickSession[0] = null;
     }
 
     public Seq<String> voted() {

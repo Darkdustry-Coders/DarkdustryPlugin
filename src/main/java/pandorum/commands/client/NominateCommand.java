@@ -18,7 +18,7 @@ import static pandorum.PluginVars.*;
 
 public class NominateCommand {
     public static void run(final String[] args, final Player player) {
-        if (currentVote != null) {
+        if (currentVote[0] != null) {
             Utils.bundled(player, "commands.vote-already-started");
             return;
         }
@@ -37,14 +37,14 @@ public class NominateCommand {
                     return;
                 }
                 VoteSession session = new VoteMapSession(currentVote, map);
-                currentVote = session;
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }
             case "save" -> {
                 Fi save = saveDirectory.child(Strings.format("@.@", args[1], saveExtension));
                 VoteSession session = new VoteSaveSession(currentVote, save);
-                currentVote = session;
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }
@@ -55,7 +55,7 @@ public class NominateCommand {
                     return;
                 }
                 VoteSession session = new VoteLoadSession(currentVote, save);
-                currentVote = session;
+                currentVote[0] = session;
                 session.vote(player, 1);
                 vtime.reset();
             }
