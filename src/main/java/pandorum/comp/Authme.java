@@ -16,18 +16,17 @@ import java.awt.*;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.discord.Bot.text;
-import static pandorum.util.Utils.secondsToMinutes;
+import static pandorum.util.Utils.*;
 
 public class Authme {
 
     public static final Button confirm = Button.success("admin.confirm", "Подтвердить");
-    public static final Button deny = Button.danger("admin.deny", "Отклонить");
-    public static final Button check = Button.primary("admin.check", "Информация");
+    public static final Button deny = Button.secondary("admin.deny", "Отклонить");
     public static final Button ban = Button.danger("admin.ban", "Забанить");
+    public static final Button check = Button.primary("admin.check", "Информация");
 
     public static void sendConfirmation(Player player) {
         adminChannel.sendMessage(new MessageBuilder()
@@ -49,7 +48,7 @@ public class Authme {
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             player.admin(true);
-            bundled(player, "commands.login.success");
+            bundled(player, "commands.login.confirm");
             message.delete().queue();
         }
     }
@@ -59,7 +58,7 @@ public class Authme {
         if (player != null) {
             text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", player.name, member.getAsMention());
 
-            bundled(player, "commands.login.ignore");
+            bundled(player, "commands.login.deny");
             message.delete().queue();
         }
     }
@@ -67,9 +66,9 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Игрок **@** был отправлен в дурку **@**", player.name, member.getAsMention());
+            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", player.name, member.getAsMention());
 
-            player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), secondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration * 1000);
+            player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
         }
     }

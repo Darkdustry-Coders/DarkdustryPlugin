@@ -36,8 +36,8 @@ public class BotListener extends ListenerAdapter {
         switch (event.getComponentId()) {
             case "admin.confirm" -> Authme.confirm(message, member);
             case "admin.deny" -> Authme.deny(message, member);
-            case "admin.check" -> Authme.check(message, event);
             case "admin.ban" -> Authme.ban(message, member);
+            case "admin.check" -> Authme.check(message, event);
         }
     }
 }
