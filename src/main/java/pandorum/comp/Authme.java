@@ -66,7 +66,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", player.name, member.getAsMention());
+            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", member.getAsMention(), player.name, millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
