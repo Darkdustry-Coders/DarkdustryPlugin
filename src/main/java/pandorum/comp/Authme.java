@@ -14,16 +14,20 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import java.awt.*;
 
 import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.loginAbuseKickDuration;
+import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.discord.Bot.text;
+import static pandorum.util.Utils.secondsToMinutes;
 
 public class Authme {
 
     public static final Button confirm = Button.success("admin.confirm", "Подтвердить");
     public static final Button deny = Button.danger("admin.deny", "Отклонить");
     public static final Button check = Button.primary("admin.check", "Информация");
+    public static final Button ban = Button.danger("admin.ban", "Забанить");
 
     public static void sendConfirmation(Player player) {
         adminChannel.sendMessage(new MessageBuilder()
@@ -35,7 +39,7 @@ public class Authme {
                         .addField("UUID:", player.uuid(), true)
                         .setFooter("Нажмите на кнопку чтобы подтвердить или отменить получение прав администратора.", null)
                         .build()
-                ).setActionRows(ActionRow.of(confirm, deny, check)).build()).queue(message -> loginWaiting.put(message, player));
+                ).setActionRows(ActionRow.of(confirm, deny, ban), ActionRow.of(check)).build()).queue(message -> loginWaiting.put(message, player));
     }
 
     public static void confirm(Message message, Member member) {
@@ -56,6 +60,16 @@ public class Authme {
             text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", player.name, member.getAsMention());
 
             bundled(player, "commands.login.ignore");
+            message.delete().queue();
+        }
+    }
+
+    public static void ban(Message message, Member member) {
+        Player player = loginWaiting.remove(message);
+        if (player != null) {
+            text(message.getChannel(), "Игрок **@** был отправлен в дурку **@**", player.name, member.getAsMention());
+
+            player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), secondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration * 1000);
             message.delete().queue();
         }
     }

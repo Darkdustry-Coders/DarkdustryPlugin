@@ -70,6 +70,9 @@ public class PluginVars {
     /** Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 
+    /** Время, на которое игрок будет выгнан за абьюз команды /login. В секундах. */
+    public static final long loginAbuseKickDuration = 5400L;
+
     /** Локаль по умолчанию. */
     public static final String defaultLocale = "en";
 
