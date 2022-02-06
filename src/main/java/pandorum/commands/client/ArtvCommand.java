@@ -13,7 +13,7 @@ public class ArtvCommand {
                 MenuHandler.artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
                 Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),
-                new String[][] {{Bundle.format("events.menu.yes", findLocale(player.locale)), Bundle.format("events.menu.no", findLocale(player.locale))}}
+                new String[][] {{Bundle.format("ui.menus.yes", findLocale(player.locale)), Bundle.format("ui.menus.no", findLocale(player.locale))}}
         );
     }
 }

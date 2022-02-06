@@ -35,7 +35,7 @@ public class TranslatorCommand {
 
                     playerModel.locale = locale;
                     playerModel.save();
-                    bundled(player, "commands.tr.changed", args[0], codeLanguages.get(args[0]));
+                    bundled(player, "commands.tr.changed", locale, codeLanguages.get(locale));
                 }
             }
         });

@@ -51,6 +51,7 @@ public class VoteKickCommand {
         VoteKickSession session = new VoteKickSession(currentVotekick, player, target);
         currentVotekick[0] = session;
         session.vote(player, 1);
+        Utils.bundled(target, "commands.votekick.do-not-leave", Utils.millisecondsToMinutes(kickDuration));
         vtime.reset();
     }
 }

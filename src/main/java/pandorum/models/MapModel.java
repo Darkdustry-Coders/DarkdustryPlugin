@@ -19,7 +19,7 @@ public class MapModel extends MongoDataBridge<MapModel> {
     public int bestWave = 0;
 
     public static void find(Map map, Cons<MapModel> cons) {
-        if (map != null) find(map.name(), cons);
+        if (map != null && map.hasTag("name")) find(map.name(), cons);
     }
 
     public static void find(String name, Cons<MapModel> cons) {

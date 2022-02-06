@@ -26,6 +26,14 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
+    public static int voteChoise(String value) {
+        return switch (value.toLowerCase()) {
+            case "y", "yes", "д", "да", "так", "+" -> 1;
+            case "n", "no", "н", "нет", "ні", "-" -> -1;
+            default -> 0;
+        };
+    }
+
     public static String colorizedTeam(Team team) {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }

@@ -22,7 +22,7 @@ public class ConfigCommand {
             if (args.length == 1) {
                 Log.info("Конфигурация '@' сейчас имеет значение @.", c.name(), c.get());
             } else {
-                if (args[1].equalsIgnoreCase("default")) {
+                if (args[1].equalsIgnoreCase("default") || args[1].equalsIgnoreCase("reset")) {
                     c.set(c.defaultValue);
                 } else if (c.isBool()) {
                     c.set(args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("true"));
@@ -35,7 +35,7 @@ public class ConfigCommand {
                 Log.info("Конфигурации '@' присвоено значение @.", c.name(), c.get());
                 Core.settings.forceSave();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             Log.err("Неизвестная конфигурация: '@'. Используй команду без аргументов, чтобы получить список доступных конфигураций.", args[0]);
         }
     }

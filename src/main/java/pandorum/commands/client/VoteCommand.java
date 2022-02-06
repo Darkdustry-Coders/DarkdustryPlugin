@@ -4,6 +4,7 @@ import mindustry.gen.Player;
 
 import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.currentVotekick;
+import static pandorum.util.Utils.voteChoise;
 
 public class VoteCommand {
     public static void run(final String[] args, final Player player) {
@@ -27,12 +28,7 @@ public class VoteCommand {
             return;
         }
 
-        int sign = switch (args[0].toLowerCase()) {
-            case "y", "yes", "+", "д", "да" -> 1;
-            case "n", "no", "-", "н", "нет" -> -1;
-            default -> 0;
-        };
-
+        int sign = voteChoise(args[0]);
         if (sign == 0) {
             bundled(player, "commands.vote.incorrect-sign");
             return;

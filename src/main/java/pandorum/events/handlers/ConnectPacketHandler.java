@@ -109,11 +109,11 @@ public class ConnectPacketHandler {
         netServer.admins.updatePlayerJoined(uuid, ip, name);
 
         Player player = Player.create();
-        player.admin = netServer.admins.isAdmin(uuid, usid);
-        player.name = name;
-        player.locale = locale;
-        player.color = new Color(packet.color).a(1f);
-        player.con = con;
+        player.admin(netServer.admins.isAdmin(uuid, usid));
+        player.name(name);
+        player.locale(locale);
+        player.color(new Color(packet.color).a(1f));
+        player.con(con);
         player.con.usid = usid;
         player.con.uuid = uuid;
         player.con.mobile = packet.mobile;

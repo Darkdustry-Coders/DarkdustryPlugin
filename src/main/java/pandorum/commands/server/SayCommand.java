@@ -9,6 +9,6 @@ public class SayCommand {
     public static void run(final String[] args) {
         Log.info("Сервер: &ly@", args[0]);
         sendToChat("commands.say.chat", args[0]);
-        text("**Сервер**: @", args[0]);
+        text("**Server**: @", args[0]);
     }
 }
