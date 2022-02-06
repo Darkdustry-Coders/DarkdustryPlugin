@@ -6,7 +6,7 @@ import arc.util.Reflect;
 import arc.util.Timer;
 import mindustry.core.NetServer;
 import mindustry.game.EventType.*;
-import mindustry.net.Administration;
+import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.comp.Icons;
@@ -57,14 +57,14 @@ public class Loader {
         Events.run("HexedGameOver", GameOverListener::call);
         Events.run("CastleGameOver", GameOverListener::call);
 
-        Administration.Config.motd.set("off");
-        Administration.Config.interactRateWindow.set(3);
-        Administration.Config.interactRateLimit.set(50);
-        Administration.Config.interactRateKick.set(1000);
-        Administration.Config.showConnectMessages.set(false);
-        Administration.Config.logging.set(true);
-        Administration.Config.strict.set(true);
-        Administration.Config.enableVotekick.set(true);
+        Config.motd.set("off");
+        Config.interactRateWindow.set(3);
+        Config.interactRateLimit.set(50);
+        Config.interactRateKick.set(1000);
+        Config.showConnectMessages.set(false);
+        Config.logging.set(true);
+        Config.strict.set(true);
+        Config.enableVotekick.set(true);
 
         Translator.loadLanguages();
 

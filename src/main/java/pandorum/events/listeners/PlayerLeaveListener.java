@@ -21,7 +21,7 @@ public class PlayerLeaveListener {
     public static void call(final PlayerLeave event) {
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
         Utils.sendToChat("events.player.leave", event.player.coloredName());
-        Bot.sendEmbed(Color.red, "@ вышел с сервера.", Strings.stripColors(event.player.name));
+        Bot.sendEmbed(Color.red, "@ left.", Strings.stripColors(event.player.name));
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 

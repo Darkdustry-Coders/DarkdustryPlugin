@@ -2,7 +2,7 @@ package pandorum.commands.client;
 
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
-import mindustry.net.Administration;
+import mindustry.net.Administration.Config;
 import pandorum.util.Utils;
 import pandorum.vote.VoteKickSession;
 
@@ -11,7 +11,7 @@ import static pandorum.util.Search.findPlayer;
 
 public class VoteKickCommand {
     public static void run(final String[] args, final Player player) {
-        if (!Administration.Config.enableVotekick.bool()) {
+        if (!Config.enableVotekick.bool()) {
             Utils.bundled(player, "commands.votekick.disabled");
             return;
         }
