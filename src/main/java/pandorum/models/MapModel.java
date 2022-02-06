@@ -14,7 +14,7 @@ public class MapModel extends MongoDataBridge<MapModel> {
     public int upVotes = 0;
     public int downVotes = 0;
 
-    public long playTime = 0L;
+    public int playTime = 0;
     public int gamesPlayed = 0;
     public int bestWave = 0;
 

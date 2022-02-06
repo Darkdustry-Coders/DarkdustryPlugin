@@ -14,7 +14,7 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     public String locale = "off";
     public boolean welcomeMessage = true;
     public boolean alerts = true;
-    public long playTime = 0L;
+    public int playTime = 0;
     public int buildingsBuilt = 0;
     public int buildingsDeconstructed = 0;
     public int gamesPlayed = 0;
@@ -32,5 +32,3 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
         save(playersInfoCollection);
     }
 }
-
-
