@@ -4,8 +4,8 @@ import mindustry.game.EventType.DepositEvent;
 import mindustry.gen.Groups;
 import mindustry.world.blocks.power.NuclearReactor;
 import pandorum.comp.Icons;
+import pandorum.entry.CacheEntry;
 import pandorum.entry.DepositEntry;
-import pandorum.entry.HistoryEntry;
 import pandorum.models.PlayerModel;
 
 import static pandorum.util.Utils.bundled;
@@ -21,8 +21,8 @@ public class DepositListener {
         }
 
         if (config.historyEnabled()) {
-            HistoryEntry entry = new DepositEntry(event);
-            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
+            CacheEntry entry = new DepositEntry(event);
+            event.tile.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
         }
     }
 }

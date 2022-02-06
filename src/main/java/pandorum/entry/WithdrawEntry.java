@@ -10,7 +10,7 @@ import static mindustry.Vars.content;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class WithdrawEntry implements HistoryEntry {
+public class WithdrawEntry implements CacheEntry {
 
     public final String name;
     public final short blockID;
