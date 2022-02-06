@@ -45,8 +45,7 @@ public class Bot {
             adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
 
             DiscordCommandsLoader.registerDiscordCommands(discordHandler);
-            EnumSet<MentionType> deny = EnumSet.of(MentionType.EVERYONE, MentionType.HERE);
-            AllowedMentions.setDefaultMentions(EnumSet.complementOf(deny));
+            AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
