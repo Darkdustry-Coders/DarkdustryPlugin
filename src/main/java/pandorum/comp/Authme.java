@@ -32,11 +32,10 @@ public class Authme {
         adminChannel.sendMessage(new MessageBuilder()
                 .setEmbeds(new EmbedBuilder()
                         .setColor(Color.cyan)
-                        .setAuthor("Log-in System", null, "https://icon-library.com/images/yes-icon/yes-icon-15.jpg")
                         .setTitle("Запрос на выдачу прав администратора.")
                         .addField("Никнейм:", player.name, true)
                         .addField("UUID:", player.uuid(), true)
-                        .setFooter("Нажмите на кнопку чтобы подтвердить или отменить получение прав администратора.", null)
+                        .setFooter("Нажмите на кнопку чтобы подтвердить или отклонить получение прав администратора. Используйте кнопку бана только в крайнем случае.", null)
                         .build()
                 ).setActionRows(ActionRow.of(confirm, deny, ban), ActionRow.of(check)).build()).queue(message -> loginWaiting.put(message, player));
     }
@@ -66,7 +65,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", player.name, member.getAsMention());
+            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", member.getAsMention(), player.name, millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
