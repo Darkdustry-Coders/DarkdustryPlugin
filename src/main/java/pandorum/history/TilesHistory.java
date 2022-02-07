@@ -19,9 +19,7 @@ public class TilesHistory<T extends HistoryEntry> {
 
     public TilesHistory(int maxTileHistoryCapacity, int allHistorySize) {
         this.maxTileHistoryCapacity = maxTileHistoryCapacity;
-        this.historyCache = Caffeine.newBuilder()
-                .maximumSize(allHistorySize)
-                .buildAsync();
+        this.historyCache = Caffeine.newBuilder().maximumSize(allHistorySize).buildAsync();
     }
 
     public void getAll(short x, short y, Cons<Seq<T>> valuesFunction, Cons<Seq<TileKey>> keysFunction) {
@@ -34,7 +32,7 @@ public class TilesHistory<T extends HistoryEntry> {
         historyCache.asMap().entrySet().stream().filter(entry -> {
             TileKey key = entry.getKey();
             return key.serialNumber >= 0 && key.serialNumber < maxTileHistoryCapacity && key.x == x && key.y == y;
-        }).collect(Collectors.toMap(Entry::getKey, valueMapper -> valueMapper.getValue().join())).forEach((key, value) -> {
+        }).collect(Collectors.toMap(Entry::getKey, entry -> entry.getValue().join())).forEach((key, value) -> {
             int index = key.serialNumber;
 
             keys.set(index, key);
@@ -50,14 +48,14 @@ public class TilesHistory<T extends HistoryEntry> {
     }
 
     public void put(short x, short y, T cacheEntry) {
-        getAll(x, y, data -> {
-            int serialNumber = Mathf.clamp(data.count(Objects::nonNull), 0, maxTileHistoryCapacity - 1);
+        getAll(x, y, values -> {
+            int serialNumber = Mathf.clamp(values.size, 0, maxTileHistoryCapacity - 1);
 
             historyCache.put(new TileKey(x, y, serialNumber), CompletableFuture.completedFuture(cacheEntry));
         }, keys -> {
-            if (keys.count(Objects::nonNull) < maxTileHistoryCapacity) return;
+            if (keys.size < maxTileHistoryCapacity) return;
 
-            historyCache.asMap().remove(keys.get(0));
+            historyCache.asMap().remove(keys.first());
             keys.forEach(key -> key.serialNumber--);
         });
     }

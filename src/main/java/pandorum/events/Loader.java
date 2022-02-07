@@ -9,6 +9,7 @@ import mindustry.game.EventType.*;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
+import mindustry.world.meta.BuildVisibility;
 import pandorum.components.Icons;
 import pandorum.components.Translator;
 import pandorum.discord.Bot;
@@ -20,8 +21,7 @@ import pandorum.events.handlers.InvalidCommandResponse;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.events.listeners.*;
 
-import static mindustry.Vars.net;
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
 import static pandorum.PluginVars.outputBuffer;
 import static pandorum.PluginVars.writeBuffer;
 
@@ -71,6 +71,8 @@ public class Loader {
         MenuHandler.init();
         Icons.init();
         Bot.init();
+
+        content.blocks().each(block -> block.buildVisibility == BuildVisibility.hidden || block.buildVisibility == BuildVisibility.debugOnly || block.buildVisibility == BuildVisibility.lightingOnly, block -> block.buildVisibility = BuildVisibility.shown);
 
         Timer.schedule(StateUpdater::update, 0f, 1f);
 
