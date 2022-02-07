@@ -8,9 +8,9 @@ import mindustry.world.Tile;
 import pandorum.comp.Icons;
 
 import static mindustry.Vars.world;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Search.findBlock;
 import static pandorum.PluginVars.maxFillSize;
+import static pandorum.util.Search.findBlock;
+import static pandorum.util.Utils.bundled;
 
 public class FillCommand {
     public static void run(final String[] args, final Player player) {

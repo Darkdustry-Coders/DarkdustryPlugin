@@ -6,7 +6,8 @@ import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
+import static pandorum.util.Search.findPlayer;
+import static pandorum.util.Search.findUnit;
 
 public class UnitCommand {
     public static void run(final String[] args, final Player player) {

@@ -1,6 +1,7 @@
 package pandorum.util;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -36,6 +37,10 @@ public class Utils {
 
     public static String colorizedTeam(Team team) {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
+    }
+
+    public static void eachPlayerInTeam(Team team, Cons<Player> cons) {
+        Groups.player.each(player -> player.team() == team, cons);
     }
 
     public static boolean adminCheck(Player player) {

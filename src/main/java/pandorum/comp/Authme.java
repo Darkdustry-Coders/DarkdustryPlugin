@@ -15,11 +15,12 @@ import java.awt.*;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
-import static pandorum.util.Search.findLocale;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.discord.Bot.text;
-import static pandorum.util.Utils.*;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.bundled;
+import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class Authme {
 

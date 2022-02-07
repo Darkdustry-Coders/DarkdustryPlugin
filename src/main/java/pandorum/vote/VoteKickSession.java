@@ -8,8 +8,8 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.*;
+import static pandorum.util.Search.findLocale;
 
 public class VoteKickSession {
 

@@ -7,8 +7,9 @@ import pandorum.comp.Bundle;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Search.findPlayer;
 
 public class BanCommand {
     public static void run(final String[] args) {

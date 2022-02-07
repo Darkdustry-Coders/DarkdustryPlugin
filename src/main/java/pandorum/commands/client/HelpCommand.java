@@ -8,8 +8,8 @@ import mindustry.gen.Player;
 import pandorum.commands.CommandsHelper;
 import pandorum.comp.Bundle;
 
-import static pandorum.util.Utils.bundled;
 import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.bundled;
 
 public class HelpCommand {
     public static void run(final String[] args, final Player player) {

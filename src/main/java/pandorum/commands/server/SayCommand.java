@@ -2,8 +2,8 @@ package pandorum.commands.server;
 
 import arc.util.Log;
 
-import static pandorum.util.Utils.sendToChat;
 import static pandorum.discord.Bot.text;
+import static pandorum.util.Utils.sendToChat;
 
 public class SayCommand {
     public static void run(final String[] args) {

@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import pandorum.comp.Authme;
 
-import static pandorum.util.Utils.sendToChat;
 import static pandorum.discord.Bot.*;
+import static pandorum.util.Utils.sendToChat;
 
 public class BotListener extends ListenerAdapter {
 

@@ -7,7 +7,8 @@ import pandorum.models.MapModel;
 import pandorum.models.PlayerModel;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.mapPlayTime;
+import static pandorum.PluginVars.serverUpTime;
 
 public class StateUpdater {
 

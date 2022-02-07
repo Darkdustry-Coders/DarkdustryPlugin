@@ -13,8 +13,9 @@ import pandorum.vote.VoteSession;
 
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.*;
+import static pandorum.util.Search.findMap;
+import static pandorum.util.Search.findSave;
 
 public class NominateCommand {
     public static void run(final String[] args, final Player player) {

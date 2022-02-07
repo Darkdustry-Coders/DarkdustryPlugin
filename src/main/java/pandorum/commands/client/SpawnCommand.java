@@ -7,8 +7,9 @@ import mindustry.type.UnitType;
 import pandorum.comp.Icons;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.maxSpawnAmount;
+import static pandorum.util.Search.findTeam;
+import static pandorum.util.Search.findUnit;
 
 public class SpawnCommand {
     public static void run(final String[] args, final Player player) {

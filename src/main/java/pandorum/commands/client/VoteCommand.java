@@ -2,8 +2,8 @@ package pandorum.commands.client;
 
 import mindustry.gen.Player;
 
-import static pandorum.util.Utils.bundled;
 import static pandorum.PluginVars.currentVotekick;
+import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.voteChoise;
 
 public class VoteCommand {

@@ -2,10 +2,10 @@ package pandorum.commands.client;
 
 import mindustry.gen.Player;
 
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Search.findPlayer;
 import static pandorum.PluginVars.activeSpectatingPlayers;
 import static pandorum.PluginVars.spectateTeam;
+import static pandorum.util.Search.findPlayer;
+import static pandorum.util.Utils.bundled;
 
 public class SpectateCommand {
     public static void run(final String[] args, final Player player) {

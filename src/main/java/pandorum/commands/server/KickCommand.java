@@ -5,9 +5,10 @@ import mindustry.gen.Player;
 import pandorum.comp.Bundle;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.kickDuration;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Search.findPlayer;
 
 public class KickCommand {
     public static void run(final String[] args) {

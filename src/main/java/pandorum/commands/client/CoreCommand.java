@@ -8,7 +8,8 @@ import mindustry.world.Block;
 import pandorum.comp.Icons;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
+import static pandorum.util.Search.findCore;
+import static pandorum.util.Search.findTeam;
 
 public class CoreCommand {
     public static void run(final String[] args, final Player player) {

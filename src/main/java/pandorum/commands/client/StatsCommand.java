@@ -8,7 +8,8 @@ import pandorum.comp.Ranks.Rank;
 import pandorum.models.PlayerModel;
 import pandorum.util.Utils;
 
-import static pandorum.util.Search.*;
+import static pandorum.util.Search.findLocale;
+import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Utils.bundled;
 
 public class StatsCommand {
