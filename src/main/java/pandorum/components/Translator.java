@@ -1,4 +1,4 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.func.Cons;
 import com.google.gson.JsonArray;

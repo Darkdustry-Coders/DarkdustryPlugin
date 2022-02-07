@@ -6,7 +6,7 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import static mindustry.Vars.saveDirectory;
 import static pandorum.util.Search.findLocale;

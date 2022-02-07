@@ -1,11 +1,11 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.models.PlayerModel;
+import pandorum.database.models.PlayerModel;
 
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.secondsToMinutes;

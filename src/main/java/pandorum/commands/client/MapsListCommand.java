@@ -5,7 +5,7 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import static mindustry.Vars.maps;
 import static mindustry.Vars.state;

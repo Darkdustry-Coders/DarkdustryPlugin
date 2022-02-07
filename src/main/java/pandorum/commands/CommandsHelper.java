@@ -8,8 +8,8 @@ import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
-import pandorum.comp.Config.Gamemode;
+import pandorum.components.Bundle;
+import pandorum.components.Config.Gamemode;
 import pandorum.discord.Context;
 
 import static mindustry.Vars.netServer;

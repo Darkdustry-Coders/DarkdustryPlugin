@@ -4,8 +4,8 @@ import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
-import pandorum.entry.CacheEntry;
-import pandorum.entry.ConfigEntry;
+import pandorum.history.entry.HistoryEntry;
+import pandorum.history.entry.ConfigEntry;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
@@ -21,19 +21,25 @@ public class ConfigListener {
 
                 if (event.tile.block instanceof PowerNode node && historyEntries.any() && historyEntries.peek() instanceof ConfigEntry lastConfigEntry && lastConfigEntry.value instanceof Long value) {
                     int connections = event.tile.power.links.size;
-                    connected = historyEntries.size >= 2 && historyEntries.get(historyEntries.size - 2) instanceof ConfigEntry configEntry && configEntry.value instanceof Long longValue && Pack.leftInt(longValue) != connections && content.block(configEntry.blockID) instanceof PowerNode ? isLastUniqueCount(historyEntries, value, node.maxNodes) : connections > Pack.leftInt(value);
+
+                    connected = historyEntries.size >= 2
+                            && historyEntries.get(historyEntries.size - 2) instanceof ConfigEntry configEntry
+                            && configEntry.value instanceof Long longValue
+                            && Pack.leftInt(longValue) != connections
+                            && content.block(configEntry.blockID) instanceof PowerNode ? isLastUniqueCount(historyEntries, value, node.maxNodes) : connections > Pack.leftInt(value);
                 }
 
-                CacheEntry entry = new ConfigEntry(event, connected);
+                HistoryEntry entry = new ConfigEntry(event, connected);
                 event.tile.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
             });
         }
     }
 
-    private static boolean isLastUniqueCount(Seq<CacheEntry> entries, long lastCount, int maxSearchBound) {
+    private static boolean isLastUniqueCount(Seq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
         for (int i = entries.size - 2; i >= maxSearchBound; i--) {
-            if (entries.get(i) instanceof ConfigEntry configEntry && configEntry.value instanceof Long value)
-                if (lastCount > value) return true;
+            if (entries.get(i) instanceof ConfigEntry configEntry && configEntry.value instanceof Long value) {
+                if (Pack.leftInt(lastCount) > Pack.leftInt(value)) return true;
+            }
         }
 
         return false;

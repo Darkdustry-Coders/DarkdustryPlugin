@@ -2,14 +2,12 @@ package pandorum.util;
 
 import arc.Core;
 import arc.func.Cons;
-import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.server.ServerControl;
-import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
-import pandorum.struct.Tuple2;
+import pandorum.components.Bundle;
+import pandorum.components.Icons;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -17,9 +15,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import static mindustry.Vars.port;
-import static pandorum.PluginVars.config;
 
 public class Utils {
 
@@ -78,11 +73,6 @@ public class Utils {
 
     public static long secondsToMinutes(long time) {
         return TimeUnit.SECONDS.toMinutes(time);
-    }
-
-    public static Tuple2<String, Integer> hubIp() {
-        String[] parts = config.hubIp.split(":");
-        return parts.length > 1 ? Tuple2.of(parts[0], Strings.parseInt(parts[1], port)) : Tuple2.of(config.hubIp, port);
     }
 
     public static ServerControl getServerControl() {

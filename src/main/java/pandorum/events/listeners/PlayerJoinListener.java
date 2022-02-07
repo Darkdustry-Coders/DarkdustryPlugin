@@ -5,12 +5,12 @@ import arc.util.Strings;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
 import mindustry.net.Administration.Config;
-import pandorum.comp.Bundle;
-import pandorum.comp.Effects;
-import pandorum.comp.Ranks;
+import pandorum.components.Bundle;
+import pandorum.components.Effects;
+import pandorum.components.Ranks;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
-import pandorum.models.PlayerModel;
+import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import java.awt.*;

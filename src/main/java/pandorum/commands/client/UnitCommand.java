@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 import pandorum.util.Utils;
 
 import static pandorum.util.Search.findPlayer;
@@ -27,6 +27,7 @@ public class UnitCommand {
         target.unit(unit);
         unit.spawnedByCore(true);
         Utils.bundled(target, "commands.admin.unit.success", Icons.get(type.name));
-        if (target != player) Utils.bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
+        if (target != player)
+            Utils.bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
     }
 }

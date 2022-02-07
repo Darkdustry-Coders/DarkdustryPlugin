@@ -13,7 +13,7 @@ import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import java.util.Locale;
 

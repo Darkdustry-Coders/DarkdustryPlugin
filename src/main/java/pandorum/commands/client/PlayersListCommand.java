@@ -6,7 +6,7 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;

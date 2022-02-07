@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 
 import static pandorum.PluginVars.loginCooldownTime;
 import static pandorum.PluginVars.loginCooldowns;
-import static pandorum.comp.Authme.sendConfirmation;
+import static pandorum.components.Authme.sendConfirmation;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.secondsToMinutes;
 

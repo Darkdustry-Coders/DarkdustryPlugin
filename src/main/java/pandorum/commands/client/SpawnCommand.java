@@ -4,7 +4,7 @@ import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 import pandorum.util.Utils;
 
 import static pandorum.PluginVars.maxSpawnAmount;

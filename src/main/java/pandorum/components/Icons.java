@@ -1,4 +1,4 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.struct.StringMap;
 import arc.util.Structs;

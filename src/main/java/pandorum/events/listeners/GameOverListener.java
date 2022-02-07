@@ -1,8 +1,8 @@
 package pandorum.events.listeners;
 
 import mindustry.gen.Groups;
-import pandorum.models.MapModel;
-import pandorum.models.PlayerModel;
+import pandorum.database.models.MapModel;
+import pandorum.database.models.PlayerModel;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;

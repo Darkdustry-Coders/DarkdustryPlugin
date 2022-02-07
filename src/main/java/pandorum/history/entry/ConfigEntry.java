@@ -1,4 +1,4 @@
-package pandorum.entry;
+package pandorum.history.entry;
 
 import arc.graphics.Color;
 import arc.util.Pack;
@@ -27,8 +27,8 @@ import mindustry.world.blocks.sandbox.LiquidSource;
 import mindustry.world.blocks.storage.Unloader;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.UnitFactory;
-import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
+import pandorum.components.Bundle;
+import pandorum.components.Icons;
 
 import java.util.Locale;
 
@@ -37,7 +37,7 @@ import static mindustry.Vars.world;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class ConfigEntry implements CacheEntry {
+public class ConfigEntry implements HistoryEntry {
     public final String name;
     public final short blockID;
     public final Object value;

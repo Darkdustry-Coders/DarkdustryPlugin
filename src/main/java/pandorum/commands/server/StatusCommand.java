@@ -19,7 +19,8 @@ public class StatusCommand {
             Log.info("  Карта: @", state.map.name());
             Log.info("  Время игры на этой карте: @.", formatDuration(mapPlayTime * 1000L));
 
-            if (state.rules.waves) Log.info("  @ волна, следующая волна через @.", state.wave, formatDuration((int) state.wavetime / 60 * 1000L));
+            if (state.rules.waves)
+                Log.info("  @ волна, следующая волна через @.", state.wave, formatDuration((int) state.wavetime / 60 * 1000L));
             Log.info("  @ юнитов / @ вражеских юнитов.", Groups.unit.size(), state.enemies);
             Log.info("  @ TPS, @ MB памяти занято.", Core.graphics.getFramesPerSecond(), Core.app.getJavaHeap() / 1024 / 1024);
 

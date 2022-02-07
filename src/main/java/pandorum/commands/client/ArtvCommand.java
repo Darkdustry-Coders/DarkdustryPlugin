@@ -2,7 +2,7 @@ package pandorum.commands.client;
 
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 import pandorum.events.handlers.MenuHandler;
 
 import static pandorum.util.Search.findLocale;

@@ -1,4 +1,4 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.files.Fi;
 import arc.struct.ObjectMap;

@@ -5,7 +5,7 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 import pandorum.util.Utils;
 
 import static pandorum.PluginVars.*;

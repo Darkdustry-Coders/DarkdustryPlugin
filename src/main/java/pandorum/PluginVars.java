@@ -8,7 +8,6 @@ import arc.util.Timekeeper;
 import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,53 +19,36 @@ import mindustry.gen.Player;
 import net.dv8tion.jda.api.entities.Message;
 import okhttp3.OkHttpClient;
 import org.bson.Document;
-import pandorum.comp.Config;
-import pandorum.comp.TilesHistory;
-import pandorum.entry.CacheEntry;
+import pandorum.components.Config;
+import pandorum.history.TilesHistory;
+import pandorum.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
 public class PluginVars {
 
-    /** Время непрерывной работы сервера. */
-    public static int serverUpTime = 0,
-            /** Время, проведенное на текущей карте. */
-            mapPlayTime = 0;
-
-    /** Могут ли игроки голосовать в данный момент. */
-    public static boolean canVote = false;
-
     /** Максимальный размер заполняемого пространства через /fill. */
-    public static final int maxFillSize = 25,
-            /** Максимальное количество заспавненных юнитов через /spawn. */
-            maxSpawnAmount = 25;
+    public static final int maxFillSize = 25;
+    /** Максимальное количество заспавненных юнитов через /spawn. */
+    public static final int maxSpawnAmount = 25;
 
     /** Время кулдауна для команды nominate. В секундах. */
-    public static final int nominateCooldownTime = 300,
-            /** Время кулдауна для команды votekick. В секундах */
-            votekickCooldownTime = 300,
-            /** Время кулдауна для команды login. В секундах */
-            loginCooldownTime = 1200,
-            /** Время кулдауна для команды sync. В секундах */
-            syncCooldownTime = 15;
+    public static final int nominateCooldownTime = 300;
+    /** Время кулдауна для команды votekick. В секундах */
+    public static final int votekickCooldownTime = 300;
+    /** Время кулдауна для команды login. В секундах */
+    public static final int loginCooldownTime = 1200;
+    /** Время кулдауна для команды sync. В секундах */
+    public static final int syncCooldownTime = 15;
 
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.6f;
 
-    /**
-     * Ёмкость кэша, хранящего историю.
-     */
-    public static final int historySize = 40000;
+    /** Максимальное количество записей на один тайл. */
+    public static final int maxTileHistoryCapacity = 6;
 
-    /**
-     * Максимальное количество записей на один тайл
-     */
-    public static final byte maxTileHistory = 8;
-
-    /**
-     * Время, через которое запись в истории тайла будет удалена. В минутах.
-     */
-    public static final int expireDelay = 30;
+    /** Ёмкость кэша, хранящего историю. */
+    public static final int allHistorySize = 100000;
 
     /** Расстояние до ядер, в котором отслеживаются ториевые реакторы. */
     public static final int alertsDistance = 120;
@@ -93,37 +75,34 @@ public class PluginVars {
     public static final String configFileName = "config.json";
 
     /** Url для подключения к базе данных. */
-    public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry",
-            /** Название базы данных. */
-            databaseName = "darkdustry",
-            /** Название коллекции со статистикой игроков в базе данных. */
-            playersCollectionName = "players",
-            /** Название коллекции со статистикой карт в базе данных. */
-            mapsCollectionName = "maps";
+    public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry";
+    /** Название базы данных. */
+    public static final String databaseName = "darkdustry";
+    /** Название коллекции со статистикой игроков в базе данных. */
+    public static final String playersCollectionName = "players";
+    /** Название коллекции со статистикой карт в базе данных. */
+    public static final String mapsCollectionName = "maps";
 
     /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
 
     /** Эффект при входе на сервер. */
-    public static final Effect joinEffect = Fx.greenBomb,
-            /** Эффект при выходе с сервера. */
-            leaveEffect = Fx.greenLaserCharge,
-            /** Эффект при движении игрока. */
-            moveEffect = Fx.freezing;
+    public static final Effect joinEffect = Fx.greenBomb;
+    /** Эффект при выходе с сервера. */
+    public static final Effect leaveEffect = Fx.greenLaserCharge;
+    /** Эффект при движении игрока. */
+    public static final Effect moveEffect = Fx.freezing;
 
     public static final VoteSession[] currentVote = {null};
     public static final VoteKickSession[] currentVotekick = {null};
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
-
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
-
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
     public static final Interval interval = new Interval();
@@ -132,10 +111,18 @@ public class PluginVars {
 
     public static final OkHttpClient client = new OkHttpClient();
 
+    /** Время непрерывной работы сервера. */
+    public static int serverUpTime = 0;
+    /** Время, проведенное на текущей карте. */
+    public static int mapPlayTime = 0;
+
+    /** Могут ли игроки голосовать в данный момент. */
+    public static boolean canVote = false;
+
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
 
     public static Config config;
-    public static TilesHistory<CacheEntry> history = new TilesHistory<>(maxTileHistory, expireDelay, historySize);
+    public static TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
 
     public static Task worldLoadTask = null;
 

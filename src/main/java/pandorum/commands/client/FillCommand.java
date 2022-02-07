@@ -5,7 +5,7 @@ import mindustry.content.Blocks;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.maxFillSize;

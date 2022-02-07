@@ -1,12 +1,12 @@
-package pandorum.entry;
+package pandorum.history.entry;
 
 import arc.util.Time;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
-import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
+import pandorum.components.Bundle;
+import pandorum.components.Icons;
 
 import java.util.Locale;
 
@@ -14,7 +14,7 @@ import static mindustry.Vars.content;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class BlockEntry implements CacheEntry {
+public class BlockEntry implements HistoryEntry {
     public final String name;
     public final short unitID;
     public final short blockID;
@@ -25,7 +25,7 @@ public class BlockEntry implements CacheEntry {
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getControllerName();
         this.unitID = event.unit.type.id;
-        this.blockID = event.breaking ? -1 : event.tile.build.block.id;
+        this.blockID = event.breaking ? -1 : event.tile.blockID();
         this.rotation = (byte) (event.breaking ? -1 : event.tile.build.rotation);
         this.breaking = event.breaking;
         this.time = Time.millis();

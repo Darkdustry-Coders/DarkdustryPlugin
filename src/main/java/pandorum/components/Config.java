@@ -1,4 +1,4 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.struct.Seq;
 
@@ -7,7 +7,7 @@ import static mindustry.Vars.state;
 public class Config {
 
     /**
-     * IP адрес хаба. Порт по умолчанию - 6567.
+     * IP адрес хаба. Порт - 6567 (по умолчанию).
      */
     public String hubIp = "darkdustry.ml";
 

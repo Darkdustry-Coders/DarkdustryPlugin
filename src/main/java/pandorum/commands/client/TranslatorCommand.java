@@ -1,7 +1,7 @@
 package pandorum.commands.client;
 
 import mindustry.gen.Player;
-import pandorum.models.PlayerModel;
+import pandorum.database.models.PlayerModel;
 
 import static pandorum.PluginVars.codeLanguages;
 import static pandorum.util.Utils.bundled;

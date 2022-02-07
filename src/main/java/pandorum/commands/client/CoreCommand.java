@@ -5,7 +5,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.world.Block;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 import pandorum.util.Utils;
 
 import static pandorum.util.Search.findCore;

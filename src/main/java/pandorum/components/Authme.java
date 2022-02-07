@@ -1,4 +1,4 @@
-package pandorum.comp;
+package pandorum.components;
 
 import arc.util.Strings;
 import mindustry.gen.Player;

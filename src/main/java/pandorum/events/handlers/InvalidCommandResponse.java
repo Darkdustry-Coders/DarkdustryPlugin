@@ -5,7 +5,7 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Strings;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import static mindustry.Vars.netServer;
 import static pandorum.util.Search.findLocale;

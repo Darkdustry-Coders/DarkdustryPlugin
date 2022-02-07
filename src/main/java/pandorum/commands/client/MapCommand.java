@@ -2,8 +2,8 @@ package pandorum.commands.client;
 
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
-import pandorum.models.MapModel;
+import pandorum.components.Bundle;
+import pandorum.database.models.MapModel;
 
 import static mindustry.Vars.state;
 import static pandorum.events.handlers.MenuHandler.mapRateMenu;

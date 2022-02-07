@@ -14,7 +14,7 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.*;

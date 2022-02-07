@@ -1,17 +1,17 @@
-package pandorum.entry;
+package pandorum.history.entry;
 
 import arc.util.Time;
 import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
-import pandorum.comp.Bundle;
-import pandorum.comp.Icons;
+import pandorum.components.Bundle;
+import pandorum.components.Icons;
 
 import static mindustry.Vars.content;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class RotateEntry implements CacheEntry {
+public class RotateEntry implements HistoryEntry {
     public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public final String name;

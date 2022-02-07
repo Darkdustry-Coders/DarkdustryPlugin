@@ -5,8 +5,8 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
-import pandorum.models.MapModel;
-import pandorum.models.PlayerModel;
+import pandorum.database.models.MapModel;
+import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;

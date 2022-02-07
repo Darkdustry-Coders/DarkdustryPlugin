@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.graphics.Pal;
-import pandorum.comp.Bundle;
+import pandorum.components.Bundle;
 
 import static pandorum.util.Search.findLocale;
 

@@ -3,7 +3,7 @@ package pandorum.commands;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import pandorum.commands.client.*;
-import pandorum.comp.Config.Gamemode;
+import pandorum.components.Config.Gamemode;
 
 public class ClientCommandsLoader {
 

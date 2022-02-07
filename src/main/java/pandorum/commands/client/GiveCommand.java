@@ -3,7 +3,7 @@ package pandorum.commands.client;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.type.Item;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 
 import static mindustry.Vars.state;
 import static pandorum.util.Search.findItem;

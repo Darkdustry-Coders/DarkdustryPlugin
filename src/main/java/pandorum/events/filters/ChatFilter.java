@@ -5,8 +5,8 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.comp.Translator;
-import pandorum.models.PlayerModel;
+import pandorum.components.Translator;
+import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;

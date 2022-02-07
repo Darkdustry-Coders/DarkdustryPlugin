@@ -1,6 +1,6 @@
 package pandorum.events.listeners;
 
-import pandorum.models.MapModel;
+import pandorum.database.models.MapModel;
 
 import static mindustry.Vars.state;
 

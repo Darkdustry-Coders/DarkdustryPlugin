@@ -2,10 +2,10 @@ package pandorum.commands.client;
 
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.comp.Bundle;
-import pandorum.comp.Ranks;
-import pandorum.comp.Ranks.Rank;
-import pandorum.models.PlayerModel;
+import pandorum.components.Bundle;
+import pandorum.components.Ranks;
+import pandorum.components.Ranks.Rank;
+import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static pandorum.util.Search.findLocale;

@@ -1,4 +1,4 @@
-package pandorum.models;
+package pandorum.database.models;
 
 import arc.func.Cons;
 import com.mongodb.BasicDBObject;

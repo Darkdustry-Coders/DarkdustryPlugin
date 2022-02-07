@@ -14,6 +14,8 @@ public class WorldLoadListener {
 
         mapRateVotes.clear();
 
+        history.clear();
+
         mapPlayTime = 0;
         canVote = true;
 

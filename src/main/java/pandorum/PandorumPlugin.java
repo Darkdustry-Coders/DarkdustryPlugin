@@ -3,7 +3,6 @@ package pandorum;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
-
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -12,7 +11,7 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.mod.Plugin;
 import pandorum.commands.ClientCommandsLoader;
 import pandorum.commands.ServerCommandsLoader;
-import pandorum.comp.Config;
+import pandorum.components.Config;
 import pandorum.events.Loader;
 
 import static mindustry.Vars.dataDirectory;

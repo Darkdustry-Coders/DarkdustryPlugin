@@ -2,7 +2,7 @@ package pandorum.commands.client;
 
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import pandorum.comp.Icons;
+import pandorum.components.Icons;
 import pandorum.util.Utils;
 
 import static pandorum.PluginVars.activeSpectatingPlayers;
@@ -29,6 +29,7 @@ public class TeamCommand {
         }
         target.team(team);
         Utils.bundled(target, "commands.admin.team.success", Utils.colorizedTeam(team));
-        if (target != player) Utils.bundled(player, "commands.admin.team.changed", target.coloredName(), Utils.colorizedTeam(team));
+        if (target != player)
+            Utils.bundled(player, "commands.admin.team.changed", target.coloredName(), Utils.colorizedTeam(team));
     }
 }

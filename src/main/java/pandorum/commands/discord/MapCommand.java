@@ -4,7 +4,7 @@ import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.discord.Context;
-import pandorum.models.MapModel;
+import pandorum.database.models.MapModel;
 import pandorum.util.Utils;
 
 import java.awt.*;
