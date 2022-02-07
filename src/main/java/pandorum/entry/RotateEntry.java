@@ -11,8 +11,7 @@ import static mindustry.Vars.content;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class RotateEntry implements HistoryEntry {
-
+public class RotateEntry implements CacheEntry {
     public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public final String name;

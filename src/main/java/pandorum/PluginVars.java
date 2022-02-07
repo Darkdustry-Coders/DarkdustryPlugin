@@ -8,6 +8,7 @@ import arc.util.Timekeeper;
 import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,8 +21,8 @@ import net.dv8tion.jda.api.entities.Message;
 import okhttp3.OkHttpClient;
 import org.bson.Document;
 import pandorum.comp.Config;
-import pandorum.entry.HistoryEntry;
-import pandorum.struct.CacheSeq;
+import pandorum.comp.TilesHistory;
+import pandorum.entry.CacheEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
@@ -52,11 +53,20 @@ public class PluginVars {
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.6f;
 
-    /** Ёмкость массива, хранящего информацию о действиях с тайлом. Может сильно влиять на трату ОЗУ. */
-    public static final int historyLimit = 6;
+    /**
+     * Ёмкость кэша, хранящего историю.
+     */
+    public static final int historySize = 40000;
 
-    /** Время, через которое запись в истории тайла будет удалена. В миллисекундах. */
-    public static final long expireDelay = 1800000L;
+    /**
+     * Максимальное количество записей на один тайл
+     */
+    public static final byte maxTileHistory = 8;
+
+    /**
+     * Время, через которое запись в истории тайла будет удалена. В минутах.
+     */
+    public static final int expireDelay = 30;
 
     /** Расстояние до ядер, в котором отслеживаются ториевые реакторы. */
     public static final int alertsDistance = 120;
@@ -125,7 +135,7 @@ public class PluginVars {
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
 
     public static Config config;
-    public static CacheSeq<HistoryEntry>[][] history;
+    public static TilesHistory<CacheEntry> history = new TilesHistory<>(maxTileHistory, expireDelay, historySize);
 
     public static Task worldLoadTask = null;
 

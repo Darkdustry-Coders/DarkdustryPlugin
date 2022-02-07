@@ -14,12 +14,11 @@ import static mindustry.Vars.content;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
-public class BlockEntry implements HistoryEntry {
-
+public class BlockEntry implements CacheEntry {
     public final String name;
     public final short unitID;
     public final short blockID;
-    public final int rotation;
+    public final byte rotation;
     public final boolean breaking;
     public final long time;
 
@@ -27,12 +26,11 @@ public class BlockEntry implements HistoryEntry {
         this.name = event.unit.getControllerName();
         this.unitID = event.unit.type.id;
         this.blockID = event.breaking ? -1 : event.tile.build.block.id;
-        this.rotation = event.breaking ? -1 : event.tile.build.rotation;
+        this.rotation = (byte) (event.breaking ? -1 : event.tile.build.rotation);
         this.breaking = event.breaking;
         this.time = Time.millis();
     }
 
-    @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         UnitType unit = content.unit(unitID);
@@ -45,7 +43,6 @@ public class BlockEntry implements HistoryEntry {
 
         String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), date) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), date);
         if (block.rotate) base += Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]);
-
         return base;
     }
 }
