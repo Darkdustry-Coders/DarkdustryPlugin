@@ -2,8 +2,8 @@ package pandorum.discord;
 
 import arc.util.Log;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -33,11 +33,11 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
         Message message = event.getMessage();
-        Member member = event.getMember();
+        User user = event.getUser();
         switch (event.getComponentId()) {
-            case "admin.confirm" -> Authme.confirm(message, member);
-            case "admin.deny" -> Authme.deny(message, member);
-            case "admin.ban" -> Authme.ban(message, member);
+            case "admin.confirm" -> Authme.confirm(message, user);
+            case "admin.deny" -> Authme.deny(message, user);
+            case "admin.ban" -> Authme.ban(message, user);
             case "admin.check" -> Authme.check(message, event);
         }
     }
