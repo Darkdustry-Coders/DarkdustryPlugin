@@ -25,8 +25,8 @@ public class BotListener extends ListenerAdapter {
         handleMessage(context);
 
         if (context.channel.getIdLong() == botChannel.getIdLong() && context.content.length() > 0) {
-            sendToChat("events.discord.chat", context.nickname, context.content);
-            Log.info("[Discord] @: @", context.nickname, context.content);
+            sendToChat("events.discord.chat", context.author.getAsTag(), context.content);
+            Log.info("[Discord] @: @", context.author.getAsTag(), context.content);
         }
     }
 
