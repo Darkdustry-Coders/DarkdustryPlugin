@@ -374,7 +374,7 @@ public class Icons {
 
     public static String teamsList() {
         StringBuilder teams = new StringBuilder();
-        Structs.each(team -> teams.append("\n[gold] - [white]").append(colorizedTeam(team)), Team.baseTeams);
+        Structs.each(team -> teams.append(" ").append(colorizedTeam(team)), Team.baseTeams);
         return teams.toString();
     }
 }
