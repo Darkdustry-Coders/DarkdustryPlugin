@@ -41,10 +41,10 @@ public class Authme {
                 ).setActionRows(ActionRow.of(confirm, deny, ban), ActionRow.of(check)).build()).queue(message -> loginWaiting.put(message, player));
     }
 
-    public static void confirm(Message message, Member member) {
+    public static void confirm(Message message, User user) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), member.getNickname());
+            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), user.getName());
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             player.admin(true);
@@ -53,20 +53,20 @@ public class Authme {
         }
     }
 
-    public static void deny(Message message, Member member) {
+    public static void deny(Message message, User user) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), member.getNickname());
+            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), user.getName());
 
             bundled(player, "commands.login.deny");
             message.delete().queue();
         }
     }
 
-    public static void ban(Message message, Member member) {
+    public static void ban(Message message, User user) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", member.getNickname(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", user.getName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
