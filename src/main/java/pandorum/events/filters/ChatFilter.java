@@ -11,7 +11,6 @@ import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.codeLanguages;
-import static pandorum.PluginVars.defaultLocale;
 import static pandorum.discord.Bot.text;
 
 public class ChatFilter {
@@ -29,14 +28,14 @@ public class ChatFilter {
                 return;
             }
 
-            String locale = playerModel.locale.equals("auto") ? Utils.notNullElse(codeLanguages.keys().toSeq().find(key -> player.locale.equalsIgnoreCase(key) || player.locale.startsWith(key)), defaultLocale) : playerModel.locale;
+            String locale = Translator.getLocale(player, playerModel.locale);
             if (cache.containsKey(locale)) {
-                player.sendMessage(formatTranslated(formatted, text, cache.get(locale)), author, text);
+                player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
             }
 
-            Translator.translate(Strings.stripColors(text), locale, translated -> {
-                player.sendMessage(formatTranslated(formatted, text, translated), author, text);
+            Translator.translate(Utils.stripAll(text), locale, translated -> {
+                player.sendMessage(formatTranslated(formatted, translated), author, text);
                 cache.put(locale, translated);
             });
         }));
@@ -45,7 +44,7 @@ public class ChatFilter {
         return null;
     }
 
-    private static String formatTranslated(String formatted, String text, String translatedText) {
+    private static String formatTranslated(String formatted, String translatedText) {
         return translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
     }
 }

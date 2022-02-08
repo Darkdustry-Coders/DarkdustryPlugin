@@ -27,7 +27,7 @@ public class TranslatorCommand {
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
-                    String locale = codeLanguages.keys().toSeq().find(key -> args[0].equalsIgnoreCase(key) || args[0].startsWith(key));
+                    String locale = codeLanguages.keys().toSeq().find(key -> key.equalsIgnoreCase(args[0]));
                     if (locale == null) {
                         bundled(player, "commands.tr.incorrect");
                         return;

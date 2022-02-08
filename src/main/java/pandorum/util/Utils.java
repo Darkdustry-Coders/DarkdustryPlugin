@@ -2,6 +2,7 @@ package pandorum.util;
 
 import arc.Core;
 import arc.func.Cons;
+import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -28,6 +29,10 @@ public class Utils {
             case "n", "no", "н", "нет", "ні", "-" -> -1;
             default -> 0;
         };
+    }
+
+    public static String stripAll(String str) {
+        return Strings.stripColors(Strings.stripGlyphs(str));
     }
 
     public static String colorizedTeam(Team team) {

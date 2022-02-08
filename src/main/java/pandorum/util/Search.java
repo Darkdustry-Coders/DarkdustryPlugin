@@ -37,7 +37,7 @@ public class Search {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Strings.stripGlyphs(Strings.stripColors(player.name)).equalsIgnoreCase(Strings.stripGlyphs(Strings.stripColors(name))));
+        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Utils.stripAll(player.name).equalsIgnoreCase(Utils.stripAll(name)));
     }
 
     public static Block findBlock(String name) {
