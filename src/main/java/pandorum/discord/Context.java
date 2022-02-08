@@ -29,7 +29,6 @@ public class Context {
 
         this.attachments = message.getAttachments();
         this.content = message.getContentRaw();
-        this.nickname = member.getNickname();
     }
 
     public void sendEmbed(MessageEmbed embed) {
