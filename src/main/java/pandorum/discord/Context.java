@@ -19,7 +19,6 @@ public class Context {
 
     public List<Attachment> attachments;
     public String content;
-    public String nickname;
 
     public Context(MessageReceivedEvent event) {
         this.message = event.getMessage();
