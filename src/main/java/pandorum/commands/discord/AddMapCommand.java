@@ -27,7 +27,7 @@ public class AddMapCommand {
             maps.reload();
             context.success(":white_check_mark: Успешно.", "Карта добавлена на сервер.");
         }).exceptionally(e -> {
-            context.err(":x: Ошибка.", "Добавить карту на сервер не удалось.");
+            context.err(":eyes: Ошибка.", "Добавить карту на сервер не удалось из-за внутренней ошибки сервера.");
             return null;
         });
     }
