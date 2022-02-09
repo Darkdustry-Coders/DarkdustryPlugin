@@ -19,7 +19,7 @@ public class RemoveMapCommand {
             maps.reload();
             context.success(":white_check_mark: Успешно.", "Карта удалена с сервера.");
         } catch (Exception e) {
-            context.err(":x: Ошибка.", "Удалить карту с сервера не удалось.");
+            context.err(":eyes: Ошибка.", "Удалить карту с сервера не удалось из-за внутренней ошибки сервера.");
         }
     }
 }
