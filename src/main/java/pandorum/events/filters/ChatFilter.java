@@ -10,7 +10,7 @@ import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.text;
 
 public class ChatFilter {
@@ -28,13 +28,13 @@ public class ChatFilter {
                 return;
             }
 
-            String locale = Translator.getLocale(player, playerModel.locale);
+            String locale = playerModel.locale.equals("auto") ? player.locale : playerModel.locale;
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
             }
 
-            Translator.translate(Utils.stripAll(text), locale, translated -> {
+            Translator.translate(Utils.stripAll(text), codeLanguages.get(locale, defaultTranslatorLocale), translated -> {
                 player.sendMessage(formatTranslated(formatted, translated), author, text);
                 cache.put(locale, translated);
             });

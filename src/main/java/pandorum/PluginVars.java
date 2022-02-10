@@ -66,7 +66,7 @@ public class PluginVars {
     public static final long loginAbuseKickDuration = 2700000L;
 
     /** Локаль по умолчанию. */
-    public static final String defaultLocale = "en";
+    public static final String defaultLocale = "en", defaultTranslatorLocale = "en_GB";
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";

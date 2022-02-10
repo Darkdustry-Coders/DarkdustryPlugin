@@ -1,6 +1,8 @@
 package pandorum.components;
 
 import arc.func.Cons;
+import arc.util.Log;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mindustry.gen.Player;
@@ -61,18 +63,16 @@ public class Translator {
     }
 
     public static void loadLanguages() {
-        client.newCall(languagesRequest.build()).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                for (JsonElement languageElement : gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsJsonArray()) {
-                    JsonObject language = languageElement.getAsJsonObject();
-                    codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
-                }
+        try {
+            JsonArray languages = gson.fromJson(client.newCall(languagesRequest.build()).execute().body().string(), JsonObject.class).get("result").getAsJsonArray();
+            for (JsonElement element : languages) {
+                JsonObject language = element.getAsJsonObject();
+                codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
             }
-        });
+        } catch (Exception e) {
+            Log.err("[Darkdustry] Не удалось загрузить языки для переводчика чата!");
+            Log.err(e);
+        }
     }
 
     public static String getLocale(Player player, String locale) {
