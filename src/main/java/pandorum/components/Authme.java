@@ -5,6 +5,7 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -38,13 +39,13 @@ public class Authme {
                         .addField("UUID:", player.uuid(), true)
                         .setFooter("Нажмите на кнопку чтобы подтвердить или отклонить получение прав администратора. Используйте кнопку бана только в крайнем случае.", null)
                         .build()
-                ).setActionRows(ActionRow.of(confirm, deny, ban), ActionRow.of(check)).build()).queue(message -> loginWaiting.put(message, player));
+                ).setActionRows(ActionRow.of(confirm, deny, ban, check)).build()).queue(message -> loginWaiting.put(message, player));
     }
 
-    public static void confirm(Message message, User user) {
+    public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), user.getName());
+            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), member.getEffectiveName());
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             player.admin(true);
@@ -53,20 +54,20 @@ public class Authme {
         }
     }
 
-    public static void deny(Message message, User user) {
+    public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), user.getName());
+            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), member.getEffectiveName());
 
             bundled(player, "commands.login.deny");
             message.delete().queue();
         }
     }
 
-    public static void ban(Message message, User user) {
+    public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", user.getName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();

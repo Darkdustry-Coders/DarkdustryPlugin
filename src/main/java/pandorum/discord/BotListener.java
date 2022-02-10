@@ -2,6 +2,7 @@ package pandorum.discord;
 
 import arc.util.Log;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -25,19 +26,19 @@ public class BotListener extends ListenerAdapter {
         handleMessage(context);
 
         if (context.channel.getIdLong() == botChannel.getIdLong() && context.content.length() > 0) {
-            sendToChat("events.discord.chat", context.author.getAsTag(), context.content);
-            Log.info("[Discord] @: @", context.author.getAsTag(), context.content);
+            sendToChat("events.discord.chat", context.member.getEffectiveName(), context.content);
+            Log.info("[Discord] @: @", context.member.getEffectiveName(), context.content);
         }
     }
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
         Message message = event.getMessage();
-        User user = event.getUser();
+        Member member = event.getMember();
         switch (event.getComponentId()) {
-            case "admin.confirm" -> Authme.confirm(message, user);
-            case "admin.deny" -> Authme.deny(message, user);
-            case "admin.ban" -> Authme.ban(message, user);
+            case "admin.confirm" -> Authme.confirm(message, member);
+            case "admin.deny" -> Authme.deny(message, member);
+            case "admin.ban" -> Authme.ban(message, member);
             case "admin.check" -> Authme.check(message, event);
         }
     }
