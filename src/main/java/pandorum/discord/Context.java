@@ -12,13 +12,14 @@ import java.util.List;
 
 public class Context {
 
-    public Message message;
-    public Member member;
-    public User author;
-    public MessageChannel channel;
+    public final Message message;
+    public final Member member;
+    public final User author;
+    public final MessageChannel channel;
 
-    public List<Attachment> attachments;
-    public String content;
+    public final List<Attachment> attachments;
+    public final String contentRaw;
+    public final String contentDisplay;
 
     public Context(MessageReceivedEvent event) {
         this.message = event.getMessage();
@@ -27,7 +28,8 @@ public class Context {
         this.channel = event.getChannel();
 
         this.attachments = message.getAttachments();
-        this.content = message.getContentRaw();
+        this.contentRaw = message.getContentRaw();
+        this.contentDisplay = message.getContentDisplay();
     }
 
     public void sendEmbed(MessageEmbed embed) {

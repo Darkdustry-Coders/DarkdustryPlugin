@@ -55,7 +55,7 @@ public class Bot {
     }
 
     public static void handleMessage(Context context) {
-        CommandResponse response = discordHandler.handleMessage(context.content, context);
+        CommandResponse response = discordHandler.handleMessage(context.contentRaw, context);
         if (response.type == ResponseType.fewArguments) {
             context.err(":interrobang: Слишком мало аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         } else if (response.type == ResponseType.manyArguments) {

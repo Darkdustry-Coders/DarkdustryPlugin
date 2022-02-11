@@ -122,7 +122,7 @@ public class PluginVars {
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
 
     public static Config config;
-    public static TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
+    public static final TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
 
     public static Task worldLoadTask = null;
 

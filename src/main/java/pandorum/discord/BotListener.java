@@ -4,7 +4,6 @@ import arc.util.Log;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,14 +19,13 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE)
-            return;
+        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE) return;
 
         handleMessage(context);
 
-        if (context.channel.getIdLong() == botChannel.getIdLong() && context.content.length() > 0) {
-            sendToChat("events.discord.chat", context.member.getEffectiveName(), context.content);
-            Log.info("[Discord] @: @", context.member.getEffectiveName(), context.content);
+        if (context.channel.getIdLong() == botChannel.getIdLong() && context.contentDisplay.length() > 0) {
+            sendToChat("events.discord.chat", context.member.getEffectiveName(), context.contentDisplay);
+            Log.info("[Discord] @: @", context.member.getEffectiveName(), context.contentDisplay);
         }
     }
 

@@ -1,8 +1,8 @@
 package pandorum.history;
 
 public class TileKey {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
     public int serialNumber;
 
     public TileKey(int x, int y, int serialNumber) {
