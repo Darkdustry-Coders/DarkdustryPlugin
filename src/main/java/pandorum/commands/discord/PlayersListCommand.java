@@ -13,13 +13,13 @@ import java.awt.*;
 public class PlayersListCommand {
     public static void run(final String[] args, final Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            context.err(":interrobang: Ошибка.", "Страница должна быть числом.");
+            context.err(":interrobang: Page must be a number.");
             return;
         }
 
         Seq<Player> playersList = Groups.player.copy(new Seq<>());
         if (playersList.isEmpty()) {
-            context.info(":satellite: На сервере нет игроков.", "Список игроков пуст.");
+            context.info(":satellite: No players on the server.");
             return;
         }
 
@@ -27,7 +27,7 @@ public class PlayersListCommand {
         int pages = Mathf.ceil(playersList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            context.err(":interrobang: Указана неверная страница списка игроков.", "Страница должна быть числом от 1 до @", pages);
+            context.err(":interrobang: Invalid page.", "Page should be a number from 1 to @", pages);
             return;
         }
 
@@ -39,8 +39,9 @@ public class PlayersListCommand {
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle(Strings.format(":satellite: Список игроков сервера (страница @ из @)", page + 1, pages))
-                .addField(Strings.format("Всего игроков @", playersList.size), players.toString(), false)
+                .setTitle(Strings.format(":satellite: Online players: @", playersList.size))
+                .setDescription(players.toString())
+                .setFooter(Strings.format("Page @ / @", page + 1, pages))
                 .build());
     }
 }

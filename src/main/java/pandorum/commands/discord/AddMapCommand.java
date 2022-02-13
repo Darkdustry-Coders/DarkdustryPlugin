@@ -10,7 +10,7 @@ import static mindustry.Vars.*;
 public class AddMapCommand {
     public static void run(final String[] args, final Context context) {
         if (context.attachments.size() != 1 || !context.attachments.get(0).getFileName().endsWith(mapExtension)) {
-            context.err(":x: Ошибка.", "Пожалуйста, прикрепи один файл карты к сообщению.");
+            context.err(":link: Invalid attachment.", "You need to attach a valid .msav file!");
             return;
         }
 
@@ -19,15 +19,15 @@ public class AddMapCommand {
         attachment.downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
             Fi mapFile = new Fi(file);
             if (!SaveIO.isSaveValid(mapFile)) {
-                context.err(":x: Ошибка.", "Кажется, файл карты поврежден.");
+                context.err(":x: Attachment is invalid or corrupted!");
                 mapFile.delete();
                 return;
             }
 
             maps.reload();
-            context.success(":white_check_mark: Успешно.", "Карта добавлена на сервер.");
+            context.success(":map: Map added to server.");
         }).exceptionally(e -> {
-            context.err(":eyes: Ошибка.", "Добавить карту на сервер не удалось из-за внутренней ошибки сервера.");
+            context.err(":x: Attachment is invalid or corrupted!");
             return null;
         });
     }

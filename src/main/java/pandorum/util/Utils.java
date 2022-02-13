@@ -64,11 +64,11 @@ public class Utils {
     public static String formatDuration(long time) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" д ");
-        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" ч ");
-        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" мин ");
+        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" d ");
+        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" h ");
+        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" min ");
 
-        builder.append(duration.toSecondsPart()).append(" сек");
+        builder.append(duration.toSecondsPart()).append(" sec");
         return builder.toString();
     }
 

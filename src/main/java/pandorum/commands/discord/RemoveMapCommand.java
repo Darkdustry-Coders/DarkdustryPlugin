@@ -10,16 +10,12 @@ public class RemoveMapCommand {
     public static void run(final String[] args, final Context context) {
         Map map = findMap(args[0]);
         if (map == null) {
-            context.err(":mag: Карта не найдена.", "Проверьте правильность ввода.");
+            context.err(":mag: Map not found.", "Check if the name is correct.");
             return;
         }
 
-        try {
-            maps.removeMap(map);
-            maps.reload();
-            context.success(":white_check_mark: Успешно.", "Карта удалена с сервера.");
-        } catch (Exception e) {
-            context.err(":eyes: Ошибка.", "Удалить карту с сервера не удалось из-за внутренней ошибки сервера.");
-        }
+        maps.removeMap(map);
+        maps.reload();
+        context.success(":dagger: Map removed from the server.");
     }
 }

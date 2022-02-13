@@ -24,19 +24,19 @@ import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class Authme {
 
-    public static final Button confirm = Button.success("admin.confirm", "Подтвердить");
-    public static final Button deny = Button.secondary("admin.deny", "Отклонить");
-    public static final Button ban = Button.danger("admin.ban", "Забанить");
-    public static final Button check = Button.primary("admin.check", "Информация");
+    public static final Button confirm = Button.success("admin.confirm", "Confirm");
+    public static final Button deny = Button.secondary("admin.deny", "Deny");
+    public static final Button ban = Button.danger("admin.ban", "Ban");
+    public static final Button check = Button.primary("admin.check", "Information");
 
     public static void sendConfirmation(Player player) {
         adminChannel.sendMessage(new MessageBuilder()
                 .setEmbeds(new EmbedBuilder()
                         .setColor(Color.cyan)
-                        .setTitle("Запрос на выдачу прав администратора.")
-                        .addField("Никнейм:", Strings.stripColors(player.name), true)
+                        .setTitle("Request for administrator rights.")
+                        .addField("Nickname:", Strings.stripColors(player.name), true)
                         .addField("UUID:", player.uuid(), true)
-                        .setFooter("Нажмите на кнопку чтобы подтвердить или отклонить получение прав администратора. Используйте кнопку бана только в крайнем случае.", null)
+                        .setFooter("Click the button to confirm or deny the request.", null)
                         .build()
                 ).setActionRows(ActionRow.of(confirm, deny, ban, check)).build()).queue(message -> loginWaiting.put(message, player));
     }
@@ -44,7 +44,7 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), member.getEffectiveName());
+            text(message.getChannel(), "A request of player **@** was confirmed by **@**", Strings.stripColors(player.name), member.getEffectiveName());
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             player.admin(true);
@@ -56,7 +56,7 @@ public class Authme {
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), member.getEffectiveName());
+            text(message.getChannel(), "A request of player **@** was denied by **@**", Strings.stripColors(player.name), member.getEffectiveName());
 
             bundled(player, "commands.login.deny");
             message.delete().queue();
@@ -66,7 +66,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** заблокировал игрока @ на @ минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            text(message.getChannel(), "**@** banned a player **@** for **@** minutes", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
@@ -77,7 +77,7 @@ public class Authme {
         Player player = loginWaiting.get(message);
         if (player != null) {
             PlayerInfo info = player.getInfo();
-            event.reply(Strings.format("> Информация об игроке **@**\n\nUUID: @\nIP: @\n\nВошел на сервер: @ раз.\nБыл выгнан с сервера: @ раз\n\nВсе IP адреса: @\n\nВсе никнеймы: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).setEphemeral(true).queue();
+            event.reply(Strings.format("> Information about player **@**\n\nUUID: @\nIP: @\n\nTimes joined: @ раз.\nTimes kicked: @ раз\n\nAll IPs: @\n\nAll nicknames: @", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).setEphemeral(true).queue();
         }
     }
 }

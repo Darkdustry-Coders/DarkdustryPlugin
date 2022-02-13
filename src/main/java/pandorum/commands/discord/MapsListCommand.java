@@ -14,13 +14,13 @@ import static mindustry.Vars.maps;
 public class MapsListCommand {
     public static void run(final String[] args, final Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            context.err(":interrobang: Ошибка.", "Страница должна быть числом.");
+            context.err(":interrobang: Page must be a number.");
             return;
         }
 
         Seq<Map> mapsList = maps.customMaps();
         if (mapsList.isEmpty()) {
-            context.info(":map: На сервере нет карт.", "Список карт пуст.");
+            context.info(":map: No maps on the server.");
             return;
         }
 
@@ -28,7 +28,7 @@ public class MapsListCommand {
         int pages = Mathf.ceil(mapsList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            context.err(":interrobang: Указана неверная страница списка карт.", "Страница должна быть числом от 1 до @", pages);
+            context.err(":interrobang: Invalid page.", "Page should be a number from 1 to @", pages);
             return;
         }
 
@@ -40,8 +40,9 @@ public class MapsListCommand {
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle(Strings.format(":map: Список карт сервера (страница @ из @)", page + 1, pages))
-                .addField(Strings.format("Всего карт: @", mapsList.size), maps.toString(), false)
+                .setTitle(Strings.format(":map: Total maps in playlist: @", mapsList.size))
+                .setDescription(maps.toString())
+                .setFooter(Strings.format("Page @ / @", page + 1, pages))
                 .build());
     }
 }

@@ -51,4 +51,16 @@ public class Context {
     public void err(String title, String text, Object... args) {
         sendEmbed(new EmbedBuilder().addField(title, Strings.format(text, args), true).setColor(Color.red).build());
     }
+
+    public void success(String text, Object... args) {
+        sendEmbed(new EmbedBuilder().setTitle(Strings.format(text, args)).setColor(Color.green).build());
+    }
+
+    public void info(String text, Object... args) {
+        sendEmbed(new EmbedBuilder().setTitle(Strings.format(text, args)).setColor(Color.yellow).build());
+    }
+
+    public void err(String text, Object... args) {
+        sendEmbed(new EmbedBuilder().setTitle(Strings.format(text, args)).setColor(Color.red).build());
+    }
 }

@@ -57,9 +57,9 @@ public class Bot {
     public static void handleMessage(Context context) {
         CommandResponse response = discordHandler.handleMessage(context.contentRaw, context);
         if (response.type == ResponseType.fewArguments) {
-            context.err(":interrobang: Слишком мало аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            context.err(":interrobang: Too few arguments.", "Usage: **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         } else if (response.type == ResponseType.manyArguments) {
-            context.err(":interrobang: Слишком много аргументов.", "Использование : **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            context.err(":interrobang: Too many arguments.", "Usage: **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 
@@ -68,7 +68,7 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игроков на сервере", Groups.player.size()), null, ActivityType.STREAMING));
+        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ online players.", Groups.player.size()), null, ActivityType.STREAMING));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
