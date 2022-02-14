@@ -77,7 +77,7 @@ public class Authme {
         Player player = loginWaiting.get(message);
         if (player != null) {
             PlayerInfo info = player.getInfo();
-            event.reply(Strings.format("> :information_source: **@**\n\nUUID: **@**\nIP: **@**\n\nЗашел на сервер: **@** раз.\nВыгнан: **@** раз\n\nВсе IP адреса: *@*\n\nВсе никнеймы: *@*", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).setEphemeral(true).queue();
+            event.reply(Strings.format("> :information_source: Информация о игроке **@**\n\nUUID: **@**\nIP: **@**\n\nЗашел на сервер: **@** раз.\nВыгнан: **@** раз\n\nВсе IP адреса: *@*\n\nВсе никнеймы: *@*", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).setEphemeral(true).queue();
         }
     }
 }
