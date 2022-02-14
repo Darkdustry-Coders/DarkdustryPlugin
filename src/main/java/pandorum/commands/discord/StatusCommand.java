@@ -17,19 +17,19 @@ import static pandorum.util.Utils.stripAll;
 public class StatusCommand {
     public static void run(final String[] args, final Context context) {
         if (state.isMenu()) {
-            context.err(":x: The server is down.", "Why.");
+            context.err(":connection_refused: Сервер оффлайн.", ":thonk: Почему.");
             return;
         }
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.green)
                 .setTitle(Strings.format(":desktop: @", stripAll(Config.name.string())))
-                .addField("Players:", String.valueOf(Groups.player.size()), true)
-                .addField("Map:", Strings.stripColors(state.map.name()), true)
-                .addField("Wave:", String.valueOf(state.wave), true)
-                .addField("Next wave in:", formatDuration((int) state.wavetime / 60 * 1000L), true)
-                .addField("Server Uptime:", formatDuration(serverUpTime * 1000L), true)
-                .addField("Map Playtime:", formatDuration(mapPlayTime * 1000L), true)
+                .addField("Игроков:", String.valueOf(Groups.player.size()), true)
+                .addField("Карта:", Strings.stripColors(state.map.name()), true)
+                .addField("Волна:", String.valueOf(state.wave), true)
+                .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
+                .addField("Сервер онлайн уже:", formatDuration(serverUpTime * 1000L), true)
+                .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true)
                 .build());
     }
 }

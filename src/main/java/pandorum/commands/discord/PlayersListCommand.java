@@ -13,13 +13,13 @@ import java.awt.*;
 public class PlayersListCommand {
     public static void run(final String[] args, final Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            context.err(":interrobang: Page must be a number.");
+            context.err(":interrobang: Страница должна быть числом.");
             return;
         }
 
         Seq<Player> playersList = Groups.player.copy(new Seq<>());
         if (playersList.isEmpty()) {
-            context.info(":satellite: No players on the server.");
+            context.info(":satellite: На сервере нет игроков.");
             return;
         }
 
@@ -27,7 +27,7 @@ public class PlayersListCommand {
         int pages = Mathf.ceil(playersList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            context.err(":interrobang: Invalid page.", "Page should be a number from 1 to @", pages);
+            context.err(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
@@ -39,9 +39,9 @@ public class PlayersListCommand {
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle(Strings.format(":satellite: Online players: @", playersList.size))
+                .setTitle(Strings.format(":satellite: Всего игроков на сервере: @", playersList.size))
                 .setDescription(players.toString())
-                .setFooter(Strings.format("Page @ / @", page + 1, pages))
+                .setFooter(Strings.format("Страница @ / @", page + 1, pages))
                 .build());
     }
 }

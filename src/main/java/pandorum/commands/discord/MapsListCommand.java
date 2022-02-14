@@ -14,13 +14,13 @@ import static mindustry.Vars.maps;
 public class MapsListCommand {
     public static void run(final String[] args, final Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            context.err(":interrobang: Page must be a number.");
+            context.err(":interrobang: Страница должна быть числом.");
             return;
         }
 
         Seq<Map> mapsList = maps.customMaps();
         if (mapsList.isEmpty()) {
-            context.info(":map: No maps on the server.");
+            context.info(":map: На сервере нет карт.");
             return;
         }
 
@@ -28,7 +28,7 @@ public class MapsListCommand {
         int pages = Mathf.ceil(mapsList.size / 16f);
 
         if (--page >= pages || page < 0) {
-            context.err(":interrobang: Invalid page.", "Page should be a number from 1 to @", pages);
+            context.err(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
@@ -40,9 +40,9 @@ public class MapsListCommand {
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle(Strings.format(":map: Total maps in playlist: @", mapsList.size))
+                .setTitle(Strings.format(":map: Всего карт на сервере: @", mapsList.size))
                 .setDescription(maps.toString())
-                .setFooter(Strings.format("Page @ / @", page + 1, pages))
+                .setFooter(Strings.format("Страница @ / @", page + 1, pages))
                 .build());
     }
 }

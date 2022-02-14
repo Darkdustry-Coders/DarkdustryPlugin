@@ -15,6 +15,6 @@ public class HelpCommand {
             commands.append(" - ").append(command.description).append("\n");
         });
 
-        context.info(":newspaper: All available commands:", commands.toString());
+        context.info(":newspaper: Доступные команды:", commands.toString());
     }
 }

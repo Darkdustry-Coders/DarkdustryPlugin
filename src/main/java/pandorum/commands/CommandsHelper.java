@@ -77,7 +77,7 @@ public class CommandsHelper {
     public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Context> runner) {
         discordHandler.<Context>register(text, params, description, (args, context) -> {
             if (adminOnly && !adminCheck(context.member)) {
-                context.err(":x: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+                context.err(":no_entry: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }
 
