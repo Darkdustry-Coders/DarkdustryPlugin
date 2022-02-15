@@ -25,7 +25,7 @@ public class PlayerJoinListener {
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
             Utils.sendToChat("events.player.join", name);
-            Bot.sendEmbed(Color.green, "@ joined.", Strings.stripColors(name));
+            Bot.sendEmbed(Color.green, "@ присоединился к серверу.", Strings.stripColors(name));
         });
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);

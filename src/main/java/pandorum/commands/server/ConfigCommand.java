@@ -20,23 +20,23 @@ public class ConfigCommand {
         try {
             Config c = Config.valueOf(args[0]);
             if (args.length == 1) {
-                Log.info("Конфигурация '@' сейчас имеет значение @.", c.name(), c.get());
+                Log.info("Конфигурация '@' сейчас имеет значение '@'.", c.name(), c.get());
             } else {
                 if (args[1].equalsIgnoreCase("default") || args[1].equalsIgnoreCase("reset")) {
                     c.set(c.defaultValue);
                 } else if (c.isBool()) {
                     c.set(args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("true"));
                 } else if (c.isNum()) {
-                    c.set(Strings.parseInt(args[1], 0));
+                    c.set(Strings.parseInt(args[1], c.num()));
                 } else if (c.isString()) {
                     c.set(args[1].replace("\\n", "\n"));
                 }
 
-                Log.info("Конфигурации '@' присвоено значение @.", c.name(), c.get());
+                Log.info("Конфигурации '@' присвоено значение '@'.", c.name(), c.get());
                 Core.settings.forceSave();
             }
         } catch (Exception e) {
-            Log.err("Неизвестная конфигурация: '@'. Используй команду без аргументов, чтобы получить список доступных конфигураций.", args[0]);
+            Log.err("Неизвестная конфигурация: '@'.", args[0]);
         }
     }
 }

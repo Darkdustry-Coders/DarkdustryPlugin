@@ -9,7 +9,7 @@ public class ServerLoadListener {
 
     public static void call() {
         Log.info("[Darkdustry]: Сервер готов к работе...");
-        Bot.sendEmbed(Color.yellow, "Server started!");
+        Bot.sendEmbed(Color.yellow, "Сервер запущен...");
     }
 }
 

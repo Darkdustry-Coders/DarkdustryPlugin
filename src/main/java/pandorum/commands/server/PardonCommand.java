@@ -7,13 +7,13 @@ import static mindustry.Vars.netServer;
 
 public class PardonCommand {
     public static void run(final String[] args) {
-        PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
-        if (info == null) {
+        PlayerInfo info;
+        if ((info = netServer.admins.getInfoOptional(args[0])) == null && (info = netServer.admins.findByIP(args[0])) == null) {
             Log.err("Игрок '@' не найден...", args[0]);
             return;
         }
 
-        info.lastKicked = 0;
+        info.lastKicked = 0L;
         info.ips.each(netServer.admins.kickedIPs::remove);
         Log.info("Игрок '@' снова может зайти на сервер.", info.lastName);
     }

@@ -27,7 +27,7 @@ public class Authme {
     public static final Button confirm = Button.success("admin.confirm", "Подтвердить");
     public static final Button deny = Button.secondary("admin.deny", "Отклонить");
     public static final Button ban = Button.danger("admin.ban", "Забанить");
-    public static final Button check = Button.primary("admin.check", "Информация");
+    public static final Button check = Button.primary("admin.info", "Информация");
 
     public static void sendConfirmation(Player player) {
         adminChannel.sendMessage(new MessageBuilder()
@@ -73,7 +73,7 @@ public class Authme {
         }
     }
 
-    public static void check(Message message, ButtonClickEvent event) {
+    public static void info(Message message, ButtonClickEvent event) {
         Player player = loginWaiting.get(message);
         if (player != null) {
             PlayerInfo info = player.getInfo();

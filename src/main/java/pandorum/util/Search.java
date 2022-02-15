@@ -9,6 +9,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
+import mindustry.io.SaveVersion;
 import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
@@ -41,7 +42,7 @@ public class Search {
     }
 
     public static Block findBlock(String name) {
-        return Strings.canParsePositiveInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name) || block.name.equalsIgnoreCase(SaveVersion.modContentNameMap.get(name, name)));
     }
 
     public static Block findCore(String name) {

@@ -37,7 +37,7 @@ public class BotListener extends ListenerAdapter {
             case "admin.confirm" -> Authme.confirm(message, member);
             case "admin.deny" -> Authme.deny(message, member);
             case "admin.ban" -> Authme.ban(message, member);
-            case "admin.check" -> Authme.check(message, event);
+            case "admin.info" -> Authme.info(message, event);
         }
     }
 }

@@ -45,6 +45,6 @@ public class ClientCommandsLoader {
 
         CommandsHelper.registerClient(handler, "artv", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), ArtvCommand::run);
         CommandsHelper.registerClient(handler, "despw", true, DespwCommand::run);
-        CommandsHelper.registerClient(handler, "fill", "<width> <height> <block>", true, Seq.with(Gamemode.sandbox), FillCommand::run);
+        CommandsHelper.registerClient(handler, "fill", "<width> <height> <block>", true, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival), FillCommand::run);
     }
 }

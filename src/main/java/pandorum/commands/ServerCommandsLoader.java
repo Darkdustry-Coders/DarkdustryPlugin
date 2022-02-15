@@ -24,7 +24,7 @@ public class ServerCommandsLoader {
         CommandsHelper.registerServer(handler, "ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", BanCommand::run);
         CommandsHelper.registerServer(handler, "bans", "List of all banned IPs and UUIDs.", BansListCommand::run);
         CommandsHelper.registerServer(handler, "unban", "<uuid/all/ip...>", "Unban a player by UUID or IP.", UnbanCommand::run);
-        CommandsHelper.registerServer(handler, "pardon", "<uuid...>", "Pardon a kicked player.", PardonCommand::run);
+        CommandsHelper.registerServer(handler, "pardon", "<uuid/ip...>", "Pardon a kicked player.", PardonCommand::run);
         CommandsHelper.registerServer(handler, "admin", "<add/remove> <uuid/username...>", "Make an online user admin.", AdminCommand::run);
         CommandsHelper.registerServer(handler, "admins", "List of all admins.", AdminsListCommand::run);
         CommandsHelper.registerServer(handler, "players", "List of all online players.", PlayersListCommand::run);

@@ -12,7 +12,7 @@ import static mindustry.Vars.netServer;
 public class RestartCommand {
     public static void run(final String[] args) {
         Log.info("Сервер перезапускается...");
-        Bot.sendEmbed(Color.red, "Server is restarting...");
+        Bot.sendEmbed(Color.red, "Сервер перезапускается...");
 
         netServer.kickAll(KickReason.serverRestarting);
         Time.runTask(60f, () -> System.exit(2));
