@@ -1,9 +1,13 @@
 package pandorum.events;
 
 import arc.Events;
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Reflect;
 import arc.util.Timer;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
 import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
@@ -23,8 +27,7 @@ import pandorum.events.listeners.*;
 
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.outputBuffer;
-import static pandorum.PluginVars.writeBuffer;
+import static pandorum.PluginVars.*;
 
 public class Loader {
 
@@ -74,6 +77,9 @@ public class Loader {
         MenuHandler.init();
         Icons.init();
         Bot.init();
+
+        dangerousBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
+        dangerousDepositBlocks = ObjectMap.of(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
 
         Timer.schedule(StateUpdater::update, 0f, 1f);
 

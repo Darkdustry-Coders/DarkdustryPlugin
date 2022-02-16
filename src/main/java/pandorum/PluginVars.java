@@ -12,9 +12,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.reactivestreams.client.MongoCollection;
-import mindustry.content.Blocks;
 import mindustry.content.Fx;
-import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -106,11 +104,9 @@ public class PluginVars {
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
-    public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
-    public static final Seq<Block> dangerousBlocks = new Seq<>();
 
     public static final Interval interval = new Interval();
 
@@ -127,6 +123,11 @@ public class PluginVars {
 
     /** Могут ли игроки голосовать в данный момент. */
     public static boolean canVote = false;
+
+    /** Блоки, которые опасно строить рядом с ядром. */
+    public static Seq<Block> dangerousBlocks;
+    /** Блоки, в которые опасно переносить конкретные ресурсы. */
+    public static ObjectMap<Block, Item> dangerousDepositBlocks;
 
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
     public static Config config;
