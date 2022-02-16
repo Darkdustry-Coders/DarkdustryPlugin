@@ -5,6 +5,7 @@ import arc.util.Log;
 import arc.util.Reflect;
 import arc.util.Timer;
 import mindustry.core.NetServer;
+import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
@@ -65,6 +66,8 @@ public class Loader {
         Config.logging.set(true);
         Config.strict.set(true);
         Config.enableVotekick.set(true);
+
+        Version.build = -1;
 
         Translator.loadLanguages();
 
