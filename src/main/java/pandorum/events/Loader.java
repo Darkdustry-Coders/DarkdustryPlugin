@@ -20,7 +20,8 @@ import pandorum.events.handlers.InvalidCommandResponse;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.events.listeners.*;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.outputBuffer;
 import static pandorum.PluginVars.writeBuffer;
 

@@ -4,8 +4,8 @@ import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
-import pandorum.history.entry.HistoryEntry;
 import pandorum.history.entry.ConfigEntry;
+import pandorum.history.entry.HistoryEntry;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;

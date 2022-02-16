@@ -2,9 +2,9 @@ package pandorum.events;
 
 import mindustry.gen.Groups;
 import pandorum.components.Ranks;
-import pandorum.discord.Bot;
 import pandorum.database.models.MapModel;
 import pandorum.database.models.PlayerModel;
+import pandorum.discord.Bot;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.mapPlayTime;

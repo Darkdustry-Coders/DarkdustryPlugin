@@ -19,7 +19,8 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE) return;
+        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE)
+            return;
 
         handleMessage(context);
 

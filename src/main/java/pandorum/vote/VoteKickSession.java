@@ -13,7 +13,7 @@ import static pandorum.util.Search.findLocale;
 
 public class VoteKickSession {
 
-    protected final Player player;
+    protected final Player started;
     protected final Player target;
     protected final Seq<String> voted = new Seq<>();
     protected final Task task;
@@ -21,9 +21,9 @@ public class VoteKickSession {
     protected final VoteKickSession[] voteKickSession;
     protected int votes;
 
-    public VoteKickSession(VoteKickSession[] voteKickSession, Player player, Player target) {
+    public VoteKickSession(VoteKickSession[] voteKickSession, Player started, Player target) {
         this.voteKickSession = voteKickSession;
-        this.player = player;
+        this.started = started;
         this.target = target;
         this.task = start();
     }
@@ -48,7 +48,7 @@ public class VoteKickSession {
         if (votes >= votesRequired()) {
             Utils.sendToChat("commands.votekick.passed", target.coloredName(), Utils.millisecondsToMinutes(kickDuration));
             stop();
-            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), player.coloredName(), Utils.millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
+            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), started.coloredName(), Utils.millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
             return true;
         }
         return false;

@@ -14,9 +14,11 @@ public class TapListener {
             history.getAll(event.tile.x, event.tile.y, historyEntries -> {
                 StringBuilder historyString = new StringBuilder(Bundle.format("history.title", findLocale(event.player.locale), event.tile.x, event.tile.y));
 
-                for (HistoryEntry entry : historyEntries) historyString.append("\n").append(entry.getMessage(event.player));
+                for (HistoryEntry entry : historyEntries)
+                    historyString.append("\n").append(entry.getMessage(event.player));
 
-                if (historyEntries.isEmpty()) historyString.append(Bundle.format("history.empty", findLocale(event.player.locale)));
+                if (historyEntries.isEmpty())
+                    historyString.append(Bundle.format("history.empty", findLocale(event.player.locale)));
 
                 event.player.sendMessage(historyString.toString());
             });

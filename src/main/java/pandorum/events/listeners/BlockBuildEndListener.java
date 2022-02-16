@@ -1,9 +1,9 @@
 package pandorum.events.listeners;
 
 import mindustry.game.EventType.BlockBuildEndEvent;
+import pandorum.database.models.PlayerModel;
 import pandorum.history.entry.BlockEntry;
 import pandorum.history.entry.HistoryEntry;
-import pandorum.database.models.PlayerModel;
 
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;

@@ -8,9 +8,9 @@ import mindustry.net.Administration.Config;
 import pandorum.components.Bundle;
 import pandorum.components.Effects;
 import pandorum.components.Ranks;
+import pandorum.database.models.PlayerModel;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
-import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import java.awt.*;

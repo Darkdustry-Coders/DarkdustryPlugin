@@ -10,7 +10,8 @@ import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.defaultTranslatorLocale;
 import static pandorum.discord.Bot.text;
 
 public class ChatFilter {

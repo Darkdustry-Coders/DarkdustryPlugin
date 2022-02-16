@@ -2,8 +2,6 @@ package pandorum.components;
 
 import arc.struct.Seq;
 
-import static mindustry.Vars.state;
-
 public class Config {
 
     /**
@@ -51,7 +49,7 @@ public class Config {
     }
 
     public boolean alertsEnabled() {
-        return state.rules.reactorExplosions && Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
+        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
     }
 
     public enum Gamemode {
