@@ -86,7 +86,7 @@ public class ConnectPacketHandler {
             return;
         }
 
-        if (packet.versionType == null || (packet.version == -1 && Version.build != -1 && !netServer.admins.allowsCustomClients())) {
+        if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
             con.kick(Bundle.format("kick.custom-client", findLocale(locale)), 0);
             return;
         }
