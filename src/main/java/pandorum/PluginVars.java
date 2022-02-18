@@ -19,7 +19,6 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
-import okhttp3.OkHttpClient;
 import org.bson.Document;
 import pandorum.components.Config;
 import pandorum.history.TilesHistory;
@@ -112,7 +111,6 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    public static final OkHttpClient client = new OkHttpClient();
     public static final TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
 
     /** Время непрерывной работы сервера. */

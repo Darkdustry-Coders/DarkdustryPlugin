@@ -1,81 +1,56 @@
 package pandorum.components;
 
 import arc.func.Cons;
-import arc.util.Log;
+import arc.util.Http;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import mindustry.gen.Player;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.gson;
 
 public class Translator {
 
-    private static final Request.Builder translatorRequest = new Request.Builder()
-            .url("https://api-b2b.backenster.com/b1/api/v3/translate/")
-            .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
-            .addHeader("accept-language", "ru,en;q=0.9")
-            .addHeader("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
-            .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-            .addHeader("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Yandex\";v=\"90\"")
-            .addHeader("sec-ch-ua-mobile", "?0")
-            .addHeader("sec-fetch-dest", "empty")
-            .addHeader("sec-fetch-mode", "cors")
-            .addHeader("sec-fetch-site", "cross-site");
-
-    private static final Request.Builder languagesRequest = new Request.Builder()
-            .url("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
-            .get()
-            .addHeader("accept", "application/json, text/javascript, */*; q=0.01")
-            .addHeader("accept-language", "ru,en;q=0.9")
-            .addHeader("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
-            .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-            .addHeader("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Yandex\";v=\"90\"")
-            .addHeader("sec-ch-ua-mobile", "?0")
-            .addHeader("sec-fetch-dest", "empty")
-            .addHeader("sec-fetch-mode", "cors")
-            .addHeader("sec-fetch-site", "cross-site")
-            .addHeader("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"");
-
     public static void translate(String text, String locale, Cons<String> cons) {
-        Request request = translatorRequest.post(new FormBody.Builder()
-                .add("to", locale)
-                .add("text", text)
-                .add("platform", "dp")
-                .build()
-        ).build();
+        JsonObject json = new JsonObject();
+        json.addProperty("to", locale);
+        json.addProperty("text", text);
+        json.addProperty("platform", "dp");
+        json.addProperty("enableTransliteration", true);
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                cons.get("");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                cons.get(gson.fromJson(response.body().string(), JsonObject.class).get("result").getAsString());
-            }
-        });
+        Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
+                .header("accept", "application/json, text/javascript, */*; q=0.01")
+                .header("accept-language", "ru,en;q=0.9")
+                .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
+                .header("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .header("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Yandex\";v=\"90\"")
+                .header("sec-ch-ua-mobile", "?0")
+                .header("sec-fetch-dest", "empty")
+                .header("sec-fetch-mode", "cors")
+                .header("sec-fetch-site", "cross-site")
+                .content(json.getAsString())
+                .error(exception -> cons.get(""))
+                .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
 
     public static void loadLanguages() {
-        try {
-            JsonArray languages = gson.fromJson(client.newCall(languagesRequest.build()).execute().body().string(), JsonObject.class).get("result").getAsJsonArray();
-            for (JsonElement element : languages) {
-                JsonObject language = element.getAsJsonObject();
-                codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
-            }
-        } catch (Exception e) {
-            Log.err("[Darkdustry] Не удалось загрузить языки для переводчика чата!");
-            Log.err(e);
-        }
-    }
-
-    public static String getLocale(Player player, String locale) {
-        return codeLanguages.get(locale.equals("auto") ? player.locale : locale, codeLanguages.get(defaultLocale));
+        Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=dp")
+                .header("accept", "application/json, text/javascript, */*; q=0.01")
+                .header("accept-language", "ru,en;q=0.9")
+                .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
+                .header("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .header("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Yandex\";v=\"90\"")
+                .header("sec-ch-ua-mobile", "?0")
+                .header("sec-fetch-dest", "empty")
+                .header("sec-fetch-mode", "cors")
+                .header("sec-fetch-site", "cross-site")
+                .header("if-none-match", "W/\"aec6-7FjvQqCRl/1E+dvnCAlbAedDteg\"")
+                .submit(response -> {
+                    JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsJsonArray();
+                    for (JsonElement element : languages) {
+                        JsonObject language = element.getAsJsonObject();
+                        codeLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
+                    }
+                });
     }
 }
