@@ -362,19 +362,19 @@ public class Icons {
 
     public static String unitsList() {
         StringBuilder units = new StringBuilder();
-        content.units().each(unit -> units.append(" ").append(get(unit.name)).append(unit.name));
+        content.units().each(unit -> units.append(" [white]").append(get(unit.name)).append(unit.name));
         return units.toString();
     }
 
     public static String itemsList() {
         StringBuilder items = new StringBuilder();
-        content.items().each(item -> items.append(" ").append(get(item.name)).append(item.name));
+        content.items().each(item -> items.append(" [white]").append(get(item.name)).append(item.name));
         return items.toString();
     }
 
     public static String teamsList() {
         StringBuilder teams = new StringBuilder();
-        Structs.each(team -> teams.append(" ").append(colorizedTeam(team)), Team.baseTeams);
+        Structs.each(team -> teams.append(" [white]").append(colorizedTeam(team)), Team.baseTeams);
         return teams.toString();
     }
 }

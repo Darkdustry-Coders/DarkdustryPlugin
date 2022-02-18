@@ -13,9 +13,9 @@ public class TileKey {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof TileKey tileKey &&
-                tileKey.x == this.x &&
-                tileKey.y == this.y &&
-                tileKey.serialNumber == this.serialNumber;
+        return obj instanceof TileKey key &&
+                key.x == this.x &&
+                key.y == this.y &&
+                key.serialNumber == this.serialNumber;
     }
 }
