@@ -19,7 +19,7 @@ public class Translator {
         json.addProperty("platform", "dp");
         json.addProperty("enableTransliteration", true);
 
-        Log.info(json.getAsString());
+        Log.info(json.toString());
 
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
@@ -31,7 +31,7 @@ public class Translator {
                 .header("sec-fetch-dest", "empty")
                 .header("sec-fetch-mode", "cors")
                 .header("sec-fetch-site", "cross-site")
-                .content(json.getAsString())
+                .content(json.toString())
                 .error(exception -> {
                     Log.info("exception");
                     cons.get("");
