@@ -15,7 +15,7 @@ public class Translator {
     public static void translate(String text, String locale, Cons<String> cons) {
         JsonObject json = new JsonObject();
         json.addProperty("to", locale);
-        json.addProperty("text", text);
+        json.addProperty("data", text);
         json.addProperty("platform", "dp");
         json.addProperty("enableTransliteration", true);
 
