@@ -12,12 +12,7 @@ import static pandorum.PluginVars.gson;
 
 public class Translator {
 
-    public static void translate(String text, String locale, Cons<String> cons) {
-        JsonObject json = new JsonObject();
-        json.addProperty("to", locale);
-        json.addProperty("text", text);
-        json.addProperty("platform", "api");
-
+    public static void translate(String text, String to, Cons<String> cons) {
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
                 .header("accept-language", "ru,en;q=0.9")
@@ -28,7 +23,7 @@ public class Translator {
                 .header("sec-fetch-dest", "empty")
                 .header("sec-fetch-mode", "cors")
                 .header("sec-fetch-site", "cross-site")
-                .content(json.toString())
+                .content(Strings.format("from=auto&to=@&text=@&platform=dp&is_return_text_split_ranges=true", to, text))
                 .error(exception -> cons.get(""))
                 .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
