@@ -33,7 +33,7 @@ public class Translator {
                 .header("sec-fetch-site", "cross-site")
                 .content(json.toString())
                 .error(exception -> {
-                    Log.info("exception");
+                    Log.err(exception);
                     cons.get("");
                 })
                 .submit(response -> {
