@@ -16,7 +16,7 @@ public class Translator {
         JsonObject json = new JsonObject();
         json.addProperty("to", locale);
         json.addProperty("text", text);
-        json.addProperty("platform", "dp");
+        json.addProperty("platform", "api");
 
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
