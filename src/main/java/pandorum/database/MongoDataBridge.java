@@ -20,8 +20,6 @@ import java.util.Map;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
-    public static final Seq<String> specialKeys = Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY");
-
     public MongoCollection<Document> collection;
     public Map<String, Object> latest = new HashMap<>();
 
@@ -34,6 +32,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
     public MongoDataBridge () {}
 
+    @SuppressWarnings("unchecked")
     public void findAndApplySchema(Bson filter, Cons<T> cons) {
         try {
             Class<T> sourceClass = (Class<T>) getClass();
@@ -42,7 +41,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             Seq<Field> fields = Seq.with(sourceClass.getFields());
             Document defaultObject = new Document();
 
-            fields.each(field -> !specialKeys.contains(field.getName()), field -> {
+            fields.each(field -> !Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY").contains(field.getName()), field -> {
                 try {
                     defaultObject.append(field.getName(), field.get(dataClass));
                 } catch (Exception e) {
@@ -136,7 +135,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         Map<String, BasicDBObject> operations = new HashMap<>();
 
         changes.forEach((key, changedValues) -> {
-            if (!changedValues.current.equals(DataChanges.undefined) && !specialKeys.contains(key)) {
+            if (!changedValues.current.equals(DataChanges.undefined) && !Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY").contains(key)) {
                 if (!operations.containsKey("$set")) operations.put("$set", new BasicDBObject());
 
                 operations.get("$set").append(key, changedValues.current);
