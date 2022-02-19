@@ -21,6 +21,8 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import org.bson.Document;
 import pandorum.components.Config;
+import pandorum.database.models.MapModel;
+import pandorum.database.models.PlayerModel;
 import pandorum.history.TilesHistory;
 import pandorum.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
@@ -128,6 +130,10 @@ public class PluginVars {
     public static ObjectMap<Block, Item> dangerousDepositBlocks;
 
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
+
+    public static PlayerModel playersInfo;
+    public static MapModel mapsInfo;
+
     public static Config config;
     public static Task worldLoadTask = null;
 

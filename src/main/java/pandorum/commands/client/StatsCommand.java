@@ -5,9 +5,9 @@ import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.components.Ranks;
 import pandorum.components.Ranks.Rank;
-import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
+import static pandorum.PluginVars.playersInfo;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Utils.bundled;
@@ -20,7 +20,7 @@ public class StatsCommand {
             return;
         }
 
-        PlayerModel.find(target, playerModel -> {
+        playersInfo.find(target, playerModel -> {
             Rank rank = Ranks.getRank(target, playerModel.rank);
             Call.infoMessage(player.con, Bundle.format("commands.stats.content",
                     findLocale(player.locale),

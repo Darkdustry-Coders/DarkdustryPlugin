@@ -2,12 +2,18 @@ package pandorum.database.models;
 
 import arc.func.Cons;
 import com.mongodb.BasicDBObject;
+import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.maps.Map;
+import org.bson.Document;
 import pandorum.database.MongoDataBridge;
 
-import static pandorum.PluginVars.mapsInfoCollection;
-
 public class MapModel extends MongoDataBridge<MapModel> {
+
+    public MapModel(MongoCollection<Document> collection) {
+        super(collection);
+    }
+
+    public MapModel() {}
 
     public String name;
 
@@ -18,15 +24,11 @@ public class MapModel extends MongoDataBridge<MapModel> {
     public int gamesPlayed = 0;
     public int bestWave = 0;
 
-    public static void find(Map map, Cons<MapModel> cons) {
+    public void find(Map map, Cons<MapModel> cons) {
         if (map != null && map.hasTag("name")) find(map.name(), cons);
     }
 
-    public static void find(String name, Cons<MapModel> cons) {
-        findAndApplySchema(mapsInfoCollection, MapModel.class, new BasicDBObject("name", name), cons);
-    }
-
-    public void save() {
-        save(mapsInfoCollection);
+    public void find(String name, Cons<MapModel> cons) {
+        findAndApplySchema(new BasicDBObject("name", name), cons);
     }
 }

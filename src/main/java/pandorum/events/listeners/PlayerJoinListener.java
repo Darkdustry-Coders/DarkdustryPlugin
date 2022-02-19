@@ -8,7 +8,6 @@ import mindustry.net.Administration.Config;
 import pandorum.components.Bundle;
 import pandorum.components.Effects;
 import pandorum.components.Ranks;
-import pandorum.database.models.PlayerModel;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.util.Utils;
@@ -16,6 +15,7 @@ import pandorum.util.Utils;
 import java.awt.*;
 
 import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.PluginVars.playersInfo;
 import static pandorum.util.Search.findLocale;
 
 public class PlayerJoinListener {
@@ -30,7 +30,7 @@ public class PlayerJoinListener {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
-        PlayerModel.find(event.player, playerInfo -> {
+        playersInfo.find(event.player, playerInfo -> {
             if (playerInfo.welcomeMessage) Call.menu(event.player.con,
                     MenuHandler.welcomeMenu,
                     Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),

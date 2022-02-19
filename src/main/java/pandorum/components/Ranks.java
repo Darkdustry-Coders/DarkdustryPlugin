@@ -1,27 +1,33 @@
 package pandorum.components;
 
 import arc.func.Cons;
-import arc.struct.Seq;
+import arc.struct.IntMap;
 import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.database.models.PlayerModel;
 
+import static pandorum.PluginVars.playersInfo;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.secondsToMinutes;
 
 public class Ranks {
 
-    public static final Rank admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4);
-    public static final Rank veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(1500 * 60, 100000, 100), null);
-    public static final Rank activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(750 * 60, 50000, 30), veteran);
-    public static final Rank active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(250 * 60, 25000, 15), activePlus);
-    public static final Rank player = new Rank("[accent]Player", 0, null, active);
+    public static Rank player;
+    public static Rank active;
+    public static Rank activePlus;
+    public static Rank veteran;
+    public static Rank admin;
 
-    private static final Seq<Rank> ranks = Seq.with(player, active, activePlus, veteran, admin);
+    public static void init() {
+        player = new Rank("[accent]Player", 0, null, active);
+        active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(250 * 60, 25000, 15), activePlus);
+        activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(750 * 60, 50000, 30), veteran);
+        veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(1500 * 60, 100000, 100), null);
+        admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4);
+    }
 
     public static Rank get(int index) {
-        return ranks.get(index);
+        return Rank.ranks.get(index);
     }
 
     public static Rank getRank(Player player, int index) {
@@ -34,7 +40,7 @@ public class Ranks {
             return;
         }
 
-        PlayerModel.find(player, playerModel -> {
+        playersInfo.find(player, playerModel -> {
             Rank current = get(playerModel.rank);
 
             if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
@@ -66,6 +72,8 @@ public class Ranks {
     }
 
     public static class Rank {
+        public static final IntMap<Rank> ranks = new IntMap<>();
+
         public final String tag;
         public final String name;
         public final int id;
@@ -78,6 +86,8 @@ public class Ranks {
             this.id = id;
             this.req = req;
             this.next = next;
+
+            ranks.put(id, this);
         }
 
         public Rank(String name, int id, Requirements req, Rank next) {

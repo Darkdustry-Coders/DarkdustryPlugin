@@ -20,33 +20,39 @@ import java.util.Map;
 
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
-    private static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
-    private static Map<String, Object> latest = new HashMap<>();
+    public static final Seq<String> specialKeys = Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY");
+
+    public MongoCollection<Document> collection;
+    public Map<String, Object> latest = new HashMap<>();
 
     public ObjectId _id;
     public int __v;
 
-    public static <T extends MongoDataBridge<T>> void findAndApplySchema(MongoCollection<Document> collection, Class<T> sourceClass, Bson filter, Cons<T> cons) {
-        try {
-            T dataClass = sourceClass.getConstructor().newInstance();
+    public MongoDataBridge(MongoCollection<Document> collection) {
+        this.collection = collection;
+    }
 
+    public MongoDataBridge () {}
+
+    public void findAndApplySchema(Bson filter, Cons<T> cons) {
+        try {
+            Class<T> sourceClass = (Class<T>) getClass();
+
+            T dataClass = sourceClass.getConstructor().newInstance();
             Seq<Field> fields = Seq.with(sourceClass.getFields());
             Document defaultObject = new Document();
 
             fields.each(field -> !specialKeys.contains(field.getName()), field -> {
                 try {
                     defaultObject.append(field.getName(), field.get(dataClass));
-                } catch (IllegalArgumentException | IllegalAccessException e) {
+                } catch (Exception e) {
                     Log.err(e);
                 }
             });
 
             filter.toBsonDocument().forEach(defaultObject::append);
 
-            collection.findOneAndUpdate(filter,
-                    new BasicDBObject("$setOnInsert", defaultObject),
-                    new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)
-            ).subscribe(new Subscriber<>() {
+            collection.findOneAndUpdate(filter, new BasicDBObject("$setOnInsert", defaultObject), new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)).subscribe(new Subscriber<>() {
                 @Override
                 public void onSubscribe(Subscription s) {
                     s.request(1);
@@ -57,7 +63,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     fields.each(field -> {
                         try {
                             field.set(dataClass, document.getOrDefault(field.getName(), field.get(dataClass)));
-                        } catch (IllegalArgumentException | IllegalAccessException e) {
+                        } catch (Exception e) {
                             Log.err(e);
                         }
                     });
@@ -79,7 +85,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         }
     }
 
-    public void save(MongoCollection<Document> collection) {
+    public void save() {
         Map<String, Object> values = getDeclaredPublicFields();
         BasicDBObject operations = toBsonOperations(latest, values);
 
@@ -105,12 +111,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         latest = getDeclaredPublicFields();
     }
 
-    @Override
-    public String toString() {
-        return getDeclaredPublicFields().toString();
-    }
-
-    private Map<String, Object> getDeclaredPublicFields() {
+    public Map<String, Object> getDeclaredPublicFields() {
         Field[] fields = getClass().getFields();
         Map<String, Object> values = new HashMap<>();
 
@@ -125,7 +126,12 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         return values;
     }
 
-    private BasicDBObject toBsonOperations(Map<String, Object> previousFields, Map<String, Object> newFields) {
+    @Override
+    public String toString() {
+        return getDeclaredPublicFields().toString();
+    }
+
+    public BasicDBObject toBsonOperations(Map<String, Object> previousFields, Map<String, Object> newFields) {
         Map<String, DataChanges> changes = DataChanges.getChanges(previousFields, newFields);
         Map<String, BasicDBObject> operations = new HashMap<>();
 
