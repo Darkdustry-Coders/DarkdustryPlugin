@@ -6,10 +6,12 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.components.Translator;
+import pandorum.database.databridges.PlayerInfo;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.defaultTranslatorLocale;
 import static pandorum.discord.Bot.text;
 
 public class ChatFilter {
@@ -21,7 +23,7 @@ public class ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
 
-        Groups.player.each(player -> player != author, player -> playersInfo.find(player, playerModel -> {
+        Groups.player.each(player -> player != author, player -> PlayerInfo.find(player, playerModel -> {
             if (playerModel.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;

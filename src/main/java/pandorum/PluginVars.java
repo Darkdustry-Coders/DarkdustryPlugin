@@ -21,8 +21,6 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import org.bson.Document;
 import pandorum.components.Config;
-import pandorum.database.models.MapModel;
-import pandorum.database.models.PlayerModel;
 import pandorum.history.TilesHistory;
 import pandorum.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
@@ -109,7 +107,7 @@ public class PluginVars {
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
-    public static final Seq<String> specialKeys = Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY");
+    public static final Seq<String> specialKeys = Seq.with("latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY");
 
     public static final Interval interval = new Interval();
 
@@ -132,9 +130,6 @@ public class PluginVars {
     public static ObjectMap<Block, Item> dangerousDepositBlocks;
 
     public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
-
-    public static PlayerModel playersInfo;
-    public static MapModel mapsInfo;
 
     public static Config config;
     public static Task worldLoadTask = null;

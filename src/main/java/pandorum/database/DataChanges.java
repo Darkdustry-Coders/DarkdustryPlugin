@@ -1,10 +1,14 @@
 package pandorum.database;
 
+import arc.struct.ObjectMap;
+import arc.struct.ObjectSet;
+import com.mongodb.BasicDBObject;
 import org.bson.types.Symbol;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+
+import static pandorum.PluginVars.specialKeys;
 
 public class DataChanges {
 
@@ -18,16 +22,16 @@ public class DataChanges {
         this.current = current;
     }
 
-    public static Map<String, DataChanges> getChanges(Map<String, Object> first, Map<String, Object> second) {
-        HashSet<String> keys = new HashSet<>();
-        HashMap<String, DataChanges> changes = new HashMap<>();
+    public static ObjectMap<String, DataChanges> getChanges(ObjectMap<String, Object> first, ObjectMap<String, Object> second) {
+        ObjectSet<String> keys = new ObjectSet<>();
+        ObjectMap<String, DataChanges> changes = new ObjectMap<>();
 
-        keys.addAll(first.keySet());
-        keys.addAll(second.keySet());
+        keys.addAll(first.keys().toSeq());
+        keys.addAll(second.keys().toSeq());
 
         keys.forEach(key -> {
-            Object firstValue = first.getOrDefault(key, undefined);
-            Object secondValue = second.getOrDefault(key, undefined);
+            Object firstValue = first.get(key, undefined);
+            Object secondValue = second.get(key, undefined);
 
             if (firstValue == secondValue) return;
 
@@ -35,5 +39,20 @@ public class DataChanges {
         });
 
         return changes;
+    }
+
+    public static BasicDBObject toBsonOperations(ObjectMap<String, Object> previousFields, ObjectMap<String, Object> newFields) {
+        ObjectMap<String, DataChanges> changes = getChanges(previousFields, newFields);
+        Map<String, BasicDBObject> operations = new HashMap<>();
+
+        changes.each((key, value) -> {
+            if (!value.current.equals(DataChanges.undefined) && !specialKeys.contains(key)) {
+                if (!operations.containsKey("$set")) operations.put("$set", new BasicDBObject());
+
+                operations.get("$set").append(key, value.current);
+            }
+        });
+
+        return new BasicDBObject(operations);
     }
 }

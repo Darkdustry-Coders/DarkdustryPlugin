@@ -3,12 +3,12 @@ package pandorum.commands.discord;
 import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
+import pandorum.database.databridges.MapInfo;
 import pandorum.discord.Context;
 import pandorum.util.Utils;
 
 import java.awt.*;
 
-import static pandorum.PluginVars.mapsInfo;
 import static pandorum.util.Search.findMap;
 
 public class MapCommand {
@@ -19,7 +19,7 @@ public class MapCommand {
             return;
         }
 
-        mapsInfo.find(map, mapModel -> {
+        MapInfo.find(map, mapModel -> {
             context.sendEmbedWithFile(new EmbedBuilder()
                     .setColor(Color.yellow)
                     .setTitle(Strings.format(":map: @", Strings.stripColors(map.name())))
