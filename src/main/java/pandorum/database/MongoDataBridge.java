@@ -18,6 +18,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import static pandorum.PluginVars.specialKeys;
+
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
     public MongoCollection<Document> collection;
@@ -41,7 +43,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             Seq<Field> fields = Seq.with(sourceClass.getFields());
             Document defaultObject = new Document();
 
-            fields.each(field -> !Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY").contains(field.getName()), field -> {
+            fields.each(field -> !specialKeys.contains(field.getName()), field -> {
                 try {
                     defaultObject.append(field.getName(), field.get(dataClass));
                 } catch (Exception e) {
@@ -135,7 +137,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         Map<String, BasicDBObject> operations = new HashMap<>();
 
         changes.forEach((key, changedValues) -> {
-            if (!changedValues.current.equals(DataChanges.undefined) && !Seq.with("collection", "latest", "_id", "__v", "DEFAULT_CODEC_REGISTRY").contains(key)) {
+            if (!changedValues.current.equals(DataChanges.undefined) && !specialKeys.contains(key)) {
                 if (!operations.containsKey("$set")) operations.put("$set", new BasicDBObject());
 
                 operations.get("$set").append(key, changedValues.current);
