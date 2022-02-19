@@ -11,7 +11,6 @@ import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
@@ -19,7 +18,6 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
-import org.bson.Document;
 import pandorum.components.Config;
 import pandorum.history.TilesHistory;
 import pandorum.history.entry.HistoryEntry;
@@ -107,6 +105,8 @@ public class PluginVars {
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
     public static final Seq<Command> adminOnlyCommands = new Seq<>();
 
+    public static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
+
     public static final Interval interval = new Interval();
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
@@ -127,7 +127,6 @@ public class PluginVars {
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static ObjectMap<Block, Item> dangerousDepositBlocks;
 
-    public static MongoCollection<Document> playersInfoCollection, mapsInfoCollection;
     public static Config config;
     public static Task worldLoadTask = null;
 

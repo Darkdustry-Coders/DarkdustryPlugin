@@ -18,9 +18,10 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import static pandorum.PluginVars.specialKeys;
+
 public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
-    private static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
     private static Map<String, Object> latest = new HashMap<>();
 
     public ObjectId _id;
@@ -36,17 +37,14 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             fields.each(field -> !specialKeys.contains(field.getName()), field -> {
                 try {
                     defaultObject.append(field.getName(), field.get(dataClass));
-                } catch (IllegalArgumentException | IllegalAccessException e) {
+                } catch (Exception e) {
                     Log.err(e);
                 }
             });
 
             filter.toBsonDocument().forEach(defaultObject::append);
 
-            collection.findOneAndUpdate(filter,
-                    new BasicDBObject("$setOnInsert", defaultObject),
-                    new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)
-            ).subscribe(new Subscriber<>() {
+            collection.findOneAndUpdate(filter, new BasicDBObject("$setOnInsert", defaultObject), new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)).subscribe(new Subscriber<>() {
                 @Override
                 public void onSubscribe(Subscription s) {
                     s.request(1);
@@ -57,7 +55,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     fields.each(field -> {
                         try {
                             field.set(dataClass, document.getOrDefault(field.getName(), field.get(dataClass)));
-                        } catch (IllegalArgumentException | IllegalAccessException e) {
+                        } catch (Exception e) {
                             Log.err(e);
                         }
                     });
@@ -81,7 +79,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
 
     public void save(MongoCollection<Document> collection) {
         Map<String, Object> values = getDeclaredPublicFields();
-        BasicDBObject operations = toBsonOperations(latest, values);
+        BasicDBObject operations = DataChanges.toBsonOperations(latest, values);
 
         if (!operations.isEmpty()) {
             latest = values;
@@ -101,16 +99,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         }
     }
 
-    public void resetLatest() {
-        latest = getDeclaredPublicFields();
-    }
-
-    @Override
-    public String toString() {
-        return getDeclaredPublicFields().toString();
-    }
-
-    private Map<String, Object> getDeclaredPublicFields() {
+    public Map<String, Object> getDeclaredPublicFields() {
         Field[] fields = getClass().getFields();
         Map<String, Object> values = new HashMap<>();
 
@@ -125,18 +114,12 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         return values;
     }
 
-    private BasicDBObject toBsonOperations(Map<String, Object> previousFields, Map<String, Object> newFields) {
-        Map<String, DataChanges> changes = DataChanges.getChanges(previousFields, newFields);
-        Map<String, BasicDBObject> operations = new HashMap<>();
+    public void resetLatest() {
+        latest = getDeclaredPublicFields();
+    }
 
-        changes.forEach((key, changedValues) -> {
-            if (!changedValues.current.equals(DataChanges.undefined) && !specialKeys.contains(key)) {
-                if (!operations.containsKey("$set")) operations.put("$set", new BasicDBObject());
-
-                operations.get("$set").append(key, changedValues.current);
-            }
-        });
-
-        return new BasicDBObject(operations);
+    @Override
+    public String toString() {
+        return getDeclaredPublicFields().toString();
     }
 }

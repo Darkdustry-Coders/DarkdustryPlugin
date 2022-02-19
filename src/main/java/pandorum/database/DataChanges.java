@@ -1,10 +1,13 @@
 package pandorum.database;
 
+import com.mongodb.BasicDBObject;
 import org.bson.types.Symbol;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+import static pandorum.PluginVars.specialKeys;
 
 public class DataChanges {
 
@@ -35,5 +38,20 @@ public class DataChanges {
         });
 
         return changes;
+    }
+
+    public static BasicDBObject toBsonOperations(Map<String, Object> previousFields, Map<String, Object> newFields) {
+        Map<String, DataChanges> changes = DataChanges.getChanges(previousFields, newFields);
+        Map<String, BasicDBObject> operations = new HashMap<>();
+
+        changes.forEach((key, changedValues) -> {
+            if (!changedValues.current.equals(DataChanges.undefined) && !specialKeys.contains(key)) {
+                if (!operations.containsKey("$set")) operations.put("$set", new BasicDBObject());
+
+                operations.get("$set").append(key, changedValues.current);
+            }
+        });
+
+        return new BasicDBObject(operations);
     }
 }
