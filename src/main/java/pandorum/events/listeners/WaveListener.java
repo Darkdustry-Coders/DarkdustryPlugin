@@ -1,15 +1,14 @@
 package pandorum.events.listeners;
 
-import pandorum.database.databridges.MapInfo;
-
 import static mindustry.Vars.state;
+import static pandorum.PluginVars.mapsInfo;
 
 public class WaveListener {
 
     public static void call() {
-        MapInfo.find(state.map, mapModel -> {
+        mapsInfo.find(state.map, mapModel -> {
             mapModel.bestWave = Math.max(mapModel.bestWave, state.wave);
-            MapInfo.save(mapModel);
+            mapModel.save();
         });
     }
 }

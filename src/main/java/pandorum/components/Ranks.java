@@ -5,8 +5,8 @@ import arc.struct.IntMap;
 import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import pandorum.database.databridges.PlayerInfo;
 
+import static pandorum.PluginVars.playersInfo;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.secondsToMinutes;
 
@@ -40,7 +40,7 @@ public class Ranks {
             return;
         }
 
-        PlayerInfo.find(player, playerModel -> {
+        playersInfo.find(player, playerModel -> {
             Rank current = get(playerModel.rank);
 
             if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
@@ -54,7 +54,7 @@ public class Ranks {
                 ));
 
                 playerModel.rank = current.next.id;
-                PlayerInfo.save(playerModel);
+                playerModel.save();
                 cons.get(current.next);
                 return;
             }

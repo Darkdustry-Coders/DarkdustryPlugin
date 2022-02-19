@@ -5,13 +5,10 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
-import pandorum.database.databridges.MapInfo;
-import pandorum.database.databridges.PlayerInfo;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.canVote;
-import static pandorum.PluginVars.mapRateVotes;
+import static pandorum.PluginVars.*;
 
 public class MenuHandler {
 
@@ -20,9 +17,9 @@ public class MenuHandler {
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerInfo.find(player, playerModel -> {
+                playersInfo.find(player, playerModel -> {
                     playerModel.welcomeMessage = false;
-                    PlayerInfo.save(playerModel);
+                    playerModel.save();
                     Utils.bundled(player, "events.welcome.disabled");
                 });
             }
@@ -72,15 +69,15 @@ public class MenuHandler {
                     return;
                 }
 
-                MapInfo.find(state.map, mapModel -> {
+                mapsInfo.find(state.map, mapModel -> {
                     if (option == 0) {
                         mapModel.upVotes++;
-                        MapInfo.save(mapModel);
+                        mapModel.save();
                         mapRateVotes.add(player.uuid());
                         Utils.bundled(player, "commands.map.upvoted");
                     } else {
                         mapModel.downVotes++;
-                        MapInfo.save(mapModel);
+                        mapModel.save();
                         mapRateVotes.add(player.uuid());
                         Utils.bundled(player, "commands.map.downvoted");
                     }

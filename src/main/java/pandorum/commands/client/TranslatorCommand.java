@@ -1,14 +1,14 @@
 package pandorum.commands.client;
 
 import mindustry.gen.Player;
-import pandorum.database.databridges.PlayerInfo;
 
 import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.playersInfo;
 import static pandorum.util.Utils.bundled;
 
 public class TranslatorCommand {
     public static void run(final String[] args, final Player player) {
-        PlayerInfo.find(player, playerModel -> {
+        playersInfo.find(player, playerModel -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", playerModel.locale);
                 case "list" -> {
@@ -18,12 +18,12 @@ public class TranslatorCommand {
                 }
                 case "off" -> {
                     playerModel.locale = "off";
-                    PlayerInfo.save(playerModel);
+                    playerModel.save();
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
                     playerModel.locale = "auto";
-                    PlayerInfo.save(playerModel);
+                    playerModel.save();
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
@@ -34,7 +34,7 @@ public class TranslatorCommand {
                     }
 
                     playerModel.locale = locale;
-                    PlayerInfo.save(playerModel);
+                    playerModel.save();
                     bundled(player, "commands.tr.changed", locale, codeLanguages.get(locale));
                 }
             }
