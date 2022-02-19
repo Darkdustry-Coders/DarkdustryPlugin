@@ -3,7 +3,6 @@ package pandorum.components;
 import arc.func.Cons;
 import arc.util.Http;
 import arc.util.Log;
-import arc.util.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,6 +13,11 @@ import static pandorum.PluginVars.gson;
 public class Translator {
 
     public static void translate(String text, String to, Cons<String> cons) {
+        JsonObject json = new JsonObject();
+        json.addProperty("to", to);
+        json.addProperty("text", text);
+        json.addProperty("platform", "dp");
+
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
                 .header("accept-language", "ru,en;q=0.9")
@@ -24,8 +28,11 @@ public class Translator {
                 .header("sec-fetch-dest", "empty")
                 .header("sec-fetch-mode", "cors")
                 .header("sec-fetch-site", "cross-site")
-                .content(Strings.format("from=auto&to=@&text=@&platform=dp&is_return_text_split_ranges=true", to, text))
-                .error(exception -> cons.get(""))
+                .content(json.toString())
+                .error(e -> {
+                    Log.err(e);
+                    cons.get("");
+                })
                 .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
 
