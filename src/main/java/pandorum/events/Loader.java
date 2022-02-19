@@ -15,7 +15,6 @@ import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.components.Icons;
-import pandorum.components.Ranks;
 import pandorum.components.Translator;
 import pandorum.discord.Bot;
 import pandorum.events.filters.ActionFilter;
@@ -77,7 +76,6 @@ public class Loader {
 
         MenuHandler.init();
         Icons.init();
-        Ranks.init();
         Bot.init();
 
         dangerousBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
