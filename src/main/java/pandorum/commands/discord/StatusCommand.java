@@ -17,7 +17,7 @@ import static pandorum.util.Utils.stripAll;
 public class StatusCommand {
     public static void run(final String[] args, final Context context) {
         if (state.isMenu()) {
-            context.err(":connection_refused: Сервер оффлайн.", ":thonk: Почему.");
+            context.err(":gear: Сервер оффлайн.", ":thinking: Почему?");
             return;
         }
 
