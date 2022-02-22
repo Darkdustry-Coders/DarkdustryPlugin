@@ -4,6 +4,7 @@ import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
+import pandorum.components.Ranks;
 
 import static mindustry.Vars.netServer;
 import static pandorum.util.Search.findPlayer;

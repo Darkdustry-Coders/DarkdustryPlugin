@@ -1,7 +1,6 @@
 package pandorum.components;
 
-import arc.func.Cons;
-import arc.struct.IntMap;
+import arc.struct.Seq;
 import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -16,32 +15,29 @@ public class Ranks {
     public static Rank active;
     public static Rank activePlus;
     public static Rank veteran;
+    public static Rank contributor;
     public static Rank admin;
 
     public static void init() {
-        player = new Rank("", "[accent]Player", 0, null, active);
-        active = new Rank("[accent]<[white]\uE800[accent]> ", "[cyan]Active", 1, new Requirements(250 * 60, 25000, 15), activePlus);
-        activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "[sky]Active+", 2, new Requirements(750 * 60, 50000, 30), veteran);
-        veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "[gold]Veteran", 3, new Requirements(1500 * 60, 100000, 100), null);
-        admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "[scarlet]Admin", 4);
+        player = new Rank("", "player", "[accent]Player", null, active);
+        active = new Rank("[accent]<[white]\uE800[accent]> ", "active", "[sky]Active", new Requirements(300 * 60, 25000, 20), activePlus);
+        activePlus = new Rank("[accent]<[white]\uE813[accent]> ", "active+", "[cyan]Active+", new Requirements(750 * 60, 50000, 40), veteran);
+        veteran = new Rank("[accent]<[gold]\uE809[accent]> ", "veteran", "[gold]Veteran", new Requirements(1500 * 60, 100000, 100), null);
+        contributor = new Rank("[accent]<[lime]\uE80F[accent]>", "contributor", "[lime]Contributor");
+        admin = new Rank("[accent]<[scarlet]\uE817[accent]> ", "admin", "[scarlet]Admin");
     }
 
-    public static Rank get(int index) {
+    public static Rank getRank(int index) {
         return Rank.ranks.get(index);
     }
 
-    public static Rank getRank(Player player, int index) {
-        return player.admin ? admin : get(index);
+    public static Rank findRank(String name) {
+        return Strings.canParsePositiveInt(name) ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
-    public static void updateRank(Player player, Cons<Rank> cons) {
-        if (player.admin) {
-            cons.get(admin);
-            return;
-        }
-
+    public static void updateRank(Player player) {
         PlayerModel.find(player, playerModel -> {
-            Rank current = get(playerModel.rank);
+            Rank current = getRank(playerModel.rank);
 
             if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
                 Call.infoMessage(player.con, Bundle.format("events.rank-increase",
@@ -55,58 +51,58 @@ public class Ranks {
 
                 playerModel.rank = current.next.id;
                 playerModel.save();
-                cons.get(current.next);
+                player.name(current.next.tag + "[#" + player.color.toString() + "]" + player.getInfo().lastName);
                 return;
             }
 
-            cons.get(current);
+            if (player.admin && current != admin) {
+                current = admin;
+                playerModel.rank = current.id;
+                playerModel.save();
+            }
+
+            player.name(current.tag + "[#" + player.color.toString() + "]" + player.getInfo().lastName);
         });
     }
 
-    public static void updateName(Player player, Cons<String> cons) {
-        updateRank(player, rank -> cons.get(Strings.format("@[#@]@", rank.tag, player.color.toString(), player.getInfo().lastName)));
-    }
-
-    public static void updateName(Player player) {
-        updateName(player, player::name);
-    }
-
     public static class Rank {
-        public static final IntMap<Rank> ranks = new IntMap<>();
+        public static final Seq<Rank> ranks = new Seq<>(true);
 
         public final String tag;
         public final String name;
+        public final String displayName;
         public final int id;
         public final Rank next;
         public final Requirements req;
 
-        public Rank(String tag, String name, int id, Requirements req, Rank next) {
-            this.name = name;
+        public Rank(String tag, String name, String displayName, Requirements req, Rank next) {
             this.tag = tag;
-            this.id = id;
+            this.name = name;
+            this.displayName = displayName;
+            this.id = ranks.size;
             this.req = req;
             this.next = next;
 
-            ranks.put(id, this);
+            ranks.add(this);
         }
 
-        public Rank(String tag, String name, int id) {
-            this(tag, name, id, null, null);
+        public Rank(String tag, String name, String displayName) {
+            this(tag, name, displayName, null, null);
         }
     }
 
     public static class Requirements {
-        public final long playTime;
+        public final int playTime;
         public final int buildingsBuilt;
         public final int gamesPlayed;
 
-        public Requirements(long playTime, int buildingsBuilt, int gamesPlayed) {
+        public Requirements(int playTime, int buildingsBuilt, int gamesPlayed) {
             this.playTime = playTime;
             this.buildingsBuilt = buildingsBuilt;
             this.gamesPlayed = gamesPlayed;
         }
 
-        public boolean check(long playTime, int buildingsBuilt, int gamesPlayed) {
+        public boolean check(int playTime, int buildingsBuilt, int gamesPlayed) {
             return playTime >= this.playTime && buildingsBuilt >= this.buildingsBuilt && gamesPlayed >= this.gamesPlayed;
         }
     }

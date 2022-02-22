@@ -8,6 +8,7 @@ import mindustry.net.Administration.Config;
 import pandorum.components.Bundle;
 import pandorum.components.Effects;
 import pandorum.components.Ranks;
+import pandorum.components.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.discord.Bot;
 import pandorum.events.handlers.MenuHandler;
@@ -21,16 +22,15 @@ import static pandorum.util.Search.findLocale;
 public class PlayerJoinListener {
 
     public static void call(final PlayerJoin event) {
-        Ranks.updateName(event.player, name -> {
+        PlayerModel.find(event.player, playerInfo -> {
+            Rank rank = Ranks.getRank(playerInfo.rank);
+            String name = rank.tag + "[#" + event.player.color.toString() + "]" + event.player.getInfo().lastName;
+
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
             Utils.sendToChat("events.player.join", name);
             Bot.sendEmbed(Color.green, "@ присоединился к серверу.", Strings.stripColors(name));
-        });
 
-        if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
-
-        PlayerModel.find(event.player, playerInfo -> {
             if (playerInfo.welcomeMessage) Call.menu(event.player.con,
                     MenuHandler.welcomeMenu,
                     Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
@@ -40,5 +40,7 @@ public class PlayerJoinListener {
         });
 
         Utils.bundled(event.player, "events.welcome.message", Config.name.string(), discordServerUrl);
+
+        if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
     }
 }

@@ -20,19 +20,19 @@ public class RankCommand {
         }
 
         PlayerModel.find(target, playerModel -> {
-            Rank rank = Ranks.getRank(target, playerModel.rank);
+            Rank rank = Ranks.getRank(playerModel.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.info",
                     findLocale(player.locale),
                     target.coloredName(),
                     rank.tag,
-                    rank.name
+                    rank.displayName
             ));
 
             if (rank.next != null && rank.next.req != null) {
                 builder.append(Bundle.format("commands.rank.next",
                         findLocale(player.locale),
                         rank.next.tag,
-                        rank.next.name,
+                        rank.next.displayName,
                         Utils.secondsToMinutes(playerModel.playTime),
                         Utils.secondsToMinutes(rank.next.req.playTime),
                         playerModel.buildingsBuilt,
@@ -41,6 +41,10 @@ public class RankCommand {
                         rank.next.req.gamesPlayed
                 ));
             }
+
+            Rank.ranks.each(r -> {
+                // TODO информация о каждом ранге
+            });
 
             Call.infoMessage(player.con, builder.toString());
         });

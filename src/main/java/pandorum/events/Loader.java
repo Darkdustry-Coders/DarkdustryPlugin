@@ -83,7 +83,7 @@ public class Loader {
         dangerousBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
         dangerousDepositBlocks = ObjectMap.of(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
 
-        Timer.schedule(StateUpdater::update, 0f, 1f);
+        Timer.schedule(Updater::update, 0f, 1f);
 
         Log.info("[Darkdustry] Инициализация плагина завершена...");
     }

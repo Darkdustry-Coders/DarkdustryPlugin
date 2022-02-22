@@ -21,12 +21,12 @@ public class StatsCommand {
         }
 
         PlayerModel.find(target, playerModel -> {
-            Rank rank = Ranks.getRank(target, playerModel.rank);
+            Rank rank = Ranks.getRank(playerModel.rank);
             Call.infoMessage(player.con, Bundle.format("commands.stats.content",
                     findLocale(player.locale),
                     target.coloredName(),
                     rank.tag,
-                    rank.name,
+                    rank.displayName,
                     Utils.secondsToMinutes(playerModel.playTime),
                     playerModel.buildingsBuilt,
                     playerModel.buildingsDeconstructed,

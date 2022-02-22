@@ -33,5 +33,6 @@ public class ServerCommandsLoader {
 
         CommandsHelper.registerServer(handler, "despawn", "Kill all units.", DespawnCommand::run);
         CommandsHelper.registerServer(handler, "restart", "Restart the server.", RestartCommand::run);
+        CommandsHelper.registerServer(handler, "setrank", "<rank> <ID/username...>", "Set a rank for player.", SetRankCommand::run);
     }
 }

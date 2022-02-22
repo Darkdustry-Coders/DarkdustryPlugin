@@ -10,13 +10,13 @@ import static mindustry.Vars.state;
 import static pandorum.PluginVars.mapPlayTime;
 import static pandorum.PluginVars.serverUpTime;
 
-public class StateUpdater {
+public class Updater {
 
     public static void update() {
         Groups.player.each(player -> PlayerModel.find(player, playerModel -> {
             playerModel.playTime++;
             playerModel.save();
-            Ranks.updateName(player);
+            Ranks.updateRank(player);
         }));
 
         MapModel.find(state.map, mapModel -> {
