@@ -27,7 +27,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
     public ObjectId _id;
     public int __v;
 
-    public static <T extends MongoDataBridge<T>> void findAndApplySchema(MongoCollection<Document> collection, Class<T> sourceClass, Bson filter, Cons<T> cons) {
+    protected static <T extends MongoDataBridge<T>> void findAndApplySchema(MongoCollection<Document> collection, Class<T> sourceClass, Bson filter, Cons<T> cons) {
         try {
             T dataClass = sourceClass.getConstructor().newInstance();
 
@@ -77,7 +77,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         }
     }
 
-    public void save(MongoCollection<Document> collection) {
+    protected void save(MongoCollection<Document> collection) {
         Map<String, Object> values = getDeclaredPublicFields();
         BasicDBObject operations = DataChanges.toBsonOperations(latest, values);
 
@@ -99,7 +99,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         }
     }
 
-    public Map<String, Object> getDeclaredPublicFields() {
+    protected Map<String, Object> getDeclaredPublicFields() {
         Field[] fields = getClass().getFields();
         Map<String, Object> values = new HashMap<>();
 
@@ -114,7 +114,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
         return values;
     }
 
-    public void resetLatest() {
+    protected void resetLatest() {
         latest = getDeclaredPublicFields();
     }
 

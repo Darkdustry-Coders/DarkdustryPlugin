@@ -22,7 +22,7 @@ public class StatsCommand {
 
         PlayerModel.find(target, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);
-            Call.infoMessage(player.con, Bundle.format("commands.stats.content",
+            Call.infoMessage(player.con, Bundle.format("commands.stats",
                     findLocale(player.locale),
                     target.coloredName(),
                     rank.tag,

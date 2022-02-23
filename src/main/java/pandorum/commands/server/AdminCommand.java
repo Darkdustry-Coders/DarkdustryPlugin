@@ -25,6 +25,7 @@ public class AdminCommand {
             switch (args[0].toLowerCase()) {
                 case "add" -> {
                     netServer.admins.adminPlayer(info.id, info.adminUsid);
+                    Ranks.setRank(info.id, Ranks.admin);
                     Log.info("Игрок '@' теперь админ.", info.lastName);
                     if (target != null && !target.admin) {
                         target.admin(true);
@@ -33,6 +34,7 @@ public class AdminCommand {
                 }
                 case "remove" -> {
                     netServer.admins.unAdminPlayer(info.id);
+                    Ranks.resetRank(info.id);
                     Log.info("Игрок '@' больше не админ.", info.lastName);
                     if (target != null && target.admin) {
                         target.admin(false);

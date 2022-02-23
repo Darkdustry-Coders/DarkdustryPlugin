@@ -22,17 +22,7 @@ public class SetRankCommand {
             return;
         }
 
-        PlayerModel.find(target, playerModel -> {
-            playerModel.rank = rank.id;
-
-            if (rank.req != null) {
-                playerModel.playTime = rank.req.playTime;
-                playerModel.buildingsBuilt = rank.req.buildingsBuilt;
-                playerModel.gamesPlayed = rank.req.gamesPlayed;
-            }
-
-            playerModel.save();
-            Log.info("Ранг игрока '@' успешно изменен на '@'", target.name, rank.name);
-        });
+        Ranks.setRank(target.uuid(), rank);
+        Log.info("Ранг игрока '@' успешно изменен на '@'", target.name, rank.name);
     }
 }

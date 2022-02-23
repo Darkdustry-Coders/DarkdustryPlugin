@@ -35,6 +35,33 @@ public class Ranks {
         return Strings.canParsePositiveInt(name) ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
+    public static void setRank(String uuid, Rank rank) {
+        PlayerModel.find(uuid, playerModel -> {
+            playerModel.rank = rank.id;
+
+            if (rank.req != null) {
+                playerModel.playTime = Math.max(playerModel.playTime, rank.req.playTime);
+                playerModel.buildingsBuilt = Math.max(playerModel.buildingsBuilt, rank.req.buildingsBuilt);
+                playerModel.gamesPlayed = Math.max(playerModel.gamesPlayed, rank.req.gamesPlayed);
+            }
+
+            playerModel.save();
+        });
+    }
+
+    public static void resetRank(String uuid) {
+        PlayerModel.find(uuid, playerModel -> {
+            Rank rank = Rank.ranks.get(0);
+
+            while (rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
+                rank = rank.next;
+            }
+
+            playerModel.rank = rank.id;
+            playerModel.save();
+        });
+    }
+
     public static void updateRank(Player player) {
         PlayerModel.find(player, playerModel -> {
             Rank current = getRank(playerModel.rank);
@@ -53,12 +80,6 @@ public class Ranks {
                 playerModel.save();
                 player.name(current.next.tag + "[#" + player.color.toString() + "]" + player.getInfo().lastName);
                 return;
-            }
-
-            if (player.admin && current != admin) {
-                current = admin;
-                playerModel.rank = current.id;
-                playerModel.save();
             }
 
             player.name(current.tag + "[#" + player.color.toString() + "]" + player.getInfo().lastName);
