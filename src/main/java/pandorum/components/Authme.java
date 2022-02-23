@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.awt.*;
 
+import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
@@ -45,6 +46,7 @@ public class Authme {
         if (player != null) {
             text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), member.getEffectiveName());
 
+            netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
             player.admin(true);
             bundled(player, "commands.login.confirm");
