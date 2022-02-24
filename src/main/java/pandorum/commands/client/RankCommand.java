@@ -40,7 +40,7 @@ public class RankCommand {
 
             builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
             for (Rank r : Rank.ranks) {
-                builder.append(Strings.format("\n[lightgray] - @[cyan]@", rank.tag, rank.displayName));
+                builder.append(Strings.format("\n[lightgray] - @[cyan]@", r.tag, r.displayName));
                 if (r.req != null) {
                     builder.append(Bundle.format("commands.rank.requirements", findLocale(player.locale), Utils.secondsToMinutes(r.req.playTime), r.req.buildingsBuilt, r.req.gamesPlayed));
                 }

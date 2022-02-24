@@ -13,7 +13,7 @@ public class UnbanCommand {
         } else if (netServer.admins.unbanPlayerID(args[0]) || netServer.admins.unbanPlayerIP(args[0])) {
             Log.info("Игрок '@' успешно разбанен.", args[0]);
         } else {
-            Log.err("Игрок не был забанен!");
+            Log.err("Игрок не был забанен или его не существует!");
         }
     }
 }

@@ -22,7 +22,7 @@ public class TilesHistory<T extends HistoryEntry> {
         this.historyCache = Caffeine.newBuilder().maximumSize(allHistorySize).buildAsync();
     }
 
-    public void getAll(short x, short y, Cons<Seq<T>> valuesFunction, Cons<Seq<TileKey>> keysFunction) {
+    public void getAll(int x, int y, Cons<Seq<T>> valuesFunction, Cons<Seq<TileKey>> keysFunction) {
         Seq<T> values = new Seq<>();
         values.setSize(maxTileHistoryCapacity);
 
@@ -43,11 +43,11 @@ public class TilesHistory<T extends HistoryEntry> {
         if (keysFunction != null) keysFunction.get(keys.filter(Objects::nonNull));
     }
 
-    public void getAll(short x, short y, Cons<Seq<T>> valuesFunction) {
+    public void getAll(int x, int y, Cons<Seq<T>> valuesFunction) {
         getAll(x, y, valuesFunction, null);
     }
 
-    public void put(short x, short y, T cacheEntry) {
+    public void put(int x, int y, T cacheEntry) {
         getAll(x, y, values -> {
             int serialNumber = Mathf.clamp(values.size, 0, maxTileHistoryCapacity - 1);
 
