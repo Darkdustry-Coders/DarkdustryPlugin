@@ -76,13 +76,12 @@ public class Ranks {
                         playerModel.gamesPlayed
                 ));
 
-                playerModel.rank = current.next.id;
+                current = current.next;
+                playerModel.rank = current.id;
                 playerModel.save();
-                player.name(current.next.tag + " [#" + player.color.toString() + "]" + player.getInfo().lastName);
-                return;
             }
 
-            player.name(current.tag + "[#" + player.color.toString() + "]" + player.getInfo().lastName);
+            player.name(current.tag + " [#" + player.color + "]" + player.getInfo().lastName);
         });
     }
 

@@ -29,10 +29,6 @@ public class CommandsHelper {
         handler.removeCommand(text);
     }
 
-    /**
-     * Методы для команд для игроков.
-     */
-
     public static void registerClient(CommandHandler clientHandler, String text, String params, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(config.mode)) return;
         Command command = clientHandler.<Player>register(text, params, Bundle.get(Strings.format("commands.@.description", text), Bundle.defaultLocale()), (args, player) -> {
@@ -58,10 +54,6 @@ public class CommandsHelper {
         registerClient(clientHandler, text, "", adminOnly, runner);
     }
 
-    /**
-     * Методы для команд для консоли.
-     */
-
     public static void registerServer(CommandHandler serverHandler, String text, String params, String description, Cons<String[]> runner) {
         serverHandler.register(text, params, description, args -> Core.app.post(() -> runner.get(args)));
     }
@@ -69,10 +61,6 @@ public class CommandsHelper {
     public static void registerServer(CommandHandler serverHandler, String text, String description, Cons<String[]> runner) {
         registerServer(serverHandler, text, "", description, runner);
     }
-
-    /**
-     * Методы для команд для Discord.
-     */
 
     public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandRunner<Context> runner) {
         discordHandler.<Context>register(text, params, description, (args, context) -> {

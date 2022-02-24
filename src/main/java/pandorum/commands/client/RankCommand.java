@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -21,12 +22,7 @@ public class RankCommand {
 
         PlayerModel.find(target, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);
-            StringBuilder builder = new StringBuilder(Bundle.format("commands.rank",
-                    findLocale(player.locale),
-                    target.coloredName(),
-                    rank.tag,
-                    rank.displayName
-            ));
+            StringBuilder builder = new StringBuilder(Bundle.format("commands.rank", findLocale(player.locale), target.coloredName(), rank.tag, rank.displayName));
 
             if (rank.next != null && rank.next.req != null) {
                 builder.append(Bundle.format("commands.rank.next",
@@ -43,12 +39,12 @@ public class RankCommand {
             }
 
             builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
-            //for (Rank r : Rank.ranks) {
-            //    builder.append(Bundle.format("commands.rank.ranks.name", findLocale(player.locale), rank.tag, rank.displayName));
-            //    if (r.req != null) {
-            //        builder.append(Bundle.format("commands.rank.ranks.requirements", findLocale(player.locale), Utils.secondsToMinutes(rank.req.playTime), rank.req.buildingsBuilt, rank.req.gamesPlayed));
-            //    }
-            //}
+            for (Rank r : Rank.ranks) {
+                builder.append(Strings.format("\n[lightgray] - @[cyan]@", rank.tag, rank.displayName));
+                if (r.req != null) {
+                    builder.append(Bundle.format("commands.rank.requirements", findLocale(player.locale), Utils.secondsToMinutes(r.req.playTime), r.req.buildingsBuilt, r.req.gamesPlayed));
+                }
+            }
 
             Call.infoMessage(player.con, builder.toString());
         });
