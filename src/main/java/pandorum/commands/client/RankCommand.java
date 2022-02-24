@@ -42,13 +42,13 @@ public class RankCommand {
                 ));
             }
 
-            builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
-            Rank.ranks.each(r -> {
-                builder.append(Bundle.format("commands.rank.ranks.name", findLocale(player.locale), rank.tag, rank.displayName));
-                if (r.req != null) {
-                    builder.append(Bundle.format("commands.rank.ranks.requirements", findLocale(player.locale), Utils.secondsToMinutes(rank.req.playTime), rank.req.buildingsBuilt, rank.req.gamesPlayed));
-                }
-            });
+            //builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
+            //Rank.ranks.each(r -> {
+            //    builder.append(Bundle.format("commands.rank.ranks.name", findLocale(player.locale), rank.tag, rank.displayName));
+            //    if (r.req != null) {
+            //        builder.append(Bundle.format("commands.rank.ranks.requirements", findLocale(player.locale), Utils.secondsToMinutes(rank.req.playTime), rank.req.buildingsBuilt, rank.req.gamesPlayed));
+            //    }
+            //});
 
             Call.infoMessage(player.con, builder.toString());
         });
