@@ -39,12 +39,12 @@ public class RankCommand {
             }
 
             builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
-            for (Rank r : Rank.ranks) {
+            Rank.ranks.each(r -> r.req != null || r.next != null, r -> {
                 builder.append(Strings.format("\n[lightgray] - @[cyan]@", r.tag, r.displayName));
                 if (r.req != null) {
                     builder.append(Bundle.format("commands.rank.requirements", findLocale(player.locale), Utils.secondsToMinutes(r.req.playTime), r.req.buildingsBuilt, r.req.gamesPlayed));
                 }
-            }
+            });
 
             Call.infoMessage(player.con, builder.toString());
         });
