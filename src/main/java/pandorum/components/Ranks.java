@@ -31,10 +31,6 @@ public class Ranks {
         return Rank.ranks.get(index);
     }
 
-    public static Rank findRank(String name) {
-        return Strings.canParsePositiveInt(name) ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
-    }
-
     public static void setRank(String uuid, Rank rank) {
         PlayerModel.find(uuid, playerModel -> {
             playerModel.rank = rank.id;

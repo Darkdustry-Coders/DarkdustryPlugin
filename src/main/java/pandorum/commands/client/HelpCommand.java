@@ -5,8 +5,8 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import mindustry.gen.Player;
-import pandorum.commands.CommandsHelper;
 import pandorum.components.Bundle;
+import pandorum.util.Utils;
 
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
@@ -18,7 +18,7 @@ public class HelpCommand {
             return;
         }
 
-        Seq<Command> commandsList = CommandsHelper.getAvailableClientCommands(player.admin);
+        Seq<Command> commandsList = Utils.getAvailableClientCommands(player.admin);
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandsList.size / 8f);
 

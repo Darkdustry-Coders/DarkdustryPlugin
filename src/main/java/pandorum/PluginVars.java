@@ -123,7 +123,7 @@ public class PluginVars {
     public static boolean canVote = false;
 
     /** Блоки, которые опасно строить рядом с ядром. */
-    public static Seq<Block> dangerousBlocks;
+    public static Seq<Block> dangerousBuildBlocks;
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static ObjectMap<Block, Item> dangerousDepositBlocks;
 

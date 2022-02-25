@@ -80,7 +80,7 @@ public class Loader {
         Ranks.init();
         Bot.init();
 
-        dangerousBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
+        dangerousBuildBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
         dangerousDepositBlocks = ObjectMap.of(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
 
         Timer.schedule(Updater::update, 0f, 1f);

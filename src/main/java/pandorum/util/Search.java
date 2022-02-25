@@ -15,6 +15,7 @@ import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.components.Bundle;
+import pandorum.components.Ranks.Rank;
 
 import java.util.Locale;
 
@@ -35,6 +36,10 @@ public class Search {
     public static Locale findLocale(String name) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> name.equals(l.toString()) || name.startsWith(l.toString()));
         return Utils.notNullElse(locale, Bundle.defaultLocale());
+    }
+
+    public static Rank findRank(String name) {
+        return Strings.canParsePositiveInt(name) ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
     public static Player findPlayer(String name) {

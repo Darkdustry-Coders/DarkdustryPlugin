@@ -8,8 +8,6 @@ import static pandorum.PluginVars.*;
 
 public class Effects {
 
-    // TODO улучшить эффекты
-
     public static void on(Effect effect, float x, float y) {
         Call.effect(effect, x, y, 0, Color.white);
     }

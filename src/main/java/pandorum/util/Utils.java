@@ -2,6 +2,8 @@ package pandorum.util;
 
 import arc.Core;
 import arc.func.Cons;
+import arc.struct.Seq;
+import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -10,12 +12,16 @@ import mindustry.server.ServerControl;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.adminOnlyCommands;
 
 public class Utils {
 
@@ -39,10 +45,6 @@ public class Utils {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }
 
-    public static void eachPlayerInTeam(Team team, Cons<Player> cons) {
-        Groups.player.each(player -> player.team() == team, cons);
-    }
-
     public static boolean adminCheck(Player player) {
         return player.admin;
     }
@@ -55,8 +57,12 @@ public class Utils {
         Groups.player.each(player -> bundled(player, key, values));
     }
 
+    public static void eachPlayerInTeam(Team team, Cons<Player> cons) {
+        Groups.player.each(player -> player.team() == team, cons);
+    }
+
     public static String formatDate(long time) {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(new Date(time));
     }
@@ -78,6 +84,10 @@ public class Utils {
 
     public static long secondsToMinutes(long time) {
         return TimeUnit.SECONDS.toMinutes(time);
+    }
+
+    public static Seq<Command> getAvailableClientCommands(boolean admin) {
+        return netServer.clientCommands.getCommandList().removeAll(command -> !admin && adminOnlyCommands.contains(command));
     }
 
     public static ServerControl getServerControl() {
