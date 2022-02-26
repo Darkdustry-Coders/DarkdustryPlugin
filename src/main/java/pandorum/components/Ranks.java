@@ -24,6 +24,10 @@ public class Ranks {
         veteran = new Rank("[#ffd37f]<[gold]\uE809[#ffd37f]> ", "veteran", "[gold]Veteran", new Requirements(1500 * 60, 100000, 100));
         contributor = new Rank("[#ffd37f]<[lime]\uE80F[#ffd37f]> ", "contributor", "[lime]Contributor");
         admin = new Rank("[#ffd37f]<[scarlet]\uE817[#ffd37f]> ", "admin", "[scarlet]Admin");
+
+        player.next = active;
+        active.next = activePlus;
+        activePlus.next = veteran;
     }
 
     public static Rank getRank(int index) {
