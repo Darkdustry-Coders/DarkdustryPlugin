@@ -24,7 +24,7 @@ public class PlayerJoinListener {
     public static void call(final PlayerJoin event) {
         PlayerModel.find(event.player, playerInfo -> {
             Rank rank = Ranks.getRank(playerInfo.rank);
-            String name = rank.tag + " [#" + event.player.color + "]" + event.player.getInfo().lastName;
+            String name = rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
 
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
