@@ -2,9 +2,12 @@ package pandorum.events.handlers;
 
 import arc.Events;
 import mindustry.game.EventType.GameOverEvent;
+import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
+import pandorum.components.Bundle;
+import pandorum.components.Ranks.Rank;
 import pandorum.database.models.MapModel;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
@@ -12,10 +15,11 @@ import pandorum.util.Utils;
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.canVote;
 import static pandorum.PluginVars.mapRateVotes;
+import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu;
+    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu;
 
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -87,5 +91,28 @@ public class MenuHandler {
                 });
             }
         });
+
+        // TODO
+        statsMenu = emptyMenu();
+
+        rankInfoMenu = Menus.registerMenu((player, option) -> {
+            if (option == 1) {
+                StringBuilder builder = new StringBuilder();
+                Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(Bundle.format("commands.rank.menu.requirements.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(rank.req.playTime), rank.req.buildingsBuilt, rank.req.gamesPlayed)).append("\n"));
+
+                Call.menu(player.con,
+                        ranksRequirementsMenu,
+                        Bundle.format("commands.rank.menu.requirements.header", findLocale(player.locale)),
+                        builder.toString(),
+                        new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
+                );
+            }
+        });
+
+        ranksRequirementsMenu = emptyMenu();
+    }
+
+    public static int emptyMenu() {
+        return Menus.registerMenu((player, option) -> {});
     }
 }

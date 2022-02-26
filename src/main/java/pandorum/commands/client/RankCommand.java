@@ -1,6 +1,5 @@
 package pandorum.commands.client;
 
-import arc.util.Strings;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -9,6 +8,7 @@ import pandorum.components.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
+import static pandorum.events.handlers.MenuHandler.statsMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 
@@ -22,10 +22,10 @@ public class RankCommand {
 
         PlayerModel.find(target, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);
-            StringBuilder builder = new StringBuilder(Bundle.format("commands.rank", findLocale(player.locale), target.coloredName(), rank.tag, rank.displayName));
+            StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
 
             if (rank.next != null && rank.next.req != null) {
-                builder.append(Bundle.format("commands.rank.next",
+                builder.append(Bundle.format("commands.rank.menu.next",
                         findLocale(player.locale),
                         rank.next.tag,
                         rank.next.displayName,
@@ -38,15 +38,12 @@ public class RankCommand {
                 ));
             }
 
-            builder.append(Bundle.format("commands.rank.ranks", findLocale(player.locale)));
-            Rank.ranks.each(r -> r.req != null || r.next != null, r -> {
-                builder.append(Strings.format("\n[lightgray] - @[cyan]@", r.tag, r.displayName));
-                if (r.req != null) {
-                    builder.append(Bundle.format("commands.rank.requirements", findLocale(player.locale), Utils.secondsToMinutes(r.req.playTime), r.req.buildingsBuilt, r.req.gamesPlayed));
-                }
-            });
-
-            Call.infoMessage(player.con, builder.toString());
+            Call.menu(player.con,
+                    statsMenu,
+                    Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),
+                    builder.toString(),
+                    new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}, {Bundle.format("commands.rank.menu.requirements", findLocale(player.locale))}}
+            );
         });
     }
 }

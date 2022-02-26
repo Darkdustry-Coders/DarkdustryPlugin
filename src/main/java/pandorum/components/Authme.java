@@ -38,13 +38,14 @@ public class Authme {
                         .addField("UUID:", player.uuid(), true)
                         .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!", null)
                         .build()
-                ).setActionRows(ActionRow.of(confirm, deny, ban, check)).build()).queue(message -> loginWaiting.put(message, player));
+                ).setActionRows(ActionRow.of(confirm, deny, ban, check)).build()
+        ).queue(message -> loginWaiting.put(message, player));
     }
 
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был подтвержден **@**", Strings.stripColors(player.name), member.getEffectiveName());
+            text(message.getChannel(), "**@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -57,7 +58,7 @@ public class Authme {
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "Запрос игрока **@** был отклонен **@**", Strings.stripColors(player.name), member.getEffectiveName());
+            text(message.getChannel(), "**@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             bundled(player, "commands.login.deny");
             message.delete().queue();

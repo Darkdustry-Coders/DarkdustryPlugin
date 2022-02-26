@@ -35,7 +35,7 @@ public class PlayerJoinListener {
                     MenuHandler.welcomeMenu,
                     Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
                     Bundle.format("events.welcome.menu.message", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
-                    new String[][] {{Bundle.format("events.welcome.menu.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
+                    new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
             );
         });
 
