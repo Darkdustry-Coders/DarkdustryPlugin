@@ -24,7 +24,7 @@ public class RankCommand {
             Rank rank = Ranks.getRank(playerModel.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
 
-            //if (rank.next != null && rank.next.req != null) {
+            if (rank.next != null && rank.next.req != null) {
                 builder.append(Bundle.format("commands.rank.menu.next",
                         findLocale(player.locale),
                         rank.next.tag,
@@ -36,7 +36,7 @@ public class RankCommand {
                         playerModel.gamesPlayed,
                         rank.next.req.gamesPlayed
                 ));
-            //}
+            }
 
             Call.menu(player.con,
                     rankInfoMenu,
