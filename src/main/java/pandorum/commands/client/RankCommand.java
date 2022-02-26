@@ -8,7 +8,7 @@ import pandorum.components.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
-import static pandorum.events.handlers.MenuHandler.statsMenu;
+import static pandorum.events.handlers.MenuHandler.rankInfoMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 
@@ -24,7 +24,7 @@ public class RankCommand {
             Rank rank = Ranks.getRank(playerModel.rank);
             StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
 
-            if (rank.next != null && rank.next.req != null) {
+            //if (rank.next != null && rank.next.req != null) {
                 builder.append(Bundle.format("commands.rank.menu.next",
                         findLocale(player.locale),
                         rank.next.tag,
@@ -36,10 +36,10 @@ public class RankCommand {
                         playerModel.gamesPlayed,
                         rank.next.req.gamesPlayed
                 ));
-            }
+            //}
 
             Call.menu(player.con,
-                    statsMenu,
+                    rankInfoMenu,
                     Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),
                     builder.toString(),
                     new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}, {Bundle.format("commands.rank.menu.requirements", findLocale(player.locale))}}
