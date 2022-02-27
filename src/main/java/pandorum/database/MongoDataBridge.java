@@ -37,9 +37,7 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
             fields.each(field -> !specialKeys.contains(field.getName()), field -> {
                 try {
                     defaultObject.append(field.getName(), field.get(dataClass));
-                } catch (Exception e) {
-                    Log.err(e);
-                }
+                } catch (Exception ignored) {}
             });
 
             filter.toBsonDocument().forEach(defaultObject::append);
@@ -55,13 +53,16 @@ public abstract class MongoDataBridge<T extends MongoDataBridge<T>> {
                     fields.each(field -> {
                         try {
                             field.set(dataClass, document.getOrDefault(field.getName(), field.get(dataClass)));
-                        } catch (Exception e) {
-                            Log.err(e);
-                        }
+                        } catch (Exception ignored) {}
                     });
 
                     dataClass.resetLatest();
-                    cons.get(dataClass);
+
+                    try {
+                        cons.get(dataClass);
+                    } catch (Exception e) {
+                        Log.err(e);
+                    }
                 }
 
                 @Override

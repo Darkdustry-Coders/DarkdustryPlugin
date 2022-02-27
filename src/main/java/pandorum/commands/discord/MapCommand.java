@@ -24,11 +24,11 @@ public class MapCommand {
         try {
             MapModel.find(map, mapModel -> {
                 byte[] data = MapParser.parseMap(map);
-
                 context.channel.sendMessageEmbeds(new EmbedBuilder()
                         .setColor(Color.yellow)
                         .setTitle(":map: " + map.name())
-                        .setDescription(Strings.format("**Создатель карты:** *@*\n**Описание:** *@*", map.author(), map.description()))
+                        .setAuthor(map.author())
+                        .setDescription(map.description())
                         .setFooter(map.width + "x" + map.height)
                         .setImage("attachment://" + map.name())
                         .addField(":mailbox_with_mail: Рейтинг:", Strings.format(":green_circle: @ | @ :red_circle:", mapModel.upVotes, mapModel.downVotes), true)
