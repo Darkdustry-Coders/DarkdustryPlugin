@@ -28,7 +28,7 @@ public class MapParser {
                     block.mapColor.set(block.itemDrop.color);
                 }
             });
-        } catch (Exception e) {
+        } catch (IOException e) {
             Log.err(e);
         }
     }
@@ -36,7 +36,7 @@ public class MapParser {
     public static byte[] parseMap(Map map) {
         try {
             return parseMap(MapIO.generatePreview(map));
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -44,7 +44,7 @@ public class MapParser {
     public static byte[] parseMap(Tiles tiles) {
         try {
             return parseMap(MapIO.generatePreview(tiles));
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
