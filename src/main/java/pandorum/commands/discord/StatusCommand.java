@@ -28,14 +28,14 @@ public class StatusCommand {
             context.channel.sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.green)
                     .setTitle(":desktop: " + stripAll(Config.name.string()))
-                    .setImage("attachment://minimap")
+                    .setImage("attachment://minimap.png")
                     .addField("Игроков:", String.valueOf(Groups.player.size()), true)
                     .addField("Карта:", state.map.name(), true)
                     .addField("Волна:", String.valueOf(state.wave), true)
                     .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                     .addField("Сервер онлайн уже:", formatDuration(serverUpTime * 1000L), true)
                     .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true)
-                    .build()).addFile(data, "minimap").queue();
+                    .build()).addFile(data, "minimap.png").queue();
 
         } catch (Exception e) {
             Log.err(e);
