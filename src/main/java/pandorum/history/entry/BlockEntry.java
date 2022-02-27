@@ -38,7 +38,7 @@ public class BlockEntry implements HistoryEntry {
         Locale locale = findLocale(player.locale);
 
         if (breaking) {
-            return name != null ? Bundle.format("history.block.destroy.player", locale, name, date) : Bundle.format("history.block.destroy.unit", locale, Icons.get(unit.name), date);
+            return name != null ? Bundle.format("history.block.deconstruct.player", locale, name, date) : Bundle.format("history.block.deconstruct.unit", locale, Icons.get(unit.name), date);
         }
 
         String base = name != null ? Bundle.format("history.block.construct.player", locale, name, Icons.get(block.name), date) : Bundle.format("history.block.construct.unit", locale, Icons.get(unit.name), Icons.get(block.name), date);
