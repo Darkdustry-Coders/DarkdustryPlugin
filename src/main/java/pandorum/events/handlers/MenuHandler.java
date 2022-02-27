@@ -19,7 +19,7 @@ import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu;
+    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
     public static void init() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -92,7 +92,6 @@ public class MenuHandler {
             }
         });
 
-        // TODO
         statsMenu = emptyMenu();
 
         rankInfoMenu = Menus.registerMenu((player, option) -> {
@@ -110,6 +109,8 @@ public class MenuHandler {
         });
 
         ranksRequirementsMenu = emptyMenu();
+
+        rankIncreaseMenu = emptyMenu();
     }
 
     public static int emptyMenu() {

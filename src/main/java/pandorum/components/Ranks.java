@@ -4,9 +4,10 @@ import arc.struct.Seq;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.database.models.PlayerModel;
+import pandorum.util.Utils;
 
+import static pandorum.events.handlers.MenuHandler.rankIncreaseMenu;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.secondsToMinutes;
 
 public class Ranks {
 
@@ -25,9 +26,9 @@ public class Ranks {
         contributor = new Rank("[#ffd37f]<[lime]\uE80F[#ffd37f]> ", "contributor", "[lime]Contributor");
         admin = new Rank("[#ffd37f]<[scarlet]\uE817[#ffd37f]> ", "admin", "[scarlet]Admin");
 
-        player.next = active;
-        active.next = activePlus;
-        activePlus.next = veteran;
+        player.setNext(active);
+        active.setNext(activePlus);
+        activePlus.setNext(veteran);
     }
 
     public static Rank getRank(int index) {
@@ -53,7 +54,7 @@ public class Ranks {
             Rank rank;
             int id = 0;
 
-            while ((rank = Rank.ranks.get(id)) != null && rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
+            while ((rank = getRank(id)) != null && rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
                 id++;
             }
 
@@ -64,25 +65,23 @@ public class Ranks {
 
     public static void updateRank(Player player) {
         PlayerModel.find(player, playerModel -> {
-            Rank current = getRank(playerModel.rank);
+            Rank rank = getRank(playerModel.rank);
 
-            if (current.next != null && current.next.req != null && current.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
-                current = current.next;
+            if (rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
+                rank = rank.next;
 
-                Call.infoMessage(player.con, Bundle.format("events.rank-increase",
-                        findLocale(player.locale),
-                        current.tag,
-                        current.name,
-                        secondsToMinutes(playerModel.playTime),
-                        playerModel.buildingsBuilt,
-                        playerModel.gamesPlayed
-                ));
+                Call.menu(player.con,
+                        rankIncreaseMenu,
+                        Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
+                        Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(playerModel.playTime), playerModel.buildingsBuilt, playerModel.gamesPlayed),
+                        new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
+                );
 
-                playerModel.rank = current.id;
+                playerModel.rank = rank.id;
                 playerModel.save();
             }
 
-            player.name(current.tag + "[#" + player.color + "]" + player.getInfo().lastName);
+            player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
         });
     }
 
@@ -109,6 +108,10 @@ public class Ranks {
 
         public Rank(String tag, String name, String displayName) {
             this(tag, name, displayName, null);
+        }
+
+        public void setNext(Rank next) {
+            this.next = next;
         }
     }
 
