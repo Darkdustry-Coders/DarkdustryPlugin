@@ -22,6 +22,7 @@ import mindustry.world.blocks.payloads.PayloadMassDriver;
 import mindustry.world.blocks.payloads.PayloadSource;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.power.PowerNode.PowerNodeBuild;
 import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.sandbox.LiquidSource;
 import mindustry.world.blocks.storage.Unloader;
@@ -47,16 +48,9 @@ public class ConfigEntry implements HistoryEntry {
     public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
-        this.value = getConfig(event);
+        this.value = event.tile instanceof PowerNodeBuild build ? Pack.longInt(build.power.links.size, (int) event.value) : event.value;
         this.connect = connect;
         this.time = Time.millis();
-    }
-
-    private Object getConfig(ConfigEvent event) {
-        if (event.tile.block instanceof PowerNode) {
-            return Pack.longInt(event.tile.power.links.size, (int) event.value);
-        }
-        return event.value;
     }
 
     @Override

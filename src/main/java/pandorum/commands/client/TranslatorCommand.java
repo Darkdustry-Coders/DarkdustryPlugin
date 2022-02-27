@@ -13,7 +13,7 @@ public class TranslatorCommand {
                 case "current" -> bundled(player, "commands.tr.current", playerModel.locale);
                 case "list" -> {
                     StringBuilder locales = new StringBuilder();
-                    codeLanguages.keys().toSeq().each(locale -> locales.append(" ").append(locale));
+                    codeLanguages.keys().toSeq().each(locale -> locales.append(locale).append(" "));
                     bundled(player, "commands.tr.list", locales.toString());
                 }
                 case "off" -> {

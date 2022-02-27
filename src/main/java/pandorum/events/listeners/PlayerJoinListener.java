@@ -22,20 +22,20 @@ import static pandorum.util.Search.findLocale;
 public class PlayerJoinListener {
 
     public static void call(final PlayerJoin event) {
-        PlayerModel.find(event.player, playerInfo -> {
-            Rank rank = Ranks.getRank(playerInfo.rank);
-            String name = rank.tag + " [#" + event.player.color + "]" + event.player.getInfo().lastName;
+        PlayerModel.find(event.player, playerModel -> {
+            Rank rank = Ranks.getRank(playerModel.rank);
+            String name = rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
 
             event.player.name(name);
             Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
             Utils.sendToChat("events.player.join", name);
             Bot.sendEmbed(Color.green, "@ присоединился к серверу.", Strings.stripColors(name));
 
-            if (playerInfo.welcomeMessage) Call.menu(event.player.con,
+            if (playerModel.welcomeMessage) Call.menu(event.player.con,
                     MenuHandler.welcomeMenu,
                     Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
-                    Bundle.format("events.welcome.menu.message", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
-                    new String[][] {{Bundle.format("events.welcome.menu.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
+                    Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
+                    new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
             );
         });
 
