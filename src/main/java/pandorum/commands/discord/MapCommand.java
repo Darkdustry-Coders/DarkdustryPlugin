@@ -4,6 +4,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import pandorum.components.MapParser;
 import pandorum.database.models.MapModel;
 import pandorum.discord.Context;
@@ -21,25 +22,26 @@ public class MapCommand {
             return;
         }
 
-        try {
-            MapModel.find(map, mapModel -> {
-                byte[] data = MapParser.parseMap(map);
-                context.channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setColor(Color.yellow)
-                        .setTitle(":map: " + map.name())
-                        .setAuthor(map.author())
-                        .setDescription(map.description())
-                        .setFooter(map.width + "x" + map.height)
-                        .setImage("attachment://" + map.name() + ".png")
-                        .addField(":mailbox_with_mail: Рейтинг:", Strings.format(":green_circle: @ | @ :red_circle:", mapModel.upVotes, mapModel.downVotes), true)
-                        .addField(":clock1: Время игры:", Utils.formatDuration(mapModel.playTime * 1000L), true)
-                        .addField(":100: Лучшая волна:", String.valueOf(mapModel.bestWave), true)
-                        .addField(":checkered_flag: Сыграно игр:", String.valueOf(mapModel.gamesPlayed), true)
-                        .build()
-                ).addFile(map.file.file()).addFile(data, map.name() + ".png").queue();
-            });
-        } catch (Exception e) {
-            Log.err(e);
-        }
+        MapModel.find(map, mapModel -> {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(Color.yellow)
+                    .setTitle(":map: " + map.name())
+                    .setFooter(map.width + "x" + map.height)
+                    .setImage("attachment://map.png")
+                    .addField(":mailbox_with_mail: Рейтинг:", ":green_circle: " + mapModel.upVotes + " | " + mapModel.downVotes + " :red_circle:", true)
+                    .addField(":clock1: Время игры:", Utils.formatDuration(mapModel.playTime * 1000L), true)
+                    .addField(":100: Лучшая волна:", String.valueOf(mapModel.bestWave), true)
+                    .addField(":checkered_flag: Сыграно игр:", String.valueOf(mapModel.gamesPlayed), true);
+
+            if (map.author().equalsIgnoreCase("unknown")) {
+                embed.setAuthor(map.author());
+            }
+
+            if (map.description().equalsIgnoreCase("unknown")) {
+                embed.setDescription(map.description());
+            }
+
+            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+        });
     }
 }
