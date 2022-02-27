@@ -17,7 +17,6 @@ import pandorum.util.Utils;
 import java.awt.*;
 
 import static pandorum.PluginVars.discordServerUrl;
-import static pandorum.events.handlers.MenuHandler.rankIncreaseMenu;
 import static pandorum.util.Search.findLocale;
 
 public class PlayerJoinListener {
@@ -37,14 +36,6 @@ public class PlayerJoinListener {
                     Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
                     Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
                     new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
-            );
-
-            // TEST
-            Call.menu(event.player.con,
-                    rankIncreaseMenu,
-                    Bundle.format("events.rank-increase.menu.header", findLocale(event.player.locale)),
-                    Bundle.format("events.rank-increase.menu.content", findLocale(event.player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(playerModel.playTime), playerModel.buildingsBuilt, playerModel.gamesPlayed),
-                    new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}}
             );
         });
 
