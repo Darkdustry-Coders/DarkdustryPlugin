@@ -1,6 +1,5 @@
 package pandorum.discord;
 
-import arc.files.Fi;
 import arc.util.Strings;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -34,10 +33,6 @@ public class Context {
 
     public void sendEmbed(MessageEmbed embed) {
         channel.sendMessageEmbeds(embed).queue();
-    }
-
-    public void sendEmbedWithFile(MessageEmbed embed, Fi file) {
-        channel.sendMessageEmbeds(embed).addFile(file.file()).queue();
     }
 
     public void success(String title, String text, Object... args) {

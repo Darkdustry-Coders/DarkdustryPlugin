@@ -15,6 +15,7 @@ import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.components.Icons;
+import pandorum.components.MapParser;
 import pandorum.components.Ranks;
 import pandorum.components.Translator;
 import pandorum.discord.Bot;
@@ -77,6 +78,7 @@ public class Loader {
 
         MenuHandler.init();
         Icons.init();
+        MapParser.init();
         Ranks.init();
         Bot.init();
 
