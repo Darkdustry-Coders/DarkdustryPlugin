@@ -29,10 +29,7 @@ public class Translator {
                 .header("sec-fetch-mode", "cors")
                 .header("sec-fetch-site", "cross-site")
                 .content(json.toString())
-                .error(e -> {
-                    Log.err(e);
-                    cons.get("");
-                })
+                .error(e -> cons.get(""))
                 .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
 
