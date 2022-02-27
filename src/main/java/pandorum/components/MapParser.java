@@ -1,13 +1,17 @@
 package pandorum.components;
 
-import arc.graphics.Color;
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
+import arc.util.Log;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
 import mindustry.world.Tiles;
+import mindustry.world.blocks.environment.OreBlock;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import static mindustry.Vars.content;
@@ -15,7 +19,18 @@ import static mindustry.Vars.content;
 public class MapParser {
 
     public static void init() {
-        content.blocks().each(block -> block.mapColor.set(Color.cyan));
+        try {
+            BufferedImage image = ImageIO.read(new File("../block_colors.png"));
+
+            content.blocks().each(block -> {
+                block.mapColor.argb8888(image.getRGB(block.id, 0));
+                if (block instanceof OreBlock) {
+                    block.mapColor.set(block.itemDrop.color);
+                }
+            });
+        } catch (Exception e) {
+            Log.err(e);
+        }
     }
 
     public static byte[] parseMap(Map map) {

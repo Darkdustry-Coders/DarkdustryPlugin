@@ -1,10 +1,7 @@
 package pandorum.commands.discord;
 
-import arc.util.Log;
-import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import pandorum.components.MapParser;
 import pandorum.database.models.MapModel;
 import pandorum.discord.Context;
@@ -33,11 +30,11 @@ public class MapCommand {
                     .addField(":100: Лучшая волна:", String.valueOf(mapModel.bestWave), true)
                     .addField(":checkered_flag: Сыграно игр:", String.valueOf(mapModel.gamesPlayed), true);
 
-            if (map.author().equalsIgnoreCase("unknown")) {
+            if (!map.author().equalsIgnoreCase("unknown")) {
                 embed.setAuthor(map.author());
             }
 
-            if (map.description().equalsIgnoreCase("unknown")) {
+            if (!map.description().equalsIgnoreCase("unknown")) {
                 embed.setDescription(map.description());
             }
 
