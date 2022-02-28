@@ -2,6 +2,8 @@ package pandorum.components;
 
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Lines;
 import arc.util.Log;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
@@ -20,6 +22,8 @@ public class MapParser {
 
     public static void init() {
         try {
+            Draw.scl = 0.25f;
+            Lines.useLegacyLine = true;
             BufferedImage image = ImageIO.read(new File("../block_colors.png"));
             content.blocks().each(block -> block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0)));
         } catch (IOException e) {
