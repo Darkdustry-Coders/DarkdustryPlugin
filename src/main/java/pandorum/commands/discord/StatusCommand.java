@@ -24,7 +24,7 @@ public class StatusCommand {
         }
 
         try {
-            byte[] data = MapParser.parseMap(world.tiles);
+            byte[] data = MapParser.parseTiles(world.tiles);
             context.channel.sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.green)
                     .setTitle(":desktop: " + stripAll(Config.name.string()))

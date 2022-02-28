@@ -2,6 +2,8 @@ package pandorum.components;
 
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Lines;
 import arc.util.Log;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
@@ -20,14 +22,10 @@ public class MapParser {
 
     public static void init() {
         try {
+            Lines.useLegacyLine = true;
+            Draw.scl = 1f / 4f;
             BufferedImage image = ImageIO.read(new File("../block_colors.png"));
-
-            content.blocks().each(block -> {
-                block.mapColor.argb8888(image.getRGB(block.id, 0));
-                if (block instanceof OreBlock) {
-                    block.mapColor.set(block.itemDrop.color);
-                }
-            });
+            content.blocks().each(block -> block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0)));
         } catch (IOException e) {
             Log.err(e);
         }
@@ -35,21 +33,21 @@ public class MapParser {
 
     public static byte[] parseMap(Map map) {
         try {
-            return parseMap(MapIO.generatePreview(map));
+            return parseImage(MapIO.generatePreview(map));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static byte[] parseMap(Tiles tiles) {
+    public static byte[] parseTiles(Tiles tiles) {
         try {
-            return parseMap(MapIO.generatePreview(tiles));
+            return parseImage(MapIO.generatePreview(tiles));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static byte[] parseMap(Pixmap pixmap) throws IOException {
+    public static byte[] parseImage(Pixmap pixmap) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PngWriter writer = new PngWriter((int) (pixmap.width * pixmap.height * 1.5f));
         try {
