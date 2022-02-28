@@ -1,25 +1,20 @@
 package pandorum.components;
 
-import arc.graphics.Color;
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
 import arc.util.Log;
-import arc.util.io.CounterInputStream;
-import mindustry.content.Blocks;
-import mindustry.game.Team;
 import mindustry.io.MapIO;
-import mindustry.io.SaveIO;
-import mindustry.io.SaveVersion;
 import mindustry.maps.Map;
-import mindustry.world.*;
+import mindustry.world.Tiles;
 import mindustry.world.blocks.environment.OreBlock;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.zip.InflaterInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.content;
 
 public class MapParser {
 
@@ -34,7 +29,7 @@ public class MapParser {
 
     public static byte[] parseMap(Map map) {
         try {
-            return parseImage(generatePreview(map));
+            return parseImage(MapIO.generatePreview(map));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,86 +52,6 @@ public class MapParser {
             return stream.toByteArray();
         } finally {
             writer.dispose();
-        }
-    }
-
-    public static Pixmap generatePreview(Map map) throws IOException {
-        try (InputStream is = new InflaterInputStream(map.file.read(bufferSize)); CounterInputStream counter = new CounterInputStream(is); DataInputStream stream = new DataInputStream(counter)) {
-            SaveIO.readHeader(stream);
-            SaveVersion version = SaveIO.getSaveWriter(stream.readInt());
-            version.region("meta", stream, counter, version::readStringMap);
-
-            Pixmap floors = new Pixmap(map.width, map.height);
-            int black = 255;
-            int shade = Color.rgba8888(0f, 0f, 0f, 0.5f);
-            CachedTile tile = new CachedTile() {
-                @Override
-                public void setBlock(Block type) {
-                    super.setBlock(type);
-
-                    int color = MapIO.colorFor(block(), Blocks.air, Blocks.air, team());
-                    if (color != black) {
-                        floors.setRaw(x, floors.height - 1 - y, color);
-                        floors.set(x, floors.height - 1 - y + 1, shade);
-                    }
-                }
-            };
-
-            version.region("content", stream, counter, version::readContentHeader);
-            version.region("preview_map", stream, counter, in -> version.readMap(in, new WorldContext() {
-                @Override
-                public void resize(int width, int height) {}
-
-                @Override
-                public boolean isGenerating() {return false;}
-
-                @Override
-                public void begin() {
-                    world.setGenerating(true);
-                }
-
-                @Override
-                public void end() {
-                    world.setGenerating(false);
-                }
-
-                @Override
-                public void onReadBuilding() {
-                    if (tile.build != null) {
-                        int c = tile.build.team.color.rgba8888();
-                        int size = tile.block().size;
-                        int offsetx = -(size - 1) / 2;
-                        int offsety = -(size - 1) / 2;
-                        for (int dx = 0; dx < size; dx++) {
-                            for (int dy = 0; dy < size; dy++) {
-                                int drawx = tile.x + dx + offsetx, drawy = tile.y + dy + offsety;
-                                floors.set(drawx, floors.height - 1 - drawy, c);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public Tile tile(int index) {
-                    tile.x = (short) (index % map.width);
-                    tile.y = (short) (index / map.width);
-                    return tile;
-                }
-
-                @Override
-                public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
-                    if (overlayID != 0) {
-                        floors.set(x, floors.height - 1 - y, MapIO.colorFor(Blocks.air, Blocks.air, content.block(overlayID), Team.derelict));
-                    } else {
-                        floors.set(x, floors.height - 1 - y, MapIO.colorFor(Blocks.air, content.block(floorID), Blocks.air, Team.derelict));
-                    }
-                    return tile;
-                }
-            }));
-
-            return floors;
-        } finally {
-            content.setTemporaryMapper(null);
         }
     }
 }
