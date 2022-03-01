@@ -9,6 +9,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.server.ServerControl;
+import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
 
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.adminOnlyCommands;
+import static pandorum.discord.Bot.adminRole;
 
 public class Utils {
 
@@ -41,12 +43,16 @@ public class Utils {
         return Strings.stripColors(Strings.stripGlyphs(str));
     }
 
-    public static String colorizedTeam(Team team) {
+    public static String coloredTeam(Team team) {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }
 
     public static boolean adminCheck(Player player) {
         return player.admin;
+    }
+
+    public static boolean adminCheck(Member member) {
+        return member.getRoles().contains(adminRole);
     }
 
     public static void bundled(Player player, String key, Object... values) {

@@ -5,7 +5,7 @@ import arc.util.CommandHandler;
 import pandorum.commands.discord.*;
 import pandorum.discord.Context;
 
-import static pandorum.discord.Bot.adminCheck;
+import static pandorum.util.Utils.adminCheck;
 
 public class DiscordCommandsLoader {
 

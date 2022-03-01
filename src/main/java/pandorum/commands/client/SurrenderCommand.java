@@ -24,11 +24,11 @@ public class SurrenderCommand {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        Utils.sendToChat("commands.surrender.vote", Utils.colorizedTeam(player.team()), player.coloredName(), cur, req);
+        Utils.sendToChat("commands.surrender.vote", Utils.coloredTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;
 
-        Utils.sendToChat("commands.surrender.passed", Utils.colorizedTeam(player.team()));
+        Utils.sendToChat("commands.surrender.passed", Utils.coloredTeam(player.team()));
         votesSurrender.remove(player.team());
         player.team().data().destroyToDerelict();
     }

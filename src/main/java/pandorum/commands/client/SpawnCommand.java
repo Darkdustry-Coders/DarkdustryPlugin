@@ -37,6 +37,6 @@ public class SpawnCommand {
         }
 
         for (int i = 0; i < amount; i++) type.spawn(team, player.x, player.y);
-        Utils.bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), Utils.colorizedTeam(team));
+        Utils.bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), Utils.coloredTeam(team));
     }
 }

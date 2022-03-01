@@ -1,8 +1,6 @@
 package pandorum.events;
 
 import arc.Events;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Reflect;
 import arc.util.Timer;
@@ -82,8 +80,8 @@ public class Loader {
         Ranks.init();
         Bot.init();
 
-        dangerousBuildBlocks = Seq.with(Blocks.incinerator, Blocks.thoriumReactor);
-        dangerousDepositBlocks = ObjectMap.of(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
+        dangerousBuildBlocks.addAll(Blocks.incinerator, Blocks.thoriumReactor);
+        dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
 
         Timer.schedule(Updater::update, 0f, 1f);
 

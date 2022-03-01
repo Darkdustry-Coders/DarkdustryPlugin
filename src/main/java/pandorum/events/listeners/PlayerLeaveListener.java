@@ -35,7 +35,7 @@ public class PlayerLeaveListener {
         if (config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
-                Utils.sendToChat("commands.surrender.left", Utils.colorizedTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                Utils.sendToChat("commands.surrender.left", Utils.coloredTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 

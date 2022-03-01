@@ -44,11 +44,11 @@ public class MenuHandler {
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.colorizedTeam(state.rules.defaultTeam));
+                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.colorizedTeam(state.rules.waveTeam));
+                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     if (!player.dead()) player.unit().kill();

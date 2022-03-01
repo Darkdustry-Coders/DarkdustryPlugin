@@ -6,7 +6,7 @@ import mindustry.game.Team;
 import mindustry.gen.Iconc;
 
 import static mindustry.Vars.content;
-import static pandorum.util.Utils.colorizedTeam;
+import static pandorum.util.Utils.coloredTeam;
 
 public class Icons {
 
@@ -374,7 +374,7 @@ public class Icons {
 
     public static String teamsList() {
         StringBuilder teams = new StringBuilder();
-        Structs.each(team -> teams.append(" [white]").append(colorizedTeam(team)), Team.baseTeams);
+        Structs.each(team -> teams.append(" [white]").append(coloredTeam(team)), Team.baseTeams);
         return teams.toString();
     }
 }

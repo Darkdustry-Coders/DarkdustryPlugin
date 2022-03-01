@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
@@ -61,10 +60,6 @@ public class Bot {
         } else if (response.type == ResponseType.manyArguments) {
             context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
         }
-    }
-
-    public static boolean adminCheck(Member member) {
-        return member.getRoles().contains(adminRole);
     }
 
     public static void updateBotStatus() {

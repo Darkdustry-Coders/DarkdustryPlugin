@@ -1,6 +1,7 @@
 package pandorum;
 
 import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
@@ -113,6 +114,11 @@ public class PluginVars {
 
     public static final TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
 
+    /** Блоки, которые опасно строить рядом с ядром. */
+    public static final Seq<Block> dangerousBuildBlocks = new Seq<>();
+    /** Блоки, в которые опасно переносить конкретные ресурсы. */
+    public static final ObjectMap<Block, Item> dangerousDepositBlocks = new OrderedMap<>();
+
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;
 
@@ -121,11 +127,6 @@ public class PluginVars {
 
     /** Могут ли игроки голосовать в данный момент. */
     public static boolean canVote = false;
-
-    /** Блоки, которые опасно строить рядом с ядром. */
-    public static Seq<Block> dangerousBuildBlocks;
-    /** Блоки, в которые опасно переносить конкретные ресурсы. */
-    public static ObjectMap<Block, Item> dangerousDepositBlocks;
 
     public static Config config;
     public static Task worldLoadTask = null;
