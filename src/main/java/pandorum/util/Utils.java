@@ -95,11 +95,11 @@ public class Utils {
     }
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
-        return netServer.clientCommands.getCommandList().removeAll(command -> !admin && clientAdminOnlyCommands.contains(command));
+        return netServer.clientCommands.getCommandList().filter(command -> admin || !clientAdminOnlyCommands.contains(command));
     }
 
     public static Seq<Command> getAvailableDiscordCommands(boolean admin) {
-        return discordHandler.getCommandList().removeAll(command -> !admin && discordAdminOnlyCommands.contains(command));
+        return discordHandler.getCommandList().filter(command -> admin || !discordAdminOnlyCommands.contains(command));
     }
 
     public static ServerControl getServerControl() {

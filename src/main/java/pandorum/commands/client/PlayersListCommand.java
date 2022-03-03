@@ -34,7 +34,7 @@ public class PlayersListCommand {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
             if (adminCheck(p)) result.append(Iconc.admin).append(" ");
-            result.append(p.coloredName()).append(" [lightgray]([accent]").append(p.id).append("[lightgray])");
+            result.append(p.coloredName()).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])");
         }
 
         player.sendMessage(result.toString());
