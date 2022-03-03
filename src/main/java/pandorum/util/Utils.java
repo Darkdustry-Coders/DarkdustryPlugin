@@ -22,8 +22,10 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.adminOnlyCommands;
+import static pandorum.PluginVars.clientAdminOnlyCommands;
+import static pandorum.PluginVars.discordAdminOnlyCommands;
 import static pandorum.discord.Bot.adminRole;
+import static pandorum.discord.Bot.discordHandler;
 
 public class Utils {
 
@@ -93,7 +95,11 @@ public class Utils {
     }
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
-        return netServer.clientCommands.getCommandList().removeAll(command -> !admin && adminOnlyCommands.contains(command));
+        return netServer.clientCommands.getCommandList().removeAll(command -> !admin && clientAdminOnlyCommands.contains(command));
+    }
+
+    public static Seq<Command> getAvailableDiscordCommands(boolean admin) {
+        return discordHandler.getCommandList().removeAll(command -> !admin && discordAdminOnlyCommands.contains(command));
     }
 
     public static ServerControl getServerControl() {

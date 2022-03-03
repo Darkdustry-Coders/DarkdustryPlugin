@@ -104,7 +104,7 @@ public class PluginVars {
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
-    public static final Seq<Command> adminOnlyCommands = new Seq<>();
+    public static final Seq<Command> clientAdminOnlyCommands = new Seq<>(), discordAdminOnlyCommands = new Seq<>();
 
     public static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
 
@@ -129,7 +129,7 @@ public class PluginVars {
     public static boolean canVote = false;
 
     public static Config config;
-    public static Task worldLoadTask = null;
+    public static Task worldLoadTask;
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;

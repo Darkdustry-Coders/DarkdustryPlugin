@@ -27,7 +27,7 @@ public class PlayerModel extends MongoDataBridge<PlayerModel> {
     }
 
     public static void find(Player player, Cons<PlayerModel> cons) {
-        if (player != null) find(player.uuid(), cons);
+        if (player != null && !player.isLocal()) find(player.uuid(), cons);
     }
 
     public static void find(String UUID, Cons<PlayerModel> cons) {

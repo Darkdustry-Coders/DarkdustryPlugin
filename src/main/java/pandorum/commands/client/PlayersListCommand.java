@@ -9,6 +9,7 @@ import mindustry.gen.Player;
 import pandorum.components.Bundle;
 
 import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.adminCheck;
 import static pandorum.util.Utils.bundled;
 
 public class PlayersListCommand {
@@ -32,8 +33,8 @@ public class PlayersListCommand {
         for (int i = 8 * page; i < Math.min(8 * (page + 1), playersList.size); i++) {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
-            if (p.admin) result.append(Iconc.admin).append(" ");
-            result.append(p.coloredName()).append("[accent] / [cyan]").append(Bundle.format("commands.players.id", findLocale(player.locale), p.id)).append("[accent] / [cyan]").append(Bundle.format("commands.players.locale", findLocale(player.locale), p.locale));
+            if (adminCheck(p)) result.append(Iconc.admin).append(" ");
+            result.append(p.coloredName()).append(" [lightgray]([accent]").append(p.id).append("[lightgray])");
         }
 
         player.sendMessage(result.toString());

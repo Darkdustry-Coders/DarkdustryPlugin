@@ -10,7 +10,7 @@ import pandorum.commands.client.*;
 import pandorum.components.Bundle;
 import pandorum.components.Config.Gamemode;
 
-import static pandorum.PluginVars.adminOnlyCommands;
+import static pandorum.PluginVars.clientAdminOnlyCommands;
 import static pandorum.PluginVars.config;
 import static pandorum.util.Utils.adminCheck;
 import static pandorum.util.Utils.bundled;
@@ -68,7 +68,7 @@ public class ClientCommandsLoader {
             Core.app.post(() -> runner.accept(args, player));
         });
 
-        if (adminOnly) adminOnlyCommands.add(command);
+        if (adminOnly) clientAdminOnlyCommands.add(command);
     }
 
     public static void registerClient(CommandHandler clientHandler, String text, String params, boolean adminOnly, CommandHandler.CommandRunner<Player> runner) {
