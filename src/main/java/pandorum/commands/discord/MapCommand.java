@@ -42,7 +42,7 @@ public class MapCommand {
                 embed.setImage("attachment://map.png");
             }
 
-            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").addFile(new byte[0], "map1.png").queue();
+            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").queue();
         });
     }
 }

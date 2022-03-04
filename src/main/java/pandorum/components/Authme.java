@@ -45,20 +45,19 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
+            message.editMessage(Strings.format(":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).queue();
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
             player.admin(true);
             bundled(player, "commands.login.confirm");
-            message.delete().queue();
         }
     }
 
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
+            message.editMessage(Strings.format(":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).queue();
 
             bundled(player, "commands.login.deny");
             message.delete().queue();
@@ -68,7 +67,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            text(message.getChannel(), "**@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            message.editMessage(Strings.format(":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration))).queue();
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
@@ -79,7 +78,18 @@ public class Authme {
         Player player = loginWaiting.get(message);
         if (player != null) {
             PlayerInfo info = player.getInfo();
-            event.reply(Strings.format("> :information_source: Информация о игроке **@**\n\nUUID: **@**\nIP: **@**\n\nЗашел на сервер: **@** раз.\nВыгнан: **@** раз\n\nВсе IP адреса: *@*\n\nВсе никнеймы: *@*", info.lastName, info.id, info.lastIP, info.timesJoined, info.timesKicked, info.ips, info.names)).setEphemeral(true).queue();
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(Color.yellow)
+                    .setTitle(":information_source: Информация об игроке")
+                    .addField("Никнейм:", info.lastName, true)
+                    .addField("UUID:", info.id, true)
+                    .addField("IP адрес:", info.lastIP, true)
+                    .addField("Зашел на сервер:", info.timesJoined + " раз", true)
+                    .addField("Выгнан с сервера", info.timesKicked + " раз", true)
+                    .addField("Все никнеймы:", info.names.toString(), true)
+                    .addField("Все IP адреса", info.ips.toString(), true);
+
+            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
         }
     }
 }

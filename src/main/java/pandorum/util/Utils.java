@@ -9,6 +9,7 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.server.ServerControl;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
@@ -54,7 +55,7 @@ public class Utils {
     }
 
     public static boolean adminCheck(Member member) {
-        return member != null && member.getRoles().contains(adminRole);
+        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
     }
 
     public static void bundled(Player player, String key, Object... values) {
