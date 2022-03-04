@@ -44,7 +44,7 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessage(Strings.format(":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).queue();
+            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.green).setTitle(Strings.format(":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).build()).queue();
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -56,7 +56,7 @@ public class Authme {
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessage(Strings.format(":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).queue();
+            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(Strings.format(":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).build()).queue();
 
             bundled(player, "commands.login.deny");
         }
@@ -65,7 +65,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessage(Strings.format(":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration))).queue();
+            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(Strings.format(":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration))).build()).queue();
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
         }
