@@ -17,17 +17,16 @@ import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
-import static pandorum.discord.Bot.text;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class Authme {
 
-    public static final Button confirm = Button.success("admin.confirm", "Подтвердить");
-    public static final Button deny = Button.secondary("admin.deny", "Отклонить");
-    public static final Button ban = Button.danger("admin.ban", "Забанить");
-    public static final Button check = Button.primary("admin.info", "Информация");
+    public static final Button confirm = Button.success("admin.confirm", "Подтвердить"),
+            deny = Button.secondary("admin.deny", "Отклонить"),
+            ban = Button.danger("admin.ban", "Забанить"),
+            info = Button.primary("admin.info", "Информация");
 
     public static void sendConfirmation(Player player) {
         adminChannel.sendMessage(new MessageBuilder()
@@ -38,7 +37,7 @@ public class Authme {
                         .addField("UUID:", player.uuid(), true)
                         .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!", null)
                         .build()
-                ).setActionRows(ActionRow.of(confirm, deny, ban, check)).build()
+                ).setActionRows(ActionRow.of(confirm, deny, ban, info)).build()
         ).queue(message -> loginWaiting.put(message, player));
     }
 
@@ -60,7 +59,6 @@ public class Authme {
             message.editMessage(Strings.format(":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).queue();
 
             bundled(player, "commands.login.deny");
-            message.delete().queue();
         }
     }
 
@@ -70,7 +68,6 @@ public class Authme {
             message.editMessage(Strings.format(":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration))).queue();
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
-            message.delete().queue();
         }
     }
 
