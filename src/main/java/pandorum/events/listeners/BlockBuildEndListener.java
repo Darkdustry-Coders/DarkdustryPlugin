@@ -13,7 +13,7 @@ public class BlockBuildEndListener {
     public static void call(final BlockBuildEndEvent event) {
         if (config.historyEnabled()) {
             HistoryEntry entry = new BlockEntry(event);
-            event.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
+            history.putLinkedTiles(event.tile, entry);
         }
 
         PlayerModel.find(event.unit.getPlayer(), playerModel -> {

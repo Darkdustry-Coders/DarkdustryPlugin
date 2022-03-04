@@ -30,7 +30,7 @@ public class ConfigListener {
                 }
 
                 HistoryEntry entry = new ConfigEntry(event, connected);
-                event.tile.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
+                history.putLinkedTiles(event.tile.tile, entry);
             });
         }
     }

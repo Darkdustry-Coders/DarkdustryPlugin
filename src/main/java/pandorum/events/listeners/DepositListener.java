@@ -24,7 +24,7 @@ public class DepositListener {
 
         if (config.historyEnabled()) {
             HistoryEntry entry = new DepositEntry(event);
-            event.tile.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
+            history.putLinkedTiles(event.tile.tile, entry);
         }
     }
 }

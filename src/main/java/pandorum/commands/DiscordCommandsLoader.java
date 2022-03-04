@@ -25,7 +25,7 @@ public class DiscordCommandsLoader {
     public static void registerDiscord(CommandHandler discordHandler, String text, String params, String description, boolean adminOnly, CommandHandler.CommandRunner<Context> runner) {
         Command command = discordHandler.<Context>register(text, params, description, (args, context) -> {
             if (adminOnly && !adminCheck(context.member)) {
-                context.err(":no_entry: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+                context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }
             Core.app.post(() -> runner.accept(args, context));

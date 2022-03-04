@@ -46,6 +46,8 @@ public class Bot {
             DiscordCommandsLoader.registerDiscordCommands(discordHandler);
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
+            guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
+
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
             Log.err("[Darkdustry] Ошибка запуска бота...");

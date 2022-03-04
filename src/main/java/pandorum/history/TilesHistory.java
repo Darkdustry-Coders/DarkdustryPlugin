@@ -1,10 +1,12 @@
 package pandorum.history;
 
+import arc.Core;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import mindustry.world.Tile;
 import pandorum.history.entry.HistoryEntry;
 
 import java.util.Map.Entry;
@@ -50,14 +52,21 @@ public class TilesHistory<T extends HistoryEntry> {
     public void put(int x, int y, T cacheEntry) {
         getAll(x, y, values -> {
             int serialNumber = Mathf.clamp(values.size, 0, maxTileHistoryCapacity - 1);
-
             historyCache.put(new TileKey(x, y, serialNumber), CompletableFuture.completedFuture(cacheEntry));
         }, keys -> {
             if (keys.size < maxTileHistoryCapacity) return;
 
             historyCache.asMap().remove(keys.first());
-            keys.forEach(key -> key.serialNumber--);
+            keys.each(key -> key.serialNumber--);
         });
+    }
+
+    public void put(Tile tile, T cacheEntry) {
+        Core.app.post(() -> put(tile.x, tile.y, cacheEntry));
+    }
+
+    public void putLinkedTiles(Tile tile, T cacheEntry) {
+        tile.getLinkedTiles(t -> put(t, cacheEntry));
     }
 
     public void clear() {

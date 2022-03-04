@@ -1,6 +1,7 @@
 package pandorum.discord;
 
 import arc.util.Log;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -10,7 +11,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import pandorum.components.Authme;
 
+import java.awt.*;
+
 import static pandorum.discord.Bot.*;
+import static pandorum.util.Utils.adminCheck;
 import static pandorum.util.Utils.sendToChat;
 
 public class BotListener extends ListenerAdapter {
@@ -34,6 +38,12 @@ public class BotListener extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         Message message = event.getMessage();
         Member member = event.getMember();
+
+        if (!adminCheck(member)) {
+            event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).queue();
+            return;
+        }
+
         switch (event.getComponentId()) {
             case "admin.confirm" -> Authme.confirm(message, member);
             case "admin.deny" -> Authme.deny(message, member);

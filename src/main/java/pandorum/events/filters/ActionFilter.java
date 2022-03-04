@@ -13,7 +13,7 @@ public class ActionFilter {
     public static boolean filter(final PlayerAction action) {
         if (config.historyEnabled() && action.type == ActionType.rotate) {
             HistoryEntry entry = new RotateEntry(action);
-            action.tile.getLinkedTiles(tile -> history.put(tile.x, tile.y, entry));
+            history.putLinkedTiles(action.tile, entry);
         }
 
         return true;

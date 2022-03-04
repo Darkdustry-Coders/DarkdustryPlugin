@@ -50,11 +50,11 @@ public class Utils {
     }
 
     public static boolean adminCheck(Player player) {
-        return player.admin;
+        return player != null && player.admin;
     }
 
     public static boolean adminCheck(Member member) {
-        return member.getRoles().contains(adminRole);
+        return member != null && member.getRoles().contains(adminRole);
     }
 
     public static void bundled(Player player, String key, Object... values) {

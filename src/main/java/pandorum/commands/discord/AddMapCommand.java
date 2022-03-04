@@ -10,7 +10,7 @@ import static mindustry.Vars.*;
 public class AddMapCommand {
     public static void run(final String[] args, final Context context) {
         if (context.attachments.size() != 1 || !context.attachments.get(0).getFileName().endsWith(mapExtension)) {
-            context.err(":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением .msav!");
+            context.err(":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
             return;
         }
 
@@ -19,7 +19,7 @@ public class AddMapCommand {
         attachment.downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
             Fi mapFile = new Fi(file);
             if (!SaveIO.isSaveValid(mapFile)) {
-                context.err(":cat_shock: Файл поврежден или не является картой!");
+                context.err(":no_entry_sign: Файл поврежден или не является картой!");
                 mapFile.delete();
                 return;
             }
@@ -27,7 +27,7 @@ public class AddMapCommand {
             maps.reload();
             context.success(":map: Карта добавлена на сервер.");
         }).exceptionally(e -> {
-            context.err(":cat_shock: Файл поврежден или не является картой!");
+            context.err(":no_entry_sign: Файл поврежден или не является картой!");
             return null;
         });
     }
