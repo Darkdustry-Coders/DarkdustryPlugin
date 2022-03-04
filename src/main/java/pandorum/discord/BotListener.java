@@ -40,7 +40,7 @@ public class BotListener extends ListenerAdapter {
         Member member = event.getMember();
 
         if (!adminCheck(member)) {
-            event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).queue();
+            event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue();
             return;
         }
 
