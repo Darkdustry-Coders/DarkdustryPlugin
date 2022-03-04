@@ -17,6 +17,7 @@ import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.adminChannel;
+import static pandorum.discord.Bot.sendEmbed;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.millisecondsToMinutes;
@@ -44,30 +45,33 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.green).setTitle(Strings.format(":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).build()).queue();
+            sendEmbed(message.getChannel(), Color.green,":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
             player.admin(true);
             bundled(player, "commands.login.confirm");
+            message.delete().queue();
         }
     }
 
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(Strings.format(":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name))).build()).queue();
+            sendEmbed(message.getChannel(), Color.red, ":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             bundled(player, "commands.login.deny");
+            message.delete().queue();
         }
     }
 
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            message.editMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(Strings.format(":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration))).build()).queue();
+            sendEmbed(message.getChannel(), Color.red, ":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
+            message.delete().queue();
         }
     }
 
@@ -82,7 +86,7 @@ public class Authme {
                     .addField("UUID:", info.id, true)
                     .addField("IP адрес:", info.lastIP, true)
                     .addField("Зашел на сервер:", info.timesJoined + " раз", true)
-                    .addField("Выгнан с сервера", info.timesKicked + " раз", true)
+                    .addField("Выгнан с сервера:", info.timesKicked + " раз", true)
                     .addField("Все никнеймы:", info.names.toString(), true)
                     .addField("Все IP адреса", info.ips.toString(), true);
 
