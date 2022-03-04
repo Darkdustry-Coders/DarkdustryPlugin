@@ -24,7 +24,6 @@ public class MapCommand {
                     .setColor(Color.yellow)
                     .setTitle(":map: " + map.name())
                     .setFooter(map.width + "x" + map.height)
-                    .setImage("attachment://map.png")
                     .addField(":mailbox_with_mail: Рейтинг:", ":green_circle: " + mapModel.upVotes + " | " + mapModel.downVotes + " :red_circle:", true)
                     .addField(":clock1: Время игры:", Utils.formatDuration(mapModel.playTime * 1000L), true)
                     .addField(":100: Лучшая волна:", String.valueOf(mapModel.bestWave), true)
@@ -38,7 +37,12 @@ public class MapCommand {
                 embed.setDescription(map.description());
             }
 
-            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+            byte[] image = MapParser.parseMap(map);
+            if (image.length > 0) {
+                embed.setImage("attachment://map.png");
+            }
+
+            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").addFile(new byte[0], "map1.png").queue();
         });
     }
 }

@@ -34,7 +34,7 @@ public class PlayersListCommand {
         StringBuilder players = new StringBuilder();
         for (int i = 16 * page; i < Math.min(16 * (page + 1), playersList.size); i++) {
             Player player = playersList.get(i);
-            players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(player.name)).append("\n");
+            players.append("**").append(i + 1).append(".** ").append(Strings.stripColors(player.name)).append(" (ID: ").append(player.id).append(")\n");
         }
 
         context.sendEmbed(new EmbedBuilder()

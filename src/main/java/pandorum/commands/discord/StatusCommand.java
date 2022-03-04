@@ -24,19 +24,22 @@ public class StatusCommand {
         }
 
         try {
-            byte[] data = MapParser.parseTiles(world.tiles);
-            context.channel.sendMessageEmbeds(new EmbedBuilder()
+            EmbedBuilder embed = new EmbedBuilder()
                     .setColor(Color.green)
                     .setTitle(":desktop: " + stripAll(Config.name.string()))
-                    .setImage("attachment://minimap.png")
                     .addField("Игроков:", String.valueOf(Groups.player.size()), true)
                     .addField("Карта:", state.map.name(), true)
                     .addField("Волна:", String.valueOf(state.wave), true)
                     .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                     .addField("Сервер онлайн уже:", formatDuration(serverUpTime * 1000L), true)
-                    .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true)
-                    .build()).addFile(data, "minimap.png").queue();
+                    .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true);
 
+            byte[] image = MapParser.parseTiles(world.tiles);
+            if (image.length > 0) {
+                embed.setImage("attachment://minimap.png");
+            }
+
+            context.channel.sendMessageEmbeds(embed.build()).addFile(image, "minimap.png").queue();
         } catch (Exception e) {
             Log.err(e);
         }

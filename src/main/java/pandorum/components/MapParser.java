@@ -21,6 +21,8 @@ import static mindustry.Vars.*;
 
 public class MapParser {
 
+    public static Color color = new Color();
+
     public static void init() {
         try {
             BufferedImage image = ImageIO.read(new File("../block_colors.png"));
@@ -34,7 +36,7 @@ public class MapParser {
         try {
             return parseImage(generatePreview(map));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new byte[0];
         }
     }
 
@@ -42,16 +44,15 @@ public class MapParser {
         try {
             return parseImage(generatePreview(tiles));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new byte[0];
         }
     }
 
     public static BufferedImage generatePreview(Map map) throws IOException {
         try (InputStream ifs = new InflaterInputStream(map.file.read(bufferSize)); CounterInputStream counter = new CounterInputStream(ifs); DataInputStream stream = new DataInputStream(counter)) {
             SaveIO.readHeader(stream);
-            int version = stream.readInt();
-            SaveVersion ver = SaveIO.getSaveWriter(version);
-            ver.region("meta", stream, counter, ver::readStringMap);
+            SaveVersion version = SaveIO.getSaveWriter(stream.readInt());
+            version.region("meta", stream, counter, version::readStringMap);
 
             int width = map.width, height = map.height;
 
@@ -75,8 +76,8 @@ public class MapParser {
                 }
             };
 
-            ver.region("content", stream, counter, ver::readContentHeader);
-            ver.region("preview_map", stream, counter, in -> ver.readMap(in, new WorldContext() {
+            version.region("content", stream, counter, version::readContentHeader);
+            version.region("preview_map", stream, counter, in -> version.readMap(in, new WorldContext() {
                 @Override
                 public void resize(int width, int height) {}
 
@@ -155,6 +156,6 @@ public class MapParser {
     }
 
     public static int conv(int rgba) {
-        return new Color().set(rgba).argb8888();
+        return color.set(rgba).argb8888();
     }
 }
