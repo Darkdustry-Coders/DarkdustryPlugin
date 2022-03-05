@@ -45,7 +45,7 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            sendEmbed(message.getChannel(), Color.green,":white_check_mark: **@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
+            sendEmbed(message.getChannel(), Color.green,"**@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -58,7 +58,7 @@ public class Authme {
     public static void deny(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            sendEmbed(message.getChannel(), Color.red, ":no_entry_sign: **@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
+            sendEmbed(message.getChannel(), Color.red, "**@** отклонил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             bundled(player, "commands.login.deny");
             message.delete().queue();
@@ -68,7 +68,7 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            sendEmbed(message.getChannel(), Color.red, ":no_entry: **@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            sendEmbed(message.getChannel(), Color.red, "**@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
 
             player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
             message.delete().queue();
