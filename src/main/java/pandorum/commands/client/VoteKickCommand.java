@@ -29,7 +29,7 @@ public class VoteKickCommand {
 
         Player target = findPlayer(args[0]);
         if (target == null) {
-            Utils.bundled(player, "commands.player-not-found");
+            Utils.bundled(player, "commands.player-not-found", args[0]);
             return;
         }
 
