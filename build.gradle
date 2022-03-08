@@ -21,7 +21,7 @@ dependencies {
     implementation 'com.github.ben-manes.caffeine:caffeine:3.0.5'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'net.dv8tion:JDA:5.0.0-alpha.9'
-    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.4.1'
+    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.5.0'
 }
 
 jar {

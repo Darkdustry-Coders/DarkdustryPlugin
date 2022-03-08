@@ -22,8 +22,12 @@ public class LoadCommand {
             return;
         }
 
+        logic.reset();
+
         Core.app.post(() -> {
             try {
+                Log.info("Загружаю сохранение...");
+
                 SaveIO.load(save);
                 logic.play();
 

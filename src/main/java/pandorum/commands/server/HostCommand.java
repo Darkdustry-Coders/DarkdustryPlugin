@@ -37,7 +37,9 @@ public class HostCommand {
             Log.info("Случайным образом выбрана карта: '@'.", map.name());
         }
 
-        Log.info("Загружаю карту...");
+        if (!mode.valid(map)) {
+            Log.warn("Карта '@' не подходит для игрового режима '@'.");
+        }
 
         logic.reset();
         Core.settings.put("lastServerMode", mode.name());
@@ -45,6 +47,8 @@ public class HostCommand {
 
         Core.app.post(() -> {
             try {
+                Log.info("Загружаю карту...");
+
                 world.loadMap(map, map.applyRules(mode));
                 state.rules = map.applyRules(mode);
                 logic.play();

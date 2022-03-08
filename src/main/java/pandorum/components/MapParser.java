@@ -1,6 +1,7 @@
 package pandorum.components;
 
 import arc.graphics.Color;
+import arc.struct.StringMap;
 import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import mindustry.content.Blocks;
@@ -49,12 +50,17 @@ public class MapParser {
     }
 
     public static BufferedImage generatePreview(Map map) throws IOException {
-        try (InputStream ifs = new InflaterInputStream(map.file.read(bufferSize)); CounterInputStream counter = new CounterInputStream(ifs); DataInputStream stream = new DataInputStream(counter)) {
+        return generatePreview(map.file.read(bufferSize));
+    }
+
+    public static BufferedImage generatePreview(InputStream input) throws IOException {
+        try (InputStream ifs = new InflaterInputStream(input); CounterInputStream counter = new CounterInputStream(ifs); DataInputStream stream = new DataInputStream(counter)) {
             SaveIO.readHeader(stream);
             SaveVersion version = SaveIO.getSaveWriter(stream.readInt());
-            version.region("meta", stream, counter, version::readStringMap);
+            StringMap meta = new StringMap();
+            version.region("meta", stream, counter, data -> meta.putAll(version.readStringMap(data)));
 
-            int width = map.width, height = map.height;
+            int width = meta.getInt("width"), height = meta.getInt("height");
 
             var floors = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             var walls = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

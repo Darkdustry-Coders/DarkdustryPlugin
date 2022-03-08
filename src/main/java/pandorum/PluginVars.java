@@ -1,7 +1,6 @@
 package pandorum;
 
 import arc.struct.ObjectMap;
-import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
@@ -39,7 +38,7 @@ public class PluginVars {
     /** Время кулдауна для команды votekick. В секундах */
     public static final int votekickCooldownTime = 300;
     /** Время кулдауна для команды login. В секундах */
-    public static final int loginCooldownTime = 1200;
+    public static final int loginCooldownTime = 900;
     /** Время кулдауна для команды sync. В секундах */
     public static final int syncCooldownTime = 15;
 
@@ -70,7 +69,7 @@ public class PluginVars {
     public static final String defaultLocale = "en", defaultTranslatorLocale = "en_GB";
 
     /** Ссылка на наш Discord сервер */
-    public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
+    public static final String discordServerUrl = "discord.gg/45NNzjGCmY";
 
     /** Название файла с конфигурацией. */
     public static final String configFileName = "config.json";
@@ -117,7 +116,7 @@ public class PluginVars {
     /** Блоки, которые опасно строить рядом с ядром. */
     public static final Seq<Block> dangerousBuildBlocks = new Seq<>();
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
-    public static final ObjectMap<Block, Item> dangerousDepositBlocks = new OrderedMap<>();
+    public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;
