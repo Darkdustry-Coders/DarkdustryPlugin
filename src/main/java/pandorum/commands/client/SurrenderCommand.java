@@ -2,10 +2,14 @@ package pandorum.commands.client;
 
 import arc.math.Mathf;
 import arc.struct.Seq;
+import arc.util.Time;
+import mindustry.content.Blocks;
+import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.util.Utils;
 
+import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
 
 public class SurrenderCommand {
@@ -30,6 +34,13 @@ public class SurrenderCommand {
 
         Utils.sendToChat("commands.surrender.passed", Utils.coloredTeam(player.team()));
         votesSurrender.remove(player.team());
-        player.team().data().destroyToDerelict();
+
+        world.tiles.eachTile(tile -> {
+            if (tile.build != null && tile.block() != Blocks.air && tile.team() == player.team()) {
+                Time.run(Mathf.random(360f), tile::removeNet);
+            }
+        });
+
+        player.team().data().units.each(unit -> Time.run(Mathf.random(360f), () -> Call.unitDespawn(unit)));
     }
 }

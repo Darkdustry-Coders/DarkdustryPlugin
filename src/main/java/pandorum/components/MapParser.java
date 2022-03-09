@@ -146,8 +146,8 @@ public class MapParser {
 
     public static BufferedImage generatePreview(Tiles tiles) {
         var image = new BufferedImage(tiles.width, tiles.height, BufferedImage.TYPE_INT_ARGB);
-        for(int x = 0; x < tiles.width; x++){
-            for(int y = 0; y < tiles.height; y++){
+        for (int x = 0; x < tiles.width; x++) {
+            for (int y = 0; y < tiles.height; y++) {
                 Tile tile = tiles.getn(x, y);
                 image.setRGB(x, tiles.height - 1 - y, conv(MapIO.colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team())));
             }
