@@ -158,7 +158,7 @@ public class Loader {
     }
 
     public static void registerDiscordCommands() {
-        discordHandler = new CommandHandler(config.discordBotPrefix);
+        discordCommands = new CommandHandler(config.discordBotPrefix);
         DiscordCommandsHandler handler = new DiscordCommandsHandler(discordCommands);
 
         handler.register("help", "Список всех команд.", false, pandorum.commands.discord.HelpCommand::run);
