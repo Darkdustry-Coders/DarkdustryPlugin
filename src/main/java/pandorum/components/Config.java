@@ -47,20 +47,4 @@ public class Config {
     public boolean historyEnabled() {
         return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
     }
-
-    public boolean alertsEnabled() {
-        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
-    }
-
-    public enum Gamemode {
-        attack,
-        castle,
-        crawler,
-        hexed,
-        hub,
-        pvp,
-        sandbox,
-        survival,
-        tower
-    }
 }

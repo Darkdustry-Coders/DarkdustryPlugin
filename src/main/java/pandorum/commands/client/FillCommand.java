@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.math.Mathf;
 import arc.util.Strings;
 import mindustry.content.Blocks;
 import mindustry.gen.Player;
@@ -33,7 +34,7 @@ public class FillCommand {
                 if (tile != null) {
                     if (block.isFloor()) tile.setFloorNet(block);
                     else if (block.isOverlay()) tile.setFloorNet(Blocks.air, block);
-                    else tile.setNet(block, player.team(), 0);
+                    else tile.setNet(block, player.team(), Mathf.random(0, 3));
                 }
             }
         }

@@ -5,9 +5,9 @@ import pandorum.discord.Bot;
 
 import java.awt.*;
 
-public class ServerLoadListener {
+public class ServerLoadListener implements Runnable {
 
-    public static void call() {
+    public void run() {
         Log.info("[Darkdustry]: Сервер готов к работе...");
         Bot.sendEmbed(Color.yellow, "Сервер запущен...");
     }

@@ -18,7 +18,7 @@ public class Ranks {
     public static Rank contributor;
     public static Rank admin;
 
-    public static void init() {
+    public static void load() {
         player = new Rank("", "player", "[accent]Player");
         active = new Rank("[#ffd37f]<[white]\uE800[#ffd37f]> ", "active", "[sky]Active", new Requirements(300 * 60, 25000, 20));
         activePlus = new Rank("[#ffd37f]<[white]\uE813[#ffd37f]> ", "active+", "[cyan]Active+", new Requirements(750 * 60, 50000, 40));

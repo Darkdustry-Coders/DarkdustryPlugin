@@ -7,9 +7,9 @@ import pandorum.database.models.PlayerModel;
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
 
-public class GameOverListener {
+public class GameOverListener implements Runnable {
 
-    public static void call() {
+    public void run() {
         canVote = false;
         activeHistoryPlayers.clear();
         activeSpectatingPlayers.clear();

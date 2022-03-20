@@ -1,20 +1,21 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
-import pandorum.history.entry.ConfigEntry;
-import pandorum.history.entry.HistoryEntry;
+import pandorum.antigrief.history.entry.ConfigEntry;
+import pandorum.antigrief.history.entry.HistoryEntry;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;
 
-public class ConfigListener {
+public class ConfigListener implements Cons<ConfigEvent> {
 
-    public static void call(final ConfigEvent event) {
+    public void get(ConfigEvent event) {
         if (config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             history.getAll(event.tile.tile.x, event.tile.tile.y, historyEntries -> {
                 boolean connected = false;

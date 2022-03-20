@@ -4,11 +4,9 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
@@ -16,7 +14,6 @@ import java.awt.*;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
-import static pandorum.discord.Bot.adminChannel;
 import static pandorum.discord.Bot.sendEmbed;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
@@ -28,19 +25,6 @@ public class Authme {
             deny = Button.secondary("admin.deny", "Отклонить"),
             ban = Button.danger("admin.ban", "Забанить"),
             info = Button.primary("admin.info", "Информация");
-
-    public static void sendConfirmation(Player player) {
-        adminChannel.sendMessage(new MessageBuilder()
-                .setEmbeds(new EmbedBuilder()
-                        .setColor(Color.cyan)
-                        .setTitle("Запрос на права администратора.")
-                        .addField("Никнейм:", Strings.stripColors(player.name), true)
-                        .addField("UUID:", player.uuid(), true)
-                        .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!", null)
-                        .build()
-                ).setActionRows(ActionRow.of(confirm, deny, ban, info)).build()
-        ).queue(message -> loginWaiting.put(message, player));
-    }
 
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);

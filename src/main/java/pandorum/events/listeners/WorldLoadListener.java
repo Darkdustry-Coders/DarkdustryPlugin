@@ -1,13 +1,13 @@
 package pandorum.events.listeners;
 
-import arc.util.Timer;
+import arc.util.Time;
 
 import static pandorum.PluginVars.*;
 import static pandorum.util.Utils.sendToChat;
 
-public class WorldLoadListener {
+public class WorldLoadListener implements Runnable {
 
-    public static void call() {
+    public void run() {
         votesSurrender.clear();
         votesRtv.clear();
         votesVnw.clear();
@@ -19,7 +19,6 @@ public class WorldLoadListener {
         mapPlayTime = 0;
         canVote = true;
 
-        if (worldLoadTask != null) worldLoadTask.cancel();
-        worldLoadTask = Timer.schedule(() -> sendToChat("events.world-loaded"), 10f);
+        Time.run(600f, () -> sendToChat("events.world-loaded"));
     }
 }

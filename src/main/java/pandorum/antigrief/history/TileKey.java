@@ -1,6 +1,7 @@
-package pandorum.history;
+package pandorum.antigrief.history;
 
 public class TileKey {
+
     public final int x;
     public final int y;
     public int serialNumber;

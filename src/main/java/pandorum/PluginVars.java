@@ -1,11 +1,12 @@
 package pandorum;
 
+import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
-import arc.util.Timer.Task;
 import arc.util.io.ReusableByteOutStream;
 import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
@@ -19,8 +20,9 @@ import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Config;
-import pandorum.history.TilesHistory;
-import pandorum.history.entry.HistoryEntry;
+import pandorum.components.Gamemode;
+import pandorum.antigrief.history.HistoryMap;
+import pandorum.antigrief.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 
@@ -52,7 +54,8 @@ public class PluginVars {
 
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
-    /** Таймер для оповещения об опасных блоков */
+
+    /** Таймер для оповещения об опасных блоков. */
     public static final float alertsTimer = 600f;
 
     /** Время голосования через /nominate. В секундах. */
@@ -105,16 +108,17 @@ public class PluginVars {
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
     public static final Seq<Command> clientAdminOnlyCommands = new Seq<>(), discordAdminOnlyCommands = new Seq<>();
 
+    public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
     public static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
 
-    public static final Interval interval = new Interval();
+    public static final Interval interval = new Interval(2);
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    public static final TilesHistory<HistoryEntry> history = new TilesHistory<>(maxTileHistoryCapacity, allHistorySize);
+    public static final HistoryMap<HistoryEntry> history = new HistoryMap<>(maxTileHistoryCapacity, allHistorySize);
 
     /** Блоки, которые опасно строить рядом с ядром. */
-    public static final Seq<Block> dangerousBuildBlocks = new Seq<>();
+    public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
@@ -127,9 +131,9 @@ public class PluginVars {
     /** Могут ли игроки голосовать в данный момент. */
     public static boolean canVote = false;
 
-    public static Config config;
-    public static Task worldLoadTask;
+    public static CommandHandler clientCommands, serverCommands, discordCommands;
 
+    public static Config config;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
 }

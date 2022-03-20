@@ -5,6 +5,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.net.Administration.ChatFilter;
 import pandorum.components.Translator;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
@@ -14,9 +15,9 @@ import static pandorum.PluginVars.codeLanguages;
 import static pandorum.PluginVars.defaultTranslatorLocale;
 import static pandorum.discord.Bot.text;
 
-public class ChatFilter {
+public class ChatManager implements ChatFilter {
 
-    public static String filter(final Player author, final String text) {
+    public String filter(final Player author, final String text) {
         String formatted = netServer.chatFormatter.format(author, text);
         ObjectMap<String, String> cache = new ObjectMap<>();
 

@@ -1,4 +1,4 @@
-package pandorum.history.entry;
+package pandorum.antigrief.history.entry;
 
 import mindustry.gen.Player;
 

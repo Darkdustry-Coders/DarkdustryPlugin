@@ -1,6 +1,7 @@
 package pandorum.events.handlers;
 
 import arc.Events;
+import arc.func.Cons2;
 import arc.graphics.Color;
 import arc.graphics.Colors;
 import arc.struct.Seq;
@@ -22,9 +23,9 @@ import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.millisecondsToMinutes;
 
-public class ConnectPacketHandler {
+public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket> {
 
-    public static void handle(NetConnection con, ConnectPacket packet) {
+    public void get(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
         Events.fire(new ConnectPacketEvent(con, packet));

@@ -1,12 +1,13 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
 import mindustry.game.EventType.AdminRequestEvent;
 
 import static pandorum.util.Utils.sendToChat;
 
-public class AdminRequestListener {
+public class AdminRequestListener implements Cons<AdminRequestEvent> {
 
-    public static void call(final AdminRequestEvent event) {
+    public void get(AdminRequestEvent event) {
         switch (event.action) {
             case wave -> sendToChat("events.admin.wave", event.player.coloredName());
             case kick -> sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());

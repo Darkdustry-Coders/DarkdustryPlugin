@@ -1,12 +1,13 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
-import pandorum.components.Config.Gamemode;
+import pandorum.components.Gamemode;
 import pandorum.components.Effects;
 import pandorum.discord.Bot;
 import pandorum.util.Utils;
@@ -16,9 +17,9 @@ import java.awt.*;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.*;
 
-public class PlayerLeaveListener {
+public class PlayerLeaveListener implements Cons<PlayerLeave> {
 
-    public static void call(final PlayerLeave event) {
+    public void get(PlayerLeave event) {
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
         Utils.sendToChat("events.player.leave", event.player.name);
         Bot.sendEmbed(Color.red, "@ покинул сервер.", Strings.stripColors(event.player.name));

@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import net.dv8tion.jda.internal.entities.EntityBuilder;
-import pandorum.commands.DiscordCommandsLoader;
 
 import java.awt.*;
 import java.util.EnumSet;
@@ -33,7 +32,7 @@ public class Bot {
     public static Role adminRole;
     public static MessageChannel botChannel, adminChannel;
 
-    public static void init() {
+    public static void run() {
         try {
             jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady();
             jda.addEventListener(new BotListener());
@@ -43,7 +42,6 @@ public class Bot {
             botChannel = guild.getTextChannelById(config.discordBotChannelID);
             adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
 
-            DiscordCommandsLoader.registerDiscordCommands(discordHandler);
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
             guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();

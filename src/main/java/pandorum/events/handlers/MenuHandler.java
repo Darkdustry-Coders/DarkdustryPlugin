@@ -21,7 +21,7 @@ public class MenuHandler {
 
     public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
-    public static void init() {
+    public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 PlayerModel.find(player, playerModel -> {

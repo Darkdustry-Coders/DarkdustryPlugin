@@ -1,4 +1,4 @@
-package pandorum.history.entry;
+package pandorum.antigrief.history.entry;
 
 import arc.util.Time;
 import mindustry.game.EventType.BlockBuildEndEvent;

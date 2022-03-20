@@ -1,5 +1,6 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerJoin;
@@ -19,9 +20,9 @@ import java.awt.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.Search.findLocale;
 
-public class PlayerJoinListener {
+public class PlayerJoinListener implements Cons<PlayerJoin> {
 
-    public static void call(final PlayerJoin event) {
+    public void get(PlayerJoin event) {
         PlayerModel.find(event.player, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);
             String name = rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;

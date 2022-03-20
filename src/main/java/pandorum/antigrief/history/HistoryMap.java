@@ -1,4 +1,4 @@
-package pandorum.history;
+package pandorum.antigrief.history;
 
 import arc.Core;
 import arc.func.Cons;
@@ -7,19 +7,19 @@ import arc.struct.Seq;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import mindustry.world.Tile;
-import pandorum.history.entry.HistoryEntry;
+import pandorum.antigrief.history.entry.HistoryEntry;
 
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class TilesHistory<T extends HistoryEntry> {
+public class HistoryMap<T extends HistoryEntry> {
 
     public final int maxTileHistoryCapacity;
     public final AsyncCache<TileKey, T> historyCache;
 
-    public TilesHistory(int maxTileHistoryCapacity, int allHistorySize) {
+    public HistoryMap(int maxTileHistoryCapacity, int allHistorySize) {
         this.maxTileHistoryCapacity = maxTileHistoryCapacity;
         this.historyCache = Caffeine.newBuilder().maximumSize(allHistorySize).buildAsync();
     }
