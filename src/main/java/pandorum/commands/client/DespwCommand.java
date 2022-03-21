@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -10,8 +11,8 @@ import static mindustry.Vars.state;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.coloredTeam;
 
-public class DespwCommand {
-    public static void run(final String[] args, final Player player) {
+public class DespwCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Call.menu(player.con,
                 MenuHandler.despwMenu,
                 Bundle.format("commands.admin.despw.menu.header", findLocale(player.locale)),

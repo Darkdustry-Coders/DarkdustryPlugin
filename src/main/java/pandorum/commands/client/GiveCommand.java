@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.type.Item;
@@ -9,8 +10,8 @@ import static mindustry.Vars.state;
 import static pandorum.util.Search.findItem;
 import static pandorum.util.Utils.bundled;
 
-public class GiveCommand {
-    public static void run(final String[] args, final Player player) {
+public class GiveCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
             bundled(player, "commands.non-int");
             return;

@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import pandorum.components.Icons;
@@ -9,8 +10,8 @@ import static pandorum.PluginVars.activeSpectatingPlayers;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findTeam;
 
-public class TeamCommand {
-    public static void run(final String[] args, final Player player) {
+public class TeamCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Team team = findTeam(args[0]);
         if (team == null) {
             Utils.bundled(player, "commands.team-not-found", Icons.teamsList());

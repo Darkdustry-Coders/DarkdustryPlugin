@@ -17,7 +17,7 @@ import static pandorum.discord.Bot.text;
 
 public class ChatManager implements ChatFilter {
 
-    public String filter(final Player author, final String text) {
+    public String filter(Player author, String text) {
         String formatted = netServer.chatFormatter.format(author, text);
         ObjectMap<String, String> cache = new ObjectMap<>();
 

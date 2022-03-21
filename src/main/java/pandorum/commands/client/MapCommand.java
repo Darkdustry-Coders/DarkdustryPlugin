@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -10,8 +11,8 @@ import static pandorum.events.handlers.MenuHandler.mapRateMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.secondsToMinutes;
 
-public class MapCommand {
-    public static void run(final String[] args, final Player player) {
+public class MapCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         MapModel.find(state.map, mapModel -> Call.menu(player.con,
                 mapRateMenu,
                 Bundle.format("commands.map.menu.header", findLocale(player.locale), state.map.name()),

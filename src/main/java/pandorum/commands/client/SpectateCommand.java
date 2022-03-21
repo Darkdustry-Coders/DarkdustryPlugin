@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 
 import static pandorum.PluginVars.activeSpectatingPlayers;
@@ -7,8 +8,8 @@ import static pandorum.PluginVars.spectateTeam;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Utils.bundled;
 
-public class SpectateCommand {
-    public static void run(final String[] args, final Player player) {
+public class SpectateCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Player target = args.length > 0 ? findPlayer(args[0]) : player;
         if (target == null) {
             bundled(player, "commands.player-not-found", args[0]);

@@ -1,12 +1,13 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import pandorum.database.models.PlayerModel;
 
 import static pandorum.util.Utils.bundled;
 
-public class AlertCommand {
-    public static void run(final String[] args, final Player player) {
+public class AlertCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         PlayerModel.find(player, playerModel -> {
             playerModel.alerts = !playerModel.alerts;
             playerModel.save();

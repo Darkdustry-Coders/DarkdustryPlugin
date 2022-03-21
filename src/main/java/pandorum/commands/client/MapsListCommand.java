@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Strings;
@@ -12,8 +13,8 @@ import static mindustry.Vars.state;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
 
-public class MapsListCommand {
-    public static void run(final String[] args, final Player player) {
+public class MapsListCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");
             return;

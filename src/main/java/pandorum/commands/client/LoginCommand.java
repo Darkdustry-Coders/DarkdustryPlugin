@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
@@ -15,8 +16,8 @@ import static pandorum.discord.Bot.adminChannel;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.secondsToMinutes;
 
-public class LoginCommand {
-    public static void run(final String[] args, final Player player) {
+public class LoginCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (player.admin) {
             bundled(player, "commands.login.already-admin");
             return;

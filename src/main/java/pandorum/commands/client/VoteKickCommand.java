@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
@@ -9,8 +10,8 @@ import pandorum.vote.VoteKickSession;
 import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findPlayer;
 
-public class VoteKickCommand {
-    public static void run(final String[] args, final Player player) {
+public class VoteKickCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (!Config.enableVotekick.bool()) {
             Utils.bundled(player, "commands.votekick.disabled");
             return;

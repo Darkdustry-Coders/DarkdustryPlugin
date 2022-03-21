@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -12,8 +13,8 @@ import static pandorum.events.handlers.MenuHandler.rankInfoMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 
-public class RankCommand {
-    public static void run(final String[] args, final Player player) {
+public class RankCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Player target = args.length > 0 ? findPlayer(args[0]) : player;
         if (target == null) {
             Utils.bundled(player, "commands.player-not-found", args[0]);

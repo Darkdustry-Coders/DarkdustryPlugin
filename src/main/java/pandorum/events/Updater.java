@@ -10,9 +10,9 @@ import static mindustry.Vars.state;
 import static pandorum.PluginVars.mapPlayTime;
 import static pandorum.PluginVars.serverUpTime;
 
-public class Updater {
+public class Updater implements Runnable {
 
-    public static void update() {
+    public void run() {
         Groups.player.each(player -> PlayerModel.find(player, playerModel -> {
             playerModel.playTime++;
             playerModel.save();

@@ -1,13 +1,14 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import pandorum.database.models.PlayerModel;
 
 import static pandorum.PluginVars.codeLanguages;
 import static pandorum.util.Utils.bundled;
 
-public class TranslatorCommand {
-    public static void run(final String[] args, final Player player) {
+public class TranslatorCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         PlayerModel.find(player, playerModel -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", playerModel.locale);

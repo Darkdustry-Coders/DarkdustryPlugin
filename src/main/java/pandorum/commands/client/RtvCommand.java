@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.Events;
 import arc.math.Mathf;
 import mindustry.game.EventType.GameOverEvent;
@@ -12,8 +13,8 @@ import static pandorum.PluginVars.*;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.sendToChat;
 
-public class RtvCommand {
-    public static void run(final String[] args, final Player player) {
+public class RtvCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (votesRtv.contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;

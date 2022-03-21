@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.math.Mathf;
 import arc.util.Strings;
 import mindustry.content.Blocks;
@@ -13,8 +14,8 @@ import static pandorum.PluginVars.maxFillSize;
 import static pandorum.util.Search.findBlock;
 import static pandorum.util.Utils.bundled;
 
-public class FillCommand {
-    public static void run(final String[] args, final Player player) {
+public class FillCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxFillSize || Strings.parseInt(args[1]) > maxFillSize) {
             bundled(player, "commands.admin.fill.incorrect-number-format", maxFillSize);
             return;

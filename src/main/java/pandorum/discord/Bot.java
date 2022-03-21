@@ -1,6 +1,5 @@
 package pandorum.discord;
 
-import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
@@ -21,10 +20,9 @@ import java.awt.*;
 import java.util.EnumSet;
 
 import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.discordCommands;
 
 public class Bot {
-
-    public static final CommandHandler discordHandler = new CommandHandler(config.discordBotPrefix);
 
     public static JDA jda;
 
@@ -54,11 +52,11 @@ public class Bot {
     }
 
     public static void handleMessage(Context context) {
-        CommandResponse response = discordHandler.handleMessage(context.contentRaw, context);
+        CommandResponse response = discordCommands.handleMessage(context.contentRaw, context);
         if (response.type == ResponseType.fewArguments) {
-            context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
         } else if (response.type == ResponseType.manyArguments) {
-            context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordHandler.getPrefix(), response.command.text, response.command.paramText);
+            context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 

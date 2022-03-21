@@ -1,5 +1,6 @@
 package pandorum.components;
 
+import arc.files.Fi;
 import arc.graphics.Color;
 import arc.struct.StringMap;
 import arc.util.Log;
@@ -26,7 +27,12 @@ public class MapParser {
 
     public static void load() {
         try {
-            BufferedImage image = ImageIO.read(new File("../block_colors.png"));
+            Fi colors = new Fi("../block_colors.png");
+            if (!colors.exists()){
+                Log.err("[Darkdustry] Не найден файл 'block_colors.png'.");
+                return;
+            }
+            BufferedImage image = ImageIO.read(colors.file());
             content.blocks().each(block -> block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0)));
         } catch (IOException e) {
             Log.err(e);

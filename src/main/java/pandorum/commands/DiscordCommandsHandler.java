@@ -2,7 +2,8 @@ package pandorum.commands;
 
 import arc.Core;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.*;
+import arc.util.CommandHandler.Command;
+import arc.util.CommandHandler.CommandRunner;
 import pandorum.discord.Context;
 
 import static pandorum.PluginVars.discordAdminOnlyCommands;

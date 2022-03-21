@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -11,8 +12,8 @@ import pandorum.util.Utils;
 import static pandorum.util.Search.findCore;
 import static pandorum.util.Search.findTeam;
 
-public class CoreCommand {
-    public static void run(final String[] args, final Player player) {
+public class CoreCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Block core = args.length > 0 ? findCore(args[0]) : Blocks.coreShard;
         if (core == null) {
             Utils.bundled(player, "commands.admin.core.core-not-found");

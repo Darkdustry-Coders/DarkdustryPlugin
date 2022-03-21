@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.Seq;
@@ -12,8 +13,8 @@ import static mindustry.Vars.saveDirectory;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.bundled;
 
-public class SavesListCommand {
-    public static void run(final String[] args, final Player player) {
+public class SavesListCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");
             return;

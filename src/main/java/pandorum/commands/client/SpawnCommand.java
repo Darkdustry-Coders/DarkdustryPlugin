@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -11,8 +12,8 @@ import static pandorum.PluginVars.maxSpawnAmount;
 import static pandorum.util.Search.findTeam;
 import static pandorum.util.Search.findUnit;
 
-public class SpawnCommand {
-    public static void run(final String[] args, final Player player) {
+public class SpawnCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (args.length > 1 && !Strings.canParseInt(args[1])) {
             Utils.bundled(player, "commands.non-int");
             return;

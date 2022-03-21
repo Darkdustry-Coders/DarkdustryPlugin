@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.files.Fi;
 import arc.util.Strings;
 import arc.util.Timekeeper;
@@ -17,8 +18,8 @@ import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findMap;
 import static pandorum.util.Search.findSave;
 
-public class NominateCommand {
-    public static void run(final String[] args, final Player player) {
+public class NominateCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (currentVote[0] != null) {
             Utils.bundled(player, "commands.vote-already-started");
             return;

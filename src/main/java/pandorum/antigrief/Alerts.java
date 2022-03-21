@@ -1,19 +1,17 @@
 package pandorum.antigrief;
 
 import arc.math.geom.Position;
-import mindustry.game.EventType.DepositEvent;
 import mindustry.game.EventType.BuildSelectEvent;
+import mindustry.game.EventType.DepositEvent;
 import mindustry.game.Team;
 import mindustry.type.Item;
 import mindustry.world.Block;
-import mindustry.world.Tile;
 import pandorum.components.Icons;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
-import static pandorum.PluginVars.alertsTimer;
 import static pandorum.util.Utils.bundled;
 
 public class Alerts {

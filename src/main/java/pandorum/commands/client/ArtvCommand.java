@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -7,8 +8,8 @@ import pandorum.events.handlers.MenuHandler;
 
 import static pandorum.util.Search.findLocale;
 
-public class ArtvCommand {
-    public static void run(final String[] args, final Player player) {
+public class ArtvCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Call.menu(player.con,
                 MenuHandler.artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),

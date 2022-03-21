@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.math.Mathf;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -10,8 +11,8 @@ import static pandorum.PluginVars.*;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.sendToChat;
 
-public class VnwCommand {
-    public static void run(final String[] args, final Player player) {
+public class VnwCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (votesVnw.contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;

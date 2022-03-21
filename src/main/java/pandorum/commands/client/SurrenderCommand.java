@@ -1,5 +1,6 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Time;
@@ -12,8 +13,8 @@ import pandorum.util.Utils;
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
 
-public class SurrenderCommand {
-    public static void run(final String[] args, final Player player) {
+public class SurrenderCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         Seq<String> teamVotes = votesSurrender.get(player.team(), Seq::new);
         if (teamVotes.contains(player.uuid())) {
             Utils.bundled(player, "commands.already-voted");

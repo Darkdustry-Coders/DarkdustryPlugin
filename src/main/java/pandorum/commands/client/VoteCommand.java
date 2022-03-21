@@ -1,13 +1,14 @@
 package pandorum.commands.client;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 
 import static pandorum.PluginVars.currentVotekick;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.voteChoise;
 
-public class VoteCommand {
-    public static void run(final String[] args, final Player player) {
+public class VoteCommand implements CommandRunner<Player> {
+    public void accept(String[] args, Player player) {
         if (currentVotekick[0] == null) {
             bundled(player, "commands.no-voting");
             return;

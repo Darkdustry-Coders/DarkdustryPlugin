@@ -11,7 +11,7 @@ import static pandorum.PluginVars.history;
 
 public class ActionManager implements ActionFilter {
 
-    public boolean allow(final PlayerAction action) {
+    public boolean allow(PlayerAction action) {
         if (config.historyEnabled() && action.type == ActionType.rotate) {
             HistoryEntry entry = new RotateEntry(action);
             history.putLinkedTiles(action.tile, entry);

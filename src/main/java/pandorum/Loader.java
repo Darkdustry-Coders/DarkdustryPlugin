@@ -12,15 +12,16 @@ import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.net.Administration;
-import mindustry.net.Packets.*;
+import mindustry.net.Packets.Connect;
+import mindustry.net.Packets.ConnectPacket;
 import pandorum.commands.ClientCommandsHandler;
 import pandorum.commands.DiscordCommandsHandler;
 import pandorum.commands.ServerCommandsHandler;
-import pandorum.commands.client.*;
 import pandorum.commands.client.HelpCommand;
 import pandorum.commands.client.MapsListCommand;
 import pandorum.commands.client.PlayersListCommand;
 import pandorum.commands.client.SavesListCommand;
+import pandorum.commands.client.*;
 import pandorum.commands.discord.AddMapCommand;
 import pandorum.commands.discord.IpCommand;
 import pandorum.commands.discord.RemoveMapCommand;
@@ -38,7 +39,6 @@ import pandorum.events.handlers.MenuHandler;
 import pandorum.events.listeners.*;
 
 import static mindustry.Vars.*;
-import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
 
 public class Loader {
@@ -84,7 +84,7 @@ public class Loader {
 
         Version.build = -1;
 
-        Timer.schedule(Updater::update, 0f, 1f);
+        Timer.schedule(new Updater(), 0f, 1f);
     }
 
     public static void load() {
@@ -116,44 +116,44 @@ public class Loader {
     public static void registerClientCommands() {
         ClientCommandsHandler handler = new ClientCommandsHandler(clientCommands);
 
-        handler.register("help", "[page]", false, HelpCommand::run);
-        handler.register("discord", false, DiscordLinkCommand::run);
-        handler.register("a", "<message...>", true, AdminChatCommand::run);
-        handler.register("t", "<message...>", false, TeamChatCommand::run);
-        handler.register("votekick", "<ID/username...>", false, VoteKickCommand::run);
-        handler.register("vote", "<y/n>", false, VoteCommand::run);
-        handler.register("sync", false, SyncCommand::run);
-        handler.register("tr", "<current/list/off/auto/locale>", false, TranslatorCommand::run);
-        handler.register("stats", "[ID/username...]", false, StatsCommand::run);
-        handler.register("rank", "[ID/username...]", false, RankCommand::run);
-        handler.register("players", "[page]", false, PlayersListCommand::run);
+        handler.register("help", "[page]", false, new HelpCommand());
+        handler.register("discord", false, new DiscordLinkCommand());
+        handler.register("a", "<message...>", true, new AdminChatCommand());
+        handler.register("t", "<message...>", false, new TeamChatCommand());
+        handler.register("votekick", "<ID/username...>", false, new VoteKickCommand());
+        handler.register("vote", "<y/n>", false, new VoteCommand());
+        handler.register("sync", false, new SyncCommand());
+        handler.register("tr", "<current/list/off/auto/locale>", false, new TranslatorCommand());
+        handler.register("stats", "[ID/username...]", false, new StatsCommand());
+        handler.register("rank", "[ID/username...]", false, new RankCommand());
+        handler.register("players", "[page]", false, new PlayersListCommand());
 
-        handler.register("hub", false, Seq.with(Gamemode.attack, Gamemode.castle, Gamemode.crawler, Gamemode.hexed, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), HubCommand::run);
+        handler.register("hub", false, Seq.with(Gamemode.attack, Gamemode.castle, Gamemode.crawler, Gamemode.hexed, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new HubCommand());
 
-        handler.register("rtv", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), RtvCommand::run);
-        handler.register("vnw", false, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), VnwCommand::run);
-        handler.register("surrender", false, Seq.with(Gamemode.pvp), SurrenderCommand::run);
+        handler.register("rtv", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new RtvCommand());
+        handler.register("vnw", false, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new VnwCommand());
+        handler.register("surrender", false, Seq.with(Gamemode.pvp), new SurrenderCommand());
 
-        handler.register("history", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), HistoryCommand::run);
-        handler.register("alert", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), AlertCommand::run);
-        handler.register("map", false, MapCommand::run);
-        handler.register("maps", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), MapsListCommand::run);
-        handler.register("saves", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SavesListCommand::run);
-        handler.register("nominate", "<map/save/load> <name...>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), NominateCommand::run);
-        handler.register("voting", "<y/n>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), VotingCommand::run);
+        handler.register("history", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new HistoryCommand());
+        handler.register("alert", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new AlertCommand());
+        handler.register("map", false, new MapCommand());
+        handler.register("maps", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new MapsListCommand());
+        handler.register("saves", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SavesListCommand());
+        handler.register("nominate", "<map/save/load> <name...>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new NominateCommand());
+        handler.register("voting", "<y/n>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new VotingCommand());
 
-        handler.register("spawn", "<unit> [amount] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SpawnCommand::run);
-        handler.register("core", "[small/medium/big] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), CoreCommand::run);
-        handler.register("give", "<item> <amount>", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), GiveCommand::run);
-        handler.register("unit", "<unit> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), UnitCommand::run);
-        handler.register("team", "<team> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), TeamCommand::run);
-        handler.register("spectate", "[ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), SpectateCommand::run);
+        handler.register("spawn", "<unit> [amount] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SpawnCommand());
+        handler.register("core", "[small/medium/big] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new CoreCommand());
+        handler.register("give", "<item> <amount>", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new GiveCommand());
+        handler.register("unit", "<unit> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new UnitCommand());
+        handler.register("team", "<team> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new TeamCommand());
+        handler.register("spectate", "[ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SpectateCommand());
 
-        handler.register("artv", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), ArtvCommand::run);
-        handler.register("despw", true, DespwCommand::run);
-        handler.register("fill", "<width> <height> <block>", true, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival), FillCommand::run);
+        handler.register("artv", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new ArtvCommand());
+        handler.register("despw", true, new DespwCommand());
+        handler.register("fill", "<width> <height> <block>", true, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival), new FillCommand());
 
-        handler.register("login", false, LoginCommand::run);
+        handler.register("login", false, new LoginCommand());
     }
 
     public static void registerDiscordCommands() {
