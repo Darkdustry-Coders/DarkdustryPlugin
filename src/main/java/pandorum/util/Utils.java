@@ -95,8 +95,8 @@ public class Utils {
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
         Seq<Command> commands = clientCommands.getCommandList();
-        Seq<Command> playerCommands = commands.filter(command -> !clientAdminOnlyCommands.contains(command));
-        Seq<Command> adminCommands = commands.filter(command -> admin && clientAdminOnlyCommands.contains(command));
+        Seq<Command> playerCommands = commands.copy().filter(command -> !clientAdminOnlyCommands.contains(command));
+        Seq<Command> adminCommands = commands.copy().filter(command -> admin && clientAdminOnlyCommands.contains(command));
         commands.clear();
 
         return commands.addAll(playerCommands.sort(Comparator.comparing(command -> command.text))).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
@@ -104,8 +104,8 @@ public class Utils {
 
     public static Seq<Command> getAvailableDiscordCommands(boolean admin) {
         Seq<Command> commands = discordCommands.getCommandList();
-        Seq<Command> playerCommands = commands.filter(command -> !discordAdminOnlyCommands.contains(command));
-        Seq<Command> adminCommands = commands.filter(command -> admin && discordAdminOnlyCommands.contains(command));
+        Seq<Command> playerCommands = commands.copy().filter(command -> !discordAdminOnlyCommands.contains(command));
+        Seq<Command> adminCommands = commands.copy().filter(command -> admin && discordAdminOnlyCommands.contains(command));
         commands.clear();
 
         return commands.addAll(playerCommands.sort(Comparator.comparing(command -> command.text))).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
