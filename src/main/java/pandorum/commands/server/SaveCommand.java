@@ -2,14 +2,15 @@ package pandorum.commands.server;
 
 import arc.Core;
 import arc.files.Fi;
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.io.SaveIO;
 
 import static mindustry.Vars.*;
 
-public class SaveCommand {
-    public static void run(final String[] args) {
+public class SaveCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (state.isMenu()) {
             Log.err("Сервер отключен. Может быть, пора запустить его командой 'host'?");
             return;

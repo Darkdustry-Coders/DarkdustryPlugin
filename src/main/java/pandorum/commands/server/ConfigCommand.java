@@ -1,12 +1,13 @@
 package pandorum.commands.server;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.net.Administration.Config;
 
-public class ConfigCommand {
-    public static void run(final String[] args) {
+public class ConfigCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (args.length == 0) {
             Log.info("Все значения конфигурации:");
             for (Config config : Config.all) {

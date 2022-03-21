@@ -1,13 +1,14 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.net.Administration.PlayerInfo;
 
 import static mindustry.Vars.netServer;
 
-public class BansListCommand {
-    public static void run(final String[] args) {
+public class BansListCommand implements Cons<String[]> {
+    public void get(String[] args) {
         Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
         if (bannedIDs.isEmpty()) {
             Log.info("Не найдено заблокированных игроков... [UUID]");

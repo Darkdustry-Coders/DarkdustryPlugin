@@ -161,43 +161,43 @@ public class Loader {
         discordCommands = new CommandHandler(config.discordBotPrefix);
         DiscordCommandsHandler handler = new DiscordCommandsHandler(discordCommands);
 
-        handler.register("help", "Список всех команд.", false, pandorum.commands.discord.HelpCommand::run);
-        handler.register("ip", "IP адрес сервера.", false, IpCommand::run);
-        handler.register("map", "<название...>", "Получить карту с сервера.", false, pandorum.commands.discord.MapCommand::run);
-        handler.register("maps", "[страница]", "Список карт сервера.", false, pandorum.commands.discord.MapsListCommand::run);
-        handler.register("players", "[страница]", "Список игроков сервера.", false, pandorum.commands.discord.PlayersListCommand::run);
-        handler.register("status", "Состояние сервера.", false, StatusCommand::run);
+        handler.register("help", "Список всех команд.", false, new pandorum.commands.discord.HelpCommand());
+        handler.register("ip", "IP адрес сервера.", false, new IpCommand());
+        handler.register("map", "<название...>", "Получить карту с сервера.", false, new pandorum.commands.discord.MapCommand());
+        handler.register("maps", "[страница]", "Список карт сервера.", false, new pandorum.commands.discord.MapsListCommand());
+        handler.register("players", "[страница]", "Список игроков сервера.", false, new pandorum.commands.discord.PlayersListCommand());
+        handler.register("status", "Состояние сервера.", false, new StatusCommand());
 
-        handler.register("addmap", "Добавить карту на сервер.", true, AddMapCommand::run);
-        handler.register("removemap", "<название...>", "Удалить карту с сервера.", true, RemoveMapCommand::run);
+        handler.register("addmap", "Добавить карту на сервер.", true, new AddMapCommand());
+        handler.register("removemap", "<название...>", "Удалить карту с сервера.", true, new RemoveMapCommand());
     }
 
     public static void registerServerCommands() {
         ServerCommandsHandler handler = new ServerCommandsHandler(serverCommands);
 
-        handler.register("help", "List of all commands.", pandorum.commands.server.HelpCommand::run);
-        handler.register("exit", "Shut down the server.", ExitCommand::run);
-        handler.register("host", "[map] [mode]", "Open the server. Will default to a random map and survival gamemode if not specified.", HostCommand::run);
-        handler.register("maps", "List of all available maps.", pandorum.commands.server.MapsListCommand::run);
-        handler.register("saves", "List of all available saves.", pandorum.commands.server.SavesListCommand::run);
-        handler.register("status", "Display server status.", pandorum.commands.server.StatusCommand::run);
-        handler.register("say", "<message...>", "Send a message to all players.", SayCommand::run);
-        handler.register("rules", "[remove/add] [name] [value...]", "List, add or remove global rules.", RulesCommand::run);
-        handler.register("config", "[name] [value...]", "Configure server settings.", ConfigCommand::run);
-        handler.register("nextmap", "<map...>", "Set the next map to be played after a gameover. Overrides shuffling.", NextMapCommand::run);
-        handler.register("kick", "<ID/username...>", "Kick a player from the server.", KickCommand::run);
-        handler.register("ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", BanCommand::run);
-        handler.register("bans", "List of all banned IPs and UUIDs.", BansListCommand::run);
-        handler.register("unban", "<uuid/all/ip...>", "Unban a player by UUID or IP.", UnbanCommand::run);
-        handler.register("pardon", "<uuid/ip...>", "Pardon a kicked player.", PardonCommand::run);
-        handler.register("admin", "<add/remove> <uuid/username...>", "Make an online user admin.", AdminCommand::run);
-        handler.register("admins", "List of all admins.", AdminsListCommand::run);
-        handler.register("players", "List of all online players.", pandorum.commands.server.PlayersListCommand::run);
-        handler.register("save", "<save...>", "Save game state to a slot.", SaveCommand::run);
-        handler.register("load", "<save...>", "Load a save from a slot.", LoadCommand::run);
+        handler.register("help", "List of all commands.", new pandorum.commands.server.HelpCommand());
+        handler.register("exit", "Shut down the server.", new ExitCommand());
+        handler.register("host", "[map] [mode]", "Open the server. Will default to a random map and survival gamemode if not specified.", new HostCommand());
+        handler.register("maps", "List of all available maps.", new pandorum.commands.server.MapsListCommand());
+        handler.register("saves", "List of all available saves.", new pandorum.commands.server.SavesListCommand());
+        handler.register("status", "Display server status.", new pandorum.commands.server.StatusCommand());
+        handler.register("say", "<message...>", "Send a message to all players.", new SayCommand());
+        handler.register("rules", "[remove/add] [name] [value...]", "List, add or remove global rules.", new RulesCommand());
+        handler.register("config", "[name] [value...]", "Configure server settings.", new ConfigCommand());
+        handler.register("nextmap", "<map...>", "Set the next map to be played after a gameover. Overrides shuffling.", new NextMapCommand());
+        handler.register("kick", "<ID/username...>", "Kick a player from the server.", new KickCommand());
+        handler.register("ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", new BanCommand());
+        handler.register("bans", "List of all banned IPs and UUIDs.", new BansListCommand());
+        handler.register("unban", "<uuid/all/ip...>", "Unban a player by UUID or IP.", new UnbanCommand());
+        handler.register("pardon", "<uuid/ip...>", "Pardon a kicked player.", new PardonCommand());
+        handler.register("admin", "<add/remove> <uuid/username...>", "Make an online user admin.", new AdminCommand());
+        handler.register("admins", "List of all admins.", new AdminsListCommand());
+        handler.register("players", "List of all online players.", new pandorum.commands.server.PlayersListCommand());
+        handler.register("save", "<save...>", "Save game state to a slot.", new SaveCommand());
+        handler.register("load", "<save...>", "Load a save from a slot.", new LoadCommand());
 
-        handler.register("despawn", "Kill all units.", DespawnCommand::run);
-        handler.register("restart", "Restart the server.", RestartCommand::run);
-        handler.register("setrank", "<rank> <ID/username...>", "Set a rank for player.", SetRankCommand::run);
+        handler.register("despawn", "Kill all units.", new DespawnCommand());
+        handler.register("restart", "Restart the server.", new RestartCommand());
+        handler.register("setrank", "<rank> <ID/username...>", "Set a rank for player.", new SetRankCommand());
     }
 }

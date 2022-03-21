@@ -2,6 +2,7 @@ package pandorum.commands.server;
 
 import arc.Core;
 import arc.files.Fi;
+import arc.func.Cons;
 import arc.util.Log;
 import mindustry.io.SaveIO;
 import mindustry.io.SaveIO.SaveException;
@@ -9,8 +10,8 @@ import mindustry.io.SaveIO.SaveException;
 import static mindustry.Vars.*;
 import static pandorum.util.Search.findSave;
 
-public class LoadCommand {
-    public static void run(final String[] args) {
+public class LoadCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (!state.isMenu()) {
             Log.err("Сервер уже запущен. Используй 'stop', чтобы остановить его.");
             return;

@@ -1,12 +1,13 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-public class PlayersListCommand {
-    public static void run(final String[] args) {
+public class PlayersListCommand implements Cons<String[]> {
+    public void get(String[] args) {
         Seq<Player> playersList = Groups.player.copy(new Seq<>());
         if (playersList.isEmpty()) {
             Log.info("На сервере нет игроков.");

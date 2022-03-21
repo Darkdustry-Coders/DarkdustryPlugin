@@ -1,13 +1,14 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.net.Administration.PlayerInfo;
 
 import static mindustry.Vars.netServer;
 
-public class AdminsListCommand {
-    public static void run(final String[] args) {
+public class AdminsListCommand implements Cons<String[]> {
+    public void get(String[] args) {
         Seq<PlayerInfo> admins = netServer.admins.getAdmins();
         if (admins.isEmpty()) {
             Log.info("Не найдено администраторов.");

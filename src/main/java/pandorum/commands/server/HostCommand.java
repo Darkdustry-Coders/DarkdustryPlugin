@@ -1,6 +1,7 @@
 package pandorum.commands.server;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Reflect;
 import arc.util.Structs;
@@ -12,8 +13,8 @@ import static mindustry.Vars.*;
 import static pandorum.util.Search.findMap;
 import static pandorum.util.Utils.getServerControl;
 
-public class HostCommand {
-    public static void run(final String[] args) {
+public class HostCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (!state.isMenu()) {
             Log.err("Сервер уже запущен. Используй 'stop', чтобы остановить его.");
             return;

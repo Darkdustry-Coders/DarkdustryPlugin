@@ -1,6 +1,7 @@
 package pandorum.commands.server;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Groups;
 
@@ -9,8 +10,8 @@ import static pandorum.PluginVars.mapPlayTime;
 import static pandorum.PluginVars.serverUpTime;
 import static pandorum.util.Utils.formatDuration;
 
-public class StatusCommand {
-    public static void run(final String[] args) {
+public class StatusCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (state.isMenu()) {
             Log.info("Сервер отключен. Может быть, пора запустить его командой 'host'?");
         } else {

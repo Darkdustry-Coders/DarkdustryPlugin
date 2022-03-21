@@ -1,5 +1,6 @@
 package pandorum.commands.discord;
 
+import arc.util.CommandHandler.CommandRunner;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
@@ -11,8 +12,8 @@ import java.awt.*;
 
 import static pandorum.util.Search.findMap;
 
-public class MapCommand {
-    public static void run(final String[] args, final Context context) {
+public class MapCommand implements CommandRunner<Context> {
+    public void accept(String[] args, Context context) {
         Map map = findMap(args[0]);
         if (map == null) {
             context.err(":mag: Карта не найдена.", "Проверь, правильно ли введено название.");

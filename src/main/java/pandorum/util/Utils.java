@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -93,11 +94,21 @@ public class Utils {
     }
 
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
-        return clientCommands.getCommandList().filter(command -> admin || !clientAdminOnlyCommands.contains(command));
+        Seq<Command> commands = clientCommands.getCommandList();
+        Seq<Command> playerCommands = commands.filter(command -> !clientAdminOnlyCommands.contains(command));
+        Seq<Command> adminCommands = commands.filter(command -> admin && clientAdminOnlyCommands.contains(command));
+        commands.clear();
+
+        return commands.addAll(playerCommands.sort(Comparator.comparing(command -> command.text))).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
     }
 
     public static Seq<Command> getAvailableDiscordCommands(boolean admin) {
-        return discordCommands.getCommandList().filter(command -> admin || !discordAdminOnlyCommands.contains(command));
+        Seq<Command> commands = discordCommands.getCommandList();
+        Seq<Command> playerCommands = commands.filter(command -> !discordAdminOnlyCommands.contains(command));
+        Seq<Command> adminCommands = commands.filter(command -> admin && discordAdminOnlyCommands.contains(command));
+        commands.clear();
+
+        return commands.addAll(playerCommands.sort(Comparator.comparing(command -> command.text))).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
     }
 
     public static ServerControl getServerControl() {

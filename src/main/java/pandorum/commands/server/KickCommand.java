@@ -1,5 +1,6 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
@@ -10,8 +11,8 @@ import static pandorum.PluginVars.kickDuration;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 
-public class KickCommand {
-    public static void run(final String[] args) {
+public class KickCommand implements Cons<String[]> {
+    public void get(String[] args) {
         Player target = findPlayer(args[0]);
         if (target == null) {
             Log.err("Игрок '@' не найден...", args[0]);

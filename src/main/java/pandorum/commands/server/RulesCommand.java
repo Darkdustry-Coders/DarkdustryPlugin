@@ -1,6 +1,7 @@
 package pandorum.commands.server;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.serialization.JsonReader;
 import arc.util.serialization.JsonValue;
@@ -10,8 +11,8 @@ import mindustry.io.JsonIO;
 
 import static mindustry.Vars.state;
 
-public class RulesCommand {
-    public static void run(final String[] args) {
+public class RulesCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (args.length == 0) {
             Log.info("Пользовательские правила:\n@", JsonIO.print(Core.settings.getString("globalrules")));
             return;

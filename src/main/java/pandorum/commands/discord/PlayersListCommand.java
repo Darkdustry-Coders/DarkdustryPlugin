@@ -1,5 +1,6 @@
 package pandorum.commands.discord;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Strings;
@@ -10,8 +11,8 @@ import pandorum.discord.Context;
 
 import java.awt.*;
 
-public class PlayersListCommand {
-    public static void run(final String[] args, final Context context) {
+public class PlayersListCommand implements CommandRunner<Context> {
+    public void accept(String[] args, Context context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             context.err(":interrobang: Страница должна быть числом.");
             return;

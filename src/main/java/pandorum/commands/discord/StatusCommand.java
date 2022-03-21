@@ -1,5 +1,6 @@
 package pandorum.commands.discord;
 
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
@@ -16,8 +17,8 @@ import static pandorum.PluginVars.serverUpTime;
 import static pandorum.util.Utils.formatDuration;
 import static pandorum.util.Utils.stripAll;
 
-public class StatusCommand {
-    public static void run(final String[] args, final Context context) {
+public class StatusCommand implements CommandRunner<Context> {
+    public void accept(String[] args, Context context) {
         if (state.isMenu()) {
             context.err(":gear: Сервер оффлайн.", ":thinking: Почему?");
             return;

@@ -1,5 +1,6 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.net.Packets.KickReason;
@@ -9,8 +10,8 @@ import java.awt.*;
 
 import static mindustry.Vars.netServer;
 
-public class RestartCommand {
-    public static void run(final String[] args) {
+public class RestartCommand implements Cons<String[]> {
+    public void get(String[] args) {
         Log.info("Сервер перезапускается...");
         Bot.sendEmbed(Color.red, "Сервер перезапускается...");
 

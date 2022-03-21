@@ -1,11 +1,12 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.util.Log;
 
 import static mindustry.Vars.netServer;
 
-public class UnbanCommand {
-    public static void run(final String[] args) {
+public class UnbanCommand implements Cons<String[]> {
+    public void get(String[] args) {
         if (args[0].equalsIgnoreCase("all")) {
             netServer.admins.getBanned().each(info -> netServer.admins.unbanPlayerID(info.id));
             netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));

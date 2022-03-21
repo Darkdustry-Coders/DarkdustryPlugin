@@ -1,5 +1,6 @@
 package pandorum.commands.server;
 
+import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -11,8 +12,8 @@ import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 
-public class BanCommand {
-    public static void run(final String[] args) {
+public class BanCommand implements Cons<String[]> {
+    public void get(String[] args) {
         switch (args[0].toLowerCase()) {
             case "id", "uuid" -> {
                 netServer.admins.banPlayerID(args[1]);
