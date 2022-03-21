@@ -3,6 +3,7 @@ package pandorum;
 import arc.Events;
 import arc.files.Fi;
 import arc.struct.Seq;
+import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Reflect;
 import arc.util.Timer;
@@ -157,6 +158,7 @@ public class Loader {
     }
 
     public static void registerDiscordCommands() {
+        discordCommands = new CommandHandler(config.discordBotPrefix);
         DiscordCommandsHandler handler = new DiscordCommandsHandler(discordCommands);
 
         handler.register("help", "Список всех команд.", false, pandorum.commands.discord.HelpCommand::run);

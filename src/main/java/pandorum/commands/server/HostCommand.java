@@ -37,10 +37,6 @@ public class HostCommand {
             Log.info("Случайным образом выбрана карта: '@'.", map.name());
         }
 
-        if (!mode.valid(map)) {
-            Log.warn("Карта '@' не подходит для игрового режима '@'.");
-        }
-
         logic.reset();
         Core.settings.put("lastServerMode", mode.name());
         Reflect.set(getServerControl(), "lastMode", mode);
