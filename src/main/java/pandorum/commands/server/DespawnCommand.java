@@ -16,6 +16,6 @@ public class DespawnCommand implements Cons<String[]> {
 
         int amount = Groups.unit.size();
         Groups.unit.each(Unitc::kill);
-        Log.info("Убито @ юнитов...", amount);
+        Log.info("Убито '@' юнитов...", amount);
     }
 }

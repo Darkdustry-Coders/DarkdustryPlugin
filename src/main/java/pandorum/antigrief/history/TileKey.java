@@ -13,8 +13,8 @@ public class TileKey {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof TileKey key &&
+    public boolean equals(Object o) {
+        return o instanceof TileKey key &&
                 key.x == this.x &&
                 key.y == this.y &&
                 key.serialNumber == this.serialNumber;

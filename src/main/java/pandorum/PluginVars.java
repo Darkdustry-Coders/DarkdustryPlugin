@@ -54,9 +54,8 @@ public class PluginVars {
 
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
-
     /** Таймер для оповещения об опасных блоков. */
-    public static final float alertsTimer = 600f;
+    public static final float alertsTimer = 240f;
 
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 150f;
