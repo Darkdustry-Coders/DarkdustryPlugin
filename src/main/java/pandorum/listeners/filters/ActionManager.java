@@ -1,4 +1,4 @@
-package pandorum.events.managers;
+package pandorum.listeners.filters;
 
 import mindustry.net.Administration.ActionFilter;
 import mindustry.net.Administration.ActionType;

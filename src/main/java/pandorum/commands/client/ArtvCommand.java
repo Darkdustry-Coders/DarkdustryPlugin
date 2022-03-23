@@ -4,7 +4,7 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.events.handlers.MenuHandler;
+import pandorum.listeners.handlers.MenuHandler;
 
 import static pandorum.util.Search.findLocale;
 

@@ -7,7 +7,7 @@ import pandorum.components.Bundle;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
-import static pandorum.events.handlers.MenuHandler.rankIncreaseMenu;
+import static pandorum.listeners.handlers.MenuHandler.rankIncreaseMenu;
 import static pandorum.util.Search.findLocale;
 
 public class Ranks {

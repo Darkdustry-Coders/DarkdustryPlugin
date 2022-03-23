@@ -1,4 +1,4 @@
-package pandorum.events.handlers;
+package pandorum.listeners.handlers;
 
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandResponse;
@@ -11,7 +11,7 @@ import pandorum.components.Bundle;
 import static pandorum.PluginVars.clientCommands;
 import static pandorum.util.Search.findLocale;
 
-public class InvalidCommandResponse implements InvalidCommandHandler {
+public class InvalidCommandResponseHandler implements InvalidCommandHandler {
 
     public String handle(Player player, CommandResponse response) {
         if (response.type == ResponseType.manyArguments) {

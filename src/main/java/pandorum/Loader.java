@@ -30,14 +30,14 @@ import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
 import pandorum.components.*;
 import pandorum.discord.Bot;
-import pandorum.events.Updater;
-import pandorum.events.managers.ActionManager;
-import pandorum.events.managers.ChatManager;
-import pandorum.events.handlers.ConnectHandler;
-import pandorum.events.handlers.ConnectPacketHandler;
-import pandorum.events.handlers.InvalidCommandResponse;
-import pandorum.events.handlers.MenuHandler;
-import pandorum.events.listeners.*;
+import pandorum.listeners.Updater;
+import pandorum.listeners.filters.ActionManager;
+import pandorum.listeners.filters.ChatManager;
+import pandorum.listeners.handlers.ConnectHandler;
+import pandorum.listeners.handlers.ConnectPacketHandler;
+import pandorum.listeners.handlers.InvalidCommandResponseHandler;
+import pandorum.listeners.handlers.MenuHandler;
+import pandorum.listeners.events.*;
 import pandorum.features.Ranks;
 import pandorum.features.Translator;
 
@@ -55,7 +55,7 @@ public class Loader {
 
         netServer.admins.addActionFilter(new ActionManager());
         netServer.admins.addChatFilter(new ChatManager());
-        netServer.invalidHandler = new InvalidCommandResponse();
+        netServer.invalidHandler = new InvalidCommandResponseHandler();
 
         Events.on(AdminRequestEvent.class, new OnAdminRequest());
         Events.on(BlockBuildEndEvent.class, new OnBlockBuildEnd());

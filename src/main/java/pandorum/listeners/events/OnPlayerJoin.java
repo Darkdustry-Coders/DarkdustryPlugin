@@ -1,4 +1,4 @@
-package pandorum.events.listeners;
+package pandorum.listeners.events;
 
 import arc.func.Cons;
 import arc.util.Log;
@@ -12,7 +12,7 @@ import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.discord.Bot;
-import pandorum.events.handlers.MenuHandler;
+import pandorum.listeners.handlers.MenuHandler;
 import pandorum.util.Utils;
 
 import java.awt.*;

@@ -1,4 +1,4 @@
-package pandorum.events.listeners;
+package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.GameOverEvent;

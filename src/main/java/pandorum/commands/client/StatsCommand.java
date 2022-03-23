@@ -9,7 +9,7 @@ import pandorum.features.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 
-import static pandorum.events.handlers.MenuHandler.statsMenu;
+import static pandorum.listeners.handlers.MenuHandler.statsMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Utils.bundled;

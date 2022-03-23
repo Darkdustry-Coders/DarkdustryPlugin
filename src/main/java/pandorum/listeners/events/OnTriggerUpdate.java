@@ -1,4 +1,4 @@
-package pandorum.events.listeners;
+package pandorum.listeners.events;
 
 import mindustry.gen.Groups;
 import pandorum.features.Effects;

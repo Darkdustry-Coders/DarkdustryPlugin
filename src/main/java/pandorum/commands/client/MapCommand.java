@@ -7,7 +7,7 @@ import pandorum.components.Bundle;
 import pandorum.database.models.MapModel;
 
 import static mindustry.Vars.state;
-import static pandorum.events.handlers.MenuHandler.mapRateMenu;
+import static pandorum.listeners.handlers.MenuHandler.mapRateMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.secondsToMinutes;
 

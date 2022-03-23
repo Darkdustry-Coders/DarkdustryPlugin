@@ -1,4 +1,4 @@
-package pandorum.events.handlers;
+package pandorum.listeners.handlers;
 
 import arc.Events;
 import mindustry.game.EventType.GameOverEvent;
