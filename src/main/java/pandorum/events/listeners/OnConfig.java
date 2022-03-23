@@ -13,7 +13,7 @@ import static mindustry.Vars.world;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;
 
-public class ConfigListener implements Cons<ConfigEvent> {
+public class OnConfig implements Cons<ConfigEvent> {
 
     public void get(ConfigEvent event) {
         if (config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {

@@ -5,7 +5,7 @@ import mindustry.game.EventType.AdminRequestEvent;
 
 import static pandorum.util.Utils.sendToChat;
 
-public class AdminRequestListener implements Cons<AdminRequestEvent> {
+public class OnAdminRequest implements Cons<AdminRequestEvent> {
 
     public void get(AdminRequestEvent event) {
         switch (event.action) {

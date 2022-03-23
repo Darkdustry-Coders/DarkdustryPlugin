@@ -9,7 +9,7 @@ import pandorum.features.antigrief.history.entry.HistoryEntry;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;
 
-public class DepositListener implements Cons<DepositEvent> {
+public class OnDeposit implements Cons<DepositEvent> {
 
     public void get(DepositEvent event) {
         Alerts.depositAlert(event);

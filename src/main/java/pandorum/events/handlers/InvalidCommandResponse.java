@@ -8,7 +8,7 @@ import mindustry.core.NetServer.InvalidCommandHandler;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 
-import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.clientCommands;
 import static pandorum.util.Search.findLocale;
 
 public class InvalidCommandResponse implements InvalidCommandHandler {
@@ -22,7 +22,7 @@ public class InvalidCommandResponse implements InvalidCommandHandler {
             int minDst = 0;
             Command closest = null;
 
-            for (Command command : netServer.clientCommands.getCommandList()) {
+            for (Command command : clientCommands.getCommandList()) {
                 int dst = Strings.levenshtein(command.text, response.runCommand);
                 if (dst < 3 && (closest == null || dst < minDst)) {
                     minDst = dst;

@@ -17,7 +17,7 @@ import java.awt.*;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.*;
 
-public class PlayerLeaveListener implements Cons<PlayerLeave> {
+public class OnPlayerLeave implements Cons<PlayerLeave> {
 
     public void get(PlayerLeave event) {
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());

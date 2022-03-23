@@ -9,7 +9,11 @@ import static pandorum.PluginVars.*;
 public class Effects {
 
     public static void on(Effect effect, float x, float y) {
-        Call.effect(effect, x, y, 0, Color.white);
+        on(effect, x, y, 0, Color.white);
+    }
+
+    public static void on(Effect effect, float x, float y, int rotation, Color color) {
+        Call.effect(effect, x, y, rotation, color);
     }
 
     public static void onMove(float x, float y) {

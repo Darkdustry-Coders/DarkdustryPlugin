@@ -8,7 +8,7 @@ import pandorum.components.Bundle;
 import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findLocale;
 
-public class TapListener implements Cons<TapEvent> {
+public class OnTap implements Cons<TapEvent> {
 
     public void get(TapEvent event) {
         if (config.historyEnabled() && activeHistoryPlayers.contains(event.player.uuid()) && event.tile != null) {

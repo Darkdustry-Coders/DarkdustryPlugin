@@ -57,24 +57,23 @@ public class Loader {
         netServer.admins.addChatFilter(new ChatManager());
         netServer.invalidHandler = new InvalidCommandResponse();
 
-        Events.on(AdminRequestEvent.class, new AdminRequestListener());
-        Events.on(BlockBuildEndEvent.class, new BlockBuildEndListener());
-        Events.on(BuildSelectEvent.class, new BuildSelectListener());
-        Events.on(ConfigEvent.class, new ConfigListener());
-        Events.on(DepositEvent.class, new DepositListener());
-        Events.on(PlayerJoin.class, new PlayerJoinListener());
-        Events.on(PlayerLeave.class, new PlayerLeaveListener());
-        Events.on(TapEvent.class, new TapListener());
-        Events.on(WithdrawEvent.class, new WithdrawListener());
+        Events.on(AdminRequestEvent.class, new OnAdminRequest());
+        Events.on(BlockBuildEndEvent.class, new OnBlockBuildEnd());
+        Events.on(BuildSelectEvent.class, new OnBuildSelect());
+        Events.on(ConfigEvent.class, new OnConfig());
+        Events.on(DepositEvent.class, new OnDeposit());
+        Events.on(GameOverEvent.class, new OnGameOver());
+        Events.on(PlayerJoin.class, new OnPlayerJoin());
+        Events.on(PlayerLeave.class, new OnPlayerLeave());
+        Events.on(ServerLoadEvent.class, new OnServerLoad());
+        Events.on(TapEvent.class, new OnTap());
+        Events.on(WaveEvent.class, new OnWave());
+        Events.on(WithdrawEvent.class, new OnWithdraw());
+        Events.on(WorldLoadEvent.class, new OnWorldLoad());
 
-        Events.run(GameOverEvent.class, new GameOverListener());
-        Events.run(ServerLoadEvent.class, new ServerLoadListener());
-        Events.run(WaveEvent.class, new WaveListener());
-        Events.run(WorldLoadEvent.class, new WorldLoadListener());
-
-        Events.run(Trigger.update, new TriggerUpdateListener());
-        Events.run("HexedGameOver", new GameOverListener());
-        Events.run("CastleGameOver", new GameOverListener());
+        Events.run(Trigger.update, new OnTriggerUpdate());
+        Events.run("HexedGameOver", new OnGameOver());
+        Events.run("CastleGameOver", new OnGameOver());
 
         Administration.Config.motd.set("off");
         Administration.Config.interactRateWindow.set(3);

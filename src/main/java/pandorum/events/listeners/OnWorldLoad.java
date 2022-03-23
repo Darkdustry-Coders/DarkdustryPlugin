@@ -1,13 +1,15 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
 import arc.util.Time;
+import mindustry.game.EventType.WorldLoadEvent;
 
 import static pandorum.PluginVars.*;
 import static pandorum.util.Utils.sendToChat;
 
-public class WorldLoadListener implements Runnable {
+public class OnWorldLoad implements Cons<WorldLoadEvent> {
 
-    public void run() {
+    public void get(WorldLoadEvent event) {
         votesSurrender.clear();
         votesRtv.clear();
         votesVnw.clear();

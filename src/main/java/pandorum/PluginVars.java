@@ -35,13 +35,13 @@ public class PluginVars {
     /** Максимальное количество заспавненных юнитов через /spawn. */
     public static final int maxSpawnAmount = 25;
 
-    /** Время кулдауна для команды nominate. В секундах. */
+    /** Время кулдауна для команды /nominate. В секундах. */
     public static final int nominateCooldownTime = 300;
-    /** Время кулдауна для команды votekick. В секундах */
+    /** Время кулдауна для команды /votekick. В секундах */
     public static final int votekickCooldownTime = 300;
-    /** Время кулдауна для команды login. В секундах */
+    /** Время кулдауна для команды /login. В секундах */
     public static final int loginCooldownTime = 900;
-    /** Время кулдауна для команды sync. В секундах */
+    /** Время кулдауна для команды /sync. В секундах */
     public static final int syncCooldownTime = 15;
 
     /** Необходимое количество игроков для успешного завершения голосования. */

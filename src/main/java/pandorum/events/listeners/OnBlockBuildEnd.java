@@ -9,7 +9,7 @@ import pandorum.database.models.PlayerModel;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;
 
-public class BlockBuildEndListener implements Cons<BlockBuildEndEvent> {
+public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
 
     public void get(BlockBuildEndEvent event) {
         if (config.historyEnabled()) {

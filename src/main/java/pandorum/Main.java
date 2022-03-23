@@ -24,9 +24,4 @@ public class Main implements ApplicationListener {
     public void dispose() {
         Log.info("[Darkdustry] Выключение плагина...");
     }
-
-    @Override
-    public void update() {
-
-    }
 }

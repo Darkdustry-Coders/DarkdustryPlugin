@@ -20,7 +20,7 @@ import java.awt.*;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.Search.findLocale;
 
-public class PlayerJoinListener implements Cons<PlayerJoin> {
+public class OnPlayerJoin implements Cons<PlayerJoin> {
 
     public void get(PlayerJoin event) {
         PlayerModel.find(event.player, playerModel -> {

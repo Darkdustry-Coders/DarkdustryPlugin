@@ -65,12 +65,12 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
 
         if (extraMods.any() || missingMods.any()) {
             StringBuilder reason = new StringBuilder(Bundle.format("kick.incompatible-mods", findLocale(locale)));
-            if (missingMods.any()) {
-                reason.append(Bundle.format("kick.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
-            }
-
             if (extraMods.any()) {
                 reason.append(Bundle.format("kick.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
+            }
+
+            if (missingMods.any()) {
+                reason.append(Bundle.format("kick.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
             }
             con.kick(reason.toString(), 0);
         }

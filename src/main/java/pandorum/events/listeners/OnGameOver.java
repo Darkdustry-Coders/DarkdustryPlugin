@@ -1,5 +1,7 @@
 package pandorum.events.listeners;
 
+import arc.func.Cons;
+import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import pandorum.database.models.MapModel;
 import pandorum.database.models.PlayerModel;
@@ -7,7 +9,11 @@ import pandorum.database.models.PlayerModel;
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
 
-public class GameOverListener implements Runnable {
+public class OnGameOver implements Cons<GameOverEvent>, Runnable {
+
+    public void get(GameOverEvent event) {
+        run();
+    }
 
     public void run() {
         canVote = false;

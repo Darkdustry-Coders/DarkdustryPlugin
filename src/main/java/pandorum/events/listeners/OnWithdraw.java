@@ -8,7 +8,7 @@ import pandorum.features.antigrief.history.entry.WithdrawEntry;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;
 
-public class WithdrawListener implements Cons<WithdrawEvent> {
+public class OnWithdraw implements Cons<WithdrawEvent> {
 
     public void get(WithdrawEvent event) {
         if (config.historyEnabled()) {
