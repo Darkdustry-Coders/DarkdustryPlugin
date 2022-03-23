@@ -1,4 +1,4 @@
-package pandorum.antigrief.history;
+package pandorum.features.antigrief.history;
 
 import arc.Core;
 import arc.func.Cons;
@@ -7,7 +7,7 @@ import arc.struct.Seq;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import mindustry.world.Tile;
-import pandorum.antigrief.history.entry.HistoryEntry;
+import pandorum.features.antigrief.history.entry.HistoryEntry;
 
 import java.util.Map.Entry;
 import java.util.Objects;

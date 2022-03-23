@@ -1,4 +1,4 @@
-package pandorum.antigrief;
+package pandorum.features.antigrief;
 
 import arc.math.geom.Position;
 import mindustry.game.EventType.BuildSelectEvent;

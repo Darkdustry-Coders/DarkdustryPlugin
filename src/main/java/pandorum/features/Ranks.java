@@ -1,8 +1,9 @@
-package pandorum.components;
+package pandorum.features;
 
 import arc.struct.Seq;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
+import pandorum.components.Bundle;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 

@@ -31,13 +31,15 @@ import pandorum.commands.server.*;
 import pandorum.components.*;
 import pandorum.discord.Bot;
 import pandorum.events.Updater;
-import pandorum.events.filters.ActionManager;
-import pandorum.events.filters.ChatManager;
+import pandorum.events.managers.ActionManager;
+import pandorum.events.managers.ChatManager;
 import pandorum.events.handlers.ConnectHandler;
 import pandorum.events.handlers.ConnectPacketHandler;
 import pandorum.events.handlers.InvalidCommandResponse;
 import pandorum.events.handlers.MenuHandler;
 import pandorum.events.listeners.*;
+import pandorum.features.Ranks;
+import pandorum.features.Translator;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;

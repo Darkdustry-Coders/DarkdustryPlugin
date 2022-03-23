@@ -1,4 +1,4 @@
-package pandorum.antigrief.history;
+package pandorum.features.antigrief.history;
 
 public class TileKey {
 

@@ -3,8 +3,8 @@ package pandorum.commands.server;
 import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Player;
-import pandorum.components.Ranks;
-import pandorum.components.Ranks.Rank;
+import pandorum.features.Ranks;
+import pandorum.features.Ranks.Rank;
 
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findRank;

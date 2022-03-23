@@ -5,8 +5,8 @@ import arc.struct.Seq;
 import arc.util.Pack;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode;
-import pandorum.antigrief.history.entry.ConfigEntry;
-import pandorum.antigrief.history.entry.HistoryEntry;
+import pandorum.features.antigrief.history.entry.ConfigEntry;
+import pandorum.features.antigrief.history.entry.HistoryEntry;
 
 import static mindustry.Vars.content;
 import static mindustry.Vars.world;

@@ -7,7 +7,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.components.Bundle;
-import pandorum.components.Ranks.Rank;
+import pandorum.features.Ranks.Rank;
 import pandorum.database.models.MapModel;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;

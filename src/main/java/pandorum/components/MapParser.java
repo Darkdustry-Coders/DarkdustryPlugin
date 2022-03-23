@@ -32,8 +32,13 @@ public class MapParser {
                 Log.err("[Darkdustry] Не найден файл 'block_colors.png'.");
                 return;
             }
+
             BufferedImage image = ImageIO.read(colors.file());
-            content.blocks().each(block -> block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0)));
+            for (Block block : content.blocks()) {
+                block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0));
+                block.mapColor.a = 1f;
+                block.hasColor = true;
+            }
         } catch (IOException e) {
             Log.err(e);
         }

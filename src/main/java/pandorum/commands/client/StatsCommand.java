@@ -4,8 +4,8 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.components.Ranks;
-import pandorum.components.Ranks.Rank;
+import pandorum.features.Ranks;
+import pandorum.features.Ranks.Rank;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 

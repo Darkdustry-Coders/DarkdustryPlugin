@@ -7,7 +7,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
-import pandorum.components.Effects;
+import pandorum.features.Effects;
 import pandorum.components.Gamemode;
 import pandorum.discord.Bot;
 import pandorum.util.Utils;

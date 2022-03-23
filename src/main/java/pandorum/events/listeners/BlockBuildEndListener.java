@@ -2,8 +2,8 @@ package pandorum.events.listeners;
 
 import arc.func.Cons;
 import mindustry.game.EventType.BlockBuildEndEvent;
-import pandorum.antigrief.history.entry.BlockEntry;
-import pandorum.antigrief.history.entry.HistoryEntry;
+import pandorum.features.antigrief.history.entry.BlockEntry;
+import pandorum.features.antigrief.history.entry.HistoryEntry;
 import pandorum.database.models.PlayerModel;
 
 import static pandorum.PluginVars.config;

@@ -15,7 +15,7 @@ import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.components.Bundle;
-import pandorum.components.Ranks.Rank;
+import pandorum.features.Ranks.Rank;
 
 import java.util.Locale;
 

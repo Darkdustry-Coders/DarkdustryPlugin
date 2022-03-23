@@ -1,4 +1,4 @@
-package pandorum.components;
+package pandorum.features;
 
 import arc.util.Strings;
 import mindustry.gen.Player;
@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import pandorum.components.Bundle;
+import pandorum.features.Ranks;
 
 import java.awt.*;
 

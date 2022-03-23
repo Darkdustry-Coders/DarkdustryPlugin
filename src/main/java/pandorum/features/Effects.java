@@ -1,4 +1,4 @@
-package pandorum.components;
+package pandorum.features;
 
 import arc.graphics.Color;
 import mindustry.entities.Effect;

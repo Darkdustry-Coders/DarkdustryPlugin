@@ -1,4 +1,4 @@
-package pandorum.events.filters;
+package pandorum.events.managers;
 
 import arc.struct.ObjectMap;
 import arc.util.Log;
@@ -6,7 +6,7 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
-import pandorum.components.Translator;
+import pandorum.features.Translator;
 import pandorum.database.models.PlayerModel;
 import pandorum.util.Utils;
 

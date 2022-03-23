@@ -2,7 +2,7 @@ package pandorum.events.listeners;
 
 import arc.func.Cons;
 import mindustry.game.EventType.BuildSelectEvent;
-import pandorum.antigrief.Alerts;
+import pandorum.features.antigrief.Alerts;
 
 public class BuildSelectListener implements Cons<BuildSelectEvent> {
 

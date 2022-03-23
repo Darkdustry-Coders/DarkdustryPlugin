@@ -2,9 +2,9 @@ package pandorum.events.listeners;
 
 import arc.func.Cons;
 import mindustry.game.EventType.DepositEvent;
-import pandorum.antigrief.Alerts;
-import pandorum.antigrief.history.entry.DepositEntry;
-import pandorum.antigrief.history.entry.HistoryEntry;
+import pandorum.features.antigrief.Alerts;
+import pandorum.features.antigrief.history.entry.DepositEntry;
+import pandorum.features.antigrief.history.entry.HistoryEntry;
 
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.history;

@@ -1,4 +1,4 @@
-package pandorum.components;
+package pandorum.features;
 
 import arc.func.Cons;
 import arc.util.Http;

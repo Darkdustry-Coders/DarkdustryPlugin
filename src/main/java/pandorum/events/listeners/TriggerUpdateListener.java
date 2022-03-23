@@ -1,7 +1,7 @@
 package pandorum.events.listeners;
 
 import mindustry.gen.Groups;
-import pandorum.components.Effects;
+import pandorum.features.Effects;
 
 public class TriggerUpdateListener implements Runnable {
 
