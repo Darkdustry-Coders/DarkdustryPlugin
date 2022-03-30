@@ -52,9 +52,9 @@ public class Search {
 
     public static Block findCore(String name) {
         return switch (name.toLowerCase()) {
-            case "small", "shard", "core-shard" -> Blocks.coreShard;
-            case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
-            case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            case "s", "small", "shard", "core-shard" -> Blocks.coreShard;
+            case "m", "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
+            case "b", "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
             default -> null;
         };
     }
