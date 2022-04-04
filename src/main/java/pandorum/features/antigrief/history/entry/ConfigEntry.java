@@ -46,7 +46,7 @@ public class ConfigEntry implements HistoryEntry {
     public final long time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
-        this.name = event.player.coloredName();
+        this.name = event.player.name;
         this.blockID = event.tile.block.id;
         this.value = event.tile instanceof PowerNodeBuild build ? Pack.longInt(build.power.links.size, (int) event.value) : event.value;
         this.connect = connect;

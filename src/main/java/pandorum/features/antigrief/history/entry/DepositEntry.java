@@ -18,7 +18,7 @@ public class DepositEntry implements HistoryEntry {
     public final long time;
 
     public DepositEntry(DepositEvent event) {
-        this.name = event.player.coloredName();
+        this.name = event.player.name;
         this.blockID = event.tile.block.id;
         this.itemID = event.item.id;
         this.amount = event.amount;
