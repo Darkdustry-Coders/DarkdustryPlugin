@@ -25,12 +25,12 @@ public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) <= mapsList.size ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name));
+        return Strings.parseInt(name) > 0 && Strings.parseInt(name) <= mapsList.size ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> Strings.stripColors(map.name()).equalsIgnoreCase(name) || Strings.stripColors(map.name()).contains(name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) <= savesList.size ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name));
+        return Strings.parseInt(name) > 0 && Strings.parseInt(name) <= savesList.size ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().contains(name));
     }
 
     public static Locale findLocale(String name) {
@@ -52,9 +52,9 @@ public class Search {
 
     public static Block findCore(String name) {
         return switch (name.toLowerCase()) {
-            case "small", "shard", "core-shard" -> Blocks.coreShard;
-            case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
-            case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            case "s", "small", "shard", "core-shard" -> Blocks.coreShard;
+            case "m", "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
+            case "b", "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
             default -> null;
         };
     }
