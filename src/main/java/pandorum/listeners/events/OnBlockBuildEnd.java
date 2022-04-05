@@ -1,7 +1,6 @@
 package pandorum.listeners.events;
 
 import arc.func.Cons;
-import mindustry.ai.types.FormationAI;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import pandorum.features.antigrief.history.entry.BlockEntry;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
@@ -15,7 +14,6 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
     public void get(BlockBuildEndEvent event) {
         if (config.historyEnabled() && event.unit.isPlayer()) {
             HistoryEntry entry = new BlockEntry(event);
-            event.unit.getControllerName();
             history.putLinkedTiles(event.tile, entry);
         }
 
