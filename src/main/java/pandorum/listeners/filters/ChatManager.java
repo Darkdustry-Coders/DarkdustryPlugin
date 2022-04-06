@@ -32,6 +32,7 @@ public class ChatManager implements ChatFilter {
             }
 
             String locale = playerModel.locale.equals("auto") ? Seq.with(codeLanguages.keys()).find(l -> player.locale.equals(l) || player.locale.startsWith(l)) : playerModel.locale;
+            Log.info(locale);
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
