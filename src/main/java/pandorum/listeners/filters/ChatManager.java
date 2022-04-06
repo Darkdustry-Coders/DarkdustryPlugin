@@ -1,6 +1,7 @@
 package pandorum.listeners.filters;
 
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
@@ -30,7 +31,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            String locale = playerModel.locale.equals("auto") ? player.locale : playerModel.locale;
+            String locale = playerModel.locale.equals("auto") ? Seq.with(codeLanguages.keys()).find(l -> player.locale.equals(l) || player.locale.startsWith(l)) : playerModel.locale;
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
