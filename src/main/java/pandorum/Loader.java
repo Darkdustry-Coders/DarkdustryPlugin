@@ -18,6 +18,7 @@ import mindustry.net.Packets.ConnectPacket;
 import pandorum.commands.ClientCommandsHandler;
 import pandorum.commands.DiscordCommandsHandler;
 import pandorum.commands.ServerCommandsHandler;
+import pandorum.commands.client.DespawnCommand;
 import pandorum.commands.client.HelpCommand;
 import pandorum.commands.client.MapsListCommand;
 import pandorum.commands.client.PlayersListCommand;
@@ -152,7 +153,7 @@ public class Loader {
         handler.register("spectate", "[ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SpectateCommand());
 
         handler.register("artv", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new ArtvCommand());
-        handler.register("despw", true, new DespwCommand());
+        handler.register("despawn", true, new DespawnCommand());
         handler.register("fill", "<width> <height> <block>", true, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival), new FillCommand());
 
         handler.register("login", false, new LoginCommand());
@@ -197,7 +198,7 @@ public class Loader {
         handler.register("save", "<save...>", "Save game state to a slot.", new SaveCommand());
         handler.register("load", "<save...>", "Load a save from a slot.", new LoadCommand());
 
-        handler.register("despawn", "Kill all units.", new DespawnCommand());
+        handler.register("despawn", "Kill all units.", new pandorum.commands.server.DespawnCommand());
         handler.register("restart", "Restart the server.", new RestartCommand());
         handler.register("setrank", "<rank> <ID/username...>", "Set a rank for player.", new SetRankCommand());
     }

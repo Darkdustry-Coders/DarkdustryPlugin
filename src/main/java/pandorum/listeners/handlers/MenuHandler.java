@@ -19,7 +19,7 @@ import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despwMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -32,27 +32,27 @@ public class MenuHandler {
             }
         });
 
-        despwMenu = Menus.registerMenu((player, option) -> {
+        despawnMenu = Menus.registerMenu((player, option) -> {
             switch (option) {
                 case 0 -> {
                     Groups.unit.each(Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.all");
+                    Utils.bundled(player, "commands.admin.despawn.success.all");
                 }
                 case 2 -> {
                     Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.players");
+                    Utils.bundled(player, "commands.admin.despawn.success.players");
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.coloredTeam(state.rules.defaultTeam));
+                    Utils.bundled(player, "commands.admin.despawn.success.team", Utils.coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despw.success.team", Utils.coloredTeam(state.rules.waveTeam));
+                    Utils.bundled(player, "commands.admin.despawn.success.team", Utils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     if (!player.dead()) player.unit().kill();
-                    Utils.bundled(player, "commands.admin.despw.success.suicide");
+                    Utils.bundled(player, "commands.admin.despawn.success.suicide");
                 }
             }
         });
