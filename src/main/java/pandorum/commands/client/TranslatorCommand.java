@@ -1,11 +1,11 @@
 package pandorum.commands.client;
 
-import arc.struct.Seq;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import pandorum.database.models.PlayerModel;
 
 import static pandorum.PluginVars.codeLanguages;
+import static pandorum.util.Search.findTranslatorLocale;
 import static pandorum.util.Utils.bundled;
 
 public class TranslatorCommand implements CommandRunner<Player> {
@@ -29,7 +29,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
                     bundled(player, "commands.tr.auto");
                 }
                 default -> {
-                    String locale = Seq.with(codeLanguages.keys()).find(key -> key.equalsIgnoreCase(args[0]));
+                    String locale = findTranslatorLocale(args[0]);
                     if (locale == null) {
                         bundled(player, "commands.tr.incorrect");
                         return;

@@ -20,6 +20,7 @@ import pandorum.features.Ranks.Rank;
 import java.util.Locale;
 
 import static mindustry.Vars.*;
+import static pandorum.PluginVars.codeLanguages;
 
 public class Search {
 
@@ -36,6 +37,10 @@ public class Search {
     public static Locale findLocale(String name) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> name.equals(l.toString()) || name.startsWith(l.toString()));
         return Utils.notNullElse(locale, Bundle.defaultLocale());
+    }
+
+    public static String findTranslatorLocale(String name) {
+        return Seq.with(codeLanguages.keys()).find(l -> name.equals(l) || name.startsWith(l));
     }
 
     public static Rank findRank(String name) {

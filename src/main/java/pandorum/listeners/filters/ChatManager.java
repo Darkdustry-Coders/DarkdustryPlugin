@@ -1,20 +1,20 @@
 package pandorum.listeners.filters;
 
 import arc.struct.ObjectMap;
-import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
-import pandorum.features.Translator;
 import pandorum.database.models.PlayerModel;
+import pandorum.features.Translator;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.codeLanguages;
 import static pandorum.PluginVars.defaultTranslatorLocale;
 import static pandorum.discord.Bot.text;
+import static pandorum.util.Search.findTranslatorLocale;
 
 public class ChatManager implements ChatFilter {
 
@@ -31,8 +31,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            String locale = playerModel.locale.equals("auto") ? Seq.with(codeLanguages.keys()).find(l -> player.locale.equals(l) || player.locale.startsWith(l)) : playerModel.locale;
-            Log.info(locale);
+            String locale = playerModel.locale.equals("auto") ? findTranslatorLocale(player.locale) : playerModel.locale;
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
