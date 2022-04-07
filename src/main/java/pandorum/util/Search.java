@@ -59,7 +59,7 @@ public class Search {
             case "s", "small", "shard", "core-shard" -> Blocks.coreShard;
             case "m", "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
             case "b", "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
-            default -> null;
+            default -> null; // Because java sucks
         };
     }
 

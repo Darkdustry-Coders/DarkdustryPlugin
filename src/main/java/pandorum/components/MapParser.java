@@ -27,6 +27,7 @@ public class MapParser {
 
     public static void load() {
         try {
+            // TODO мб прикреплять файл при компиляции?
             Fi colors = new Fi("../block_colors.png");
             if (!colors.exists()){
                 Log.err("[Darkdustry] Не найден файл 'block_colors.png'.");
