@@ -78,7 +78,6 @@ public class MapParser {
             var walls = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             var fgraphics = floors.createGraphics();
             var shade = new java.awt.Color(0, 0, 0, 64);
-            int black = 255;
 
             CachedTile tile = new CachedTile() {
                 @Override
@@ -86,7 +85,7 @@ public class MapParser {
                     super.setBlock(type);
 
                     int color = MapIO.colorFor(block(), Blocks.air, Blocks.air, team());
-                    if (color != black && color != 0) {
+                    if (color != 255 && color != 0) {
                         walls.setRGB(x, floors.getHeight() - 1 - y, conv(color));
                         fgraphics.setColor(shade);
                         fgraphics.drawRect(x, floors.getHeight() - 1 - y + 1, 1, 1);
