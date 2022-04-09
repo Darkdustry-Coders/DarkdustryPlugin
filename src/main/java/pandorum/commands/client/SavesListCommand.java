@@ -33,7 +33,7 @@ public class SavesListCommand implements CommandRunner<Player> {
 
         for (int i = 8 * page; i < Math.min(8 * (page + 1), savesList.size); i++) {
             Fi save = savesList.get(i);
-            result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension());
+            result.append("\n[lightgray] ").append(i).append(". [orange]").append(save.nameWithoutExtension());
         }
 
         player.sendMessage(result.toString());

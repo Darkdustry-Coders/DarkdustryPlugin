@@ -25,12 +25,12 @@ public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        return Strings.parseInt(name) > 0 && Strings.parseInt(name) <= mapsList.size ? mapsList.get(Strings.parseInt(name) - 1) : mapsList.find(map -> map.name().equalsIgnoreCase(name) || map.name().toLowerCase().contains(name.toLowerCase()));
+        return Strings.canParseInt(name) && Strings.parseInt(name) < mapsList.size ? mapsList.get(Strings.parseInt(name)) : mapsList.find(map -> Utils.deepEquals(map.name(), name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return Strings.parseInt(name) > 0 && Strings.parseInt(name) <= savesList.size ? savesList.get(Strings.parseInt(name) - 1) : savesList.find(save -> save.nameWithoutExtension().equalsIgnoreCase(name) || save.nameWithoutExtension().toLowerCase().contains(name.toLowerCase()));
+        return Strings.canParseInt(name) && Strings.parseInt(name) < savesList.size ? savesList.get(Strings.parseInt(name)) : savesList.find(save -> Utils.deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Locale findLocale(String name) {
@@ -47,7 +47,7 @@ public class Search {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Utils.stripAll(player.name).equalsIgnoreCase(Utils.stripAll(name)) || Utils.stripAll(player.name).toLowerCase().contains(Utils.stripAll(name).toLowerCase()));
+        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Utils.deepEquals(player.name, name));
     }
 
     public static Block findBlock(String name) {

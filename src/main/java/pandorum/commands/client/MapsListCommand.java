@@ -33,7 +33,7 @@ public class MapsListCommand implements CommandRunner<Player> {
 
         for (int i = 8 * page; i < Math.min(8 * (page + 1), mapsList.size); i++) {
             Map map = mapsList.get(i);
-            result.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name());
+            result.append("\n[lightgray] ").append(i).append(". [orange]").append(map.name());
         }
 
         result.append(Bundle.format("commands.maps.current", findLocale(player.locale), state.map.name()));

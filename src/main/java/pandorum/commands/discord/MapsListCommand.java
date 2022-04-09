@@ -36,7 +36,7 @@ public class MapsListCommand implements CommandRunner<Context> {
         StringBuilder maps = new StringBuilder();
         for (int i = 16 * page; i < Math.min(16 * (page + 1), mapsList.size); i++) {
             Map map = mapsList.get(i);
-            maps.append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append("\n");
+            maps.append("**").append(i).append(".** ").append(Strings.stripColors(map.name())).append("\n");
         }
 
         context.sendEmbed(new EmbedBuilder()
