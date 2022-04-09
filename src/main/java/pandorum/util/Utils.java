@@ -40,6 +40,10 @@ public class Utils {
         };
     }
 
+    public static boolean deepEquals(String first, String second) {
+        return stripAll(first).equalsIgnoreCase(stripAll(second)) || stripAll(first).toLowerCase().contains(stripAll(second).toLowerCase());
+    }
+
     public static String stripAll(String str) {
         return Strings.stripColors(Strings.stripGlyphs(str));
     }
