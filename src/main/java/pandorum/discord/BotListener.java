@@ -29,7 +29,7 @@ public class BotListener extends ListenerAdapter {
 
         if (context.channel.getIdLong() == botChannel.getIdLong() && context.contentDisplay.length() > 0) {
             sendToChat("events.discord.chat", context.member.getEffectiveName(), context.author.getDiscriminator(), context.contentDisplay);
-            Log.info("[Discord] @@: @", context.member.getEffectiveName(), context.author.getDiscriminator(), context.contentDisplay);
+            Log.info("[Discord] @#@: @", context.member.getEffectiveName(), context.author.getDiscriminator(), context.contentDisplay);
         }
     }
 
