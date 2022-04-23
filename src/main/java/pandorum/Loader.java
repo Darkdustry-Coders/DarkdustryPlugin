@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.Events;
 import arc.files.Fi;
+import arc.graphics.Colors;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -12,6 +13,7 @@ import mindustry.content.Items;
 import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
+import mindustry.graphics.Pal;
 import mindustry.net.Administration;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
@@ -103,6 +105,11 @@ public class Loader {
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
         dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
+
+        Colors.put("accent", Pal.accent);
+        Colors.put("ACCENT", Pal.accent);
+        Colors.put("stat", Pal.stat);
+        Colors.put("STAT", Pal.stat);
     }
 
     public static void loadConfig() {

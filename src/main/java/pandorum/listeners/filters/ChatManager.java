@@ -11,8 +11,7 @@ import pandorum.features.Translator;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.codeLanguages;
-import static pandorum.PluginVars.defaultTranslatorLocale;
+import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.text;
 import static pandorum.util.Search.findTranslatorLocale;
 
@@ -31,7 +30,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            String locale = playerModel.locale.equals("auto") ? findTranslatorLocale(player.locale) : playerModel.locale;
+            String locale = playerModel.locale.equals("auto") ? Utils.notNullElse(findTranslatorLocale(player.locale), defaultLocale) : playerModel.locale;
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
