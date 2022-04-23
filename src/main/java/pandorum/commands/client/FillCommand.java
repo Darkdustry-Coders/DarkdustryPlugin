@@ -16,12 +16,16 @@ import static pandorum.util.Utils.bundled;
 
 public class FillCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1]) || Strings.parseInt(args[0]) > maxFillSize || Strings.parseInt(args[1]) > maxFillSize) {
-            bundled(player, "commands.admin.fill.incorrect-number-format", maxFillSize);
+        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1])) {
+            bundled(player, "commands.admin.fill.incorrect-number-format");
             return;
         }
 
         int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
+        if (width * height > maxFillSize) {
+            bundled(player, "commands.admin.fill.too-big-area", maxFillSize);
+            return;
+        }
 
         Block block = findBlock(args[2]);
         if (block == null) {
