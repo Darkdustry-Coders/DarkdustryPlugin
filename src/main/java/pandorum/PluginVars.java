@@ -31,7 +31,7 @@ import static mindustry.Vars.tilesize;
 public class PluginVars {
 
     /** Максимальный размер заполняемого пространства через /fill. */
-    public static final int maxFillSize = 25 * 25;
+    public static final int maxFillSize = 500;
     /** Максимальное количество заспавненных юнитов через /spawn. */
     public static final int maxSpawnAmount = 25;
 
