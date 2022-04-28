@@ -39,7 +39,7 @@ public class Search {
     }
 
     public static String findTranslatorLocale(String name) {
-        return Seq.with(codeLanguages.keys()).find(l -> name.equals(l) || name.startsWith(l));
+        return codeLanguages.keys().toSeq().find(l -> name.equals(l) || name.startsWith(l));
     }
 
     public static Rank findRank(String name) {
