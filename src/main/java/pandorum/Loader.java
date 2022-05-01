@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.Events;
 import arc.files.Fi;
+import arc.graphics.Color;
 import arc.graphics.Colors;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
@@ -107,8 +108,13 @@ public class Loader {
         dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
 
         Colors.put("accent", Pal.accent);
-        Colors.put("ACCENT", Pal.accent);
+        Colors.put("unlaunched", Color.valueOf("8982ed"));
+        Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));
         Colors.put("stat", Pal.stat);
+        
+        Colors.put("ACCENT", Pal.accent);
+        Colors.put("UNLAUNCHED", Color.valueOf("8982ed"));
+        Colors.put("HIGHLIGHT", Pal.accent.cpy().lerp(Color.white, 0.3f));
         Colors.put("STAT", Pal.stat);
     }
 
