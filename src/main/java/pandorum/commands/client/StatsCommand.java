@@ -6,7 +6,7 @@ import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static pandorum.listeners.handlers.MenuHandler.statsMenu;

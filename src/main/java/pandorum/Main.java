@@ -9,10 +9,12 @@ public class Main implements ApplicationListener {
     public void init() {
         Log.info("[Darkdustry] Инициализация плагина...");
 
+        // Сначала загружаем конфигурацию
         Loader.loadConfig();
         Loader.load();
         Loader.init();
 
+        // Регистрируем команды
         Loader.registerClientCommands();
         Loader.registerDiscordCommands();
         Loader.registerServerCommands();

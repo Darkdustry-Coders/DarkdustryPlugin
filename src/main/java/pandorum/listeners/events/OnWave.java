@@ -2,7 +2,7 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.WaveEvent;
-import pandorum.database.models.MapModel;
+import pandorum.mongo.models.MapModel;
 
 import static mindustry.Vars.state;
 

@@ -1,4 +1,4 @@
-package pandorum.database;
+package pandorum.mongo;
 
 import arc.func.Cons;
 import arc.struct.Seq;

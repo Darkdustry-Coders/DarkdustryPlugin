@@ -7,22 +7,34 @@ import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
 import mindustry.net.Administration.Config;
 import pandorum.components.Bundle;
+import pandorum.data.PlayerData;
+import pandorum.discord.Bot;
 import pandorum.features.Effects;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
-import pandorum.database.models.PlayerModel;
-import pandorum.discord.Bot;
 import pandorum.listeners.handlers.MenuHandler;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import java.awt.*;
 
+import static pandorum.PluginVars.datas;
 import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.data.Database.getPlayerData;
+import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.Search.findLocale;
 
 public class OnPlayerJoin implements Cons<PlayerJoin> {
 
     public void get(PlayerJoin event) {
+        PlayerData data = getPlayerData(event.player.uuid());
+        if (data == null) {
+            data = new PlayerData();
+            setPlayerData(event.player.uuid(), data);
+        }
+
+        datas.put(event.player.uuid(), data);
+
         PlayerModel.find(event.player, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);
             String name = rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;

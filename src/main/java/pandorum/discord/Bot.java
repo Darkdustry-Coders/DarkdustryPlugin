@@ -30,7 +30,7 @@ public class Bot {
     public static Role adminRole;
     public static MessageChannel botChannel, adminChannel;
 
-    public static void run() {
+    public static void connect() {
         try {
             jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady();
             jda.addEventListener(new BotListener());
@@ -40,13 +40,15 @@ public class Bot {
             botChannel = guild.getTextChannelById(config.discordBotChannelID);
             adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
 
+            // Бот не должен иметь права на упоминание участников
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
+            // Изменяем никнейм бота на [prefix] Nickname
             guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {
-            Log.err("[Darkdustry] Ошибка запуска бота...");
+            Log.err("[Darkdustry] Не удалось запустить бота...");
             Log.err(e);
         }
     }

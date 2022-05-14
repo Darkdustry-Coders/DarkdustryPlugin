@@ -6,7 +6,7 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.features.Translator;
 import pandorum.util.Utils;
 

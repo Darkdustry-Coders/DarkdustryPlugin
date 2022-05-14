@@ -2,7 +2,7 @@ package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.PlayerModel;
 
 import static pandorum.util.Utils.bundled;
 

@@ -19,12 +19,15 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
+import pandorum.data.PlayerData;
 import pandorum.features.antigrief.history.HistoryMap;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
 import pandorum.components.Config;
 import pandorum.components.Gamemode;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
+import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
 
@@ -76,6 +79,9 @@ public class PluginVars {
     /** Название файла с конфигурацией. */
     public static final String configFileName = "config.json";
 
+    /** Порт для подключения базы данных Jedis. */
+    public static final int jedisPoolPort = 6379;
+
     /** Url для подключения к базе данных. */
     public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry";
     /** Название базы данных. */
@@ -97,6 +103,8 @@ public class PluginVars {
 
     public static final VoteSession[] currentVote = {null};
     public static final VoteKickSession[] currentVotekick = {null};
+
+    public static final ObjectMap<String, PlayerData> datas = new ObjectMap<>();
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
@@ -135,4 +143,6 @@ public class PluginVars {
     public static Config config;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
+
+    public static JedisPool jedisPool;
 }

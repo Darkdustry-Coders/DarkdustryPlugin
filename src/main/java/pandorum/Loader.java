@@ -34,6 +34,7 @@ import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
 import pandorum.components.*;
 import pandorum.discord.Bot;
+import pandorum.data.Database;
 import pandorum.listeners.Updater;
 import pandorum.listeners.filters.ActionManager;
 import pandorum.listeners.filters.ChatManager;
@@ -49,6 +50,43 @@ import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
 
 public class Loader {
+
+    public static void loadConfig() {
+        Fi configFile = dataDirectory.child(configFileName);
+        if (configFile.exists()) {
+            config = gson.fromJson(configFile.reader(), Config.class);
+            Log.info("[Darkdustry] Конфигурация загружена. (@)", configFile.absolutePath());
+        } else {
+            configFile.writeString(gson.toJson(config = new Config()));
+            Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
+        }
+    }
+
+    public static void load() {
+        MenuHandler.load();
+        Icons.load();
+        MapParser.load();
+        Ranks.load();
+
+        Translator.loadLanguages();
+
+        Database.connect();
+        Bot.connect();
+
+        dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
+        dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
+        dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
+
+        Colors.put("accent", Pal.accent);
+        Colors.put("unlaunched", Color.valueOf("8982ed"));
+        Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));
+        Colors.put("stat", Pal.stat);
+
+        Colors.put("ACCENT", Pal.accent);
+        Colors.put("UNLAUNCHED", Color.valueOf("8982ed"));
+        Colors.put("HIGHLIGHT", Pal.accent.cpy().lerp(Color.white, 0.3f));
+        Colors.put("STAT", Pal.stat);
+    }
 
     public static void init() {
         writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
@@ -91,42 +129,6 @@ public class Loader {
         Version.build = -1;
 
         Timer.schedule(new Updater(), 0f, 1f);
-    }
-
-    public static void load() {
-        MenuHandler.load();
-        Icons.load();
-        MapParser.load();
-        Ranks.load();
-
-        Translator.loadLanguages();
-
-        Bot.run();
-
-        dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
-        dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
-        dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
-
-        Colors.put("accent", Pal.accent);
-        Colors.put("unlaunched", Color.valueOf("8982ed"));
-        Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));
-        Colors.put("stat", Pal.stat);
-        
-        Colors.put("ACCENT", Pal.accent);
-        Colors.put("UNLAUNCHED", Color.valueOf("8982ed"));
-        Colors.put("HIGHLIGHT", Pal.accent.cpy().lerp(Color.white, 0.3f));
-        Colors.put("STAT", Pal.stat);
-    }
-
-    public static void loadConfig() {
-        Fi configFile = dataDirectory.child(configFileName);
-        if (configFile.exists()) {
-            config = gson.fromJson(configFile.reader(), Config.class);
-            Log.info("[Darkdustry] Конфигурация загружена. (@)", configFile.absolutePath());
-        } else {
-            configFile.writeString(gson.toJson(config = new Config()));
-            Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
-        }
     }
 
     public static void registerClientCommands() {

@@ -8,8 +8,8 @@ import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.components.Bundle;
 import pandorum.features.Ranks.Rank;
-import pandorum.database.models.MapModel;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.MapModel;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;

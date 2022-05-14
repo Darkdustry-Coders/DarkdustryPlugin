@@ -1,11 +1,11 @@
-package pandorum.database.models;
+package pandorum.mongo.models;
 
 import arc.func.Cons;
 import com.mongodb.BasicDBObject;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import mindustry.gen.Player;
 import org.bson.Document;
-import pandorum.database.MongoDataBridge;
+import pandorum.mongo.MongoDataBridge;
 
 public class PlayerModel extends MongoDataBridge<PlayerModel> {
 

@@ -10,12 +10,13 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.mod.Plugin;
 import org.bson.Document;
-import pandorum.database.models.MapModel;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.MapModel;
+import pandorum.mongo.models.PlayerModel;
 
 import static pandorum.PluginVars.*;
 
-public final class PandorumPlugin extends Plugin {
+public class PandorumPlugin extends Plugin {
+
     public PandorumPlugin() {
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(connectionStringUrl)).retryWrites(true).build();
         MongoClient client = MongoClients.create(settings);

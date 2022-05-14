@@ -1,4 +1,4 @@
-package pandorum.database;
+package pandorum.mongo;
 
 import com.mongodb.BasicDBObject;
 import org.bson.types.Symbol;

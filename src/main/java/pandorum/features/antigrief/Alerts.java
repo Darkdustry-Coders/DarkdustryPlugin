@@ -7,7 +7,7 @@ import mindustry.game.Team;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import pandorum.components.Icons;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;

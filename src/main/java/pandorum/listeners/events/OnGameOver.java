@@ -3,8 +3,8 @@ package pandorum.listeners.events;
 import arc.func.Cons;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import pandorum.database.models.MapModel;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.MapModel;
+import pandorum.mongo.models.PlayerModel;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;

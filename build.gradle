@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    project.version = '1.6'
+    project.version = '1.7'
     mindustryVersion = 'v135'
 }
 
@@ -18,10 +18,11 @@ dependencies {
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:server:$mindustryVersion"
 
-    implementation 'com.github.ben-manes.caffeine:caffeine:3.0.6'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.0'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'net.dv8tion:JDA:5.0.0-alpha.9'
     implementation 'org.mongodb:mongodb-driver-reactivestreams:4.6.0'
+    implementation 'redis.clients:jedis:4.2.2'
 }
 
 jar {

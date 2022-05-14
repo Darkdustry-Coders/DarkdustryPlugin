@@ -4,7 +4,7 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.database.models.MapModel;
+import pandorum.mongo.models.MapModel;
 
 import static mindustry.Vars.state;
 import static pandorum.listeners.handlers.MenuHandler.mapRateMenu;

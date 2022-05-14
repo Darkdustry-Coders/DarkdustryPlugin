@@ -4,7 +4,7 @@ import arc.struct.Seq;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.database.models.PlayerModel;
+import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static pandorum.listeners.handlers.MenuHandler.rankIncreaseMenu;
