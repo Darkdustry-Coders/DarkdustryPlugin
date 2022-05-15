@@ -33,12 +33,8 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
             setPlayerData(event.player.uuid(), data);
         }
 
+        Log.info(data.playTime);
         datas.put(event.player.uuid(), data);
-
-        PlayerData test = getPlayerData(event.player.uuid());
-        Log.info(test.rank);
-        Log.info(test.buildingsBuilt);
-        Log.info(test.playTime);
 
         PlayerModel.find(event.player, playerModel -> {
             Rank rank = Ranks.getRank(playerModel.rank);

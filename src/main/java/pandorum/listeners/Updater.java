@@ -7,13 +7,13 @@ import pandorum.mongo.models.PlayerModel;
 import pandorum.discord.Bot;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.mapPlayTime;
-import static pandorum.PluginVars.serverUpTime;
+import static pandorum.PluginVars.*;
 
 public class Updater implements Runnable {
 
     public void run() {
         Groups.player.each(player -> PlayerModel.find(player, playerModel -> {
+            datas.get(player.uuid()).playTime++;
             playerModel.playTime++;
             playerModel.save();
             Ranks.updateRank(player);
