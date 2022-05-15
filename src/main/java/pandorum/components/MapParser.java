@@ -20,27 +20,20 @@ import java.io.*;
 import java.util.zip.InflaterInputStream;
 
 import static mindustry.Vars.*;
+import static pandorum.util.Utils.getPluginFile;
 
 public class MapParser {
 
-    public static Color color = new Color();
-
     public static void load() {
         try {
-            // TODO мб прикреплять файл при компиляции?
-            Fi colors = new Fi("../block_colors.png");
-            if (!colors.exists()){
-                Log.err("[Darkdustry] Не найден файл 'block_colors.png'.");
-                return;
-            }
-
+            Fi colors = getPluginFile().child("block_colors.png");
             BufferedImage image = ImageIO.read(colors.file());
             for (Block block : content.blocks()) {
                 block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0));
                 block.mapColor.a = 1f;
                 block.hasColor = true;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.err(e);
         }
     }
@@ -84,9 +77,9 @@ public class MapParser {
                 public void setBlock(Block type) {
                     super.setBlock(type);
 
-                    int color = MapIO.colorFor(block(), Blocks.air, Blocks.air, team());
+                    int color = colorFor(block(), Blocks.air, Blocks.air, team());
                     if (color != 255 && color != 0) {
-                        walls.setRGB(x, floors.getHeight() - 1 - y, conv(color));
+                        walls.setRGB(x, floors.getHeight() - 1 - y, color);
                         fgraphics.setColor(shade);
                         fgraphics.drawRect(x, floors.getHeight() - 1 - y + 1, 1, 1);
                     }
@@ -116,14 +109,13 @@ public class MapParser {
                 @Override
                 public void onReadBuilding() {
                     if (tile.build != null) {
-                        int c = tile.build.team.color.argb8888();
                         int size = tile.block().size;
-                        int offsetx = -(size - 1) / 2;
-                        int offsety = -(size - 1) / 2;
+                        int offsetX = -(size - 1) / 2;
+                        int offsetY = -(size - 1) / 2;
                         for (int dx = 0; dx < size; dx++) {
                             for (int dy = 0; dy < size; dy++) {
-                                int drawx = tile.x + dx + offsetx, drawy = tile.y + dy + offsety;
-                                walls.setRGB(drawx, floors.getHeight() - 1 - drawy, c);
+                                int drawx = tile.x + dx + offsetX, drawy = tile.y + dy + offsetY;
+                                walls.setRGB(drawx, floors.getHeight() - 1 - drawy, tile.team().color.argb8888());
                             }
                         }
                     }
@@ -139,9 +131,9 @@ public class MapParser {
                 @Override
                 public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
                     if (overlayID != 0) {
-                        floors.setRGB(x, floors.getHeight() - 1 - y, conv(MapIO.colorFor(Blocks.air, Blocks.air, content.block(overlayID), Team.derelict)));
+                        floors.setRGB(x, floors.getHeight() - 1 - y, colorFor(Blocks.air, Blocks.air, content.block(overlayID), Team.derelict));
                     } else {
-                        floors.setRGB(x, floors.getHeight() - 1 - y, conv(MapIO.colorFor(Blocks.air, content.block(floorID), Blocks.air, Team.derelict)));
+                        floors.setRGB(x, floors.getHeight() - 1 - y, colorFor(Blocks.air, content.block(floorID), Blocks.air, Team.derelict));
                     }
                     return tile;
                 }
@@ -159,8 +151,8 @@ public class MapParser {
         var image = new BufferedImage(tiles.width, tiles.height, BufferedImage.TYPE_INT_ARGB);
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
-                Tile tile = tiles.getn(x, y);
-                image.setRGB(x, tiles.height - 1 - y, conv(MapIO.colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team())));
+                Tile tile = tiles.getc(x, y);
+                image.setRGB(x, tiles.height - 1 - y, colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team()));
             }
         }
         return image;
@@ -172,7 +164,7 @@ public class MapParser {
         return stream.toByteArray();
     }
 
-    public static int conv(int rgba) {
-        return color.set(rgba).argb8888();
+    public static int colorFor(Block block, Block floor, Block overlay, Team team) {
+        return new Color().set(MapIO.colorFor(block, floor, overlay, team)).argb8888();
     }
 }

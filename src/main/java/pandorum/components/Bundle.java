@@ -6,14 +6,13 @@ import arc.struct.StringMap;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.gen.Iconc;
-import pandorum.PandorumPlugin;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static mindustry.Vars.mods;
 import static pandorum.PluginVars.defaultLocale;
+import static pandorum.util.Utils.getPluginFile;
 
 public class Bundle {
 
@@ -23,7 +22,7 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     static {
-        Fi[] files = mods.list().find(mod -> mod.main instanceof PandorumPlugin).root.child("bundles").list();
+        Fi[] files = getPluginFile().child("bundles").list();
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");
 

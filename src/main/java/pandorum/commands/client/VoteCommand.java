@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 
 import static pandorum.PluginVars.currentVotekick;
 import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.voteChoise;
+import static pandorum.util.Utils.voteChoice;
 
 public class VoteCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -29,7 +29,7 @@ public class VoteCommand implements CommandRunner<Player> {
             return;
         }
 
-        int sign = voteChoise(args[0]);
+        int sign = voteChoice(args[0]);
         if (sign == 0) {
             bundled(player, "commands.vote.incorrect-sign");
             return;

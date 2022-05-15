@@ -1,6 +1,7 @@
 package pandorum.util;
 
 import arc.Core;
+import arc.files.Fi;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
@@ -11,6 +12,7 @@ import mindustry.gen.Player;
 import mindustry.server.ServerControl;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import pandorum.PandorumPlugin;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
 
@@ -23,6 +25,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static mindustry.Vars.mods;
 import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.adminRole;
 
@@ -32,7 +35,7 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
-    public static int voteChoise(String value) {
+    public static int voteChoice(String value) {
         return switch (value.toLowerCase()) {
             case "y", "yes", "д", "да", "так", "+" -> 1;
             case "n", "no", "н", "нет", "ні", "-" -> -1;
@@ -113,6 +116,10 @@ public class Utils {
         commands.clear();
 
         return commands.addAll(playerCommands.sort(Comparator.comparing(command -> command.text))).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
+    }
+
+    public static Fi getPluginFile() {
+        return mods.list().find(mod -> mod.main instanceof PandorumPlugin).root;
     }
 
     public static ServerControl getServerControl() {

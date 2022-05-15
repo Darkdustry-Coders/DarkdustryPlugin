@@ -19,14 +19,13 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
+import pandorum.components.Config;
+import pandorum.components.Gamemode;
 import pandorum.data.PlayerData;
 import pandorum.features.antigrief.history.HistoryMap;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
-import pandorum.components.Config;
-import pandorum.components.Gamemode;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
