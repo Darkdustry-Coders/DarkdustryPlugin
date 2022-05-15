@@ -37,8 +37,8 @@ public class FillCommand implements CommandRunner<Player> {
             for (int y = player.tileY(); y < height + player.tileY(); y += block.size) {
                 Tile tile = world.tile(x, y);
                 if (tile != null) {
-                    if (block.isFloor()) tile.setFloorNet(block);
-                    else if (block.isOverlay()) tile.setFloorNet(Blocks.air, block);
+                    if (block.isFloor()) tile.setFloorNet(block, tile.overlay());
+                    else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
                     else tile.setNet(block, player.team(), Mathf.random(0, 3));
                 }
             }
