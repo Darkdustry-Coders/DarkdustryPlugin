@@ -35,14 +35,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         datas.put(event.player.uuid(), data);
 
-        // TEST
-        PlayerData test = new PlayerData();
-        test.rank = Ranks.admin;
-        test.buildingsBuilt = 1000 - 7;
-        test.playTime = -1;
-        setPlayerData(event.player.uuid(), test);
-
-        test = getPlayerData(event.player.uuid());
+        PlayerData test = getPlayerData(event.player.uuid());
         Log.info(test.rank);
         Log.info(test.buildingsBuilt);
         Log.info(test.playTime);
