@@ -1,7 +1,9 @@
 {
-  "name": "DarkdustryPlugin",
-  "author": "Darkdustry Coders",
-  "main": "pandorum.PandorumPlugin",
-  "description": "The main plugin for Darkdustry servers",
-  "version": "1000.-7-gey_porno_xxx"
+  "name": "darkdustry-plugin",
+  "displayName": "Darkdustry Plugin",
+  "description": "Core plugin for Darkdustry servers.",
+  "author": "Darkness6030",
+  "version": "1.7",
+  "minGameVersion": "135",
+  "main": "pandorum.PandorumPlugin"
 }
