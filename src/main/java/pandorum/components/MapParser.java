@@ -27,7 +27,7 @@ public class MapParser {
     public static void load() {
         try {
             Fi colors = getPluginFile().child("block_colors.png");
-            BufferedImage image = ImageIO.read(colors.file());
+            BufferedImage image = ImageIO.read(colors.read());
             for (Block block : content.blocks()) {
                 block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0));
                 block.mapColor.a = 1f;

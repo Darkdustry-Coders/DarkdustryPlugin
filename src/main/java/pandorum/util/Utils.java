@@ -119,7 +119,7 @@ public class Utils {
     }
 
     public static Fi getPluginFile() {
-        return mods.list().find(mod -> mod.main instanceof PandorumPlugin).root;
+        return mods.locateMod("darkdustry-plugin").root;
     }
 
     public static ServerControl getServerControl() {
