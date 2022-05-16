@@ -7,7 +7,6 @@ import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
-import mindustry.io.MapIO;
 import mindustry.io.SaveIO;
 import mindustry.io.SaveVersion;
 import mindustry.maps.Map;
@@ -23,6 +22,7 @@ import java.io.InputStream;
 import java.util.zip.InflaterInputStream;
 
 import static mindustry.Vars.*;
+import static mindustry.io.MapIO.colorFor;
 import static pandorum.util.Utils.getPluginFile;
 
 public class MapParser {
@@ -82,7 +82,7 @@ public class MapParser {
 
                     int color = colorFor(block(), Blocks.air, Blocks.air, team());
                     if (color != 255 && color != 0) {
-                        walls.setRGB(x, floors.getHeight() - 1 - y, color);
+                        walls.setRGB(x, floors.getHeight() - 1 - y, convert(color));
                         fgraphics.setColor(shade);
                         fgraphics.drawRect(x, floors.getHeight() - 1 - y + 1, 1, 1);
                     }
@@ -134,9 +134,9 @@ public class MapParser {
                 @Override
                 public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
                     if (overlayID != 0) {
-                        floors.setRGB(x, floors.getHeight() - 1 - y, colorFor(Blocks.air, Blocks.air, content.block(overlayID), Team.derelict));
+                        floors.setRGB(x, floors.getHeight() - 1 - y, convert(colorFor(Blocks.air, Blocks.air, content.block(overlayID), Team.derelict)));
                     } else {
-                        floors.setRGB(x, floors.getHeight() - 1 - y, colorFor(Blocks.air, content.block(floorID), Blocks.air, Team.derelict));
+                        floors.setRGB(x, floors.getHeight() - 1 - y, convert(colorFor(Blocks.air, content.block(floorID), Blocks.air, Team.derelict)));
                     }
                     return tile;
                 }
@@ -155,7 +155,7 @@ public class MapParser {
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
                 Tile tile = tiles.getc(x, y);
-                image.setRGB(x, tiles.height - 1 - y, colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team()));
+                image.setRGB(x, tiles.height - 1 - y, convert(colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team())));
             }
         }
         return image;
@@ -167,7 +167,7 @@ public class MapParser {
         return stream.toByteArray();
     }
 
-    public static int colorFor(Block block, Block floor, Block overlay, Team team) {
-        return new Color().set(MapIO.colorFor(block, floor, overlay, team)).argb8888();
+    public static int convert(int color) {
+        return new Color(color).argb8888();
     }
 }
