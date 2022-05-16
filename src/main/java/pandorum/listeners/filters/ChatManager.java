@@ -6,7 +6,7 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
-import pandorum.mongo.models.PlayerModel;
+import pandorum.data.PlayerData;
 import pandorum.features.Translator;
 import pandorum.util.Utils;
 
@@ -17,6 +17,10 @@ import static pandorum.util.Search.findTranslatorLocale;
 
 public class ChatManager implements ChatFilter {
 
+    private static String formatTranslated(String formatted, String translatedText) {
+        return translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
+    }
+
     public String filter(Player author, String text) {
         String formatted = netServer.chatFormatter.format(author, text);
         ObjectMap<String, String> cache = new ObjectMap<>();
@@ -24,13 +28,14 @@ public class ChatManager implements ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
 
-        Groups.player.each(player -> player != author, player -> PlayerModel.find(player, playerModel -> {
-            if (playerModel.locale.equals("off")) {
+        Groups.player.each(player -> player != author, player -> {
+            PlayerData data = datas.get(player.uuid());
+            if (data.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;
             }
 
-            String locale = playerModel.locale.equals("auto") ? Utils.notNullElse(findTranslatorLocale(player.locale), defaultLocale) : playerModel.locale;
+            String locale = data.locale.equals("auto") ? Utils.notNullElse(findTranslatorLocale(player.locale), defaultLocale) : data.locale;
             if (cache.containsKey(locale)) {
                 player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
                 return;
@@ -40,13 +45,9 @@ public class ChatManager implements ChatFilter {
                 player.sendMessage(formatTranslated(formatted, translated), author, text);
                 cache.put(locale, translated);
             });
-        }));
+        });
 
         text("**@**: @", Strings.stripColors(author.name), text);
         return null;
-    }
-
-    private static String formatTranslated(String formatted, String translatedText) {
-        return translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
     }
 }

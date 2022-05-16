@@ -4,9 +4,10 @@ import arc.struct.Seq;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.mongo.models.PlayerModel;
+import pandorum.data.PlayerData;
 import pandorum.util.Utils;
 
+import static pandorum.PluginVars.datas;
 import static pandorum.listeners.handlers.MenuHandler.rankIncreaseMenu;
 import static pandorum.util.Search.findLocale;
 
@@ -37,53 +38,44 @@ public class Ranks {
     }
 
     public static void setRank(String uuid, Rank rank) {
-        PlayerModel.find(uuid, playerModel -> {
-            playerModel.rank = rank.id;
+        PlayerData data = datas.get(uuid);
+        data.rank = rank;
 
-            if (rank.req != null) {
-                playerModel.playTime = Math.max(playerModel.playTime, rank.req.playTime);
-                playerModel.buildingsBuilt = Math.max(playerModel.buildingsBuilt, rank.req.buildingsBuilt);
-                playerModel.gamesPlayed = Math.max(playerModel.gamesPlayed, rank.req.gamesPlayed);
-            }
-
-            playerModel.save();
-        });
+        if (rank.req != null) {
+            data.playTime = Math.max(data.playTime, rank.req.playTime);
+            data.buildingsBuilt = Math.max(data.buildingsBuilt, rank.req.buildingsBuilt);
+            data.gamesPlayed = Math.max(data.gamesPlayed, rank.req.gamesPlayed);
+        }
     }
 
     public static void resetRank(String uuid) {
-        PlayerModel.find(uuid, playerModel -> {
-            Rank rank;
-            int id = 0;
+        PlayerData data = datas.get(uuid);
 
-            while ((rank = getRank(id)) != null && rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
-                id++;
-            }
+        Rank rank = player;
+        while (rank != null && rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+            rank = rank.next;
+        }
 
-            playerModel.rank = id;
-            playerModel.save();
-        });
+        data.rank = rank;
     }
 
     public static void updateRank(Player player) {
-        PlayerModel.find(player, playerModel -> {
-            Rank rank = getRank(playerModel.rank);
+        PlayerData data = datas.get(player.uuid());
+        Rank rank = data.rank;
 
-            if (rank.next != null && rank.next.req != null && rank.next.req.check(playerModel.playTime, playerModel.buildingsBuilt, playerModel.gamesPlayed)) {
-                rank = rank.next;
+        if (rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+            rank = rank.next;
 
-                Call.menu(player.con,
-                        rankIncreaseMenu,
-                        Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
-                        Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(playerModel.playTime), playerModel.buildingsBuilt, playerModel.gamesPlayed),
-                        new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
-                );
+            Call.menu(player.con, rankIncreaseMenu,
+                    Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
+                    Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(data.playTime), data.buildingsBuilt, data.gamesPlayed),
+                    new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
+            );
 
-                playerModel.rank = rank.id;
-                playerModel.save();
-            }
+            data.rank = rank;
+        }
 
-            player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
-        });
+        player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
     }
 
     public static class Rank {

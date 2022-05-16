@@ -4,11 +4,11 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.features.Ranks;
+import pandorum.data.PlayerData;
 import pandorum.features.Ranks.Rank;
-import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
+import static pandorum.PluginVars.datas;
 import static pandorum.listeners.handlers.MenuHandler.rankInfoMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
@@ -21,30 +21,30 @@ public class RankCommand implements CommandRunner<Player> {
             return;
         }
 
-        PlayerModel.find(target, playerModel -> {
-            Rank rank = Ranks.getRank(playerModel.rank);
-            StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
+        PlayerData data = datas.get(target.uuid());
+        Rank rank = data.rank, next = rank.next;
 
-            if (rank.next != null && rank.next.req != null) {
-                builder.append(Bundle.format("commands.rank.menu.next",
-                        findLocale(player.locale),
-                        rank.next.tag,
-                        rank.next.displayName,
-                        Utils.secondsToMinutes(playerModel.playTime),
-                        Utils.secondsToMinutes(rank.next.req.playTime),
-                        playerModel.buildingsBuilt,
-                        rank.next.req.buildingsBuilt,
-                        playerModel.gamesPlayed,
-                        rank.next.req.gamesPlayed
-                ));
-            }
+        StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
 
-            Call.menu(player.con,
-                    rankInfoMenu,
-                    Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),
-                    builder.toString(),
-                    new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}, {Bundle.format("commands.rank.menu.requirements", findLocale(player.locale))}}
-            );
-        });
+        if (next != null && next.req != null) {
+            builder.append(Bundle.format("commands.rank.menu.next",
+                    findLocale(player.locale),
+                    next.tag,
+                    next.displayName,
+                    Utils.secondsToMinutes(data.playTime),
+                    Utils.secondsToMinutes(next.req.playTime),
+                    data.buildingsBuilt,
+                    next.req.buildingsBuilt,
+                    data.gamesPlayed,
+                    next.req.gamesPlayed
+            ));
+        }
+
+
+        Call.menu(player.con, rankInfoMenu,
+                Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),
+                builder.toString(),
+                new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}, {Bundle.format("commands.rank.menu.requirements", findLocale(player.locale))}}
+        );
     }
 }

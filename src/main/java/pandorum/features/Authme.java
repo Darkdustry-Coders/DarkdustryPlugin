@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import pandorum.components.Bundle;
-import pandorum.features.Ranks;
 
 import java.awt.*;
 
@@ -31,7 +30,7 @@ public class Authme {
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            sendEmbed(message.getChannel(), Color.green,"**@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
+            sendEmbed(message.getChannel(), Color.green, "**@** подтвердил запрос игрока **@**", member.getEffectiveName(), Strings.stripColors(player.name));
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);

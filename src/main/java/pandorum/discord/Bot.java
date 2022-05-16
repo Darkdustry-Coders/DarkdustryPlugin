@@ -8,17 +8,17 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
-import net.dv8tion.jda.internal.entities.EntityBuilder;
 
 import java.awt.*;
 import java.util.EnumSet;
 
+import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.discordCommands;
 
@@ -63,7 +63,8 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(EntityBuilder.createActivity(Strings.format("@ игроков онлайн", Groups.player.size()), null, ActivityType.STREAMING));
+        String activity = netServer.admins.getPlayerLimit() > 0 ? Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()) : Strings.format("@ игроков онлайн", Groups.player.size());
+        jda.getPresence().setActivity(Activity.playing(activity));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {

@@ -7,14 +7,13 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unitc;
 import mindustry.ui.Menus;
 import pandorum.components.Bundle;
+import pandorum.data.PlayerData;
 import pandorum.features.Ranks.Rank;
 import pandorum.mongo.models.MapModel;
-import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.canVote;
-import static pandorum.PluginVars.mapRateVotes;
+import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
@@ -24,11 +23,9 @@ public class MenuHandler {
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerModel.find(player, playerModel -> {
-                    playerModel.welcomeMessage = false;
-                    playerModel.save();
-                    Utils.bundled(player, "events.welcome.disabled");
-                });
+                PlayerData data = datas.get(player.uuid());
+                data.welcomeMessage = false;
+                Utils.bundled(player, "events.welcome.disabled");
             }
         });
 
@@ -99,8 +96,7 @@ public class MenuHandler {
                 StringBuilder builder = new StringBuilder();
                 Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(Bundle.format("commands.rank.menu.requirements.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(rank.req.playTime), rank.req.buildingsBuilt, rank.req.gamesPlayed)).append("\n"));
 
-                Call.menu(player.con,
-                        ranksRequirementsMenu,
+                Call.menu(player.con, ranksRequirementsMenu,
                         Bundle.format("commands.rank.menu.requirements.header", findLocale(player.locale)),
                         builder.toString(),
                         new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}

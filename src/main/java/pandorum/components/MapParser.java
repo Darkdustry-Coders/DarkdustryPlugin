@@ -16,7 +16,10 @@ import mindustry.world.blocks.environment.OreBlock;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.InflaterInputStream;
 
 import static mindustry.Vars.*;

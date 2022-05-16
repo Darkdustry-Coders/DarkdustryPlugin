@@ -15,6 +15,16 @@ import static pandorum.PluginVars.history;
 
 public class OnConfig implements Cons<ConfigEvent> {
 
+    private static boolean isLastUniqueCount(Seq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
+        for (int i = entries.size - 2; i >= maxSearchBound; i--) {
+            if (entries.get(i) instanceof ConfigEntry configEntry && configEntry.value instanceof Long value) {
+                if (Pack.leftInt(lastCount) > Pack.leftInt(value)) return true;
+            }
+        }
+
+        return false;
+    }
+
     public void get(ConfigEvent event) {
         if (config.historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             history.getAll(event.tile.tile.x, event.tile.tile.y, historyEntries -> {
@@ -34,15 +44,5 @@ public class OnConfig implements Cons<ConfigEvent> {
                 history.putLinkedTiles(event.tile.tile, entry);
             });
         }
-    }
-
-    private static boolean isLastUniqueCount(Seq<HistoryEntry> entries, long lastCount, int maxSearchBound) {
-        for (int i = entries.size - 2; i >= maxSearchBound; i--) {
-            if (entries.get(i) instanceof ConfigEntry configEntry && configEntry.value instanceof Long value) {
-                if (Pack.leftInt(lastCount) > Pack.leftInt(value)) return true;
-            }
-        }
-
-        return false;
     }
 }

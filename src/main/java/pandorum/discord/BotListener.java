@@ -2,7 +2,6 @@ package pandorum.discord;
 
 import arc.util.Log;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -23,7 +22,7 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || context.channel.getType() == ChannelType.PRIVATE) return;
+        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || !context.message.isFromGuild()) return;
 
         handleMessage(context);
 

@@ -10,10 +10,7 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
-import pandorum.features.Ranks;
-import pandorum.features.Ranks.Rank;
 import pandorum.listeners.handlers.MenuHandler;
-import pandorum.mongo.models.PlayerModel;
 import pandorum.util.Utils;
 
 import java.awt.*;
@@ -33,25 +30,21 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
             setPlayerData(event.player.uuid(), data);
         }
 
-        Log.info(data.playTime);
+        String name = data.rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
+        event.player.name(name);
+
+        Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
+        Utils.sendToChat("events.player.join", name);
+        Bot.sendEmbed(Color.green, "@ зашел на сервер.", Strings.stripColors(name));
+
+        if (data.welcomeMessage) Call.menu(event.player.con,
+                MenuHandler.welcomeMenu,
+                Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
+                Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
+                new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
+        );
+
         datas.put(event.player.uuid(), data);
-
-        PlayerModel.find(event.player, playerModel -> {
-            Rank rank = Ranks.getRank(playerModel.rank);
-            String name = rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
-
-            event.player.name(name);
-            Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
-            Utils.sendToChat("events.player.join", name);
-            Bot.sendEmbed(Color.green, "@ присоединился к серверу.", Strings.stripColors(name));
-
-            if (playerModel.welcomeMessage) Call.menu(event.player.con,
-                    MenuHandler.welcomeMenu,
-                    Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
-                    Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
-                    new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
-            );
-        });
 
         Utils.bundled(event.player, "events.welcome.message", Config.name.string(), discordServerUrl);
 

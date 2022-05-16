@@ -4,14 +4,13 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.listeners.handlers.MenuHandler;
 
+import static pandorum.listeners.handlers.MenuHandler.artvMenu;
 import static pandorum.util.Search.findLocale;
 
 public class ArtvCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        Call.menu(player.con,
-                MenuHandler.artvMenu,
+        Call.menu(player.con, artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
                 Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),
                 new String[][] {{Bundle.format("ui.menus.yes", findLocale(player.locale)), Bundle.format("ui.menus.no", findLocale(player.locale))}}

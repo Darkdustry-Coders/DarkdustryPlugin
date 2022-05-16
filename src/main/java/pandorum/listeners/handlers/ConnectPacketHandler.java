@@ -25,6 +25,50 @@ import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket> {
 
+    private static String fixName(String name) {
+        name = name.trim().replace("\n", "").replace("\t", "");
+        if (name.equals("[") || name.equals("]")) {
+            return "";
+        }
+
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) == '[' && i != name.length() - 1 && name.charAt(i + 1) != '[' && (i == 0 || name.charAt(i - 1) != '[')) {
+                String prev = name.substring(0, i);
+                String next = name.substring(i);
+                String result = checkColor(next);
+                name = prev + result;
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        int curChar = 0;
+        while (curChar < name.length() && result.toString().getBytes(Strings.utf8).length < maxNameLength) {
+            result.append(name.charAt(curChar++));
+        }
+        return result.toString();
+    }
+
+    private static String checkColor(String str) {
+        for (int i = 1; i < str.length(); i++) {
+            if (str.charAt(i) == ']') {
+                String color = str.substring(1, i);
+
+                if (Colors.get(color.toUpperCase()) != null || Colors.get(color.toLowerCase()) != null) {
+                    Color result = (Colors.get(color.toLowerCase()) == null ? Colors.get(color.toUpperCase()) : Colors.get(color.toLowerCase()));
+                    if (result.a <= 0.8f) return str.substring(i + 1);
+                } else {
+                    try {
+                        Color result = Color.valueOf(color);
+                        if (result.a <= 0.8f) return str.substring(i + 1);
+                    } catch (Exception e) {
+                        return str;
+                    }
+                }
+            }
+        }
+        return str;
+    }
+
     public void get(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
 
@@ -136,49 +180,5 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
         netServer.sendWorldData(player);
 
         Events.fire(new PlayerConnect(player));
-    }
-
-    private static String fixName(String name) {
-        name = name.trim().replace("\n", "").replace("\t", "");
-        if (name.equals("[") || name.equals("]")) {
-            return "";
-        }
-
-        for (int i = 0; i < name.length(); i++) {
-            if (name.charAt(i) == '[' && i != name.length() - 1 && name.charAt(i + 1) != '[' && (i == 0 || name.charAt(i - 1) != '[')) {
-                String prev = name.substring(0, i);
-                String next = name.substring(i);
-                String result = checkColor(next);
-                name = prev + result;
-            }
-        }
-
-        StringBuilder result = new StringBuilder();
-        int curChar = 0;
-        while (curChar < name.length() && result.toString().getBytes(Strings.utf8).length < maxNameLength) {
-            result.append(name.charAt(curChar++));
-        }
-        return result.toString();
-    }
-
-    private static String checkColor(String str) {
-        for (int i = 1; i < str.length(); i++) {
-            if (str.charAt(i) == ']') {
-                String color = str.substring(1, i);
-
-                if (Colors.get(color.toUpperCase()) != null || Colors.get(color.toLowerCase()) != null) {
-                    Color result = (Colors.get(color.toLowerCase()) == null ? Colors.get(color.toUpperCase()) : Colors.get(color.toLowerCase()));
-                    if (result.a <= 0.8f) return str.substring(i + 1);
-                } else {
-                    try {
-                        Color result = Color.valueOf(color);
-                        if (result.a <= 0.8f) return str.substring(i + 1);
-                    } catch (Exception e) {
-                        return str;
-                    }
-                }
-            }
-        }
-        return str;
     }
 }

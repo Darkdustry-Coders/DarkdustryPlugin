@@ -7,7 +7,7 @@ import mindustry.game.Team;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import pandorum.components.Icons;
-import pandorum.mongo.models.PlayerModel;
+import pandorum.data.PlayerData;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
@@ -25,11 +25,12 @@ public class Alerts {
 
         if (isDangerousBuild(event.builder.buildPlan().block) && isNearCore(event.team, event.tile) && interval.get(1, alertsTimer)) {
             String name = Utils.notNullElse(event.builder.getControllerName(), Icons.get(event.builder.type.name));
-            Utils.eachPlayerInTeam(event.team, player -> PlayerModel.find(player, playerModel -> {
-                if (playerModel.alerts) {
+            Utils.eachPlayerInTeam(event.team, player -> {
+                PlayerData data = datas.get(player.uuid());
+                if (data.alertsEnabled) {
                     bundled(player, "events.alert", name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
                 }
-            }));
+            });
         }
     }
 
@@ -38,11 +39,12 @@ public class Alerts {
 
         if (isDangerousDeposit(event.tile.block, event.item) && isNearCore(event.player.team(), event.tile)) {
             String name = event.player.coloredName();
-            Utils.eachPlayerInTeam(event.player.team(), player -> PlayerModel.find(player, playerModel -> {
-                if (playerModel.alerts) {
+            Utils.eachPlayerInTeam(event.player.team(), player -> {
+                PlayerData data = datas.get(player.uuid());
+                if (data.alertsEnabled) {
                     bundled(player, "events.withdraw-thorium", name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
                 }
-            }));
+            });
         }
     }
 

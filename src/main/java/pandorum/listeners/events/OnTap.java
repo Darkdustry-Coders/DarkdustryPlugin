@@ -2,8 +2,8 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.TapEvent;
-import pandorum.features.antigrief.history.entry.HistoryEntry;
 import pandorum.components.Bundle;
+import pandorum.features.antigrief.history.entry.HistoryEntry;
 
 import static pandorum.PluginVars.*;
 import static pandorum.util.Search.findLocale;

@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import java.awt.*;
 
 import static pandorum.PluginVars.*;
-import static pandorum.features.Authme.*;
 import static pandorum.discord.Bot.adminChannel;
+import static pandorum.features.Authme.*;
 import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.secondsToMinutes;
 

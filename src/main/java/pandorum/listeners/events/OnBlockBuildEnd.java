@@ -2,12 +2,11 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.BlockBuildEndEvent;
+import pandorum.data.PlayerData;
 import pandorum.features.antigrief.history.entry.BlockEntry;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
-import pandorum.mongo.models.PlayerModel;
 
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.*;
 
 public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
 
@@ -17,10 +16,8 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
             history.putLinkedTiles(event.tile, entry);
         }
 
-        PlayerModel.find(event.unit.getPlayer(), playerModel -> {
-            if (event.breaking) playerModel.buildingsDeconstructed++;
-            else playerModel.buildingsBuilt++;
-            playerModel.save();
-        });
+        if (!event.unit.isPlayer() || event.breaking) return;
+        PlayerData data = datas.get(event.unit.getPlayer().uuid());
+        data.buildingsBuilt++;
     }
 }

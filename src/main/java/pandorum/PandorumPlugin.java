@@ -11,7 +11,6 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import mindustry.mod.Plugin;
 import org.bson.Document;
 import pandorum.mongo.models.MapModel;
-import pandorum.mongo.models.PlayerModel;
 
 import static pandorum.PluginVars.*;
 
@@ -21,9 +20,6 @@ public class PandorumPlugin extends Plugin {
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(connectionStringUrl)).retryWrites(true).build();
         MongoClient client = MongoClients.create(settings);
         MongoDatabase database = client.getDatabase(databaseName);
-
-        MongoCollection<Document> playersInfoCollection = database.getCollection(playersCollectionName);
-        PlayerModel.setCollection(playersInfoCollection);
 
         MongoCollection<Document> mapsInfoCollection = database.getCollection(mapsCollectionName);
         MapModel.setCollection(mapsInfoCollection);
