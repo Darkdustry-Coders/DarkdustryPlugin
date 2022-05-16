@@ -9,16 +9,15 @@ import mindustry.ui.Menus;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.features.Ranks.Rank;
-import pandorum.mongo.models.MapModel;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.datas;
 import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, mapRateMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, mapInfoMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -61,33 +60,7 @@ public class MenuHandler {
             }
         });
 
-        mapRateMenu = Menus.registerMenu((player, option) -> {
-            if ((option == 0 || option == 1)) {
-                if (mapRateVotes.contains(player.uuid())) {
-                    Utils.bundled(player, "commands.map.already-voted");
-                    return;
-                }
-
-                if (!canVote) {
-                    Utils.bundled(player, "commands.can-not-vote");
-                    return;
-                }
-
-                MapModel.find(state.map, mapModel -> {
-                    if (option == 0) {
-                        mapModel.upVotes++;
-                        mapModel.save();
-                        mapRateVotes.add(player.uuid());
-                        Utils.bundled(player, "commands.map.upvoted");
-                    } else {
-                        mapModel.downVotes++;
-                        mapModel.save();
-                        mapRateVotes.add(player.uuid());
-                        Utils.bundled(player, "commands.map.downvoted");
-                    }
-                });
-            }
-        });
+        mapInfoMenu = emptyMenu();
 
         statsMenu = emptyMenu();
 

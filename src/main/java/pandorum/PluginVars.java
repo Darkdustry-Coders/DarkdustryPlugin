@@ -81,15 +81,6 @@ public class PluginVars {
     /** Порт для подключения базы данных Jedis. */
     public static final int jedisPoolPort = 6379;
 
-    /** Url для подключения к базе данных. */
-    public static final String connectionStringUrl = "mongodb://manager:QULIoZBckRlLkZXn@127.0.0.1:27017/?authSource=darkdustry";
-    /** Название базы данных. */
-    public static final String databaseName = "darkdustry";
-    /** Название коллекции со статистикой игроков в базе данных. */
-    public static final String playersCollectionName = "players";
-    /** Название коллекции со статистикой карт в базе данных. */
-    public static final String mapsCollectionName = "maps";
-
     /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
 
@@ -115,7 +106,6 @@ public class PluginVars {
     public static final Seq<Command> clientAdminOnlyCommands = new Seq<>(), discordAdminOnlyCommands = new Seq<>();
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
-    public static final Seq<String> specialKeys = Seq.with("_id", "__v", "DEFAULT_CODEC_REGISTRY");
 
     public static final Interval interval = new Interval(2);
 

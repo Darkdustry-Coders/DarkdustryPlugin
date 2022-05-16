@@ -5,8 +5,6 @@ import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
 import pandorum.discord.Context;
-import pandorum.mongo.models.MapModel;
-import pandorum.util.Utils;
 
 import java.awt.*;
 
@@ -20,30 +18,25 @@ public class MapCommand implements CommandRunner<Context> {
             return;
         }
 
-        MapModel.find(map, mapModel -> {
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setColor(Color.yellow)
-                    .setTitle(":map: " + map.name())
-                    .setFooter(map.width + "x" + map.height)
-                    .addField(":mailbox_with_mail: Рейтинг:", ":green_circle: " + mapModel.upVotes + " | " + mapModel.downVotes + " :red_circle:", true)
-                    .addField(":clock1: Время игры:", Utils.formatDuration(mapModel.playTime * 1000L), true)
-                    .addField(":100: Лучшая волна:", String.valueOf(mapModel.bestWave), true)
-                    .addField(":checkered_flag: Сыграно игр:", String.valueOf(mapModel.gamesPlayed), true);
 
-            if (!map.author().equalsIgnoreCase("unknown")) {
-                embed.setAuthor(map.author());
-            }
+        EmbedBuilder embed = new EmbedBuilder()
+                .setColor(Color.yellow)
+                .setTitle(":map: " + map.name())
+                .setFooter(map.width + "x" + map.height);
 
-            if (!map.description().equalsIgnoreCase("unknown")) {
-                embed.setDescription(map.description());
-            }
+        if (!map.author().equalsIgnoreCase("unknown")) {
+            embed.setAuthor(map.author());
+        }
 
-            byte[] image = MapParser.parseMap(map);
-            if (image.length > 0) {
-                embed.setImage("attachment://map.png");
-            }
+        if (!map.description().equalsIgnoreCase("unknown")) {
+            embed.setDescription(map.description());
+        }
 
-            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").queue();
-        });
+        byte[] image = MapParser.parseMap(map);
+        if (image.length > 0) {
+            embed.setImage("attachment://map.png");
+        }
+
+        context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").queue();
     }
 }
