@@ -8,6 +8,8 @@ import pandorum.data.PlayerData;
 import pandorum.util.Utils;
 
 import static pandorum.PluginVars.datas;
+import static pandorum.data.Database.getPlayerData;
+import static pandorum.data.Database.setPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.rankIncreaseMenu;
 import static pandorum.util.Search.findLocale;
 
@@ -33,30 +35,19 @@ public class Ranks {
         activePlus.setNext(veteran);
     }
 
-    public static Rank getRank(int index) {
-        return Rank.ranks.get(index);
-    }
-
     public static void setRank(String uuid, Rank rank) {
-        PlayerData data = datas.get(uuid);
+        PlayerData data = getPlayerData(uuid);
+        if (data == null) return;
+
         data.rank = rank;
 
         if (rank.req != null) {
-            data.playTime = Math.max(data.playTime, rank.req.playTime);
-            data.buildingsBuilt = Math.max(data.buildingsBuilt, rank.req.buildingsBuilt);
-            data.gamesPlayed = Math.max(data.gamesPlayed, rank.req.gamesPlayed);
-        }
-    }
-
-    public static void resetRank(String uuid) {
-        PlayerData data = datas.get(uuid);
-
-        Rank rank = player;
-        while (rank != null && rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-            rank = rank.next;
+            data.playTime = rank.req.playTime;
+            data.buildingsBuilt = rank.req.buildingsBuilt;
+            data.gamesPlayed = rank.req.gamesPlayed;
         }
 
-        data.rank = rank;
+        setPlayerData(uuid, data);
     }
 
     public static void updateRank(Player player) {
@@ -78,8 +69,10 @@ public class Ranks {
         player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
     }
 
+
+
     public static class Rank {
-        public static final Seq<Rank> ranks = new Seq<>(true);
+        public static final Seq<Rank> ranks = new Seq<>();
 
         public final String tag;
         public final String name;

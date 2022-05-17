@@ -23,7 +23,7 @@ public class Alerts {
     public static void buildAlert(BuildSelectEvent event) {
         if (!enabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 
-        if (isDangerousBuild(event.builder.buildPlan().block) && isNearCore(event.team, event.tile) && interval.get(1, alertsTimer)) {
+        if (isDangerousBuild(event.builder.buildPlan().block) && isNearCore(event.team, event.tile) && interval.get(0, alertsTimer)) {
             String name = Utils.notNullElse(event.builder.getControllerName(), Icons.get(event.builder.type.name));
             Utils.eachPlayerInTeam(event.team, player -> {
                 PlayerData data = datas.get(player.uuid());

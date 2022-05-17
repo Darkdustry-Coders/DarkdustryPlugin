@@ -59,6 +59,9 @@ public class PluginVars {
     /** Таймер для оповещения об опасных блоков. */
     public static final float alertsTimer = 240f;
 
+    /** Таймер для сохранения всех данных игроков в базу данных. */
+    public static final float databaseSaveTimer = 60f * 60f;
+
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 150f;
     /** Время голосования через /votekick. В секундах. */
@@ -127,11 +130,12 @@ public class PluginVars {
     /** Могут ли игроки голосовать в данный момент. */
     public static boolean canVote = false;
 
+    /** База данных Jedis. */
+    public static JedisPool jedisPool;
+
     public static CommandHandler clientCommands, serverCommands, discordCommands;
 
     public static Config config;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
-
-    public static JedisPool jedisPool;
 }

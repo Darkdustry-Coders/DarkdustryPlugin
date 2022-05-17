@@ -19,7 +19,7 @@ public class AdminCommand implements Cons<String[]> {
             info = target.getInfo();
         } else {
             info = netServer.admins.getInfoOptional(args[1]);
-            target = Groups.player.find(player -> player.getInfo() == info);
+            target = Groups.player.find(player -> player.uuid().equals(info.id));
         }
 
         if (info != null) {
@@ -28,16 +28,16 @@ public class AdminCommand implements Cons<String[]> {
                     netServer.admins.adminPlayer(info.id, info.adminUsid);
                     Ranks.setRank(info.id, Ranks.admin);
                     Log.info("Игрок '@' теперь админ.", info.lastName);
-                    if (target != null && !target.admin) {
+                    if (target != null) {
                         target.admin(true);
                         bundled(target, "events.server.admin");
                     }
                 }
                 case "remove" -> {
                     netServer.admins.unAdminPlayer(info.id);
-                    Ranks.resetRank(info.id);
+                    Ranks.setRank(info.id, Ranks.player);
                     Log.info("Игрок '@' больше не админ.", info.lastName);
-                    if (target != null && target.admin) {
+                    if (target != null) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
                     }
