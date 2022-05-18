@@ -29,6 +29,8 @@ public class MenuHandler {
         });
 
         despawnMenu = Menus.registerMenu((player, option) -> {
+            if (!player.admin) return;
+
             switch (option) {
                 case 0 -> {
                     Groups.unit.each(Unitc::kill);
@@ -54,6 +56,8 @@ public class MenuHandler {
         });
 
         artvMenu = Menus.registerMenu((player, option) -> {
+            if (!player.admin) return;
+
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
                 Utils.sendToChat("commands.admin.artv.info", player.coloredName());
