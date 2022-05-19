@@ -25,8 +25,7 @@ public class Authme {
     public static final Button confirm = Button.success("admin.confirm", "Подтвердить"),
             deny = Button.secondary("admin.deny", "Отклонить"),
             ban = Button.danger("admin.ban", "Забанить"),
-            info = Button.primary("admin.info", "Информация"),
-            fuck = Button.success("admin.fuck", "Выебать").asDisabled();
+            info = Button.primary("admin.info", "Информация");
 
     public static void confirm(Message message, Member member) {
         Player player = loginWaiting.remove(message);
