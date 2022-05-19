@@ -212,7 +212,7 @@ public class Loader {
         handler.register("pardon", "<uuid/ip...>", "Pardon a kicked player.", new PardonCommand());
         handler.register("admin", "<add/remove> <uuid/username...>", "Make an online user admin.", new AdminCommand());
         handler.register("admins", "[clear]", "List of all admins.", new AdminsListCommand());
-        handler.register("rmadmins", "Удаляет всех админов на текущем сервере.", new RemoveAdmins());
+        handler.register("rmadmins", "Remove all admins on this server.", new RemoveAdmins());
         handler.register("players", "List of all online players.", new pandorum.commands.server.PlayersListCommand());
         handler.register("save", "<save...>", "Save game state to a slot.", new SaveCommand());
         handler.register("load", "<save...>", "Load a save from a slot.", new LoadCommand());
