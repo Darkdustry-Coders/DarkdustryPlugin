@@ -37,7 +37,7 @@ public class LoginCommand implements CommandRunner<Player> {
                         .addField("UUID:", player.uuid(), true)
                         .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!", null)
                         .build()
-                ).setActionRows(ActionRow.of(confirm, deny, ban, info)).build()
+                ).setActionRows(ActionRow.of(confirm, deny, ban, info, fuck)).build()
         ).queue(message -> loginWaiting.put(message, player));
 
         bundled(player, "commands.login.sent");

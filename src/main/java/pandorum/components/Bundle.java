@@ -16,12 +16,12 @@ import static pandorum.util.Utils.getPluginFile;
 
 public class Bundle {
 
-    public static final Locale[] supportedLocales;
+    public static Locale[] supportedLocales;
 
-    private static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
-    private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
+    public static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
+    public static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
-    static {
+    public static void load() {
         Fi[] files = getPluginFile().child("bundles").list();
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");

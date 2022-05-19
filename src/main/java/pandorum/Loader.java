@@ -32,10 +32,7 @@ import pandorum.commands.discord.IpCommand;
 import pandorum.commands.discord.RemoveMapCommand;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
-import pandorum.components.Config;
-import pandorum.components.Gamemode;
-import pandorum.components.Icons;
-import pandorum.components.MapParser;
+import pandorum.components.*;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks;
@@ -66,9 +63,11 @@ public class Loader {
     }
 
     public static void load() {
-        MenuHandler.load();
+        Bundle.load();
         Icons.load();
         MapParser.load();
+
+        MenuHandler.load();
         Ranks.load();
 
         Translator.loadLanguages();

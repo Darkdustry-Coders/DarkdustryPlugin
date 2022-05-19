@@ -4,13 +4,17 @@ import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.net.Administration.PlayerInfo;
+import pandorum.features.Ranks;
 
 import static mindustry.Vars.netServer;
 
 public class AdminsListCommand implements Cons<String[]> {
     public void get(String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
-            netServer.admins.getAdmins().each(info -> netServer.admins.unAdminPlayer(info.id));
+            netServer.admins.getAdmins().each(info -> {
+                netServer.admins.unAdminPlayer(info.id);
+                Ranks.setRank(info.id, Ranks.player);
+            });
             return;
         }
 

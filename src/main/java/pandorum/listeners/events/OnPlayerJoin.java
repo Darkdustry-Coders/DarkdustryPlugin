@@ -10,7 +10,6 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
-import pandorum.listeners.handlers.MenuHandler;
 import pandorum.util.Utils;
 
 import java.awt.*;
@@ -19,6 +18,7 @@ import static pandorum.PluginVars.datas;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
+import static pandorum.listeners.handlers.MenuHandler.welcomeMenu;
 import static pandorum.util.Search.findLocale;
 
 public class OnPlayerJoin implements Cons<PlayerJoin> {
@@ -37,8 +37,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
         Utils.sendToChat("events.player.join", name);
         Bot.sendEmbed(Color.green, "@ зашел на сервер.", Strings.stripColors(name));
 
-        if (data.welcomeMessage) Call.menu(event.player.con,
-                MenuHandler.welcomeMenu,
+        if (data.welcomeMessage) Call.menu(event.player.con, welcomeMenu,
                 Bundle.format("events.welcome.menu.header", findLocale(event.player.locale)),
                 Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
