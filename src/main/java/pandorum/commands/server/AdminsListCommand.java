@@ -9,6 +9,11 @@ import static mindustry.Vars.netServer;
 
 public class AdminsListCommand implements Cons<String[]> {
     public void get(String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
+            netServer.admins.getAdmins().each(info -> netServer.admins.unAdminPlayer(info.id));
+            return;
+        }
+
         Seq<PlayerInfo> admins = netServer.admins.getAdmins();
         if (admins.isEmpty()) {
             Log.info("Не найдено администраторов.");

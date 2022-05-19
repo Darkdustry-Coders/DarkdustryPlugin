@@ -23,7 +23,7 @@ public class SetRankCommand implements Cons<String[]> {
             return;
         }
 
-        Ranks.setRank(target.uuid(), rank);
+        Ranks.setRank(target, rank);
         Log.info("Ранг игрока '@' успешно изменен на '@'", target.name, rank.name);
     }
 }

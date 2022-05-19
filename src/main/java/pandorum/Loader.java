@@ -207,11 +207,11 @@ public class Loader {
         handler.register("nextmap", "<map...>", "Set the next map to be played after a gameover. Overrides shuffling.", new NextMapCommand());
         handler.register("kick", "<ID/username...>", "Kick a player from the server.", new KickCommand());
         handler.register("ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", new BanCommand());
-        handler.register("bans", "List of all banned IPs and UUIDs.", new BansListCommand());
+        handler.register("bans", "[clear]", "List of all banned IPs and UUIDs.", new BansListCommand());
         handler.register("unban", "<uuid/all/ip...>", "Unban a player by UUID or IP.", new UnbanCommand());
         handler.register("pardon", "<uuid/ip...>", "Pardon a kicked player.", new PardonCommand());
         handler.register("admin", "<add/remove> <uuid/username...>", "Make an online user admin.", new AdminCommand());
-        handler.register("admins", "List of all admins.", new AdminsListCommand());
+        handler.register("admins", "[clear]", "List of all admins.", new AdminsListCommand());
         handler.register("players", "List of all online players.", new pandorum.commands.server.PlayersListCommand());
         handler.register("save", "<save...>", "Save game state to a slot.", new SaveCommand());
         handler.register("load", "<save...>", "Load a save from a slot.", new LoadCommand());

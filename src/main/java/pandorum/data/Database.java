@@ -1,6 +1,5 @@
 package pandorum.data;
 
-import arc.Core;
 import arc.util.Log;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

@@ -18,7 +18,9 @@ public class SaveCommand implements Cons<String[]> {
 
         Fi save = saveDirectory.child(Strings.format("@.@", args[0], saveExtension));
 
-        Core.app.post(() -> SaveIO.save(save));
-        Log.info("Карта сохранена в @", save.absolutePath());
+        Core.app.post(() -> {
+            SaveIO.save(save);
+            Log.info("Карта сохранена в @", save.absolutePath());
+        });
     }
 }

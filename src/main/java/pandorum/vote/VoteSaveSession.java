@@ -20,7 +20,7 @@ public class VoteSaveSession extends VoteSession {
     }
 
     @Override
-    protected Task start() {
+    public Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
                 sendToChat("commands.nominate.save.failed", target.nameWithoutExtension());
@@ -38,7 +38,7 @@ public class VoteSaveSession extends VoteSession {
     }
 
     @Override
-    protected boolean checkPass() {
+    public boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.save.passed", target.nameWithoutExtension());
             stop();

@@ -23,7 +23,7 @@ public class VoteKickSession extends VoteSession {
     }
 
     @Override
-    protected Task start() {
+    public Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
                 sendToChat("commands.votekick.failed", target.coloredName());
@@ -41,7 +41,7 @@ public class VoteKickSession extends VoteSession {
     }
 
     @Override
-    protected boolean checkPass() {
+    public boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
             stop();
@@ -52,7 +52,7 @@ public class VoteKickSession extends VoteSession {
     }
 
     @Override
-    protected int votesRequired() {
+    public int votesRequired() {
         return Groups.player.size() > 4 ? 3 : 2;
     }
 

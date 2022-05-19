@@ -9,6 +9,12 @@ import static mindustry.Vars.netServer;
 
 public class BansListCommand implements Cons<String[]> {
     public void get(String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
+            netServer.admins.getBanned().each(info -> netServer.admins.unbanPlayerID(info.id));
+            netServer.admins.getBannedIPs().each(ip -> netServer.admins.unbanPlayerIP(ip));
+            return;
+        }
+
         Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
         if (bannedIDs.isEmpty()) {
             Log.info("Не найдено заблокированных игроков... [UUID]");

@@ -1,7 +1,6 @@
 package pandorum.listeners.events;
 
 import mindustry.gen.Groups;
-import pandorum.data.PlayerData;
 import pandorum.features.Effects;
 
 import static pandorum.PluginVars.*;

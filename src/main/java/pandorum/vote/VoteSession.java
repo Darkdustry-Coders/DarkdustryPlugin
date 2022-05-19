@@ -21,20 +21,20 @@ public abstract class VoteSession {
         this.task = start();
     }
 
-    protected abstract Task start();
-
-    public abstract void vote(Player player, int sign);
-
-    protected abstract boolean checkPass();
-
-    protected int votesRequired() {
-        return Mathf.ceil(voteRatio * Groups.player.size());
-    }
+    public abstract Task start();
 
     public void stop() {
         voted.clear();
         task.cancel();
         voteSession[0] = null;
+    }
+
+    public abstract void vote(Player player, int sign);
+
+    public abstract boolean checkPass();
+
+    public int votesRequired() {
+        return Mathf.ceil(voteRatio * Groups.player.size());
     }
 
     public Seq<String> voted() {
