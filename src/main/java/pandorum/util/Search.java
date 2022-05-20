@@ -25,12 +25,16 @@ public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        return Strings.canParseInt(name) && Strings.parseInt(name) < mapsList.size ? mapsList.get(Strings.parseInt(name)) : mapsList.find(map -> Utils.deepEquals(map.name(), name));
+        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < mapsList.size ? mapsList.get(Strings.parseInt(name)) : mapsList.find(map -> Utils.deepEquals(map.name(), name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return Strings.canParseInt(name) && Strings.parseInt(name) < savesList.size ? savesList.get(Strings.parseInt(name)) : savesList.find(save -> Utils.deepEquals(save.nameWithoutExtension(), name));
+        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < savesList.size ? savesList.get(Strings.parseInt(name)) : savesList.find(save -> Utils.deepEquals(save.nameWithoutExtension(), name));
+    }
+
+    public static Rank findRank(String name) {
+        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < Rank.ranks.size ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
     public static Locale findLocale(String name) {
@@ -40,10 +44,6 @@ public class Search {
 
     public static String findTranslatorLocale(String name) {
         return codeLanguages.keys().toSeq().find(l -> name.equals(l) || name.startsWith(l));
-    }
-
-    public static Rank findRank(String name) {
-        return Strings.canParsePositiveInt(name) ? Rank.ranks.get(Strings.parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
     public static Player findPlayer(String name) {

@@ -217,5 +217,7 @@ public class Loader {
         handler.register("despawn", "Kill all units.", new pandorum.commands.server.DespawnCommand());
         handler.register("restart", "Restart the server.", new RestartCommand());
         handler.register("setrank", "<rank> <ID/username...>", "Set a rank for player.", new SetRankCommand());
+
+        handler.register("setdata", "<uuid> <playtime> <buildings> <games>", "Shiza?", new SetDataCommand());
     }
 }
