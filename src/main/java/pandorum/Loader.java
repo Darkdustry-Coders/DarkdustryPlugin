@@ -111,7 +111,6 @@ public class Loader {
         Events.on(PlayerLeave.class, new OnPlayerLeave());
         Events.on(ServerLoadEvent.class, new OnServerLoad());
         Events.on(TapEvent.class, new OnTap());
-        Events.on(WaveEvent.class, new OnWave());
         Events.on(WithdrawEvent.class, new OnWithdraw());
         Events.on(WorldLoadEvent.class, new OnWorldLoad());
 

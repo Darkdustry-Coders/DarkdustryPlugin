@@ -30,6 +30,8 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
             setPlayerData(event.player.uuid(), data);
         }
 
+        datas.put(event.player.uuid(), data);
+
         String name = data.rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
         event.player.name(name);
 
@@ -42,8 +44,6 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
                 Bundle.format("events.welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("events.welcome.menu.disable", findLocale(event.player.locale))}}
         );
-
-        datas.put(event.player.uuid(), data);
 
         Utils.bundled(event.player, "events.welcome.message", Config.name.string(), discordServerUrl);
 

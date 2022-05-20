@@ -29,7 +29,7 @@ public class VoteKickSession extends VoteSession {
                 sendToChat("commands.votekick.failed", target.coloredName());
                 stop();
             }
-        }, votekickDuration);
+        }, voteKickDuration);
     }
 
     @Override

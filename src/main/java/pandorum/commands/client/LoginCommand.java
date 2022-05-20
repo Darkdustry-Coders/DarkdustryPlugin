@@ -23,8 +23,8 @@ public class LoginCommand implements CommandRunner<Player> {
             return;
         }
 
-        Timekeeper vtime = loginCooldowns.get(player.uuid(), () -> new Timekeeper(loginCooldownTime));
-        if (!vtime.get()) {
+        Timekeeper cooldown = loginCooldowns.get(player.uuid(), () -> new Timekeeper(loginCooldownTime));
+        if (!cooldown.get()) {
             bundled(player, "commands.login.cooldown", secondsToMinutes(loginCooldownTime));
             return;
         }
@@ -41,6 +41,6 @@ public class LoginCommand implements CommandRunner<Player> {
         ).queue(message -> loginWaiting.put(message, player));
 
         bundled(player, "commands.login.sent");
-        vtime.reset();
+        cooldown.reset();
     }
 }

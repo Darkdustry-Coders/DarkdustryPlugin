@@ -14,8 +14,6 @@ public class OnWorldLoad implements Cons<WorldLoadEvent> {
         votesRtv.clear();
         votesVnw.clear();
 
-        mapRateVotes.clear();
-
         history.clear();
 
         mapPlayTime = 0;

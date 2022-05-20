@@ -28,7 +28,7 @@ public class Alerts {
             Utils.eachPlayerInTeam(event.team, player -> {
                 PlayerData data = datas.get(player.uuid());
                 if (data.alertsEnabled) {
-                    bundled(player, "events.alert", name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
+                    bundled(player, "events.dangerous-build", name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
                 }
             });
         }
@@ -42,7 +42,7 @@ public class Alerts {
             Utils.eachPlayerInTeam(event.player.team(), player -> {
                 PlayerData data = datas.get(player.uuid());
                 if (data.alertsEnabled) {
-                    bundled(player, "events.withdraw-thorium", name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+                    bundled(player, "events.dangerous-deposit", name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
                 }
             });
         }

@@ -25,8 +25,8 @@ public class NominateCommand implements CommandRunner<Player> {
             return;
         }
 
-        Timekeeper vtime = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
-        if (!vtime.get() && !player.admin) {
+        Timekeeper cooldown = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
+        if (!cooldown.get() && !player.admin) {
             Utils.bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
             return;
         }
@@ -41,14 +41,14 @@ public class NominateCommand implements CommandRunner<Player> {
                 VoteSession session = new VoteMapSession(currentVote, map);
                 currentVote[0] = session;
                 session.vote(player, 1);
-                vtime.reset();
+                cooldown.reset();
             }
             case "save" -> {
                 Fi save = saveDirectory.child(Strings.format("@.@", args[1], saveExtension));
                 VoteSession session = new VoteSaveSession(currentVote, save);
                 currentVote[0] = session;
                 session.vote(player, 1);
-                vtime.reset();
+                cooldown.reset();
             }
             case "load" -> {
                 Fi save = findSave(args[1]);
@@ -59,7 +59,7 @@ public class NominateCommand implements CommandRunner<Player> {
                 VoteSession session = new VoteLoadSession(currentVote, save);
                 currentVote[0] = session;
                 session.vote(player, 1);
-                vtime.reset();
+                cooldown.reset();
             }
             default -> Utils.bundled(player, "commands.nominate.incorrect-mode");
         }

@@ -49,7 +49,6 @@ public class VoteMapSession extends VoteSession {
                 WorldReloader reloader = new WorldReloader();
 
                 reloader.begin();
-
                 world.loadMap(target, target.applyRules(state.rules.mode()));
 
                 state.rules = state.map.applyRules(state.rules.mode());

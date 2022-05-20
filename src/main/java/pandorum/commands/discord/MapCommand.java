@@ -18,19 +18,13 @@ public class MapCommand implements CommandRunner<Context> {
             return;
         }
 
-
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.yellow)
                 .setTitle(":map: " + map.name())
                 .setFooter(map.width + "x" + map.height);
 
-        if (!map.author().equalsIgnoreCase("unknown")) {
-            embed.setAuthor(map.author());
-        }
-
-        if (!map.description().equalsIgnoreCase("unknown")) {
-            embed.setDescription(map.description());
-        }
+        if (!map.author().equals("unknown")) embed.setAuthor(map.author());
+        if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
         byte[] image = MapParser.parseMap(map);
         if (image.length > 0) {

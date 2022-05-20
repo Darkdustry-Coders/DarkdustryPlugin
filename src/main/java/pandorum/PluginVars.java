@@ -33,14 +33,14 @@ import static mindustry.Vars.tilesize;
 public class PluginVars {
 
     /** Максимальный размер заполняемого пространства через /fill. */
-    public static final int maxFillSize = 500;
+    public static final int maxFillSize = 512;
     /** Максимальное количество заспавненных юнитов через /spawn. */
     public static final int maxSpawnAmount = 25;
 
     /** Время кулдауна для команды /nominate. В секундах. */
     public static final int nominateCooldownTime = 300;
     /** Время кулдауна для команды /votekick. В секундах */
-    public static final int votekickCooldownTime = 300;
+    public static final int voteKickCooldownTime = 300;
     /** Время кулдауна для команды /login. В секундах */
     public static final int loginCooldownTime = 900;
     /** Время кулдауна для команды /sync. В секундах */
@@ -65,7 +65,7 @@ public class PluginVars {
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 150f;
     /** Время голосования через /votekick. В секундах. */
-    public static final float votekickDuration = 40f;
+    public static final float voteKickDuration = 40f;
     /** Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 
@@ -95,17 +95,17 @@ public class PluginVars {
     public static final Effect moveEffect = Fx.freezing;
 
     public static final VoteSession[] currentVote = {null};
-    public static final VoteKickSession[] currentVotekick = {null};
+    public static final VoteKickSession[] currentVoteKick = {null};
 
     public static final ObjectMap<String, PlayerData> datas = new ObjectMap<>();
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
-    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), votekickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
+    public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
-    public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), mapRateVotes = new Seq<>(), activeHistoryPlayers = new Seq<>();
+    public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
     public static final Seq<Command> clientAdminOnlyCommands = new Seq<>(), discordAdminOnlyCommands = new Seq<>();
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);

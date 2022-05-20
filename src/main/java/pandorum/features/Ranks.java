@@ -23,16 +23,44 @@ public class Ranks {
     public static Rank admin;
 
     public static void load() {
-        player = new Rank("", "player", "[accent]Player") {{
-            next = active = new Rank("[#ffd37f]<[white]\uE800[#ffd37f]> ", "active", "[sky]Active", new Requirements(300 * 60, 25000, 20)) {{
-                next = activePlus = new Rank("[#ffd37f]<[white]\uE813[#ffd37f]> ", "active+", "[cyan]Active+", new Requirements(750 * 60, 50000, 40)) {{
-                    next = veteran = new Rank("[#ffd37f]<[gold]\uE809[#ffd37f]> ", "veteran", "[gold]Veteran", new Requirements(1500 * 60, 100000, 100));
+        player = new Rank() {{
+            tag = "";
+            name = "player";
+            displayName = "[accent]Player";
+
+            next = active = new Rank() {{
+                tag = "[#ffd37f]<[white]\uE800[#ffd37f]> ";
+                name = "active";
+                displayName = "[sky]Active";
+                req = new Requirements(300 * 60, 25000, 20);
+
+                next = activePlus = new Rank() {{
+                    tag = "[#ffd37f]<[white]\uE813[#ffd37f]> ";
+                    name = "active+";
+                    displayName = "[cyan]Active+";
+                    req = new Requirements(750 * 60, 50000, 40);
+
+                    next = veteran = new Rank() {{
+                        tag = "[#ffd37f]<[gold]\uE809[#ffd37f]> ";
+                        name = "veteran";
+                        displayName = "[gold]Veteran";
+                        req = new Requirements(1500 * 60, 100000, 100);
+                    }};
                 }};
             }};
         }};
 
-        contributor = new Rank("[#ffd37f]<[scarlet]\uE809[#ffd37f]> ", "contributor", "[lime]Contributor");
-        admin = new Rank("[#ffd37f]<[scarlet]\uE817[#ffd37f]> ", "admin", "[scarlet]Admin");
+        contributor = new Rank() {{
+            tag = "[#ffd37f]<[scarlet]\uE811[#ffd37f]> ";
+            name = "contributor";
+            displayName = "[lime]Contributor";
+        }};
+
+        admin = new Rank() {{
+            tag = "[#ffd37f]<[scarlet]\uE817[#ffd37f]> ";
+            name = "admin";
+            displayName = "[scarlet]Admin";
+        }};
     }
 
     public static void setRank(Player player, Rank rank) {
@@ -74,31 +102,18 @@ public class Ranks {
         player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
     }
 
-
-
     public static class Rank {
         public static final Seq<Rank> ranks = new Seq<>();
 
-        public final String tag;
-        public final String name;
-        public final String displayName;
-        public final Requirements req;
-        public final int id;
+        public String tag = "";
+        public String name = "";
+        public String displayName = "";
 
+        public Requirements req = null;
         public Rank next = null;
 
-        public Rank(String tag, String name, String displayName, Requirements req) {
-            this.tag = tag;
-            this.name = name;
-            this.displayName = displayName;
-            this.req = req;
-            this.id = ranks.size;
-
+        public Rank() {
             ranks.add(this);
-        }
-
-        public Rank(String tag, String name, String displayName) {
-            this(tag, name, displayName, null);
         }
     }
 

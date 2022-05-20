@@ -17,14 +17,14 @@ public class VoteKickCommand implements CommandRunner<Player> {
             return;
         }
 
-        if (currentVotekick[0] != null) {
+        if (currentVoteKick[0] != null) {
             Utils.bundled(player, "commands.vote-already-started");
             return;
         }
 
-        Timekeeper vtime = votekickCooldowns.get(player.uuid(), () -> new Timekeeper(votekickCooldownTime));
-        if (!vtime.get() && !player.admin) {
-            Utils.bundled(player, "commands.votekick.cooldown", Utils.secondsToMinutes(votekickCooldownTime));
+        Timekeeper cooldown = voteKickCooldowns.get(player.uuid(), () -> new Timekeeper(voteKickCooldownTime));
+        if (!cooldown.get() && !player.admin) {
+            Utils.bundled(player, "commands.votekick.cooldown", Utils.secondsToMinutes(voteKickCooldownTime));
             return;
         }
 
@@ -49,10 +49,10 @@ public class VoteKickCommand implements CommandRunner<Player> {
             return;
         }
 
-        VoteKickSession session = new VoteKickSession(currentVotekick, player, target);
-        currentVotekick[0] = session;
+        VoteKickSession session = new VoteKickSession(currentVoteKick, player, target);
+        currentVoteKick[0] = session;
         session.vote(player, 1);
         Utils.bundled(target, "commands.votekick.do-not-leave", Utils.millisecondsToMinutes(kickDuration));
-        vtime.reset();
+        cooldown.reset();
     }
 }

@@ -32,8 +32,8 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         activeHistoryPlayers.remove(event.player.uuid());
         activeSpectatingPlayers.remove(event.player.uuid());
 
-        if (currentVotekick[0] != null && event.player == currentVotekick[0].target()) {
-            currentVotekick[0].stop();
+        if (currentVoteKick[0] != null && event.player == currentVoteKick[0].target()) {
+            currentVoteKick[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
             Utils.sendToChat("commands.votekick.left", event.player.coloredName(), Utils.millisecondsToMinutes(kickDuration));
         }

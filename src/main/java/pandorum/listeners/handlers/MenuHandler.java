@@ -49,7 +49,7 @@ public class MenuHandler {
                     Utils.bundled(player, "commands.admin.despawn.success.team", Utils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
-                    if (!player.dead()) player.unit().kill();
+                    Call.unitCapDeath(player.unit());
                     Utils.bundled(player, "commands.admin.despawn.success.suicide");
                 }
             }

@@ -64,15 +64,12 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
         Seq<String> missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any() || missingMods.any()) {
-            StringBuilder reason = new StringBuilder(Bundle.format("kick.incompatible-mods", findLocale(locale)));
-            if (extraMods.any()) {
-                reason.append(Bundle.format("kick.unnecessary-mods", findLocale(locale))).append("> ").append(extraMods.toString("\n> "));
-            }
+            String reason = Bundle.format("kick.incompatible-mods", findLocale(locale));
 
-            if (missingMods.any()) {
-                reason.append(Bundle.format("kick.missing-mods", findLocale(locale))).append("> ").append(missingMods.toString("\n> "));
-            }
-            con.kick(reason.toString(), 0);
+            if (extraMods.any()) reason += Bundle.format("kick.unnecessary-mods", findLocale(locale), extraMods.toString("\n> "));
+            if (missingMods.any()) reason += Bundle.format("kick.missing-mods", findLocale(locale), missingMods.toString("\n> "));
+
+            con.kick(reason, 0);
         }
 
         PlayerInfo info = netServer.admins.getInfo(uuid);

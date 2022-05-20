@@ -1,5 +1,6 @@
 package pandorum.commands.server;
 
+import arc.Core;
 import arc.func.Cons;
 import arc.util.Log;
 import arc.util.Time;
@@ -16,6 +17,6 @@ public class RestartCommand implements Cons<String[]> {
         Bot.sendEmbed(Color.red, "Сервер перезапускается...");
 
         netServer.kickAll(KickReason.serverRestarting);
-        Time.runTask(60f, () -> System.exit(2));
+        Time.runTask(60f, () -> Core.app.exit());
     }
 }
