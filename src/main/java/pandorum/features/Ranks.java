@@ -93,14 +93,13 @@ public class Ranks {
 
         if (rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
             rank = rank.next;
+            data.rank = rank.id;
 
             Call.menu(player.con, rankIncreaseMenu,
                     Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
                     Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(data.playTime), data.buildingsBuilt, data.gamesPlayed),
                     new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
             );
-
-            data.rank = rank.next.id;
         }
 
         player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);

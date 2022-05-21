@@ -16,10 +16,9 @@ import static pandorum.util.Utils.getPluginFile;
 
 public class Bundle {
 
-    public static Locale[] supportedLocales;
-
     public static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
     public static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
+    public static Locale[] supportedLocales;
 
     public static void load() {
         Fi[] files = getPluginFile().child("bundles").list();
