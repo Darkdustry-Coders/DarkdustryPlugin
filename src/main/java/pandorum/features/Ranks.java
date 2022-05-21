@@ -51,7 +51,7 @@ public class Ranks {
         }};
 
         contributor = new Rank() {{
-            tag = "[#ffd37f]<[scarlet]\uE811[#ffd37f]> ";
+            tag = "[#ffd37f]<[yellow]\uE80F[#ffd37f]> ";
             name = "contributor";
             displayName = "[lime]Contributor";
         }};
