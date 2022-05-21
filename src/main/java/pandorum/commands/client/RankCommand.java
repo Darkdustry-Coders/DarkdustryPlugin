@@ -5,6 +5,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
+import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 import pandorum.util.Utils;
 
@@ -22,7 +23,7 @@ public class RankCommand implements CommandRunner<Player> {
         }
 
         PlayerData data = datas.get(target.uuid());
-        Rank rank = data.rank, next = rank.next;
+        Rank rank = Ranks.getRank(data.rank), next = rank.next;
 
         StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
 

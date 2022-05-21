@@ -10,6 +10,7 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
+import pandorum.features.Ranks;
 import pandorum.util.Utils;
 
 import java.awt.*;
@@ -32,7 +33,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         datas.put(event.player.uuid(), data);
 
-        String name = data.rank.tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
+        String name = Ranks.getRank(data.rank).tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
         event.player.name(name);
 
         Log.info("@ зашел на сервер. [@]", name, event.player.uuid());

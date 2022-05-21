@@ -63,8 +63,12 @@ public class Ranks {
         }};
     }
 
+    public static Rank getRank(int id) {
+        return Rank.ranks.get(id);
+    }
+
     public static void setRank(Player player, Rank rank) {
-        datas.get(player.uuid()).rank = rank;
+        datas.get(player.uuid()).rank = rank.id;
         setRank(player.uuid(), rank);
     }
 
@@ -72,7 +76,7 @@ public class Ranks {
         PlayerData data = getPlayerData(uuid);
         if (data == null) return;
 
-        data.rank = rank;
+        data.rank = rank.id;
 
         if (rank.req != null) {
             data.playTime = rank.req.playTime;
@@ -85,7 +89,7 @@ public class Ranks {
 
     public static void updateRank(Player player) {
         PlayerData data = datas.get(player.uuid());
-        Rank rank = data.rank;
+        Rank rank = getRank(data.rank);
 
         if (rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
             rank = rank.next;
@@ -96,7 +100,7 @@ public class Ranks {
                     new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
             );
 
-            data.rank = rank;
+            data.rank = rank.next.id;
         }
 
         player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
@@ -109,10 +113,13 @@ public class Ranks {
         public String name = "";
         public String displayName = "";
 
+        public int id;
+
         public Requirements req = null;
         public Rank next = null;
 
         public Rank() {
+            this.id = ranks.size;
             ranks.add(this);
         }
     }
