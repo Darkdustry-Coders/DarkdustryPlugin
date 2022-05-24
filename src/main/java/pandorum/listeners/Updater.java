@@ -33,7 +33,7 @@ public class Updater implements Runnable {
         data.playTime++;
 
         Rank rank = getRank(data.rank);
-        if (rank.hasNext() && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+        if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
             rank = rank.next;
             data.rank = rank.id;
 

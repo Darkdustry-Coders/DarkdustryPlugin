@@ -56,15 +56,12 @@ public class PluginVars {
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
     /** Таймер для оповещения об опасных блоков. */
-    public static final float alertsTimer = 240f;
-
-    /** Таймер для сохранения всех данных игроков в базу данных. */
-    public static final float databaseSaveTimer = 60f * 60f;
+    public static final float alertsTimer = 150f;
 
     /** Время голосования через /nominate. В секундах. */
-    public static final float voteDuration = 150f;
+    public static final float voteDuration = 120f;
     /** Время голосования через /votekick. В секундах. */
-    public static final float voteKickDuration = 40f;
+    public static final float voteKickDuration = 45f;
     /** Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 

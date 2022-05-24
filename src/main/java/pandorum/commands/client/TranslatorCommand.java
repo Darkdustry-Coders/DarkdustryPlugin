@@ -6,6 +6,7 @@ import pandorum.data.PlayerData;
 
 import static pandorum.PluginVars.codeLanguages;
 import static pandorum.data.Database.getPlayerData;
+import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.Search.findTranslatorLocale;
 import static pandorum.util.Utils.bundled;
 
@@ -22,10 +23,12 @@ public class TranslatorCommand implements CommandRunner<Player> {
             }
             case "off" -> {
                 data.locale = "off";
+                setPlayerData(player.uuid(), data);
                 bundled(player, "commands.tr.disabled");
             }
             case "auto" -> {
                 data.locale = "auto";
+                setPlayerData(player.uuid(), data);
                 bundled(player, "commands.tr.auto");
             }
             default -> {
@@ -36,6 +39,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 }
 
                 data.locale = locale;
+                setPlayerData(player.uuid(), data);
                 bundled(player, "commands.tr.changed", locale, codeLanguages.get(locale));
             }
         }

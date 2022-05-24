@@ -92,8 +92,8 @@ public class Ranks {
             ranks.add(this);
         }
 
-        public boolean hasNext() {
-            return next != null && next.req != null;
+        public boolean checkNext(int playTime, int buildingsBuilt, int gamesPlayed) {
+            return next != null && next.req != null && next.req.check(playTime, buildingsBuilt, gamesPlayed);
         }
     }
 

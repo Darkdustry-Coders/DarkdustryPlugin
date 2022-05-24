@@ -8,7 +8,6 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message.MentionType;
@@ -20,7 +19,6 @@ import java.awt.*;
 import java.util.EnumSet;
 
 import static mindustry.Vars.netServer;
-import static mindustry.Vars.state;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.discordCommands;
 
@@ -63,10 +61,7 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        OnlineStatus status = state.isMenu() ? OnlineStatus.DO_NOT_DISTURB : state.isPaused() ? OnlineStatus.IDLE : OnlineStatus.ONLINE;
         Activity activity = Activity.playing(netServer.admins.getPlayerLimit() > 0 ? Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()) : Strings.format("@ игроков онлайн", Groups.player.size()));
-
-        jda.getPresence().setStatus(status);
         jda.getPresence().setActivity(activity);
     }
 
