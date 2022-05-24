@@ -21,7 +21,6 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Config;
 import pandorum.components.Gamemode;
-import pandorum.data.PlayerData;
 import pandorum.features.antigrief.history.HistoryMap;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
@@ -96,8 +95,6 @@ public class PluginVars {
 
     public static final VoteSession[] currentVote = {null};
     public static final VoteKickSession[] currentVoteKick = {null};
-
-    public static final ObjectMap<String, PlayerData> datas = new ObjectMap<>();
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();

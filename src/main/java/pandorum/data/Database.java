@@ -23,7 +23,9 @@ public class Database {
         try (Jedis jedis = jedisPool.getResource()) {
             return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception e) {
-            return null;
+            PlayerData data = new PlayerData();
+            setPlayerData(uuid, data);
+            return data;
         }
     }
 

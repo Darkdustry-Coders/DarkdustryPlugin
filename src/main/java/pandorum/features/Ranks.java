@@ -1,17 +1,10 @@
 package pandorum.features;
 
 import arc.struct.Seq;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
-import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
-import pandorum.util.Utils;
 
-import static pandorum.PluginVars.datas;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
-import static pandorum.listeners.handlers.MenuHandler.rankIncreaseMenu;
-import static pandorum.util.Search.findLocale;
 
 public class Ranks {
 
@@ -67,11 +60,6 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
-    public static void setRank(Player player, Rank rank) {
-        datas.get(player.uuid()).rank = rank.id;
-        setRank(player.uuid(), rank);
-    }
-
     public static void setRank(String uuid, Rank rank) {
         PlayerData data = getPlayerData(uuid);
         if (data == null) return;
@@ -85,24 +73,6 @@ public class Ranks {
         }
 
         setPlayerData(uuid, data);
-    }
-
-    public static void updateRank(Player player) {
-        PlayerData data = datas.get(player.uuid());
-        Rank rank = getRank(data.rank);
-
-        if (rank.next != null && rank.next.req != null && rank.next.req.check(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-            rank = rank.next;
-            data.rank = rank.id;
-
-            Call.menu(player.con, rankIncreaseMenu,
-                    Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
-                    Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(data.playTime), data.buildingsBuilt, data.gamesPlayed),
-                    new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
-            );
-        }
-
-        player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
     }
 
     public static class Rank {
@@ -120,6 +90,10 @@ public class Ranks {
         public Rank() {
             this.id = ranks.size;
             ranks.add(this);
+        }
+
+        public boolean hasNext() {
+            return next != null && next.req != null;
         }
     }
 

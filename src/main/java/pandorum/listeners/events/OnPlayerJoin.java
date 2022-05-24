@@ -15,10 +15,8 @@ import pandorum.util.Utils;
 
 import java.awt.*;
 
-import static pandorum.PluginVars.datas;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.data.Database.getPlayerData;
-import static pandorum.data.Database.setPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.welcomeMenu;
 import static pandorum.util.Search.findLocale;
 
@@ -26,12 +24,6 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
     public void get(PlayerJoin event) {
         PlayerData data = getPlayerData(event.player.uuid());
-        if (data == null) {
-            data = new PlayerData();
-            setPlayerData(event.player.uuid(), data);
-        }
-
-        datas.put(event.player.uuid(), data);
 
         String name = Ranks.getRank(data.rank).tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
         event.player.name(name);

@@ -8,6 +8,7 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message.MentionType;
@@ -19,6 +20,7 @@ import java.awt.*;
 import java.util.EnumSet;
 
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.state;
 import static pandorum.PluginVars.config;
 import static pandorum.PluginVars.discordCommands;
 
@@ -40,10 +42,8 @@ public class Bot {
             botChannel = guild.getTextChannelById(config.discordBotChannelID);
             adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
 
-            // Бот не должен иметь права на упоминание участников
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
-            // Изменяем никнейм бота на [prefix] Nickname
             guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
             Log.info("[Darkdustry] Бот успешно запущен...");
@@ -63,11 +63,15 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        String activity = netServer.admins.getPlayerLimit() > 0 ? Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()) : Strings.format("@ игроков онлайн", Groups.player.size());
-        jda.getPresence().setActivity(Activity.playing(activity));
+        OnlineStatus status = state.isMenu() ? OnlineStatus.DO_NOT_DISTURB : state.isPaused() ? OnlineStatus.IDLE : OnlineStatus.ONLINE;
+        Activity activity = Activity.playing(netServer.admins.getPlayerLimit() > 0 ? Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()) : Strings.format("@ игроков онлайн", Groups.player.size()));
+
+        jda.getPresence().setStatus(status);
+        jda.getPresence().setActivity(activity);
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
+        channel.sendTyping().queue();
         channel.sendMessage(Strings.format(text, args)).queue();
     }
 
@@ -76,6 +80,7 @@ public class Bot {
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
+        channel.sendTyping().queue();
         channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(text, args)).build()).queue();
     }
 

@@ -5,13 +5,13 @@ import mindustry.gen.Player;
 import pandorum.data.PlayerData;
 
 import static pandorum.PluginVars.codeLanguages;
-import static pandorum.PluginVars.datas;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.util.Search.findTranslatorLocale;
 import static pandorum.util.Utils.bundled;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        PlayerData data = datas.get(player.uuid());
+        PlayerData data = getPlayerData(player.uuid());
 
         switch (args[0].toLowerCase()) {
             case "current" -> bundled(player, "commands.tr.current", data.locale);

@@ -9,7 +9,7 @@ import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 import pandorum.util.Utils;
 
-import static pandorum.PluginVars.datas;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.rankInfoMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
@@ -22,7 +22,7 @@ public class RankCommand implements CommandRunner<Player> {
             return;
         }
 
-        PlayerData data = datas.get(target.uuid());
+        PlayerData data = getPlayerData(target.uuid());
         Rank rank = Ranks.getRank(data.rank), next = rank.next;
 
         StringBuilder builder = new StringBuilder(Bundle.format("commands.rank.menu.content", findLocale(player.locale), rank.tag, rank.displayName));
@@ -40,7 +40,6 @@ public class RankCommand implements CommandRunner<Player> {
                     next.req.gamesPlayed
             ));
         }
-
 
         Call.menu(player.con, rankInfoMenu,
                 Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),

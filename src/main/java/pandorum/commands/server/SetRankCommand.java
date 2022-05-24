@@ -2,12 +2,11 @@ package pandorum.commands.server;
 
 import arc.func.Cons;
 import arc.util.Log;
-import mindustry.gen.Player;
+import mindustry.net.Administration.PlayerInfo;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 
-import static pandorum.util.Search.findPlayer;
-import static pandorum.util.Search.findRank;
+import static pandorum.util.Search.*;
 
 public class SetRankCommand implements Cons<String[]> {
     public void get(String[] args) {
@@ -17,13 +16,13 @@ public class SetRankCommand implements Cons<String[]> {
             return;
         }
 
-        Player target = findPlayer(args[1]);
-        if (target == null) {
+        PlayerInfo info = findPlayerInfo(args[1]);
+        if (info == null) {
             Log.err("Игрок '@' не найден...", args[1]);
             return;
         }
 
-        Ranks.setRank(target, rank);
-        Log.info("Ранг игрока '@' успешно изменен на '@'", target.name, rank.name);
+        Ranks.setRank(info.id, rank);
+        Log.info("Ранг игрока '@' успешно изменен на '@'", info.lastName, rank.name);
     }
 }

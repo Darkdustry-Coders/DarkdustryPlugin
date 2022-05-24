@@ -8,7 +8,6 @@ import arc.util.Strings;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
 import pandorum.components.Gamemode;
-import pandorum.data.PlayerData;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
 import pandorum.util.Utils;
@@ -17,14 +16,10 @@ import java.awt.*;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.*;
-import static pandorum.data.Database.setPlayerData;
 
 public class OnPlayerLeave implements Cons<PlayerLeave> {
 
     public void get(PlayerLeave event) {
-        PlayerData data = datas.remove(event.player.uuid());
-        setPlayerData(event.player.uuid(), data);
-
         Log.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
         Utils.sendToChat("events.player.leave", event.player.name);
         Bot.sendEmbed(Color.red, "@ покинул сервер.", Strings.stripColors(event.player.name));

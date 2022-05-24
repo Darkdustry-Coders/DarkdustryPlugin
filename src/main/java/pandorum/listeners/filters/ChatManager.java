@@ -12,6 +12,7 @@ import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.*;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.text;
 import static pandorum.util.Search.findTranslatorLocale;
 
@@ -29,7 +30,7 @@ public class ChatManager implements ChatFilter {
         author.sendMessage(formatted, author, text);
 
         Groups.player.each(player -> player != author, player -> {
-            PlayerData data = datas.get(player.uuid());
+            PlayerData data = getPlayerData(player.uuid());
             if (data.locale.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;

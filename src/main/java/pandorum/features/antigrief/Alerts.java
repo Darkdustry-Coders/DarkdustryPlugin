@@ -12,6 +12,7 @@ import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.util.Utils.bundled;
 
 public class Alerts {
@@ -26,7 +27,7 @@ public class Alerts {
         if (isDangerousBuild(event.builder.buildPlan().block) && isNearCore(event.team, event.tile) && interval.get(0, alertsTimer)) {
             String name = Utils.notNullElse(event.builder.getControllerName(), Icons.get(event.builder.type.name));
             Utils.eachPlayerInTeam(event.team, player -> {
-                PlayerData data = datas.get(player.uuid());
+                PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
                     bundled(player, "events.dangerous-build", name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
                 }
@@ -40,7 +41,7 @@ public class Alerts {
         if (isDangerousDeposit(event.tile.block, event.item) && isNearCore(event.player.team(), event.tile)) {
             String name = event.player.coloredName();
             Utils.eachPlayerInTeam(event.player.team(), player -> {
-                PlayerData data = datas.get(player.uuid());
+                PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
                     bundled(player, "events.dangerous-deposit", name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
                 }

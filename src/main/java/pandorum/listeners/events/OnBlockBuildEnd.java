@@ -6,7 +6,10 @@ import pandorum.data.PlayerData;
 import pandorum.features.antigrief.history.entry.BlockEntry;
 import pandorum.features.antigrief.history.entry.HistoryEntry;
 
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.config;
+import static pandorum.PluginVars.history;
+import static pandorum.data.Database.getPlayerData;
+import static pandorum.data.Database.setPlayerData;
 
 public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
 
@@ -17,7 +20,8 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
         }
 
         if (!event.unit.isPlayer() || event.breaking) return;
-        PlayerData data = datas.get(event.unit.getPlayer().uuid());
+        PlayerData data = getPlayerData(event.unit.getPlayer().uuid());
         data.buildingsBuilt++;
+        setPlayerData(event.unit.getPlayer().uuid(), data);
     }
 }

@@ -12,7 +12,8 @@ import pandorum.features.Ranks.Rank;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.datas;
+import static pandorum.data.Database.getPlayerData;
+import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
@@ -22,8 +23,9 @@ public class MenuHandler {
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
-                PlayerData data = datas.get(player.uuid());
+                PlayerData data = getPlayerData(player.uuid());
                 data.welcomeMessage = false;
+                setPlayerData(player.uuid(), data);
                 Utils.bundled(player, "events.welcome.disabled");
             }
         });

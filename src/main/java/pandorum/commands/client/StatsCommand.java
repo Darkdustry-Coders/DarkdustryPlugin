@@ -9,7 +9,7 @@ import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 import pandorum.util.Utils;
 
-import static pandorum.PluginVars.datas;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.statsMenu;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
@@ -23,7 +23,7 @@ public class StatsCommand implements CommandRunner<Player> {
             return;
         }
 
-        PlayerData data = datas.get(target.uuid());
+        PlayerData data = getPlayerData(target.uuid());
         Rank rank = Ranks.getRank(data.rank);
 
         Call.menu(player.con, statsMenu,
