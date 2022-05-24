@@ -66,7 +66,6 @@ public class Bot {
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {
-        channel.sendTyping().queue();
         channel.sendMessage(Strings.format(text, args)).queue();
     }
 
@@ -75,7 +74,6 @@ public class Bot {
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
-        channel.sendTyping().queue();
         channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(text, args)).build()).queue();
     }
 

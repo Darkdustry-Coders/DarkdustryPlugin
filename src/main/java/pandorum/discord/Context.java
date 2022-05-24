@@ -32,7 +32,6 @@ public class Context {
     }
 
     public void sendEmbed(MessageEmbed embed) {
-        channel.sendTyping().queue();
         channel.sendMessageEmbeds(embed).queue();
     }
 
