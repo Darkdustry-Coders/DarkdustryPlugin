@@ -31,13 +31,10 @@ public class StatusCommand implements CommandRunner<Context> {
                 .addField("Волна:", String.valueOf(state.wave), true)
                 .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                 .addField("Сервер онлайн уже:", formatDuration(serverUpTime * 1000L), true)
-                .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true);
+                .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true)
+                .setImage("attachment://minimap.png");
 
         byte[] image = MapParser.parseTiles(world.tiles);
-        if (image.length > 0) {
-            embed.setImage("attachment://minimap.png");
-        }
-
         context.channel.sendMessageEmbeds(embed.build()).addFile(image, "minimap.png").queue();
     }
 }

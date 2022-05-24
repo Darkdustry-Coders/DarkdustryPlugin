@@ -34,7 +34,6 @@ public class MapParser {
             for (Block block : content.blocks()) {
                 block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0));
                 block.mapColor.a = 1f;
-                block.hasColor = true;
             }
         } catch (Exception e) {
             Log.err(e);

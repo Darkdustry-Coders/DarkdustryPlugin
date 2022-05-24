@@ -21,16 +21,13 @@ public class MapCommand implements CommandRunner<Context> {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.yellow)
                 .setTitle(":map: " + map.name())
-                .setFooter(map.width + "x" + map.height);
+                .setFooter(map.width + "x" + map.height)
+                .setImage("attachment://map.png");;
 
         if (!map.author().equals("unknown")) embed.setAuthor(map.author());
         if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
         byte[] image = MapParser.parseMap(map);
-        if (image.length > 0) {
-            embed.setImage("attachment://map.png");
-        }
-
         context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(image, "map.png").queue();
     }
 }
