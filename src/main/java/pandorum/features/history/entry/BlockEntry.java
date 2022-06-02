@@ -1,4 +1,4 @@
-package pandorum.features.antigrief.history.entry;
+package pandorum.features.history.entry;
 
 import arc.util.Time;
 import mindustry.game.EventType.BlockBuildEndEvent;
@@ -33,12 +33,6 @@ public class BlockEntry implements HistoryEntry {
         String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
-        if (breaking) {
-            return Bundle.format("history.block.deconstruct", locale, name, date);
-        }
-
-        String base = Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date);
-        if (block.rotate) base += Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]);
-        return base;
+        return breaking ? Bundle.format("history.block.deconstruct", locale, name, date) : Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date) + (block.rotate ? Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]) : "");
     }
 }

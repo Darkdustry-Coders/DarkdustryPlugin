@@ -21,8 +21,8 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Config;
 import pandorum.components.Gamemode;
-import pandorum.features.antigrief.history.HistoryMap;
-import pandorum.features.antigrief.history.entry.HistoryEntry;
+import pandorum.features.history.HistoryMap;
+import pandorum.features.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 import redis.clients.jedis.JedisPool;
@@ -132,4 +132,12 @@ public class PluginVars {
     public static Config config;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
+
+    public static boolean alertsEnabled() {
+        return defaultModes.contains(config.mode);
+    }
+
+    public static boolean historyEnabled() {
+        return defaultModes.contains(config.mode);
+    }
 }

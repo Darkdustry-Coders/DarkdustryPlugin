@@ -1,7 +1,7 @@
 package pandorum;
 
-import arc.Core;
 import arc.util.CommandHandler;
+import arc.util.Log;
 import mindustry.mod.Plugin;
 
 import static pandorum.PluginVars.clientCommands;
@@ -11,7 +11,19 @@ public class PandorumPlugin extends Plugin {
 
     @Override
     public void init() {
-        Core.app.addListener(new Main());
+        Log.info("[Darkdustry] Инициализация плагина...");
+
+        // Сначала загружаем конфигурацию
+        Loader.loadConfig();
+        Loader.load();
+        Loader.init();
+
+        // Регистрируем команды
+        Loader.registerClientCommands();
+        Loader.registerDiscordCommands();
+        Loader.registerServerCommands();
+
+        Log.info("[Darkdustry] Инициализация плагина завершена.");
     }
 
     @Override

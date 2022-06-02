@@ -1,4 +1,4 @@
-package pandorum.features.antigrief.history.entry;
+package pandorum.features.history.entry;
 
 import arc.util.Time;
 import mindustry.game.EventType.DepositEvent;

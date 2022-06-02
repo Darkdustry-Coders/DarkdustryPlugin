@@ -1,4 +1,4 @@
-package pandorum.features.antigrief.history.entry;
+package pandorum.features.history.entry;
 
 import arc.graphics.Color;
 import arc.util.Pack;
@@ -42,14 +42,12 @@ public class ConfigEntry implements HistoryEntry {
     public final String name;
     public final short blockID;
     public final Object value;
-    public final boolean connect;
     public final long time;
 
-    public ConfigEntry(ConfigEvent event, boolean connect) {
+    public ConfigEntry(ConfigEvent event) {
         this.name = event.player.name;
         this.blockID = event.tile.block.id;
         this.value = event.tile instanceof PowerNodeBuild build ? Pack.longInt(build.power.links.size, (int) event.value) : event.value;
-        this.connect = connect;
         this.time = Time.millis();
     }
 
@@ -61,7 +59,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof PowerNode) {
             Tile tile = world.tile(Pack.rightInt((long) value));
-            return connect ? Bundle.format("history.config.power-node.connect", locale, name, Icons.get(block.name), tile.x, tile.y, date) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, date);
+            return Bundle.format("history.config.power-node", locale, name, Icons.get(block.name), tile.x, tile.y, date);
         }
 
         if (block instanceof ItemBridge || block instanceof MassDriver || block instanceof PayloadMassDriver) {

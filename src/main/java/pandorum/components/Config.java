@@ -1,7 +1,5 @@
 package pandorum.components;
 
-import arc.struct.Seq;
-
 public class Config {
 
     /**
@@ -43,8 +41,4 @@ public class Config {
      * ID роли администраторов в Discord.
      */
     public long discordAdminRoleID = 0L;
-
-    public boolean historyEnabled() {
-        return Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower).contains(mode);
-    }
 }

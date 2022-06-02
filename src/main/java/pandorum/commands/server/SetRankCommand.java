@@ -6,7 +6,8 @@ import mindustry.net.Administration.PlayerInfo;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
 
-import static pandorum.util.Search.*;
+import static pandorum.util.Search.findPlayerInfo;
+import static pandorum.util.Search.findRank;
 
 public class SetRankCommand implements Cons<String[]> {
     public void get(String[] args) {

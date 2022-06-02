@@ -2,16 +2,15 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.WithdrawEvent;
-import pandorum.features.antigrief.history.entry.HistoryEntry;
-import pandorum.features.antigrief.history.entry.WithdrawEntry;
+import pandorum.features.history.entry.HistoryEntry;
+import pandorum.features.history.entry.WithdrawEntry;
 
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.*;
 
 public class OnWithdraw implements Cons<WithdrawEvent> {
 
     public void get(WithdrawEvent event) {
-        if (config.historyEnabled()) {
+        if (historyEnabled()) {
             HistoryEntry entry = new WithdrawEntry(event);
             history.putLinkedTiles(event.tile.tile, entry);
         }
