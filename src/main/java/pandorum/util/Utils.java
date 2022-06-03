@@ -75,7 +75,7 @@ public class Utils {
         return items.toString();
     }
 
-    public static String teamsList() {ыф
+    public static String teamsList() {
         StringBuilder teams = new StringBuilder();
         for (Team team : Team.baseTeams) teams.append(" [white]").append(coloredTeam(team));
         return teams.toString();
