@@ -1,7 +1,6 @@
 package pandorum.features.history.entry;
 
 import arc.graphics.Color;
-import arc.util.Pack;
 import arc.util.Time;
 import mindustry.entities.units.UnitCommand;
 import mindustry.game.EventType.ConfigEvent;
@@ -22,7 +21,6 @@ import mindustry.world.blocks.payloads.PayloadMassDriver;
 import mindustry.world.blocks.payloads.PayloadSource;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.power.PowerNode;
-import mindustry.world.blocks.power.PowerNode.PowerNodeBuild;
 import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.sandbox.LiquidSource;
 import mindustry.world.blocks.storage.Unloader;
@@ -47,7 +45,7 @@ public class ConfigEntry implements HistoryEntry {
     public ConfigEntry(ConfigEvent event) {
         this.name = event.player.name;
         this.blockID = event.tile.block.id;
-        this.value = event.tile instanceof PowerNodeBuild build ? Pack.longInt(build.power.links.size, (int) event.value) : event.value;
+        this.value = event.value;
         this.time = Time.millis();
     }
 
@@ -58,7 +56,7 @@ public class ConfigEntry implements HistoryEntry {
         Locale locale = findLocale(player.locale);
 
         if (block instanceof PowerNode) {
-            Tile tile = world.tile(Pack.rightInt((long) value));
+            Tile tile = world.tile((int) value);
             return Bundle.format("history.config.power-node", locale, name, Icons.get(block.name), tile.x, tile.y, date);
         }
 
@@ -148,6 +146,6 @@ public class ConfigEntry implements HistoryEntry {
             return Bundle.format("history.config.default", locale, name, Icons.get(block.name), date);
         }
 
-        return Bundle.format("history.config.changed", locale, name, Icons.get(block.name), date);
+        return Bundle.format("history.config.default", locale, name, Icons.get(block.name), date);
     }
 }

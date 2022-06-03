@@ -22,7 +22,6 @@ import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Config;
 import pandorum.components.Gamemode;
 import pandorum.features.history.HistoryMap;
-import pandorum.features.history.entry.HistoryEntry;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 import redis.clients.jedis.JedisPool;
@@ -108,7 +107,7 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    public static final HistoryMap<HistoryEntry> history = new HistoryMap<>(maxTileHistoryCapacity, allHistorySize);
+    public static final HistoryMap history = new HistoryMap(maxTileHistoryCapacity, allHistorySize);
 
     /** Блоки, которые опасно строить рядом с ядром. */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();

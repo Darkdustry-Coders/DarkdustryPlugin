@@ -14,18 +14,18 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class HistoryMap<T extends HistoryEntry> {
+public class HistoryMap {
 
     public final int maxTileHistoryCapacity;
-    public final AsyncCache<TileKey, T> historyCache;
+    public final AsyncCache<TileKey, HistoryEntry> historyCache;
 
     public HistoryMap(int maxTileHistoryCapacity, int allHistorySize) {
         this.maxTileHistoryCapacity = maxTileHistoryCapacity;
         this.historyCache = Caffeine.newBuilder().maximumSize(allHistorySize).buildAsync();
     }
 
-    public void getAll(int x, int y, Cons<Seq<T>> valuesFunction, Cons<Seq<TileKey>> keysFunction) {
-        Seq<T> values = new Seq<>();
+    public void getAll(int x, int y, Cons<Seq<HistoryEntry>> valuesFunction, Cons<Seq<TileKey>> keysFunction) {
+        Seq<HistoryEntry> values = new Seq<>();
         values.setSize(maxTileHistoryCapacity);
 
         Seq<TileKey> keys = new Seq<>();
@@ -45,14 +45,14 @@ public class HistoryMap<T extends HistoryEntry> {
         if (keysFunction != null) keysFunction.get(keys.filter(Objects::nonNull));
     }
 
-    public void getAll(int x, int y, Cons<Seq<T>> valuesFunction) {
+    public void getAll(int x, int y, Cons<Seq<HistoryEntry>> valuesFunction) {
         getAll(x, y, valuesFunction, null);
     }
 
-    public void put(int x, int y, T cacheEntry) {
+    public void put(int x, int y, HistoryEntry entry) {
         getAll(x, y, values -> {
             int serialNumber = Mathf.clamp(values.size, 0, maxTileHistoryCapacity - 1);
-            historyCache.put(new TileKey(x, y, serialNumber), CompletableFuture.completedFuture(cacheEntry));
+            historyCache.put(new TileKey(x, y, serialNumber), CompletableFuture.completedFuture(entry));
         }, keys -> {
             if (keys.size < maxTileHistoryCapacity) return;
 
@@ -61,12 +61,12 @@ public class HistoryMap<T extends HistoryEntry> {
         });
     }
 
-    public void put(Tile tile, T cacheEntry) {
-        Core.app.post(() -> put(tile.x, tile.y, cacheEntry));
+    public void put(Tile tile, HistoryEntry entry) {
+        Core.app.post(() -> put(tile.x, tile.y, entry));
     }
 
-    public void putLinkedTiles(Tile tile, T cacheEntry) {
-        tile.getLinkedTiles(t -> put(t, cacheEntry));
+    public void putLinkedTiles(Tile tile, HistoryEntry entry) {
+        tile.getLinkedTiles(t -> put(t, entry));
     }
 
     public void clear() {

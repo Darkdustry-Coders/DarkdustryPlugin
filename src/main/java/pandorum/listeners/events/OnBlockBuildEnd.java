@@ -20,6 +20,7 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
         }
 
         if (!event.unit.isPlayer() || event.breaking) return;
+
         PlayerData data = getPlayerData(event.unit.getPlayer().uuid());
         data.buildingsBuilt++;
         setPlayerData(event.unit.getPlayer().uuid(), data);
