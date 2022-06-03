@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
+import pandorum.Loader;
 
 import java.awt.*;
 import java.util.EnumSet;
@@ -43,6 +45,9 @@ public class Bot {
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
             guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
+
+            discordCommands = new CommandHandler(config.discordBotPrefix);
+            Loader.registerDiscordCommands();
 
             Log.info("[Darkdustry] Бот успешно запущен...");
         } catch (Exception e) {

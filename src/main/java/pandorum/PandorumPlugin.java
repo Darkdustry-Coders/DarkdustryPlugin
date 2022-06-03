@@ -18,21 +18,18 @@ public class PandorumPlugin extends Plugin {
         Loader.load();
         Loader.init();
 
-        // Регистрируем команды
-        Loader.registerClientCommands();
-        Loader.registerDiscordCommands();
-        Loader.registerServerCommands();
-
         Log.info("[Darkdustry] Инициализация плагина завершена.");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
         clientCommands = handler;
+        Loader.registerClientCommands(clientCommands);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
         serverCommands = handler;
+        Loader.registerServerCommands(serverCommands);
     }
 }

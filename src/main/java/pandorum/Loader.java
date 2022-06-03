@@ -132,7 +132,7 @@ public class Loader {
         Timer.schedule(new Updater(), 0f, 1f);
     }
 
-    public static void registerClientCommands() {
+    public static void registerClientCommands(CommandHandler clientCommands) {
         ClientCommandsHandler handler = new ClientCommandsHandler(clientCommands);
 
         handler.register("help", "[page]", false, new HelpCommand());
@@ -176,7 +176,6 @@ public class Loader {
     }
 
     public static void registerDiscordCommands() {
-        discordCommands = new CommandHandler(config.discordBotPrefix);
         DiscordCommandsHandler handler = new DiscordCommandsHandler(discordCommands);
 
         handler.register("help", "Список всех команд.", false, new pandorum.commands.discord.HelpCommand());
@@ -190,7 +189,7 @@ public class Loader {
         handler.register("removemap", "<название...>", "Удалить карту с сервера.", true, new RemoveMapCommand());
     }
 
-    public static void registerServerCommands() {
+    public static void registerServerCommands(CommandHandler serverCommands) {
         ServerCommandsHandler handler = new ServerCommandsHandler(serverCommands);
 
         handler.register("help", "List of all commands.", new pandorum.commands.server.HelpCommand());
