@@ -66,7 +66,7 @@ public class Authme {
             PlayerInfo info = player.getInfo();
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(Color.yellow)
-                    .setTitle(":information_source: Информация об игроке")
+                    .setTitle("Информация об игроке")
                     .addField("Никнейм:", info.lastName, true)
                     .addField("UUID:", info.id, true)
                     .addField("IP адрес:", info.lastIP, true)

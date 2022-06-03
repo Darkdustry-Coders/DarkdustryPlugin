@@ -58,7 +58,7 @@ public class MapParser {
     }
 
     public static BufferedImage generatePreview(InputStream input) throws IOException {
-        try (InputStream ifs = new InflaterInputStream(input); CounterInputStream counter = new CounterInputStream(ifs); DataInputStream stream = new DataInputStream(counter)) {
+        try (CounterInputStream counter = new CounterInputStream(new InflaterInputStream(input)); DataInputStream stream = new DataInputStream(counter)) {
             SaveIO.readHeader(stream);
             SaveVersion version = SaveIO.getSaveWriter(stream.readInt());
             StringMap meta = new StringMap();
