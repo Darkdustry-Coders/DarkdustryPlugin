@@ -9,10 +9,11 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.components.Gamemode;
+import pandorum.util.Utils;
 
 import static pandorum.PluginVars.clientAdminOnlyCommands;
 import static pandorum.PluginVars.config;
-import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.isAdmin;
 import static pandorum.util.Utils.bundled;
 
 public class ClientCommandsHandler {
@@ -26,7 +27,7 @@ public class ClientCommandsHandler {
     public void register(String text, String params, boolean adminOnly, Seq<Gamemode> modes, CommandRunner<Player> runner) {
         if (!modes.contains(config.mode)) return;
         Command command = handler.<Player>register(text, params, Bundle.get(Strings.format("commands.@.description", text), Bundle.defaultLocale()), (args, player) -> {
-            if (adminOnly && !adminCheck(player)) {
+            if (adminOnly && !Utils.isAdmin(player)) {
                 bundled(player, "commands.permission-denied");
                 return;
             }

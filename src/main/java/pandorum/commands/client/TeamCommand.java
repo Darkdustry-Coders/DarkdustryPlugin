@@ -28,6 +28,7 @@ public class TeamCommand implements CommandRunner<Player> {
             activeSpectatingPlayers.remove(target.uuid());
             Utils.bundled(target, "commands.admin.spectate.success.disabled");
         }
+
         target.team(team);
         Utils.bundled(target, "commands.admin.team.success", Utils.coloredTeam(team));
         if (target != player)

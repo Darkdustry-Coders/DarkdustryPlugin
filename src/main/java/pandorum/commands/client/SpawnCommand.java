@@ -2,6 +2,7 @@ package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
+import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
@@ -20,7 +21,7 @@ public class SpawnCommand implements CommandRunner<Player> {
         }
 
         UnitType type = findUnit(args[0]);
-        if (type == null) {
+        if (type == null || type == UnitTypes.block) {
             Utils.bundled(player, "commands.unit-not-found", Icons.unitsList());
             return;
         }

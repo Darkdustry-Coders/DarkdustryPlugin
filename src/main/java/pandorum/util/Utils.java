@@ -76,11 +76,11 @@ public class Utils {
         return Utils.notNullElse(unit.getControllerName(), Icons.get(unit.type.name));
     }
 
-    public static boolean adminCheck(Player player) {
+    public static boolean isAdmin(Player player) {
         return player != null && player.admin;
     }
 
-    public static boolean adminCheck(Member member) {
+    public static boolean isAdmin(Member member) {
         return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
     }
 

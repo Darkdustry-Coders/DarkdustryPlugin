@@ -3,7 +3,7 @@ package pandorum.components;
 public class Config {
 
     /**
-     * IP адрес хаба. Порт - 6567 (по умолчанию).
+     * IP адрес Хаба. Порт - 6567 (по умолчанию).
      */
     public String hubIp = "darkdustry.ml";
 

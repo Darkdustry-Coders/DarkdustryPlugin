@@ -10,7 +10,7 @@ import pandorum.components.Bundle;
 import pandorum.util.Utils;
 
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.isAdmin;
 import static pandorum.util.Utils.bundled;
 
 public class HelpCommand implements CommandRunner<Player> {
@@ -20,7 +20,7 @@ public class HelpCommand implements CommandRunner<Player> {
             return;
         }
 
-        Seq<Command> commandsList = Utils.getAvailableClientCommands(adminCheck(player));
+        Seq<Command> commandsList = Utils.getAvailableClientCommands(Utils.isAdmin(player));
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandsList.size / 8f);
 

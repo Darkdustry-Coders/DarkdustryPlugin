@@ -7,7 +7,7 @@ import arc.util.CommandHandler.CommandRunner;
 import pandorum.discord.Context;
 
 import static pandorum.PluginVars.discordAdminOnlyCommands;
-import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.isAdmin;
 
 public class DiscordCommandsHandler {
 
@@ -19,7 +19,7 @@ public class DiscordCommandsHandler {
 
     public void register(String text, String params, String description, boolean adminOnly, CommandRunner<Context> runner) {
         Command command = handler.<Context>register(text, params, description, (args, context) -> {
-            if (adminOnly && !adminCheck(context.member)) {
+            if (adminOnly && !isAdmin(context.member)) {
                 context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
                 return;
             }

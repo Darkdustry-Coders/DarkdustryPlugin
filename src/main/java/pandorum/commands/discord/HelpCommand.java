@@ -7,11 +7,11 @@ import pandorum.discord.Context;
 import pandorum.util.Utils;
 
 import static pandorum.PluginVars.discordCommands;
-import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.isAdmin;
 
 public class HelpCommand implements CommandRunner<Context> {
     public void accept(String[] args, Context context) {
-        Seq<Command> commandsList = Utils.getAvailableDiscordCommands(adminCheck(context.member));
+        Seq<Command> commandsList = Utils.getAvailableDiscordCommands(isAdmin(context.member));
         StringBuilder commands = new StringBuilder();
 
         for (Command command : commandsList) {

@@ -1,6 +1,7 @@
 package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
+import mindustry.content.UnitTypes;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
@@ -13,7 +14,7 @@ import static pandorum.util.Search.findUnit;
 public class UnitCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         UnitType type = findUnit(args[0]);
-        if (type == null) {
+        if (type == null || type == UnitTypes.block) {
             Utils.bundled(player, "commands.unit-not-found", Icons.unitsList());
             return;
         }

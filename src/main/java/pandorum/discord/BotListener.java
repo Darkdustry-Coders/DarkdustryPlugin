@@ -12,8 +12,9 @@ import pandorum.features.Authme;
 
 import java.awt.*;
 
+import static pandorum.PluginVars.config;
 import static pandorum.discord.Bot.*;
-import static pandorum.util.Utils.adminCheck;
+import static pandorum.util.Utils.isAdmin;
 import static pandorum.util.Utils.sendToChat;
 
 public class BotListener extends ListenerAdapter {
@@ -22,7 +23,7 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (context.author.getIdLong() == jda.getSelfUser().getIdLong() || !context.message.isFromGuild()) return;
+        if (!context.message.isFromGuild() || context.message.getGuild().getIdLong() != config.discordGuildID || context.author.getIdLong() == jda.getSelfUser().getIdLong()) return;
 
         handleMessage(context);
 
@@ -37,7 +38,7 @@ public class BotListener extends ListenerAdapter {
         Message message = event.getMessage();
         Member member = event.getMember();
 
-        if (!adminCheck(member)) {
+        if (!isAdmin(member)) {
             event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue();
             return;
         }
