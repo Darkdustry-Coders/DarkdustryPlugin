@@ -17,7 +17,7 @@ public class Icons {
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        try (Scanner scanner = new Scanner(getPluginFile().child("block_colors.png").read(512))) {
+        try (Scanner scanner = new Scanner(getPluginFile().child("icons.properties").read(512))) {
             while (scanner.hasNextLine()) {
                 String[] split = scanner.nextLine().split("=");
 
