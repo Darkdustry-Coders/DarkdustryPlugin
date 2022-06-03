@@ -11,6 +11,7 @@ import pandorum.util.Utils;
 
 import static pandorum.util.Search.findCore;
 import static pandorum.util.Search.findTeam;
+import static pandorum.util.Utils.teamsList;
 
 public class CoreCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -22,7 +23,7 @@ public class CoreCommand implements CommandRunner<Player> {
 
         Team team = args.length > 1 ? findTeam(args[1]) : player.team();
         if (team == null) {
-            Utils.bundled(player, "commands.team-not-found", Icons.teamsList());
+            Utils.bundled(player, "commands.team-not-found", teamsList());
             return;
         }
 

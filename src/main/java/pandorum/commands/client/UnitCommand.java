@@ -10,12 +10,13 @@ import pandorum.util.Utils;
 
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findUnit;
+import static pandorum.util.Utils.unitsList;
 
 public class UnitCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         UnitType type = findUnit(args[0]);
         if (type == null || type == UnitTypes.block) {
-            Utils.bundled(player, "commands.unit-not-found", Icons.unitsList());
+            Utils.bundled(player, "commands.unit-not-found", unitsList());
             return;
         }
 

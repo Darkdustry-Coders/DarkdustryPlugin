@@ -6,7 +6,8 @@ import mindustry.net.Administration.PlayerAction;
 import pandorum.features.history.entry.HistoryEntry;
 import pandorum.features.history.entry.RotateEntry;
 
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.historyEnabled;
 
 public class ActionManager implements ActionFilter {
 

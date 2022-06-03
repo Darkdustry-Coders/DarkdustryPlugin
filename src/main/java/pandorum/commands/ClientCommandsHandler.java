@@ -13,7 +13,6 @@ import pandorum.util.Utils;
 
 import static pandorum.PluginVars.clientAdminOnlyCommands;
 import static pandorum.PluginVars.config;
-import static pandorum.util.Utils.isAdmin;
 import static pandorum.util.Utils.bundled;
 
 public class ClientCommandsHandler {

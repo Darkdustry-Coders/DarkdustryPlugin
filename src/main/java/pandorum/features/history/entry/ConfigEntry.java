@@ -87,7 +87,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof CommandCenter) {
             UnitCommand command = (UnitCommand) value;
-            return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(command.name()), date);
+            return Bundle.format("history.config", locale, name, Icons.get(block.name), command.name(), date);
         }
 
         if (block instanceof MessageBlock) {

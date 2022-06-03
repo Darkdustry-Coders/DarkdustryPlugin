@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static mindustry.Vars.content;
 import static mindustry.Vars.mods;
 import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.adminRole;
@@ -48,20 +49,10 @@ public class Utils {
         };
     }
 
+    // String utils
+
     public static boolean deepEquals(String first, String second) {
         return stripAll(first).equalsIgnoreCase(stripAll(second)) || stripAll(first).toLowerCase().contains(stripAll(second).toLowerCase());
-    }
-
-    public static boolean isNearCore(Team team, Position position) {
-        return team.cores().contains(core -> core.dst(position) < alertsDistance);
-    }
-
-    public static boolean isDangerousBuild(Block block, Team team, Tile tile) {
-        return dangerousBuildBlocks.containsKey(block) && dangerousBuildBlocks.get(block).get() && isNearCore(team, tile);
-    }
-
-    public static boolean isDangerousDeposit(Building build, Item item, Team team) {
-        return dangerousDepositBlocks.containsKey(build.block) && dangerousDepositBlocks.get(build.block) == item && isNearCore(team, build);
     }
 
     public static String stripAll(String str) {
@@ -72,9 +63,29 @@ public class Utils {
         return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
     }
 
+    public static String unitsList() {
+        StringBuilder units = new StringBuilder();
+        content.units().each(unit -> units.append(" [white]").append(Icons.get(unit.name)).append(unit.name));
+        return units.toString();
+    }
+
+    public static String itemsList() {
+        StringBuilder items = new StringBuilder();
+        content.items().each(item -> items.append(" [white]").append(Icons.get(item.name)).append(item.name));
+        return items.toString();
+    }
+
+    public static String teamsList() {
+        StringBuilder teams = new StringBuilder();
+        for (Team team : Team.baseTeams) teams.append(" [white]").append(coloredTeam(team));
+        return teams.toString();
+    }
+
     public static String getName(Unit unit) {
         return Utils.notNullElse(unit.getControllerName(), Icons.get(unit.type.name));
     }
+
+    // Player utils
 
     public static boolean isAdmin(Player player) {
         return player != null && player.admin;
@@ -95,6 +106,8 @@ public class Utils {
     public static void eachPlayer(Team team, Cons<Player> cons) {
         Groups.player.each(player -> player.team() == team, cons);
     }
+
+    // Time utils
 
     public static String formatDate(long time) {
         DateFormat format = new SimpleDateFormat("HH:mm:ss");
@@ -121,6 +134,8 @@ public class Utils {
         return TimeUnit.SECONDS.toMinutes(time);
     }
 
+    // Commands utils
+
     public static Seq<Command> getAvailableClientCommands(boolean admin) {
         Seq<Command> commands = clientCommands.getCommandList();
         Seq<Command> playerCommands = commands.copy().filter(command -> !clientAdminOnlyCommands.contains(command));
@@ -137,11 +152,25 @@ public class Utils {
         return playerCommands.sort(Comparator.comparing(command -> command.text)).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
     }
 
+    // Mindustry utils
+
     public static Fi getPluginFile() {
         return mods.locateMod("darkdustry-plugin").root;
     }
 
     public static ServerControl getServerControl() {
         return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
+    }
+
+    public static boolean isNearCore(Team team, Position position) {
+        return team.cores().contains(core -> core.dst(position) < alertsDistance);
+    }
+
+    public static boolean isDangerousBuild(Block block, Team team, Tile tile) {
+        return dangerousBuildBlocks.containsKey(block) && dangerousBuildBlocks.get(block).get() && isNearCore(team, tile);
+    }
+
+    public static boolean isDangerousDeposit(Building build, Team team, Item item) {
+        return dangerousDepositBlocks.containsKey(build.block) && dangerousDepositBlocks.get(build.block) == item && isNearCore(team, build);
     }
 }

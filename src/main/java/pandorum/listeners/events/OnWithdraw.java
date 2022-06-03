@@ -5,7 +5,8 @@ import mindustry.game.EventType.WithdrawEvent;
 import pandorum.features.history.entry.HistoryEntry;
 import pandorum.features.history.entry.WithdrawEntry;
 
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.historyEnabled;
 
 public class OnWithdraw implements Cons<WithdrawEvent> {
 

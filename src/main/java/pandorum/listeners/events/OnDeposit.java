@@ -24,7 +24,7 @@ public class OnDeposit implements Cons<DepositEvent> {
 
         if (!alertsEnabled() || !state.rules.reactorExplosions) return;
 
-        if (isDangerousDeposit(event.tile, event.item, event.tile.team)) {
+        if (isDangerousDeposit(event.tile, event.tile.team, event.item)) {
             Utils.eachPlayer(event.player.team(), player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {

@@ -12,6 +12,8 @@ import pandorum.util.Utils;
 import static pandorum.PluginVars.maxSpawnAmount;
 import static pandorum.util.Search.findTeam;
 import static pandorum.util.Search.findUnit;
+import static pandorum.util.Utils.teamsList;
+import static pandorum.util.Utils.unitsList;
 
 public class SpawnCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -22,7 +24,7 @@ public class SpawnCommand implements CommandRunner<Player> {
 
         UnitType type = findUnit(args[0]);
         if (type == null || type == UnitTypes.block) {
-            Utils.bundled(player, "commands.unit-not-found", Icons.unitsList());
+            Utils.bundled(player, "commands.unit-not-found", unitsList());
             return;
         }
 
@@ -34,7 +36,7 @@ public class SpawnCommand implements CommandRunner<Player> {
 
         Team team = args.length > 2 ? findTeam(args[2]) : player.team();
         if (team == null) {
-            Utils.bundled(player, "commands.team-not-found", Icons.teamsList());
+            Utils.bundled(player, "commands.team-not-found", teamsList());
             return;
         }
 

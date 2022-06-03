@@ -10,7 +10,6 @@ import pandorum.components.Bundle;
 import pandorum.util.Utils;
 
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.isAdmin;
 import static pandorum.util.Utils.bundled;
 
 public class HelpCommand implements CommandRunner<Player> {

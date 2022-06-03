@@ -9,6 +9,7 @@ import pandorum.components.Icons;
 import static mindustry.Vars.state;
 import static pandorum.util.Search.findItem;
 import static pandorum.util.Utils.bundled;
+import static pandorum.util.Utils.itemsList;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -19,7 +20,7 @@ public class GiveCommand implements CommandRunner<Player> {
 
         Item item = findItem(args[0]);
         if (item == null) {
-            bundled(player, "commands.item-not-found", Icons.itemsList());
+            bundled(player, "commands.item-not-found", itemsList());
             return;
         }
 
