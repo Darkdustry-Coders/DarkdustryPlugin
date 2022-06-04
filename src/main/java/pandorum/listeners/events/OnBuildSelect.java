@@ -13,7 +13,7 @@ import static pandorum.util.Utils.*;
 public class OnBuildSelect implements Cons<BuildSelectEvent> {
 
     public void get(BuildSelectEvent event) {
-        if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null ) return;
+        if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 
         if (isDangerousBuild(event.builder.buildPlan().block, event.team, event.tile) && interval.get(0, alertsTimer)) {
             Utils.eachPlayer(event.team, player -> {

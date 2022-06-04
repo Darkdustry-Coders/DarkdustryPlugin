@@ -4,7 +4,6 @@ import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.Command;
 import arc.util.Interval;
 import arc.util.Timekeeper;
 import arc.util.io.ReusableByteOutStream;
@@ -99,7 +98,6 @@ public class PluginVars {
     public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
-    public static final Seq<Command> clientAdminOnlyCommands = new Seq<>(), discordAdminOnlyCommands = new Seq<>();
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
 

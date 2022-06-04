@@ -4,12 +4,19 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
+import pandorum.util.Utils;
 
 import static pandorum.listeners.handlers.MenuHandler.artvMenu;
 import static pandorum.util.Search.findLocale;
+import static pandorum.util.Utils.bundled;
 
 public class ArtvCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
+        if (!Utils.isAdmin(player)) {
+            bundled(player, "commands.permission-denied");
+            return;
+        }
+
         Call.menu(player.con, artvMenu,
                 Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
                 Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),

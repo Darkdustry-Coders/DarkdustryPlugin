@@ -47,7 +47,7 @@ public class Bot {
             guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
             discordCommands = new CommandHandler(config.discordBotPrefix);
-            Loader.registerDiscordCommands();
+            Loader.registerDiscordCommands(discordCommands);
 
             Log.info("[Darkdustry] Бот успешно подключен... (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {

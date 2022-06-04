@@ -23,13 +23,13 @@ import java.util.zip.InflaterInputStream;
 
 import static mindustry.Vars.*;
 import static mindustry.io.MapIO.colorFor;
-import static pandorum.util.Utils.getPluginFile;
+import static pandorum.util.Utils.getPluginResource;
 
 public class MapParser {
 
     public static void load() {
         try {
-            Fi colors = getPluginFile().child("block_colors.png");
+            Fi colors = getPluginResource("block_colors.png");
             BufferedImage image = ImageIO.read(colors.read());
             content.blocks().each(block -> block.mapColor.argb8888(block instanceof OreBlock ? block.itemDrop.color.argb8888() : image.getRGB(block.id, 0)).a(1f));
         } catch (Exception e) {

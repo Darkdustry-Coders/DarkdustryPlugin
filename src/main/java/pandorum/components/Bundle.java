@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static pandorum.PluginVars.defaultLocale;
-import static pandorum.util.Utils.getPluginFile;
+import static pandorum.util.Utils.getPluginResource;
 
 public class Bundle {
 
@@ -22,7 +22,7 @@ public class Bundle {
     public static Locale[] supportedLocales;
 
     public static void load() {
-        Fi[] files = getPluginFile().child("bundles").list();
+        Fi[] files = getPluginResource("bundles").list();
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");
 
@@ -43,10 +43,10 @@ public class Bundle {
     }
 
     public static String get(String key, Locale locale) {
-        return getOrDefault(key, key, locale);
+        return get(key, key, locale);
     }
 
-    public static String getOrDefault(String key, String defaultValue, Locale locale) {
+    public static String get(String key, String defaultValue, Locale locale) {
         StringMap bundle = getOrLoad(locale);
         return bundle != null ? bundle.get(key, defaultValue) : defaultValue;
     }

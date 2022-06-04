@@ -22,7 +22,7 @@ public class MapCommand implements CommandRunner<Context> {
                 .setColor(Color.yellow)
                 .setTitle(":map: " + map.name())
                 .setFooter(map.width + "x" + map.height)
-                .setImage("attachment://map.png");;
+                .setImage("attachment://map.png");
 
         if (!map.author().equals("unknown")) embed.setAuthor(map.author());
         if (!map.description().equals("unknown")) embed.setDescription(map.description());

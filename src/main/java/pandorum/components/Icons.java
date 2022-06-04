@@ -5,14 +5,14 @@ import arc.util.Log;
 
 import java.util.Scanner;
 
-import static pandorum.util.Utils.getPluginFile;
+import static pandorum.util.Utils.getPluginResource;
 
 public class Icons {
 
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        try (Scanner scanner = new Scanner(getPluginFile().child("icons.properties").read(512))) {
+        try (Scanner scanner = new Scanner(getPluginResource("icons.properties").read(512))) {
             while (scanner.hasNextLine()) {
                 String[] lines = scanner.nextLine().split("=");
                 String[] name = lines[1].split("\\|");

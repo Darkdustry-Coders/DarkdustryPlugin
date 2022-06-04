@@ -4,8 +4,6 @@ import arc.Core;
 import arc.files.Fi;
 import arc.func.Cons;
 import arc.math.geom.Position;
-import arc.struct.Seq;
-import arc.util.CommandHandler.Command;
 import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Building;
@@ -25,7 +23,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -134,28 +131,10 @@ public class Utils {
         return TimeUnit.SECONDS.toMinutes(time);
     }
 
-    // Commands utils
-
-    public static Seq<Command> getAvailableClientCommands(boolean admin) {
-        Seq<Command> commands = clientCommands.getCommandList();
-        Seq<Command> playerCommands = commands.copy().filter(command -> !clientAdminOnlyCommands.contains(command));
-        Seq<Command> adminCommands = commands.copy().filter(command -> admin && clientAdminOnlyCommands.contains(command));
-
-        return playerCommands.sort(Comparator.comparing(command -> command.text)).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
-    }
-
-    public static Seq<Command> getAvailableDiscordCommands(boolean admin) {
-        Seq<Command> commands = discordCommands.getCommandList();
-        Seq<Command> playerCommands = commands.copy().filter(command -> !discordAdminOnlyCommands.contains(command));
-        Seq<Command> adminCommands = commands.copy().filter(command -> admin && discordAdminOnlyCommands.contains(command));
-
-        return playerCommands.sort(Comparator.comparing(command -> command.text)).addAll(adminCommands.sort(Comparator.comparing(command -> command.text)));
-    }
-
     // Mindustry utils
 
-    public static Fi getPluginFile() {
-        return mods.locateMod("darkdustry-plugin").root;
+    public static Fi getPluginResource(String name) {
+        return mods.locateMod("darkdustry-plugin").root.child(name);
     }
 
     public static ServerControl getServerControl() {

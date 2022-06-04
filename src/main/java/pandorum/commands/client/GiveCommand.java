@@ -5,6 +5,7 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.components.Icons;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.util.Search.findItem;
@@ -13,6 +14,11 @@ import static pandorum.util.Utils.itemsList;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
+        if (!Utils.isAdmin(player)) {
+            bundled(player, "commands.permission-denied");
+            return;
+        }
+
         if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
             bundled(player, "commands.non-int");
             return;

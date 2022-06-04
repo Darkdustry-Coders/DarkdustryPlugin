@@ -7,6 +7,7 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import pandorum.components.Icons;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.maxFillSize;
@@ -15,6 +16,11 @@ import static pandorum.util.Utils.bundled;
 
 public class FillCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
+        if (!Utils.isAdmin(player)) {
+            bundled(player, "commands.permission-denied");
+            return;
+        }
+
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1])) {
             bundled(player, "commands.admin.fill.incorrect-number-format");
             return;

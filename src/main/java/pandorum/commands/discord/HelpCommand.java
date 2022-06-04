@@ -4,14 +4,14 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import pandorum.discord.Context;
-import pandorum.util.Utils;
+
+import java.util.Comparator;
 
 import static pandorum.PluginVars.discordCommands;
-import static pandorum.util.Utils.isAdmin;
 
 public class HelpCommand implements CommandRunner<Context> {
     public void accept(String[] args, Context context) {
-        Seq<Command> commandsList = Utils.getAvailableDiscordCommands(isAdmin(context.member));
+        Seq<Command> commandsList = discordCommands.getCommandList().sort(Comparator.comparing(command -> command.text));
         StringBuilder commands = new StringBuilder();
 
         for (Command command : commandsList) {

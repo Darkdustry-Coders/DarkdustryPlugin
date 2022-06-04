@@ -2,7 +2,6 @@ package pandorum.commands.client;
 
 import arc.files.Fi;
 import arc.util.CommandHandler.CommandRunner;
-import arc.util.Strings;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
@@ -44,7 +43,7 @@ public class NominateCommand implements CommandRunner<Player> {
                 cooldown.reset();
             }
             case "save" -> {
-                Fi save = saveDirectory.child(Strings.format("@.@", args[1], saveExtension));
+                Fi save = saveDirectory.child(args[1] + "." + saveExtension);
                 VoteSession session = new VoteSaveSession(currentVote, save);
                 currentVote[0] = session;
                 session.vote(player, 1);

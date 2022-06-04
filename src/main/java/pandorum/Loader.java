@@ -4,7 +4,6 @@ import arc.Events;
 import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.Colors;
-import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Reflect;
@@ -18,9 +17,6 @@ import mindustry.graphics.Pal;
 import mindustry.net.Administration;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import pandorum.commands.ClientCommandsHandler;
-import pandorum.commands.DiscordCommandsHandler;
-import pandorum.commands.ServerCommandsHandler;
 import pandorum.commands.client.DespawnCommand;
 import pandorum.commands.client.HelpCommand;
 import pandorum.commands.client.MapsListCommand;
@@ -32,7 +28,10 @@ import pandorum.commands.discord.IpCommand;
 import pandorum.commands.discord.RemoveMapCommand;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
-import pandorum.components.*;
+import pandorum.components.Bundle;
+import pandorum.components.Config;
+import pandorum.components.Icons;
+import pandorum.components.MapParser;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks;
@@ -48,6 +47,8 @@ import pandorum.listeners.handlers.MenuHandler;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
+import static pandorum.components.Gamemode.hub;
+import static pandorum.components.Gamemode.pvp;
 
 public class Loader {
 
@@ -132,66 +133,65 @@ public class Loader {
         Timer.schedule(new Updater(), 0f, 1f);
     }
 
-    public static void registerClientCommands(CommandHandler clientCommands) {
-        ClientCommandsHandler handler = new ClientCommandsHandler(clientCommands);
+    public static void registerClientCommands(CommandHandler handler) {
+        handler.register("help", "[page]", "commands.help.description", new HelpCommand());
+        handler.register("discord", "commands.discord.description", new DiscordLinkCommand());
+        handler.register("a", "<message...>", "commands.a.description", new AdminChatCommand());
+        handler.register("t", "<message...>", "commands.t.description", new TeamChatCommand());
+        handler.register("votekick", "<ID/username...>", "commands.votekick.description", new VoteKickCommand());
+        handler.register("vote", "<y/n>", "commands.vote.description", new VoteCommand());
+        handler.register("sync", "commands.sync.description", new SyncCommand());
+        handler.register("tr", "<current/list/off/auto/locale>", "commands.tr.description", new TranslatorCommand());
+        handler.register("stats", "[ID/username...]", "commands.stats.description", new StatsCommand());
+        handler.register("rank", "[ID/username...]", "commands.rank.description", new RankCommand());
+        handler.register("players", "[page]", "commands.players.description", new PlayersListCommand());
+        handler.register("login", "commands.login.description", new LoginCommand());
 
-        handler.register("help", "[page]", false, new HelpCommand());
-        handler.register("discord", false, new DiscordLinkCommand());
-        handler.register("a", "<message...>", true, new AdminChatCommand());
-        handler.register("t", "<message...>", false, new TeamChatCommand());
-        handler.register("votekick", "<ID/username...>", false, new VoteKickCommand());
-        handler.register("vote", "<y/n>", false, new VoteCommand());
-        handler.register("sync", false, new SyncCommand());
-        handler.register("tr", "<current/list/off/auto/locale>", false, new TranslatorCommand());
-        handler.register("stats", "[ID/username...]", false, new StatsCommand());
-        handler.register("rank", "[ID/username...]", false, new RankCommand());
-        handler.register("players", "[page]", false, new PlayersListCommand());
+        if (config.mode != hub) {
+            handler.register("hub", "commands.hub.description", new HubCommand());
+        }
 
-        handler.register("hub", false, Seq.with(Gamemode.attack, Gamemode.castle, Gamemode.crawler, Gamemode.hexed, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new HubCommand());
+        if (config.mode == pvp) {
+            handler.register("surrender", "commands.surrender.description", new SurrenderCommand());
+        }
 
-        handler.register("rtv", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new RtvCommand());
-        handler.register("vnw", false, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new VnwCommand());
-        handler.register("surrender", false, Seq.with(Gamemode.pvp), new SurrenderCommand());
+        if (defaultModes.contains(config.mode)) {
+            handler.register("rtv", "commands.rtv.description", new RtvCommand());
+            handler.register("vnw", "commands.vnw.description", new VnwCommand());
 
-        handler.register("history", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new HistoryCommand());
-        handler.register("alert", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new AlertCommand());
-        handler.register("map", false, new MapCommand());
-        handler.register("maps", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new MapsListCommand());
-        handler.register("saves", "[page]", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SavesListCommand());
-        handler.register("nominate", "<map/save/load> <name...>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new NominateCommand());
-        handler.register("voting", "<y/n>", false, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new VotingCommand());
+            handler.register("history", "commands.history.description", new HistoryCommand());
+            handler.register("alert", "commands.alert.description", new AlertCommand());
 
-        handler.register("spawn", "<unit> [amount] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SpawnCommand());
-        handler.register("core", "[small/medium/big] [team]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new CoreCommand());
-        handler.register("give", "<item> <amount>", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new GiveCommand());
-        handler.register("unit", "<unit> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new UnitCommand());
-        handler.register("team", "<team> [ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new TeamCommand());
-        handler.register("spectate", "[ID/username...]", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new SpectateCommand());
+            handler.register("maps", "[page]", "commands.maps.description", new MapsListCommand());
+            handler.register("saves", "[page]", "commands.saves.description", new SavesListCommand());
+            handler.register("nominate", "<map/save/load> <name...>", "commands.nominate.description", new NominateCommand());
+            handler.register("voting", "<y/n>", "commands.voting.description", new VotingCommand());
 
-        handler.register("artv", true, Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower), new ArtvCommand());
-        handler.register("despawn", true, new DespawnCommand());
-        handler.register("fill", "<width> <height> <block>", true, Seq.with(Gamemode.attack, Gamemode.sandbox, Gamemode.survival), new FillCommand());
-
-        handler.register("login", false, new LoginCommand());
+            handler.register("artv", "commands.artv.description", new ArtvCommand());
+            handler.register("despawn", "commands.despawn.description", new DespawnCommand());
+            handler.register("fill", "<width> <height> <block>", "commands.fill.description", new FillCommand());
+            handler.register("spawn", "<unit> [amount] [team]", "commands.spawn.description", new SpawnCommand());
+            handler.register("core", "[small/medium/big] [team]", "commands.core.description", new CoreCommand());
+            handler.register("give", "<item> <amount>", "commands.give.description", new GiveCommand());
+            handler.register("unit", "<unit> [ID/username...]", "commands.unit.description", new UnitCommand());
+            handler.register("team", "<team> [ID/username...]", "commands.team.description", new TeamCommand());
+            handler.register("spectate", "[ID/username...]", "commands.spectate.description", new SpectateCommand());
+        }
     }
 
-    public static void registerDiscordCommands() {
-        DiscordCommandsHandler handler = new DiscordCommandsHandler(discordCommands);
+    public static void registerDiscordCommands(CommandHandler handler) {
+        handler.register("help", "Список всех команд.", new pandorum.commands.discord.HelpCommand());
+        handler.register("ip", "IP адрес сервера.", new IpCommand());
+        handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());
+        handler.register("maps", "[страница]", "Список карт сервера.", new pandorum.commands.discord.MapsListCommand());
+        handler.register("players", "[страница]", "Список игроков сервера.", new pandorum.commands.discord.PlayersListCommand());
+        handler.register("status", "Состояние сервера.", new StatusCommand());
 
-        handler.register("help", "Список всех команд.", false, new pandorum.commands.discord.HelpCommand());
-        handler.register("ip", "IP адрес сервера.", false, new IpCommand());
-        handler.register("map", "<название...>", "Получить карту с сервера.", false, new pandorum.commands.discord.MapCommand());
-        handler.register("maps", "[страница]", "Список карт сервера.", false, new pandorum.commands.discord.MapsListCommand());
-        handler.register("players", "[страница]", "Список игроков сервера.", false, new pandorum.commands.discord.PlayersListCommand());
-        handler.register("status", "Состояние сервера.", false, new StatusCommand());
-
-        handler.register("addmap", "Добавить карту на сервер.", true, new AddMapCommand());
-        handler.register("removemap", "<название...>", "Удалить карту с сервера.", true, new RemoveMapCommand());
+        handler.register("addmap", "Добавить карту на сервер.", new AddMapCommand());
+        handler.register("removemap", "<название...>", "Удалить карту с сервера.", new RemoveMapCommand());
     }
 
-    public static void registerServerCommands(CommandHandler serverCommands) {
-        ServerCommandsHandler handler = new ServerCommandsHandler(serverCommands);
-
+    public static void registerServerCommands(CommandHandler handler) {
         handler.register("help", "List of all commands.", new pandorum.commands.server.HelpCommand());
         handler.register("exit", "Shut down the server.", new ExitCommand());
         handler.register("host", "[map] [mode]", "Open the server. Will default to a random map and survival gamemode if not specified.", new HostCommand());

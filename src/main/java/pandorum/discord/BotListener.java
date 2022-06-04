@@ -23,7 +23,8 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (!context.message.isFromGuild() || context.message.getGuild().getIdLong() != config.discordGuildID || context.author.getIdLong() == jda.getSelfUser().getIdLong()) return;
+        if (!context.message.isFromGuild() || context.message.getGuild().getIdLong() != config.discordGuildID || context.author.getIdLong() == jda.getSelfUser().getIdLong())
+            return;
 
         handleMessage(context);
 
