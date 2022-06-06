@@ -21,17 +21,19 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return gson.fromJson(jedis.get(uuid), PlayerData.class);
+            if (jedis.exists(uuid)) return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception e) {
-            PlayerData data = new PlayerData();
-            setPlayerData(uuid, data);
-            return data;
+            Log.err(e);
         }
+
+        return new PlayerData();
     }
 
     public static void setPlayerData(String uuid, PlayerData data) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(uuid, gson.toJson(data));
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            Log.err(e);
+        }
     }
 }
