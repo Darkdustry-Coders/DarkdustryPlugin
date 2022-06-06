@@ -14,7 +14,7 @@ public class ActionManager implements ActionFilter {
     public boolean allow(PlayerAction action) {
         if (historyEnabled() && action.type == ActionType.rotate) {
             HistoryEntry entry = new RotateEntry(action);
-            history.putLinkedTiles(action.tile, entry);
+            action.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
 
         return true;

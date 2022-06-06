@@ -16,7 +16,7 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
     public void get(BlockBuildEndEvent event) {
         if (historyEnabled() && event.unit.isPlayer()) {
             HistoryEntry entry = new BlockEntry(event);
-            history.putLinkedTiles(event.tile, entry);
+            event.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
 
         if (!event.unit.isPlayer() || event.breaking) return;

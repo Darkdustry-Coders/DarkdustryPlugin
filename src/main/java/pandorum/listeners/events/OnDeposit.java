@@ -19,7 +19,7 @@ public class OnDeposit implements Cons<DepositEvent> {
     public void get(DepositEvent event) {
         if (historyEnabled()) {
             HistoryEntry entry = new DepositEntry(event);
-            history.putLinkedTiles(event.tile.tile, entry);
+            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
 
         if (!alertsEnabled() || !state.rules.reactorExplosions) return;

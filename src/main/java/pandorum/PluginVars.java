@@ -20,7 +20,7 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Config;
 import pandorum.components.Gamemode;
-import pandorum.features.history.HistoryMap;
+import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 import redis.clients.jedis.JedisPool;
@@ -46,10 +46,8 @@ public class PluginVars {
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.6f;
 
-    /** Максимальное количество записей на один тайл. */
+    /** Максимальное количество записей истории на один тайл. */
     public static final int maxTileHistoryCapacity = 6;
-    /** Ёмкость кэша, хранящего историю. */
-    public static final int allHistorySize = 100000;
 
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
@@ -105,8 +103,6 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    public static final HistoryMap history = new HistoryMap(maxTileHistoryCapacity, allHistorySize);
-
     /** Блоки, которые опасно строить рядом с ядром. */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
@@ -124,9 +120,13 @@ public class PluginVars {
     /** База данных Jedis. */
     public static JedisPool jedisPool;
 
+    /** Конфигурация сервера. */
+    public static Config config;
+
+    public static HistorySeq[][] history;
+
     public static CommandHandler clientCommands, serverCommands, discordCommands;
 
-    public static Config config;
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
 

@@ -14,7 +14,7 @@ public class OnConfig implements Cons<ConfigEvent> {
     public void get(ConfigEvent event) {
         if (historyEnabled() && event.player != null && event.tile.tileX() <= world.width() && event.tile.tileX() <= world.height()) {
             HistoryEntry entry = new ConfigEntry(event);
-            history.putLinkedTiles(event.tile.tile, entry);
+            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
     }
 }

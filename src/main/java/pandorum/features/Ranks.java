@@ -22,19 +22,19 @@ public class Ranks {
             displayName = "[accent]Player";
 
             next = active = new Rank() {{
-                tag = "[#ffd37f]<[white]\uE800[#ffd37f]> ";
+                tag = "[accent]<[white]\uE800[accent]> ";
                 name = "active";
                 displayName = "[sky]Active";
                 req = new Requirements(300 * 60, 25000, 20);
 
                 next = activePlus = new Rank() {{
-                    tag = "[#ffd37f]<[white]\uE813[#ffd37f]> ";
+                    tag = "[accent]<[white]\uE813[accent]> ";
                     name = "active+";
                     displayName = "[cyan]Active+";
                     req = new Requirements(750 * 60, 50000, 40);
 
                     next = veteran = new Rank() {{
-                        tag = "[#ffd37f]<[gold]\uE809[#ffd37f]> ";
+                        tag = "[accent]<[gold]\uE809[accent]> ";
                         name = "veteran";
                         displayName = "[gold]Veteran";
                         req = new Requirements(1500 * 60, 100000, 100);
@@ -44,13 +44,13 @@ public class Ranks {
         }};
 
         contributor = new Rank() {{
-            tag = "[#ffd37f]<[yellow]\uE80F[#ffd37f]> ";
+            tag = "[accent]<[yellow]\uE80F[accent]> ";
             name = "contributor";
-            displayName = "[lime]Contributor";
+            displayName = "[yellow]Contributor";
         }};
 
         admin = new Rank() {{
-            tag = "[#ffd37f]<[scarlet]\uE817[#ffd37f]> ";
+            tag = "[accent]<[scarlet]\uE817[accent]> ";
             name = "admin";
             displayName = "[scarlet]Admin";
         }};

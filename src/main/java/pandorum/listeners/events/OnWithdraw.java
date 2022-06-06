@@ -13,7 +13,7 @@ public class OnWithdraw implements Cons<WithdrawEvent> {
     public void get(WithdrawEvent event) {
         if (historyEnabled()) {
             HistoryEntry entry = new WithdrawEntry(event);
-            history.putLinkedTiles(event.tile.tile, entry);
+            event.tile.tile.getLinkedTiles(tile -> history[tile.x][tile.y].add(entry));
         }
     }
 }
