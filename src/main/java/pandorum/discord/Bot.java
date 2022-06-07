@@ -6,6 +6,7 @@ import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
+import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -66,8 +67,15 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        Activity activity = Activity.playing(netServer.admins.getPlayerLimit() > 0 ? Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()) : Strings.format("@ игроков онлайн", Groups.player.size()));
-        jda.getPresence().setActivity(activity);
+        StringBuilder result = new StringBuilder();
+        if (netServer.admins.getPlayerLimit() > 0) {
+            result.append(Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()));
+        } else {
+            result.append(Strings.format("@ игроков онлайн", Groups.player.size()));
+        }
+        result.append(Strings.format(" | IP: darkdustry.ml:@", Config.port.num()));
+
+        jda.getPresence().setActivity(Activity.playing(result.toString()));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {

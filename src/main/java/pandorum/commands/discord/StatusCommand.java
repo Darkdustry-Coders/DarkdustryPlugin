@@ -19,7 +19,7 @@ import static pandorum.util.Utils.stripAll;
 public class StatusCommand implements CommandRunner<Context> {
     public void accept(String[] args, Context context) {
         if (state.isMenu()) {
-            context.err(":gear: Сервер отключен.", ":thinking: Почему?");
+            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
             return;
         }
 

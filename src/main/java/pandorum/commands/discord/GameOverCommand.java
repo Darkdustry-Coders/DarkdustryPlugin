@@ -15,6 +15,11 @@ public class GameOverCommand implements CommandRunner<Context> {
             return;
         }
 
+        if (state.isMenu()) {
+            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
+            return;
+        }
+
         Events.fire(new GameOverEvent(state.rules.waveTeam));
         context.success(":map: Игра успешно завершена.");
     }
