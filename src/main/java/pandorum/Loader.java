@@ -23,9 +23,7 @@ import pandorum.commands.client.MapsListCommand;
 import pandorum.commands.client.PlayersListCommand;
 import pandorum.commands.client.SavesListCommand;
 import pandorum.commands.client.*;
-import pandorum.commands.discord.AddMapCommand;
-import pandorum.commands.discord.IpCommand;
-import pandorum.commands.discord.RemoveMapCommand;
+import pandorum.commands.discord.*;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
 import pandorum.components.Bundle;
@@ -189,6 +187,10 @@ public class Loader {
 
         handler.register("addmap", "Добавить карту на сервер.", new AddMapCommand());
         handler.register("removemap", "<название...>", "Удалить карту с сервера.", new RemoveMapCommand());
+
+        if (defaultModes.contains(config.mode)) {
+            handler.register("gameover", "Принудительно завершить игру.", new GameOverCommand());
+        }
     }
 
     public static void registerServerCommands(CommandHandler handler) {
