@@ -24,6 +24,8 @@ import pandorum.commands.client.PlayersListCommand;
 import pandorum.commands.client.SavesListCommand;
 import pandorum.commands.client.*;
 import pandorum.commands.discord.*;
+import pandorum.commands.discord.BanCommand;
+import pandorum.commands.discord.KickCommand;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
 import pandorum.components.Bundle;
@@ -183,8 +185,8 @@ public class Loader {
         handler.register("status", "Состояние сервера.", new StatusCommand());
 
         /* Administration commands */
-        handler.register("kick", "<игрок>", "Позволяет выгнать игрока с игрового сервера.", new pandorum.commands.discord.administration.KickCommand());
-        handler.register("ban", "<type> <uuid/username/ip...>", "Позволяет забанить игрока на игровом сервере, используя никнейм, IP или UUID.", new pandorum.commands.discord.administration.BanCommand());
+        handler.register("kick", "<игрок>", "Позволяет выгнать игрока с игрового сервера.", new KickCommand());
+        handler.register("ban", "<type> <uuid/username/ip...>", "Позволяет забанить игрока на игровом сервере, используя никнейм, IP или UUID.", new BanCommand());
 
         if (config.mode != hexed) {
             handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());

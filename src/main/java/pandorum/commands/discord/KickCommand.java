@@ -1,13 +1,11 @@
-package pandorum.commands.discord.administration;
+package pandorum.commands.discord;
 
 import arc.util.CommandHandler.CommandRunner;
-import arc.util.Log;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.discord.Context;
 import pandorum.util.Utils;
 
-import static mindustry.Vars.state;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.kickDuration;
 import static pandorum.util.Search.findLocale;
@@ -23,21 +21,14 @@ public class KickCommand implements CommandRunner<Context> {
             return;
         }
 
-        if (state.isMenu()) {
-            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
-            return;
-        }
-
         Player target = findPlayer(args[0]);
         if (target == null) {
-            Log.err("Игрок '@' не найден...", args[0]);
+            context.err(":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
             return;
         }
 
         target.kick(Bundle.format("kick.kicked", findLocale(target.locale), Utils.millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
-        Log.info("Игрок '@' был выгнан с сервера.", target.name);
+        context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @ минут", target.name, Utils.millisecondsToMinutes(kickDuration));
         Utils.sendToChat("events.server.kick", target.coloredName());
-
-        context.info(":skull: Игрок успешно выгнан с сервера.");
     }
 }

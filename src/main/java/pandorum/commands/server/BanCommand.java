@@ -19,6 +19,10 @@ public class BanCommand implements Cons<String[]> {
                 netServer.admins.banPlayerID(args[1]);
                 Log.info("Игрок '@' успешно забанен.", args[1]);
             }
+            case "ip", "address" -> {
+                netServer.admins.banPlayerIP(args[1]);
+                Log.info("Игрок '@' успешно забанен.", args[1]);
+            }
             case "name", "username" -> {
                 Player target = findPlayer(args[1]);
                 if (target != null) {
@@ -30,10 +34,6 @@ public class BanCommand implements Cons<String[]> {
                     Log.err("Игрок '@' не найден...", args[1]);
                 }
                 return;
-            }
-            case "ip", "address" -> {
-                netServer.admins.banPlayerIP(args[1]);
-                Log.info("Игрок '@' успешно забанен.", args[1]);
             }
             default -> {
                 Log.err("Неверный тип целеуказания бана. Выбери один из этих: id, name, ip");
