@@ -45,8 +45,7 @@ import pandorum.listeners.handlers.MenuHandler;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
-import static pandorum.components.Gamemode.hub;
-import static pandorum.components.Gamemode.pvp;
+import static pandorum.components.Gamemode.*;
 
 public class Loader {
 
@@ -180,13 +179,16 @@ public class Loader {
     public static void registerDiscordCommands(CommandHandler handler) {
         handler.register("help", "Список всех команд.", new pandorum.commands.discord.HelpCommand());
         handler.register("ip", "IP адрес сервера.", new IpCommand());
-        handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());
-        handler.register("maps", "[страница]", "Список карт сервера.", new pandorum.commands.discord.MapsListCommand());
         handler.register("players", "[страница]", "Список игроков сервера.", new pandorum.commands.discord.PlayersListCommand());
         handler.register("status", "Состояние сервера.", new StatusCommand());
 
-        handler.register("addmap", "Добавить карту на сервер.", new AddMapCommand());
-        handler.register("removemap", "<название...>", "Удалить карту с сервера.", new RemoveMapCommand());
+        if (config.mode != hexed) {
+            handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());
+            handler.register("maps", "[страница]", "Список карт сервера.", new pandorum.commands.discord.MapsListCommand());
+
+            handler.register("addmap", "Добавить карту на сервер.", new AddMapCommand());
+            handler.register("removemap", "<название...>", "Удалить карту с сервера.", new RemoveMapCommand());
+        }
 
         if (defaultModes.contains(config.mode)) {
             handler.register("gameover", "Принудительно завершить игру.", new GameOverCommand());
