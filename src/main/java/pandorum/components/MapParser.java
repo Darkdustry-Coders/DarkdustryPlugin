@@ -141,8 +141,6 @@ public class MapParser {
             fgraphics.drawImage(walls, 0, 0, null);
             fgraphics.dispose();
             return floors;
-        } finally {
-            content.setTemporaryMapper(null);
         }
     }
 

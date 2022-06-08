@@ -19,7 +19,7 @@ public class Translator {
 
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
-                .header("accept-language", "ru,en;q=0.9")
+                //.header("accept-language", "ru,en;q=0.9")
                 .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
                 .header("content-type", "application/json")
                 .content(json.toString())
@@ -30,7 +30,7 @@ public class Translator {
     public static void loadLanguages() {
         Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=api")
                 .header("accept", "application/json, text/javascript, */*; q=0.01")
-                .header("accept-language", "ru,en;q=0.9")
+                //.header("accept-language", "ru,en;q=0.9")
                 .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
                 .header("content-type", "application/json")
                 .submit(response -> {

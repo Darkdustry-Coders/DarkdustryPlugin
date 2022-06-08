@@ -15,11 +15,12 @@ public class Icons {
         try (Scanner scanner = new Scanner(getPluginResource("icons.properties").read(512))) {
             while (scanner.hasNextLine()) {
                 String[] lines = scanner.nextLine().split("=");
-                String[] name = lines[1].split("\\|");
-                char icon = (char) Integer.parseInt(lines[0]);
+                String name = lines[1].split("\\|")[0];
+                String icon = String.valueOf((char) Integer.parseInt(lines[0]));
 
-                icons.put(name[0], String.valueOf(icon));
+                icons.put(name, icon);
             }
+
         } catch (Exception e) {
             Log.err(e);
         }

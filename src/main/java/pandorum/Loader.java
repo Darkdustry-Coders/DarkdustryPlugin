@@ -14,7 +14,7 @@ import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.graphics.Pal;
-import mindustry.net.Administration;
+import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.commands.client.DespawnCommand;
@@ -27,9 +27,9 @@ import pandorum.commands.discord.*;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.server.*;
 import pandorum.components.Bundle;
-import pandorum.components.Config;
 import pandorum.components.Icons;
 import pandorum.components.MapParser;
+import pandorum.components.PluginConfig;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks;
@@ -53,10 +53,10 @@ public class Loader {
     public static void loadConfig() {
         Fi configFile = dataDirectory.child(configFileName);
         if (configFile.exists()) {
-            config = gson.fromJson(configFile.reader(), Config.class);
+            config = gson.fromJson(configFile.reader(), PluginConfig.class);
             Log.info("[Darkdustry] Конфигурация загружена. (@)", configFile.absolutePath());
         } else {
-            configFile.writeString(gson.toJson(config = new Config()));
+            configFile.writeString(gson.toJson(config = new PluginConfig()));
             Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
     }
@@ -117,14 +117,14 @@ public class Loader {
         Events.run("HexedGameOver", new OnGameOver());
         Events.run("CastleGameOver", new OnGameOver());
 
-        Administration.Config.motd.set("off");
-        Administration.Config.interactRateWindow.set(3);
-        Administration.Config.interactRateLimit.set(50);
-        Administration.Config.interactRateKick.set(1000);
-        Administration.Config.showConnectMessages.set(false);
-        Administration.Config.logging.set(true);
-        Administration.Config.strict.set(true);
-        Administration.Config.enableVotekick.set(true);
+        Config.motd.set("off");
+        Config.interactRateWindow.set(3);
+        Config.interactRateLimit.set(50);
+        Config.interactRateKick.set(1000);
+        Config.showConnectMessages.set(false);
+        Config.logging.set(true);
+        Config.strict.set(true);
+        Config.enableVotekick.set(true);
 
         Version.build = -1;
 

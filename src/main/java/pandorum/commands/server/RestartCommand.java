@@ -16,6 +16,6 @@ public class RestartCommand implements Cons<String[]> {
         Bot.sendEmbed(Color.red, "Сервер перезапускается...");
 
         netServer.kickAll(KickReason.serverRestarting);
-        Time.runTask(60f, () -> System.exit(0));
+        Time.runTask(60f, () -> System.exit(2));
     }
 }

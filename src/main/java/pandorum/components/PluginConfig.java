@@ -1,6 +1,6 @@
 package pandorum.components;
 
-public class Config {
+public class PluginConfig {
 
     /**
      * IP адрес Хаба. Порт - 6567 (по умолчанию).

@@ -18,7 +18,7 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
-import pandorum.components.Config;
+import pandorum.components.PluginConfig;
 import pandorum.components.Gamemode;
 import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
@@ -121,7 +121,7 @@ public class PluginVars {
     public static JedisPool jedisPool;
 
     /** Конфигурация сервера. */
-    public static Config config;
+    public static PluginConfig config;
 
     public static HistorySeq[][] history;
 
