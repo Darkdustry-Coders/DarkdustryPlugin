@@ -7,7 +7,6 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks.Rank;
-import pandorum.util.Utils;
 
 import static pandorum.PluginVars.mapPlayTime;
 import static pandorum.PluginVars.serverUpTime;
@@ -39,7 +38,7 @@ public class Updater implements Runnable {
 
             Call.menu(player.con, rankIncreaseMenu,
                     Bundle.format("events.rank-increase.menu.header", findLocale(player.locale)),
-                    Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(data.playTime), data.buildingsBuilt, data.gamesPlayed),
+                    Bundle.format("events.rank-increase.menu.content", findLocale(player.locale), rank.tag, rank.displayName, data.playTime / 60, data.buildingsBuilt, data.gamesPlayed),
                     new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
             );
         }

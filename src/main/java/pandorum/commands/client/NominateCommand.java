@@ -5,7 +5,6 @@ import arc.util.CommandHandler.CommandRunner;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import pandorum.util.Utils;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
@@ -27,7 +26,7 @@ public class NominateCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!cooldown.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
+            bundled(player, "commands.nominate.cooldown", nominateCooldownTime / 60);
             return;
         }
 

@@ -7,7 +7,6 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
-import pandorum.util.Utils;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.rankInfoMenu;
@@ -33,8 +32,8 @@ public class RankCommand implements CommandRunner<Player> {
                     findLocale(player.locale),
                     next.tag,
                     next.displayName,
-                    Utils.secondsToMinutes(data.playTime),
-                    Utils.secondsToMinutes(next.req.playTime),
+                    data.playTime / 60,
+                    next.req.playTime / 60,
                     data.buildingsBuilt,
                     next.req.buildingsBuilt,
                     data.gamesPlayed,

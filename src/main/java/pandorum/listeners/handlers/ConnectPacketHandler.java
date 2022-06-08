@@ -22,9 +22,8 @@ import java.util.Locale;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
+import static pandorum.util.PlayerUtils.kick;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.millisecondsToMinutes;
-import static pandorum.util.PlayerUtils.*;
 
 public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket> {
 

@@ -15,7 +15,6 @@ import static pandorum.discord.Bot.adminChannel;
 import static pandorum.features.Authme.*;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
-import static pandorum.util.Utils.secondsToMinutes;
 
 public class LoginCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -26,7 +25,7 @@ public class LoginCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = loginCooldowns.get(player.uuid(), () -> new Timekeeper(loginCooldownTime));
         if (!cooldown.get()) {
-            bundled(player, "commands.login.cooldown", secondsToMinutes(loginCooldownTime));
+            bundled(player, "commands.login.cooldown", loginCooldownTime / 60);
             return;
         }
 

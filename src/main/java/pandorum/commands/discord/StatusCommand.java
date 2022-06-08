@@ -13,8 +13,8 @@ import static mindustry.Vars.state;
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.mapPlayTime;
 import static pandorum.PluginVars.serverUpTime;
-import static pandorum.util.Utils.formatDuration;
 import static pandorum.util.StringUtils.stripAll;
+import static pandorum.util.Utils.formatDuration;
 
 public class StatusCommand implements CommandRunner<Context> {
     public void accept(String[] args, Context context) {

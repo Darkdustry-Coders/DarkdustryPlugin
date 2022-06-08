@@ -9,17 +9,19 @@ import mindustry.server.ServerControl;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import pandorum.components.Bundle;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import static mindustry.Vars.mods;
 import static pandorum.PluginVars.*;
+import static pandorum.util.Search.findLocale;
 
 public class Utils {
 
@@ -34,22 +36,18 @@ public class Utils {
     }
 
     public static String formatDuration(long time) {
+        return formatDuration(time, findLocale("ru"));
+    }
+
+    public static String formatDuration(long time, Locale locale) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" д ");
-        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" ч ");
-        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" мин ");
+        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" ").append(Bundle.get("time.days", locale)).append(" ");
+        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" ").append(Bundle.get("time.hours", locale)).append(" ");
+        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" ").append(Bundle.get("time.minutes", locale)).append(" ");
 
-        builder.append(duration.toSecondsPart()).append(" сек");
+        builder.append(duration.toSecondsPart()).append(" ").append(Bundle.get("time.seconds", locale));
         return builder.toString();
-    }
-
-    public static long millisecondsToMinutes(long time) {
-        return TimeUnit.MILLISECONDS.toMinutes(time);
-    }
-
-    public static long secondsToMinutes(long time) {
-        return TimeUnit.SECONDS.toMinutes(time);
     }
 
     public static Fi getPluginResource(String name) {

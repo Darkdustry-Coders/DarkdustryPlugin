@@ -11,7 +11,6 @@ import pandorum.components.Gamemode;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
 import pandorum.util.StringUtils;
-import pandorum.util.Utils;
 
 import java.awt.*;
 
@@ -32,7 +31,7 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         if (currentVoteKick[0] != null && event.player == currentVoteKick[0].target()) {
             currentVoteKick[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
-            sendToChat("commands.votekick.left", event.player.coloredName(), Utils.millisecondsToMinutes(kickDuration));
+            sendToChat("commands.votekick.left", event.player.coloredName(), kickDuration / 1000);
         }
 
         if (config.mode == Gamemode.pvp) {

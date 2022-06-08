@@ -9,7 +9,6 @@ import static pandorum.PluginVars.kickDuration;
 import static pandorum.PluginVars.voteKickDuration;
 import static pandorum.util.PlayerUtils.kick;
 import static pandorum.util.PlayerUtils.sendToChat;
-import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class VoteKickSession extends VoteSession {
 
@@ -43,7 +42,7 @@ public class VoteKickSession extends VoteSession {
     @Override
     public boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
+            sendToChat("commands.votekick.passed", target.coloredName(), kickDuration / 1000);
             stop();
             kick(target, kickDuration, true, "kick.votekicked", started.coloredName());
             return true;

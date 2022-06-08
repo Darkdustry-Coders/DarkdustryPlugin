@@ -7,7 +7,7 @@ import pandorum.discord.Context;
 import static pandorum.PluginVars.kickDuration;
 import static pandorum.util.PlayerUtils.*;
 import static pandorum.util.Search.findPlayer;
-import static pandorum.util.Utils.millisecondsToMinutes;
+import static pandorum.util.Utils.formatDuration;
 
 public class KickCommand implements CommandRunner<Context> {
 
@@ -25,7 +25,7 @@ public class KickCommand implements CommandRunner<Context> {
         }
 
         kick(target, kickDuration, true, "kick.kicked");
-        context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @ минут", target.name, millisecondsToMinutes(kickDuration));
+        context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
         sendToChat("events.server.kick", target.coloredName());
     }
 }

@@ -4,7 +4,6 @@ import arc.util.CommandHandler.CommandRunner;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
-import pandorum.util.Utils;
 import pandorum.vote.VoteKickSession;
 
 import static pandorum.PluginVars.*;
@@ -25,7 +24,7 @@ public class VoteKickCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = voteKickCooldowns.get(player.uuid(), () -> new Timekeeper(voteKickCooldownTime));
         if (!cooldown.get() && !player.admin) {
-            bundled(player, "commands.votekick.cooldown", Utils.secondsToMinutes(voteKickCooldownTime));
+            bundled(player, "commands.votekick.cooldown", voteKickCooldownTime / 60);
             return;
         }
 
@@ -53,7 +52,7 @@ public class VoteKickCommand implements CommandRunner<Player> {
         VoteKickSession session = new VoteKickSession(currentVoteKick, player, target);
         currentVoteKick[0] = session;
         session.vote(player, 1);
-        bundled(target, "commands.votekick.do-not-leave", Utils.millisecondsToMinutes(kickDuration));
+        bundled(target, "commands.votekick.do-not-leave", kickDuration / 1000);
         cooldown.reset();
     }
 }

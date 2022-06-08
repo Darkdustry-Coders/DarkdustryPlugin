@@ -7,7 +7,6 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.features.Ranks;
 import pandorum.features.Ranks.Rank;
-import pandorum.util.Utils;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.statsMenu;
@@ -28,7 +27,7 @@ public class StatsCommand implements CommandRunner<Player> {
 
         Call.menu(player.con, statsMenu,
                 Bundle.format("commands.stats.menu.header", findLocale(player.locale), target.coloredName()),
-                Bundle.format("commands.stats.menu.content", findLocale(player.locale), rank.tag, rank.displayName, Utils.secondsToMinutes(data.playTime), data.buildingsBuilt, data.gamesPlayed),
+                Bundle.format("commands.stats.menu.content", findLocale(player.locale), rank.tag, rank.displayName, data.playTime / 60, data.buildingsBuilt, data.gamesPlayed),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
         );
     }

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import pandorum.components.Bundle;
 
 import java.awt.*;
 
@@ -17,8 +16,7 @@ import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.sendEmbed;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.millisecondsToMinutes;
+import static pandorum.util.PlayerUtils.kick;
 
 public class Authme {
 
@@ -53,9 +51,9 @@ public class Authme {
     public static void ban(Message message, Member member) {
         Player player = loginWaiting.remove(message);
         if (player != null) {
-            sendEmbed(message.getChannel(), Color.red, "**@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), millisecondsToMinutes(loginAbuseKickDuration));
+            sendEmbed(message.getChannel(), Color.red, "**@** забанил игрока **@** на **@** минут", member.getEffectiveName(), Strings.stripColors(player.name), loginAbuseKickDuration / 1000);
 
-            player.kick(Bundle.format("commands.login.ban", findLocale(player.locale), millisecondsToMinutes(loginAbuseKickDuration)), loginAbuseKickDuration);
+            kick(player, loginAbuseKickDuration, false, "commands.login.ban");
             message.delete().queue();
         }
     }

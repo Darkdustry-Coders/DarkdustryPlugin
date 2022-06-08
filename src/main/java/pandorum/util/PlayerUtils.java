@@ -36,7 +36,7 @@ public class PlayerUtils {
     public static void kick(NetConnection con, long duration, boolean disclaimer, String key, Locale locale, Object... values) {
        String reason = Bundle.format(key, locale, values);
        if (duration > 0) {
-           reason += Bundle.format("kick.time", locale, Utils.millisecondsToMinutes(duration));
+           reason += Bundle.format("kick.time", locale, Utils.formatDuration(duration, locale));
        }
 
        if (disclaimer) {
