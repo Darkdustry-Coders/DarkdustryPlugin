@@ -29,6 +29,9 @@ import static mindustry.Vars.tilesize;
 
 public class PluginVars {
 
+    /** IP адрес сервера. */
+    public static final String serverIp = "darkdustry.ml";
+
     /** Максимальный размер заполняемого пространства через /fill. */
     public static final int maxFillSize = 512;
     /** Максимальное количество заспавненных юнитов через /spawn. */

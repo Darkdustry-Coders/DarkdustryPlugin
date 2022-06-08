@@ -21,9 +21,7 @@ import pandorum.Loader;
 import java.awt.*;
 import java.util.EnumSet;
 
-import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.discordCommands;
+import static pandorum.PluginVars.*;
 
 public class Bot {
 
@@ -59,7 +57,9 @@ public class Bot {
 
     public static void handleMessage(Context context) {
         CommandResponse response = discordCommands.handleMessage(context.contentRaw, context);
-        if (response.type == ResponseType.fewArguments) {
+        if (response.type == ResponseType.unknownCommand) {
+            context.err(":interrobang: Неизвестная команда.", "Используй: **@help**, чтобы получить список доступных команд.", discordCommands.getPrefix());
+        } else if (response.type == ResponseType.fewArguments) {
             context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
         } else if (response.type == ResponseType.manyArguments) {
             context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
@@ -67,15 +67,8 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        StringBuilder result = new StringBuilder();
-        if (netServer.admins.getPlayerLimit() > 0) {
-            result.append(Strings.format("@ / @ игроков онлайн", Groups.player.size(), netServer.admins.getPlayerLimit()));
-        } else {
-            result.append(Strings.format("@ игроков онлайн", Groups.player.size()));
-        }
-        result.append(Strings.format(" | IP: darkdustry.ml:@", Config.port.num()));
-
-        jda.getPresence().setActivity(Activity.playing(result.toString()));
+        String activity = Groups.player.size() + " игроков онлайн" + " | IP: " + serverIp + ":" + Config.port.num();
+        jda.getPresence().setActivity(Activity.playing(activity));
     }
 
     public static void text(MessageChannel channel, String text, Object... args) {

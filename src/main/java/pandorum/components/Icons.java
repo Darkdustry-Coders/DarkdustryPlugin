@@ -1,5 +1,6 @@
 package pandorum.components;
 
+import arc.files.Fi;
 import arc.struct.StringMap;
 import arc.util.Log;
 
@@ -9,18 +10,18 @@ import static pandorum.util.Utils.getPluginResource;
 
 public class Icons {
 
-    private static final StringMap icons = new StringMap();
+    private static final StringMap stringIcons = new StringMap();
 
     public static void load() {
-        try (Scanner scanner = new Scanner(getPluginResource("icons.properties").read(512))) {
+        Fi icons = getPluginResource("icons.properties");
+
+        try (Scanner scanner = new Scanner(icons.read(512));) {
             while (scanner.hasNextLine()) {
-                String[] lines = scanner.nextLine().split("=");
-                String name = lines[1].split("\\|")[0];
-                String icon = String.valueOf((char) Integer.parseInt(lines[0]));
+                String[] lines = scanner.nextLine().split("="), names = lines[1].split("\\|");
+                String name = names[0], icon = String.valueOf((char) Integer.parseInt(lines[0]));
 
-                icons.put(name, icon);
+                stringIcons.put(name, icon);
             }
-
         } catch (Exception e) {
             Log.err(e);
         }
@@ -31,6 +32,6 @@ public class Icons {
     }
 
     public static String get(String key, String defaultValue) {
-        return icons.get(key, defaultValue);
+        return stringIcons.get(key, defaultValue);
     }
 }
