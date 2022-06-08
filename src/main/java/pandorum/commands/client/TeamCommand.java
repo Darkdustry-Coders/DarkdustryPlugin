@@ -3,17 +3,18 @@ package pandorum.commands.client;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import pandorum.util.Utils;
+import pandorum.util.StringUtils;
 
 import static pandorum.PluginVars.activeSpectatingPlayers;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findTeam;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.teamsList;
+import static pandorum.util.StringUtils.teamsList;
 
 public class TeamCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }
@@ -36,8 +37,8 @@ public class TeamCommand implements CommandRunner<Player> {
         }
 
         target.team(team);
-        bundled(target, "commands.admin.team.success", Utils.coloredTeam(team));
+        bundled(target, "commands.admin.team.success", StringUtils.coloredTeam(team));
         if (target != player)
-            bundled(player, "commands.admin.team.changed", target.coloredName(), Utils.coloredTeam(team));
+            bundled(player, "commands.admin.team.changed", target.coloredName(), StringUtils.coloredTeam(team));
     }
 }

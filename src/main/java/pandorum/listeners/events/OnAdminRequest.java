@@ -3,7 +3,7 @@ package pandorum.listeners.events;
 import arc.func.Cons;
 import mindustry.game.EventType.AdminRequestEvent;
 
-import static pandorum.util.Utils.sendToChat;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class OnAdminRequest implements Cons<AdminRequestEvent> {
 

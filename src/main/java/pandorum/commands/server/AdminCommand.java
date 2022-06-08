@@ -7,9 +7,9 @@ import mindustry.net.Administration.PlayerInfo;
 import pandorum.features.Ranks;
 
 import static mindustry.Vars.netServer;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findPlayerInfo;
-import static pandorum.util.Utils.bundled;
 
 public class AdminCommand implements Cons<String[]> {
     public void get(String[] args) {

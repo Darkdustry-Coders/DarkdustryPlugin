@@ -7,16 +7,19 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.UnitType;
 import pandorum.components.Icons;
-import pandorum.util.Utils;
+import pandorum.util.StringUtils;
 
 import static pandorum.PluginVars.maxSpawnAmount;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findTeam;
 import static pandorum.util.Search.findUnit;
-import static pandorum.util.Utils.*;
+import static pandorum.util.StringUtils.teamsList;
+import static pandorum.util.StringUtils.unitsList;
 
 public class SpawnCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }
@@ -45,6 +48,6 @@ public class SpawnCommand implements CommandRunner<Player> {
         }
 
         for (int i = 0; i < amount; i++) type.spawn(team, player.x, player.y);
-        bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), Utils.coloredTeam(team));
+        bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), StringUtils.coloredTeam(team));
     }
 }

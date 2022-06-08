@@ -16,8 +16,8 @@ import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.loginAbuseKickDuration;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.discord.Bot.sendEmbed;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 import static pandorum.util.Utils.millisecondsToMinutes;
 
 public class Authme {

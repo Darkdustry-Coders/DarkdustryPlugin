@@ -9,11 +9,14 @@ import mindustry.ui.Menus;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.features.Ranks.Rank;
+import pandorum.util.StringUtils;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
@@ -26,7 +29,7 @@ public class MenuHandler {
                 PlayerData data = getPlayerData(player.uuid());
                 data.welcomeMessage = false;
                 setPlayerData(player.uuid(), data);
-                Utils.bundled(player, "events.welcome.disabled");
+                bundled(player, "welcome.disabled");
             }
         });
 
@@ -36,23 +39,23 @@ public class MenuHandler {
             switch (option) {
                 case 0 -> {
                     Groups.unit.each(Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despawn.success.all");
+                    bundled(player, "commands.admin.despawn.success.all");
                 }
                 case 2 -> {
                     Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despawn.success.players");
+                    bundled(player, "commands.admin.despawn.success.players");
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despawn.success.team", Utils.coloredTeam(state.rules.defaultTeam));
+                    bundled(player, "commands.admin.despawn.success.team", StringUtils.coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    Utils.bundled(player, "commands.admin.despawn.success.team", Utils.coloredTeam(state.rules.waveTeam));
+                    bundled(player, "commands.admin.despawn.success.team", StringUtils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     Call.unitCapDeath(player.unit());
-                    Utils.bundled(player, "commands.admin.despawn.success.suicide");
+                    bundled(player, "commands.admin.despawn.success.suicide");
                 }
             }
         });
@@ -62,7 +65,7 @@ public class MenuHandler {
 
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
-                Utils.sendToChat("commands.admin.artv.info", player.coloredName());
+                sendToChat("commands.admin.artv.info", player.coloredName());
             }
         });
 

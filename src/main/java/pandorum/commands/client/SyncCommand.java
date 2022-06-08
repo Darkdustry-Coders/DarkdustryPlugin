@@ -7,7 +7,7 @@ import mindustry.gen.Player;
 
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.syncCooldownTime;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
 
 public class SyncCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

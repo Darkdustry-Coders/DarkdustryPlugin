@@ -8,6 +8,7 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
 import pandorum.data.PlayerData;
 import pandorum.features.Translator;
+import pandorum.util.StringUtils;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
@@ -42,7 +43,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            Translator.translate(Utils.stripAll(text), codeLanguages.get(locale, defaultTranslatorLocale), translated -> {
+            Translator.translate(StringUtils.stripAll(text), codeLanguages.get(locale, defaultTranslatorLocale), translated -> {
                 player.sendMessage(formatTranslated(formatted, translated), author, text);
                 cache.put(locale, translated);
             });

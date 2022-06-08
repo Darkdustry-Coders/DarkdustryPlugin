@@ -26,12 +26,12 @@ public class Search {
 
     public static Map findMap(String name) {
         Seq<Map> mapsList = maps.customMaps();
-        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < mapsList.size ? mapsList.get(Strings.parseInt(name)) : mapsList.find(map -> Utils.deepEquals(map.name(), name));
+        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < mapsList.size ? mapsList.get(Strings.parseInt(name)) : mapsList.find(map -> StringUtils.deepEquals(map.name(), name));
     }
 
     public static Fi findSave(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < savesList.size ? savesList.get(Strings.parseInt(name)) : savesList.find(save -> Utils.deepEquals(save.nameWithoutExtension(), name));
+        return Strings.canParsePositiveInt(name) && Strings.parseInt(name) < savesList.size ? savesList.get(Strings.parseInt(name)) : savesList.find(save -> StringUtils.deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Rank findRank(String name) {
@@ -48,7 +48,7 @@ public class Search {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Utils.deepEquals(player.name, name));
+        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> StringUtils.deepEquals(player.name, name));
     }
 
     public static Block findBlock(String name) {

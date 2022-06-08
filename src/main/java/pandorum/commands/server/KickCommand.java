@@ -3,12 +3,10 @@ package pandorum.commands.server;
 import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Player;
-import pandorum.components.Bundle;
-import pandorum.util.Utils;
 
-import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.PluginVars.kickDuration;
-import static pandorum.util.Search.findLocale;
+import static pandorum.util.PlayerUtils.kick;
+import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findPlayer;
 
 public class KickCommand implements Cons<String[]> {
@@ -19,8 +17,8 @@ public class KickCommand implements Cons<String[]> {
             return;
         }
 
-        target.kick(Bundle.format("kick.kicked", findLocale(target.locale), Utils.millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
+        kick(target, kickDuration, true, "kick.kicked");
         Log.info("Игрок '@' был выгнан с сервера.", target.name);
-        Utils.sendToChat("events.server.kick", target.coloredName());
+        sendToChat("events.server.kick", target.coloredName());
     }
 }

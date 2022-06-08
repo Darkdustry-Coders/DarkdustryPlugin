@@ -4,8 +4,8 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 
 import static pandorum.PluginVars.currentVoteKick;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.voteChoice;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.StringUtils.voteChoice;
 
 public class VoteCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

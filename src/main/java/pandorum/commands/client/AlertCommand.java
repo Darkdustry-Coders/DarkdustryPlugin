@@ -6,7 +6,7 @@ import pandorum.data.PlayerData;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
 
 public class AlertCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

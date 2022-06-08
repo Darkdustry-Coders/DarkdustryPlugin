@@ -6,16 +6,16 @@ import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.components.Icons;
-import pandorum.util.Utils;
 
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findUnit;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.unitsList;
+import static pandorum.util.StringUtils.unitsList;
 
 public class UnitCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }

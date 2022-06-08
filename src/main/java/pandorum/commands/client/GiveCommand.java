@@ -5,16 +5,16 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.components.Icons;
-import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.itemsList;
+import static pandorum.util.StringUtils.itemsList;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }

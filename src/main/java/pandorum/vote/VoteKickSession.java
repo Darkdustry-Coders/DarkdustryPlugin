@@ -4,12 +4,12 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.components.Bundle;
 
-import static pandorum.PluginVars.*;
-import static pandorum.util.Search.findLocale;
+import static pandorum.PluginVars.kickDuration;
+import static pandorum.PluginVars.voteKickDuration;
+import static pandorum.util.PlayerUtils.kick;
+import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Utils.millisecondsToMinutes;
-import static pandorum.util.Utils.sendToChat;
 
 public class VoteKickSession extends VoteSession {
 
@@ -45,7 +45,7 @@ public class VoteKickSession extends VoteSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.coloredName(), millisecondsToMinutes(kickDuration));
             stop();
-            target.kick(Bundle.format("kick.votekicked", findLocale(target.locale), started.coloredName(), millisecondsToMinutes(kickDuration), discordServerUrl), kickDuration);
+            kick(target, kickDuration, true, "kick.votekicked", started.coloredName());
             return true;
         }
         return false;

@@ -2,22 +2,13 @@ package pandorum.util;
 
 import arc.Core;
 import arc.files.Fi;
-import arc.func.Cons;
 import arc.math.geom.Position;
-import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.gen.Building;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
 import mindustry.server.ServerControl;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import pandorum.components.Bundle;
-import pandorum.components.Icons;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,84 +18,14 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import static mindustry.Vars.content;
 import static mindustry.Vars.mods;
 import static pandorum.PluginVars.*;
-import static pandorum.discord.Bot.adminRole;
 
 public class Utils {
 
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
     }
-
-    public static int voteChoice(String value) {
-        return switch (value.toLowerCase()) {
-            case "y", "yes", "д", "да", "так", "+" -> 1;
-            case "n", "no", "н", "нет", "ні", "-" -> -1;
-            default -> 0;
-        };
-    }
-
-    // String utils
-
-    public static boolean deepEquals(String first, String second) {
-        return stripAll(first).equalsIgnoreCase(stripAll(second)) || stripAll(first).toLowerCase().contains(stripAll(second).toLowerCase());
-    }
-
-    public static String stripAll(String str) {
-        return Strings.stripColors(Strings.stripGlyphs(str));
-    }
-
-    public static String coloredTeam(Team team) {
-        return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
-    }
-
-    public static String unitsList() {
-        StringBuilder units = new StringBuilder();
-        content.units().each(unit -> units.append(" [white]").append(Icons.get(unit.name)).append(unit.name));
-        return units.toString();
-    }
-
-    public static String itemsList() {
-        StringBuilder items = new StringBuilder();
-        content.items().each(item -> items.append(" [white]").append(Icons.get(item.name)).append(item.name));
-        return items.toString();
-    }
-
-    public static String teamsList() {
-        StringBuilder teams = new StringBuilder();
-        for (Team team : Team.baseTeams) teams.append(" [white]").append(coloredTeam(team));
-        return teams.toString();
-    }
-
-    public static String getName(Unit unit) {
-        return Utils.notNullElse(unit.getControllerName(), Icons.get(unit.type.name));
-    }
-
-    // Player utils
-
-    public static boolean isAdmin(Player player) {
-        return player != null && player.admin;
-    }
-
-    public static boolean isAdmin(Member member) {
-        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
-    }
-
-    public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(Bundle.format(key, Search.findLocale(player.locale), values));
-    }
-
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(player -> bundled(player, key, values));
-    }
-
-    public static void eachPlayer(Team team, Cons<Player> cons) {
-        Groups.player.each(player -> player.team() == team, cons);
-    }
-
-    // Time utils
 
     public static String formatDate(long time) {
         DateFormat format = new SimpleDateFormat("HH:mm:ss");
@@ -130,8 +51,6 @@ public class Utils {
     public static long secondsToMinutes(long time) {
         return TimeUnit.SECONDS.toMinutes(time);
     }
-
-    // Mindustry utils
 
     public static Fi getPluginResource(String name) {
         return mods.locateMod("darkdustry-plugin").root.child(name);

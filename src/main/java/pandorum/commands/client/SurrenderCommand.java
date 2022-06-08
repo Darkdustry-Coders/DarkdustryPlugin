@@ -8,32 +8,34 @@ import mindustry.content.Blocks;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.util.Utils;
+import pandorum.util.StringUtils;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class SurrenderCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         Seq<String> teamVotes = votesSurrender.get(player.team(), Seq::new);
         if (teamVotes.contains(player.uuid())) {
-            Utils.bundled(player, "commands.already-voted");
+            bundled(player, "commands.already-voted");
             return;
         }
 
         if (!canVote) {
-            Utils.bundled(player, "commands.can-not-vote");
+            bundled(player, "commands.can-not-vote");
             return;
         }
 
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        Utils.sendToChat("commands.surrender.vote", Utils.coloredTeam(player.team()), player.coloredName(), cur, req);
+        sendToChat("commands.surrender.vote", StringUtils.coloredTeam(player.team()), player.coloredName(), cur, req);
 
         if (cur < req) return;
 
-        Utils.sendToChat("commands.surrender.passed", Utils.coloredTeam(player.team()));
+        sendToChat("commands.surrender.passed", StringUtils.coloredTeam(player.team()));
         votesSurrender.remove(player.team());
 
         world.tiles.eachTile(tile -> {

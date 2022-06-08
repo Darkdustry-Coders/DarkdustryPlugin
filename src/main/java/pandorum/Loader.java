@@ -23,10 +23,10 @@ import pandorum.commands.client.MapsListCommand;
 import pandorum.commands.client.PlayersListCommand;
 import pandorum.commands.client.SavesListCommand;
 import pandorum.commands.client.*;
-import pandorum.commands.discord.*;
 import pandorum.commands.discord.BanCommand;
 import pandorum.commands.discord.KickCommand;
 import pandorum.commands.discord.StatusCommand;
+import pandorum.commands.discord.*;
 import pandorum.commands.server.*;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
@@ -211,8 +211,8 @@ public class Loader {
         handler.register("rules", "[remove/add] [name] [value...]", "List, add or remove global rules.", new RulesCommand());
         handler.register("config", "[name] [value...]", "Configure server settings.", new ConfigCommand());
         handler.register("nextmap", "<map...>", "Set the next map to be played after a gameover. Overrides shuffling.", new NextMapCommand());
-        handler.register("kick", "<ID/username...>", "Kick a player from the server.", new KickCommand());
-        handler.register("ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", new BanCommand());
+        handler.register("kick", "<ID/username...>", "Kick a player from the server.", new pandorum.commands.server.KickCommand());
+        handler.register("ban", "<type> <uuid/username/ip...>", "Ban a player by UUID, name or IP.", new pandorum.commands.server.BanCommand());
         handler.register("bans", "[clear]", "List of all banned IPs and UUIDs.", new BansListCommand());
         handler.register("unban", "<uuid/all/ip...>", "Unban a player by UUID or IP.", new UnbanCommand());
         handler.register("pardon", "<uuid/ip...>", "Pardon a kicked player.", new PardonCommand());
@@ -225,7 +225,5 @@ public class Loader {
         handler.register("despawn", "Kill all units.", new pandorum.commands.server.DespawnCommand());
         handler.register("restart", "Restart the server.", new RestartCommand());
         handler.register("setrank", "<rank> <ID/username...>", "Set a rank for player.", new SetRankCommand());
-
-        handler.register("setdata", "<uuid> <playtime> <buildings> <games>", "Shiza?", new SetDataCommand());
     }
 }

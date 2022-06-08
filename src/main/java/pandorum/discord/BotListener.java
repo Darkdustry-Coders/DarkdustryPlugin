@@ -14,8 +14,8 @@ import java.awt.*;
 
 import static pandorum.PluginVars.config;
 import static pandorum.discord.Bot.*;
-import static pandorum.util.Utils.isAdmin;
-import static pandorum.util.Utils.sendToChat;
+import static pandorum.util.PlayerUtils.isAdmin;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class BotListener extends ListenerAdapter {
 

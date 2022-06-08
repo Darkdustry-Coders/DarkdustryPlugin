@@ -7,8 +7,8 @@ import pandorum.data.PlayerData;
 import static pandorum.PluginVars.codeLanguages;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findTranslatorLocale;
-import static pandorum.util.Utils.bundled;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

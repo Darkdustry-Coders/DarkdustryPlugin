@@ -5,14 +5,14 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.graphics.Pal;
 import pandorum.components.Bundle;
-import pandorum.util.Utils;
 
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 
 public class AdminChatCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }

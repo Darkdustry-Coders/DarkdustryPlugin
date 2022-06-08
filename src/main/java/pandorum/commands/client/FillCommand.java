@@ -6,16 +6,16 @@ import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import pandorum.components.Icons;
-import pandorum.util.Utils;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.maxFillSize;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findBlock;
-import static pandorum.util.Utils.bundled;
 
 public class FillCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }

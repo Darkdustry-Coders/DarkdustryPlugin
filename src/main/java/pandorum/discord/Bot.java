@@ -33,7 +33,7 @@ public class Bot {
 
     public static void connect() {
         try {
-            jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady();
+            jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady(); // А токена тут нету
             jda.addEventListener(new BotListener());
 
             guild = jda.getGuildById(config.discordGuildID);

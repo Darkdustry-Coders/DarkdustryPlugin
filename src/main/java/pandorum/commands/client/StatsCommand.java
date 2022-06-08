@@ -11,9 +11,9 @@ import pandorum.util.Utils;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.listeners.handlers.MenuHandler.statsMenu;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
-import static pandorum.util.Utils.bundled;
 
 public class StatsCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

@@ -7,19 +7,19 @@ import mindustry.gen.Player;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import pandorum.util.Utils;
 
 import java.awt.*;
 
 import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.features.Authme.*;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Utils.secondsToMinutes;
 
 public class LoginCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (Utils.isAdmin(player)) {
+        if (isAdmin(player)) {
             bundled(player, "commands.login.already-admin");
             return;
         }

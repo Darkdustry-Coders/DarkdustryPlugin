@@ -8,10 +8,10 @@ import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
-import pandorum.util.Utils;
 
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 
 public class PlayersListCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -34,7 +34,7 @@ public class PlayersListCommand implements CommandRunner<Player> {
         for (int i = 8 * page; i < Math.min(8 * (page + 1), playersList.size); i++) {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
-            if (Utils.isAdmin(p)) result.append(Iconc.admin).append(" ");
+            if (isAdmin(p)) result.append(Iconc.admin).append(" ");
             result.append(p.coloredName()).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])");
         }
 

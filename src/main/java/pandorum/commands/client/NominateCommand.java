@@ -14,19 +14,20 @@ import pandorum.vote.VoteSession;
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
 import static pandorum.PluginVars.*;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findMap;
 import static pandorum.util.Search.findSave;
 
 public class NominateCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         if (currentVote[0] != null) {
-            Utils.bundled(player, "commands.vote-already-started");
+            bundled(player, "commands.vote-already-started");
             return;
         }
 
         Timekeeper cooldown = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!cooldown.get() && !player.admin) {
-            Utils.bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
+            bundled(player, "commands.nominate.cooldown", Utils.secondsToMinutes(nominateCooldownTime));
             return;
         }
 
@@ -34,7 +35,7 @@ public class NominateCommand implements CommandRunner<Player> {
             case "map" -> {
                 Map map = findMap(args[1]);
                 if (map == null) {
-                    Utils.bundled(player, "commands.nominate.map.not-found");
+                    bundled(player, "commands.nominate.map.not-found");
                     return;
                 }
                 VoteSession session = new VoteMapSession(currentVote, map);
@@ -52,7 +53,7 @@ public class NominateCommand implements CommandRunner<Player> {
             case "load" -> {
                 Fi save = findSave(args[1]);
                 if (save == null) {
-                    Utils.bundled(player, "commands.nominate.load.not-found");
+                    bundled(player, "commands.nominate.load.not-found");
                     return;
                 }
                 VoteSession session = new VoteLoadSession(currentVote, save);
@@ -60,7 +61,7 @@ public class NominateCommand implements CommandRunner<Player> {
                 session.vote(player, 1);
                 cooldown.reset();
             }
-            default -> Utils.bundled(player, "commands.nominate.incorrect-mode");
+            default -> bundled(player, "commands.nominate.incorrect-mode");
         }
     }
 }

@@ -4,12 +4,10 @@ import arc.func.Cons;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.components.Bundle;
-import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.discordServerUrl;
-import static pandorum.util.Search.findLocale;
+import static pandorum.util.PlayerUtils.kick;
+import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findPlayer;
 
 public class BanCommand implements Cons<String[]> {
@@ -27,9 +25,9 @@ public class BanCommand implements Cons<String[]> {
                 Player target = findPlayer(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
-                    target.kick(Bundle.format("kick.banned", findLocale(target.locale), discordServerUrl), 0);
+                    kick(target, 0, true, "kick.banned");
                     Log.info("Игрок '@' успешно забанен.", target.name);
-                    Utils.sendToChat("events.server.ban", target.coloredName());
+                    sendToChat("events.server.ban", target.coloredName());
                 } else {
                     Log.err("Игрок '@' не найден...", args[1]);
                 }
@@ -42,8 +40,8 @@ public class BanCommand implements Cons<String[]> {
         }
 
         Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
-            player.kick(Bundle.format("kick.banned", findLocale(player.locale), discordServerUrl), 0);
-            Utils.sendToChat("events.server.ban", player.coloredName());
+            kick(player, 0, true, "kick.banned");
+            sendToChat("events.server.ban", player.coloredName());
         });
     }
 }

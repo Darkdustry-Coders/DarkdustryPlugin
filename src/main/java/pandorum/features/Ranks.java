@@ -8,12 +8,7 @@ import static pandorum.data.Database.setPlayerData;
 
 public class Ranks {
 
-    public static Rank player;
-    public static Rank active;
-    public static Rank activePlus;
-    public static Rank veteran;
-    public static Rank contributor;
-    public static Rank admin;
+    public static Rank player, active, activePlus, veteran, contributor, admin;
 
     public static void load() {
         player = new Rank() {{

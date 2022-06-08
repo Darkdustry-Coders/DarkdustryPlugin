@@ -6,12 +6,12 @@ import pandorum.components.Icons;
 import pandorum.data.PlayerData;
 import pandorum.features.history.entry.DepositEntry;
 import pandorum.features.history.entry.HistoryEntry;
-import pandorum.util.Utils;
+import pandorum.util.PlayerUtils;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
 import static pandorum.data.Database.getPlayerData;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Utils.isDangerousDeposit;
 
 public class OnDeposit implements Cons<DepositEvent> {
@@ -25,10 +25,10 @@ public class OnDeposit implements Cons<DepositEvent> {
         if (!alertsEnabled() || !state.rules.reactorExplosions) return;
 
         if (isDangerousDeposit(event.tile, event.tile.team, event.item)) {
-            Utils.eachPlayer(event.player.team(), player -> {
+            PlayerUtils.eachPlayer(event.player.team(), player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
-                    bundled(player, "events.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+                    bundled(player, "alert.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
                 }
             });
         }

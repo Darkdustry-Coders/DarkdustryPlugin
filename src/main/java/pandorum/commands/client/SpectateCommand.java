@@ -2,16 +2,16 @@ package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.util.Utils;
 
 import static pandorum.PluginVars.activeSpectatingPlayers;
 import static pandorum.PluginVars.spectateTeam;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
-import static pandorum.util.Utils.bundled;
 
 public class SpectateCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!Utils.isAdmin(player)) {
+        if (!isAdmin(player)) {
             bundled(player, "commands.permission-denied");
             return;
         }

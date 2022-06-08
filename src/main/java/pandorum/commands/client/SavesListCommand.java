@@ -10,8 +10,8 @@ import mindustry.io.SaveIO;
 import pandorum.components.Bundle;
 
 import static mindustry.Vars.saveDirectory;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 
 public class SavesListCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

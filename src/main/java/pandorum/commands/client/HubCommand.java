@@ -7,7 +7,7 @@ import mindustry.gen.Player;
 import static mindustry.Vars.net;
 import static mindustry.Vars.port;
 import static pandorum.PluginVars.config;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
 
 public class HubCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

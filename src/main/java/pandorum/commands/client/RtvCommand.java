@@ -6,12 +6,11 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.PluginVars.*;
-import static pandorum.util.Utils.bundled;
-import static pandorum.util.Utils.sendToChat;
+import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class RtvCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -21,7 +20,7 @@ public class RtvCommand implements CommandRunner<Player> {
         }
 
         if (!canVote) {
-            Utils.bundled(player, "commands.can-not-vote");
+            bundled(player, "commands.can-not-vote");
             return;
         }
 

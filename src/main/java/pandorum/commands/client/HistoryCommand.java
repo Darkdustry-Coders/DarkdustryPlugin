@@ -4,7 +4,7 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 
 import static pandorum.PluginVars.activeHistoryPlayers;
-import static pandorum.util.Utils.bundled;
+import static pandorum.util.PlayerUtils.bundled;
 
 public class HistoryCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

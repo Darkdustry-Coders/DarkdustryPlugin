@@ -11,8 +11,8 @@ import pandorum.components.Bundle;
 import java.util.Comparator;
 
 import static pandorum.PluginVars.clientCommands;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.Utils.bundled;
 
 public class HelpCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

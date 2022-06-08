@@ -4,7 +4,7 @@ import arc.func.Cons;
 import arc.util.Log;
 
 import static pandorum.discord.Bot.text;
-import static pandorum.util.Utils.sendToChat;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class SayCommand implements Cons<String[]> {
     public void get(String[] args) {
