@@ -9,6 +9,7 @@ import pandorum.discord.Context;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.state;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
@@ -17,13 +18,29 @@ public class BanCommand implements CommandRunner<Context> {
 
     @Override
     public void accept(String[] args, Context context) {
+        Player target = findPlayer(args[0]);
+
+        if (!Utils.isAdmin(context.member)) {
+            context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+            return;
+        }
+
+        if (state.isMenu()) {
+            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
+            return;
+        }
+
+        if (target == null) {
+            Log.err("Игрок '@' не найден...", args[0]);
+            return;
+        }
+
         switch (args[0].toLowerCase()) {
             case "id", "uuid" -> {
                 netServer.admins.banPlayerID(args[1]);
                 Log.info("Игрок '@' успешно забанен.", args[1]);
             }
             case "name", "username" -> {
-                Player target = findPlayer(args[1]);
                 if (target != null) {
                     netServer.admins.banPlayer(target.uuid());
                     target.kick(Bundle.format("kick.banned", findLocale(target.locale), discordServerUrl), 0);
