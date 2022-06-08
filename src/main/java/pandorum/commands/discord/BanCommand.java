@@ -20,7 +20,7 @@ public class BanCommand implements CommandRunner<Context> {
             return;
         }
 
-        Player target = findPlayer(args[1]);
+        Player target = findPlayer(args[0]);
         if (target == null) {
             context.err(":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
             return;
