@@ -15,7 +15,7 @@ public class AdminsListCommand implements Cons<String[]> {
                 netServer.admins.unAdminPlayer(info.id);
                 Ranks.setRank(info.id, Ranks.player);
             });
-            // TODO сообщение в консоль о том, что все админки сняты
+            Log.info("Список админов очищен.");
             return;
         }
 
