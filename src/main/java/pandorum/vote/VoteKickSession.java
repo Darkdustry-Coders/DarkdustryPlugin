@@ -42,7 +42,7 @@ public class VoteKickSession extends VoteSession {
     @Override
     public boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), kickDuration / 1000);
+            sendToChat("commands.votekick.passed", target.coloredName(), kickDuration / 60000);
             stop();
             kick(target, kickDuration, true, "kick.votekicked", started.coloredName());
             return true;

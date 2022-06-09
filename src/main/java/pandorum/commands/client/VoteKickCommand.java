@@ -52,7 +52,6 @@ public class VoteKickCommand implements CommandRunner<Player> {
         VoteKickSession session = new VoteKickSession(currentVoteKick, player, target);
         currentVoteKick[0] = session;
         session.vote(player, 1);
-        bundled(target, "commands.votekick.do-not-leave", kickDuration / 1000);
         cooldown.reset();
     }
 }

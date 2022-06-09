@@ -58,15 +58,12 @@ public class VoteLoadSession extends VoteSession {
                 reloader.end();
             };
 
-            Timer.schedule(new Task() {
-                @Override
-                public void run() {
-                    try {
-                        r.run();
-                    } catch (MapException e) {
-                        Log.err("@: @", e.map.name(), e.getMessage());
-                        net.closeServer();
-                    }
+            Timer.schedule(() -> {
+                try {
+                    r.run();
+                } catch (MapException e) {
+                    Log.err("@: @", e.map.name(), e.getMessage());
+                    net.closeServer();
                 }
             }, 10f);
             return true;

@@ -31,7 +31,7 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         if (currentVoteKick[0] != null && event.player == currentVoteKick[0].target()) {
             currentVoteKick[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
-            sendToChat("commands.votekick.left", event.player.coloredName(), kickDuration / 1000);
+            sendToChat("commands.votekick.left", event.player.coloredName(), kickDuration / 60000);
         }
 
         if (config.mode == Gamemode.pvp) {
