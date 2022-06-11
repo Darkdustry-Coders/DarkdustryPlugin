@@ -27,7 +27,7 @@ public class RtvCommand implements CommandRunner<Player> {
         votesRtv.add(player.uuid());
         int cur = votesRtv.size;
         int req = Mathf.ceil(voteRatio * Groups.player.size());
-        sendToChat("commands.rtv.vote", player.coloredName(), cur, req);
+        sendToChat("commands.rtv.vote", player.name, cur, req);
 
         if (cur < req) return;
 

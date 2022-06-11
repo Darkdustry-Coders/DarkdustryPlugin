@@ -27,7 +27,7 @@ public class Bot {
 
     public static JDA jda;
 
-    public static Guild guild;
+    public static Guild botGuild;
     public static Role adminRole;
     public static MessageChannel botChannel, adminChannel;
 
@@ -36,14 +36,14 @@ public class Bot {
             jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady(); // А токена тут нету
             jda.addEventListener(new BotListener());
 
-            guild = jda.getGuildById(config.discordGuildID);
-            adminRole = guild.getRoleById(config.discordAdminRoleID);
-            botChannel = guild.getTextChannelById(config.discordBotChannelID);
-            adminChannel = guild.getTextChannelById(config.discordAdminChannelID);
+            botGuild = jda.getGuildById(config.discordGuildID);
+            adminRole = botGuild.getRoleById(config.discordAdminRoleID);
+            botChannel = botGuild.getTextChannelById(config.discordBotChannelID);
+            adminChannel = botGuild.getTextChannelById(config.discordAdminChannelID);
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
-            guild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
+            botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
             discordCommands = new CommandHandler(config.discordBotPrefix);
             Loader.registerDiscordCommands(discordCommands);
@@ -56,7 +56,8 @@ public class Bot {
     }
 
     public static void handleMessage(Context context) {
-        CommandResponse response = discordCommands.handleMessage(context.contentRaw, context);
+        CommandResponse response = discordCommands.handleMessage(context.message.getContentRaw(), context);
+
         if (response.type == ResponseType.unknownCommand) {
             context.err(":interrobang: Неизвестная команда.", "Используй: **@help**, чтобы получить список доступных команд.", discordCommands.getPrefix());
         } else if (response.type == ResponseType.fewArguments) {

@@ -19,6 +19,6 @@ public class KickCommand implements Cons<String[]> {
 
         kick(target, kickDuration, true, "kick.kicked");
         Log.info("Игрок '@' был выгнан с сервера.", target.name);
-        sendToChat("events.server.kick", target.coloredName());
+        sendToChat("events.server.kick", target.name);
     }
 }

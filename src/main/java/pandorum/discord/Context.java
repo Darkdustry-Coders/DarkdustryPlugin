@@ -2,33 +2,31 @@ package pandorum.discord;
 
 import arc.util.Strings;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
-import java.util.List;
 
 public class Context {
 
     public final Message message;
     public final Member member;
-    public final User author;
     public final MessageChannel channel;
-
-    public final List<Attachment> attachments;
-    public final String contentRaw;
-    public final String contentDisplay;
 
     public Context(MessageReceivedEvent event) {
         this.message = event.getMessage();
         this.member = event.getMember();
-        this.author = event.getAuthor();
         this.channel = event.getChannel();
+    }
 
-        this.attachments = message.getAttachments();
-        this.contentRaw = message.getContentRaw();
-        this.contentDisplay = message.getContentDisplay();
+    public Context(ButtonInteractionEvent event) {
+        this.message = event.getMessage();
+        this.member = event.getMember();
+        this.channel = event.getChannel();
     }
 
     public void sendEmbed(MessageEmbed embed) {

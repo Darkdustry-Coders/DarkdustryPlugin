@@ -31,7 +31,7 @@ public class SurrenderCommand implements CommandRunner<Player> {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        sendToChat("commands.surrender.vote", StringUtils.coloredTeam(player.team()), player.coloredName(), cur, req);
+        sendToChat("commands.surrender.vote", StringUtils.coloredTeam(player.team()), player.name, cur, req);
 
         if (cur < req) return;
 

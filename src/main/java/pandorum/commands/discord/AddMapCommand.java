@@ -16,12 +16,12 @@ public class AddMapCommand implements CommandRunner<Context> {
             return;
         }
 
-        if (context.attachments.size() != 1 || !context.attachments.get(0).getFileName().endsWith(mapExtension)) {
+        if (context.message.getAttachments().size() != 1 || !context.message.getAttachments().get(0).getFileName().endsWith(mapExtension)) {
             context.err(":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
             return;
         }
 
-        Attachment attachment = context.attachments.get(0);
+        Attachment attachment = context.message.getAttachments().get(0);
 
         attachment.downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
             Fi mapFile = new Fi(file);

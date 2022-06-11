@@ -9,6 +9,6 @@ import static pandorum.util.Search.findLocale;
 
 public class TeamChatCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        PlayerUtils.eachPlayer(player.team(), p -> p.sendMessage(Bundle.format("commands.t.chat", findLocale(p.locale), player.team().color, player.coloredName(), args[0]), player, args[0]));
+        PlayerUtils.eachPlayer(player.team(), p -> p.sendMessage(Bundle.format("commands.t.chat", findLocale(p.locale), player.team().color, player.name, args[0]), player, args[0]));
     }
 }

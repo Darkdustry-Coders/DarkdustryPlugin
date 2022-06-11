@@ -25,7 +25,7 @@ public class VnwCommand implements CommandRunner<Player> {
         votesVnw.add(player.uuid());
         int cur = votesVnw.size;
         int req = Mathf.ceil(voteRatio * Groups.player.size());
-        sendToChat("commands.vnw.vote", player.coloredName(), cur, req);
+        sendToChat("commands.vnw.vote", player.name, cur, req);
 
         if (cur < req) return;
 

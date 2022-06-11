@@ -25,7 +25,7 @@ public class VoteKickSession extends VoteSession {
     public Task start() {
         return Timer.schedule(() -> {
             if (!checkPass()) {
-                sendToChat("commands.votekick.failed", target.coloredName());
+                sendToChat("commands.votekick.failed", target.name);
                 stop();
             }
         }, voteKickDuration);
@@ -35,16 +35,16 @@ public class VoteKickSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes, votesRequired());
+        sendToChat("commands.votekick.vote", player.name, target.name, votes, votesRequired());
         checkPass();
     }
 
     @Override
     public boolean checkPass() {
         if (votes >= votesRequired()) {
-            sendToChat("commands.votekick.passed", target.coloredName(), kickDuration / 60000);
+            sendToChat("commands.votekick.passed", target.name, kickDuration / 60000);
             stop();
-            kick(target, kickDuration, true, "kick.votekicked", started.coloredName());
+            kick(target, kickDuration, true, "kick.votekicked", started.name);
             return true;
         }
         return false;

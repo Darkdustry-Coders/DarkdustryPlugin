@@ -42,7 +42,7 @@ public class RankCommand implements CommandRunner<Player> {
         }
 
         Call.menu(player.con, rankInfoMenu,
-                Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.coloredName()),
+                Bundle.format("commands.rank.menu.header", findLocale(player.locale), target.name),
                 builder.toString(),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}, {Bundle.format("commands.rank.menu.requirements", findLocale(player.locale))}}
         );

@@ -37,6 +37,7 @@ import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
 public class ConfigEntry implements HistoryEntry {
+
     public final String name;
     public final short blockID;
     public final Object value;

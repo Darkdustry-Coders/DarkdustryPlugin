@@ -11,6 +11,7 @@ import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
 public class DepositEntry implements HistoryEntry {
+
     public final String name;
     public final short blockID;
     public final short itemID;

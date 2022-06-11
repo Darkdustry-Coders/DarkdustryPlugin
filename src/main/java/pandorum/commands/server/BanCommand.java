@@ -18,7 +18,7 @@ public class BanCommand implements Cons<String[]> {
             netServer.admins.banPlayer(target.uuid());
             kick(target, 0, true, "kick.banned");
             Log.info("Игрок '@' успешно забанен.", target.name);
-            sendToChat("events.server.ban", target.coloredName());
+            sendToChat("events.server.ban", target.name);
             return;
         }
 
@@ -29,11 +29,11 @@ public class BanCommand implements Cons<String[]> {
         }
 
         netServer.admins.banPlayer(info.id);
-        Log.info("Игрок '@' успешно забанен.", args[0]);
+        Log.info("Игрок '@' успешно забанен.", info.lastName);
 
         Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
             kick(player, 0, true, "kick.banned");
-            sendToChat("events.server.ban", player.coloredName());
+            sendToChat("events.server.ban", player.name);
         });
     }
 }

@@ -37,6 +37,6 @@ public class UnitCommand implements CommandRunner<Player> {
         unit.spawnedByCore(true);
         bundled(target, "commands.admin.unit.success", Icons.get(type.name));
         if (target != player)
-            bundled(player, "commands.admin.unit.changed", target.coloredName(), Icons.get(type.name));
+            bundled(player, "commands.admin.unit.changed", target.name, Icons.get(type.name));
     }
 }

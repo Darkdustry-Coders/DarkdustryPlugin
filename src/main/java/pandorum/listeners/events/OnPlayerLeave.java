@@ -31,22 +31,22 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         if (currentVoteKick[0] != null && event.player == currentVoteKick[0].target()) {
             currentVoteKick[0].stop();
             netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
-            sendToChat("commands.votekick.left", event.player.coloredName(), kickDuration / 60000);
+            sendToChat("commands.votekick.left", event.player.name, kickDuration / 60000);
         }
 
         if (config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
-                sendToChat("commands.surrender.left", StringUtils.coloredTeam(event.player.team()), event.player.coloredName(), teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                sendToChat("commands.surrender.left", StringUtils.coloredTeam(event.player.team()), event.player.name, teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 
         if (votesRtv.remove(event.player.uuid())) {
-            sendToChat("commands.rtv.left", event.player.coloredName(), votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
+            sendToChat("commands.rtv.left", event.player.name, votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
 
         if (votesVnw.remove(event.player.uuid())) {
-            sendToChat("commands.vnw.left", event.player.coloredName(), votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
+            sendToChat("commands.vnw.left", event.player.name, votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         }
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);

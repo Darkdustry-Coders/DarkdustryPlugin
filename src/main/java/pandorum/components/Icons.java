@@ -3,6 +3,7 @@ package pandorum.components;
 import arc.files.Fi;
 import arc.struct.StringMap;
 import arc.util.Log;
+import mindustry.gen.Iconc;
 
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class Icons {
     public static void load() {
         Fi icons = getPluginResource("icons.properties");
 
-        try (Scanner scanner = new Scanner(icons.read(512));) {
+        try (Scanner scanner = new Scanner(icons.read(512))) {
             while (scanner.hasNextLine()) {
                 String[] lines = scanner.nextLine().split("="), names = lines[1].split("\\|");
                 String name = names[0], icon = String.valueOf((char) Integer.parseInt(lines[0]));

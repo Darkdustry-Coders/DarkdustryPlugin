@@ -35,7 +35,7 @@ public class PlayersListCommand implements CommandRunner<Player> {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
             if (isAdmin(p)) result.append(Iconc.admin).append(" ");
-            result.append(p.coloredName()).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])");
+            result.append(p.name).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])");
         }
 
         player.sendMessage(result.toString());

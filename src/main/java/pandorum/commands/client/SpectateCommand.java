@@ -32,6 +32,6 @@ public class SpectateCommand implements CommandRunner<Player> {
 
         bundled(target, activeSpectatingPlayers.containsKey(target.uuid()) ? "commands.admin.spectate.success.enabled" : "commands.admin.spectate.success.disabled");
         if (target != player)
-            bundled(player, activeSpectatingPlayers.containsKey(target.uuid()) ? "commands.admin.spectate.changed.enabled" : "commands.admin.spectate.changed.disabled", target.coloredName());
+            bundled(player, activeSpectatingPlayers.containsKey(target.uuid()) ? "commands.admin.spectate.changed.enabled" : "commands.admin.spectate.changed.disabled", target.name);
     }
 }

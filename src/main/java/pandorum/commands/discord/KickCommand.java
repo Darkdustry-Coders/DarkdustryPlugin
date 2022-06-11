@@ -26,6 +26,6 @@ public class KickCommand implements CommandRunner<Context> {
 
         kick(target, kickDuration, true, "kick.kicked");
         context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
-        sendToChat("events.server.kick", target.coloredName());
+        sendToChat("events.server.kick", target.name);
     }
 }

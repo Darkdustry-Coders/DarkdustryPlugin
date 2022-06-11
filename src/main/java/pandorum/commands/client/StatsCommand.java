@@ -26,7 +26,7 @@ public class StatsCommand implements CommandRunner<Player> {
         Rank rank = Ranks.getRank(data.rank);
 
         Call.menu(player.con, statsMenu,
-                Bundle.format("commands.stats.menu.header", findLocale(player.locale), target.coloredName()),
+                Bundle.format("commands.stats.menu.header", findLocale(player.locale), target.name),
                 Bundle.format("commands.stats.menu.content", findLocale(player.locale), rank.tag, rank.displayName, data.playTime / 60, data.buildingsBuilt, data.gamesPlayed),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(player.locale))}}
         );

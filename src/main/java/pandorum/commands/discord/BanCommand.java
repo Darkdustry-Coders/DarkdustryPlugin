@@ -26,6 +26,6 @@ public class BanCommand implements CommandRunner<Context> {
         netServer.admins.banPlayer(target.uuid());
         kick(target, 0, true, "kick.banned");
         context.info(":dagger: Игрок успешно забанен.", "@ больше не сможет зайти на сервер.", target.name);
-        sendToChat("events.server.ban", target.coloredName());
+        sendToChat("events.server.ban", target.name);
     }
 }

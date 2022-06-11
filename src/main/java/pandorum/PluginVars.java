@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
-import mindustry.gen.Player;
+import mindustry.gen.Iconc;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
@@ -64,9 +64,6 @@ public class PluginVars {
     /** Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 
-    /** Время, на которое игрок будет выгнан за абьюз команды /login. В миллисекундах. */
-    public static final long loginAbuseKickDuration = 5400000L;
-
     /** Локаль по умолчанию. */
     public static final String defaultLocale = "en", defaultTranslatorLocale = "en_GB";
 
@@ -96,7 +93,8 @@ public class PluginVars {
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
-    public static final ObjectMap<Message, Player> loginWaiting = new ObjectMap<>();
+
+    public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
@@ -110,6 +108,8 @@ public class PluginVars {
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
+
+    public static final char[] rotateIcons = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;

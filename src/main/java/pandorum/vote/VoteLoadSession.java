@@ -36,7 +36,7 @@ public class VoteLoadSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.nominate.load.vote", player.coloredName(), target.nameWithoutExtension(), votes, votesRequired());
+        sendToChat("commands.nominate.load.vote", player.name, target.nameWithoutExtension(), votes, votesRequired());
         checkPass();
     }
 

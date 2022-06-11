@@ -64,7 +64,7 @@ public class MenuHandler {
 
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
-                sendToChat("commands.admin.artv.info", player.coloredName());
+                sendToChat("commands.admin.artv.info", player.name);
             }
         });
 

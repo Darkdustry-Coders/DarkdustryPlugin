@@ -35,7 +35,7 @@ public class VoteMapSession extends VoteSession {
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
-        sendToChat("commands.nominate.map.vote", player.coloredName(), target.name(), votes, votesRequired());
+        sendToChat("commands.nominate.map.vote", player.name, target.name(), votes, votesRequired());
         checkPass();
     }
 

@@ -10,10 +10,12 @@ import pandorum.components.Icons;
 import java.util.Locale;
 
 import static mindustry.Vars.content;
+import static pandorum.PluginVars.rotateIcons;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
 public class BlockEntry implements HistoryEntry {
+
     public final String name;
     public final short blockID;
     public final byte rotation;
@@ -33,6 +35,6 @@ public class BlockEntry implements HistoryEntry {
         String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
-        return breaking ? Bundle.format("history.block.deconstruct", locale, name, date) : Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date) + (block.rotate ? Bundle.format("history.block.construct.rotate", locale, RotateEntry.sides[rotation]) : "");
+        return breaking ? Bundle.format("history.block.deconstruct", locale, name, date) : Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date) + (block.rotate ? Bundle.format("history.block.construct.rotate", locale, rotateIcons[rotation]) : "");
     }
 }

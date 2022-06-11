@@ -17,6 +17,6 @@ public class AdminChatCommand implements CommandRunner<Player> {
             return;
         }
 
-        Groups.player.each(Player::admin, p -> p.sendMessage(Bundle.format("commands.admin.a.chat", findLocale(p.locale), Pal.adminChat, player.coloredName(), args[0]), player, args[0]));
+        Groups.player.each(Player::admin, p -> p.sendMessage(Bundle.format("commands.admin.a.chat", findLocale(p.locale), Pal.adminChat, player.name, args[0]), player, args[0]));
     }
 }
