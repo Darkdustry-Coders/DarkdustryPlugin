@@ -1,2 +1,2 @@
 ## Darkdustry plugin
-### Made for private use.
+### No u.
