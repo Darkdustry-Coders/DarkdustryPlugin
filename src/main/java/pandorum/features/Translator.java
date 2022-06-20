@@ -30,7 +30,7 @@ public class Translator {
                 .header("user-agent", "darkdustry")
                 .header("content-type", "application/json")
                 .submit(response -> {
-                    JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).getAsJsonArray();
+                    JsonArray languages = gson.fromJson(response.getResultAsString(), JsonArray.class).getAsJsonArray();
                     for (JsonElement element : languages) {
                         JsonObject language = element.getAsJsonObject();
                         codeLanguages.put(language.get("code").getAsString(), language.get("name").getAsString());
