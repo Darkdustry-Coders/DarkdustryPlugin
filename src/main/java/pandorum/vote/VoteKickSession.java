@@ -15,6 +15,7 @@ public class VoteKickSession extends VoteSession {
     protected final Player target;
 
     public VoteKickSession(Player plaintiff, Player target) {
+        super();
         this.plaintiff = plaintiff;
         this.target = target;
     }
@@ -62,9 +63,5 @@ public class VoteKickSession extends VoteSession {
 
     public Player target() {
         return target;
-    }
-
-    public Player plaintiff() {
-        return plaintiff;
     }
 }

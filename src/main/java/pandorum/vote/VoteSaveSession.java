@@ -2,13 +2,14 @@ package pandorum.vote;
 
 import arc.Core;
 import arc.files.Fi;
+import arc.math.Mathf;
 import arc.util.Timer;
 import arc.util.Timer.Task;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static pandorum.PluginVars.currentVote;
-import static pandorum.PluginVars.voteDuration;
+import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.sendToChat;
 
 public class VoteSaveSession extends VoteSession {
@@ -16,6 +17,7 @@ public class VoteSaveSession extends VoteSession {
     protected final Fi target;
 
     public VoteSaveSession(Fi target) {
+        super();
         this.target = target;
     }
 
@@ -53,5 +55,10 @@ public class VoteSaveSession extends VoteSession {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int votesRequired() {
+        return Mathf.ceil(voteRatio * Groups.player.size());
     }
 }

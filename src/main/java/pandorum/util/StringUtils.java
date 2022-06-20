@@ -11,8 +11,8 @@ public class StringUtils {
 
     public static int voteChoice(String value) {
         return switch (value.toLowerCase()) {
-            case "y", "yes", "д", "да", "так", "+" -> 1;
-            case "n", "no", "н", "нет", "ні", "-" -> -1;
+            case "y", "yes", "+" -> 1;
+            case "n", "no", "-" -> -1;
             default -> 0;
         };
     }

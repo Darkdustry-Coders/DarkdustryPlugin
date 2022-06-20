@@ -24,7 +24,7 @@ public class VoteKickCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = voteKickCooldowns.get(player.uuid(), () -> new Timekeeper(voteKickCooldownTime));
         if (!cooldown.get() && !player.admin) {
-            bundled(player, "commands.votekick.cooldown", voteKickCooldownTime / 60);
+            bundled(player, "commands.cooldown", voteKickCooldownTime / 60);
             return;
         }
 

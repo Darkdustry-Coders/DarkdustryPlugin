@@ -25,7 +25,7 @@ public class LoginCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = loginCooldowns.get(player.uuid(), () -> new Timekeeper(loginCooldownTime));
         if (!cooldown.get()) {
-            bundled(player, "commands.login.cooldown", loginCooldownTime / 60);
+            bundled(player, "commands.cooldown", loginCooldownTime / 60);
             return;
         }
 

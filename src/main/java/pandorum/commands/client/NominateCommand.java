@@ -25,7 +25,7 @@ public class NominateCommand implements CommandRunner<Player> {
 
         Timekeeper cooldown = nominateCooldowns.get(player.uuid(), () -> new Timekeeper(nominateCooldownTime));
         if (!cooldown.get() && !player.admin) {
-            bundled(player, "commands.nominate.cooldown", nominateCooldownTime / 60);
+            bundled(player, "commands.cooldown", nominateCooldownTime / 60);
             return;
         }
 

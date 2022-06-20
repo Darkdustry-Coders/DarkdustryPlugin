@@ -1,8 +1,10 @@
 package pandorum.vote;
 
+import arc.math.Mathf;
 import arc.util.Log;
 import arc.util.Timer;
 import arc.util.Timer.Task;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
@@ -17,6 +19,7 @@ public class VoteMapSession extends VoteSession {
     protected final Map target;
 
     public VoteMapSession(Map target) {
+        super();
         this.target = target;
     }
 
@@ -50,21 +53,17 @@ public class VoteMapSession extends VoteSession {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.map.passed", target.name());
 
-            Runnable r = () -> {
-                WorldReloader reloader = new WorldReloader();
-
-                reloader.begin();
-                world.loadMap(target, target.applyRules(state.rules.mode()));
-
-                state.rules = state.map.applyRules(state.rules.mode());
-                logic.play();
-
-                reloader.end();
-            };
-
             Timer.schedule(() -> {
                 try {
-                    r.run();
+                    WorldReloader reloader = new WorldReloader();
+
+                    reloader.begin();
+                    world.loadMap(target, target.applyRules(state.rules.mode()));
+
+                    state.rules = state.map.applyRules(state.rules.mode());
+                    logic.play();
+
+                    reloader.end();
                 } catch (MapException e) {
                     Log.err("@: @", e.map.name(), e.getMessage());
                     net.closeServer();
@@ -74,5 +73,10 @@ public class VoteMapSession extends VoteSession {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int votesRequired() {
+        return Mathf.ceil(voteRatio * Groups.player.size());
     }
 }

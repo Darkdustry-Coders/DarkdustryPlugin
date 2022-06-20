@@ -27,9 +27,7 @@ public abstract class VoteSession {
 
     public abstract boolean checkPass();
 
-    public int votesRequired() {
-        return Mathf.ceil(voteRatio * Groups.player.size());
-    }
+    public abstract int votesRequired();
 
     public Seq<String> voted() {
         return voted;
