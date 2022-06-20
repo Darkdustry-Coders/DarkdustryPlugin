@@ -7,6 +7,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import static pandorum.PluginVars.translatorLocales;
 import static pandorum.PluginVars.gson;
 
@@ -27,7 +30,7 @@ public class Translator {
     }
 
     public static void translateGoogle(String text, String to, Cons<String> cons) {
-        Http.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + to + "&dt=t&q=" + text)
+        Http.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + to + "&dt=t&q=" + URLEncoder.encode(text, StandardCharsets.UTF_8))
                 .header("user-agent", "darkdustry")
                 .error(e -> cons.get(""))
                 .submit(response -> {
