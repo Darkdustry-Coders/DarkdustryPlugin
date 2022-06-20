@@ -20,7 +20,7 @@ import pandorum.features.Ranks.Rank;
 import java.util.Locale;
 
 import static mindustry.Vars.*;
-import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.translatorLocales;
 
 public class Search {
 
@@ -39,12 +39,11 @@ public class Search {
     }
 
     public static Locale findLocale(String name) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> name.equals(l.toString()) || name.startsWith(l.toString()));
-        return Utils.notNullElse(locale, Bundle.defaultLocale());
+        return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equals(locale.toString()) || name.startsWith(locale.toString())), Bundle.defaultLocale());
     }
 
     public static String findTranslatorLocale(String name) {
-        return codeLanguages.keys().toSeq().find(l -> name.equals(l) || name.startsWith(l));
+        return translatorLocales.keys().toSeq().find(locale -> name.equals(locale) || name.startsWith(locale));
     }
 
     public static Player findPlayer(String name) {

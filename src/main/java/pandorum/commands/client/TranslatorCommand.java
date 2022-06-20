@@ -4,7 +4,7 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import pandorum.data.PlayerData;
 
-import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.translatorLocales;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
@@ -14,11 +14,15 @@ public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         PlayerData data = getPlayerData(player.uuid());
 
+        if (args.length == 0) {
+            bundled(player, "commands.tr.current", data.locale);
+            return;
+        }
+
         switch (args[0].toLowerCase()) {
-            case "current" -> bundled(player, "commands.tr.current", data.locale);
             case "list" -> {
                 StringBuilder locales = new StringBuilder();
-                codeLanguages.keys().toSeq().each(locale -> locales.append(locale).append(" "));
+                translatorLocales.keys().toSeq().each(locale -> locales.append(locale).append(" "));
                 bundled(player, "commands.tr.list", locales.toString());
             }
             case "off" -> {
@@ -40,7 +44,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
 
                 data.locale = locale;
                 setPlayerData(player.uuid(), data);
-                bundled(player, "commands.tr.changed", locale, codeLanguages.get(locale));
+                bundled(player, "commands.tr.changed", locale, translatorLocales.get(locale));
             }
         }
     }

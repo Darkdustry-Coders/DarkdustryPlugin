@@ -89,7 +89,7 @@ public class PluginVars {
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-    public static final ObjectMap<String, String> codeLanguages = new ObjectMap<>();
+    public static final ObjectMap<String, String> translatorLocales = new ObjectMap<>();
 
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 

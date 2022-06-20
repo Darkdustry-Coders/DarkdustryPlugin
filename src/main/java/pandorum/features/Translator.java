@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import static pandorum.PluginVars.codeLanguages;
+import static pandorum.PluginVars.translatorLocales;
 import static pandorum.PluginVars.gson;
 
 public class Translator {
@@ -33,7 +33,7 @@ public class Translator {
                     JsonArray languages = gson.fromJson(response.getResultAsString(), JsonArray.class).getAsJsonArray();
                     for (JsonElement element : languages) {
                         JsonObject language = element.getAsJsonObject();
-                        codeLanguages.put(language.get("code").getAsString(), language.get("name").getAsString());
+                        translatorLocales.put(language.get("code").getAsString(), language.get("name").getAsString());
                     }
                 });
     }

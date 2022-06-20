@@ -12,7 +12,7 @@ import pandorum.util.StringUtils;
 import pandorum.util.Utils;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.defaultLocale;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.text;
 import static pandorum.util.Search.findTranslatorLocale;
@@ -43,7 +43,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            Translator.translate(StringUtils.stripAll(text), codeLanguages.get(locale, defaultTranslatorLocale), translated -> {
+            Translator.translate(StringUtils.stripAll(text), locale, translated -> {
                 player.sendMessage(formatTranslated(formatted, translated), author, text);
                 cache.put(locale, translated);
             });
