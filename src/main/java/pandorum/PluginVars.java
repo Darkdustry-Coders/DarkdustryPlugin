@@ -86,9 +86,6 @@ public class PluginVars {
     /** Эффект при движении игрока. */
     public static final Effect moveEffect = Fx.freezing;
 
-    public static final VoteSession[] currentVote = {null};
-    public static final VoteKickSession[] currentVoteKick = {null};
-
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
@@ -127,6 +124,9 @@ public class PluginVars {
     public static PluginConfig config;
 
     public static HistorySeq[][] history;
+
+    public static VoteSession currentVote;
+    public static VoteKickSession currentVoteKick;
 
     public static CommandHandler clientCommands, serverCommands, discordCommands;
 

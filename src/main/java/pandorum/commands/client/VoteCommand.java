@@ -9,22 +9,22 @@ import static pandorum.util.StringUtils.voteChoice;
 
 public class VoteCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (currentVoteKick[0] == null) {
+        if (currentVoteKick == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (currentVoteKick[0].voted().contains(player.uuid())) {
+        if (currentVoteKick.voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
 
-        if (currentVoteKick[0].target() == player) {
+        if (currentVoteKick.target() == player) {
             bundled(player, "commands.vote.player-is-you");
             return;
         }
 
-        if (currentVoteKick[0].target().team() != player.team()) {
+        if (currentVoteKick.target().team() != player.team()) {
             bundled(player, "commands.vote.player-is-enemy");
             return;
         }
@@ -35,6 +35,6 @@ public class VoteCommand implements CommandRunner<Player> {
             return;
         }
 
-        currentVoteKick[0].vote(player, sign);
+        currentVoteKick.vote(player, sign);
     }
 }

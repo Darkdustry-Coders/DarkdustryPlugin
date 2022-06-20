@@ -5,19 +5,17 @@ import arc.util.Timer.Task;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import static pandorum.PluginVars.kickDuration;
-import static pandorum.PluginVars.voteKickDuration;
+import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.kick;
 import static pandorum.util.PlayerUtils.sendToChat;
 
 public class VoteKickSession extends VoteSession {
 
-    protected final Player started;
+    protected final Player plaintiff;
     protected final Player target;
 
-    public VoteKickSession(VoteKickSession[] voteKickSession, Player started, Player target) {
-        super(voteKickSession);
-        this.started = started;
+    public VoteKickSession(Player plaintiff, Player target) {
+        this.plaintiff = plaintiff;
         this.target = target;
     }
 
@@ -32,6 +30,13 @@ public class VoteKickSession extends VoteSession {
     }
 
     @Override
+    public void stop() {
+        voted.clear();
+        task.cancel();
+        currentVoteKick = null;
+    }
+
+    @Override
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
@@ -43,8 +48,8 @@ public class VoteKickSession extends VoteSession {
     public boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.votekick.passed", target.name, kickDuration / 60000);
+            kick(target, kickDuration, true, "kick.votekicked", plaintiff.name);
             stop();
-            kick(target, kickDuration, true, "kick.votekicked", started.name);
             return true;
         }
         return false;
@@ -57,5 +62,9 @@ public class VoteKickSession extends VoteSession {
 
     public Player target() {
         return target;
+    }
+
+    public Player plaintiff() {
+        return plaintiff;
     }
 }

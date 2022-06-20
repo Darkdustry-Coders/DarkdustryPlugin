@@ -7,6 +7,7 @@ import arc.util.Timer.Task;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
+import static pandorum.PluginVars.currentVote;
 import static pandorum.PluginVars.voteDuration;
 import static pandorum.util.PlayerUtils.sendToChat;
 
@@ -14,8 +15,7 @@ public class VoteSaveSession extends VoteSession {
 
     protected final Fi target;
 
-    public VoteSaveSession(VoteSession[] voteSession, Fi target) {
-        super(voteSession);
+    public VoteSaveSession(Fi target) {
         this.target = target;
     }
 
@@ -30,6 +30,13 @@ public class VoteSaveSession extends VoteSession {
     }
 
     @Override
+    public void stop() {
+        voted.clear();
+        task.cancel();
+        currentVote = null;
+    }
+
+    @Override
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
@@ -41,8 +48,8 @@ public class VoteSaveSession extends VoteSession {
     public boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.save.passed", target.nameWithoutExtension());
-            stop();
             Core.app.post(() -> SaveIO.save(target));
+            stop();
             return true;
         }
         return false;

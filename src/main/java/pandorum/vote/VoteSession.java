@@ -13,21 +13,15 @@ public abstract class VoteSession {
     protected final Seq<String> voted = new Seq<>();
     protected final Task task;
 
-    protected final VoteSession[] voteSession;
     protected int votes;
 
-    public VoteSession(VoteSession[] voteSession) {
-        this.voteSession = voteSession;
+    public VoteSession() {
         this.task = start();
     }
 
     public abstract Task start();
 
-    public void stop() {
-        voted.clear();
-        task.cancel();
-        voteSession[0] = null;
-    }
+    public abstract void stop();
 
     public abstract void vote(Player player, int sign);
 

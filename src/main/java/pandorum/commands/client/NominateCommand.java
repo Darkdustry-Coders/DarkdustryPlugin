@@ -8,7 +8,6 @@ import mindustry.maps.Map;
 import pandorum.vote.VoteLoadSession;
 import pandorum.vote.VoteMapSession;
 import pandorum.vote.VoteSaveSession;
-import pandorum.vote.VoteSession;
 
 import static mindustry.Vars.saveDirectory;
 import static mindustry.Vars.saveExtension;
@@ -19,7 +18,7 @@ import static pandorum.util.Search.findSave;
 
 public class NominateCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (currentVote[0] != null) {
+        if (currentVote != null) {
             bundled(player, "commands.vote-already-started");
             return;
         }
@@ -37,16 +36,14 @@ public class NominateCommand implements CommandRunner<Player> {
                     bundled(player, "commands.nominate.map.not-found");
                     return;
                 }
-                VoteSession session = new VoteMapSession(currentVote, map);
-                currentVote[0] = session;
-                session.vote(player, 1);
+                currentVote = new VoteMapSession(map);
+                currentVote.vote(player, 1);
                 cooldown.reset();
             }
             case "save" -> {
                 Fi save = saveDirectory.child(args[1] + "." + saveExtension);
-                VoteSession session = new VoteSaveSession(currentVote, save);
-                currentVote[0] = session;
-                session.vote(player, 1);
+                currentVote = new VoteSaveSession(save);
+                currentVote.vote(player, 1);
                 cooldown.reset();
             }
             case "load" -> {
@@ -55,9 +52,8 @@ public class NominateCommand implements CommandRunner<Player> {
                     bundled(player, "commands.nominate.load.not-found");
                     return;
                 }
-                VoteSession session = new VoteLoadSession(currentVote, save);
-                currentVote[0] = session;
-                session.vote(player, 1);
+                currentVote = new VoteLoadSession(save);
+                currentVote.vote(player, 1);
                 cooldown.reset();
             }
             default -> bundled(player, "commands.nominate.incorrect-mode");

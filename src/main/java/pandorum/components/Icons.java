@@ -3,7 +3,6 @@ package pandorum.components;
 import arc.files.Fi;
 import arc.struct.StringMap;
 import arc.util.Log;
-import mindustry.gen.Iconc;
 
 import java.util.Scanner;
 

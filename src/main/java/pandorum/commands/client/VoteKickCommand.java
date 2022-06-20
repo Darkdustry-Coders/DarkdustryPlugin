@@ -17,7 +17,7 @@ public class VoteKickCommand implements CommandRunner<Player> {
             return;
         }
 
-        if (currentVoteKick[0] != null) {
+        if (currentVoteKick != null) {
             bundled(player, "commands.vote-already-started");
             return;
         }
@@ -49,9 +49,8 @@ public class VoteKickCommand implements CommandRunner<Player> {
             return;
         }
 
-        VoteKickSession session = new VoteKickSession(currentVoteKick, player, target);
-        currentVoteKick[0] = session;
-        session.vote(player, 1);
+        currentVoteKick = new VoteKickSession(player, target);
+        currentVoteKick.vote(player, 1);
         cooldown.reset();
     }
 }

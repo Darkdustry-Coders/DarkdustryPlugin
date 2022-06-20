@@ -9,12 +9,12 @@ import static pandorum.util.StringUtils.voteChoice;
 
 public class VotingCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (currentVote[0] == null) {
+        if (currentVote == null) {
             bundled(player, "commands.no-voting");
             return;
         }
 
-        if (currentVote[0].voted().contains(player.uuid())) {
+        if (currentVote.voted().contains(player.uuid())) {
             bundled(player, "commands.already-voted");
             return;
         }
@@ -25,6 +25,6 @@ public class VotingCommand implements CommandRunner<Player> {
             return;
         }
 
-        currentVote[0].vote(player, sign);
+        currentVote.vote(player, sign);
     }
 }

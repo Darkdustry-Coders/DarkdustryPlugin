@@ -10,15 +10,14 @@ import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
 
 import static mindustry.Vars.*;
-import static pandorum.PluginVars.voteDuration;
+import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.sendToChat;
 
 public class VoteLoadSession extends VoteSession {
 
     protected final Fi target;
 
-    public VoteLoadSession(VoteSession[] voteSession, Fi target) {
-        super(voteSession);
+    public VoteLoadSession(Fi target) {
         this.target = target;
     }
 
@@ -33,6 +32,13 @@ public class VoteLoadSession extends VoteSession {
     }
 
     @Override
+    public void stop() {
+        voted.clear();
+        task.cancel();
+        currentVote = null;
+    }
+
+    @Override
     public void vote(Player player, int sign) {
         votes += sign;
         voted.add(player.uuid());
@@ -44,7 +50,6 @@ public class VoteLoadSession extends VoteSession {
     public boolean checkPass() {
         if (votes >= votesRequired()) {
             sendToChat("commands.nominate.load.passed", target.nameWithoutExtension());
-            stop();
 
             Runnable r = () -> {
                 WorldReloader reloader = new WorldReloader();
@@ -66,6 +71,7 @@ public class VoteLoadSession extends VoteSession {
                     net.closeServer();
                 }
             }, 10f);
+            stop();
             return true;
         }
         return false;
