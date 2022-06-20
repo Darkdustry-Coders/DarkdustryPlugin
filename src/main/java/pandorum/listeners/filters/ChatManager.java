@@ -1,6 +1,5 @@
 package pandorum.listeners.filters;
 
-import arc.struct.ObjectMap;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Groups;
@@ -19,13 +18,8 @@ import static pandorum.util.Search.findTranslatorLocale;
 
 public class ChatManager implements ChatFilter {
 
-    private static String formatTranslated(String formatted, String translatedText) {
-        return translatedText.isBlank() ? formatted : formatted + " [white]([lightgray]" + translatedText + "[white])";
-    }
-
     public String filter(Player author, String text) {
         String formatted = netServer.chatFormatter.format(author, text);
-        ObjectMap<String, String> cache = new ObjectMap<>();
 
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(formatted, author, text);
@@ -38,15 +32,8 @@ public class ChatManager implements ChatFilter {
             }
 
             String locale = data.locale.equals("auto") ? Utils.notNullElse(findTranslatorLocale(player.locale), defaultLocale) : data.locale;
-            if (cache.containsKey(locale)) {
-                player.sendMessage(formatTranslated(formatted, cache.get(locale)), author, text);
-                return;
-            }
 
-            Translator.translate(StringUtils.stripAll(text), locale, translated -> {
-                player.sendMessage(formatTranslated(formatted, translated), author, text);
-                cache.put(locale, translated);
-            });
+            Translator.translateGoogle(StringUtils.stripAll(text), locale, translated -> player.sendMessage(formatted + " [white]([lightgray]" + translated + "[white])", author, text));
         });
 
         text("**@**: @", Strings.stripColors(author.name), text);

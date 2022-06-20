@@ -1,12 +1,8 @@
 package pandorum.vote;
 
-import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Timer.Task;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
-
-import static pandorum.PluginVars.voteRatio;
 
 public abstract class VoteSession {
 
