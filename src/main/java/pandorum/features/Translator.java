@@ -26,7 +26,7 @@ public class Translator {
     }
 
     public static void loadLanguages() {
-        Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages")
+        Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=api")
                 .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
                 .header("content-type", "application/json")
                 .submit(response -> {
