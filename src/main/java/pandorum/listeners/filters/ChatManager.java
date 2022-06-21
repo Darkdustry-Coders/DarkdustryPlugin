@@ -33,7 +33,7 @@ public class ChatManager implements ChatFilter {
 
             String locale = data.locale.equals("auto") ? Utils.notNullElse(findTranslatorLocale(player.locale), defaultLocale) : data.locale;
 
-            Translator.translate(StringUtils.stripAll(text), locale, translated -> player.sendMessage(formatted + (translated.isBlank() ? "" : "[white]([lightgray]" + translated + "[white])"), author, text));
+            Translator.translate(StringUtils.stripAll(text), locale, translated -> player.sendMessage(formatted + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
         });
 
         text("**@**: @", Strings.stripColors(author.name), text);
