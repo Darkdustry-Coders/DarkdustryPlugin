@@ -39,11 +39,11 @@ public class Search {
     }
 
     public static Locale findLocale(String name) {
-        return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equals(locale.toString()) || name.startsWith(locale.toString())), Bundle.defaultLocale());
+        return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equalsIgnoreCase(locale.toString())), Bundle.defaultLocale());
     }
 
     public static String findTranslatorLocale(String name) {
-        return translatorLocales.keys().toSeq().find(locale -> name.equals(locale) || name.startsWith(locale));
+        return translatorLocales.keys().toSeq().find(name::equalsIgnoreCase);
     }
 
     public static Player findPlayer(String name) {
