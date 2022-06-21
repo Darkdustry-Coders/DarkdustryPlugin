@@ -5,7 +5,6 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
-import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -67,8 +66,8 @@ public class Bot {
         }
     }
 
-    public static void updateBotStatus() {
-        String activity = Groups.player.size() + " игроков онлайн" + " | IP: " + serverIp + ":" + Config.port.num();
+    public static void updateBotStatus(int players) {
+        String activity = players + " игроков онлайн" + " | IP: " + serverIp + ":" + Config.port.num();
         jda.getPresence().setActivity(Activity.playing(activity));
     }
 

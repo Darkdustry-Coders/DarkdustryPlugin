@@ -1,10 +1,13 @@
 package pandorum.listeners.events;
 
 import arc.func.Cons;
+import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
@@ -42,5 +45,8 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
         bundled(event.player, "welcome.message", Config.name.string(), discordServerUrl);
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
+
+        Seq<Player> players = Groups.player.copy(new Seq<>());
+        Bot.updateBotStatus(players.size);
     }
 }

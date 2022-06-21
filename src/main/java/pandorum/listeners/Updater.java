@@ -5,7 +5,6 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
-import pandorum.discord.Bot;
 import pandorum.features.Ranks.Rank;
 
 import static pandorum.PluginVars.mapPlayTime;
@@ -23,8 +22,6 @@ public class Updater implements Runnable {
 
         serverUpTime++;
         mapPlayTime++;
-
-        Bot.updateBotStatus();
     }
 
     public void updatePlayer(Player player) {

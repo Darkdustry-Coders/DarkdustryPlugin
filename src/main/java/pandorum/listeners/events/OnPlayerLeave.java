@@ -7,6 +7,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import pandorum.components.Gamemode;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
@@ -50,5 +51,9 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         }
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
+
+        Seq<Player> players = Groups.player.copy(new Seq<>());
+        players.remove(event.player);
+        Bot.updateBotStatus(players.size);
     }
 }
