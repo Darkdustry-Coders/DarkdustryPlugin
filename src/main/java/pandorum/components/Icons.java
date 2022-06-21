@@ -23,7 +23,7 @@ public class Icons {
                 stringIcons.put(name, icon);
             }
         } catch (Exception e) {
-            Log.err(e);
+            Log.err("[Darkdustry] Файл 'icons.properties' не найден или повреждён", e);
         }
     }
 

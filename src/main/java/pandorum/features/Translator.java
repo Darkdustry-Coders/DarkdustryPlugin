@@ -2,6 +2,7 @@ package pandorum.features;
 
 import arc.func.Cons;
 import arc.util.Http;
+import arc.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,6 +16,7 @@ public class Translator {
         JsonObject json = new JsonObject();
         json.addProperty("to", to);
         json.addProperty("text", text);
+        json.addProperty("platform", "api");
         json.addProperty("enableTransliteration", true);
 
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
@@ -29,12 +31,15 @@ public class Translator {
         Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=api")
                 .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
                 .header("content-type", "application/json")
+                .error(e -> Log.err("Не удалось загрузить языки для переводчика чата", e))
                 .submit(response -> {
                     JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsJsonArray();
                     for (JsonElement element : languages) {
                         JsonObject language = element.getAsJsonObject();
-                        translatorLocales.put(language.get("name").getAsString(), language.get("englishName").getAsString());
+                        translatorLocales.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
                     }
+
+                    Log.info("Загружено @ языков для перевода.", translatorLocales.size);
                 });
     }
 }

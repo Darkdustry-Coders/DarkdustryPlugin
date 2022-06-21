@@ -14,8 +14,7 @@ public class Database {
             jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", jedisPoolPort);
             Log.info("[Darkdustry] База данных успешно подключена...");
         } catch (Exception e) {
-            Log.err("[Darkdustry] Не удалось подключиться к базе данных...");
-            Log.err(e);
+            Log.err("[Darkdustry] Не удалось подключиться к базе данных", e);
         }
     }
 
@@ -23,7 +22,7 @@ public class Database {
         try (Jedis jedis = jedisPool.getResource()) {
             if (jedis.exists(uuid)) return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception e) {
-            Log.err(e);
+            //Log.err(e);
         }
 
         return new PlayerData();
@@ -33,7 +32,7 @@ public class Database {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(uuid, gson.toJson(data));
         } catch (Exception e) {
-            Log.err(e);
+            //Log.err(e);
         }
     }
 }

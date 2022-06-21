@@ -49,8 +49,7 @@ public class Bot {
 
             Log.info("[Darkdustry] Бот успешно подключен... (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
-            Log.err("[Darkdustry] Не удалось запустить бота...");
-            Log.err(e);
+            Log.err("[Darkdustry] Не удалось запустить бота", e);
         }
     }
 
