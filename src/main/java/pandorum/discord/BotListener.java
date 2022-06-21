@@ -21,7 +21,7 @@ public class BotListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Context context = new Context(event);
 
-        if (!context.message.isFromGuild() || context.message.getGuild() != botGuild || context.member.getUser() == jda.getSelfUser())
+        if (!context.message.isFromGuild() || context.message.getGuild() != botGuild || context.member == null || context.member == botGuild.getSelfMember())
             return;
 
         handleMessage(context);
