@@ -35,11 +35,19 @@ public class Translator {
                     JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsJsonArray();
                     for (JsonElement element : languages) {
                         JsonObject language = element.getAsJsonObject();
-                        translatorLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
-                        //Log.info("@ @ @", language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString(), language.get("englishName").getAsString());
+                        translatorLanguages.add(new Language(
+                                language.get("code_alpha_1").getAsString(),
+                                language.get("full_code").getAsString(),
+                                language.get("englishName").getAsString()));
                     }
 
                     Log.info("[Darkdustry] Загружено @ языков для перевода.", translatorLanguages.size);
                 });
+    }
+
+    public static record Language(String code, String fullCode, String name) {}
+
+    public static Language getLangByCode(String code) {
+        return translatorLanguages.find(l -> l.code.equals(code));
     }
 }

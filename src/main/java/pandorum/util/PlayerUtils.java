@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
+import pandorum.features.Translator.Language;
 
 import java.util.Locale;
 
@@ -16,6 +17,7 @@ import static pandorum.PluginVars.*;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.adminRole;
 import static pandorum.util.Search.findLocale;
+import static pandorum.features.Translator.getLangByCode;
 
 public class PlayerUtils {
 
@@ -67,6 +69,7 @@ public class PlayerUtils {
     public static String getTranslatorLanguage(Player player) {
         PlayerData data = getPlayerData(player.uuid());
 
-        return translatorLanguages.get(data.locale.equals("auto") ? player.locale : data.locale, defaultTranslatorLocale);
+        Language language = getLangByCode(data.locale.equals("auto") ? player.locale : data.locale);
+        return language == null ? defaultTranslatorLocale : language.fullCode();
     }
 }

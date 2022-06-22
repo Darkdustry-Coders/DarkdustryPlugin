@@ -8,6 +8,7 @@ import static pandorum.PluginVars.translatorLanguages;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
+import static pandorum.features.Translator.getLangByCode;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -21,7 +22,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
         switch (args[0].toLowerCase()) {
             case "list" -> {
                 StringBuilder locales = new StringBuilder();
-                translatorLanguages.each((language, name) -> locales.append(language).append(" "));
+                translatorLanguages.each(l -> locales.append(l.code()).append(" "));
                 bundled(player, "commands.tr.list", locales.toString());
             }
             case "off" -> {
@@ -35,14 +36,14 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 bundled(player, "commands.tr.auto");
             }
             default -> {
-                if (!translatorLanguages.containsKey(args[0])) {
+                if (!translatorLanguages.contains(l -> l.code().equals(args[0]))) {
                     bundled(player, "commands.tr.incorrect");
                     return;
                 }
 
                 data.locale = args[0];
                 setPlayerData(player.uuid(), data);
-                bundled(player, "commands.tr.changed", args[0], translatorLanguages.get(args[0]));
+                bundled(player, "commands.tr.changed", args[0], getLangByCode(args[0]));
             }
         }
     }

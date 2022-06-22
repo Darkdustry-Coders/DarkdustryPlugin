@@ -3,7 +3,6 @@ package pandorum;
 import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.struct.StringMap;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Timekeeper;
@@ -21,6 +20,7 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
+import pandorum.features.Translator.Language;
 import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
@@ -94,7 +94,7 @@ public class PluginVars {
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
 
-    public static final StringMap translatorLanguages = new StringMap();
+    public static final Seq<Language> translatorLanguages = new Seq<>();
 
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
