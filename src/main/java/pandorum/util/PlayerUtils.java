@@ -28,7 +28,7 @@ public class PlayerUtils {
     }
 
     public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
+        if (player != null) player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
     }
 
     public static void sendToChat(String key, Object... values) {
@@ -64,9 +64,9 @@ public class PlayerUtils {
         Groups.player.each(player -> player.team() == team, cons);
     }
 
-    public static String getTranslatorLocale(Player player) {
+    public static String getTranslatorLanguage(Player player) {
         PlayerData data = getPlayerData(player.uuid());
 
-        return translatorLocales.get(data.locale.equals("auto") ? player.locale : data.locale, defaultTranslatorLocale);
+        return translatorLanguages.get(data.locale.equals("auto") ? player.locale : data.locale, defaultTranslatorLocale);
     }
 }

@@ -25,14 +25,16 @@ public class Authme {
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.success("Запрос подтвержден.", "**@** подтвердил запрос игрока **@**", context.member.getEffectiveName(), player.name);
+            context.success("Запрос подтвержден.", "**@** подтвердил запрос игрока **@**.", context.member.getEffectiveName(), player.name);
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
             player.admin(true);
+
             bundled(player, "commands.login.confirm");
-            context.message.delete().queue();
         }
+
+        context.message.delete().queue();
     }
 
     public static void deny(Context context) {
@@ -40,11 +42,11 @@ public class Authme {
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.err("Запрос отклонён.", "**@** отклонил запрос игрока **@**", context.member.getEffectiveName(), player.name);
-
+            context.err("Запрос отклонён.", "**@** отклонил запрос игрока **@**.", context.member.getEffectiveName(), player.name);
             bundled(player, "commands.login.deny");
-            context.message.delete().queue();
         }
+
+        context.message.delete().queue();
     }
 
     public static void info(Context context, ButtonInteractionEvent event) {

@@ -20,7 +20,6 @@ import pandorum.features.Ranks.Rank;
 import java.util.Locale;
 
 import static mindustry.Vars.*;
-import static pandorum.PluginVars.translatorLocales;
 
 public class Search {
 

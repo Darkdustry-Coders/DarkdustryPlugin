@@ -2,8 +2,8 @@ package pandorum;
 
 import arc.func.Boolp;
 import arc.struct.ObjectMap;
-import arc.struct.OrderedMap;
 import arc.struct.Seq;
+import arc.struct.StringMap;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Timekeeper;
@@ -68,6 +68,9 @@ public class PluginVars {
     /** Локаль по умолчанию. */
     public static final String defaultLocale = "en", defaultTranslatorLocale = "en_GB";
 
+    /** Ключ API для переводчика чата. */
+    public static final String translatorApiKey = "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx";
+
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/45NNzjGCmY";
 
@@ -90,7 +93,8 @@ public class PluginVars {
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-    public static final OrderedMap<String, String> translatorLocales = new OrderedMap<>();
+
+    public static final StringMap translatorLanguages = new StringMap();
 
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 

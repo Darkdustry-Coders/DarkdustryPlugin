@@ -7,8 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import static pandorum.PluginVars.gson;
-import static pandorum.PluginVars.translatorLocales;
+import static pandorum.PluginVars.*;
 
 public class Translator {
 
@@ -20,28 +19,27 @@ public class Translator {
         json.addProperty("enableTransliteration", true);
 
         Http.post("https://api-b2b.backenster.com/b1/api/v3/translate")
-                .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
+                .header("authorization", translatorApiKey)
                 .header("content-type", "application/json")
                 .content(json.toString())
                 .error(e -> cons.get(""))
                 .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
 
-    // TODO шизофрения?
-
     public static void loadLanguages() {
         Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=api")
-                .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
+                .header("authorization", translatorApiKey)
                 .header("content-type", "application/json")
                 .error(e -> Log.err("[Darkdustry] Не удалось загрузить языки для переводчика чата", e))
                 .submit(response -> {
                     JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsJsonArray();
                     for (JsonElement element : languages) {
                         JsonObject language = element.getAsJsonObject();
-                        translatorLocales.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
+                        translatorLanguages.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
+                        //Log.info("@ @ @", language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString(), language.get("englishName").getAsString());
                     }
 
-                    Log.info("[Darkdustry] Загружено @ языков для перевода.", translatorLocales.size);
+                    Log.info("[Darkdustry] Загружено @ языков для перевода.", translatorLanguages.size);
                 });
     }
 }

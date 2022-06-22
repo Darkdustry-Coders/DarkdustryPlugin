@@ -9,7 +9,7 @@ import pandorum.features.Translator;
 
 import static mindustry.Vars.netServer;
 import static pandorum.discord.Bot.text;
-import static pandorum.util.PlayerUtils.getTranslatorLocale;
+import static pandorum.util.PlayerUtils.getTranslatorLanguage;
 
 public class ChatManager implements ChatFilter {
 
@@ -19,13 +19,13 @@ public class ChatManager implements ChatFilter {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
 
         Groups.player.each(player -> {
-            String locale = getTranslatorLocale(player);
-            if (locale.equals("off")) {
+            String language = getTranslatorLanguage(player);
+            if (language.equals("off")) {
                 player.sendMessage(formatted, author, text);
                 return;
             }
 
-            Translator.translate(Strings.stripColors(text), locale, translated -> player.sendMessage(formatted + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
+            Translator.translate(Strings.stripColors(text), language, translated -> player.sendMessage(formatted + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
         });
 
         text("**@**: @", Strings.stripColors(author.name), Strings.stripColors(text));
