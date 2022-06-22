@@ -8,13 +8,12 @@ import static pandorum.PluginVars.translatorLocales;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.Search.findTranslatorLocale;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         PlayerData data = getPlayerData(player.uuid());
 
-        if (args.length == 0) {
+        if (args.length == 0 || args[0].equalsIgnoreCase("current")) {
             bundled(player, "commands.tr.current", data.locale);
             return;
         }
@@ -36,15 +35,14 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 bundled(player, "commands.tr.auto");
             }
             default -> {
-                String locale = findTranslatorLocale(args[0]);
-                if (locale == null) {
+                if (!translatorLocales.containsKey(args[0])) {
                     bundled(player, "commands.tr.incorrect");
                     return;
                 }
 
-                data.locale = locale;
+                data.locale = args[0];
                 setPlayerData(player.uuid(), data);
-                bundled(player, "commands.tr.changed", locale, translatorLocales.get(locale));
+                bundled(player, "commands.tr.changed", args[0], translatorLocales.get(args[0]));
             }
         }
     }

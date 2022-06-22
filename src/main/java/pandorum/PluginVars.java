@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.func.Boolp;
 import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
@@ -89,7 +90,7 @@ public class PluginVars {
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-    public static final ObjectMap<String, String> translatorLocales = new ObjectMap<>();
+    public static final OrderedMap<String, String> translatorLocales = new OrderedMap<>();
 
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 

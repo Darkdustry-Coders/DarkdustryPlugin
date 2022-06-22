@@ -8,10 +8,12 @@ import mindustry.net.NetConnection;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
+import pandorum.data.PlayerData;
 
 import java.util.Locale;
 
-import static pandorum.PluginVars.discordServerUrl;
+import static pandorum.PluginVars.*;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.adminRole;
 import static pandorum.util.Search.findLocale;
 
@@ -60,5 +62,11 @@ public class PlayerUtils {
 
     public static void eachPlayer(Team team, Cons<Player> cons) {
         Groups.player.each(player -> player.team() == team, cons);
+    }
+
+    public static String getTranslatorLocale(Player player) {
+        PlayerData data = getPlayerData(player.uuid());
+
+        return translatorLocales.get(data.locale.equals("auto") ? player.locale : data.locale, defaultTranslatorLocale);
     }
 }

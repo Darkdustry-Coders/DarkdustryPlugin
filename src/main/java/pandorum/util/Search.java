@@ -42,10 +42,6 @@ public class Search {
         return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equalsIgnoreCase(locale.toString())), Bundle.defaultLocale());
     }
 
-    public static String findTranslatorLocale(String name) {
-        return translatorLocales.keys().toSeq().find(name::equalsIgnoreCase);
-    }
-
     public static Player findPlayer(String name) {
         return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> StringUtils.deepEquals(player.name, name));
     }

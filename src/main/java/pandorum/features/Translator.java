@@ -27,11 +27,13 @@ public class Translator {
                 .submit(response -> cons.get(gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsString()));
     }
 
+    // TODO шизофрения?
+
     public static void loadLanguages() {
         Http.get("https://api-b2b.backenster.com/b1/api/v3/getLanguages?platform=api")
                 .header("authorization", "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx")
                 .header("content-type", "application/json")
-                .error(e -> Log.err("Не удалось загрузить языки для переводчика чата", e))
+                .error(e -> Log.err("[Darkdustry] Не удалось загрузить языки для переводчика чата", e))
                 .submit(response -> {
                     JsonArray languages = gson.fromJson(response.getResultAsString(), JsonObject.class).get("result").getAsJsonArray();
                     for (JsonElement element : languages) {
@@ -39,7 +41,7 @@ public class Translator {
                         translatorLocales.put(language.get("code_alpha_1").getAsString(), language.get("full_code").getAsString());
                     }
 
-                    Log.info("Загружено @ языков для перевода.", translatorLocales.size);
+                    Log.info("[Darkdustry] Загружено @ языков для перевода.", translatorLocales.size);
                 });
     }
 }
