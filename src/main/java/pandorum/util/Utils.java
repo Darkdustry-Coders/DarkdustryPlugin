@@ -45,8 +45,8 @@ public class Utils {
         if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" ").append(Bundle.get("time.days", locale)).append(" ");
         if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" ").append(Bundle.get("time.hours", locale)).append(" ");
         if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" ").append(Bundle.get("time.minutes", locale)).append(" ");
+        if (duration.toSecondsPart() > 0) builder.append(duration.toSecondsPart()).append(" ").append(Bundle.get("time.seconds", locale));
 
-        builder.append(duration.toSecondsPart()).append(" ").append(Bundle.get("time.seconds", locale));
         return builder.toString();
     }
 

@@ -1,14 +1,18 @@
 package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
+import mindustry.gen.Call;
 import mindustry.gen.Player;
+import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
+import pandorum.features.Translator.Language;
 
 import static pandorum.PluginVars.translatorLanguages;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
+import static pandorum.features.Translator.getLanguageByCode;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.features.Translator.getLangByCode;
+import static pandorum.util.Search.findLocale;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -21,9 +25,9 @@ public class TranslatorCommand implements CommandRunner<Player> {
 
         switch (args[0].toLowerCase()) {
             case "list" -> {
-                StringBuilder locales = new StringBuilder();
-                translatorLanguages.each(l -> locales.append(l.code()).append(" "));
-                bundled(player, "commands.tr.list", locales.toString());
+                StringBuilder result = new StringBuilder(Bundle.format("commands.tr.list", findLocale(player.locale)));
+                translatorLanguages.each(language -> result.append("[cyan]").append(language.code()).append(" [accent](").append(language.name()).append(")\n"));
+                Call.infoMessage(player.con, result.toString());
             }
             case "off" -> {
                 data.locale = "off";
@@ -36,14 +40,15 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 bundled(player, "commands.tr.auto");
             }
             default -> {
-                if (!translatorLanguages.contains(l -> l.code().equals(args[0]))) {
+                Language language = getLanguageByCode(args[0]);
+                if (language == null) {
                     bundled(player, "commands.tr.incorrect");
                     return;
                 }
 
-                data.locale = args[0];
+                data.locale = language.code();
                 setPlayerData(player.uuid(), data);
-                bundled(player, "commands.tr.changed", args[0], getLangByCode(args[0]));
+                bundled(player, "commands.tr.changed", language.code(), language.name());
             }
         }
     }

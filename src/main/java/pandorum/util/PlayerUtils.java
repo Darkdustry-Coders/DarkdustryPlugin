@@ -16,8 +16,8 @@ import java.util.Locale;
 import static pandorum.PluginVars.*;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.adminRole;
+import static pandorum.features.Translator.getLanguageByCode;
 import static pandorum.util.Search.findLocale;
-import static pandorum.features.Translator.getLangByCode;
 
 public class PlayerUtils {
 
@@ -69,7 +69,9 @@ public class PlayerUtils {
     public static String getTranslatorLanguage(Player player) {
         PlayerData data = getPlayerData(player.uuid());
 
-        Language language = getLangByCode(data.locale.equals("auto") ? player.locale : data.locale);
+        if (data.locale.equals("off")) return data.locale;
+
+        Language language = getLanguageByCode(data.locale.equals("auto") ? player.locale : data.locale);
         return language == null ? defaultTranslatorLocale : language.fullCode();
     }
 }

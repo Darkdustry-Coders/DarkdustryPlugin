@@ -1,7 +1,7 @@
 package pandorum.data;
 
 public class PlayerData {
-    public String locale = "off";
+    public String locale = "en";
     public boolean welcomeMessage = true;
     public boolean alertsEnabled = true;
 
