@@ -39,13 +39,13 @@ public class PluginVars {
     public static final int maxSpawnAmount = 25;
 
     /** Время кулдауна для команды /nominate. В секундах. */
-    public static final int nominateCooldownTime = 300;
-    /** Время кулдауна для команды /votekick. В секундах */
+    public static final int nominateCooldownTime = 150;
+    /** Время кулдауна для команды /votekick. В секундах. */
     public static final int voteKickCooldownTime = 300;
-    /** Время кулдауна для команды /login. В секундах */
+    /** Время кулдауна для команды /login. В секундах. */
     public static final int loginCooldownTime = 900;
-    /** Время кулдауна для команды /sync. В секундах */
-    public static final int syncCooldownTime = 15;
+    /** Время кулдауна для команды /sync. В миллисекундах. */
+    public static final int syncCooldownTime = 15000;
 
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.6f;

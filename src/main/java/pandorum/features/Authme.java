@@ -25,7 +25,7 @@ public class Authme {
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.success("Запрос подтвержден.", "**@** подтвердил запрос игрока **@**.", context.member.getEffectiveName(), player.name);
+            context.success("Запрос подтвержден.", "**@** подтвердил запрос игрока **@**.", context.user.getAsMention(), player.name);
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -42,7 +42,7 @@ public class Authme {
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.err("Запрос отклонён.", "**@** отклонил запрос игрока **@**.", context.member.getEffectiveName(), player.name);
+            context.err("Запрос отклонён.", "**@** отклонил запрос игрока **@**.", context.user.getAsMention(), player.name);
             bundled(player, "commands.login.deny");
         }
 

@@ -32,8 +32,12 @@ public class Bot {
 
     public static void connect() {
         try {
-            jda = JDABuilder.createDefault(config.discordBotToken).build().awaitReady(); // А токена тут нету
-            jda.addEventListener(new BotListener());
+            JDABuilder builder = JDABuilder.createLight(config.discordBotToken)
+                    .addEventListeners(new MessageListener())
+                    .addEventListeners(new ButtonListener());
+
+            jda = builder.build();
+            jda.awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildID);
             adminRole = botGuild.getRoleById(config.discordAdminRoleID);

@@ -4,6 +4,7 @@ import arc.files.Fi;
 import arc.graphics.Color;
 import arc.struct.StringMap;
 import arc.util.Log;
+import arc.util.Tmp;
 import arc.util.io.CounterInputStream;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
@@ -163,6 +164,6 @@ public class MapParser {
     }
 
     public static int convert(int color) {
-        return new Color(color).argb8888();
+        return Tmp.c1.rgba8888(color).argb8888();
     }
 }
