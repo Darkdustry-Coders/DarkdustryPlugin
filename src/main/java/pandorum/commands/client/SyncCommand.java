@@ -12,7 +12,7 @@ import static pandorum.util.PlayerUtils.bundled;
 public class SyncCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
         if (Time.timeSinceMillis(player.getInfo().lastSyncTime) < syncCooldownTime && !player.admin) {
-            bundled(player, "корочcommands.sync.cooldown", syncCooldownTime / 1000);
+            bundled(player, "commands.sync.cooldown", syncCooldownTime / 1000);
             return;
         }
 
