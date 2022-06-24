@@ -32,12 +32,12 @@ public class GiveCommand implements CommandRunner<Player> {
 
         int amount = Strings.parseInt(args[1]);
 
-        if (state.teams.get(player.team()).noCores()) {
+        if (player.team().cores().isEmpty()) {
             bundled(player, "commands.admin.give.no-core");
             return;
         }
 
-        state.teams.get(player.team()).core().items.add(item, amount);
+        player.team().core().items.add(item, amount);
         bundled(player, "commands.admin.give.success", amount, Icons.get(item.name));
     }
 }
