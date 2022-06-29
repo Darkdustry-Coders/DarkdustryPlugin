@@ -33,6 +33,7 @@ public class Bot {
     public static void connect() {
         try {
             JDABuilder builder = JDABuilder.createLight(config.discordBotToken)
+                    .setActivity(Activity.playing("Ожидание игроков..."))
                     .addEventListeners(new MessageListener())
                     .addEventListeners(new ButtonListener());
 
@@ -70,7 +71,7 @@ public class Bot {
     }
 
     public static void updateBotStatus(int players) {
-        String activity = players + " игроков онлайн" + " | IP: " + serverIp + ":" + Config.port.num();
+        String activity = players + " игроков | IP: " + serverIp + ":" + Config.port.num();
         jda.getPresence().setActivity(Activity.playing(activity));
     }
 
