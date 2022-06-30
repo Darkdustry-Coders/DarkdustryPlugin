@@ -40,10 +40,7 @@ import pandorum.listeners.Updater;
 import pandorum.listeners.events.*;
 import pandorum.listeners.filters.ActionManager;
 import pandorum.listeners.filters.ChatManager;
-import pandorum.listeners.handlers.ConnectHandler;
-import pandorum.listeners.handlers.ConnectPacketHandler;
-import pandorum.listeners.handlers.InvalidCommandResponseHandler;
-import pandorum.listeners.handlers.MenuHandler;
+import pandorum.listeners.handlers.*;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
@@ -77,7 +74,10 @@ public class Loader {
 
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
-        dangerousDepositBlocks.putAll(Blocks.combustionGenerator, Items.blastCompound, Blocks.steamGenerator, Items.blastCompound, Blocks.thoriumReactor, Items.thorium);
+
+        dangerousDepositBlocks.put(Blocks.combustionGenerator, Items.blastCompound);
+        dangerousDepositBlocks.put(Blocks.steamGenerator, Items.blastCompound);
+        dangerousDepositBlocks.put(Blocks.thoriumReactor, Items.thorium);
 
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));

@@ -17,7 +17,7 @@ public class OnBuildSelect implements Cons<BuildSelectEvent> {
     public void get(BuildSelectEvent event) {
         if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 
-        if (isDangerousBuild(event.builder.buildPlan().block, event.team, event.tile) && interval.get(0, alertsTimer)) {
+        if (isDangerousBuild(event.builder.buildPlan().block, event.team, event.tile) && interval.get(alertsInterval)) {
             PlayerUtils.eachPlayer(event.team, player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {

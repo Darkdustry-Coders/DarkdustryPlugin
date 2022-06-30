@@ -1,7 +1,6 @@
 package pandorum.components;
 
 import arc.files.Fi;
-import arc.graphics.Color;
 import arc.struct.StringMap;
 import arc.util.Log;
 import arc.util.Tmp;

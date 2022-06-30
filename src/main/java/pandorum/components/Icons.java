@@ -1,30 +1,25 @@
 package pandorum.components;
 
-import arc.files.Fi;
 import arc.struct.StringMap;
-import arc.util.Log;
+import arc.util.Http;
 
 import java.util.Scanner;
 
-import static pandorum.util.Utils.getPluginResource;
-
 public class Icons {
 
-    private static final StringMap stringIcons = new StringMap();
+    private static final StringMap icons = new StringMap();
 
     public static void load() {
-        Fi icons = getPluginResource("icons.properties");
+        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v135/core/assets/icons/icons.properties").submit(response -> {
+            try (Scanner scanner = new Scanner(response.getResultAsString())) {
+                while (scanner.hasNextLine()) {
+                    String[] lines = scanner.nextLine().split("="), names = lines[1].split("\\|");
+                    String name = names[0], icon = String.valueOf((char) Integer.parseInt(lines[0]));
 
-        try (Scanner scanner = new Scanner(icons.read(512))) {
-            while (scanner.hasNextLine()) {
-                String[] lines = scanner.nextLine().split("="), names = lines[1].split("\\|");
-                String name = names[0], icon = String.valueOf((char) Integer.parseInt(lines[0]));
-
-                stringIcons.put(name, icon);
+                    icons.put(name, icon);
+                }
             }
-        } catch (Exception e) {
-            Log.err("[Darkdustry] Файл 'icons.properties' не найден или повреждён", e);
-        }
+        });
     }
 
     public static String get(String key) {
@@ -32,6 +27,6 @@ public class Icons {
     }
 
     public static String get(String key, String defaultValue) {
-        return stringIcons.get(key, defaultValue);
+        return icons.get(key, defaultValue);
     }
 }

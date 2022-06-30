@@ -55,8 +55,8 @@ public class PluginVars {
 
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
-    /** Таймер для оповещения об опасных блоков. */
-    public static final float alertsTimer = 150f;
+    /** Интвервал оповещений о постройке опасных блоков. */
+    public static final float alertsInterval = 150f;
 
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 120f;
@@ -102,7 +102,7 @@ public class PluginVars {
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
 
-    public static final Interval interval = new Interval(2);
+    public static final Interval interval = new Interval();
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
