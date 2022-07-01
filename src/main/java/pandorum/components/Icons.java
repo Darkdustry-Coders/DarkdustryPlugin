@@ -2,6 +2,8 @@ package pandorum.components;
 
 import arc.struct.StringMap;
 import arc.util.Http;
+import arc.util.Log;
+import mindustry.game.Team;
 
 import java.util.Scanner;
 
@@ -21,6 +23,8 @@ public class Icons {
 
                     icons.put(name, icon);
                 }
+
+                Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
             }
         });
     }

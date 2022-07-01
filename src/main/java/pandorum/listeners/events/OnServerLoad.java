@@ -10,8 +10,8 @@ import java.awt.*;
 public class OnServerLoad implements Cons<ServerLoadEvent> {
 
     public void get(ServerLoadEvent event) {
-        Log.info("[Darkdustry]: Сервер готов к работе...");
-        Bot.sendEmbed(Color.yellow, "Сервер запущен...");
+        Log.info("[Darkdustry]: Сервер готов к работе.");
+        Bot.sendEmbed(Color.yellow, "Сервер запущен.");
     }
 }
 

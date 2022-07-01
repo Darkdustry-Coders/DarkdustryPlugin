@@ -3,6 +3,7 @@ package pandorum.components;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
+import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.gen.Iconc;
@@ -22,7 +23,7 @@ public class Bundle {
     public static Locale[] supportedLocales;
 
     public static void load() {
-        Fi[] files = getPluginResource("bundles").list(file -> file.getName().startsWith("bundle_"));
+        Fi[] files = getPluginResource("bundles").list();
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");
 
@@ -36,6 +37,8 @@ public class Bundle {
                 supportedLocales[i] = new Locale(code);
             }
         }
+
+        Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.length);
     }
 
     public static Locale defaultLocale() {

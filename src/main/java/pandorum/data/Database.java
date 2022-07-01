@@ -12,7 +12,7 @@ public class Database {
     public static void connect() {
         try {
             jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", jedisPoolPort);
-            Log.info("[Darkdustry] База данных успешно подключена...");
+            Log.info("[Darkdustry] База данных успешно подключена.");
         } catch (Exception e) {
             Log.err("[Darkdustry] Не удалось подключиться к базе данных", e);
         }

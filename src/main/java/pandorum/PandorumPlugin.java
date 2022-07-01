@@ -12,7 +12,7 @@ public class PandorumPlugin extends Plugin {
 
     @Override
     public void init() {
-        Log.info("[Darkdustry] Инициализация плагина...");
+        Log.info("[Darkdustry] Начинается инициализация плагина.");
 
         // Сначала загружаем конфигурацию
         Loader.loadConfig();

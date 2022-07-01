@@ -52,7 +52,7 @@ public class Bot {
             discordCommands = new CommandHandler(config.discordBotPrefix);
             Loader.registerDiscordCommands(discordCommands);
 
-            Log.info("[Darkdustry] Бот успешно подключен... (@)", jda.getSelfUser().getAsTag());
+            Log.info("[Darkdustry] Бот успешно подключен. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
             Log.err("[Darkdustry] Не удалось запустить бота", e);
         }
