@@ -33,11 +33,11 @@ public class RankCommand implements CommandRunner<Player> {
                     next.tag,
                     next.displayName,
                     data.playTime / 60,
-                    next.req.playTime / 60,
+                    next.req.playTime() / 60,
                     data.buildingsBuilt,
-                    next.req.buildingsBuilt,
+                    next.req.buildingsBuilt(),
                     data.gamesPlayed,
-                    next.req.gamesPlayed
+                    next.req.gamesPlayed()
             ));
         }
 

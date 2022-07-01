@@ -35,12 +35,14 @@ import pandorum.components.PluginConfig;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks;
-import pandorum.features.Translator;
 import pandorum.listeners.Updater;
 import pandorum.listeners.events.*;
 import pandorum.listeners.filters.ActionManager;
 import pandorum.listeners.filters.ChatManager;
-import pandorum.listeners.handlers.*;
+import pandorum.listeners.handlers.ConnectHandler;
+import pandorum.listeners.handlers.ConnectPacketHandler;
+import pandorum.listeners.handlers.InvalidCommandResponseHandler;
+import pandorum.listeners.handlers.MenuHandler;
 
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
@@ -66,8 +68,6 @@ public class Loader {
 
         MenuHandler.load();
         Ranks.load();
-
-        Translator.loadLanguages();
 
         Database.connect();
         Bot.connect();
@@ -140,7 +140,6 @@ public class Loader {
         handler.register("votekick", "<ID/username...>", "commands.votekick.description", new VoteKickCommand());
         handler.register("vote", "<y/n>", "commands.vote.description", new VoteCommand());
         handler.register("sync", "commands.sync.description", new SyncCommand());
-        handler.register("tr", "[current/list/off/auto/locale]", "commands.tr.description", new TranslatorCommand());
         handler.register("stats", "[ID/username...]", "commands.stats.description", new StatsCommand());
         handler.register("rank", "[ID/username...]", "commands.rank.description", new RankCommand());
         handler.register("players", "[page]", "commands.players.description", new PlayersListCommand());

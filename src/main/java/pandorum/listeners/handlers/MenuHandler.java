@@ -75,7 +75,7 @@ public class MenuHandler {
         rankInfoMenu = Menus.registerMenu((player, option) -> {
             if (option == 1) {
                 StringBuilder builder = new StringBuilder();
-                Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(Bundle.format("commands.rank.menu.requirements.content", findLocale(player.locale), rank.tag, rank.displayName, rank.req.playTime / 60, rank.req.buildingsBuilt, rank.req.gamesPlayed)).append("\n"));
+                Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(Bundle.format("commands.rank.menu.requirements.content", findLocale(player.locale), rank.tag, rank.displayName, rank.req.playTime() / 60, rank.req.buildingsBuilt(), rank.req.gamesPlayed())).append("\n"));
 
                 Call.menu(player.con, ranksRequirementsMenu,
                         Bundle.format("commands.rank.menu.requirements.header", findLocale(player.locale)),

@@ -22,7 +22,7 @@ public class Bundle {
     public static Locale[] supportedLocales;
 
     public static void load() {
-        Fi[] files = getPluginResource("bundles").list();
+        Fi[] files = getPluginResource("bundles").list(file -> file.getName().startsWith("bundle_"));
         supportedLocales = new Locale[files.length + 1];
         supportedLocales[supportedLocales.length - 1] = new Locale("router");
 

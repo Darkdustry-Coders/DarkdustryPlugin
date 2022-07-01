@@ -20,7 +20,6 @@ import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
-import pandorum.features.Translator.Language;
 import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
@@ -66,10 +65,7 @@ public class PluginVars {
     public static final long kickDuration = 2700000L;
 
     /** Локаль по умолчанию. */
-    public static final String defaultLocale = "en", defaultTranslatorLocale = "en_GB";
-
-    /** Ключ API для переводчика чата. */
-    public static final String translatorApiKey = "Bearer a_25rccaCYcBC9ARqMODx2BV2M0wNZgDCEl3jryYSgYZtF1a702PVi4sxqi2AmZWyCcw4x209VXnCYwesx";
+    public static final String defaultLocale = "en";
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/45NNzjGCmY";
@@ -93,8 +89,6 @@ public class PluginVars {
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-
-    public static final Seq<Language> translatorLanguages = new Seq<>();
 
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 

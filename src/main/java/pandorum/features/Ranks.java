@@ -92,17 +92,7 @@ public class Ranks {
         }
     }
 
-    public static class Requirements {
-        public final int playTime;
-        public final int buildingsBuilt;
-        public final int gamesPlayed;
-
-        public Requirements(int playTime, int buildingsBuilt, int gamesPlayed) {
-            this.playTime = playTime;
-            this.buildingsBuilt = buildingsBuilt;
-            this.gamesPlayed = gamesPlayed;
-        }
-
+    public record Requirements(int playTime, int buildingsBuilt, int gamesPlayed) {
         public boolean check(int playTime, int buildingsBuilt, int gamesPlayed) {
             return playTime >= this.playTime && buildingsBuilt >= this.buildingsBuilt && gamesPlayed >= this.gamesPlayed;
         }

@@ -6,7 +6,6 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.components.Icons;
 
-import static mindustry.Vars.state;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;

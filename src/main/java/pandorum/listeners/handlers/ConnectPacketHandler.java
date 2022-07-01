@@ -32,7 +32,6 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
         Events.fire(new ConnectPacketEvent(con, packet));
 
         con.connectTime = Time.millis();
-        packet.locale = packet.locale.substring(0, 2);
 
         String uuid = packet.uuid;
         String usid = packet.usid;

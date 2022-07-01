@@ -8,15 +8,11 @@ import mindustry.net.NetConnection;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
-import pandorum.data.PlayerData;
-import pandorum.features.Translator.Language;
 
 import java.util.Locale;
 
-import static pandorum.PluginVars.*;
-import static pandorum.data.Database.getPlayerData;
+import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.discord.Bot.adminRole;
-import static pandorum.features.Translator.getLanguageByCode;
 import static pandorum.util.Search.findLocale;
 
 public class PlayerUtils {
@@ -37,41 +33,32 @@ public class PlayerUtils {
         Groups.player.each(player -> bundled(player, key, values));
     }
 
-    public static void kick(NetConnection con, long duration, boolean disclaimer, String key, Locale locale, Object... values) {
+    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
        String reason = Bundle.format(key, locale, values);
        if (duration > 0) {
            reason += Bundle.format("kick.time", locale, Utils.formatDuration(duration, locale));
        }
 
-       if (disclaimer) {
+       if (showDisclaimer) {
            reason += Bundle.format("kick.disclaimer", locale, discordServerUrl);
        }
 
        con.kick(reason, duration);
     }
 
-    public static void kick(NetConnection con, boolean disclaimer, String key, Locale locale, Object... values) {
-        kick(con, 0, disclaimer, key, locale, values);
+    public static void kick(NetConnection con, boolean showDisclaimer, String key, Locale locale, Object... values) {
+        kick(con, 0, showDisclaimer, key, locale, values);
     }
 
-    public static void kick(Player player, long duration, boolean disclaimer, String key, Object... values) {
-        kick(player.con, duration, disclaimer, key, findLocale(player.locale), values);
+    public static void kick(Player player, long duration, boolean showDisclaimer, String key, Object... values) {
+        kick(player.con, duration, showDisclaimer, key, findLocale(player.locale), values);
     }
 
-    public static void kick(Player player, boolean disclaimer, String key, Object... values) {
-        kick(player, 0, disclaimer, key, values);
+    public static void kick(Player player, boolean showDisclaimer, String key, Object... values) {
+        kick(player, 0, showDisclaimer, key, values);
     }
 
     public static void eachPlayer(Team team, Cons<Player> cons) {
         Groups.player.each(player -> player.team() == team, cons);
-    }
-
-    public static String getTranslatorLanguage(Player player) {
-        PlayerData data = getPlayerData(player.uuid());
-
-        if (data.locale.equals("off")) return data.locale;
-
-        Language language = getLanguageByCode(data.locale.equals("auto") ? player.locale : data.locale);
-        return language == null ? defaultTranslatorLocale : language.fullCode();
     }
 }

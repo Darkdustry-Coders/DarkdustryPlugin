@@ -7,6 +7,7 @@ import mindustry.mod.Plugin;
 import static pandorum.PluginVars.clientCommands;
 import static pandorum.PluginVars.serverCommands;
 
+@SuppressWarnings("unused")
 public class PandorumPlugin extends Plugin {
 
     @Override
