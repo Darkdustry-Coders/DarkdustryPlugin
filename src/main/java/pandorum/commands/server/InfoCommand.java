@@ -14,17 +14,16 @@ public class InfoCommand implements Cons<String[]> {
         if (infos.isEmpty()) {
             Log.info("Не найдено ни одного игрока с таким никнеймом, IP или UUID.");
         } else {
-            Log.info("Найдено @ игроков:", infos.size);
+            Log.info("Все найденные игроки: (@)", infos.size);
 
-            for (int i = 0; i < infos.size; i++) {
-                PlayerInfo info = infos.get(i);
-
-                Log.info("[@] Информация об игроке '@' / UUID: @", i, info.lastName, info.id, info.lastName);
-                Log.info("  все использованные никнеймы: @", info.names);
-                Log.info("  IP адрес: @", info.lastIP);
-                Log.info("  все использованные IP адреса: @", info.ips);
-                Log.info("  подключился к серверу: @ раз", info.timesJoined);
-                Log.info("  выгнан с сервера: @ раз", info.timesKicked);
+            int i = 0;
+            for (PlayerInfo info : infos) {
+                Log.info("  - [@] Информация об игроке '@' / UUID: @", ++i, info.lastName, info.id, info.lastName);
+                Log.info("    все использованные никнеймы: @", info.names);
+                Log.info("    IP адрес: @", info.lastIP);
+                Log.info("    все использованные IP адреса: @", info.ips);
+                Log.info("    подключился к серверу: @ раз", info.timesJoined);
+                Log.info("    выгнан с сервера: @ раз", info.timesKicked);
             }
         }
     }

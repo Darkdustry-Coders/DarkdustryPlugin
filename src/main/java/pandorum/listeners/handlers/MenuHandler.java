@@ -20,7 +20,7 @@ import static pandorum.util.Search.findLocale;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, mapInfoMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -67,8 +67,6 @@ public class MenuHandler {
                 sendToChat("commands.admin.artv.info", player.name);
             }
         });
-
-        mapInfoMenu = emptyMenu();
 
         statsMenu = emptyMenu();
 

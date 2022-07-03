@@ -14,11 +14,11 @@ public class SearchCommand implements Cons<String[]> {
         if (infos.isEmpty()) {
             Log.info("Не найдено ни одного игрока с таким никнеймом.");
         } else {
-            Log.info("Найдено @ игроков:", infos.size);
+            Log.info("Все найденные игроки: (@)", infos.size);
 
-            for (int i = 0; i < infos.size; i++) {
-                PlayerInfo info = infos.get(i);
-                Log.info("- [@] '@' / UUID: @", i++, info.lastName, info.id);
+            int i = 0;
+            for (PlayerInfo info : infos) {
+                Log.info("  - [@] '@' / UUID: @", ++i, info.lastName, info.id);
             }
         }
     }

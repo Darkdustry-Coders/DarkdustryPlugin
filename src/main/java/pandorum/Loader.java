@@ -198,18 +198,28 @@ public class Loader {
     }
 
     public static void registerServerCommands(CommandHandler handler) {
+        handler.removeCommand("mod");
+        handler.removeCommand("mods");
+        handler.removeCommand("fillitems");
+        handler.removeCommand("pause");
+        handler.removeCommand("shuffle");
+        handler.removeCommand("runwave");
+
         handler.register("help", "Список всех команд.", new pandorum.commands.server.HelpCommand());
         handler.register("version", "Информация о версии сервера.", new VersionCommand());
         handler.register("exit", "Выключить сервер.", new ExitCommand());
         handler.register("stop", "Остановить сервер.", new StopCommand());
         handler.register("host", "[карта] [режим]", "Запустить сервер на выбранной карте.", new HostCommand());
+        handler.register("reloadmaps", "Перезагрузить список карт.", new ReloadMapsCommand());
         handler.register("maps", "Список всех карт сервера.", new pandorum.commands.server.MapsListCommand());
         handler.register("saves", "Список всех сохранений сервера.", new pandorum.commands.server.SavesListCommand());
         handler.register("status", "Состояние сервера.", new pandorum.commands.server.StatusCommand());
         handler.register("say", "<сообщение...>", "Отправить сообщение всем игрокам.", new SayCommand());
         handler.register("rules", "[remove/add] [название] [значение...]", "Изменить глобальные правила сервера.", new RulesCommand());
+        handler.register("playerlimit", "[off/число]", "Настроить лимит игроков на сервере.", new PlayerLimitCommand());
         handler.register("config", "[название] [значение...]", "Изменить конфигурацию сервера.", new ConfigCommand());
         handler.register("whitelist", "[add/remove] [uuid...]", "Добавить или удалить игрока из белого списка.", new WhiteListCommand());
+        handler.register("subnet-ban", "[add/remove] [ip...]", "Добавить или удалить IP адрес из списка забаненных сабнетов.", new SubnetBanCommand());
         handler.register("nextmap", "<карта...>", "Задать следующую карту.", new NextMapCommand());
         handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new pandorum.commands.server.KickCommand());
         handler.register("ban", "<никнейм/ip/uuid...>", "Забанить игрока на сервере.", new pandorum.commands.server.BanCommand());
