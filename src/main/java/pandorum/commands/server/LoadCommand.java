@@ -13,7 +13,7 @@ import static pandorum.util.Search.findSave;
 public class LoadCommand implements Cons<String[]> {
     public void get(String[] args) {
         if (!state.isMenu()) {
-            Log.err("Сервер уже запущен. Используй 'stop', чтобы остановить его.");
+            Log.err("Сервер уже запущен.");
             return;
         }
 

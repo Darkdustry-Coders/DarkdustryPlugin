@@ -13,7 +13,7 @@ import static pandorum.util.Utils.formatDuration;
 public class StatusCommand implements Cons<String[]> {
     public void get(String[] args) {
         if (state.isMenu()) {
-            Log.info("Сервер отключен. Может быть, пора запустить его командой 'host'?");
+            Log.err("Сервер отключен.");
         } else {
             Log.info("Статус сервера:");
             Log.info("  Сервер онлайн уже: @.", formatDuration(serverUpTime * 1000L));

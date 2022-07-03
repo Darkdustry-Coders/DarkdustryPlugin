@@ -12,7 +12,7 @@ import static mindustry.Vars.*;
 public class SaveCommand implements Cons<String[]> {
     public void get(String[] args) {
         if (state.isMenu()) {
-            Log.err("Сервер отключен. Может быть, пора запустить его командой 'host'?");
+            Log.err("Сервер отключен.");
             return;
         }
 

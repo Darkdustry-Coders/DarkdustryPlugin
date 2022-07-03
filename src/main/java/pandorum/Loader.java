@@ -11,7 +11,6 @@ import arc.util.Timer;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.core.NetServer;
-import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.graphics.Pal;
 import mindustry.net.Administration.Config;
@@ -24,6 +23,7 @@ import pandorum.commands.client.PlayersListCommand;
 import pandorum.commands.client.SavesListCommand;
 import pandorum.commands.client.*;
 import pandorum.commands.discord.BanCommand;
+import pandorum.commands.discord.GameOverCommand;
 import pandorum.commands.discord.KickCommand;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.discord.*;
@@ -127,8 +127,6 @@ public class Loader {
         Config.strict.set(true);
         Config.enableVotekick.set(true);
 
-        Version.build = -1;
-
         Timer.schedule(new Updater(), 0f, 1f);
     }
 
@@ -201,28 +199,34 @@ public class Loader {
 
     public static void registerServerCommands(CommandHandler handler) {
         handler.register("help", "Список всех команд.", new pandorum.commands.server.HelpCommand());
+        handler.register("version", "Информация о версии сервера.", new VersionCommand());
         handler.register("exit", "Выключить сервер.", new ExitCommand());
-        handler.register("host", "[map] [mode]", "Запустить сервер на выбранной карте.", new HostCommand());
+        handler.register("stop", "Остановить сервер.", new StopCommand());
+        handler.register("host", "[карта] [режим]", "Запустить сервер на выбранной карте.", new HostCommand());
         handler.register("maps", "Список всех карт сервера.", new pandorum.commands.server.MapsListCommand());
         handler.register("saves", "Список всех сохранений сервера.", new pandorum.commands.server.SavesListCommand());
         handler.register("status", "Состояние сервера.", new pandorum.commands.server.StatusCommand());
-        handler.register("say", "<message...>", "Отправить сообщение всем игрокам.", new SayCommand());
-        handler.register("rules", "[remove/add] [name] [value...]", "Изменить глобальные правила сервера.", new RulesCommand());
-        handler.register("config", "[name] [value...]", "Изменить конфигурацию сервера.", new ConfigCommand());
-        handler.register("nextmap", "<map...>", "Задать следующую карту.", new NextMapCommand());
-        handler.register("kick", "<ID/username...>", "Выгнать игрока с сервера.", new pandorum.commands.server.KickCommand());
-        handler.register("ban", "<uuid/username/ip...>", "Забанить игрока на сервере.", new pandorum.commands.server.BanCommand());
+        handler.register("say", "<сообщение...>", "Отправить сообщение всем игрокам.", new SayCommand());
+        handler.register("rules", "[remove/add] [название] [значение...]", "Изменить глобальные правила сервера.", new RulesCommand());
+        handler.register("config", "[название] [значение...]", "Изменить конфигурацию сервера.", new ConfigCommand());
+        handler.register("whitelist", "[add/remove] [uuid...]", "Добавить или удалить игрока из белого списка.", new WhiteListCommand());
+        handler.register("nextmap", "<карта...>", "Задать следующую карту.", new NextMapCommand());
+        handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new pandorum.commands.server.KickCommand());
+        handler.register("ban", "<никнейм/ip/uuid...>", "Забанить игрока на сервере.", new pandorum.commands.server.BanCommand());
         handler.register("bans", "[clear]", "Список всех забаненных игроков.", new BansListCommand());
-        handler.register("unban", "<uuid/all/ip...>", "Разбанить игрока на сервере.", new UnbanCommand());
-        handler.register("pardon", "<uuid/ip...>", "Снять кик с игрока.", new PardonCommand());
-        handler.register("admin", "<add/remove> <uuid/username...>", "Выдать права админа игроку.", new AdminCommand());
+        handler.register("unban", "<ip/uuid...>", "Разбанить игрока на сервере.", new UnbanCommand());
+        handler.register("pardon", "<ip/uuid...>", "Снять кик с игрока.", new PardonCommand());
+        handler.register("admin", "<add/remove> <никнейм/uuid...>", "Выдать права админа игроку.", new AdminCommand());
         handler.register("admins", "[clear]", "Список всех админов.", new AdminsListCommand());
         handler.register("players", "Список всех игроков на сервере.", new pandorum.commands.server.PlayersListCommand());
-        handler.register("save", "<save...>", "Сохранить карту в выбранный файл.", new SaveCommand());
-        handler.register("load", "<save...>", "Загрузить сохранение из файла.", new LoadCommand());
+        handler.register("save", "<файл...>", "Сохранить карту в выбранный файл.", new SaveCommand());
+        handler.register("load", "<файл...>", "Загрузить сохранение из файла.", new LoadCommand());
+        handler.register("gameover", "Принудительно завершить игру.", new pandorum.commands.server.GameOverCommand());
+        handler.register("info", "<никнейм/ip/uuid...>", "Поиск информации об игроке.", new InfoCommand());
+        handler.register("search", "<никнейм...>", "Поиск игроков, которые использовали часть данного никнейма.", new SearchCommand());
 
         handler.register("despawn", "Убить всех юнитов.", new pandorum.commands.server.DespawnCommand());
         handler.register("restart", "Перезапустить сервер.", new RestartCommand());
-        handler.register("setrank", "<rank> <ID/username...>", "Изменить ранг игрока.", new SetRankCommand());
+        handler.register("setrank", "<ранг> <ID/никнейм...>", "Изменить ранг игрока.", new SetRankCommand());
     }
 }

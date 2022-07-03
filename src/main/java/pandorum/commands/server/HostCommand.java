@@ -3,7 +3,6 @@ package pandorum.commands.server;
 import arc.Core;
 import arc.func.Cons;
 import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.Structs;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
@@ -11,12 +10,11 @@ import mindustry.maps.MapException;
 
 import static mindustry.Vars.*;
 import static pandorum.util.Search.findMap;
-import static pandorum.util.Utils.getServerControl;
 
 public class HostCommand implements Cons<String[]> {
     public void get(String[] args) {
         if (!state.isMenu()) {
-            Log.err("Сервер уже запущен. Используй 'stop', чтобы остановить его.");
+            Log.err("Сервер уже запущен.");
             return;
         }
 
@@ -39,8 +37,6 @@ public class HostCommand implements Cons<String[]> {
         }
 
         logic.reset();
-        Core.settings.put("lastServerMode", mode.name());
-        Reflect.set(getServerControl(), "lastMode", mode);
 
         Core.app.post(() -> {
             try {
