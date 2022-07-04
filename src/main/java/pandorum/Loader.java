@@ -11,6 +11,7 @@ import arc.util.Timer;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.core.NetServer;
+import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.graphics.Pal;
 import mindustry.net.Administration.Config;
@@ -71,6 +72,8 @@ public class Loader {
 
         Database.connect();
         Bot.connect();
+
+        Version.build = -1;
 
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
