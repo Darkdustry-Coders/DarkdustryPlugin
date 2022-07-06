@@ -51,8 +51,7 @@ public class Translator {
                 "pt_PT", "pt",
                 "uk_UA", "uk",
                 "zh_CN", "zh-CN",
-                "zh_TW", "zh-TW",
-                "router", "en"
+                "zh_TW", "zh-TW"
         );
 
         Log.info("[Darkdustry] Загружено языков для переводчика: @.", translatorLanguages.size);

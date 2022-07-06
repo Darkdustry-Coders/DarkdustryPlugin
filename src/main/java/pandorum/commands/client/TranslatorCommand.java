@@ -31,7 +31,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 bundled(player, "commands.tr.disabled");
             }
             case "auto" -> {
-                data.language = mindustryLocales2Api.get(player.locale);
+                data.language = mindustryLocales2Api.get(player.locale, "en");
                 setPlayerData(player.uuid(), data);
                 bundled(player, "commands.tr.changed"); // TODO: дарк, вставь сюда нужные аргументы. Chat language set to {0} ({1}).
             }
