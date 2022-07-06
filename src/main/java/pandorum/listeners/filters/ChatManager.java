@@ -1,21 +1,34 @@
 package pandorum.listeners.filters;
 
 import arc.util.Log;
-import arc.util.Strings;
-import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
+import pandorum.components.Translator;
+import pandorum.data.PlayerData;
 
 import static mindustry.Vars.netServer;
+import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.text;
+import static pandorum.util.StringUtils.stripAll;
 
 public class ChatManager implements ChatFilter {
 
     public String filter(Player author, String text) {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
-        Call.sendMessage(netServer.chatFormatter.format(author, text), text, author);
-        text("**@**: @", Strings.stripColors(author.name), text);
+        // author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
 
+        Groups.player.each(player -> {
+            PlayerData data = getPlayerData(player.uuid());
+            if (data.language.equals("off")) {
+                player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+                return;
+            }
+
+            Translator.translate(stripAll(text), data.language, translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
+        });
+
+        text("**@**: @", stripAll(author.name), stripAll(text));
         return null;
     }
 }

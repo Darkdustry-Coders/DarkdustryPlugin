@@ -1,6 +1,8 @@
 package pandorum.data;
 
 public class PlayerData {
+    public String language = "ru"; // <-- TODO "off"
+
     public boolean welcomeMessage = true;
     public boolean alertsEnabled = true;
 

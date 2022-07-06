@@ -29,10 +29,7 @@ import pandorum.commands.discord.KickCommand;
 import pandorum.commands.discord.StatusCommand;
 import pandorum.commands.discord.*;
 import pandorum.commands.server.*;
-import pandorum.components.Bundle;
-import pandorum.components.Icons;
-import pandorum.components.MapParser;
-import pandorum.components.PluginConfig;
+import pandorum.components.*;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
 import pandorum.features.Ranks;
@@ -66,6 +63,8 @@ public class Loader {
         Bundle.load();
         Icons.load();
         MapParser.load();
+
+        Translator.loadLanguages();
 
         MenuHandler.load();
         Ranks.load();

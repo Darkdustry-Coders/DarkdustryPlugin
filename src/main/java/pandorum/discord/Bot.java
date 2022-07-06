@@ -33,21 +33,25 @@ public class Bot {
     public static void connect() {
         try {
             JDABuilder builder = JDABuilder.createLight(config.discordBotToken)
-                    .setActivity(Activity.playing("Ожидание игроков..."))
                     .addEventListeners(new MessageListener())
                     .addEventListeners(new ButtonListener());
 
             jda = builder.build();
             jda.awaitReady();
 
-            botGuild = jda.getGuildById(config.discordGuildID);
-            adminRole = botGuild.getRoleById(config.discordAdminRoleID);
-            botChannel = botGuild.getTextChannelById(config.discordBotChannelID);
-            adminChannel = botGuild.getTextChannelById(config.discordAdminChannelID);
+            botGuild = jda.getGuildById(config.discordGuildId);
+            assert botGuild != null;
+
+            adminRole = botGuild.getRoleById(config.discordAdminRoleId);
+            botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
+            adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
+            assert adminRole != null && botChannel != null && adminChannel != null;
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
             botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
+
+            updateBotStatus(0);
 
             discordCommands = new CommandHandler(config.discordBotPrefix);
             Loader.registerDiscordCommands(discordCommands);

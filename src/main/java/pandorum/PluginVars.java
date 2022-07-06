@@ -3,6 +3,7 @@ package pandorum;
 import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.struct.StringMap;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Timekeeper;
@@ -70,6 +71,8 @@ public class PluginVars {
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/45NNzjGCmY";
 
+    public static final String translatorApiUrl = "https://deep-translate1.p.rapidapi.com/language/translate/v2";
+
     /** Название файла с конфигурацией. */
     public static final String configFileName = "config.json";
 
@@ -89,16 +92,17 @@ public class PluginVars {
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
-
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
+
+    public static final StringMap translatorLanguages = new StringMap();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
 
-    public static final Interval interval = new Interval();
-
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
+
+    public static final Interval interval = new Interval();
 
     /** Блоки, которые опасно строить рядом с ядром. */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
