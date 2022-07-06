@@ -44,6 +44,17 @@ public class Translator {
                 "ko", "한국어"
         );
 
+        mindustryLocales2Api.putAll(
+                "in_ID", "id",
+                "nl_BE", "nl",
+                "pt_BR", "pt",
+                "pt_PT", "pt",
+                "uk_UA", "uk",
+                "zh_CN", "zh-CN",
+                "zh_TW", "zh-TW",
+                "router", "en"
+        );
+
         Log.info("[Darkdustry] Загружено языков для переводчика: @.", translatorLanguages.size);
     }
 

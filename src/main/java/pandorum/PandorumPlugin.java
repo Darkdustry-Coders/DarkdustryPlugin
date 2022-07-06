@@ -24,13 +24,11 @@ public class PandorumPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        clientCommands = handler;
-        Loader.registerClientCommands(clientCommands);
+        Loader.registerClientCommands(clientCommands = handler);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        serverCommands = handler;
-        Loader.registerServerCommands(serverCommands);
+        Loader.registerServerCommands(serverCommands = handler);
     }
 }

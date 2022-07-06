@@ -4,7 +4,6 @@ import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
-import arc.struct.StringMap;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Timekeeper;
@@ -96,6 +95,7 @@ public class PluginVars {
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
+    public static final OrderedMap<String, String> mindustryLocales2Api = new OrderedMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
 

@@ -7,6 +7,7 @@ import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 
 import static pandorum.PluginVars.translatorLanguages;
+import static pandorum.PluginVars.mindustryLocales2Api;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
@@ -28,6 +29,11 @@ public class TranslatorCommand implements CommandRunner<Player> {
                 data.language = "off";
                 setPlayerData(player.uuid(), data);
                 bundled(player, "commands.tr.disabled");
+            }
+            case "auto" -> {
+                data.language = mindustryLocales2Api.get(player.locale);
+                setPlayerData(player.uuid(), data);
+                bundled(player, "commands.tr.changed"); // TODO: дарк, вставь сюда нужные аргументы. Chat language set to {0} ({1}).
             }
             default -> {
                 if (!translatorLanguages.containsKey(args[0])) {
