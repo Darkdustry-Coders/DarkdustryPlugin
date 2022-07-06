@@ -14,19 +14,16 @@ import static pandorum.util.Search.findLocale;
 
 public class TranslatorCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        PlayerData data = getPlayerData(player.uuid());
-
-        if (args.length == 0 || args[0].equalsIgnoreCase("current")) {
-            bundled(player, "commands.tr.current", data.language);
+        if (args.length == 0 || args[0].equalsIgnoreCase("list")) {
+            StringBuilder result = new StringBuilder(Bundle.format("commands.tr.list", findLocale(player.locale)));
+            translatorLanguages.each((language, name) -> result.append("[cyan]").append(language).append(" [accent](").append(name).append(")\n"));
+            Call.infoMessage(player.con, result.toString());
             return;
         }
 
+        PlayerData data = getPlayerData(player.uuid());
         switch (args[0].toLowerCase()) {
-            case "list" -> {
-                StringBuilder result = new StringBuilder(Bundle.format("commands.tr.list", findLocale(player.locale)));
-                translatorLanguages.each((language, name) -> result.append("[cyan]").append(language).append(" [accent](").append(name).append(")\n"));
-                Call.infoMessage(player.con, result.toString());
-            }
+            case "current" -> bundled(player, "commands.tr.current", data.language);
             case "off" -> {
                 data.language = "off";
                 setPlayerData(player.uuid(), data);
@@ -34,7 +31,7 @@ public class TranslatorCommand implements CommandRunner<Player> {
             }
             default -> {
                 if (!translatorLanguages.containsKey(args[0])) {
-                    bundled(player, "commands.tr.incorrect");
+                    bundled(player, "commands.tr.not-found");
                     return;
                 }
 

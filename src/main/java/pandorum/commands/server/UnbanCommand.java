@@ -15,7 +15,7 @@ public class UnbanCommand implements Cons<String[]> {
         }
 
         netServer.admins.unbanPlayerID(info.id);
-        netServer.admins.unbanPlayerIP(info.lastIP);
+        info.ips.each(netServer.admins::unbanPlayerIP);
         Log.info("Игрок '@' успешно разбанен.", info.lastName);
     }
 }

@@ -2,6 +2,7 @@ package pandorum;
 
 import arc.func.Boolp;
 import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.CommandHandler;
@@ -94,7 +95,7 @@ public class PluginVars {
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
-    public static final StringMap translatorLanguages = new StringMap();
+    public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
 
     public static final Seq<String> votesRtv = new Seq<>(), votesVnw = new Seq<>(), activeHistoryPlayers = new Seq<>();
 
@@ -109,7 +110,7 @@ public class PluginVars {
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
-    public static final char[] rotateIcons = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
+    public static final char[] rotateSides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;

@@ -140,6 +140,7 @@ public class Loader {
         handler.register("votekick", "<ID/username...>", "commands.votekick.description", new VoteKickCommand());
         handler.register("vote", "<y/n>", "commands.vote.description", new VoteCommand());
         handler.register("sync", "commands.sync.description", new SyncCommand());
+        handler.register("tr", "[list/off/language]", "commands.tr.description", new TranslatorCommand());
         handler.register("stats", "[ID/username...]", "commands.stats.description", new StatsCommand());
         handler.register("rank", "[ID/username...]", "commands.rank.description", new RankCommand());
         handler.register("players", "[page]", "commands.players.description", new PlayersListCommand());

@@ -11,7 +11,7 @@ public class Translator {
 
     public static void loadLanguages() {
         translatorLanguages.putAll(
-                "id", "Bahasa Indonesia",
+                "id", "Indonesia",
                 "da", "Dansk",
                 "de", "Deutsch",
                 "et", "Eesti",
@@ -44,7 +44,7 @@ public class Translator {
                 "ko", "한국어"
         );
 
-        Log.info("Загружено языков для переводчика: @.", translatorLanguages.size);
+        Log.info("[Darkdustry] Загружено языков для переводчика: @.", translatorLanguages.size);
     }
 
     public static void translate(String text, String to, Cons<String> cons) {

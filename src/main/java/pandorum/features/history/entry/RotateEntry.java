@@ -7,7 +7,7 @@ import pandorum.components.Bundle;
 import pandorum.components.Icons;
 
 import static mindustry.Vars.content;
-import static pandorum.PluginVars.rotateIcons;
+import static pandorum.PluginVars.rotateSides;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
@@ -27,6 +27,6 @@ public class RotateEntry implements HistoryEntry {
 
     @Override
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), rotateIcons[rotation], formatDate(time));
+        return Bundle.format("history.rotate", findLocale(player.locale), name, Icons.get(content.block(blockID).name), rotateSides[rotation], formatDate(time));
     }
 }
