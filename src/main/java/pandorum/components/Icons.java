@@ -24,6 +24,13 @@ public class Icons {
                     icons.put(name, icon);
                 }
 
+                Team.derelict.emoji = get("derelict");
+                Team.sharded.emoji = get("sharded");
+                Team.crux.emoji = get("crux");
+                Team.green.emoji = get("shocked");
+                Team.purple.emoji = get("spore-slowed");
+                Team.blue.emoji = get("wet");
+
                 Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
             }
         });

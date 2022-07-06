@@ -21,7 +21,6 @@ import java.util.TimeZone;
 
 import static mindustry.Vars.mods;
 import static pandorum.PluginVars.*;
-import static pandorum.util.Search.findLocale;
 
 public class Utils {
 
@@ -36,16 +35,16 @@ public class Utils {
     }
 
     public static String formatDuration(long time) {
-        return formatDuration(time, findLocale("ru"));
+        return formatDuration(time, Bundle.defaultLocale());
     }
 
     public static String formatDuration(long time, Locale locale) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(" ").append(Bundle.get("time.days", locale)).append(" ");
-        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(" ").append(Bundle.get("time.hours", locale)).append(" ");
-        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(" ").append(Bundle.get("time.minutes", locale)).append(" ");
-        if (duration.toSecondsPart() > 0) builder.append(duration.toSecondsPart()).append(" ").append(Bundle.get("time.seconds", locale));
+        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(Bundle.get("time.days", locale));
+        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(Bundle.get("time.hours", locale));
+        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(Bundle.get("time.minutes", locale));
+        if (duration.toSecondsPart() > 0) builder.append(duration.toSecondsPart()).append(Bundle.get("time.seconds", locale));
 
         return builder.toString();
     }

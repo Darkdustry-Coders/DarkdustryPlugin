@@ -26,7 +26,7 @@ public class StringUtils {
     }
 
     public static String coloredTeam(Team team) {
-        return Icons.get(team.name) + "[#" + team.color + "]" + team.name;
+        return team.emoji + "[#" + team.color + "]" + team.name;
     }
 
     public static String unitsList() {

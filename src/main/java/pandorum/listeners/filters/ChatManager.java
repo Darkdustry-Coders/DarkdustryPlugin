@@ -16,9 +16,9 @@ public class ChatManager implements ChatFilter {
 
     public String filter(Player author, String text) {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
-        // author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+        //author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
 
-        Groups.player.each(player -> {
+        Groups.player.each(player -> player != null, player -> {
             PlayerData data = getPlayerData(player.uuid());
             if (data.language.equals("off")) {
                 player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
