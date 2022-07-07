@@ -18,6 +18,7 @@ import java.awt.*;
 
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.data.Database.getPlayerData;
+import static pandorum.discord.Bot.botChannel;
 import static pandorum.listeners.handlers.MenuHandler.welcomeMenu;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.sendToChat;
@@ -34,7 +35,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
         sendToChat("events.player.join", name);
-        Bot.sendEmbed(Color.green, "@ зашел на сервер.", stripAll(name));
+        Bot.sendEmbed(botChannel, Color.green, "@ присоединился", stripAll(name));
 
         if (data.welcomeMessage) Call.menu(event.player.con, welcomeMenu,
                 Bundle.format("welcome.menu.header", findLocale(event.player.locale)),

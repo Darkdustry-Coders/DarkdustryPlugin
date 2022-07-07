@@ -7,11 +7,13 @@ import pandorum.discord.Bot;
 
 import java.awt.*;
 
+import static pandorum.discord.Bot.botChannel;
+
 public class OnServerLoad implements Cons<ServerLoadEvent> {
 
     public void get(ServerLoadEvent event) {
         Log.info("[Darkdustry]: Сервер готов к работе.");
-        Bot.sendEmbed(Color.yellow, "Сервер запущен.");
+        Bot.sendEmbed(botChannel, Color.yellow, "Сервер запущен.");
     }
 }
 

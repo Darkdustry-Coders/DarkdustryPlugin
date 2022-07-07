@@ -2,16 +2,16 @@ package pandorum.commands.discord;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.netServer;
 import static pandorum.util.PlayerUtils.*;
 import static pandorum.util.Search.findPlayer;
 
-public class BanCommand implements CommandRunner<Context> {
+public class BanCommand implements CommandRunner<MessageContext> {
 
     @Override
-    public void accept(String[] args, Context context) {
+    public void accept(String[] args, MessageContext context) {
         if (!isAdmin(context.member)) {
             context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
             return;

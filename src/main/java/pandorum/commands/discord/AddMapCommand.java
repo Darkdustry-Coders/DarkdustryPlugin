@@ -4,13 +4,13 @@ import arc.files.Fi;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.*;
 import static pandorum.util.PlayerUtils.isAdmin;
 
-public class AddMapCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class AddMapCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         if (!isAdmin(context.member)) {
             context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
             return;

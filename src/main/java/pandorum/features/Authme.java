@@ -6,7 +6,6 @@ import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import pandorum.discord.Context;
 
 import java.awt.*;
 
@@ -16,16 +15,21 @@ import static pandorum.util.PlayerUtils.bundled;
 
 public class Authme {
 
-    public static final Button confirm = Button.success("admin.confirm", "Подтвердить"),
-            deny = Button.danger("admin.deny", "Отклонить"),
-            info = Button.primary("admin.info", "Информация");
+    public static final Button confirm = Button.success("authme.confirm", "Подтвердить"),
+            deny = Button.danger("authme.deny", "Отклонить"),
+            info = Button.primary("authme.info", "Информация");
 
-    public static void confirm(Context context) {
-        String uuid = loginWaiting.remove(context.message);
+    public static void confirm(ButtonInteractionEvent event) {
+        String uuid = loginWaiting.remove(event.getMessage());
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.success("Запрос подтвержден.", "**@** подтвердил запрос игрока **@**.", context.user.getAsMention(), player.name);
+            event.getChannel().sendMessageEmbeds(new EmbedBuilder()
+                    .setColor(Color.green)
+                    .setTitle("Запрос подтвержден")
+                    .addField("Администратор:", event.getUser().getAsMention(), true)
+                    .addField("Игрок:", player.name, true).build()
+            ).queue();
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -34,23 +38,29 @@ public class Authme {
             bundled(player, "commands.login.confirm");
         }
 
-        context.message.delete().queue();
+        event.getMessage().delete().queue();
     }
 
-    public static void deny(Context context) {
-        String uuid = loginWaiting.remove(context.message);
+    public static void deny(ButtonInteractionEvent event) {
+        String uuid = loginWaiting.remove(event.getMessage());
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) {
-            context.err("Запрос отклонён.", "**@** отклонил запрос игрока **@**.", context.user.getAsMention(), player.name);
+            event.getChannel().sendMessageEmbeds(new EmbedBuilder()
+                    .setColor(Color.red)
+                    .setTitle("Запрос отклонён")
+                    .addField("Администратор:", event.getUser().getAsMention(), true)
+                    .addField("Игрок:", player.name, true).build()
+            ).queue();
+
             bundled(player, "commands.login.deny");
         }
 
-        context.message.delete().queue();
+        event.getMessage().delete().queue();
     }
 
-    public static void info(Context context, ButtonInteractionEvent event) {
-        String uuid = loginWaiting.get(context.message);
+    public static void info(ButtonInteractionEvent event) {
+        String uuid = loginWaiting.get(event.getMessage());
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
         EmbedBuilder embed = new EmbedBuilder()

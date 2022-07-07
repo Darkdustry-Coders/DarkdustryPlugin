@@ -5,7 +5,7 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import java.awt.*;
 
@@ -16,8 +16,8 @@ import static pandorum.PluginVars.serverUpTime;
 import static pandorum.util.StringUtils.stripAll;
 import static pandorum.util.Utils.formatDuration;
 
-public class StatusCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class StatusCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         if (state.isMenu()) {
             context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
             return;

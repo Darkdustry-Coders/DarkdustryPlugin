@@ -8,21 +8,21 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
 
-public class Context {
+public class MessageContext {
 
     public final Message message;
     public final Member member;
     public final User user;
     public final MessageChannel channel;
 
-    public Context(MessageReceivedEvent event) {
+    public MessageContext(MessageReceivedEvent event) {
         this.message = event.getMessage();
         this.member = event.getMember();
         this.user = event.getAuthor();
         this.channel = event.getChannel();
     }
 
-    public Context(ButtonInteractionEvent event) {
+    public MessageContext(ButtonInteractionEvent event) {
         this.message = event.getMessage();
         this.member = event.getMember();
         this.user = event.getUser();

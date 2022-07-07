@@ -6,14 +6,14 @@ import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import java.awt.*;
 
 import static mindustry.Vars.maps;
 
-public class MapsListCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class MapsListCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             context.err(":interrobang: Страница должна быть числом.");
             return;

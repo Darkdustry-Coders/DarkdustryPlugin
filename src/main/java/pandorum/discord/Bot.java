@@ -21,6 +21,7 @@ import java.awt.*;
 import java.util.EnumSet;
 
 import static pandorum.PluginVars.*;
+import static pandorum.util.PlayerUtils.sendToChat;
 
 public class Bot {
 
@@ -62,7 +63,14 @@ public class Bot {
         }
     }
 
-    public static void handleMessage(Context context) {
+    public static void sendMessageToGame(MessageContext context) {
+        if (context.channel != botChannel) return;
+
+        sendToChat("events.discord.chat", Integer.toHexString(context.member.getColorRaw()), context.member.getEffectiveName(), context.message.getContentDisplay());
+        Log.info("[Discord] @: @", context.member.getEffectiveName(), context.message.getContentDisplay());
+    }
+
+    public static void handleMessage(MessageContext context) {
         CommandResponse response = discordCommands.handleMessage(context.message.getContentRaw(), context);
 
         if (response.type == ResponseType.unknownCommand) {
@@ -79,19 +87,11 @@ public class Bot {
         jda.getPresence().setActivity(Activity.playing(activity));
     }
 
-    public static void text(MessageChannel channel, String text, Object... args) {
+    public static void sendMessage(MessageChannel channel, String text, Object... args) {
         channel.sendMessage(Strings.format(text, args)).queue();
-    }
-
-    public static void text(String text, Object... args) {
-        text(botChannel, text, args);
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
         channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(text, args)).build()).queue();
-    }
-
-    public static void sendEmbed(Color color, String text, Object... args) {
-        sendEmbed(botChannel, color, text, args);
     }
 }

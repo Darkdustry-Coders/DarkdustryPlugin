@@ -2,17 +2,17 @@ package pandorum.commands.discord;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import static pandorum.PluginVars.kickDuration;
 import static pandorum.util.PlayerUtils.*;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Utils.formatDuration;
 
-public class KickCommand implements CommandRunner<Context> {
+public class KickCommand implements CommandRunner<MessageContext> {
 
     @Override
-    public void accept(String[] args, Context context) {
+    public void accept(String[] args, MessageContext context) {
         if (!isAdmin(context.member)) {
             context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
             return;

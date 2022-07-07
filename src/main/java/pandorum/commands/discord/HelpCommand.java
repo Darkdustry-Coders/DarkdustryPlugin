@@ -3,14 +3,14 @@ package pandorum.commands.discord;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import java.util.Comparator;
 
 import static pandorum.PluginVars.discordCommands;
 
-public class HelpCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class HelpCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         Seq<Command> commandsList = discordCommands.getCommandList().sort(Comparator.comparing(command -> command.text));
         StringBuilder commands = new StringBuilder();
 

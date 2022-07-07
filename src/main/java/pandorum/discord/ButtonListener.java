@@ -22,12 +22,11 @@ public class ButtonListener extends ListenerAdapter {
             return;
         }
 
-        Context context = new Context(event);
 
         switch (event.getComponentId()) {
-            case "admin.confirm" -> Authme.confirm(context);
-            case "admin.deny" -> Authme.deny(context);
-            case "admin.info" -> Authme.info(context, event);
+            case "authme.confirm" -> Authme.confirm(event);
+            case "authme.deny" -> Authme.deny(event);
+            case "authme.info" -> Authme.info(event);
         }
     }
 }

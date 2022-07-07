@@ -7,12 +7,12 @@ import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.EmbedBuilder;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import java.awt.*;
 
-public class PlayersListCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class PlayersListCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         if (args.length > 0 && !Strings.canParseInt(args[0])) {
             context.err(":interrobang: Страница должна быть числом.");
             return;

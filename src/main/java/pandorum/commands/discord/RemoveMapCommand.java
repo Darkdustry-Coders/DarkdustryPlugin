@@ -2,14 +2,14 @@ package pandorum.commands.discord;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.maps.Map;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.maps;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findMap;
 
-public class RemoveMapCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class RemoveMapCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         if (!isAdmin(context.member)) {
             context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
             return;

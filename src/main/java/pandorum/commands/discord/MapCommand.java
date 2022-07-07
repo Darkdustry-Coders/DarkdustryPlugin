@@ -4,14 +4,14 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
-import pandorum.discord.Context;
+import pandorum.discord.MessageContext;
 
 import java.awt.*;
 
 import static pandorum.util.Search.findMap;
 
-public class MapCommand implements CommandRunner<Context> {
-    public void accept(String[] args, Context context) {
+public class MapCommand implements CommandRunner<MessageContext> {
+    public void accept(String[] args, MessageContext context) {
         Map map = findMap(args[0]);
         if (map == null) {
             context.err(":mag: Карта не найдена.", "Проверь, правильно ли введено название.");
