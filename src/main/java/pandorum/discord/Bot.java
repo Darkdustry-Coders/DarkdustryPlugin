@@ -5,6 +5,7 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
+import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -16,12 +17,16 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import pandorum.Loader;
+import pandorum.components.Bundle;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.EnumSet;
+import java.util.Locale;
 
 import static pandorum.PluginVars.*;
+import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.sendToChat;
+import static pandorum.util.Search.findLocale;
 
 public class Bot {
 
@@ -64,10 +69,19 @@ public class Bot {
     }
 
     public static void sendMessageToGame(MessageContext context) {
-        if (context.channel != botChannel) return;
+        if (context.channel != botChannel || context.message.getContentDisplay().length() == 0) return;
 
-        sendToChat("events.discord.chat", Integer.toHexString(context.member.getColorRaw()), context.member.getEffectiveName(), context.message.getContentDisplay());
-        Log.info("[Discord] @: @", context.member.getEffectiveName(), context.message.getContentDisplay());
+        Groups.player.each(player -> {
+            Locale locale = findLocale(player.locale);
+
+            String color = Integer.toHexString(context.member.getColorRaw());
+            String role = context.member.getRoles().isEmpty() ? Bundle.format("discord.chat.no-role", locale) : context.member.getRoles().get(0).getName();
+            String name = context.member.getEffectiveName();
+            String reply = context.message.getReferencedMessage() != null ? Bundle.format("discord.chat.reply", locale, botGuild.getMember(context.message.getReferencedMessage().getAuthor()).getEffectiveName()) : "";
+            String message = context.message.getContentDisplay();
+
+            bundled(player, "discord.chat", color, role, name, reply, message);
+        });
     }
 
     public static void handleMessage(MessageContext context) {
