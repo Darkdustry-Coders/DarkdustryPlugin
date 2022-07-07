@@ -48,8 +48,10 @@ public class Utils {
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()
         ).each((key, value) -> {
-            if (value > 0) builder.append(Bundle.format(key, locale, value));
+            if (value > 0) builder.append(Bundle.format(key, locale, value)).append(" ");
         });
+
+        builder.setLength(Math.max(0, builder.length() - 1)); // Чтобы убрать пробел на конце
 
         return builder.toString();
     }

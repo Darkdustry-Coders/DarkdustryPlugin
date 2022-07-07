@@ -70,18 +70,18 @@ public class Bot {
     public static void sendMessageToGame(MessageContext context) {
         if (context.channel != botChannel || context.message.getContentDisplay().length() == 0) return;
 
+        var roles = context.member.getRoles();
+        var reply = context.message.getReferencedMessage();
+
         Groups.player.each(player -> {
             Locale locale = findLocale(player.locale);
-
-            var roles = context.member.getRoles();
-            var reply = context.message.getReferencedMessage();
 
             bundled(player, "discord.chat",
                     roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
                     Integer.toHexString(context.member.getColorRaw()),
                     context.member.getEffectiveName(),
                     context.message.getContentDisplay(),
-                    reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.getMember(reply.getAuthor()).getEffectiveName()) : "");
+                    reply != null && reply.getMember() != null ? Bundle.format("discord.chat.reply", locale, reply.getMember().getEffectiveName()) : "");
         });
     }
 
