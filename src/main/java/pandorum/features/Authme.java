@@ -6,13 +6,10 @@ import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import pandorum.data.Database;
-import pandorum.data.PlayerData;
 
 import java.awt.*;
 
 import static mindustry.Vars.netServer;
-import static pandorum.PluginVars.authWaiting;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.util.PlayerUtils.bundled;
 
@@ -20,8 +17,7 @@ public class Authme {
 
     public static final Button confirm = Button.success("authme.confirm", "Подтвердить"),
             deny = Button.danger("authme.deny", "Отклонить"),
-            info = Button.primary("authme.info", "Информация"),
-            auth = Button.success("discord.auth.confirm", "Подтвердить");
+            info = Button.primary("authme.info", "Информация");
 
     public static void confirm(ButtonInteractionEvent event) {
         String uuid = loginWaiting.remove(event.getMessage());
@@ -79,18 +75,6 @@ public class Authme {
                 .addField("Все IP адреса", info.ips.toString(), true);
 
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
-    }
-
-    public static void auth(ButtonInteractionEvent event) {
-        String user = event.getUser().getId();
-        String uuid = authWaiting.get(user);
-
-        PlayerData data = Database.getPlayerData(uuid);
-        data.discord = user;
-
-        authWaiting.remove(user);
-
-        Database.setPlayerData(uuid, data);
     }
 }
 

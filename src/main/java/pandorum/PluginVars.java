@@ -93,7 +93,6 @@ public class PluginVars {
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
-    public static final ObjectMap<String, String> authWaiting = new ObjectMap<>();
 
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
     public static final OrderedMap<String, String> mindustryLocales2Api = new OrderedMap<>();
