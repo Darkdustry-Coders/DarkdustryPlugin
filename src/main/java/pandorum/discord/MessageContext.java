@@ -3,23 +3,29 @@ package pandorum.discord;
 import arc.util.Strings;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
 
 public class MessageContext {
 
-    public final MessageReceivedEvent event;
-
     public final Message message;
     public final Member member;
+    public final User user;
     public final MessageChannel channel;
 
     public MessageContext(MessageReceivedEvent event) {
-        this.event = event;
-
         this.message = event.getMessage();
         this.member = event.getMember();
+        this.user = event.getAuthor();
+        this.channel = event.getChannel();
+    }
+
+    public MessageContext(ButtonInteractionEvent event) {
+        this.message = event.getMessage();
+        this.member = event.getMember();
+        this.user = event.getUser();
         this.channel = event.getChannel();
     }
 
