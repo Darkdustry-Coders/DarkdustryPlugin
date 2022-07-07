@@ -3,6 +3,7 @@ package pandorum.util;
 import arc.Core;
 import arc.files.Fi;
 import arc.math.geom.Position;
+import arc.struct.ObjectMap;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.server.ServerControl;
@@ -41,10 +42,14 @@ public class Utils {
     public static String formatDuration(long time, Locale locale) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        if (duration.toDaysPart() > 0) builder.append(duration.toDaysPart()).append(Bundle.get("time.days", locale));
-        if (duration.toHoursPart() > 0) builder.append(duration.toHoursPart()).append(Bundle.get("time.hours", locale));
-        if (duration.toMinutesPart() > 0) builder.append(duration.toMinutesPart()).append(Bundle.get("time.minutes", locale));
-        if (duration.toSecondsPart() > 0) builder.append(duration.toSecondsPart()).append(Bundle.get("time.seconds", locale));
+        ObjectMap.<String, Integer>of(
+                "time.days", duration.toDaysPart(),
+                "time.hours", duration.toHoursPart(),
+                "time.minutes", duration.toMinutesPart(),
+                "time.seconds", duration.toSecondsPart()
+        ).each((key, value) -> {
+            if (value > 0) builder.append(Bundle.format(key, locale, value));
+        });
 
         return builder.toString();
     }

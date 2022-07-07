@@ -25,7 +25,6 @@ import java.util.Locale;
 
 import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findLocale;
 
 public class Bot {
@@ -38,7 +37,7 @@ public class Bot {
 
     public static void connect() {
         try {
-            JDABuilder builder = JDABuilder.createLight(config.discordBotToken)
+            JDABuilder builder = JDABuilder.createDefault(config.discordBotToken)
                     .addEventListeners(new MessageListener())
                     .addEventListeners(new ButtonListener());
 
@@ -74,13 +73,15 @@ public class Bot {
         Groups.player.each(player -> {
             Locale locale = findLocale(player.locale);
 
-            String color = Integer.toHexString(context.member.getColorRaw());
-            String role = context.member.getRoles().isEmpty() ? Bundle.format("discord.chat.no-role", locale) : context.member.getRoles().get(0).getName();
-            String name = context.member.getEffectiveName();
-            String reply = context.message.getReferencedMessage() != null ? Bundle.format("discord.chat.reply", locale, botGuild.getMember(context.message.getReferencedMessage().getAuthor()).getEffectiveName()) : "";
-            String message = context.message.getContentDisplay();
+            var roles = context.member.getRoles();
+            var reply = context.message.getReferencedMessage();
 
-            bundled(player, "discord.chat", color, role, name, reply, message);
+            bundled(player, "discord.chat",
+                    roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
+                    Integer.toHexString(context.member.getColorRaw()),
+                    context.member.getEffectiveName(),
+                    context.message.getContentDisplay(),
+                    reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.getMember(reply.getAuthor()).getEffectiveName()) : "");
         });
     }
 
