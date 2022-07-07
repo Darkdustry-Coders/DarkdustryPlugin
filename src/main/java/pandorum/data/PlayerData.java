@@ -11,4 +11,6 @@ public class PlayerData {
     public int gamesPlayed = 0;
 
     public int rank = 0;
+
+    public String discord = "0";
 }
