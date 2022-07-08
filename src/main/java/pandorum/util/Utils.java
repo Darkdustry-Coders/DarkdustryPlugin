@@ -42,8 +42,8 @@ public class Utils {
     public static String formatDuration(long time, Locale locale) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        ObjectMap.<String, Long>of(
-                "time.days", duration.toDaysPart(),
+        ObjectMap.<String, Integer>of(
+                "time.days", (int) duration.toDaysPart(),
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()
