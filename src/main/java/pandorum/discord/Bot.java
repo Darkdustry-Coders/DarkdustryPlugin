@@ -81,7 +81,7 @@ public class Bot {
                     Integer.toHexString(context.member.getColorRaw()),
                     context.member.getEffectiveName(),
                     context.message.getContentDisplay(),
-                    reply != null && reply.getMember() != null ? Bundle.format("discord.chat.reply", locale, reply.getMember().getEffectiveName()) : "");
+                    reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "");
         });
     }
 
