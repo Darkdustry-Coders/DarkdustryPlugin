@@ -3,7 +3,7 @@ package pandorum.util;
 import arc.Core;
 import arc.files.Fi;
 import arc.math.geom.Position;
-import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.server.ServerControl;
@@ -42,7 +42,7 @@ public class Utils {
     public static String formatDuration(long time, Locale locale) {
         Duration duration = Duration.ofMillis(time);
         StringBuilder builder = new StringBuilder();
-        ObjectMap.<String, Integer>of(
+        OrderedMap.<String, Integer>of(
                 "time.days", (int) duration.toDaysPart(),
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
