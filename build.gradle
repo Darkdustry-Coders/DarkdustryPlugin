@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    project.version = '1.7'
+    project.version = '2.0'
     mindustryVersion = 'v135'
 }
 
@@ -20,7 +20,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.2'
-    implementation 'net.dv8tion:JDA:5.0.0-alpha.11'
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.13'
     implementation 'redis.clients:jedis:4.2.3'
 }
 

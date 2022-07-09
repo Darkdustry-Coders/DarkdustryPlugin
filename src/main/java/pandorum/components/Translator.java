@@ -63,9 +63,8 @@ public class Translator {
         json.addProperty("source", "auto");
         json.addProperty("target", to);
 
-        Http.post(translatorApiUrl)
+        Http.post(translatorApiUrl, json.toString())
                 .header("X-RapidAPI-Key", config.translatorApiKey)
-                .content(json.toString())
                 .error(throwable -> cons.get(""))
                 .submit(response -> {
                     String translatedText = gson.fromJson(response.getResultAsString(), JsonObject.class).getAsJsonObject("data").getAsJsonObject("translations").get("translatedText").getAsString();

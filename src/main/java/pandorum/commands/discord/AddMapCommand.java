@@ -23,7 +23,7 @@ public class AddMapCommand implements CommandRunner<MessageContext> {
 
         Attachment attachment = context.message.getAttachments().get(0);
 
-        attachment.downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
+        attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
             Fi mapFile = new Fi(file);
             if (!SaveIO.isSaveValid(mapFile)) {
                 context.err(":no_entry_sign: Файл поврежден или не является картой!");

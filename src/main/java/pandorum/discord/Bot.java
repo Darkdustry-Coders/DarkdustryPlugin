@@ -37,7 +37,7 @@ public class Bot {
 
     public static void connect() {
         try {
-            JDABuilder builder = JDABuilder.createDefault(config.discordBotToken)
+            JDABuilder builder = JDABuilder.createLight(config.discordBotToken)
                     .addEventListeners(new MessageListener())
                     .addEventListeners(new ButtonListener());
 
@@ -70,6 +70,8 @@ public class Bot {
     public static void sendMessageToGame(MessageContext context) {
         if (context.channel != botChannel || context.message.getContentDisplay().length() == 0) return;
 
+        Log.info("[Discord] @: @", context.member.getEffectiveName(), context.message.getContentDisplay());
+
         var roles = context.member.getRoles();
         var reply = context.message.getReferencedMessage();
 
@@ -77,11 +79,12 @@ public class Bot {
             Locale locale = findLocale(player.locale);
 
             bundled(player, "discord.chat",
-                    roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
                     Integer.toHexString(context.member.getColorRaw()),
+                    roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
                     context.member.getEffectiveName(),
-                    context.message.getContentDisplay(),
-                    reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "");
+                    reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
+                    context.message.getContentDisplay()
+            );
         });
     }
 

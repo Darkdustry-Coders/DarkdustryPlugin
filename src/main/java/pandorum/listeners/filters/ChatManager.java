@@ -1,6 +1,7 @@
 package pandorum.listeners.filters;
 
 import arc.util.Log;
+import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ChatFilter;
@@ -11,7 +12,6 @@ import pandorum.discord.Bot;
 import static mindustry.Vars.netServer;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.botChannel;
-import static pandorum.util.StringUtils.stripAll;
 
 public class ChatManager implements ChatFilter {
 
@@ -26,10 +26,10 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            Translator.translate(stripAll(text), data.language, translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
+            Translator.translate(Strings.stripColors(text), data.language, translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
         });
 
-        Bot.sendMessage(botChannel, "@ » @", stripAll(author.name), stripAll(text));
+        Bot.sendMessage(botChannel, "@ » @", Strings.stripColors(author.name), Strings.stripColors(text));
         return null;
     }
 }

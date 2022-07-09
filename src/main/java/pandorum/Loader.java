@@ -4,10 +4,7 @@ import arc.Events;
 import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.Colors;
-import arc.util.CommandHandler;
-import arc.util.Log;
-import arc.util.Reflect;
-import arc.util.Timer;
+import arc.util.*;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.core.NetServer;
@@ -80,6 +77,8 @@ public class Loader {
         dangerousDepositBlocks.put(Blocks.combustionGenerator, Items.blastCompound);
         dangerousDepositBlocks.put(Blocks.steamGenerator, Items.blastCompound);
         dangerousDepositBlocks.put(Blocks.thoriumReactor, Items.thorium);
+
+        Http.setMaxConcurrent(16);
 
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));

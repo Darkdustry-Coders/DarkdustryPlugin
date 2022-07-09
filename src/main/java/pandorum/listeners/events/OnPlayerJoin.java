@@ -3,6 +3,7 @@ package pandorum.listeners.events;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Log;
+import arc.util.Strings;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
@@ -23,7 +24,6 @@ import static pandorum.listeners.handlers.MenuHandler.welcomeMenu;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findLocale;
-import static pandorum.util.StringUtils.stripAll;
 
 public class OnPlayerJoin implements Cons<PlayerJoin> {
 
@@ -35,7 +35,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         Log.info("@ зашел на сервер. [@]", name, event.player.uuid());
         sendToChat("events.player.join", name);
-        Bot.sendEmbed(botChannel, Color.green, "@ присоединился", stripAll(name));
+        Bot.sendEmbed(botChannel, Color.green, "@ присоединился", Strings.stripColors(name));
 
         if (data.welcomeMessage) Call.menu(event.player.con, welcomeMenu,
                 Bundle.format("welcome.menu.header", findLocale(event.player.locale)),
