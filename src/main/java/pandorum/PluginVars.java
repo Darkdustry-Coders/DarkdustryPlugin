@@ -24,6 +24,7 @@ import pandorum.components.PluginConfig;
 import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
@@ -123,6 +124,7 @@ public class PluginVars {
 
     /** База данных Jedis. */
     public static JedisPool jedisPool;
+    public static Jedis jedis;
 
     /** Конфигурация сервера. */
     public static PluginConfig config;
