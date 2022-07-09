@@ -12,14 +12,14 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static pandorum.PluginVars.defaultLocale;
+import static pandorum.PluginVars.defaultLanguage;
 import static pandorum.util.Utils.getPluginResource;
 
 public class Bundle {
 
     public static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
     public static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
-
+    public static final Locale defaultLocale = new Locale(defaultLanguage);
     public static Locale[] supportedLocales;
 
     public static void load() {
@@ -29,40 +29,34 @@ public class Bundle {
 
         for (int i = 0; i < files.length; i++) {
             String code = files[i].nameWithoutExtension();
-            code = code.substring("bundle_".length());
-            if (code.contains("_")) {
-                String[] codes = code.split("_");
-                supportedLocales[i] = new Locale(codes[0], codes[1]);
-            } else {
-                supportedLocales[i] = new Locale(code);
+            String[] codes;
+            if (!code.contains("_")) { // bundle.properties
+                supportedLocales[i] = Locale.ROOT;
+            } else if ((codes = code.split("_")).length == 3) { // bundle_uk_UA.properties
+                supportedLocales[i] = new Locale(codes[1], codes[2]);
+            } else { // bundle_ru.properties
+                supportedLocales[i] = new Locale(codes[1]);
             }
         }
 
         Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.length);
     }
 
-    public static Locale defaultLocale() {
-        return Structs.find(supportedLocales, locale -> locale.toString().equals(defaultLocale));
-    }
-
     public static String get(String key, Locale locale) {
-        return get(key, key, locale);
-    }
-
-    public static String get(String key, String defaultValue, Locale locale) {
         StringMap bundle = getOrLoad(locale);
-        return bundle != null ? bundle.get(key, defaultValue) : defaultValue;
+        return bundle != null ? bundle.get(key, key) : key;
     }
 
     public static String format(String key, Locale locale, Object... values) {
         String pattern = get(key, locale);
+        if (values.length == 0) return pattern;
+
         MessageFormat format = formats.get(locale);
         if (!Structs.contains(supportedLocales, locale)) {
-            format = formats.get(defaultLocale(), () -> new MessageFormat(pattern, defaultLocale()));
+            format = formats.get(defaultLocale, () -> new MessageFormat(pattern, defaultLocale));
             format.applyPattern(pattern);
         } else if (format == null) {
-            format = new MessageFormat(pattern, locale);
-            formats.put(locale, format);
+            formats.put(locale, format = new MessageFormat(pattern, locale));
         } else {
             format.applyPattern(pattern);
         }
@@ -71,21 +65,19 @@ public class Bundle {
 
     private static StringMap getOrLoad(Locale locale) {
         StringMap bundle = bundles.get(locale);
-        if (bundle == null && locale.getDisplayName().equals("router")) {
-            StringMap router = new StringMap();
-            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("\\S", String.valueOf(Iconc.blockRouter))));
-            bundles.put(locale, bundle = router);
-        } else if (bundle == null && Structs.contains(supportedLocales, locale)) {
+        if (bundle == null && Structs.contains(supportedLocales, locale)) {
             bundles.put(locale, bundle = load(locale));
         }
-        return bundle != null ? bundle : bundles.get(defaultLocale());
+        return bundle != null ? bundle : bundles.get(defaultLocale);
     }
 
     private static StringMap load(Locale locale) {
         StringMap properties = new StringMap();
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.bundle", locale);
-        for (String s : bundle.keySet()) {
-            properties.put(s, bundle.getString(s));
+        if (locale.getDisplayName().equals("router")) {
+            getOrLoad(defaultLocale).each((key, value) -> properties.put(key, Strings.stripColors(value).replaceAll("\\S", String.valueOf(Iconc.blockRouter))));
+        } else {
+            bundle.keySet().forEach(key -> properties.put(key, bundle.getString(key)));
         }
         return properties;
     }

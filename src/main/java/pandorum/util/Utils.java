@@ -36,7 +36,7 @@ public class Utils {
     }
 
     public static String formatDuration(long time) {
-        return formatDuration(time, Bundle.defaultLocale());
+        return formatDuration(time, Bundle.defaultLocale);
     }
 
     public static String formatDuration(long time, Locale locale) {

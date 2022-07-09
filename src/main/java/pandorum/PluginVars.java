@@ -65,8 +65,8 @@ public class PluginVars {
     /** Время, на которое игрок будет выгнан голосованием или через команду. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 
-    /** Локаль по умолчанию. */
-    public static final String defaultLocale = "en";
+    /** Язык по умолчанию. */
+    public static final String defaultLanguage = "en";
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/45NNzjGCmY";

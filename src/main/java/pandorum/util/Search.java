@@ -39,13 +39,13 @@ public class Search {
     }
 
     public static Locale findLocale(String name) {
-        return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equals(locale.toString()) || name.startsWith(locale.toString())), Bundle.defaultLocale());
+        return Utils.notNullElse(Structs.find(Bundle.supportedLocales, locale -> name.equals(locale.toString()) || name.startsWith(locale.toString())), Bundle.defaultLocale);
     }
 
     public static String findTranslatorLanguage(String name) {
         if (mindustryLocales2Api.containsKey(name)) return mindustryLocales2Api.get(name);
 
-        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(language -> name.equals(language) || name.startsWith(language)), defaultLocale);
+        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(language -> name.equals(language) || name.startsWith(language)), defaultLanguage);
     }
 
     public static Player findPlayer(String name) {
