@@ -16,6 +16,7 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.ConnectPacket;
 import pandorum.components.Bundle;
+import pandorum.util.Utils;
 
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
         String ip = con.address;
         String name = fixName(packet.name);
 
-        Locale locale = findLocale(packet.locale);
+        Locale locale = findLocale(packet.locale = Utils.notNullElse(packet.locale, defaultLanguage));
 
         if (con.hasBegunConnecting || uuid == null || usid == null) {
             kick(con, 0, false, "kick.already-connected", locale);
