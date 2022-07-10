@@ -20,7 +20,7 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         try {
-            return gson.fromJson(jedis.get(uuid), PlayerData.class);
+            if (jedis.exists(uuid)) return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception ignored) {}
 
         return new PlayerData();
