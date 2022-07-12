@@ -70,9 +70,9 @@ public class PluginVars {
     public static final String defaultLanguage = "en";
 
     /** Ссылка на наш Discord сервер */
-    public static final String discordServerUrl = "discord.gg/45NNzjGCmY";
+    public static final String discordServerUrl = "https://discord.gg/45NNzjGCmY";
 
-    public static final String translatorApiUrl = "https://deep-translate1.p.rapidapi.com/language/translate/v2";
+    public static final String translatorApiUrl = "https://translo.p.rapidapi.com/api/v3/translate", translatorApiHost = "translo.p.rapidapi.com";
 
     /** Название файла с конфигурацией. */
     public static final String configFileName = "config.json";

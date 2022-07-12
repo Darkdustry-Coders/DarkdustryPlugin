@@ -1,6 +1,7 @@
 package pandorum.components;
 
 import arc.func.Cons;
+import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Log;
 import com.google.gson.JsonObject;
@@ -18,7 +19,6 @@ public class Translator {
                 "en", "English",
                 "es", "Español",
                 "eu", "Euskara",
-                "fil", "Filipino",
                 "fr", "Français",
                 "it", "Italiano",
                 "lt", "Lietuvių",
@@ -38,8 +38,7 @@ public class Translator {
                 "ru", "Русский",
                 "uk", "Українська",
                 "th", "ไทย",
-                "zh-CN", "简体中文",
-                "zh-TW", "正體中文",
+                "zh", "简体中文",
                 "ja", "日本語",
                 "ko", "한국어"
         );
@@ -50,25 +49,22 @@ public class Translator {
                 "pt_BR", "pt",
                 "pt_PT", "pt",
                 "uk_UA", "uk",
-                "zh_CN", "zh-CN",
-                "zh_TW", "zh-TW"
+                "zh_CN", "zh",
+                "zh_TW", "zh"
         );
 
         Log.info("[Darkdustry] Загружено языков для переводчика: @.", translatorLanguages.size);
     }
 
-    public static void translate(String text, String to, Cons<String> cons) {
-        JsonObject json = new JsonObject();
-        json.addProperty("q", text);
-        json.addProperty("source", "auto");
-        json.addProperty("target", to);
-
-        Http.post(translatorApiUrl, json.toString())
+    public static void translate(String to, String text, Cons<String> cons) {
+        Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
+                .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
+                .header("X-RapidAPI-Host", translatorApiHost)
                 .error(throwable -> cons.get(""))
                 .submit(response -> {
-                    String translatedText = gson.fromJson(response.getResultAsString(), JsonObject.class).getAsJsonObject("data").getAsJsonObject("translations").get("translatedText").getAsString();
-                    cons.get(translatedText.equalsIgnoreCase(text) ? "" : translatedText);
+                    String translatedText = gson.fromJson(response.getResultAsString(), JsonObject.class).get("translated_text").getAsString();
+                    cons.get(translatedText);
                 });
     }
 }

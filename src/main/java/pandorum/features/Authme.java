@@ -28,8 +28,8 @@ public class Authme {
                     .setColor(Color.green)
                     .setTitle("Запрос подтвержден")
                     .addField("Администратор:", event.getUser().getAsMention(), true)
-                    .addField("Игрок:", player.name, true).build()
-            ).queue();
+                    .addField("Игрок:", player.name, true)
+                    .build()).queue();
 
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRank(player.uuid(), Ranks.admin);
@@ -50,8 +50,8 @@ public class Authme {
                     .setColor(Color.red)
                     .setTitle("Запрос отклонён")
                     .addField("Администратор:", event.getUser().getAsMention(), true)
-                    .addField("Игрок:", player.name, true).build()
-            ).queue();
+                    .addField("Игрок:", player.name, true)
+                    .build()).queue();
 
             bundled(player, "commands.login.deny");
         }

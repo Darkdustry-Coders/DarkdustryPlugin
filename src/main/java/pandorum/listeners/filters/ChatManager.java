@@ -26,7 +26,7 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            Translator.translate(Strings.stripColors(text), data.language, translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
+            Translator.translate(data.language, Strings.stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
         });
 
         Bot.sendMessage(botChannel, "@ » @", Strings.stripColors(author.name), Strings.stripColors(text));
