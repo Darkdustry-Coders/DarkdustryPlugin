@@ -1,23 +1,28 @@
 package pandorum.features;
 
+import arc.struct.ObjectMap;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 
 import static mindustry.Vars.netServer;
+import static pandorum.PluginVars.authWaiting;
 import static pandorum.PluginVars.loginWaiting;
 import static pandorum.util.PlayerUtils.bundled;
 
 public class Authme {
 
-    public static final Button confirm = Button.success("authme.confirm", "Подтвердить"),
+    public static final Button
+            confirm = Button.success("authme.confirm", "Подтвердить"),
             deny = Button.danger("authme.deny", "Отклонить"),
-            info = Button.primary("authme.info", "Информация");
+            info = Button.primary("authme.info", "Информация"),
+            discord = Button.success("discord.link", "Подтвердить");
 
     public static void confirm(ButtonInteractionEvent event) {
         String uuid = loginWaiting.remove(event.getMessage());
@@ -75,6 +80,12 @@ public class Authme {
                 .addField("Все IP адреса", info.ips.toString(), true);
 
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+    }
+
+    public static void discordLink(Member member) {
+        String uuid = authWaiting.get(member.getId());
+
+        // TODO базе данных нужна новая няшка с текстом >w<
     }
 }
 
