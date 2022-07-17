@@ -56,14 +56,26 @@ public class Bot {
 
             botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
-            updateBotStatus(0);
-
             discordCommands = new CommandHandler(config.discordBotPrefix);
             Loader.registerDiscordCommands(discordCommands);
+
+            updateBotStatus(0);
 
             Log.info("[Darkdustry] Бот успешно подключен. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
             Log.err("[Darkdustry] Не удалось запустить бота", e);
+        }
+    }
+
+    public static void handleMessage(MessageContext context) {
+        CommandResponse response = discordCommands.handleMessage(context.message.getContentRaw(), context);
+
+        if (response.type == ResponseType.unknownCommand) {
+            context.err(":interrobang: Неизвестная команда.", "Используй: **@help**, чтобы получить список доступных команд.", discordCommands.getPrefix());
+        } else if (response.type == ResponseType.fewArguments) {
+            context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
+        } else if (response.type == ResponseType.manyArguments) {
+            context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
         }
     }
 
@@ -86,18 +98,6 @@ public class Bot {
                     context.message.getContentDisplay()
             );
         });
-    }
-
-    public static void handleMessage(MessageContext context) {
-        CommandResponse response = discordCommands.handleMessage(context.message.getContentRaw(), context);
-
-        if (response.type == ResponseType.unknownCommand) {
-            context.err(":interrobang: Неизвестная команда.", "Используй: **@help**, чтобы получить список доступных команд.", discordCommands.getPrefix());
-        } else if (response.type == ResponseType.fewArguments) {
-            context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
-        } else if (response.type == ResponseType.manyArguments) {
-            context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
-        }
     }
 
     public static void updateBotStatus(int players) {

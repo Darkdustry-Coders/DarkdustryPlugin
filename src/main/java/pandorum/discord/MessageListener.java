@@ -1,5 +1,6 @@
 package pandorum.discord;
 
+import arc.Core;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,9 @@ public class MessageListener extends ListenerAdapter {
         if (!event.isFromGuild() || event.getAuthor().isBot()) return;
 
         MessageContext context = new MessageContext(event);
-        handleMessage(context);
-        sendMessageToGame(context);
+        Core.app.post(() -> {
+            handleMessage(context);
+            sendMessageToGame(context);
+        });
     }
 }

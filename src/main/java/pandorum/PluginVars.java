@@ -70,7 +70,7 @@ public class PluginVars {
     public static final String defaultLanguage = "en";
 
     /** Ссылка на наш Discord сервер */
-    public static final String discordServerUrl = "https://discord.gg/45NNzjGCmY";
+    public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
 
     public static final String translatorApiUrl = "https://translo.p.rapidapi.com/api/v3/translate", translatorApiHost = "translo.p.rapidapi.com";
 
