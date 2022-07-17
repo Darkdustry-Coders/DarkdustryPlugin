@@ -57,7 +57,7 @@ public class Utils {
     }
 
     public static Fi getPluginResource(String name) {
-        return mods.locateMod("darkdustry-plugin").root.child(name);
+        return mods.list().find(mod -> mod.name.equals("darkdustry-plugin")).root.child(name);
     }
 
     public static ServerControl getServerControl() {

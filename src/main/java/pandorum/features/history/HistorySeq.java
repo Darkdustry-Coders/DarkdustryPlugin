@@ -12,11 +12,13 @@ public class HistorySeq extends Seq<HistoryEntry> {
     }
 
     @Override
-    public void add(HistoryEntry entry) {
+    public HistorySeq add(HistoryEntry entry) {
         super.add(entry);
 
         while(size > maxSize) {
             remove(first());
         }
+
+        return this;
     }
 }

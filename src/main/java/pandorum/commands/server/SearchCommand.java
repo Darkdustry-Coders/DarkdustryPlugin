@@ -9,7 +9,7 @@ import static mindustry.Vars.netServer;
 
 public class SearchCommand implements Cons<String[]> {
     public void get(String[] args) {
-        Seq<PlayerInfo> infos = netServer.admins.searchNames(args[0]).asArray();
+        Seq<PlayerInfo> infos = netServer.admins.searchNames(args[0]).toSeq();
 
         if (infos.isEmpty()) {
             Log.info("Не найдено ни одного игрока с таким никнеймом.");

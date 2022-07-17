@@ -12,7 +12,7 @@ public class Icons {
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v135/core/assets/icons/icons.properties").submit(response -> {
+        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136/core/assets/icons/icons.properties").submit(response -> {
             try (Scanner scanner = new Scanner(response.getResultAsString())) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine().split("\\|")[0];
@@ -27,9 +27,9 @@ public class Icons {
                 Team.derelict.emoji = get("derelict");
                 Team.sharded.emoji = get("sharded");
                 Team.crux.emoji = get("crux");
+                Team.malis.emoji = get("malis");
                 Team.green.emoji = get("shocked");
-                Team.purple.emoji = get("spore-slowed");
-                Team.blue.emoji = get("wet");
+                Team.blue.emoji = get("spore-slowed");
 
                 Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
             }

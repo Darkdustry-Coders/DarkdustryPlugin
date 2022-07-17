@@ -39,11 +39,11 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         if (data.welcomeMessage) Call.menu(event.player.con, welcomeMenu,
                 Bundle.format("welcome.menu.header", findLocale(event.player.locale)),
-                Bundle.format("welcome.menu.content", findLocale(event.player.locale), Config.name.string(), discordServerUrl),
+                Bundle.format("welcome.menu.content", findLocale(event.player.locale), Config.serverName.string(), discordServerUrl),
                 new String[][] {{Bundle.format("ui.menus.close", findLocale(event.player.locale))}, {Bundle.format("welcome.menu.disable", findLocale(event.player.locale))}}
         );
 
-        bundled(event.player, "welcome.message", Config.name.string(), discordServerUrl);
+        bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 

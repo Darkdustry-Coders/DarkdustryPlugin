@@ -22,7 +22,6 @@ public class ButtonListener extends ListenerAdapter {
             return;
         }
 
-
         switch (event.getComponentId()) {
             case "authme.confirm" -> Authme.confirm(event);
             case "authme.deny" -> Authme.deny(event);

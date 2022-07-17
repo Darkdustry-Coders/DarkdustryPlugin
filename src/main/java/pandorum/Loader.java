@@ -78,8 +78,6 @@ public class Loader {
         dangerousDepositBlocks.put(Blocks.steamGenerator, Items.blastCompound);
         dangerousDepositBlocks.put(Blocks.thoriumReactor, Items.thorium);
 
-        Http.setMaxConcurrent(16);
-
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));
         Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));

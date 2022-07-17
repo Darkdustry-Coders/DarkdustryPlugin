@@ -9,6 +9,6 @@ import static pandorum.util.StringUtils.stripAll;
 
 public class IpCommand implements CommandRunner<MessageContext> {
     public void accept(String[] args, MessageContext context) {
-        context.info(":desktop: " + stripAll(Config.name.string()), "IP: @:@", serverIp, Config.port.num());
+        context.info(":desktop: " + stripAll(Config.serverName.string()), "IP: @:@", serverIp, Config.port.num());
     }
 }

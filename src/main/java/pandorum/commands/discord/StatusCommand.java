@@ -25,7 +25,7 @@ public class StatusCommand implements CommandRunner<MessageContext> {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.green)
-                .setTitle(":desktop: " + stripAll(Config.name.string()))
+                .setTitle(":desktop: " + stripAll(Config.serverName.string()))
                 .addField("Игроков:", String.valueOf(Groups.player.size()), true)
                 .addField("Карта:", state.map.name(), true)
                 .addField("Волна:", String.valueOf(state.wave), true)
