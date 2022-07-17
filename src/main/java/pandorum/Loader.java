@@ -131,7 +131,7 @@ public class Loader {
 
     public static void registerClientCommands(CommandHandler handler) {
         handler.register("help", "[page]", "commands.help.description", new HelpCommand());
-        handler.register("discord", "<id>", "commands.discord.description", new DiscordLinkCommand());
+        handler.register("discord", "commands.discord.description", new DiscordLinkCommand());
         handler.register("a", "<message...>", "commands.a.description", new AdminChatCommand());
         handler.register("t", "<message...>", "commands.t.description", new TeamChatCommand());
         handler.register("votekick", "<ID/username...>", "commands.votekick.description", new VoteKickCommand());

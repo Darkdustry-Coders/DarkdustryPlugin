@@ -45,20 +45,12 @@ public class Bot {
             jda.awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
-
-            if(botGuild == null) {
-                Log.err("[Darkdustry] Discord сервер не найден. Проверьте @.\nВыключение сервера...", configFileName);
-                return;
-            }
+            assert botGuild != null;
 
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
-
-            if(adminRole == null || botChannel == null || adminChannel == null) {
-                Log.err("[Darkdustry] Проверьте правильность написания id ролей, каналов в @.\nВыключение сервера...", configFileName);
-                return;
-            }
+            assert adminRole != null && botChannel != null && adminChannel != null;
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
 
@@ -71,7 +63,7 @@ public class Bot {
 
             Log.info("[Darkdustry] Бот успешно подключен. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
-            Log.err("[Darkdustry] Не удалось запустить бота: ", e);
+            Log.err("[Darkdustry] Не удалось запустить бота", e);
         }
     }
 
