@@ -45,18 +45,19 @@ jobs:
       uses: WyriHaximus/github-action-get-previous-tag@v1
 
     - name: Get new/old tag
+      id: newtag
 
       run: |
 
-        version=$(gradle printProjectVersion -q)
+        tag=$(cat gradle.build | grep "project.version*" | cut -d "=" -f 2,3 | tr -d "'" | tr -d \"," ")
 
-        echo '::set-output name=version::'$version
+        echo '::set-output name=tag::'$tag
 
     - name: Create release
       
       id: release
 
-      if: ${{ steps.release.outputs.version != steps.previoustag.outputs.tag }}
+      if: ${{ steps.newtag.outputs.tag != steps.previoustag.outputs.tag }}
 
       uses: actions/create-release@v1
 
@@ -66,9 +67,9 @@ jobs:
 
       with:
 
-        tag_name: ${{ steps.release.outputs.version }}
+        tag_name: ${{ steps.newtag.outputs.tag }}
 
-        release_name: Release ${{ steps.release.outputs.version }}
+        release_name: Release ${{ steps.newtag.outputs.tag }}
 
         draft: false
 
@@ -78,7 +79,7 @@ jobs:
 
       id: upload-release-asset 
       
-      if: ${{ steps.release.outputs.version != steps.previoustag.outputs.tag }}
+      if: ${{ steps.newtag.outputs.tag != steps.previoustag.outputs.tag }}
 
       uses: actions/upload-release-asset@v1
 
@@ -90,8 +91,8 @@ jobs:
 
         upload_url: ${{ steps.release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
  
-        asset_path: ./build/libs/DarkdustryPlugin.jar
+        asset_path: ./build/libs/DarkdustryPlugin-${{ steps.newtag.outputs.tag }}.jar
 
-        asset_name: DarkdustryPlugin.jar
+        asset_name: DarkdustryPlugin-${{ steps.newtag.outputs.tag }}.jar
 
         asset_content_type: application/java-archive
