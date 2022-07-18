@@ -35,6 +35,6 @@ rootProject.tasks.named("jar") {
 }
 task printProjectVersion {
     doLast {
-      println(ext.project.version)
+      println(project.version)
     }
 }
