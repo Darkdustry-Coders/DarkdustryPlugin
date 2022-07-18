@@ -45,11 +45,12 @@ jobs:
       uses: WyriHaximus/github-action-get-previous-tag@v1
 
     - name: Get new/old tag
+
       id: newtag
 
       run: |
 
-        tag=$(cat gradle.build | grep "project.version*" | cut -d "=" -f 2,3 | tr -d "'" | tr -d \"," ")
+        tag=$(cat build.gradle | grep "project.version*" | cut -d "=" -f 2,3 | tr -d "'" | tr -d \"," ")
 
         echo '::set-output name=tag::'$tag
 
