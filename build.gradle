@@ -33,8 +33,3 @@ jar {
 rootProject.tasks.named("jar") {
     duplicatesStrategy = 'include'
 }
-task printProjectVersion {
-    doLast {
-      println(project.version)
-    }
-}
