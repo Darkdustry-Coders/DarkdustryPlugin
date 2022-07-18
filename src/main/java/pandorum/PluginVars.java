@@ -32,7 +32,7 @@ import static mindustry.Vars.tilesize;
 public class PluginVars {
 
     /** IP адрес сервера. */
-    public static final String serverIp = "darkdustry.ml";
+    public static final String serverIp = "darkdustry.tk";
 
     /** Максимальный размер заполняемого пространства через /fill. */
     public static final int maxFillSize = 512;
