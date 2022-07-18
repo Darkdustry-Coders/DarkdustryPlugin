@@ -48,7 +48,7 @@ jobs:
 
       run: |
 
-        version=$(grep "project.version" build.gradle | awk '{print $2}' | tr -d \''"\')
+        version=$(gradle printProjectVersion -q)
 
         echo '::set-output name=version::'$version
 
