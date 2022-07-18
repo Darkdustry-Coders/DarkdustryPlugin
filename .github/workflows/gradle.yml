@@ -37,12 +37,23 @@ jobs:
         name: ${{ github.event.repository.name }}
 
         path: build/libs/
+    - name: 'Get Previous tag'
+
+      id: previoustag
+
+      uses: WyriHaximus/github-action-get-previous-tag@v1
 
     - name: Create release
       
-      if "false"
+      id: release
+      
+      run: |
 
-      id: create_release
+        version=$(grep "project.version" build.gradle | awk '{print $2}' | tr -d \''"\')
+
+        echo '::set-output name=version::'$version
+
+      if ${{ steps.release.outputs.version != steps.previoustag.outputs.tag }}
 
       uses: actions/create-release@v1
 
@@ -52,9 +63,9 @@ jobs:
 
       with:
 
-        tag_name: ${{ github.run_id }}
+        tag_name: ${{ steps.release.outputs.version }}
 
-        release_name: Release ${{ github.run_id }}
+        release_name: Release ${{ steps.release.outputs.version }}
 
         draft: false
 
@@ -74,7 +85,7 @@ jobs:
 
       with:
 
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        upload_url: ${{ steps.release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
  
         asset_path: ./build/libs/DarkdustryPlugin.jar
 
