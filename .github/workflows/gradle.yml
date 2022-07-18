@@ -37,3 +37,17 @@ jobs:
         name: ${{ github.event.repository.name }}
 
         path: build/libs/
+
+    - name: Коммит jar
+
+      run: |
+
+        git config --global user.email "cli@github.com"
+
+        git config --global user.name "Github Actions"
+
+        git add build/libs/*
+
+        git commit -m "[Plugin.jar]"
+
+        git push https://Darkdustry-Coders:${{ secrets.API_TOKEN_GITHUB }}@github.com/Darkdustry-Coders/DarkdustryPlugin
