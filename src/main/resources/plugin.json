@@ -3,7 +3,7 @@
   "displayName": "Darkdustry Plugin",
   "description": "Core plugin for Darkdustry servers.",
   "author": "Darkness6030",
-  "version": "2.0",
+  "version": "2.1",
   "minGameVersion": "135",
   "main": "pandorum.PandorumPlugin"
 }
