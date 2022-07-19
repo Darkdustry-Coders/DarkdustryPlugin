@@ -11,6 +11,7 @@ import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import pandorum.components.Bundle;
+import pandorum.features.history.HistorySeq;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -62,6 +63,15 @@ public class Utils {
 
     public static ServerControl getServerControl() {
         return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
+    }
+
+    public static HistorySeq getHistory(int x, int y) {
+        HistorySeq entries = history[x][y];
+        if (entries == null) {
+            history[x][y] = entries = new HistorySeq(maxTileHistoryCapacity);
+        }
+
+        return entries;
     }
 
     public static boolean isNearCore(Team team, Position position) {

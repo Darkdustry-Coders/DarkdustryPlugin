@@ -15,7 +15,6 @@ public class OnWorldLoad implements Cons<WorldLoadEvent> {
         votesVnw.clear();
 
         history = new HistorySeq[world.width()][world.height()];
-        world.tiles.eachTile(tile -> history[tile.x][tile.y] = new HistorySeq(maxTileHistoryCapacity));
 
         mapPlayTime = 0;
         canVote = true;

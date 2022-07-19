@@ -1,7 +1,6 @@
 package pandorum.components;
 
 import arc.func.Cons;
-import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Log;
 import com.google.gson.JsonObject;

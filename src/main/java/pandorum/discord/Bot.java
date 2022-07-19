@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.utils.AllowedMentions;
 import pandorum.Loader;
 import pandorum.components.Bundle;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.EnumSet;
 import java.util.Locale;
 
