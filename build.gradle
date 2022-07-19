@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    project.version = '2.0'
+    project.version = '2.1'
     mindustryVersion = 'v136'
 }
 
