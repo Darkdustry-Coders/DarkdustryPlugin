@@ -4,15 +4,13 @@ import arc.Events;
 import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.Colors;
-import arc.util.CommandHandler;
-import arc.util.Log;
-import arc.util.Reflect;
-import arc.util.Timer;
+import arc.util.*;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
+import mindustry.gen.Call;
 import mindustry.graphics.Pal;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
@@ -130,6 +128,26 @@ public class Loader {
         Config.enableVotekick.set(true);
 
         Timer.schedule(new Updater(), 0f, 1f);
+
+        // TODO (xzxADIxzx) упростить код, локализовать для каждого игрока (alerts.discord.join, alerts.discord.link)
+        Timer.schedule(() -> {
+            if (state.rules.mission != null) {
+                state.rules.mission = "Join our Discord!";
+                Call.setRules(state.rules);
+
+                Time.runTask(6 * 60f, () -> {
+                    if (state.rules.mission == null) {
+                        state.rules.mission = "[blue]\uE80D[sky]" + discordServerUrl;
+                        Call.setRules(state.rules);
+
+                        Time.runTask(6 * 60f, () -> {
+                            state.rules.mission = null;
+                            Call.setRules(state.rules);
+                        });
+                    }
+                });
+            }
+        }, 0f, 20f); // TODO 15 минут
     }
 
     public static void registerClientCommands(CommandHandler handler) {
