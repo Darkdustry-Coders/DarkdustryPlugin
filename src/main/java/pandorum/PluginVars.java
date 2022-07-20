@@ -106,11 +106,6 @@ public class PluginVars {
 
     public static final Interval interval = new Interval();
 
-    /** Блоки, которые опасно строить рядом с ядром. */
-    public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
-    /** Блоки, в которые опасно переносить конкретные ресурсы. */
-    public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
-
     public static final char[] rotateSides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     /** Время непрерывной работы сервера. */

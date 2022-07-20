@@ -2,14 +2,8 @@ package pandorum.util;
 
 import arc.Core;
 import arc.files.Fi;
-import arc.math.geom.Position;
 import arc.struct.OrderedMap;
-import mindustry.game.Team;
-import mindustry.gen.Building;
 import mindustry.server.ServerControl;
-import mindustry.type.Item;
-import mindustry.world.Block;
-import mindustry.world.Tile;
 import pandorum.components.Bundle;
 import pandorum.features.history.HistorySeq;
 
@@ -22,7 +16,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static mindustry.Vars.mods;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.history;
+import static pandorum.PluginVars.maxTileHistoryCapacity;
 
 public class Utils {
 
@@ -70,17 +65,5 @@ public class Utils {
         }
 
         return entries;
-    }
-
-    public static boolean isNearCore(Team team, Position position) {
-        return team.cores().contains(core -> core.dst(position) < alertsDistance);
-    }
-
-    public static boolean isDangerousBuild(Block block, Team team, Tile tile) {
-        return dangerousBuildBlocks.containsKey(block) && dangerousBuildBlocks.get(block).get() && isNearCore(team, tile);
-    }
-
-    public static boolean isDangerousDeposit(Building build, Team team, Item item) {
-        return dangerousDepositBlocks.containsKey(build.block) && dangerousDepositBlocks.get(build.block) == item && isNearCore(team, build);
     }
 }

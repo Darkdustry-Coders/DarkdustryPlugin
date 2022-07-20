@@ -30,6 +30,7 @@ import pandorum.commands.server.*;
 import pandorum.components.*;
 import pandorum.data.Database;
 import pandorum.discord.Bot;
+import pandorum.features.Alerts;
 import pandorum.features.Ranks;
 import pandorum.listeners.Updater;
 import pandorum.listeners.events.*;
@@ -65,19 +66,13 @@ public class Loader {
         Translator.loadLanguages();
 
         MenuHandler.load();
+        Alerts.load();
         Ranks.load();
 
         Database.connect();
         Bot.connect();
 
         Version.build = -1;
-
-        dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
-        dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
-
-        dangerousDepositBlocks.put(Blocks.combustionGenerator, Items.blastCompound);
-        dangerousDepositBlocks.put(Blocks.steamGenerator, Items.blastCompound);
-        dangerousDepositBlocks.put(Blocks.thoriumReactor, Items.thorium);
 
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));

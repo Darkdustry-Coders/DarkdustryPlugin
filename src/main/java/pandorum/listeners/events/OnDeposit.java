@@ -4,6 +4,7 @@ import arc.func.Cons;
 import mindustry.game.EventType.DepositEvent;
 import pandorum.components.Icons;
 import pandorum.data.PlayerData;
+import pandorum.features.Alerts;
 import pandorum.features.history.entry.DepositEntry;
 import pandorum.features.history.entry.HistoryEntry;
 import pandorum.util.PlayerUtils;
@@ -14,7 +15,6 @@ import static pandorum.PluginVars.alertsEnabled;
 import static pandorum.PluginVars.historyEnabled;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.Utils.isDangerousDeposit;
 
 public class OnDeposit implements Cons<DepositEvent> {
 
@@ -26,7 +26,7 @@ public class OnDeposit implements Cons<DepositEvent> {
 
         if (!alertsEnabled() || !state.rules.reactorExplosions) return;
 
-        if (isDangerousDeposit(event.tile, event.tile.team, event.item)) {
+        if (Alerts.isDangerousDeposit(event.tile, event.tile.team, event.item)) {
             PlayerUtils.eachPlayer(event.player.team(), player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
