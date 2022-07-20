@@ -52,9 +52,7 @@ public class Utils {
             if (value > 0) builder.append(Bundle.format(key, locale, value)).append(" ");
         });
 
-        builder.setLength(Math.max(0, builder.length() - 1)); // Чтобы убрать пробел на конце
-
-        return builder.toString();
+        return builder.toString().trim();
     }
 
     public static Fi getPluginResource(String name) {

@@ -1,7 +1,6 @@
 package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
-import arc.util.Strings;
 import arc.util.Timekeeper;
 import mindustry.gen.Player;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -32,10 +31,10 @@ public class LoginCommand implements CommandRunner<Player> {
         adminChannel.sendMessage(new MessageBuilder()
                 .setEmbeds(new EmbedBuilder()
                         .setColor(Color.cyan)
-                        .setTitle("Запрос на права администратора.")
-                        .addField("Никнейм:", Strings.stripColors(player.name), true)
+                        .setTitle("Запрос на получение прав администратора.")
+                        .addField("Никнейм:", player.name, true)
                         .addField("UUID:", player.uuid(), true)
-                        .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!", null)
+                        .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
                         .build()
                 ).setActionRows(ActionRow.of(confirm, deny, info)).build()
         ).queue(message -> loginWaiting.put(message, player.uuid()));
