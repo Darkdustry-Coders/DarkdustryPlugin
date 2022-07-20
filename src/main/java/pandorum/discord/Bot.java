@@ -101,8 +101,7 @@ public class Bot {
     }
 
     public static void updateBotStatus(int players) {
-        String activity = players + " игроков | IP: " + serverIp + ":" + Config.port.num();
-        jda.getPresence().setActivity(Activity.playing(activity));
+        jda.getPresence().setActivity(Activity.playing(players + " игроков | IP: " + serverIp + ":" + Config.port.num()));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... args) {

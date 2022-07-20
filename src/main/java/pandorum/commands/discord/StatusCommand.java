@@ -1,5 +1,6 @@
 package pandorum.commands.discord;
 
+import arc.Core;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
@@ -29,6 +30,7 @@ public class StatusCommand implements CommandRunner<MessageContext> {
                 .addField("Игроков:", String.valueOf(Groups.player.size()), true)
                 .addField("Карта:", state.map.name(), true)
                 .addField("Волна:", String.valueOf(state.wave), true)
+                .addField("TPS:", String.valueOf(Core.graphics.getFramesPerSecond()), true)
                 .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                 .addField("Сервер онлайн уже:", formatDuration(serverUpTime * 1000L), true)
                 .addField("Время игры на карте:", formatDuration(mapPlayTime * 1000L), true)
