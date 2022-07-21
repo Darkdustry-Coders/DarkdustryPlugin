@@ -4,7 +4,7 @@ import arc.util.Time;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.world.Block;
-import mindustry.world.blocks.ConstructBlock;
+import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import pandorum.components.Bundle;
 import pandorum.components.Icons;
 
@@ -19,14 +19,14 @@ public class BlockEntry implements HistoryEntry {
 
     public final String name;
     public final short blockID;
-    public final byte rotation;
+    public final int rotation;
     public final boolean breaking;
     public final long time;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getPlayer().name;
-        this.blockID = event.tile.build instanceof ConstructBlock.ConstructBuild build ? build.current.id : event.tile.blockID();
-        this.rotation = (byte) (event.breaking ? -1 : event.tile.build.rotation);
+        this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
+        this.rotation = event.tile.build != null ? event.tile.build.rotation : -1;
         this.breaking = event.breaking;
         this.time = Time.millis();
     }
@@ -36,6 +36,6 @@ public class BlockEntry implements HistoryEntry {
         String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
-        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date) + (block.rotate ? Bundle.format("history.block.construct.rotate", locale, rotateSides[rotation]) : "");
+        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : block.rotate ? Bundle.format("history.block.construct.rotate", locale, name, Icons.get(block.name), rotateSides[rotation], date) : (Bundle.format("history.block.construct", locale, name, Icons.get(block.name)));
     }
 }
