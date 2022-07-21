@@ -2,14 +2,18 @@ package pandorum.commands.client;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
+import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.components.Icons;
 
+import static pandorum.PluginVars.maxGiveAmount;
+import static pandorum.PluginVars.minGiveAmount;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;
-import static pandorum.util.StringUtils.itemsList;
+import static pandorum.util.Search.findTeam;
+import static pandorum.util.StringUtils.*;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -29,14 +33,24 @@ public class GiveCommand implements CommandRunner<Player> {
             return;
         }
 
-        int amount = Strings.parseInt(args[1]);
-
-        if (player.team().cores().isEmpty()) {
-            bundled(player, "commands.admin.give.no-core");
+        int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+        if (amount < minGiveAmount || amount > maxGiveAmount) {
+            bundled(player, "commands.admin.give.limit", maxGiveAmount, minGiveAmount);
             return;
         }
 
-        player.team().core().items.add(item, amount);
-        bundled(player, "commands.admin.give.success", amount, Icons.get(item.name));
+        Team team = args.length > 2 ? findTeam(args[2]) : player.team();
+        if (team == null) {
+            bundled(player, "commands.team-not-found", teamsList());
+            return;
+        }
+
+        if (team.core() == null) {
+            bundled(player, "commands.admin.give.no-core", coloredTeam(team));
+            return;
+        }
+
+        team.core().items.add(item, amount);
+        bundled(player, "commands.admin.give.success", amount, Icons.get(item.name), coloredTeam(team));
     }
 }

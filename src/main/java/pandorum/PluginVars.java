@@ -35,8 +35,12 @@ public class PluginVars {
 
     /** Максимальный размер заполняемого пространства через /fill. */
     public static final int maxFillSize = 512;
+
+    // TODO нам точно надо minGiveAmount и minSpawnAmount? Они просто равны единице ;-;
+    /** Максимальное количество выданного ресурса через /give. */
+    public static final int minGiveAmount = 1, maxGiveAmount = 1000000;
     /** Максимальное количество заспавненных юнитов через /spawn. */
-    public static final int maxSpawnAmount = 25;
+    public static final int minSpawnAmount = 1, maxSpawnAmount = 25;
 
     // TODO вынести в Cooldowns, переделать механику кулдаунов?
     /** Время кулдауна для команды /nominate. В секундах. */

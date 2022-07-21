@@ -10,6 +10,7 @@ import pandorum.components.Icons;
 import pandorum.util.StringUtils;
 
 import static pandorum.PluginVars.maxSpawnAmount;
+import static pandorum.PluginVars.minSpawnAmount;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findTeam;
@@ -24,7 +25,7 @@ public class SpawnCommand implements CommandRunner<Player> {
             return;
         }
 
-        if (args.length > 1 && !Strings.canParseInt(args[1])) {
+        if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
             bundled(player, "commands.non-int");
             return;
         }
@@ -36,8 +37,8 @@ public class SpawnCommand implements CommandRunner<Player> {
         }
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (amount > maxSpawnAmount || amount < 1) {
-            bundled(player, "commands.admin.spawn.limit", maxSpawnAmount);
+        if (amount < minSpawnAmount || amount > maxSpawnAmount) {
+            bundled(player, "commands.admin.spawn.limit", maxSpawnAmount, minSpawnAmount);
             return;
         }
 

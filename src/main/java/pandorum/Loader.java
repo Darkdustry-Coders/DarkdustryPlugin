@@ -190,7 +190,7 @@ public class Loader {
             handler.register("fill", "<width> <height> <block>", "commands.fill.description", new FillCommand());
             handler.register("spawn", "<unit> [amount] [team]", "commands.spawn.description", new SpawnCommand());
             handler.register("core", "[small/medium/big] [team]", "commands.core.description", new CoreCommand());
-            handler.register("give", "<item> <amount>", "commands.give.description", new GiveCommand());
+            handler.register("give", "<item> [amount] [team]", "commands.give.description", new GiveCommand());
             handler.register("unit", "<unit> [ID/username...]", "commands.unit.description", new UnitCommand());
             handler.register("team", "<team> [ID/username...]", "commands.team.description", new TeamCommand());
             handler.register("spectate", "[ID/username...]", "commands.spectate.description", new SpectateCommand());

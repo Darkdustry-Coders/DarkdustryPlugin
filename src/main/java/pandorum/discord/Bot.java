@@ -92,8 +92,8 @@ public class Bot {
             Locale locale = findLocale(player.locale);
 
             bundled(player, "discord.chat",
-                    Tmp.c1.set(context.member.getColorRaw()).toString(),
-                    roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
+                    Integer.toHexString(context.member.getColorRaw()),
+                    roles.isEmpty() ? Bundle.format("discord.chat.no-role", locale) : roles.get(0).getName(),
                     context.member.getEffectiveName(),
                     reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
                     context.message.getContentDisplay()
