@@ -18,7 +18,7 @@ public class OnBuildSelect implements Cons<BuildSelectEvent> {
         if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 
         if (Alerts.isDangerousBuild(event.builder.buildPlan().block, event.team, event.tile) && interval.get(alertsInterval)) {
-            PlayerUtils.eachPlayer(event.team, player -> {
+            event.team.data().players.each(player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
                     bundled(player, "alert.dangerous-building", getUnitName(event.builder), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);

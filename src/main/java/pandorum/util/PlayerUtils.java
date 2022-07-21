@@ -1,7 +1,5 @@
 package pandorum.util;
 
-import arc.func.Cons;
-import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.NetConnection;
@@ -56,9 +54,5 @@ public class PlayerUtils {
 
     public static void kick(Player player, boolean showDisclaimer, String key, Object... values) {
         kick(player, 0, showDisclaimer, key, values);
-    }
-
-    public static void eachPlayer(Team team, Cons<Player> cons) {
-        Groups.player.each(player -> player.team() == team, cons);
     }
 }
