@@ -2,6 +2,7 @@ package pandorum.features.history.entry;
 
 import arc.graphics.Color;
 import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.type.Item;
@@ -83,8 +84,8 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof LightBlock) {
-            Color color = new Color((int) value);
-            return Bundle.format("history.config.illuminator", locale, name, Icons.get(block.name), color.toString(), color.toString(), date);
+            Tmp.c1.set((int) value);
+            return Bundle.format("history.config.illuminator", locale, name, Icons.get(block.name), Tmp.c1.toString(), Tmp.c1.toString(), date);
         }
 
         if (block instanceof MessageBlock) {

@@ -5,6 +5,7 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
+import arc.util.Tmp;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -91,7 +92,7 @@ public class Bot {
             Locale locale = findLocale(player.locale);
 
             bundled(player, "discord.chat",
-                    Integer.toHexString(context.member.getColorRaw()),
+                    Tmp.c1.set(context.member.getColorRaw()).toString(),
                     roles.isEmpty() ? Bundle.get("discord.chat.no-role", locale) : roles.get(0).getName(),
                     context.member.getEffectiveName(),
                     reply != null ? Bundle.format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
