@@ -14,6 +14,7 @@ import static pandorum.util.StringUtils.getUnitName;
 
 public class OnBuildSelect implements Cons<BuildSelectEvent> {
 
+    // TODO вынести код внутри метода в Alerts, упростить
     public void get(BuildSelectEvent event) {
         if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 

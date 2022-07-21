@@ -25,7 +25,11 @@ public class MapParser {
             Pixmap pixmap = new Pixmap(colors);
             for (int i = 0; i < pixmap.width; i++) {
                 Block block = content.block(i);
-                block.mapColor.rgba8888(block instanceof OreBlock ? block.itemDrop.color.rgba8888() : pixmap.get(i, 0)).a(1f);
+                if (block instanceof OreBlock) {
+                    block.mapColor.set(block.itemDrop.color);
+                } else {
+                    block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
+                }
             }
 
             Log.info("[Darkdustry] Загружено цветов блоков: @.", pixmap.width);

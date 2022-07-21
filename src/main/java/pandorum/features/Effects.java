@@ -8,6 +8,7 @@ import mindustry.gen.Call;
 
 import static pandorum.PluginVars.*;
 
+// TODO больше эффектов, кастомные эффекты рангам, и так далее, и тем более
 public class Effects {
 
     public static void on(Effect effect, float x, float y) {

@@ -24,6 +24,7 @@ public class Updater implements Runnable {
         mapPlayTime++;
     }
 
+    // TODO кринж метод, упростить или убрать
     public void updatePlayer(Player player) {
         PlayerData data = getPlayerData(player.uuid());
         data.playTime++;

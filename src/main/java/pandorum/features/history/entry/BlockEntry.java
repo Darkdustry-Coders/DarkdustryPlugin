@@ -23,6 +23,7 @@ public class BlockEntry implements HistoryEntry {
     public final boolean breaking;
     public final long time;
 
+    // TODO refactor, simplify
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getPlayer().name;
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
@@ -36,6 +37,6 @@ public class BlockEntry implements HistoryEntry {
         String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
-        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : block.rotate ? Bundle.format("history.block.construct.rotate", locale, name, Icons.get(block.name), rotateSides[rotation], date) : (Bundle.format("history.block.construct", locale, name, Icons.get(block.name)));
+        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : block.rotate ? Bundle.format("history.block.construct.rotate", locale, name, Icons.get(block.name), rotateSides[rotation], date) : (Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date));
     }
 }

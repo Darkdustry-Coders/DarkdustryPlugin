@@ -15,14 +15,17 @@ import static pandorum.util.Search.findLocale;
 
 public class PlayerUtils {
 
+    // TODO нам нужен этот метод?
     public static boolean isAdmin(Player player) {
         return player != null && player.admin;
     }
 
+    // TODO вынести куда-то не сюда. Member это не Player
     public static boolean isAdmin(Member member) {
         return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
     }
 
+    // TODO проверка на нулл? Она нужна? Я не помню просто зачем она тут
     public static void bundled(Player player, String key, Object... values) {
         if (player != null) player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
     }

@@ -53,6 +53,7 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 
+        // TODO костыль, но без него никак. Или есть способ?
         Seq<Player> players = Groups.player.copy(new Seq<>());
         players.remove(event.player);
         Bot.updateBotStatus(players.size);

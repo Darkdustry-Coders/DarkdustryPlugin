@@ -24,6 +24,7 @@ public class OnDeposit implements Cons<DepositEvent> {
             event.tile.tile.getLinkedTiles(tile -> Utils.getHistory(tile.x, tile.y).add(entry));
         }
 
+        // TODO вынести код внутрь Alerts, упростить
         if (!alertsEnabled() || !state.rules.reactorExplosions) return;
 
         if (Alerts.isDangerousDeposit(event.tile, event.tile.team, event.item)) {

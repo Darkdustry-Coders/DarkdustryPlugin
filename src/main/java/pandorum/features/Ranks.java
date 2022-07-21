@@ -10,6 +10,7 @@ public class Ranks {
 
     public static Rank player, active, activePlus, veteran, contributor, admin;
 
+    // TODO упростить загрузку рангов?
     public static void load() {
         player = new Rank() {{
             tag = "";
@@ -55,6 +56,7 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
+    // TODO вот что это нахер
     public static void setRank(String uuid, Rank rank) {
         PlayerData data = getPlayerData(uuid);
         if (data == null) return;

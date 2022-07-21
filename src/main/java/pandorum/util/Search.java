@@ -22,6 +22,7 @@ import java.util.Locale;
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
 
+// TODO названия переменных name, хотя там может быть ID. Переименовать?
 public class Search {
 
     public static Map findMap(String name) {
@@ -56,6 +57,7 @@ public class Search {
         return Strings.canParsePositiveInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
 
+    // TODO нам нужен этот метод? Он кринжовый так-то
     public static Block findCore(String name) {
         return switch (name.toLowerCase()) {
             case "s", "small", "shard", "core-shard" -> Blocks.coreShard;

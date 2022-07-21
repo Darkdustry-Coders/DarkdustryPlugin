@@ -74,6 +74,7 @@ public class Loader {
 
         Version.build = -1;
 
+        // TODO упростить? Почему Анюк не добавил эти цвета сам?
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));
         Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));
@@ -86,6 +87,7 @@ public class Loader {
     }
 
     public static void init() {
+        // TODO нам точно нужна тут рефлексия?
         writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
         outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
 
@@ -110,6 +112,8 @@ public class Loader {
         Events.on(WorldLoadEvent.class, new OnWorldLoad());
 
         Events.run(Trigger.update, new OnTriggerUpdate());
+
+        // TODO это костыль, переделать или отказаться
         Events.run("HexedGameOver", new OnGameOver());
         Events.run("CastleGameOver", new OnGameOver());
 
@@ -120,11 +124,13 @@ public class Loader {
         Config.showConnectMessages.set(false);
         Config.logging.set(true);
         Config.strict.set(true);
+
+        // TODO получается проверка Config.enableVotekick.bool() не нужна? Убрать проверку или эту строчку
         Config.enableVotekick.set(true);
 
         Timer.schedule(new Updater(), 0f, 1f);
 
-        // TODO (xzxADIxzx) упростить код, локализовать для каждого игрока (alerts.discord.join, alerts.discord.link)
+        // TODO (xzxADIxzx) упростить код, локализовать для каждого игрока (Коды в бандле сделать такие: alerts.discord.join, alerts.discord.link)
         Timer.schedule(() -> {
             if (state.rules.mission != null) {
                 state.rules.mission = "Join our Discord!";

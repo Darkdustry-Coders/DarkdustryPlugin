@@ -39,15 +39,18 @@ public class ConfigEntry implements HistoryEntry {
     public final String name;
     public final short blockID;
     public final Object value;
+    public final boolean connect;
     public final long time;
 
-    public ConfigEntry(ConfigEvent event) {
+    public ConfigEntry(ConfigEvent event, boolean connect) {
         this.name = event.player.name;
         this.blockID = event.tile.block.id;
         this.value = event.value;
+        this.connect = connect;
         this.time = Time.millis();
     }
 
+    // TODO это конечно хорошо, но тут нету блоков из в7. У них свои значения конфигов. Надо их добавить.
     @Override
     public String getMessage(Player player) {
         Block block = content.block(blockID);
@@ -56,7 +59,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof PowerNode) {
             Tile tile = world.tile((int) value);
-            return Bundle.format("history.config.power-node", locale, name, Icons.get(block.name), tile.x, tile.y, date);
+            return connect ? Bundle.format("history.config.power-node.connect", locale, name, Icons.get(block.name), tile.x, tile.y, date) : Bundle.format("history.config.power-node.disconnect", locale, name, Icons.get(block.name), tile.x, tile.y, date);
         }
 
         if (block instanceof ItemBridge || block instanceof MassDriver || block instanceof PayloadMassDriver) {
@@ -102,7 +105,7 @@ public class ConfigEntry implements HistoryEntry {
             return Bundle.format("history.config", locale, name, Icons.get(block.name), Icons.get(liquid.name), date);
         }
 
-        if (block instanceof Unloader || block instanceof Sorter || block instanceof ItemSource) {
+        if (block instanceof ItemSource || block instanceof Sorter || block instanceof Unloader) {
             Item item = (Item) value;
             if (item == null) {
                 return Bundle.format("history.config.default", locale, name, Icons.get(block.name), date);

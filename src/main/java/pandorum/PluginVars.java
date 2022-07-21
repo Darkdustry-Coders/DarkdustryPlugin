@@ -1,6 +1,5 @@
 package pandorum;
 
-import arc.func.Boolp;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
@@ -16,8 +15,6 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Iconc;
-import mindustry.type.Item;
-import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
@@ -29,6 +26,8 @@ import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
 
+// TODO если переменная используется только в одном классе и не является цифрой, вынести в этот класс?
+// TODO почему разные переменные в секундах, миллисекундах и тиках? Мб все в одних единица писать?
 public class PluginVars {
 
     /** IP адрес сервера. */
@@ -39,6 +38,7 @@ public class PluginVars {
     /** Максимальное количество заспавненных юнитов через /spawn. */
     public static final int maxSpawnAmount = 25;
 
+    // TODO вынести в Cooldowns, переделать механику кулдаунов?
     /** Время кулдауна для команды /nominate. В секундах. */
     public static final int nominateCooldownTime = 150;
     /** Время кулдауна для команды /votekick. В секундах. */
@@ -48,6 +48,7 @@ public class PluginVars {
     /** Время кулдауна для команды /sync. В миллисекундах. */
     public static final int syncCooldownTime = 15000;
 
+    // TODO разные ratio ля разных типов голосования?
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.6f;
 
@@ -56,7 +57,9 @@ public class PluginVars {
 
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
-    /** Интвервал оповещений о постройке опасных блоков. */
+
+    // TODO почему 150? Не 60, 120, а именно 150?
+    /** Интвервал оповещений о постройке опасных блоков. В тиках. */
     public static final float alertsInterval = 150f;
 
     /** Время голосования через /nominate. В секундах. */
@@ -83,6 +86,7 @@ public class PluginVars {
     /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
 
+    // TODO сделать кастомные эффекты каждому рангу
     /** Эффект при входе на сервер. */
     public static final Effect joinEffect = Fx.greenBomb;
     /** Эффект при выходе с сервера. */
@@ -91,7 +95,10 @@ public class PluginVars {
     public static final Effect moveEffect = Fx.freezing;
 
     public static final ObjectMap<Team, Seq<String>> votesSurrender = new ObjectMap<>();
+
+    // TODO вынести в Cooldowns, переделать механику кулдаунов? (сделать что-то похожее на это: https://github.com/TomtheCoder2/mainPlugin/blob/master/src/main/java/mindustry/plugin/utils/Cooldowns.java)
     public static final ObjectMap<String, Timekeeper> nominateCooldowns = new ObjectMap<>(), voteKickCooldowns = new ObjectMap<>(), loginCooldowns = new ObjectMap<>();
+
     public static final ObjectMap<String, Team> activeSpectatingPlayers = new ObjectMap<>();
     public static final ObjectMap<Message, String> loginWaiting = new ObjectMap<>();
 
@@ -104,8 +111,10 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
+    // TODO переименовать в alertsInterval и вынести в Alerts
     public static final Interval interval = new Interval();
 
+    // TODO придумать что-то в этим, возможно вынести в Icons или загружать вместе с остальными иконками
     public static final char[] rotateSides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     /** Время непрерывной работы сервера. */
@@ -124,6 +133,7 @@ public class PluginVars {
     /** Конфигурация сервера. */
     public static PluginConfig config;
 
+    // TODO вынести в History
     public static HistorySeq[][] history;
 
     public static VoteSession currentVote;
@@ -134,10 +144,12 @@ public class PluginVars {
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
 
+    // TODO вынести в Alerts
     public static boolean alertsEnabled() {
         return defaultModes.contains(config.mode);
     }
 
+    // TODO вынести в History
     public static boolean historyEnabled() {
         return defaultModes.contains(config.mode);
     }

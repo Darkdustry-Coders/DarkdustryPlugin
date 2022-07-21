@@ -47,6 +47,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
+        // TODO нахер я это сделал
         Seq<Player> players = Groups.player.copy(new Seq<>());
         Bot.updateBotStatus(players.size);
     }

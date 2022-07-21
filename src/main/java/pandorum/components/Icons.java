@@ -13,6 +13,7 @@ public class Icons {
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136/core/assets/icons/icons.properties").submit(response -> {
+            // TODO упростить, отказаться от Scanner (можно например сплитнуть по "\n" а потом через for)
             try (Scanner scanner = new Scanner(response.getResultAsString())) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine().split("\\|")[0];
@@ -24,6 +25,7 @@ public class Icons {
                     icons.put(name, icon);
                 }
 
+                // TODO нам это надо?
                 Team.derelict.emoji = get("derelict");
                 Team.sharded.emoji = get("sharded");
                 Team.crux.emoji = get("crux");

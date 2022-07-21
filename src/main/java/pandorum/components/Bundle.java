@@ -17,6 +17,8 @@ import static pandorum.util.Utils.getPluginResource;
 
 public class Bundle {
 
+    // TODO стилизовать все тексты в бандлах, пофиксить грамматические ошибки, сделать одинаковые цвета и так далее
+
     public static final ObjectMap<Locale, StringMap> bundles = new ObjectMap<>();
     public static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
     public static final Locale defaultLocale = new Locale(defaultLanguage);
