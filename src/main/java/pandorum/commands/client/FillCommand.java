@@ -20,33 +20,38 @@ public class FillCommand implements CommandRunner<Player> {
             return;
         }
 
-        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1])) {
+        if (!Strings.canParsePositiveInt(args[1]) || !Strings.canParsePositiveInt(args[2]) ||
+            !Strings.canParsePositiveInt(args[3]) || !Strings.canParsePositiveInt(args[4])) {
             bundled(player, "commands.admin.fill.incorrect-number-format");
             return;
         }
 
-        // TODO x1, y1, x2, y2
+        int 
+                x1 = Strings.parseInt(args[1]), y1 = Strings.parseInt(args[2]),
+                x2 = Strings.parseInt(args[3]), y2 = Strings.parseInt(args[4]),
+                width = Math.abs(x1 - x2) + 1, height = Math.abs(y1 - y2) + 1;
 
-        int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
+        x1 = x1 < x2 ? x1 : x2;
+        y1 = y1 < y2 ? y1 : y2;
+
         if (width * height > maxFillSize) {
             bundled(player, "commands.admin.fill.too-big-area", maxFillSize);
             return;
         }
 
-        Block block = findBlock(args[2]);
+        Block block = findBlock(args[0]);
         if (block == null) {
             bundled(player, "commands.block-not-found");
             return;
         }
 
-        for (int x = player.tileX(); x < width + player.tileX(); x += block.size) {
-            for (int y = player.tileY(); y < height + player.tileY(); y += block.size) {
+        for (int x = x1; x < x1 + width; x += block.size) {
+            for (int y = y1; y < y1 + width; y += block.size) {
                 Tile tile = world.tile(x, y);
-                if (tile != null) {
-                    if (block.isFloor()) tile.setFloorNet(block, tile.overlay());
-                    else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
-                    else tile.setNet(block, player.team(), (int) player.unit().rotation / 90);
-                }
+                if (tile == null) continue;
+                else if (block.isFloor() && !block.isOverlay()) tile.setFloorNet(block, tile.overlay());
+                else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
+                else tile.setNet(block, player.team(), (int) player.unit().rotation / 90);
             }
         }
 

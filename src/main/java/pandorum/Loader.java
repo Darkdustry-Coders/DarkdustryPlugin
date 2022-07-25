@@ -5,8 +5,6 @@ import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.Colors;
 import arc.util.*;
-import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.core.NetServer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
@@ -97,6 +95,10 @@ public class Loader {
         netServer.admins.addActionFilter(new ActionManager());
         netServer.admins.addChatFilter(new ChatManager());
         netServer.invalidHandler = new InvalidCommandResponseHandler();
+        netServer.addPacketHandler("WhoIsUsingSS", (player, content) -> {
+            if (player.name.contains("[#0096FF]xzxADIxzx") && content.equals(schematicBaseStart))
+                Call.clientPacketReliable("AreYouUsingSS", ""); // remove it later
+        });
 
         Events.on(AdminRequestEvent.class, new OnAdminRequest());
         Events.on(BlockBuildEndEvent.class, new OnBlockBuildEnd());
@@ -186,8 +188,9 @@ public class Loader {
             handler.register("voting", "<y/n>", "commands.voting.description", new VotingCommand());
 
             handler.register("artv", "commands.artv.description", new ArtvCommand());
+            handler.register("teleport", "<x> <y>", "commands.teleport.description", new TeleportCommand());
             handler.register("despawn", "commands.despawn.description", new DespawnCommand());
-            handler.register("fill", "<width> <height> <block>", "commands.fill.description", new FillCommand());
+            handler.register("fill", "<block> <x1> <y1> <x2> <y2>", "commands.fill.description", new FillCommand());
             handler.register("spawn", "<unit> [amount] [team]", "commands.spawn.description", new SpawnCommand());
             handler.register("core", "[small/medium/big] [team]", "commands.core.description", new CoreCommand());
             handler.register("give", "<item> [amount] [team]", "commands.give.description", new GiveCommand());

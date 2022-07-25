@@ -5,7 +5,6 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import arc.util.Log;
 import arc.util.Strings;
-import arc.util.Tmp;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -99,6 +98,10 @@ public class Bot {
                     context.message.getContentDisplay()
             );
         });
+    }
+
+    public static void updateBotStatus() {
+        updateBotStatus(Groups.player.size());
     }
 
     public static void updateBotStatus(int players) {

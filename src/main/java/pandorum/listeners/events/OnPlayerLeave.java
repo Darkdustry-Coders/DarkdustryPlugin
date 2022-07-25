@@ -7,7 +7,6 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.gen.Groups;
-import mindustry.gen.Player;
 import pandorum.components.Gamemode;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
@@ -15,6 +14,7 @@ import pandorum.util.StringUtils;
 
 import java.awt.*;
 
+import static arc.Core.app;
 import static mindustry.Vars.netServer;
 import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.botChannel;
@@ -53,9 +53,6 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
 
         if (!event.player.dead()) Effects.onLeave(event.player.x, event.player.y);
 
-        // TODO костыль, но без него никак. Или есть способ?
-        Seq<Player> players = Groups.player.copy(new Seq<>());
-        players.remove(event.player);
-        Bot.updateBotStatus(players.size);
+        app.post(Bot::updateBotStatus);
     }
 }

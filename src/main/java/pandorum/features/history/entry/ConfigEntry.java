@@ -1,6 +1,5 @@
 package pandorum.features.history.entry;
 
-import arc.graphics.Color;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.game.EventType.ConfigEvent;
