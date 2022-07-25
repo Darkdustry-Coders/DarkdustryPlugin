@@ -15,9 +15,11 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 
 import static mindustry.Vars.state;
-import static pandorum.PluginVars.alertsDistance;
+import static pandorum.PluginVars.*;
 
 public class Alerts {
+
+    // TODO вынести сюда все что связано с оповещениями и предупреждениями
 
     /** Фразы, которые будут отображаться игрокам в углу экрана. */
     public static Seq<Func<Player, String>> alertWords = new Seq<>();
@@ -25,6 +27,10 @@ public class Alerts {
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
+
+    public static boolean enabled() {
+        return defaultModes.contains(config.mode);
+    }
 
     public static void load() {
         alertWords.add(player -> ""); // Пример
@@ -48,6 +54,4 @@ public class Alerts {
     public static boolean isDangerousDeposit(Building build, Team team, Item item) {
         return dangerousDepositBlocks.containsKey(build.block) && dangerousDepositBlocks.get(build.block) == item && isNearCore(team, build);
     }
-
-    // TODO вынести сюда все что связано с оповещениями и предупреждениями
 }

@@ -13,7 +13,6 @@ public class Ranks {
     // TODO упростить загрузку рангов?
     public static void load() {
         player = new Rank() {{
-            tag = "";
             name = "player";
             displayName = "[accent]Player";
 

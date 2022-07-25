@@ -4,17 +4,16 @@ import arc.func.Cons;
 import arc.math.geom.Point2;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode.PowerNodeBuild;
+import pandorum.features.History;
 import pandorum.features.history.entry.ConfigEntry;
 import pandorum.features.history.entry.HistoryEntry;
 import pandorum.util.Utils;
-
-import static pandorum.PluginVars.historyEnabled;
 
 public class OnConfig implements Cons<ConfigEvent> {
 
     // TODO refactor
     public void get(ConfigEvent event) {
-        if (historyEnabled() && event.player != null) {
+        if (History.enabled() && event.player != null) {
             boolean connect = false;
 
             if (event.tile instanceof PowerNodeBuild build) {

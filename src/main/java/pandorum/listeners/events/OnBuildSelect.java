@@ -5,9 +5,9 @@ import mindustry.game.EventType.BuildSelectEvent;
 import pandorum.components.Icons;
 import pandorum.data.PlayerData;
 import pandorum.features.Alerts;
-import pandorum.util.PlayerUtils;
 
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.alertsInterval;
+import static pandorum.PluginVars.interval;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.StringUtils.getUnitName;
@@ -16,7 +16,7 @@ public class OnBuildSelect implements Cons<BuildSelectEvent> {
 
     // TODO вынести код внутри метода в Alerts, упростить
     public void get(BuildSelectEvent event) {
-        if (!alertsEnabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
+        if (!Alerts.enabled() || event.breaking || event.builder == null || event.builder.buildPlan() == null) return;
 
         if (Alerts.isDangerousBuild(event.builder.buildPlan().block, event.team, event.tile) && interval.get(alertsInterval)) {
             event.team.data().players.each(player -> {

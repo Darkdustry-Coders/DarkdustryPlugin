@@ -147,14 +147,4 @@ public class PluginVars {
 
     public static ReusableByteOutStream writeBuffer;
     public static Writes outputBuffer;
-
-    // TODO вынести в Alerts
-    public static boolean alertsEnabled() {
-        return defaultModes.contains(config.mode);
-    }
-
-    // TODO вынести в History
-    public static boolean historyEnabled() {
-        return defaultModes.contains(config.mode);
-    }
 }
