@@ -31,8 +31,8 @@ public class FillCommand implements CommandRunner<Player> {
                 x2 = Strings.parseInt(args[3]), y2 = Strings.parseInt(args[4]),
                 width = Math.abs(x1 - x2) + 1, height = Math.abs(y1 - y2) + 1;
 
-        x1 = x1 < x2 ? x1 : x2;
-        y1 = y1 < y2 ? y1 : y2;
+        x1 = Math.min(x1, x2);
+        y1 = Math.min(y1, y2);
 
         if (width * height > maxFillSize) {
             bundled(player, "commands.admin.fill.too-big-area", maxFillSize);
@@ -46,12 +46,13 @@ public class FillCommand implements CommandRunner<Player> {
         }
 
         for (int x = x1; x < x1 + width; x += block.size) {
-            for (int y = y1; y < y1 + width; y += block.size) {
+            for (int y = y1; y < y1 + height; y += block.size) {
                 Tile tile = world.tile(x, y);
                 if (tile == null) continue;
-                else if (block.isFloor() && !block.isOverlay()) tile.setFloorNet(block, tile.overlay());
+
+                if (block.isFloor() && !block.isOverlay()) tile.setFloorNet(block, tile.overlay());
                 else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
-                else tile.setNet(block, player.team(), (int) player.unit().rotation / 90);
+                else tile.setNet(block, player.team(), 0);
             }
         }
 

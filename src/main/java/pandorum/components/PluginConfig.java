@@ -4,7 +4,7 @@ public class PluginConfig {
 
     // TODO IP:port, а не просто IP. Плюс нужен парсинг адреса
     /** IP адрес Хаба. Порт - 6567 (по умолчанию). */
-    public String hubIp = "darkdustry.tk";
+    public String hubIp = "darkdustry.tk"; // TODO: "darkdustry.tk:6567"
 
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;

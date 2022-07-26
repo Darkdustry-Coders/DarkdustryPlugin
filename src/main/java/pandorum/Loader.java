@@ -188,7 +188,7 @@ public class Loader {
             handler.register("voting", "<y/n>", "commands.voting.description", new VotingCommand());
 
             handler.register("artv", "commands.artv.description", new ArtvCommand());
-            handler.register("teleport", "<x> <y>", "commands.teleport.description", new TeleportCommand());
+            handler.register("tp", "<x> <y>", "commands.tp.description", new TeleportCommand());
             handler.register("despawn", "commands.despawn.description", new DespawnCommand());
             handler.register("fill", "<block> <x1> <y1> <x2> <y2>", "commands.fill.description", new FillCommand());
             handler.register("spawn", "<unit> [amount] [team]", "commands.spawn.description", new SpawnCommand());

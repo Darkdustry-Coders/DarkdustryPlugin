@@ -1,11 +1,14 @@
 package pandorum.commands.client;
 
+import arc.math.Mathf;
 import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 
+import static mindustry.Vars.tilesize;
+import static mindustry.Vars.world;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 
@@ -16,21 +19,21 @@ public class TeleportCommand implements CommandRunner<Player> {
             return;
         }
 
-        if (!Strings.canParseFloat(args[0]) || !Strings.canParseFloat(args[1])) {
-            bundled(player, "commands.admin.teleport.incorrect-number-format");
+        if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1])) {
+            bundled(player, "commands.admin.tp.incorrect-number-format");
             return;
         }
 
-        float x = Strings.parseFloat(args[0]), y = Strings.parseFloat(args[1]);
+        int x = Mathf.clamp(Strings.parseInt(args[0]), 0, world.width()), y = Mathf.clamp(Strings.parseInt(args[1]), 0, world.height());
         boolean spawnedNyCore = player.unit().spawnedByCore();
         Unit unit = player.unit();
 
         unit.spawnedByCore(false);
         player.clearUnit();
 
-        unit.set(x, y);
-        Call.setPosition(player.con, x, y);
-        Call.setCameraPosition(player.con, x, y);
+        unit.set(x * tilesize, y * tilesize);
+        Call.setPosition(player.con, x * tilesize, y * tilesize);
+        Call.setCameraPosition(player.con, x * tilesize, y * tilesize);
 
         player.unit(unit);
         unit.spawnedByCore(spawnedNyCore);
