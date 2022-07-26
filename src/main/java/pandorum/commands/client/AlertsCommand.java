@@ -13,6 +13,6 @@ public class AlertsCommand implements CommandRunner<Player> {
         PlayerData data = getPlayerData(player.uuid());
         data.alertsEnabled = !data.alertsEnabled;
         setPlayerData(player.uuid(), data);
-        bundled(player, data.alertsEnabled ? "commands.alerts.on" : "commands.alerts.off");
+        bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
     }
 }
