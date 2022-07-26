@@ -44,6 +44,10 @@ public class Bundle {
         Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.length);
     }
 
+    public static String get(String key) {
+        return get(key, defaultLocale);
+    }
+
     public static String get(String key, Locale locale) {
         StringMap bundle = getOrLoad(locale);
         return bundle != null ? bundle.get(key, key) : key;

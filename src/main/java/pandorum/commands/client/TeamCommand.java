@@ -33,12 +33,12 @@ public class TeamCommand implements CommandRunner<Player> {
 
         if (activeSpectatingPlayers.containsKey(target.uuid())) {
             activeSpectatingPlayers.remove(target.uuid());
-            bundled(target, "commands.admin.spectate.success.disabled");
+            bundled(target, "commands.spectate.success.disabled");
         }
 
         target.team(team);
-        bundled(target, "commands.admin.team.success", StringUtils.coloredTeam(team));
+        bundled(target, "commands.team.success", StringUtils.coloredTeam(team));
         if (target != player)
-            bundled(player, "commands.admin.team.changed", target.name, StringUtils.coloredTeam(team));
+            bundled(player, "commands.team.changed", target.name, StringUtils.coloredTeam(team));
     }
 }

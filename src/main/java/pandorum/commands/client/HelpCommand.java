@@ -8,8 +8,6 @@ import arc.util.Strings;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 
-import java.util.Comparator;
-
 import static pandorum.PluginVars.clientCommands;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.Search.findLocale;
@@ -21,7 +19,7 @@ public class HelpCommand implements CommandRunner<Player> {
             return;
         }
 
-        Seq<Command> commandsList = clientCommands.getCommandList().sort(Comparator.comparing(command -> command.text));
+        Seq<Command> commandsList = clientCommands.getCommandList();
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1;
         int pages = Mathf.ceil(commandsList.size / 8f);
 

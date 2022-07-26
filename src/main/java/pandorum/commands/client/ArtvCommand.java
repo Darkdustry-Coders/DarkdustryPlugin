@@ -18,8 +18,8 @@ public class ArtvCommand implements CommandRunner<Player> {
         }
 
         Call.menu(player.con, artvMenu,
-                Bundle.format("commands.admin.artv.menu.header", findLocale(player.locale)),
-                Bundle.format("commands.admin.artv.menu.content", findLocale(player.locale)),
+                Bundle.format("commands.artv.menu.header", findLocale(player.locale)),
+                Bundle.format("commands.artv.menu.content", findLocale(player.locale)),
                 new String[][] {{Bundle.format("ui.menus.yes", findLocale(player.locale)), Bundle.format("ui.menus.no", findLocale(player.locale))}}
         );
     }

@@ -21,9 +21,9 @@ public class DespawnCommand implements CommandRunner<Player> {
         }
 
         Call.menu(player.con, despawnMenu,
-                Bundle.format("commands.admin.despawn.menu.header", findLocale(player.locale)),
-                Bundle.format("commands.admin.despawn.menu.content", findLocale(player.locale), Groups.unit.size()),
-                new String[][] {{Bundle.format("ui.menus.yes", findLocale(player.locale)), Bundle.format("ui.menus.no", findLocale(player.locale))}, {Bundle.format("commands.admin.despawn.menu.players", findLocale(player.locale))}, {Bundle.format("commands.admin.despawn.menu.team", findLocale(player.locale), coloredTeam(state.rules.defaultTeam))}, {Bundle.format("commands.admin.despawn.menu.team", findLocale(player.locale), coloredTeam(state.rules.waveTeam))}, {Bundle.format("commands.admin.despawn.menu.suicide", findLocale(player.locale))}}
+                Bundle.format("commands.despawn.menu.header", findLocale(player.locale)),
+                Bundle.format("commands.despawn.menu.content", findLocale(player.locale), Groups.unit.size()),
+                new String[][] {{Bundle.format("ui.menus.yes", findLocale(player.locale)), Bundle.format("ui.menus.no", findLocale(player.locale))}, {Bundle.format("commands.despawn.menu.players", findLocale(player.locale))}, {Bundle.format("commands.despawn.menu.team", findLocale(player.locale), coloredTeam(state.rules.defaultTeam))}, {Bundle.format("commands.despawn.menu.team", findLocale(player.locale), coloredTeam(state.rules.waveTeam))}, {Bundle.format("commands.despawn.menu.suicide", findLocale(player.locale))}}
         );
     }
 }

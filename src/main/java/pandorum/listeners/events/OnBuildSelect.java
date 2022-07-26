@@ -22,7 +22,7 @@ public class OnBuildSelect implements Cons<BuildSelectEvent> {
             event.team.data().players.each(player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
-                    bundled(player, "alert.dangerous-building", getUnitName(event.builder), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
+                    bundled(player, "alerts.dangerous-building", getUnitName(event.builder), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
                 }
             });
         }

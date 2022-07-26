@@ -23,7 +23,7 @@ public class GiveCommand implements CommandRunner<Player> {
         }
 
         if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
-            bundled(player, "commands.non-int");
+            bundled(player, "commands.not-int");
             return;
         }
 
@@ -35,7 +35,7 @@ public class GiveCommand implements CommandRunner<Player> {
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
         if (amount < minGiveAmount || amount > maxGiveAmount) {
-            bundled(player, "commands.admin.give.limit", maxGiveAmount, minGiveAmount);
+            bundled(player, "commands.give.limit", maxGiveAmount, minGiveAmount);
             return;
         }
 
@@ -46,11 +46,11 @@ public class GiveCommand implements CommandRunner<Player> {
         }
 
         if (team.core() == null) {
-            bundled(player, "commands.admin.give.no-core", coloredTeam(team));
+            bundled(player, "commands.give.no-core", coloredTeam(team));
             return;
         }
 
         team.core().items.add(item, amount);
-        bundled(player, "commands.admin.give.success", amount, Icons.get(item.name), coloredTeam(team));
+        bundled(player, "commands.give.success", amount, Icons.get(item.name), coloredTeam(team));
     }
 }

@@ -39,23 +39,23 @@ public class MenuHandler {
             switch (option) {
                 case 0 -> {
                     Groups.unit.each(Unitc::kill);
-                    bundled(player, "commands.admin.despawn.success.all");
+                    bundled(player, "commands.despawn.success.all");
                 }
                 case 2 -> {
                     Groups.unit.each(Unitc::isPlayer, Unitc::kill);
-                    bundled(player, "commands.admin.despawn.success.players");
+                    bundled(player, "commands.despawn.success.players");
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    bundled(player, "commands.admin.despawn.success.team", StringUtils.coloredTeam(state.rules.defaultTeam));
+                    bundled(player, "commands.despawn.success.team", StringUtils.coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    bundled(player, "commands.admin.despawn.success.team", StringUtils.coloredTeam(state.rules.waveTeam));
+                    bundled(player, "commands.despawn.success.team", StringUtils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     Call.unitCapDeath(player.unit());
-                    bundled(player, "commands.admin.despawn.success.suicide");
+                    bundled(player, "commands.despawn.success.suicide");
                 }
             }
         });
@@ -65,7 +65,7 @@ public class MenuHandler {
 
             if (option == 0) {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
-                sendToChat("commands.admin.artv.info", player.name);
+                sendToChat("commands.artv.info", player.name);
             }
         });
 

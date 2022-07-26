@@ -20,7 +20,7 @@ public class TeleportCommand implements CommandRunner<Player> {
         }
 
         if (!Strings.canParsePositiveInt(args[0]) || !Strings.canParsePositiveInt(args[1])) {
-            bundled(player, "commands.admin.tp.incorrect-number-format");
+            bundled(player, "commands.tp.incorrect-number-format");
             return;
         }
 

@@ -127,11 +127,9 @@ public class Loader {
         Config.logging.set(true);
         Config.strict.set(true);
 
-        // TODO получается проверка Config.enableVotekick.bool() не нужна? Убрать проверку или эту строчку
-        Config.enableVotekick.set(true);
-
         Timer.schedule(new Updater(), 0f, 1f);
 
+        // TODO вынести в Alerts
         Timer.schedule(() -> {
             String[] missions = new String[] {"Join our Discord!", "[blue]\uE80D[sky]" + discordServerUrl, ""};
             for (int i = 0; i < missions.length; i++) {
@@ -147,50 +145,50 @@ public class Loader {
     }
 
     public static void registerClientCommands(CommandHandler handler) {
-        handler.register("help", "[page]", "commands.help.description", new HelpCommand());
-        handler.register("discord", "commands.discord.description", new DiscordLinkCommand());
-        handler.register("a", "<message...>", "commands.a.description", new AdminChatCommand());
-        handler.register("t", "<message...>", "commands.t.description", new TeamChatCommand());
-        handler.register("votekick", "<ID/username...>", "commands.votekick.description", new VoteKickCommand());
-        handler.register("vote", "<y/n>", "commands.vote.description", new VoteCommand());
-        handler.register("sync", "commands.sync.description", new SyncCommand());
-        handler.register("tr", "[list/off/auto/language]", "commands.tr.description", new TranslatorCommand());
-        handler.register("stats", "[ID/username...]", "commands.stats.description", new StatsCommand());
-        handler.register("rank", "[ID/username...]", "commands.rank.description", new RankCommand());
-        handler.register("players", "[page]", "commands.players.description", new PlayersListCommand());
-        handler.register("login", "commands.login.description", new LoginCommand());
+        handler.register("help", Bundle.get("commands.help.params"), Bundle.get("commands.help.description"), new HelpCommand());
+        handler.register("discord", Bundle.get("commands.discord.description"), new DiscordLinkCommand());
+        handler.register("a", Bundle.get("commands.a.params"), Bundle.get("commands.a.description"), new AdminChatCommand());
+        handler.register("t", Bundle.get("commands.t.params"), Bundle.get("commands.t.description"), new TeamChatCommand());
+        handler.register("votekick", Bundle.get("commands.votekick.params"), Bundle.get("commands.votekick.description"), new VoteKickCommand());
+        handler.register("vote", Bundle.get("commands.vote.params"), Bundle.get("commands.vote.description"), new VoteCommand());
+        handler.register("sync", Bundle.get("commands.sync.description"), new SyncCommand());
+        handler.register("tr", Bundle.get("commands.tr.params"), Bundle.get("commands.tr.description"), new TranslatorCommand());
+        handler.register("stats", Bundle.get("commands.stats.params"), Bundle.get("commands.stats.description"), new StatsCommand());
+        handler.register("rank", Bundle.get("commands.rank.params"), Bundle.get("commands.rank.description"), new RankCommand());
+        handler.register("players", Bundle.get("commands.players.params"), Bundle.get("commands.players.description"), new PlayersListCommand());
+        handler.register("login", Bundle.get("commands.login.description"), new LoginCommand());
 
         if (config.mode != hub) {
-            handler.register("hub", "commands.hub.description", new HubCommand());
-        }
-
-        if (config.mode == pvp) {
-            handler.register("surrender", "commands.surrender.description", new SurrenderCommand());
+            handler.register("hub", Bundle.get("commands.hub.description"), new HubCommand());
         }
 
         if (defaultModes.contains(config.mode)) {
-            handler.register("rtv", "commands.rtv.description", new RtvCommand());
-            handler.register("vnw", "commands.vnw.description", new VnwCommand());
+            handler.register("rtv", Bundle.get("commands.rtv.description"), new RtvCommand());
+            handler.register("vnw", Bundle.get("commands.vnw.description"), new VnwCommand());
 
-            handler.register("history", "commands.history.description", new HistoryCommand());
-            handler.register("alert", "commands.alert.description", new AlertCommand());
+            if (config.mode == pvp) {
+                handler.register("surrender", Bundle.get("commands.surrender.description"), new SurrenderCommand());
+            }
 
-            handler.register("maps", "[page]", "commands.maps.description", new MapsListCommand());
-            handler.register("saves", "[page]", "commands.saves.description", new SavesListCommand());
-            handler.register("nominate", "<map/save/load> <name...>", "commands.nominate.description", new NominateCommand());
-            handler.register("voting", "<y/n>", "commands.voting.description", new VotingCommand());
+            handler.register("history", Bundle.get("commands.history.description"), new HistoryCommand());
+            handler.register("alerts", Bundle.get("commands.alerts.description"), new AlertsCommand());
 
-            handler.register("artv", "commands.artv.description", new ArtvCommand());
-            handler.register("tp", "<x> <y>", "commands.tp.description", new TeleportCommand());
-            handler.register("despawn", "commands.despawn.description", new DespawnCommand());
-            handler.register("fill", "<block> <x1> <y1> <x2> <y2>", "commands.fill.description", new FillCommand());
-            handler.register("spawn", "<unit> [amount] [team]", "commands.spawn.description", new SpawnCommand());
-            handler.register("core", "[small/medium/big] [team]", "commands.core.description", new CoreCommand());
-            handler.register("give", "<item> [amount] [team]", "commands.give.description", new GiveCommand());
-            handler.register("unit", "<unit> [ID/username...]", "commands.unit.description", new UnitCommand());
-            handler.register("team", "<team> [ID/username...]", "commands.team.description", new TeamCommand());
-            handler.register("effect", "<effect> <amount> [ID/username...]", "commands.effect.description", new EffectCommand());
-            handler.register("spectate", "[ID/username...]", "commands.spectate.description", new SpectateCommand());
+            handler.register("maps", Bundle.get("commands.maps.params"), Bundle.get("commands.maps.description"), new MapsListCommand());
+            handler.register("saves", Bundle.get("commands.saves.params"), Bundle.get("commands.saves.description"), new SavesListCommand());
+            handler.register("nominate", Bundle.get("commands.nominate.params"), Bundle.get("commands.nominate.description"), new NominateCommand());
+            handler.register("voting", Bundle.get("commands.voting.params"), Bundle.get("commands.voting.description"), new VotingCommand());
+
+            handler.register("artv", Bundle.get("commands.artv.description"), new ArtvCommand());
+            handler.register("despawn", Bundle.get("commands.despawn.description"), new DespawnCommand());
+            handler.register("core", Bundle.get("commands.core.params"), Bundle.get("commands.core.description"), new CoreCommand());
+            handler.register("give", Bundle.get("commands.give.params"), Bundle.get("commands.give.description"), new GiveCommand());
+            handler.register("spawn", Bundle.get("commands.spawn.params"), Bundle.get("commands.spawn.description"), new SpawnCommand());
+            handler.register("effect", Bundle.get("commands.effect.params"), Bundle.get("commands.effect.description"), new EffectCommand());
+            handler.register("team", Bundle.get("commands.team.params"), Bundle.get("commands.team.description"), new TeamCommand());
+            handler.register("unit", Bundle.get("commands.unit.params"), Bundle.get("commands.unit.description"), new UnitCommand());
+            handler.register("spectate", Bundle.get("commands.spectate.params"), Bundle.get("commands.spectate.description"), new SpectateCommand());
+            handler.register("tp", Bundle.get("commands.tp.params"), Bundle.get("commands.tp.description"), new TeleportCommand());
+            handler.register("fill", Bundle.get("commands.fill.params"), Bundle.get("commands.fill.description"), new FillCommand());
         }
     }
 
@@ -199,9 +197,6 @@ public class Loader {
         handler.register("ip", "IP адрес сервера.", new IpCommand());
         handler.register("players", "[страница]", "Список всех игроков на сервере.", new pandorum.commands.discord.PlayersListCommand());
         handler.register("status", "Состояние сервера.", new StatusCommand());
-
-        handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new KickCommand());
-        handler.register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", new BanCommand());
 
         if (config.mode != hexed) {
             handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());
@@ -214,6 +209,9 @@ public class Loader {
         if (defaultModes.contains(config.mode)) {
             handler.register("gameover", "Принудительно завершить игру.", new GameOverCommand());
         }
+
+        handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new KickCommand());
+        handler.register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", new BanCommand());
     }
 
     public static void registerServerCommands(CommandHandler handler) {

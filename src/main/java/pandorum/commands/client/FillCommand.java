@@ -22,7 +22,7 @@ public class FillCommand implements CommandRunner<Player> {
 
         if (!Strings.canParsePositiveInt(args[1]) || !Strings.canParsePositiveInt(args[2]) ||
             !Strings.canParsePositiveInt(args[3]) || !Strings.canParsePositiveInt(args[4])) {
-            bundled(player, "commands.admin.fill.incorrect-number-format");
+            bundled(player, "commands.fill.incorrect-number-format");
             return;
         }
 
@@ -35,7 +35,7 @@ public class FillCommand implements CommandRunner<Player> {
         y1 = Math.min(y1, y2);
 
         if (width * height > maxFillSize) {
-            bundled(player, "commands.admin.fill.too-big-area", maxFillSize);
+            bundled(player, "commands.fill.too-big-area", maxFillSize);
             return;
         }
 
@@ -56,6 +56,6 @@ public class FillCommand implements CommandRunner<Player> {
             }
         }
 
-        bundled(player, "commands.admin.fill.success", width, height, Icons.get(block.name, block.name));
+        bundled(player, "commands.fill.success", width, height, Icons.get(block.name, block.name));
     }
 }

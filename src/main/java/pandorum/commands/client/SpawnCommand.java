@@ -26,7 +26,7 @@ public class SpawnCommand implements CommandRunner<Player> {
         }
 
         if (args.length > 1 && !Strings.canParsePositiveInt(args[1])) {
-            bundled(player, "commands.non-int");
+            bundled(player, "commands.not-int");
             return;
         }
 
@@ -38,7 +38,7 @@ public class SpawnCommand implements CommandRunner<Player> {
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
         if (amount < minSpawnAmount || amount > maxSpawnAmount) {
-            bundled(player, "commands.admin.spawn.limit", maxSpawnAmount, minSpawnAmount);
+            bundled(player, "commands.spawn.limit", maxSpawnAmount, minSpawnAmount);
             return;
         }
 
@@ -49,6 +49,6 @@ public class SpawnCommand implements CommandRunner<Player> {
         }
 
         for (int i = 0; i < amount; i++) type.spawn(team, player.x, player.y);
-        bundled(player, "commands.admin.spawn.success", amount, Icons.get(type.name), StringUtils.coloredTeam(team));
+        bundled(player, "commands.spawn.success", amount, Icons.get(type.name), StringUtils.coloredTeam(team));
     }
 }

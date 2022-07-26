@@ -29,7 +29,7 @@ public class OnDeposit implements Cons<DepositEvent> {
             event.player.team().data().players.each(player -> {
                 PlayerData data = getPlayerData(player.uuid());
                 if (data.alertsEnabled) {
-                    bundled(player, "alert.dangerous-deposit", event.player.name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+                    bundled(player, "alerts.dangerous-deposit", event.player.name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
                 }
             });
         }
