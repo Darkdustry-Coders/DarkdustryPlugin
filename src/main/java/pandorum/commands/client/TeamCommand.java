@@ -39,6 +39,6 @@ public class TeamCommand implements CommandRunner<Player> {
         target.team(team);
         bundled(target, "commands.team.success", StringUtils.coloredTeam(team));
         if (target != player)
-            bundled(player, "commands.team.changed", target.name, StringUtils.coloredTeam(team));
+            bundled(player, "commands.team.success.player", target.name, StringUtils.coloredTeam(team));
     }
 }
