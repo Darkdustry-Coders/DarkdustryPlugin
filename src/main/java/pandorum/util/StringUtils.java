@@ -31,6 +31,13 @@ public class StringUtils {
     }
 
     // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
+    public static String effectsList() {
+        StringBuilder effects = new StringBuilder();
+        content.statusEffects().each(effect -> effects.append(" [white]").append(Icons.get(effect.name)).append(effect.name));
+        return effects.toString();
+    }
+
+    // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
     public static String unitsList() {
         StringBuilder units = new StringBuilder();
         content.units().each(unit -> units.append(" [white]").append(Icons.get(unit.name)).append(unit.name));

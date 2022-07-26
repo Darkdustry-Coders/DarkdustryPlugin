@@ -132,25 +132,18 @@ public class Loader {
 
         Timer.schedule(new Updater(), 0f, 1f);
 
-        // TODO (xzxADIxzx) упростить код, локализовать для каждого игрока (Коды в бандле сделать такие: alerts.discord.join, alerts.discord.link)
         Timer.schedule(() -> {
-            if (state.rules.mission != null) {
-                state.rules.mission = "Join our Discord!";
-                Call.setRules(state.rules);
-
-                Time.runTask(6 * 60f, () -> {
-                    if (state.rules.mission == null) {
-                        state.rules.mission = "[blue]\uE80D[sky]" + discordServerUrl;
-                        Call.setRules(state.rules);
-
-                        Time.runTask(6 * 60f, () -> {
-                            state.rules.mission = null;
-                            Call.setRules(state.rules);
-                        });
-                    }
-                });
+            String[] missions = new String[] {"Join our Discord!", "[blue]\uE80D[sky]" + discordServerUrl, ""};
+            for (int i = 0; i < missions.length; i++) {
+                String mission = missions[i];
+                Time.runTask(6 * 60f * (i + 1), () -> setMission(mission));
             }
-        }, 0f, 20f); // TODO 15 минут
+        }, 0f, 900f);
+    }
+
+    private static void setMission(String mission) {
+        state.rules.mission = mission; // TODO: добавить бандлы
+        Call.setRules(state.rules);
     }
 
     public static void registerClientCommands(CommandHandler handler) {
@@ -196,6 +189,7 @@ public class Loader {
             handler.register("give", "<item> [amount] [team]", "commands.give.description", new GiveCommand());
             handler.register("unit", "<unit> [ID/username...]", "commands.unit.description", new UnitCommand());
             handler.register("team", "<team> [ID/username...]", "commands.team.description", new TeamCommand());
+            handler.register("effect", "<effect> <amount> [ID/username...]", "commands.effect.description", new EffectCommand());
             handler.register("spectate", "[ID/username...]", "commands.spectate.description", new SpectateCommand());
         }
     }

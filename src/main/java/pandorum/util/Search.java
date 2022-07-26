@@ -12,6 +12,7 @@ import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.Item;
+import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import pandorum.components.Bundle;
@@ -65,6 +66,10 @@ public class Search {
             case "b", "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
             default -> null;
         };
+    }
+
+    public static StatusEffect findEffect(String name) {
+        return Strings.canParsePositiveInt(name) ? content.statusEffects().get(Strings.parseInt(name)) : content.statusEffects().find(effect -> effect.name.equalsIgnoreCase(name));
     }
 
     public static UnitType findUnit(String name) {
