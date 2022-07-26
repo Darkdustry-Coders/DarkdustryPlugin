@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.content.Blocks;
+import mindustry.ctype.ContentType;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -69,7 +70,7 @@ public class Search {
     }
 
     public static StatusEffect findEffect(String name) {
-        return Strings.canParsePositiveInt(name) ? content.statusEffects().get(Strings.parseInt(name)) : content.statusEffects().find(effect -> effect.name.equalsIgnoreCase(name));
+        return Strings.canParsePositiveInt(name) ? content.getByID(ContentType.status, Strings.parseInt(name)) : content.statusEffects().find(effect -> effect.name.equalsIgnoreCase(name));
     }
 
     public static UnitType findUnit(String name) {

@@ -131,7 +131,7 @@ public class Loader {
 
         // TODO вынести в Alerts
         Timer.schedule(() -> {
-            String[] missions = new String[] {"Join our Discord!", "[blue]\uE80D[sky]" + discordServerUrl, ""};
+            String[] missions = new String[] {"Join our Discord!", "[blue]\uE80D[sky]" + discordServerUrl, null};
             for (int i = 0; i < missions.length; i++) {
                 String mission = missions[i];
                 Time.runTask(6 * 60f * (i + 1), () -> setMission(mission));
@@ -140,7 +140,7 @@ public class Loader {
     }
 
     private static void setMission(String mission) {
-        state.rules.mission = mission; // TODO: добавить бандлы
+        state.rules.mission = mission; // UPD: проверил, разные тексты у разных игроков будут вызывать рассинхроны.
         Call.setRules(state.rules);
     }
 
