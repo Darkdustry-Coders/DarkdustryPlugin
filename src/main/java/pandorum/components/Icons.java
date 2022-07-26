@@ -5,36 +5,31 @@ import arc.util.Http;
 import arc.util.Log;
 import mindustry.game.Team;
 
-import java.util.Scanner;
-
 public class Icons {
 
     private static final StringMap icons = new StringMap();
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136/core/assets/icons/icons.properties").submit(response -> {
-            // TODO упростить, отказаться от Scanner (можно например сплитнуть по "\n" а потом через for)
-            try (Scanner scanner = new Scanner(response.getResultAsString())) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine().split("\\|")[0];
-                    String[] lines = line.split("=");
+            String[] lines = response.getResultAsString().split("\n");
+            for (String line : lines) {
+                String[] values = line.split("\\|")[0].split("=");
 
-                    String name = lines[1];
-                    String icon = String.valueOf((char) Integer.parseInt(lines[0]));
+                String name = values[1];
+                String icon = String.valueOf((char) Integer.parseInt(values[0]));
 
-                    icons.put(name, icon);
-                }
-
-                // TODO нам это надо?
-                Team.derelict.emoji = get("derelict");
-                Team.sharded.emoji = get("sharded");
-                Team.crux.emoji = get("crux");
-                Team.malis.emoji = get("malis");
-                Team.green.emoji = get("shocked");
-                Team.blue.emoji = get("spore-slowed");
-
-                Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
+                icons.put(name, icon);
             }
+
+            Team.derelict.emoji = get("derelict");
+            Team.sharded.emoji = get("sharded");
+            Team.crux.emoji = get("crux");
+            Team.malis.emoji = get("malis");
+            Team.green.emoji = get("shocked");
+            Team.blue.emoji = get("wet");
+
+            Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
+
         });
     }
 

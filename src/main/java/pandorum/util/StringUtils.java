@@ -17,7 +17,6 @@ public class StringUtils {
         };
     }
 
-    // TODO кринж название метода
     public static boolean deepEquals(String first, String second) {
         return stripAll(first).equalsIgnoreCase(stripAll(second)) || stripAll(first).toLowerCase().contains(stripAll(second).toLowerCase());
     }

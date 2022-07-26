@@ -32,8 +32,8 @@ public class HelpCommand implements CommandRunner<Player> {
 
         for (int i = 8 * page; i < Math.min(8 * (page + 1), commandsList.size); i++) {
             Command command = commandsList.get(i);
-            String paramText = Bundle.get("command." + command.text + ".params", findLocale(player.locale), command.paramText);
-            String description = Bundle.get("command." + command.text + ".description", findLocale(player.locale), command.description);
+            String paramText = Bundle.get("commands." + command.text + ".params", findLocale(player.locale), command.paramText);
+            String description = Bundle.get("commands." + command.text + ".description", findLocale(player.locale), command.description);
             result.append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ").append(paramText).append("[lightgray] - ").append(description);
         }
 
