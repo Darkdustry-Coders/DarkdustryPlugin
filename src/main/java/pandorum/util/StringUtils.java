@@ -2,7 +2,6 @@ package pandorum.util;
 
 import arc.util.Strings;
 import mindustry.game.Team;
-import mindustry.gen.Unit;
 import pandorum.components.Icons;
 
 import static mindustry.Vars.content;
@@ -55,10 +54,5 @@ public class StringUtils {
         StringBuilder teams = new StringBuilder();
         for (Team team : Team.baseTeams) teams.append(" [white]").append(coloredTeam(team));
         return teams.toString();
-    }
-
-    // TODO а оно нам надо?
-    public static String getUnitName(Unit unit) {
-        return Utils.notNullElse(unit.getControllerName(), Icons.get(unit.type.name));
     }
 }

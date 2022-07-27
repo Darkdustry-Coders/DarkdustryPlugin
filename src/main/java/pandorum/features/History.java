@@ -1,15 +1,28 @@
 package pandorum.features;
 
-import static pandorum.PluginVars.config;
-import static pandorum.PluginVars.defaultModes;
+import pandorum.features.history.HistorySeq;
+
+import static mindustry.Vars.world;
+import static pandorum.PluginVars.*;
 
 public class History {
 
-    // TODO вынести сюда все что связано с history
+    public static HistorySeq[][] history;
 
     public static boolean enabled() {
         return defaultModes.contains(config.mode);
     }
 
+    public static void reload() {
+        history = new HistorySeq[world.width()][world.height()];
+    }
 
+    public static HistorySeq getHistory(int x, int y) {
+        HistorySeq entries = history[x][y];
+        if (entries == null) {
+            history[x][y] = entries = new HistorySeq(maxTileHistoryCapacity);
+        }
+
+        return entries;
+    }
 }

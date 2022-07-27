@@ -6,8 +6,6 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Timekeeper;
-import arc.util.io.ReusableByteOutStream;
-import arc.util.io.Writes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +16,6 @@ import mindustry.gen.Iconc;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
-import pandorum.features.history.HistorySeq;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
 import redis.clients.jedis.Jedis;
@@ -36,11 +33,10 @@ public class PluginVars {
     /** Максимальный размер заполняемого пространства через /fill. */
     public static final int maxFillSize = 512;
 
-    // TODO нам точно надо minGiveAmount и minSpawnAmount? Они просто равны единице ;-;
     /** Максимальное количество выданного ресурса через /give. */
-    public static final int minGiveAmount = 1, maxGiveAmount = 1000000;
+    public static final int maxGiveAmount = 1000000;
     /** Максимальное количество заспавненных юнитов через /spawn. */
-    public static final int minSpawnAmount = 1, maxSpawnAmount = 25;
+    public static final int maxSpawnAmount = 25;
 
     // TODO вынести в Cooldowns, переделать механику кулдаунов?
     /** Время кулдауна для команды /nominate. В секундах. */
@@ -49,8 +45,8 @@ public class PluginVars {
     public static final int voteKickCooldownTime = 300;
     /** Время кулдауна для команды /login. В секундах. */
     public static final int loginCooldownTime = 900;
-    /** Время кулдауна для команды /sync. В миллисекундах. */
-    public static final int syncCooldownTime = 15000;
+    /** Время кулдауна для команды /sync. В секундах. */
+    public static final int syncCooldownTime = 15;
 
     // TODO разные ratio ля разных типов голосования?
     /** Необходимое количество игроков для успешного завершения голосования. */
@@ -62,9 +58,8 @@ public class PluginVars {
     /** Расстояние до ядер, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
 
-    // TODO почему 150? Не 60, 120, а именно 150?
-    /** Интвервал оповещений о постройке опасных блоков. В тиках. */
-    public static final float alertsInterval = 150f;
+    /** Интервал оповещений о постройке опасных блоков. В секундах. */
+    public static final float alertsInterval = 2.5f;
 
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 120f;
@@ -115,7 +110,6 @@ public class PluginVars {
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    // TODO переименовать в alertsInterval и вынести в Alerts
     public static final Interval interval = new Interval();
 
     // TODO придумать что-то в этим, возможно вынести в Icons или загружать вместе с остальными иконками
@@ -137,14 +131,8 @@ public class PluginVars {
     /** Конфигурация сервера. */
     public static PluginConfig config;
 
-    // TODO вынести в History
-    public static HistorySeq[][] history;
-
     public static VoteSession currentVote;
     public static VoteKickSession currentVoteKick;
 
     public static CommandHandler clientCommands, serverCommands, discordCommands;
-
-    public static ReusableByteOutStream writeBuffer;
-    public static Writes outputBuffer;
 }

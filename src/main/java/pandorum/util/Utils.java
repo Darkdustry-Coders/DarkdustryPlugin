@@ -5,7 +5,6 @@ import arc.files.Fi;
 import arc.struct.OrderedMap;
 import mindustry.server.ServerControl;
 import pandorum.components.Bundle;
-import pandorum.features.history.HistorySeq;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,8 +15,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static mindustry.Vars.mods;
-import static pandorum.PluginVars.history;
-import static pandorum.PluginVars.maxTileHistoryCapacity;
 
 public class Utils {
 
@@ -57,15 +54,5 @@ public class Utils {
 
     public static ServerControl getServerControl() {
         return (ServerControl) Core.app.getListeners().find(listener -> listener instanceof ServerControl);
-    }
-
-    // TODO вынести в History
-    public static HistorySeq getHistory(int x, int y) {
-        HistorySeq entries = history[x][y];
-        if (entries == null) {
-            history[x][y] = entries = new HistorySeq(maxTileHistoryCapacity);
-        }
-
-        return entries;
     }
 }

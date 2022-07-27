@@ -24,7 +24,6 @@ import java.util.Locale;
 import static mindustry.Vars.*;
 import static pandorum.PluginVars.*;
 
-// TODO названия переменных name, хотя там может быть ID. Переименовать?
 public class Search {
 
     public static Map findMap(String name) {

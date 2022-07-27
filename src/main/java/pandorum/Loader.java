@@ -4,8 +4,9 @@ import arc.Events;
 import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.Colors;
-import arc.util.*;
-import mindustry.core.NetServer;
+import arc.util.CommandHandler;
+import arc.util.Log;
+import arc.util.Timer;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.Call;
@@ -72,7 +73,6 @@ public class Loader {
 
         Version.build = -1;
 
-        // TODO упростить? Почему Анюк не добавил эти цвета сам?
         Colors.put("accent", Pal.accent);
         Colors.put("unlaunched", Color.valueOf("8982ed"));
         Colors.put("highlight", Pal.accent.cpy().lerp(Color.white, 0.3f));
@@ -85,16 +85,13 @@ public class Loader {
     }
 
     public static void init() {
-        // TODO нам точно нужна тут рефлексия?
-        writeBuffer = Reflect.get(NetServer.class, netServer, "writeBuffer");
-        outputBuffer = Reflect.get(NetServer.class, netServer, "outputBuffer");
-
         net.handleServer(Connect.class, new ConnectHandler());
         net.handleServer(ConnectPacket.class, new ConnectPacketHandler());
 
         netServer.admins.addActionFilter(new ActionManager());
         netServer.admins.addChatFilter(new ChatManager());
         netServer.invalidHandler = new InvalidCommandResponseHandler();
+
         netServer.addPacketHandler("WhoIsUsingSS", (player, content) -> {
             if (player.name.contains("[#0096FF]xzxADIxzx") && content.equals(schematicBaseStart))
                 Call.clientPacketReliable("AreYouUsingSS", ""); // remove it later
@@ -115,7 +112,6 @@ public class Loader {
 
         Events.run(Trigger.update, new OnTriggerUpdate());
 
-        // TODO это костыль, переделать или отказаться
         Events.run("HexedGameOver", new OnGameOver());
         Events.run("CastleGameOver", new OnGameOver());
 
@@ -128,20 +124,6 @@ public class Loader {
         Config.strict.set(true);
 
         Timer.schedule(new Updater(), 0f, 1f);
-
-        // TODO вынести в Alerts
-        Timer.schedule(() -> {
-            String[] missions = new String[] {"Join our Discord!", "[blue]\uE80D[sky]" + discordServerUrl, null};
-            for (int i = 0; i < missions.length; i++) {
-                String mission = missions[i];
-                Time.runTask(6 * 60f * (i + 1), () -> setMission(mission));
-            }
-        }, 0f, 900f);
-    }
-
-    private static void setMission(String mission) {
-        state.rules.mission = mission; // UPD: проверил, разные тексты у разных игроков будут вызывать рассинхроны.
-        Call.setRules(state.rules);
     }
 
     public static void registerClientCommands(CommandHandler handler) {
@@ -198,6 +180,9 @@ public class Loader {
         handler.register("players", "[страница]", "Список всех игроков на сервере.", new pandorum.commands.discord.PlayersListCommand());
         handler.register("status", "Состояние сервера.", new StatusCommand());
 
+        handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new KickCommand());
+        handler.register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", new BanCommand());
+
         if (config.mode != hexed) {
             handler.register("map", "<название...>", "Получить карту с сервера.", new pandorum.commands.discord.MapCommand());
             handler.register("maps", "[страница]", "Список всех карт сервера.", new pandorum.commands.discord.MapsListCommand());
@@ -209,9 +194,6 @@ public class Loader {
         if (defaultModes.contains(config.mode)) {
             handler.register("gameover", "Принудительно завершить игру.", new GameOverCommand());
         }
-
-        handler.register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", new KickCommand());
-        handler.register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", new BanCommand());
     }
 
     public static void registerServerCommands(CommandHandler handler) {

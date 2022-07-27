@@ -21,7 +21,8 @@ import pandorum.util.Utils;
 import java.util.Locale;
 
 import static mindustry.Vars.*;
-import static pandorum.PluginVars.*;
+import static pandorum.PluginVars.defaultLanguage;
+import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.PlayerUtils.kick;
 import static pandorum.util.Search.findLocale;
 
@@ -124,13 +125,6 @@ public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket>
         player.con.modclient = packet.version == -1;
 
         if (!player.admin && !info.admin) info.adminUsid = usid;
-
-        try {
-            writeBuffer.reset();
-            player.write(outputBuffer);
-        } catch (Exception e) {
-            return;
-        }
 
         con.player = player;
 

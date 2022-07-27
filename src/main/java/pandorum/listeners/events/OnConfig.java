@@ -7,7 +7,6 @@ import mindustry.world.blocks.power.PowerNode.PowerNodeBuild;
 import pandorum.features.History;
 import pandorum.features.history.entry.ConfigEntry;
 import pandorum.features.history.entry.HistoryEntry;
-import pandorum.util.Utils;
 
 public class OnConfig implements Cons<ConfigEvent> {
 
@@ -27,7 +26,7 @@ public class OnConfig implements Cons<ConfigEvent> {
             }
 
             HistoryEntry entry = new ConfigEntry(event, connect);
-            event.tile.tile.getLinkedTiles(tile -> Utils.getHistory(tile.x, tile.y).add(entry));
+            event.tile.tile.getLinkedTiles(tile -> History.getHistory(tile.x, tile.y).add(entry));
         }
     }
 }

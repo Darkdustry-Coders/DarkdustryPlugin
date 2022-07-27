@@ -8,7 +8,6 @@ import mindustry.type.Item;
 import pandorum.components.Icons;
 
 import static pandorum.PluginVars.maxGiveAmount;
-import static pandorum.PluginVars.minGiveAmount;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;
@@ -34,8 +33,8 @@ public class GiveCommand implements CommandRunner<Player> {
         }
 
         int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-        if (amount < minGiveAmount || amount > maxGiveAmount) {
-            bundled(player, "commands.give.limit", maxGiveAmount, minGiveAmount);
+        if (amount < 1 || amount > maxGiveAmount) {
+            bundled(player, "commands.give.limit", maxGiveAmount);
             return;
         }
 

@@ -2,9 +2,8 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.WorldLoadEvent;
-import pandorum.features.history.HistorySeq;
+import pandorum.features.History;
 
-import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
 
 public class OnWorldLoad implements Cons<WorldLoadEvent> {
@@ -14,7 +13,7 @@ public class OnWorldLoad implements Cons<WorldLoadEvent> {
         votesRtv.clear();
         votesVnw.clear();
 
-        history = new HistorySeq[world.width()][world.height()];
+        History.reload();
 
         mapPlayTime = 0;
         canVote = true;

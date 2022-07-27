@@ -6,7 +6,6 @@ import pandorum.data.PlayerData;
 import pandorum.features.History;
 import pandorum.features.history.entry.BlockEntry;
 import pandorum.features.history.entry.HistoryEntry;
-import pandorum.util.Utils;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
@@ -16,7 +15,7 @@ public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
     public void get(BlockBuildEndEvent event) {
         if (History.enabled() && event.unit.isPlayer()) {
             HistoryEntry entry = new BlockEntry(event);
-            event.tile.getLinkedTiles(tile -> Utils.getHistory(tile.x, tile.y).add(entry));
+            event.tile.getLinkedTiles(tile -> History.getHistory(tile.x, tile.y).add(entry));
         }
 
         if (!event.unit.isPlayer() || event.breaking) return;

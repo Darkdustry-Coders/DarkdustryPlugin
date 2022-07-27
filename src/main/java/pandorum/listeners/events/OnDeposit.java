@@ -8,7 +8,6 @@ import pandorum.features.Alerts;
 import pandorum.features.History;
 import pandorum.features.history.entry.DepositEntry;
 import pandorum.features.history.entry.HistoryEntry;
-import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.data.Database.getPlayerData;
@@ -19,7 +18,7 @@ public class OnDeposit implements Cons<DepositEvent> {
     public void get(DepositEvent event) {
         if (History.enabled()) {
             HistoryEntry entry = new DepositEntry(event);
-            event.tile.tile.getLinkedTiles(tile -> Utils.getHistory(tile.x, tile.y).add(entry));
+            event.tile.tile.getLinkedTiles(tile -> History.getHistory(tile.x, tile.y).add(entry));
         }
 
         // TODO вынести код внутрь Alerts, упростить
