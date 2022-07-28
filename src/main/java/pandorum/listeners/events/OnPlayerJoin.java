@@ -27,7 +27,7 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
     public void get(PlayerJoin event) {
         PlayerData data = getPlayerData(event.player.uuid());
 
-        String name = Ranks.getRank(data.rank).tag + "[#" + event.player.color + "]" + event.player.getInfo().lastName;
+        String name = Ranks.getRank(data.rank).tag + event.player.getInfo().lastName;
         event.player.name(name);
 
         Log.info("@ зашел на сервер. [@]", name, event.player.uuid());

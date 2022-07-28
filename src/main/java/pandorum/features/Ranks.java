@@ -13,23 +13,24 @@ public class Ranks {
     // TODO упростить загрузку рангов?
     public static void load() {
         player = new Rank() {{
+            tag = "[accent]<[white]\uE800[]>[] ";
             name = "player";
             displayName = "[accent]Player";
 
             next = active = new Rank() {{
-                tag = "[accent]<[white]\uE800[accent]> ";
+                tag = "[accent]<[white]\uE800[]>[] ";
                 name = "active";
                 displayName = "[sky]Active";
                 req = new Requirements(300 * 60, 25000, 20);
 
                 next = activePlus = new Rank() {{
-                    tag = "[accent]<[white]\uE813[accent]> ";
+                    tag = "[accent]<[white]\uE813[]>[] ";
                     name = "active+";
                     displayName = "[cyan]Active+";
                     req = new Requirements(750 * 60, 50000, 40);
 
                     next = veteran = new Rank() {{
-                        tag = "[accent]<[gold]\uE809[accent]> ";
+                        tag = "[accent]<[gold]\uE809[]>[] ";
                         name = "veteran";
                         displayName = "[gold]Veteran";
                         req = new Requirements(1500 * 60, 100000, 100);
@@ -39,13 +40,13 @@ public class Ranks {
         }};
 
         contributor = new Rank() {{
-            tag = "[accent]<[yellow]\uE80F[accent]> ";
+            tag = "[accent]<[yellow]\uE80F[]>[] ";
             name = "contributor";
             displayName = "[yellow]Contributor";
         }};
 
         admin = new Rank() {{
-            tag = "[accent]<[scarlet]\uE817[accent]> ";
+            tag = "[accent]<[scarlet]\uE817[]>[] ";
             name = "admin";
             displayName = "[scarlet]Admin";
         }};

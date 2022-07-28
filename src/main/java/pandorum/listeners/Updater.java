@@ -41,7 +41,7 @@ public class Updater implements Runnable {
             );
         }
 
-        player.name(rank.tag + "[#" + player.color + "]" + player.getInfo().lastName);
+        player.name(rank.tag + player.getInfo().lastName);
 
         setPlayerData(player.uuid(), data);
     }
