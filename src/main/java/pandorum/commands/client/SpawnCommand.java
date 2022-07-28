@@ -9,13 +9,11 @@ import mindustry.type.UnitType;
 import pandorum.components.Icons;
 import pandorum.util.StringUtils;
 
-import static pandorum.PluginVars.maxSpawnAmount;
+import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findTeam;
 import static pandorum.util.Search.findUnit;
-import static pandorum.util.StringUtils.teamsList;
-import static pandorum.util.StringUtils.unitsList;
 
 public class SpawnCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -31,7 +29,7 @@ public class SpawnCommand implements CommandRunner<Player> {
 
         UnitType type = findUnit(args[0]);
         if (type == null || type == UnitTypes.block) {
-            bundled(player, "commands.unit-not-found", unitsList());
+            bundled(player, "commands.unit-not-found", unitsList);
             return;
         }
 
@@ -43,7 +41,7 @@ public class SpawnCommand implements CommandRunner<Player> {
 
         Team team = args.length > 2 ? findTeam(args[2]) : player.team();
         if (team == null) {
-            bundled(player, "commands.team-not-found", teamsList());
+            bundled(player, "commands.team-not-found", teamsList);
             return;
         }
 

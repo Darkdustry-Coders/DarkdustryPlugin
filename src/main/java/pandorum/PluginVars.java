@@ -24,7 +24,6 @@ import redis.clients.jedis.JedisPool;
 import static mindustry.Vars.tilesize;
 
 // TODO если переменная используется только в одном классе и не является цифрой, вынести в этот класс?
-// TODO почему разные переменные в секундах, миллисекундах и тиках? Мб все в одних единица писать?
 public class PluginVars {
 
     /** IP адрес сервера. */
@@ -135,4 +134,6 @@ public class PluginVars {
     public static VoteKickSession currentVoteKick;
 
     public static CommandHandler clientCommands, serverCommands, discordCommands;
+
+    public static String itemsList, unitsList, teamsList;
 }

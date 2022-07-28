@@ -9,11 +9,11 @@ import mindustry.world.Block;
 import pandorum.components.Icons;
 import pandorum.util.StringUtils;
 
+import static pandorum.PluginVars.teamsList;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findCore;
 import static pandorum.util.Search.findTeam;
-import static pandorum.util.StringUtils.teamsList;
 
 public class CoreCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -30,7 +30,7 @@ public class CoreCommand implements CommandRunner<Player> {
 
         Team team = args.length > 1 ? findTeam(args[1]) : player.team();
         if (team == null) {
-            bundled(player, "commands.team-not-found", teamsList());
+            bundled(player, "commands.team-not-found", teamsList);
             return;
         }
 

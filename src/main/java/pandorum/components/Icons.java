@@ -3,7 +3,12 @@ package pandorum.components;
 import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Log;
+import arc.util.Structs;
 import mindustry.game.Team;
+
+import static mindustry.Vars.content;
+import static pandorum.PluginVars.*;
+import static pandorum.util.StringUtils.coloredTeam;
 
 public class Icons {
 
@@ -29,8 +34,16 @@ public class Icons {
             Team.blue.emoji = get("wet");
 
             Log.info("[Darkdustry] Загружено иконок контента: @.", icons.size);
-
         });
+    }
+
+    // TODO упростить
+    public static void loadLists() {
+        content.items().each(item -> itemsList += " [white]" + get(item.name) + item.name);
+
+        content.units().each(unit -> unitsList += " [white]" + get(unit.name) + unit.name);
+
+        Structs.each(team -> teamsList += " [white]" + coloredTeam(team), Team.baseTeams);
     }
 
     public static String get(String key) {

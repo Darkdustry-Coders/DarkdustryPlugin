@@ -2,8 +2,11 @@ package pandorum.components;
 
 public class PluginConfig {
 
-    /** IP адрес Хаба. Указывается как IP:port. */
-    public String hubIp = "darkdustry.tk:6567";
+    /** IP адрес Хаба. */
+    public String hubIp = "darkdustry.tk";
+
+    /** Порт Хаба. */
+    public int hubPort = 6567;
 
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;

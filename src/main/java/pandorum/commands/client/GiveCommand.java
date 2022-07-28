@@ -7,12 +7,12 @@ import mindustry.gen.Player;
 import mindustry.type.Item;
 import pandorum.components.Icons;
 
-import static pandorum.PluginVars.maxGiveAmount;
+import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;
 import static pandorum.util.Search.findTeam;
-import static pandorum.util.StringUtils.*;
+import static pandorum.util.StringUtils.coloredTeam;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -28,7 +28,7 @@ public class GiveCommand implements CommandRunner<Player> {
 
         Item item = findItem(args[0]);
         if (item == null) {
-            bundled(player, "commands.item-not-found", itemsList());
+            bundled(player, "commands.item-not-found", itemsList);
             return;
         }
 
@@ -40,7 +40,7 @@ public class GiveCommand implements CommandRunner<Player> {
 
         Team team = args.length > 2 ? findTeam(args[2]) : player.team();
         if (team == null) {
-            bundled(player, "commands.team-not-found", teamsList());
+            bundled(player, "commands.team-not-found", teamsList);
             return;
         }
 

@@ -60,6 +60,7 @@ public class Loader {
     public static void load() {
         Bundle.load();
         Icons.load();
+        Icons.loadLists();
         MapParser.load();
 
         Translator.loadLanguages();
@@ -165,7 +166,6 @@ public class Loader {
             handler.register("core", Bundle.get("commands.core.params"), Bundle.get("commands.core.description"), new CoreCommand());
             handler.register("give", Bundle.get("commands.give.params"), Bundle.get("commands.give.description"), new GiveCommand());
             handler.register("spawn", Bundle.get("commands.spawn.params"), Bundle.get("commands.spawn.description"), new SpawnCommand());
-            handler.register("effect", Bundle.get("commands.effect.params"), Bundle.get("commands.effect.description"), new EffectCommand());
             handler.register("team", Bundle.get("commands.team.params"), Bundle.get("commands.team.description"), new TeamCommand());
             handler.register("unit", Bundle.get("commands.unit.params"), Bundle.get("commands.unit.description"), new UnitCommand());
             handler.register("spectate", Bundle.get("commands.spectate.params"), Bundle.get("commands.spectate.description"), new SpectateCommand());

@@ -2,9 +2,6 @@ package pandorum.util;
 
 import arc.util.Strings;
 import mindustry.game.Team;
-import pandorum.components.Icons;
-
-import static mindustry.Vars.content;
 
 public class StringUtils {
 
@@ -26,33 +23,5 @@ public class StringUtils {
 
     public static String coloredTeam(Team team) {
         return team.emoji + "[#" + team.color + "]" + team.name;
-    }
-
-    // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
-    public static String effectsList() {
-        StringBuilder effects = new StringBuilder();
-        content.statusEffects().each(effect -> effects.append(" [white]").append(Icons.get(effect.name)).append(effect.name));
-        return effects.toString();
-    }
-
-    // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
-    public static String unitsList() {
-        StringBuilder units = new StringBuilder();
-        content.units().each(unit -> units.append(" [white]").append(Icons.get(unit.name)).append(unit.name));
-        return units.toString();
-    }
-
-    // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
-    public static String itemsList() {
-        StringBuilder items = new StringBuilder();
-        content.items().each(item -> items.append(" [white]").append(Icons.get(item.name)).append(item.name));
-        return items.toString();
-    }
-
-    // TODO может нам нужен не метод а строка? Типа один раз сбилдили ее и не паримся?
-    public static String teamsList() {
-        StringBuilder teams = new StringBuilder();
-        for (Team team : Team.baseTeams) teams.append(" [white]").append(coloredTeam(team));
-        return teams.toString();
     }
 }

@@ -6,11 +6,11 @@ import mindustry.gen.Player;
 import pandorum.util.StringUtils;
 
 import static pandorum.PluginVars.activeSpectatingPlayers;
+import static pandorum.PluginVars.teamsList;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findTeam;
-import static pandorum.util.StringUtils.teamsList;
 
 public class TeamCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -21,7 +21,7 @@ public class TeamCommand implements CommandRunner<Player> {
 
         Team team = findTeam(args[0]);
         if (team == null) {
-            bundled(player, "commands.team-not-found", teamsList());
+            bundled(player, "commands.team-not-found", teamsList);
             return;
         }
 

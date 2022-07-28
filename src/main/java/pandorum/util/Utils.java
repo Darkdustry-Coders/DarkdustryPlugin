@@ -28,7 +28,6 @@ public class Utils {
         return format.format(new Date(time));
     }
 
-    // TODO почему defaultLocale? Оно обычно в дискорде юзается, а там все русские
     public static String formatDuration(long time) {
         return formatDuration(time, Bundle.defaultLocale);
     }

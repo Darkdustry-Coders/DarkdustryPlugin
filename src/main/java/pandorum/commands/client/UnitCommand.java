@@ -7,11 +7,11 @@ import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import pandorum.components.Icons;
 
+import static pandorum.PluginVars.unitsList;
 import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findUnit;
-import static pandorum.util.StringUtils.unitsList;
 
 public class UnitCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
@@ -22,7 +22,7 @@ public class UnitCommand implements CommandRunner<Player> {
 
         UnitType type = findUnit(args[0]);
         if (type == null || type == UnitTypes.block) {
-            bundled(player, "commands.unit-not-found", unitsList());
+            bundled(player, "commands.unit-not-found", unitsList);
             return;
         }
 
