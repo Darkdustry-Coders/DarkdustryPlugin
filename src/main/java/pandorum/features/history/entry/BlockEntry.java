@@ -11,7 +11,7 @@ import pandorum.components.Icons;
 import java.util.Locale;
 
 import static mindustry.Vars.content;
-import static pandorum.PluginVars.rotateSides;
+import static pandorum.features.history.entry.RotateEntry.sides;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Utils.formatDate;
 
@@ -23,11 +23,10 @@ public class BlockEntry implements HistoryEntry {
     public final boolean breaking;
     public final long time;
 
-    // TODO refactor, simplify
     public BlockEntry(BlockBuildEndEvent event) {
         this.name = event.unit.getPlayer().name;
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
-        this.rotation = event.tile.build != null ? event.tile.build.rotation : -1;
+        this.rotation = event.tile.build.rotation;
         this.breaking = event.breaking;
         this.time = Time.millis();
     }
@@ -37,6 +36,6 @@ public class BlockEntry implements HistoryEntry {
         String date = formatDate(time);
         Locale locale = findLocale(player.locale);
 
-        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : block.rotate ? Bundle.format("history.block.construct.rotate", locale, name, Icons.get(block.name), rotateSides[rotation], date) : (Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date));
+        return breaking ? Bundle.format("history.block.deconstruct", locale, name, Icons.get(block.name), date) : block.rotate ? Bundle.format("history.block.construct.rotate", locale, name, Icons.get(block.name), sides[rotation], date) : (Bundle.format("history.block.construct", locale, name, Icons.get(block.name), date));
     }
 }

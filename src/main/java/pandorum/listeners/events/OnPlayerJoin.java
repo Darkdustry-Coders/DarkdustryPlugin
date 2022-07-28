@@ -14,6 +14,7 @@ import pandorum.features.Ranks;
 
 import java.awt.*;
 
+import static arc.Core.app;
 import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.discord.Bot.botChannel;
@@ -44,6 +45,6 @@ public class OnPlayerJoin implements Cons<PlayerJoin> {
 
         if (event.player.bestCore() != null) Effects.onJoin(event.player.bestCore().x, event.player.bestCore().y);
 
-        Bot.updateBotStatus();
+        app.post(Bot::updateBotStatus);
     }
 }

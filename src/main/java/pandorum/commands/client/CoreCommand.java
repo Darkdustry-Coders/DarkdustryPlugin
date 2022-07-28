@@ -7,17 +7,16 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import pandorum.components.Icons;
-import pandorum.util.StringUtils;
+import pandorum.util.Utils;
 
 import static pandorum.PluginVars.teamsList;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findCore;
 import static pandorum.util.Search.findTeam;
 
 public class CoreCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }
@@ -35,6 +34,6 @@ public class CoreCommand implements CommandRunner<Player> {
         }
 
         Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-        bundled(player, player.tileOn() != null && player.tileOn().block() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core.name), StringUtils.coloredTeam(team));
+        bundled(player, player.tileOn() != null && player.tileOn().block() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core.name), Utils.coloredTeam(team));
     }
 }

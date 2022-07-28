@@ -12,7 +12,6 @@ import com.google.gson.GsonBuilder;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
-import mindustry.gen.Iconc;
 import net.dv8tion.jda.api.entities.Message;
 import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
@@ -58,7 +57,7 @@ public class PluginVars {
     public static final int alertsDistance = 8 * tilesize;
 
     /** Интервал оповещений о постройке опасных блоков. В секундах. */
-    public static final float alertsInterval = 2.5f;
+    public static final float alertsTimer = 2.5f;
 
     /** Время голосования через /nominate. В секундах. */
     public static final float voteDuration = 120f;
@@ -108,11 +107,6 @@ public class PluginVars {
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
 
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
-    public static final Interval interval = new Interval();
-
-    // TODO придумать что-то в этим, возможно вынести в Icons или загружать вместе с остальными иконками
-    public static final char[] rotateSides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;

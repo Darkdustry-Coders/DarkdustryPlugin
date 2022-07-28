@@ -9,14 +9,13 @@ import pandorum.components.Icons;
 
 import static pandorum.PluginVars.*;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findItem;
 import static pandorum.util.Search.findTeam;
-import static pandorum.util.StringUtils.coloredTeam;
+import static pandorum.util.Utils.coloredTeam;
 
 public class GiveCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }

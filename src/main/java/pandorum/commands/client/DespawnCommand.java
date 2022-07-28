@@ -3,21 +3,19 @@ package pandorum.commands.client;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
-import mindustry.gen.Nulls;
 import mindustry.gen.Player;
 import pandorum.components.Bundle;
 
 import static mindustry.Vars.state;
 import static pandorum.listeners.handlers.MenuHandler.despawnMenu;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findLocale;
 import static pandorum.util.Search.findPlayer;
-import static pandorum.util.StringUtils.coloredTeam;
+import static pandorum.util.Utils.coloredTeam;
 
 public class DespawnCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }

@@ -3,6 +3,8 @@ package pandorum.util;
 import arc.Core;
 import arc.files.Fi;
 import arc.struct.OrderedMap;
+import arc.util.Strings;
+import mindustry.game.Team;
 import mindustry.server.ServerControl;
 import pandorum.components.Bundle;
 
@@ -20,6 +22,26 @@ public class Utils {
 
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
+    }
+
+    public static int voteChoice(String value) {
+        return switch (value.toLowerCase()) {
+            case "y", "yes", "+" -> 1;
+            case "n", "no", "-" -> -1;
+            default -> 0;
+        };
+    }
+
+    public static boolean deepEquals(String first, String second) {
+        return stripAll(first).equalsIgnoreCase(stripAll(second)) || stripAll(first).toLowerCase().contains(stripAll(second).toLowerCase());
+    }
+
+    public static String stripAll(String str) {
+        return Strings.stripColors(Strings.stripGlyphs(str));
+    }
+
+    public static String coloredTeam(Team team) {
+        return team.emoji + "[#" + team.color + "]" + team.name;
     }
 
     public static String formatDate(long time) {

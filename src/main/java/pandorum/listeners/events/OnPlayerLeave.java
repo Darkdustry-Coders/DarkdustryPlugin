@@ -10,7 +10,7 @@ import mindustry.gen.Groups;
 import pandorum.components.Gamemode;
 import pandorum.discord.Bot;
 import pandorum.features.Effects;
-import pandorum.util.StringUtils;
+import pandorum.util.Utils;
 
 import java.awt.*;
 
@@ -39,7 +39,7 @@ public class OnPlayerLeave implements Cons<PlayerLeave> {
         if (config.mode == Gamemode.pvp) {
             Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
             if (teamVotes.remove(event.player.uuid())) {
-                sendToChat("commands.surrender.left", StringUtils.coloredTeam(event.player.team()), event.player.name, teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
+                sendToChat("commands.surrender.left", Utils.coloredTeam(event.player.team()), event.player.name, teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
             }
         }
 

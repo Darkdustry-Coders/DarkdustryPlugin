@@ -10,7 +10,6 @@ import mindustry.gen.Player;
 import pandorum.components.Bundle;
 
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findLocale;
 
 public class PlayersListCommand implements CommandRunner<Player> {
@@ -34,7 +33,7 @@ public class PlayersListCommand implements CommandRunner<Player> {
         for (int i = 8 * page; i < Math.min(8 * (page + 1), playersList.size); i++) {
             result.append("\n[#9c88ee]* [white]");
             Player p = playersList.get(i);
-            if (isAdmin(p)) result.append(Iconc.admin).append(" ");
+            if (p.admin) result.append(Iconc.admin).append(" ");
             result.append(p.name).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])").append(" [lightgray]([accent]Locale: ").append(p.locale).append("[lightgray])");
         }
 

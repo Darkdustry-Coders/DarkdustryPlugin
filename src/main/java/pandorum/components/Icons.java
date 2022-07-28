@@ -8,7 +8,7 @@ import mindustry.game.Team;
 
 import static mindustry.Vars.content;
 import static pandorum.PluginVars.*;
-import static pandorum.util.StringUtils.coloredTeam;
+import static pandorum.util.Utils.coloredTeam;
 
 public class Icons {
 

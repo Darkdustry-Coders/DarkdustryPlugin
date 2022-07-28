@@ -10,11 +10,10 @@ import mindustry.gen.Unit;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 
 public class TeleportCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }

@@ -3,31 +3,17 @@ package pandorum.util;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.NetConnection;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
 import pandorum.components.Bundle;
 
 import java.util.Locale;
 
 import static pandorum.PluginVars.discordServerUrl;
-import static pandorum.discord.Bot.adminRole;
 import static pandorum.util.Search.findLocale;
 
 public class PlayerUtils {
 
-    // TODO нам нужен этот метод?
-    public static boolean isAdmin(Player player) {
-        return player != null && player.admin;
-    }
-
-    // TODO вынести куда-то не сюда. Member это не Player
-    public static boolean isAdmin(Member member) {
-        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
-    }
-
-    // TODO проверка на нулл? Она нужна? Я не помню просто зачем она тут
     public static void bundled(Player player, String key, Object... values) {
-        if (player != null) player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
+        player.sendMessage(Bundle.format(key, findLocale(player.locale), values));
     }
 
     public static void sendToChat(String key, Object... values) {

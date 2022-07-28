@@ -2,6 +2,7 @@ package pandorum.commands.discord;
 
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
+import pandorum.discord.Bot;
 import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.netServer;
@@ -12,7 +13,7 @@ public class BanCommand implements CommandRunner<MessageContext> {
 
     @Override
     public void accept(String[] args, MessageContext context) {
-        if (!isAdmin(context.member)) {
+        if (!Bot.isAdmin(context.member)) {
             context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
             return;
         }

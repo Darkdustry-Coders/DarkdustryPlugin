@@ -162,7 +162,7 @@ public class Loader {
             handler.register("voting", Bundle.get("commands.voting.params"), Bundle.get("commands.voting.description"), new VotingCommand());
 
             handler.register("artv", Bundle.get("commands.artv.description"), new ArtvCommand());
-            handler.register("despawn", Bundle.get("commands.despawn.description"), new DespawnCommand());
+            handler.register("despawn", Bundle.get("commands.despawn.params"), Bundle.get("commands.despawn.description"), new DespawnCommand());
             handler.register("core", Bundle.get("commands.core.params"), Bundle.get("commands.core.description"), new CoreCommand());
             handler.register("give", Bundle.get("commands.give.params"), Bundle.get("commands.give.description"), new GiveCommand());
             handler.register("spawn", Bundle.get("commands.spawn.params"), Bundle.get("commands.spawn.description"), new SpawnCommand());

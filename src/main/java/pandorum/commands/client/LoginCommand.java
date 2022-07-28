@@ -13,11 +13,10 @@ import static pandorum.PluginVars.*;
 import static pandorum.discord.Bot.adminChannel;
 import static pandorum.features.Authme.*;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 
 public class LoginCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (isAdmin(player)) {
+        if (player.admin) {
             bundled(player, "commands.login.already-admin");
             return;
         }

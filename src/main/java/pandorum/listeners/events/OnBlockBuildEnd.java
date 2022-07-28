@@ -2,10 +2,8 @@ package pandorum.listeners.events;
 
 import arc.func.Cons;
 import mindustry.game.EventType.BlockBuildEndEvent;
-import pandorum.data.PlayerData;
 import pandorum.features.History;
 import pandorum.features.history.entry.BlockEntry;
-import pandorum.features.history.entry.HistoryEntry;
 
 import static pandorum.data.Database.getPlayerData;
 import static pandorum.data.Database.setPlayerData;
@@ -13,14 +11,14 @@ import static pandorum.data.Database.setPlayerData;
 public class OnBlockBuildEnd implements Cons<BlockBuildEndEvent> {
 
     public void get(BlockBuildEndEvent event) {
-        if (History.enabled() && event.unit.isPlayer()) {
-            HistoryEntry entry = new BlockEntry(event);
-            event.tile.getLinkedTiles(tile -> History.getHistory(tile.x, tile.y).add(entry));
+        if (History.enabled() && event.tile.build != null && event.unit.isPlayer()) {
+            var entry = new BlockEntry(event);
+            History.putTileHistory(entry, event.tile);
         }
 
         if (!event.unit.isPlayer() || event.breaking) return;
 
-        PlayerData data = getPlayerData(event.unit.getPlayer().uuid());
+        var data = getPlayerData(event.unit.getPlayer().uuid());
         data.buildingsBuilt++;
         setPlayerData(event.unit.getPlayer().uuid(), data);
     }

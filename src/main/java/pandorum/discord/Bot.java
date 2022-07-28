@@ -10,11 +10,9 @@ import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import pandorum.Loader;
 import pandorum.components.Bundle;
@@ -59,7 +57,7 @@ public class Bot {
             discordCommands = new CommandHandler(config.discordBotPrefix);
             Loader.registerDiscordCommands(discordCommands);
 
-            updateBotStatus(0);
+            updateBotStatus();
 
             Log.info("[Darkdustry] Бот успешно подключен. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
@@ -100,12 +98,12 @@ public class Bot {
         });
     }
 
-    public static void updateBotStatus() {
-        updateBotStatus(Groups.player.size());
+    public static boolean isAdmin(Member member) {
+        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
     }
 
-    public static void updateBotStatus(int players) {
-        jda.getPresence().setActivity(Activity.playing(players + " игроков | IP: " + serverIp + ":" + Config.port.num()));
+    public static void updateBotStatus() {
+        jda.getPresence().setActivity(Activity.playing(Groups.player.size() + " игроков | IP: " + serverIp + ":" + Config.port.num()));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... args) {

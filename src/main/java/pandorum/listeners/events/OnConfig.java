@@ -6,11 +6,9 @@ import mindustry.game.EventType.ConfigEvent;
 import mindustry.world.blocks.power.PowerNode.PowerNodeBuild;
 import pandorum.features.History;
 import pandorum.features.history.entry.ConfigEntry;
-import pandorum.features.history.entry.HistoryEntry;
 
 public class OnConfig implements Cons<ConfigEvent> {
 
-    // TODO refactor
     public void get(ConfigEvent event) {
         if (History.enabled() && event.player != null) {
             boolean connect = false;
@@ -18,15 +16,15 @@ public class OnConfig implements Cons<ConfigEvent> {
             if (event.tile instanceof PowerNodeBuild build) {
                 var link = Point2.unpack((int) event.value).sub(build.tileX(), build.tileY());
                 for (Point2 linked : build.config()) {
-                    if (link != null && link.x == linked.x && link.y == linked.y) {
+                    if (link.equals(linked)) {
                         connect = true;
                         break;
                     }
                 }
             }
 
-            HistoryEntry entry = new ConfigEntry(event, connect);
-            event.tile.tile.getLinkedTiles(tile -> History.getHistory(tile.x, tile.y).add(entry));
+            var entry = new ConfigEntry(event, connect);
+            History.putTileHistory(entry, event.tile.tile);
         }
     }
 }

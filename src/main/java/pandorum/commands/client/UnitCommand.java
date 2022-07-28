@@ -9,13 +9,12 @@ import pandorum.components.Icons;
 
 import static pandorum.PluginVars.unitsList;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 import static pandorum.util.Search.findUnit;
 
 public class UnitCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }

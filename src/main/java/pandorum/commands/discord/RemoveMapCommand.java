@@ -5,7 +5,7 @@ import mindustry.maps.Map;
 import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.maps;
-import static pandorum.util.PlayerUtils.isAdmin;
+import static pandorum.discord.Bot.isAdmin;
 import static pandorum.util.Search.findMap;
 
 public class RemoveMapCommand implements CommandRunner<MessageContext> {

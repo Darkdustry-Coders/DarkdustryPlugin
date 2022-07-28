@@ -9,7 +9,7 @@ import mindustry.ui.Menus;
 import pandorum.components.Bundle;
 import pandorum.data.PlayerData;
 import pandorum.features.Ranks.Rank;
-import pandorum.util.StringUtils;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.state;
 import static pandorum.data.Database.getPlayerData;
@@ -47,11 +47,11 @@ public class MenuHandler {
                 }
                 case 3 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unitc::kill);
-                    bundled(player, "commands.despawn.success.team", StringUtils.coloredTeam(state.rules.defaultTeam));
+                    bundled(player, "commands.despawn.success.team", Utils.coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
                     Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unitc::kill);
-                    bundled(player, "commands.despawn.success.team", StringUtils.coloredTeam(state.rules.waveTeam));
+                    bundled(player, "commands.despawn.success.team", Utils.coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
                     Call.unitCapDeath(player.unit());

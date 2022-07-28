@@ -6,7 +6,7 @@ import mindustry.game.EventType.GameOverEvent;
 import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.state;
-import static pandorum.util.PlayerUtils.isAdmin;
+import static pandorum.discord.Bot.isAdmin;
 
 public class GameOverCommand implements CommandRunner<MessageContext> {
     public void accept(String[] args, MessageContext context) {

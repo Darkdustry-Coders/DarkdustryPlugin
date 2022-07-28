@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message.Attachment;
 import pandorum.discord.MessageContext;
 
 import static mindustry.Vars.*;
-import static pandorum.util.PlayerUtils.isAdmin;
+import static pandorum.discord.Bot.isAdmin;
 
 public class AddMapCommand implements CommandRunner<MessageContext> {
     public void accept(String[] args, MessageContext context) {

@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 
 import static pandorum.PluginVars.currentVote;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.StringUtils.voteChoice;
+import static pandorum.util.Utils.voteChoice;
 
 public class VotingCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {

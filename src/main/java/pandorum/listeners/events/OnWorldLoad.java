@@ -13,7 +13,7 @@ public class OnWorldLoad implements Cons<WorldLoadEvent> {
         votesRtv.clear();
         votesVnw.clear();
 
-        History.reload();
+        History.clear();
 
         mapPlayTime = 0;
         canVote = true;

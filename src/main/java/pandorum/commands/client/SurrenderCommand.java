@@ -8,7 +8,7 @@ import mindustry.content.Blocks;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import pandorum.util.StringUtils;
+import pandorum.util.Utils;
 
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.*;
@@ -31,11 +31,11 @@ public class SurrenderCommand implements CommandRunner<Player> {
         teamVotes.add(player.uuid());
         int cur = teamVotes.size;
         int req = Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == player.team()));
-        sendToChat("commands.surrender.vote", StringUtils.coloredTeam(player.team()), player.name, cur, req);
+        sendToChat("commands.surrender.vote", Utils.coloredTeam(player.team()), player.name, cur, req);
 
         if (cur < req) return;
 
-        sendToChat("commands.surrender.passed", StringUtils.coloredTeam(player.team()));
+        sendToChat("commands.surrender.passed", Utils.coloredTeam(player.team()));
         votesSurrender.remove(player.team());
 
         world.tiles.eachTile(tile -> {

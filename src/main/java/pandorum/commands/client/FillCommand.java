@@ -10,23 +10,22 @@ import pandorum.components.Icons;
 import static mindustry.Vars.world;
 import static pandorum.PluginVars.maxFillSize;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findBlock;
 
 public class FillCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }
 
         if (!Strings.canParsePositiveInt(args[1]) || !Strings.canParsePositiveInt(args[2]) ||
-            !Strings.canParsePositiveInt(args[3]) || !Strings.canParsePositiveInt(args[4])) {
+                !Strings.canParsePositiveInt(args[3]) || !Strings.canParsePositiveInt(args[4])) {
             bundled(player, "commands.fill.incorrect-number-format");
             return;
         }
 
-        int 
+        int
                 x1 = Strings.parseInt(args[1]), y1 = Strings.parseInt(args[2]),
                 x2 = Strings.parseInt(args[3]), y2 = Strings.parseInt(args[4]),
                 width = Math.abs(x1 - x2) + 1, height = Math.abs(y1 - y2) + 1;

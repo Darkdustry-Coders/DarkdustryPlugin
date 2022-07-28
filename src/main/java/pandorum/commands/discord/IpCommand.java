@@ -5,7 +5,7 @@ import mindustry.net.Administration.Config;
 import pandorum.discord.MessageContext;
 
 import static pandorum.PluginVars.serverIp;
-import static pandorum.util.StringUtils.stripAll;
+import static pandorum.util.Utils.stripAll;
 
 public class IpCommand implements CommandRunner<MessageContext> {
     public void accept(String[] args, MessageContext context) {

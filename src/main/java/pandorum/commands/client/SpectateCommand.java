@@ -6,12 +6,11 @@ import mindustry.gen.Player;
 import static pandorum.PluginVars.activeSpectatingPlayers;
 import static pandorum.PluginVars.spectateTeam;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.PlayerUtils.isAdmin;
 import static pandorum.util.Search.findPlayer;
 
 public class SpectateCommand implements CommandRunner<Player> {
     public void accept(String[] args, Player player) {
-        if (!isAdmin(player)) {
+        if (!player.admin) {
             bundled(player, "commands.permission-denied");
             return;
         }

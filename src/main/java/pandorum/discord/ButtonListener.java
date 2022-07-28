@@ -9,7 +9,7 @@ import pandorum.features.Authme;
 import java.awt.*;
 
 import static pandorum.PluginVars.loginWaiting;
-import static pandorum.util.PlayerUtils.isAdmin;
+import static pandorum.discord.Bot.isAdmin;
 
 public class ButtonListener extends ListenerAdapter {
 
