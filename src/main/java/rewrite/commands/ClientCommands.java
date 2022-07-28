@@ -11,11 +11,9 @@ public enum ClientCommands implements CommandRunner<Player> {
 
     });
 
-    private String name;
     private CommandRunner<Player> runner;
 
-    private ClientCommands(String name, CommandRunner<Player> runner) {
-        this.name = ""name;
+    private ClientCommands(CommandRunner<Player> runner) {
         this.runner = runner;
 
         // пример
@@ -25,7 +23,7 @@ public enum ClientCommands implements CommandRunner<Player> {
     }
 
     public String name() {
-        return name + ".name";
+        return name() + ".name";
     }
 
     public String desc() {
