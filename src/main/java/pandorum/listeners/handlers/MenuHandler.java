@@ -18,7 +18,6 @@ import static pandorum.util.PlayerUtils.bundled;
 import static pandorum.util.PlayerUtils.sendToChat;
 import static pandorum.util.Search.findLocale;
 
-// TODO тут просто шиза, памагите
 public class MenuHandler {
 
     public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;

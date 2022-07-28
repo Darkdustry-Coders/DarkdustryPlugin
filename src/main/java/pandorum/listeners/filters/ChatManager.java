@@ -26,7 +26,6 @@ public class ChatManager implements ChatFilter {
                 return;
             }
 
-            // TODO не нравится мне эта строчка
             Translator.translate(data.language, Strings.stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[white])"), author, text));
         });
 

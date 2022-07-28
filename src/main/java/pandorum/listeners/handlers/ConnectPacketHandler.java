@@ -26,7 +26,6 @@ import static pandorum.PluginVars.discordServerUrl;
 import static pandorum.util.PlayerUtils.kick;
 import static pandorum.util.Search.findLocale;
 
-// TODO а тут еще шизовее. Упростить, рефакторнуть.
 public class ConnectPacketHandler implements Cons2<NetConnection, ConnectPacket> {
 
     public void get(NetConnection con, ConnectPacket packet) {
