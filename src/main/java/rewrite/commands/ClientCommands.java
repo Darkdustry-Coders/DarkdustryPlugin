@@ -4,30 +4,51 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 
 public enum ClientCommands implements CommandRunner<Player> {
-    adminChat((args, player) -> {
+    help((args, player) -> {
 
     }),
-    alerts((args, player) -> {
+    discord((args, player) -> {
+
+    }),
+    a((args, player) -> {
+
+    }),
+    t((args, player) -> {
+
+    }),
+    votekick((args, player) -> {
+
+    }),
+    vote((args, player) -> {
+
+    }),
+    sync((args, player) -> {
+
+    }),
+    tr((args, player) -> {
+
+    }),
+    start((args, player) -> {
+
+    }),
+    rank((args, player) -> {
+
+    }),
+    players((args, player) -> {
+
+    }),
+    login((args, player) -> {
 
     });
 
+    public String desc;
+    public String params;
     private CommandRunner<Player> runner;
 
     private ClientCommands(CommandRunner<Player> runner) {
+        this.desc = "commands." + name() + ".desc";
+        this.params = "commands." + name() + ".desc";
         this.runner = runner;
-
-        // пример
-        // for (ClientCommands command : ClientCommands.values()) {
-        // handler.register(command.name(), command.desk(), )
-        // }
-    }
-
-    public String name() {
-        return name() + ".name";
-    }
-
-    public String desc() {
-        return name + ".desc";
     }
 
     @Override
