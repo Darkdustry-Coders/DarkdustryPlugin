@@ -19,16 +19,16 @@ public enum ServerCommands implements Cons<String[]> {
 
     });
 
-    public String desc;
-    public String params;
-    private Cons<String[]> runner;
+    public final String description;
+    public final String params;
+    private final Cons<String[]> runner;
 
-    private ServerCommands(String desc, Cons<String[]> runner) {
-        this(desc, "", runner);
+    ServerCommands(String description, Cons<String[]> runner) {
+        this(description, "", runner);
     }
 
-    private ServerCommands(String desc, String params, Cons<String[]> runner) {
-        this.desc = desc;
+    ServerCommands(String description, String params, Cons<String[]> runner) {
+        this.description = description;
         this.params = params;
         this.runner = runner;
     }

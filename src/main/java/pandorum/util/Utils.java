@@ -6,6 +6,7 @@ import arc.struct.OrderedMap;
 import arc.util.Strings;
 import mindustry.game.Team;
 import mindustry.server.ServerControl;
+import pandorum.PandorumPlugin;
 import pandorum.components.Bundle;
 
 import java.text.DateFormat;
@@ -70,7 +71,7 @@ public class Utils {
     }
 
     public static Fi getPluginResource(String name) {
-        return mods.list().find(mod -> mod.name.equals("darkdustry-plugin")).root.child(name);
+        return mods.getMod("darkdustry-plugin").root.child(name);
     }
 
     public static ServerControl getServerControl() {

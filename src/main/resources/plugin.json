@@ -2,8 +2,8 @@
   "name": "darkdustry-plugin",
   "displayName": "Darkdustry Plugin",
   "description": "Core plugin for Darkdustry servers.",
-  "author": "Darkness6030",
+  "author": "Darkness6030 & xzxADIxzx",
   "version": "2.1",
-  "minGameVersion": "135",
-  "main": "pandorum.PandorumPlugin"
+  "minGameVersion": "136",
+  "main": "rewrite.DarkdustryPlugin"
 }

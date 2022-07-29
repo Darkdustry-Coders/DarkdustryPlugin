@@ -41,12 +41,12 @@ public enum ClientCommands implements CommandRunner<Player> {
 
     });
 
-    public String desc;
-    public String params;
-    private CommandRunner<Player> runner;
+    public final String description;
+    public final String params;
+    private final CommandRunner<Player> runner;
 
-    private ClientCommands(CommandRunner<Player> runner) {
-        this.desc = "commands." + name() + ".desc";
+    ClientCommands(CommandRunner<Player> runner) {
+        this.description = "commands." + name() + ".desc";
         this.params = "commands." + name() + ".desc";
         this.runner = runner;
     }

@@ -23,16 +23,16 @@ public enum DiscordCommands implements CommandRunner<MessageContext> {
 
     });
 
-    public String desc;
-    public String params;
-    private CommandRunner<MessageContext> runner;
+    public final String description;
+    public final String params;
+    private final CommandRunner<MessageContext> runner;
 
-    private DiscordCommands(String desc, CommandRunner<MessageContext> runner) {
-        this(desc, "", runner);
+    DiscordCommands(String description, CommandRunner<MessageContext> runner) {
+        this(description, "", runner);
     }
 
-    private DiscordCommands(String desc, String params, CommandRunner<MessageContext> runner) {
-        this.desc = desc;
+    DiscordCommands(String description, String params, CommandRunner<MessageContext> runner) {
+        this.description = description;
         this.params = params;
         this.runner = runner;
     }
