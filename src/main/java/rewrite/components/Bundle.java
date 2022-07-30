@@ -2,8 +2,8 @@ package rewrite.components;
 
 import arc.files.Fi;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.Log;
-import arc.util.Structs;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -17,36 +17,33 @@ public class Bundle {
 
     public static final Locale defaultLocale = new Locale(defaultLanguage);
 
-    private static final ObjectMap<Locale, ResourceBundle> properties = new ObjectMap<>();
+    private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
-    public static Locale[] supportedLocales;
+    private static final Seq<Locale> supportedLocales = new Seq<>();
 
     public static void load() {
-        Fi[] bundles = getPluginResource("bundles").list();
+        Seq<Fi> files = getPluginResource("bundles").seq();
 
-        // TODO загружать все ключи и значения прямо при запуске сервера, а не в методе getOrLoad()
-        // TODO вернуть локаль router
-        supportedLocales = new Locale[bundles.length + 1];
-        supportedLocales[supportedLocales.length - 1] = new Locale("router");
+        files.each(bundle -> {
+            String[] codes = bundle.nameWithoutExtension().split("_");
 
-        for (int i = 0; i < bundles.length; i++) {
-            String code = bundles[i].nameWithoutExtension();
-            String[] codes;
-            if (!code.contains("_")) { // bundle.properties
-                supportedLocales[i] = Locale.ROOT;
-            } else if ((codes = code.split("_")).length == 3) { // bundle_uk_UA.properties
-                supportedLocales[i] = new Locale(codes[1], codes[2]);
-            } else { // bundle_ru.properties
-                supportedLocales[i] = new Locale(codes[1]);
+            if (codes.length == 1) { // bundle.properties
+                supportedLocales.add(Locale.ROOT);
+            } else if (codes.length == 2) { // bundle_ru.properties
+                supportedLocales.add(new Locale(codes[1]));
+            } else if (codes.length == 3) { // bundle_uk_UA.properties
+                supportedLocales.add(new Locale(codes[1], codes[2]));
             }
-        }
+        });
 
-        Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.length);
+        supportedLocales.each(locale -> bundles.put(locale, ResourceBundle.getBundle("bundles.bundle", locale)));
+
+        Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.size);
     }
 
     public static String get(String key, String defaultValue, Locale locale) {
         try {
-            ResourceBundle bundle = getOrLoad(locale);
+            ResourceBundle bundle = bundles.get(locale, bundles.get(defaultLocale));
             return bundle.getString(key);
         } catch (MissingResourceException e) {
             return defaultValue;
@@ -68,7 +65,7 @@ public class Bundle {
         }
 
         MessageFormat format = formats.get(locale);
-        if (!Structs.contains(supportedLocales, locale)) {
+        if (!supportedLocales.contains(locale)) {
             format = formats.get(defaultLocale, () -> new MessageFormat(pattern, defaultLocale));
             format.applyPattern(pattern);
         } else if (format == null) {
@@ -81,17 +78,5 @@ public class Bundle {
 
     public static String format(String key, Object... values) {
         return format(key, defaultLocale, values);
-    }
-
-    public static ResourceBundle getOrLoad(Locale locale) {
-        ResourceBundle bundle = properties.get(locale);
-        if (bundle == null) {
-            if (Structs.contains(supportedLocales, locale)) {
-                properties.put(locale, bundle = ResourceBundle.getBundle("bundles.bundle", locale));
-            } else {
-                bundle = getOrLoad(defaultLocale);
-            }
-        }
-        return bundle;
     }
 }
