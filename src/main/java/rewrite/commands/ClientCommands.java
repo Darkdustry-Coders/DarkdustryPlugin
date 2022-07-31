@@ -1,9 +1,11 @@
 package rewrite.commands;
 
-import arc.func.Func;
+import arc.func.Prov;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import rewrite.components.Config.Gamemode;
+
+import static rewrite.PluginVars.config;
 
 public enum ClientCommands implements CommandRunner<Player> {
     help((args, player) -> {
@@ -44,79 +46,79 @@ public enum ClientCommands implements CommandRunner<Player> {
     }),
     hub((args, player) -> {
 
-    }, mode -> mode != Gamemode.hub),
+    }, () -> config.mode != Gamemode.hub),
     surrender((args, player) -> {
 
-    }, mode -> mode == Gamemode.pvp),
+    }, () -> config.mode == Gamemode.pvp),
     rtv((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     vnw((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     history((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     allerts((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     maps((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     saves((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     nominate((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     voting((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     artv((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     despawn((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     core((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     give((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     spawn((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     team((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     unit((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     spectate((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     tp((args, player) -> {
 
-    }, Gamemode::isDefault),
+    }, config.mode::isDefault),
     fill((args, player) -> {
 
-    }, Gamemode::isDefault);
+    }, config.mode::isDefault);
 
     public final String description;
     public final String params;
     private final CommandRunner<Player> runner;
-    private final Func<Gamemode, Boolean> allowed;
+    private final Prov<Boolean> enabled;
 
     ClientCommands(CommandRunner<Player> runner) {
-        this(runner, mode -> true);
+        this(runner, () -> true);
     }
 
-    ClientCommands(CommandRunner<Player> runner, Func<Gamemode, Boolean> allowed) {
+    ClientCommands(CommandRunner<Player> runner, Prov<Boolean> enabled) {
         this.description = "commands." + name() + ".desc";
         this.params = "commands." + name() + ".desc";
         this.runner = runner;
-        this.allowed = allowed;
+        this.enabled = enabled;
     }
 
     @Override
@@ -124,7 +126,7 @@ public enum ClientCommands implements CommandRunner<Player> {
         runner.accept(args, parameter);
     }
 
-    public boolean allowed(Gamemode mode) {
-        return allowed.get(mode);
+    public boolean enabled() {
+        return enabled.get();
     }
 }

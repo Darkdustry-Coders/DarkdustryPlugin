@@ -3,7 +3,7 @@ package rewrite.components;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.Log;
+import rewrite.DarkdustryPlugin;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -24,8 +24,8 @@ public class Bundle {
     public static void load() {
         Seq<Fi> files = getPluginResource("bundles").seq();
 
-        files.each(bundle -> {
-            String[] codes = bundle.nameWithoutExtension().split("_");
+        files.each(file -> {
+            String[] codes = file.nameWithoutExtension().split("_");
 
             if (codes.length == 1) { // bundle.properties
                 supportedLocales.add(Locale.ROOT);
@@ -36,9 +36,12 @@ public class Bundle {
             }
         });
 
-        supportedLocales.each(locale -> bundles.put(locale, ResourceBundle.getBundle("bundles.bundle", locale)));
+        supportedLocales.each(locale -> {
+            bundles.put(locale, ResourceBundle.getBundle("bundles.bundle", locale));
+            formats.put(locale, new MessageFormat("", locale));
+        });
 
-        Log.info("[Darkdustry] Загружено локалей: @.", supportedLocales.size);
+        DarkdustryPlugin.info("Загружено локалей: @, локаль по умолчанию: @.", supportedLocales.size, defaultLocale.toLanguageTag());
     }
 
     public static String get(String key, String defaultValue, Locale locale) {
@@ -54,6 +57,10 @@ public class Bundle {
         return get(key, key, locale);
     }
 
+    public static String get(String key, String defaultValue) {
+        return get(key, defaultValue, defaultLocale);
+    }
+
     public static String get(String key) {
         return get(key, defaultLocale);
     }
@@ -64,15 +71,8 @@ public class Bundle {
             return pattern;
         }
 
-        MessageFormat format = formats.get(locale);
-        if (!supportedLocales.contains(locale)) {
-            format = formats.get(defaultLocale, () -> new MessageFormat(pattern, defaultLocale));
-            format.applyPattern(pattern);
-        } else if (format == null) {
-            formats.put(locale, format = new MessageFormat(pattern, locale));
-        } else {
-            format.applyPattern(pattern);
-        }
+        MessageFormat format = formats.get(locale, formats.get(defaultLocale));
+        format.applyPattern(pattern);
         return format.format(values);
     }
 

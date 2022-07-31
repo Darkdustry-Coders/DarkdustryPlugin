@@ -1,6 +1,6 @@
 package rewrite.components;
 
-import arc.struct.Seq;
+import static rewrite.PluginVars.defaultModes;
 
 public class Config {
 
@@ -38,7 +38,7 @@ public class Config {
         attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower, industry;
 
         public boolean isDefault() {
-            return Seq.with(attack, pvp, sandbox, survival, tower).contains(this);
+            return defaultModes.contains(this);
         }
     }
 }
