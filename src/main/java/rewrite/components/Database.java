@@ -1,13 +1,14 @@
 package rewrite.components;
 
+import arc.util.Log;
+import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
+
+    public static final String table = "players";
 
     public static Connection connection;
 
@@ -20,7 +21,24 @@ public class Database {
         }
     }
 
+    // TODO упростить, переделать
     public static PlayerData getPlayerData(String uuid) {
+        String sql = "SELECT uuid, translatorLanguage, welcomeMessage, alertsEnabled, playTime, buildingsBuilt, gamesPlayed, rank FROM players WHERE uuid = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, uuid);
+
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                PlayerData data = new PlayerData(set);
+                set.close();
+                return data;
+            }
+            set.close();
+        } catch (SQLException e) {
+            Log.err(e);
+        }
+
         return null;
     }
 
