@@ -1,9 +1,9 @@
 package rewrite.components;
 
 import arc.util.Log;
-import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 
 public class Database {
@@ -23,6 +23,23 @@ public class Database {
 
     // TODO упростить, переделать
     public static PlayerData getPlayerData(String uuid) {
+
+        // это просто тест
+        getFields: {
+            Field[] fields = PlayerData.class.getDeclaredFields();
+            if (fields.length == 0) {
+                break getFields;
+            }
+
+            StringBuilder request = new StringBuilder();
+
+            for (Field field : fields) {
+                request.append(field.getName()).append(" ");
+            }
+
+            Log.info(request.toString());
+        }
+
         String sql = "SELECT uuid, translatorLanguage, welcomeMessage, alertsEnabled, playTime, buildingsBuilt, gamesPlayed, rank FROM players WHERE uuid = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
