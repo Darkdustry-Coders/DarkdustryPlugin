@@ -1,5 +1,7 @@
 package rewrite.components;
 
+import arc.struct.Seq;
+
 public class Config {
 
     /** IP адрес Хаба. */
@@ -33,14 +35,10 @@ public class Config {
     public String translatorApiKey = "key";
 
     public enum Gamemode {
-        attack,
-        castle,
-        crawler,
-        hexed,
-        hub,
-        pvp,
-        sandbox,
-        survival,
-        tower
+        attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower, industry;
+
+        public boolean isDefault() {
+            return Seq.with(attack, pvp, sandbox, survival, tower).contains(this);
+        }
     }
 }

@@ -15,11 +15,10 @@ import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
 import rewrite.components.Config;
 
-import static mindustry.Vars.dataDirectory;
-import static rewrite.PluginVars.config;
-import static rewrite.PluginVars.configFileName;
+import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({ "unused" })
 public class DarkdustryPlugin extends Plugin {
     
     @Override
@@ -38,7 +37,8 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        for (ClientCommands command : ClientCommands.values()) handler.register(command.name(), Bundle.get(command.params), Bundle.get(command.description), command);
+        for (ClientCommands command : ClientCommands.values())
+            if (command.allowed(config.mode)) handler.register(command.name(), Bundle.get(command.params), Bundle.get(command.description), command);
     }
 
     @Override
