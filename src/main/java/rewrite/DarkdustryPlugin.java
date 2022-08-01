@@ -18,6 +18,8 @@ import rewrite.commands.ClientCommands;
 import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
 import rewrite.components.Config;
+import rewrite.components.Database;
+import rewrite.features.Ranks;
 import rewrite.listeners.EventListeners;
 
 import static mindustry.Vars.*;
@@ -43,6 +45,10 @@ public class DarkdustryPlugin extends Plugin {
 
         Events.run("HexedGameOver", EventListeners.GameOver);
         Events.run("CastleGameOver", EventListeners.GameOver);
+
+        Ranks.load();
+
+        Database.connect("", config.dbUser, config.dbPassword);
 
         Version.build = -1;
     }

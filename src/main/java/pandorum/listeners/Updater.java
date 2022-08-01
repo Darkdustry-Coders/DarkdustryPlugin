@@ -31,7 +31,7 @@ public class Updater implements Runnable {
 
         Rank rank = getRank(data.rank);
         if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-            rank = rank.next;
+            rank = rank.next; // TODO: для rewrite использовать Ranks.setRank, или не забыть обновлять цвета в Effects
             data.rank = rank.id;
 
             Call.menu(player.con, rankIncreaseMenu,
