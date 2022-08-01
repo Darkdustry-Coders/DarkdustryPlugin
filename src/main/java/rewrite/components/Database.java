@@ -20,7 +20,7 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.exists(uuid) ? JsonIO.json.fromJson(PlayerData.class, jedis.get(uuid)) : new PlayerData();
+            return jedis.exists(uuid) ? JsonIO.json.fromJson(PlayerData.class, jedis.get(uuid)) : new PlayerData(uuid);
         }
     }
 
@@ -42,5 +42,9 @@ public class Database {
         public int gamesPlayed = 0;
 
         public int rank = 0;
+
+        public PlayerData(String uuid) {
+            this.uuid = uuid;
+        }
     }
 }
