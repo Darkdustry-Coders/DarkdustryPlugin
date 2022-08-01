@@ -75,6 +75,6 @@ public enum EventListeners implements Cons<Object>, Runnable {
         } catch (ClassNotFoundException e) {
             DarkdustryPlugin.error("Не удалось найти класс: @", e);
         }
-        return null; // по идеи, это никогда не должно случится, если у всех руки растут из правильного места
+        return null; // по идее, это никогда не должно случится, если у всех руки растут из правильного места
     }
 }
