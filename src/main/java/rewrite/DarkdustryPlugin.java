@@ -3,23 +3,28 @@
 
 package rewrite;
 
+import arc.Events;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.core.Version;
+import mindustry.game.EventType.Trigger;
+import mindustry.gen.Groups;
 import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
+import pandorum.features.Effects;
 import rewrite.components.Bundle;
 import rewrite.commands.ClientCommands;
 import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
 import rewrite.components.Config;
+import rewrite.listeners.EventListeners;
 
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 
-@SuppressWarnings({ "unused" })
+@SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
     
     @Override
@@ -32,6 +37,12 @@ public class DarkdustryPlugin extends Plugin {
             configFile.writeString(JsonIO.json.toJson(config = new Config()));
             info("Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
+
+        for (EventListeners listener : EventListeners.values()) Events.on(listener.event(), listener::get);
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
+
+        Events.run("HexedGameOver", EventListeners.GameOver);
+        Events.run("CastleGameOver", EventListeners.GameOver);
 
         Version.build = -1;
     }
