@@ -4,11 +4,7 @@ import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.Interval;
 import arc.util.Timekeeper;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
@@ -17,7 +13,6 @@ import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
@@ -106,8 +101,6 @@ public class PluginVars {
 
     public static final Seq<Gamemode> defaultModes = Seq.with(Gamemode.attack, Gamemode.pvp, Gamemode.sandbox, Gamemode.survival, Gamemode.tower);
 
-    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
     /** Время непрерывной работы сервера. */
     public static int serverUpTime = 0;
 
@@ -119,7 +112,6 @@ public class PluginVars {
 
     /** База данных Jedis. */
     public static JedisPool jedisPool;
-    public static Jedis jedis;
 
     /** Конфигурация сервера. */
     public static PluginConfig config;
