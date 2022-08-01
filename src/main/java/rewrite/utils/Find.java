@@ -44,9 +44,12 @@ public class Find {
 
     public static Block core(String name) {
         return switch (name.toLowerCase()) {
-            case "s", "small",  "shard",      "core-shard" -> Blocks.coreShard;
-            case "m", "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
-            case "b", "big",    "nucleus",    "core-nucleus" -> Blocks.coreNucleus;
+            case "shard" -> Blocks.coreShard;
+            case "foundation" -> Blocks.coreFoundation;
+            case "nucleus" -> Blocks.coreNucleus;
+            case "bastion" -> Blocks.coreBastion;
+            case "citadel" -> Blocks.coreCitadel;
+            case "acropolis" -> Blocks.coreAcropolis;
             default -> null; // нормальный метод, не кипишуй дарк
         };
     }
