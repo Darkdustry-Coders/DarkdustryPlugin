@@ -14,6 +14,7 @@ public class PluginVars {
     /** Название файла, в котором хранится конфигурация сервера. */
     public static final String configFileName = "config.json";
 
+    /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
 
     /** Конфигурация сервера. */

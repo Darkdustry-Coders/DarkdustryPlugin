@@ -1,6 +1,6 @@
 package rewrite.commands;
 
-import arc.func.Prov;
+import arc.func.Boolp;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import rewrite.components.Config.Gamemode;
@@ -108,13 +108,13 @@ public enum ClientCommands implements CommandRunner<Player> {
     public final String description;
     public final String params;
     private final CommandRunner<Player> runner;
-    private final Prov<Boolean> enabled;
+    private final Boolp enabled;
 
     ClientCommands(CommandRunner<Player> runner) {
         this(runner, () -> true);
     }
 
-    ClientCommands(CommandRunner<Player> runner, Prov<Boolean> enabled) {
+    ClientCommands(CommandRunner<Player> runner, Boolp enabled) {
         this.description = "commands." + name() + ".desc";
         this.params = "commands." + name() + ".desc";
         this.runner = runner;

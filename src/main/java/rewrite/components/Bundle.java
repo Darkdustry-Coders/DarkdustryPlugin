@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static pandorum.util.Utils.getPluginResource;
-import static rewrite.PluginVars.defaultLanguage;
+import static pandorum.util.Utils.*;
+import static rewrite.PluginVars.*;
 
 public class Bundle {
 

@@ -1,6 +1,6 @@
 package rewrite.components;
 
-import static rewrite.PluginVars.defaultModes;
+import static rewrite.PluginVars.*;
 
 public class Config {
 
@@ -33,6 +33,12 @@ public class Config {
 
     /** Ключ API для переводчика чата. */
     public String translatorApiKey = "key";
+
+    /** Имя пользователя базы данных. */
+    public String dbUser = "user";
+
+    /** Пароль пользователя базы данных. */
+    public String dbPassword = "password";
 
     public enum Gamemode {
         attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower, industry;

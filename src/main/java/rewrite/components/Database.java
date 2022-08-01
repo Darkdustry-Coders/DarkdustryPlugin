@@ -17,12 +17,11 @@ public class Database {
 
             createTables();
         } catch (ClassNotFoundException | SQLException e) {
-            DarkdustryPlugin.err("Не удалось подключиться к базе данных: @", e.getMessage());
+            DarkdustryPlugin.error("Не удалось подключиться к базе данных: @", e.getMessage());
         }
     }
 
     private static void createTables() {
-
         String sql = """
         CREATE TABLE IF NOT EXISTS players (
           uuid varchar(32) primary key,
@@ -60,39 +59,11 @@ public class Database {
         return false;
     }
 
-    // TODO упростить, переделать
     public static PlayerData getPlayerData(String uuid) {
-
-        // это просто тест
-        getFields: {
-            Field[] fields = PlayerData.class.getDeclaredFields();
-            if (fields.length == 0) {
-                break getFields;
-            }
-
-            StringBuilder request = new StringBuilder();
-
-            for (Field field : fields) {
-                request.append(field.getName()).append(" ");
-            }
-
-            Log.info(request.toString());
-        }
-
         String sql = "SELECT * FROM players WHERE uuid = ?";
         try (PreparedStatement statement = createPreparedStatement(sql, uuid); ResultSet set = statement.executeQuery()) {
-            if (set.next()) {
-                PlayerData data = new PlayerData(uuid);
-                data.translatorLanguage = set.getString("translatorLanguage");
-                data.welcomeMessage = set.getBoolean("welcomeMessage");
-                data.alertsEnabled = set.getBoolean("alertsEnabled");
-                data.playTime = set.getInt("playTime");
-                data.buildingsBuilt = set.getInt("buildingsBuilt");
-                data.gamesPlayed = set.getInt("gamesPlayed");
-                data.rank = set.getInt("rank");
-                return data;
-            }
-        } catch (SQLException e) {
+            if (set.next()) return new PlayerData(set);
+        } catch (IllegalAccessException | SQLException e) {
             Log.err(e);
         }
 
@@ -144,8 +115,9 @@ public class Database {
 
         public int rank = 0;
 
-        public PlayerData(String uuid) {
-            this.uuid = uuid;
+        public PlayerData(ResultSet set) throws IllegalAccessException, SQLException {
+            for (Field field : PlayerData.class.getDeclaredFields())
+                field.set(this, set.getObject(field.getName()));
         }
     }
 }

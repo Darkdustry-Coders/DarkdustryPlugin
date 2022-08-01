@@ -55,7 +55,7 @@ public class DarkdustryPlugin extends Plugin {
         Log.infoTag("Darkdustry", Strings.format(text, values));
     }
 
-    public static void err(String text, Object... values) {
+    public static void error(String text, Object... values) {
         Log.errTag("Darkdustry", Strings.format(text, values));
     }
 }
