@@ -3,23 +3,26 @@ package rewrite.components;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
+import rewrite.utils.Find;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static pandorum.util.Utils.*;
 import static rewrite.PluginVars.*;
+import static rewrite.utils.Utils.*;
 
 public class Bundle {
 
     public static final Locale defaultLocale = new Locale(defaultLanguage);
+    public static final Seq<Locale> supportedLocales = new Seq<>();
 
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
-    private static final Seq<Locale> supportedLocales = new Seq<>();
 
     public static void load() {
         Seq<Fi> files = getPluginResource("bundles").seq();
@@ -78,5 +81,13 @@ public class Bundle {
 
     public static String format(String key, Object... values) {
         return format(key, defaultLocale, values);
+    }
+
+    public static void bundled(Player player, String key, Object... values) {
+        player.sendMessage(format(key, Find.locale(player.locale), values));
+    }
+
+    public static void sendToChat(String key, Object... values) {
+        Groups.player.each(player -> bundled(player, key, values));
     }
 }

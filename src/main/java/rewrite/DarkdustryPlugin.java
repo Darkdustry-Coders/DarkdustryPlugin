@@ -14,7 +14,6 @@ import mindustry.gen.Groups;
 import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
 import pandorum.features.Effects;
-import rewrite.components.Bundle;
 import rewrite.commands.ClientCommands;
 import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
@@ -23,6 +22,7 @@ import rewrite.listeners.EventListeners;
 
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -50,7 +50,7 @@ public class DarkdustryPlugin extends Plugin {
     @Override
     public void registerClientCommands(CommandHandler handler) {
         for (ClientCommands command : ClientCommands.values())
-            if (command.enabled()) handler.register(command.name(), Bundle.get(command.params, ""), Bundle.get(command.description, ""), command);
+            if (command.enabled()) handler.register(command.name(), get(command.params, ""), get(command.description, ""), command);
     }
 
     @Override

@@ -5,7 +5,7 @@ import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import rewrite.components.Config.Gamemode;
 
-import static rewrite.PluginVars.config;
+import static rewrite.PluginVars.*;
 
 public enum ClientCommands implements CommandRunner<Player> {
     help((args, player) -> {

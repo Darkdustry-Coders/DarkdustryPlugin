@@ -4,7 +4,7 @@ import arc.func.Cons;
 import mindustry.game.EventType.*;
 import rewrite.DarkdustryPlugin;
 
-import static pandorum.util.PlayerUtils.sendToChat;
+import static rewrite.components.Bundle.*;
 
 // перечисления названы заглавными буквами не просто так!
 // по их имени находятся классы событий
