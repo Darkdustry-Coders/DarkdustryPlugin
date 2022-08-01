@@ -21,9 +21,12 @@ public class CoreCommand implements CommandRunner<Player> {
         }
 
         Block core = args.length > 0 ? switch (args[0].toLowerCase()) {
-            case "small", "shard", "core-shard" -> Blocks.coreShard;
-            case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
-            case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            case "shard" -> Blocks.coreShard;
+            case "foundation" -> Blocks.coreFoundation;
+            case "nucleus" -> Blocks.coreNucleus;
+            case "bastion" -> Blocks.coreBastion;
+            case "citadel" -> Blocks.coreCitadel;
+            case "acropolis" -> Blocks.coreAcropolis;
             default -> null;
         } : Blocks.coreShard;
 
