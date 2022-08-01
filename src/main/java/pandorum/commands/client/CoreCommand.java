@@ -11,7 +11,6 @@ import pandorum.util.Utils;
 
 import static pandorum.PluginVars.teamsList;
 import static pandorum.util.PlayerUtils.bundled;
-import static pandorum.util.Search.findCore;
 import static pandorum.util.Search.findTeam;
 
 public class CoreCommand implements CommandRunner<Player> {
@@ -21,7 +20,13 @@ public class CoreCommand implements CommandRunner<Player> {
             return;
         }
 
-        Block core = args.length > 0 ? findCore(args[0]) : Blocks.coreShard;
+        Block core = args.length > 0 ? switch (args[0].toLowerCase()) {
+            case "small", "shard", "core-shard" -> Blocks.coreShard;
+            case "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
+            case "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
+            default -> null;
+        } : Blocks.coreShard;
+
         if (core == null) {
             bundled(player, "commands.core.core-not-found");
             return;

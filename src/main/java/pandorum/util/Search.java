@@ -4,7 +4,6 @@ import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
-import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -54,16 +53,6 @@ public class Search {
 
     public static Block findBlock(String name) {
         return Strings.canParsePositiveInt(name) ? content.block(Strings.parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
-    }
-
-    // TODO нам нужен этот метод? Он кринжовый так-то
-    public static Block findCore(String name) {
-        return switch (name.toLowerCase()) {
-            case "s", "small", "shard", "core-shard" -> Blocks.coreShard;
-            case "m", "medium", "foundation", "core-foundation" -> Blocks.coreFoundation;
-            case "b", "big", "nucleus", "core-nucleus" -> Blocks.coreNucleus;
-            default -> null;
-        };
     }
 
     public static UnitType findUnit(String name) {
