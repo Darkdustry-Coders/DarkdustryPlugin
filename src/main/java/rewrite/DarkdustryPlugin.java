@@ -13,22 +13,23 @@ import mindustry.game.EventType.Trigger;
 import mindustry.gen.Groups;
 import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
-import pandorum.features.Effects;
 import rewrite.commands.ClientCommands;
 import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
 import rewrite.components.Config;
 import rewrite.components.Database;
+import rewrite.features.Effects;
 import rewrite.features.Ranks;
-import rewrite.listeners.EventListeners;
+import rewrite.listeners.PluginEvents;
 
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
+import static rewrite.listeners.PluginEvents.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
-    
+
     @Override
     public void init() {
         Fi configFile = dataDirectory.child(configFileName);
@@ -40,17 +41,18 @@ public class DarkdustryPlugin extends Plugin {
             info("Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
 
-        for (EventListeners listener : EventListeners.values()) Events.on(listener.event(), listener::get);
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
-
-        Events.run("HexedGameOver", EventListeners.GameOver);
-        Events.run("CastleGameOver", EventListeners.GameOver);
-
         Ranks.load();
+        PluginEvents.load();
 
-        Database.connect("", config.dbUser, config.dbPassword);
+        // Database.connect("", config.dbUser, config.dbPassword);
 
         Version.build = -1;
+
+        events.each(event -> Events.on(event.type(), event.listener()));
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
+
+        Events.run("HexedGameOver", gameover::run);
+        Events.run("CastleGameOver", gameover::run);
     }
 
     @Override
