@@ -19,4 +19,7 @@ public class PluginVars {
 
     /** Конфигурация сервера. */
     public static Config config;
+
+    /** Список всех предметов, юнитов и команд. */
+    public static String items, units, teams;
 }
