@@ -2,6 +2,7 @@ package rewrite;
 
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
+import arc.util.CommandHandler;
 import rewrite.components.Config;
 import rewrite.components.Config.Gamemode;
 
@@ -38,4 +39,7 @@ public class PluginVars {
 
     /** Список всех предметов, юнитов и команд. */
     public static String items, units, teams;
+
+    /** Кэшированные хэндлеры, которые использовались для регистрации команд. */
+    public static CommandHandler clientCommands, serverCommands, discordCommands;
 }

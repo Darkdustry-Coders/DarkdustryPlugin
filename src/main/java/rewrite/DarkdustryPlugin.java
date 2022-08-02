@@ -14,19 +14,16 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
-import rewrite.commands.ClientCommands;
-import rewrite.commands.DiscordCommands;
-import rewrite.commands.ServerCommands;
-import rewrite.components.Bundle;
-import rewrite.components.Config;
-import rewrite.components.Database;
-import rewrite.components.Icons;
-import rewrite.components.MenuHandler;
+import mindustry.net.Packets.Connect;
+import mindustry.net.Packets.ConnectPacket;
+import rewrite.commands.*;
+import rewrite.components.*;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.Translator;
 import rewrite.features.Ranks.Rank;
 import rewrite.listeners.Filters;
+import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
@@ -56,8 +53,12 @@ public class DarkdustryPlugin extends Plugin {
 
         Version.build = -1;
 
+        net.handleServer(Connect.class, NetHandlers::connect);
+        net.handleServer(ConnectPacket.class, NetHandlers::packet);
+
         netServer.admins.addActionFilter(Filters::action);
         netServer.admins.addChatFilter(Filters::chat);
+        netServer.invalidHandler = NetHandlers::invalide;
 
         Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
         Timer.schedule(() -> Groups.player.each(player -> {
@@ -81,16 +82,19 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
+        clientCommands = handler;
         for (ClientCommands command : ClientCommands.values())
             if (command.enabled()) handler.register(command.name(), get(command.params, ""), get(command.description, ""), command);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
+        serverCommands = handler;
         for (ServerCommands command : ServerCommands.values()) handler.register(command.name(), command.params, command.description, command);
     }
 
     public void registerDiscordCommands(CommandHandler handler) {
+        discordCommands = handler;
         for (DiscordCommands command : DiscordCommands.values()) handler.register(command.name(), command.params, command.description, command);
     }
 

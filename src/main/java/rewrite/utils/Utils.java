@@ -3,6 +3,8 @@ package rewrite.utils;
 import arc.files.Fi;
 import arc.struct.OrderedMap;
 import mindustry.game.Team;
+import mindustry.gen.Player;
+import mindustry.net.NetConnection;
 
 import java.text.*;
 import java.time.*;
@@ -10,6 +12,7 @@ import java.util.*;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 
 public class Utils {
@@ -58,5 +61,20 @@ public class Utils {
                 });
 
         return builder.toString().trim();
+    }
+
+    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
+        String reason = format(key, locale, values);
+        if (duration > 0) reason += format("kick.time", locale, Utils.formatDuration(duration, locale));
+        if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);
+        con.kick(reason, duration);
+    }
+
+    public static void kick(Player player, long duration, boolean showDisclaimer, String key, Object... values) {
+        kick(player.con, duration, showDisclaimer, key, Find.locale(player.locale), values);
+    }
+
+    public static void kick(Player player, boolean showDisclaimer, String key, Object... values) {
+        kick(player, 0, showDisclaimer, key, values);
     }
 }
