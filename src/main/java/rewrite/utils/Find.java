@@ -3,7 +3,6 @@ package rewrite.utils;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Structs;
-import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -12,6 +11,7 @@ import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
+import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Locale;
 
@@ -57,14 +57,6 @@ public class Find {
     }
 
     public static Block core(String name) {
-        return switch (name.toLowerCase()) {
-            case "shard" -> Blocks.coreShard;
-            case "foundation" -> Blocks.coreFoundation;
-            case "nucleus" -> Blocks.coreNucleus;
-            case "bastion" -> Blocks.coreBastion;
-            case "citadel" -> Blocks.coreCitadel;
-            case "acropolis" -> Blocks.coreAcropolis;
-            default -> null; // нормальный метод, не кипишуй дарк
-        };
+        return content.blocks().select(block -> block instanceof CoreBlock).find(block -> block.name.split("-")[1].equalsIgnoreCase(name));
     }
 }
