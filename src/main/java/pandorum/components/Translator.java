@@ -4,6 +4,7 @@ import arc.func.Cons;
 import arc.util.Http;
 import arc.util.Log;
 import com.google.gson.JsonObject;
+import mindustry.io.JsonIO;
 
 import static pandorum.PluginVars.*;
 
@@ -62,7 +63,7 @@ public class Translator {
                 .header("X-RapidAPI-Host", translatorApiHost)
                 .error(throwable -> cons.get(""))
                 .submit(response -> {
-                    String translatedText = gson.fromJson(response.getResultAsString(), JsonObject.class).get("translated_text").getAsString();
+                    String translatedText = JsonIO.json.fromJson(JsonObject.class, response.getResultAsString()).get("translated_text").getAsString();
                     cons.get(translatedText);
                 });
     }
