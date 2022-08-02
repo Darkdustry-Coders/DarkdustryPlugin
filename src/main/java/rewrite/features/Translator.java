@@ -2,10 +2,8 @@ package rewrite.features;
 
 import arc.func.Cons;
 import arc.util.Http;
-import mindustry.io.JsonIO;
+import arc.util.serialization.Jval;
 import rewrite.DarkdustryPlugin;
-
-import com.google.gson.JsonObject;
 
 import static rewrite.PluginVars.*;
 
@@ -60,7 +58,7 @@ public class Translator {
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
-                .error(throwable -> cons.get("")) // TODO: заменить gson.JsonObject на что-то другое
-                .submit(response -> cons.get(JsonIO.json.fromJson(JsonObject.class, response.getResultAsString()).get("translated_text").getAsString()));
+                .error(throwable -> cons.get(""))
+                .submit(response -> cons.get(Jval.read(response.getResultAsString()).getString("translated_text")));
     }
 }
