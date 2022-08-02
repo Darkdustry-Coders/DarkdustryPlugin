@@ -81,5 +81,8 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {});
         Events.on(WithdrawEvent.class, event -> {});
         Events.on(WorldLoadEvent.class, event -> {});
+
+        Events.run("HexedGameOver", () -> gameover.get(null));
+        Events.run("CastleGameOver", () -> gameover.get(null));
     }
 }

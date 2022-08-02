@@ -3,7 +3,6 @@
 
 package rewrite;
 
-import arc.Events;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -25,6 +24,7 @@ import rewrite.components.MenuHandler;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.Ranks.Rank;
+import rewrite.listeners.Filters;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
@@ -52,6 +52,9 @@ public class DarkdustryPlugin extends Plugin {
 
         Version.build = -1;
 
+        netServer.admins.addActionFilter(Filters::action);
+        netServer.admins.addChatFilter(Filters::chat);
+
         Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
         Timer.schedule(() -> Groups.player.each(player -> {
             PlayerData data = getPlayerData(player.uuid());
@@ -68,9 +71,6 @@ public class DarkdustryPlugin extends Plugin {
 
             setPlayerData(data);
         }), 0f, 60f);
-
-        Events.run("HexedGameOver", () -> gameover.get(null));
-        Events.run("CastleGameOver", () -> gameover.get(null));
 
         info("Плагин инициализирован.");
     }
