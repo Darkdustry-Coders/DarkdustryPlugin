@@ -3,8 +3,11 @@ package rewrite.listeners;
 import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.net.Administration.ActionType;
 import mindustry.net.Administration.PlayerAction;
 import rewrite.features.Translator;
+import rewrite.features.history.History;
+import rewrite.features.history.RotateEntry;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
@@ -13,12 +16,8 @@ import static rewrite.components.Database.*;
 public class Filters {
     
     public static boolean action(PlayerAction action) {
-        // if (History.enabled() && action.type == ActionType.rotate) {
-        //     var entry = new RotateEntry(action);
-        //     History.putTileHistory(entry, action.tile);
-        // }
-
-        return true; // TODO: добавить историю
+        if (History.enabled() && action.type == ActionType.rotate) History.put(new RotateEntry(action), action.tile);
+        return true;
     }
 
     public static String chat(Player author, String text) {

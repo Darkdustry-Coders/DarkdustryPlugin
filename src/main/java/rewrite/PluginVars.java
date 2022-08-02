@@ -9,6 +9,9 @@ import static rewrite.components.Config.Gamemode.*;
 
 public class PluginVars {
 
+    /** Максимальное количество записей истории на один тайл. */
+    public static final int maxHistoryCapacity = 6;
+
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
 
