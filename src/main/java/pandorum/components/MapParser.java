@@ -32,9 +32,9 @@ public class MapParser {
                 }
             }
 
-            Log.info("[Darkdustry] Загружено цветов блоков: @.", pixmap.width);
+            Log.infoTag("Darkdustry", "Загружено цветов блоков: " + pixmap.width);
         } catch (Exception e) {
-            Log.err("[Darkdustry] Файл 'block_colors.png' не найден или повреждён", e);
+            Log.errTag("Darkdustry", "Файл 'block_colors.png' не найден или повреждён: " + e);
         }
     }
 
