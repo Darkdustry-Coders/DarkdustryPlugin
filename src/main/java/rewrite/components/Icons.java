@@ -15,7 +15,7 @@ public class Icons {
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136/core/assets/icons/icons.properties").submit(response -> {
+        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136.1/core/assets/icons/icons.properties").submit(response -> {
             for (String line : response.getResultAsString().split("\n")) {
                 String[] values = line.split("\\|")[0].split("=");
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
@@ -28,14 +28,12 @@ public class Icons {
             Team.green.emoji = get("shocked");
             Team.blue.emoji = get("wet");
 
-            DarkdustryPlugin.info("Загружено @ иконок контента", icons.size);
-        });
-    }
+            content.items().each(item -> items += " " + get(item.name) + item.name);
+            content.units().each(unit -> units += " " + get(unit.name) + unit.name);
+            Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
 
-    public static void loadLists() {
-        content.items().each(item -> items += " " + get(item.name) + item.name);
-        content.units().each(unit -> units += " " + get(unit.name) + unit.name);
-        Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
+            DarkdustryPlugin.info("Загружено @ иконок контента.", icons.size);
+        });
     }
 
     public static String get(String key) {

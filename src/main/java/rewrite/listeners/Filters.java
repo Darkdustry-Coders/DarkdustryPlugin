@@ -4,7 +4,9 @@ import arc.util.Log;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
+import rewrite.features.Translator;
 
+import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.components.Database.*;
 
@@ -26,8 +28,8 @@ public class Filters {
 
         Groups.player.each(player -> player != author, player -> {
             PlayerData data = getPlayerData(player.uuid());
-            if (data.translatorLanguage.equals("off")) player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-            else return; // Translator.translate(data.language, stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[])"), author, text));
+            if (data.language.equals("off")) player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+            else Translator.translate(data.language, stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[])"), author, text));
         });
 
         return null;

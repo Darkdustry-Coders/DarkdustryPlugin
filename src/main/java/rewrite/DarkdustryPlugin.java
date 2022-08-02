@@ -20,9 +20,11 @@ import rewrite.commands.ServerCommands;
 import rewrite.components.Bundle;
 import rewrite.components.Config;
 import rewrite.components.Database;
+import rewrite.components.Icons;
 import rewrite.components.MenuHandler;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
+import rewrite.features.Translator;
 import rewrite.features.Ranks.Rank;
 import rewrite.listeners.Filters;
 import rewrite.listeners.PluginEvents;
@@ -44,9 +46,11 @@ public class DarkdustryPlugin extends Plugin {
     public void init() {
         Config.load();
         Bundle.load();
+        Icons.load();
         Ranks.load();
         PluginEvents.load();
         MenuHandler.load();
+        Translator.load();
 
         // Database.connect("", config.dbUser, config.dbPassword); // TODO: дарк просил обратно на Redis бд перевести
 

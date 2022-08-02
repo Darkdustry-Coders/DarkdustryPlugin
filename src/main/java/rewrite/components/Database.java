@@ -78,7 +78,7 @@ public class Database {
             UPDATE players set translatorLanguage = ?, welcomeMessage = ?, alertsEnabled = ?,
               playTime = ?, buildingsBuilt = ?, gamesPlayed = ?, rank = ? WHERE uuid = ?
             """;
-            try (PreparedStatement statement = createPreparedStatement(sql, data.translatorLanguage,
+            try (PreparedStatement statement = createPreparedStatement(sql, data.language,
                     data.welcomeMessage, data.alertsEnabled, data.playTime,
                     data.buildingsBuilt, data.gamesPlayed, data.rank, data.uuid)) {
 
@@ -92,7 +92,7 @@ public class Database {
               playTime, buildingsBuilt, gamesPlayed, rank) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """;
             try (PreparedStatement statement = createPreparedStatement(sql,
-                    data.uuid, data.translatorLanguage, data.welcomeMessage, data.alertsEnabled, data.playTime,
+                    data.uuid, data.language, data.welcomeMessage, data.alertsEnabled, data.playTime,
                     data.buildingsBuilt, data.gamesPlayed, data.rank)) {
 
                 statement.executeUpdate();
@@ -104,7 +104,7 @@ public class Database {
 
     public static class PlayerData {
         public String uuid;
-        public String translatorLanguage = "off";
+        public String language = "off";
 
         public boolean welcomeMessage = true;
         public boolean alertsEnabled = true;

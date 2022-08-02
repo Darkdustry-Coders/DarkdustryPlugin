@@ -1,5 +1,6 @@
 package rewrite;
 
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import rewrite.components.Config;
 import rewrite.components.Config.Gamemode;
@@ -10,6 +11,15 @@ public class PluginVars {
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
+
+    /** Ссылка на API переводчика. */
+    public static final String translatorApiUrl = "https://translo.p.rapidapi.com/api/v3/translate", translatorApiHost = "translo.p.rapidapi.com";
+
+    /** Список всех языков переводчика. */
+    public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
+
+    /** Словарь для перевода локалей миндастри в локали переводчика */
+    public static final OrderedMap<String, String> mindustry2Api = new OrderedMap<>();
 
     /** Язык по умолчанию. */
     public static final String defaultLanguage = "en";
