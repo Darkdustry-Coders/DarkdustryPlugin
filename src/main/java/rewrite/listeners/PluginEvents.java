@@ -2,20 +2,16 @@ package rewrite.listeners;
 
 import arc.struct.ObjectMap;
 import mindustry.game.EventType.*;
-import mindustry.gen.Call;
 import mindustry.net.Administration.Config;
 import rewrite.DarkdustryPlugin;
 import rewrite.components.Database.PlayerData;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
-import rewrite.utils.Find;
 
-import static pandorum.listeners.handlers.MenuHandler.*; // TODO: заменить импорт из пандорума
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-
-import java.util.Locale;
+import static rewrite.components.MenuHandler.*;
 
 @SuppressWarnings("unchecked")
 public class PluginEvents {
@@ -49,11 +45,8 @@ public class PluginEvents {
             // Bot.sendEmbed(botChannel, Color.green, "@ присоединился", Strings.stripColors(event.player.name));
             // app.post(Bot::updateBotStatus); // TODO: добавить бота
 
-            Locale locale = Find.locale(event.player.locale);
-            if (data.welcomeMessage) Call.menu(event.player.con, welcomeMenu,
-                    format("welcome.menu.header", locale),
-                    format("welcome.menu.content", locale, Config.serverName.string(), discordServerUrl),
-                    new String[][] { { format("ui.menus.close", locale) }, { format("welcome.menu.disable", locale) } });
+            if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
+                    new String[][] { { "ui.menus.close" }, { "welcome.menu.disable" } }, null, Config.serverName.string(), discordServerUrl);
         });
         register(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);

@@ -13,6 +13,7 @@ import pandorum.components.Gamemode;
 import pandorum.components.PluginConfig;
 import pandorum.vote.VoteKickSession;
 import pandorum.vote.VoteSession;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import static mindustry.Vars.tilesize;
@@ -74,6 +75,7 @@ public class PluginVars {
 
     /** Порт для подключения базы данных Jedis. */
     public static final int jedisPoolPort = 6379;
+    public static Jedis jedis;
 
     /** Команда для наблюдателей. */
     public static final Team spectateTeam = Team.derelict;
