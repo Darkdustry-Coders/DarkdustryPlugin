@@ -48,6 +48,7 @@ public class DarkdustryPlugin extends Plugin {
         PluginEvents.load();
         MenuHandler.load();
         Translator.load();
+        MapParser.load();
 
         Database.connect();
 
