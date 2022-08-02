@@ -48,11 +48,11 @@ public class DarkdustryPlugin extends Plugin {
 
         Version.build = -1;
 
-        events.each(event -> Events.on(event.type(), event.listener()));
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
+        events.each((type, event) -> Events.on(type, event.listener()));
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove)); // TODO: Timer.schedule
 
-        Events.run("HexedGameOver", gameover::run);
-        Events.run("CastleGameOver", gameover::run);
+        Events.run("HexedGameOver", gameover);
+        Events.run("CastleGameOver", gameover);
     }
 
     @Override
