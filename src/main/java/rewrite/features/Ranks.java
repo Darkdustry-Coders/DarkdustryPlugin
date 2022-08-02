@@ -21,6 +21,7 @@ public class Ranks {
         EffectsPack pro = new EffectsPack(Fx.instBomb, Fx.instHit, Fx.instTrail);
 
         player = new Rank() {{
+            tag = "";
             name = "player";
             effects = def;
 
