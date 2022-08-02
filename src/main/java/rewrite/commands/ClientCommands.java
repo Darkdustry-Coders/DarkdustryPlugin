@@ -32,7 +32,7 @@ public enum ClientCommands implements CommandRunner<Player> {
     tr((args, player) -> {
 
     }),
-    start((args, player) -> {
+    stats((args, player) -> {
 
     }),
     rank((args, player) -> {
