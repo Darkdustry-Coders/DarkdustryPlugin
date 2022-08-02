@@ -4,6 +4,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.gen.Player;
 
 import static rewrite.components.Database.*;
 
@@ -35,6 +36,7 @@ public class Ranks {
                     next = veteran = new Rank() {{
                         tag = "[accent]<[gold]\uE809[]>[] ";
                         name = "veteran";
+                        effects = def;
                         req = new Requirements(1500, 100000, 100);
                     }};
                 }};
@@ -58,13 +60,17 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
-    public static void setRank(String uuid, Rank rank) {
+    public static void setRank(Player player, Rank rank) {
+        player.name(rank.tag + player.getInfo().lastName);
+        cache.put(player.uuid(), rank);
+    }
+
+    public static void setRankNet(String uuid, Rank rank) {
         PlayerData data = getPlayerData(uuid);
         if (data == null) return;
 
         data.rank = rank.id;
         setPlayerData(data);
-        cache.put(uuid, rank);
     }
 
     public static class Rank {

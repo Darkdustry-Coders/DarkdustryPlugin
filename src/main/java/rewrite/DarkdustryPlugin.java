@@ -13,9 +13,11 @@ import mindustry.game.EventType.Trigger;
 import mindustry.gen.Groups;
 import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
+import pandorum.listeners.handlers.MenuHandler;
 import rewrite.commands.ClientCommands;
 import rewrite.commands.DiscordCommands;
 import rewrite.commands.ServerCommands;
+import rewrite.components.Bundle;
 import rewrite.components.Config;
 import rewrite.components.Database;
 import rewrite.features.Effects;
@@ -41,8 +43,10 @@ public class DarkdustryPlugin extends Plugin {
             info("Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
 
+        Bundle.load();
         Ranks.load();
         PluginEvents.load();
+        MenuHandler.load(); // TODO: заменить импорт из пандорума
 
         // Database.connect("", config.dbUser, config.dbPassword);
 
@@ -70,8 +74,16 @@ public class DarkdustryPlugin extends Plugin {
         for (DiscordCommands command : DiscordCommands.values()) handler.register(command.name(), command.params, command.description, command);
     }
 
+    public static void info(String text) {
+        Log.infoTag("Darkdustry", text);
+    }
+
     public static void info(String text, Object... values) {
         Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void error(String text) {
+        Log.errTag("Darkdustry", text);
     }
 
     public static void error(String text, Object... values) {

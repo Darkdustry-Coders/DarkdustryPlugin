@@ -1,10 +1,14 @@
 package rewrite.utils;
 
+import arc.files.Fi;
+import arc.struct.Seq;
 import arc.util.Structs;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.io.SaveIO;
+import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -40,6 +44,16 @@ public class Find {
 
     public static Block block(String name) {
         return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
+    }
+
+    public static Map map(String name) {
+        Seq<Map> mapsList = maps.customMaps();
+        return canParsePositiveInt(name) && parseInt(name) < mapsList.size ? mapsList.get(parseInt(name)) : mapsList.find(map -> deepEquals(map.name(), name));
+    }
+
+    public static Fi save(String name) {
+        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
+        return canParsePositiveInt(name) && parseInt(name) < savesList.size ? savesList.get(parseInt(name)) : savesList.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Block core(String name) {

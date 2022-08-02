@@ -8,6 +8,9 @@ import static rewrite.components.Config.Gamemode.*;
 
 public class PluginVars {
 
+    /** Ссылка на наш Discord сервер */
+    public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
+
     /** Язык по умолчанию. */
     public static final String defaultLanguage = "en";
 

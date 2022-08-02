@@ -1,6 +1,15 @@
 package rewrite.commands;
 
 import arc.func.Cons;
+import arc.util.Structs;
+import mindustry.game.Gamemode;
+import mindustry.maps.Map;
+import mindustry.maps.MapException;
+import rewrite.DarkdustryPlugin;
+import rewrite.utils.Find;
+
+import static arc.Core.*;
+import static mindustry.Vars.*;
 
 public enum ServerCommands implements Cons<String[]> {
     help("Список всех команд.", (args) -> {
@@ -10,13 +19,52 @@ public enum ServerCommands implements Cons<String[]> {
 
     }),
     exit("Выключить сервер.", (args) -> {
-
+        DarkdustryPlugin.info("Выключаю сервер...");
+        System.exit(2);
     }),
     stop("Остановить сервер.", (args) -> {
 
     }),
     host("Запустить сервер на выбранной карте.", "[карта] [режим]", (args) -> {
+        if (!state.isMenu()) {
+            DarkdustryPlugin.error("Сервер уже запущен.");
+            return;
+        }
 
+        Gamemode mode = args.length > 1 ? Structs.find(Gamemode.all, m -> m.name().equalsIgnoreCase(args[1])) : Gamemode.survival;
+        if (mode == null) {
+            DarkdustryPlugin.error("Режим игры '@' не найден.", args[1]);
+            return;
+        }
+
+        Map map;
+        if (args.length > 0) {
+            map = Find.map(args[0]);
+            if (map == null) {
+                DarkdustryPlugin.error("Карта '@' не найдена.", args[0]);
+                return;
+            }
+        } else {
+            map = maps.getShuffleMode().next(mode, state.map);
+            DarkdustryPlugin.info("Случайным образом выбрана карта: '@'.", map.name());
+        }
+
+        logic.reset();
+
+        app.post(() -> {
+            try {
+                DarkdustryPlugin.info("Загружаю карту...");
+
+                world.loadMap(map, map.applyRules(mode));
+                state.rules = map.applyRules(mode);
+                logic.play();
+                netServer.openServer();
+
+                DarkdustryPlugin.info("Карта загружена.");
+            } catch (MapException e) {
+                DarkdustryPlugin.error("@: @", e.map.name(), e.getMessage());
+            }
+        });
     });
 
     public final String description;
