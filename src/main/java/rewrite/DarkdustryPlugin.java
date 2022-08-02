@@ -52,7 +52,6 @@ public class DarkdustryPlugin extends Plugin {
 
         Version.build = -1;
 
-        events.each((type, event) -> Events.on(type, event::listener));
         Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
         Timer.schedule(() -> Groups.player.each(player -> {
             PlayerData data = getPlayerData(player.uuid());
@@ -70,8 +69,8 @@ public class DarkdustryPlugin extends Plugin {
             setPlayerData(data);
         }), 0f, 60f);
 
-        Events.run("HexedGameOver", gameover);
-        Events.run("CastleGameOver", gameover);
+        Events.run("HexedGameOver", () -> gameover.get(null));
+        Events.run("CastleGameOver", () -> gameover.get(null));
 
         info("Плагин инициализирован.");
     }
