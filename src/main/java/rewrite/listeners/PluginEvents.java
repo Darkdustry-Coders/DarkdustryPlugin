@@ -1,6 +1,5 @@
 package rewrite.listeners;
 
-import arc.func.Cons;
 import arc.struct.ObjectMap;
 import mindustry.game.EventType.*;
 import mindustry.gen.Call;
@@ -105,8 +104,8 @@ public class PluginEvents {
             get(null);
         }
 
-        default <B> Cons<B> listener() {
-            return event -> get((T) event);
+        default void listener(Object event) {
+            get((T) event);
         }
     }
 }
