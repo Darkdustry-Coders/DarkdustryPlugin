@@ -51,7 +51,7 @@ public class Bundle {
         try {
             ResourceBundle bundle = bundles.get(locale, bundles.get(defaultLocale));
             return bundle.getString(key);
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException ignored) {
             return defaultValue;
         }
     }

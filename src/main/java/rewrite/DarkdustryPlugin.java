@@ -52,7 +52,7 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         Translator.load();
 
-        // Database.connect("", config.dbUser, config.dbPassword); // TODO: дарк просил обратно на Redis бд перевести
+        Database.connect();
 
         Version.build = -1;
 

@@ -16,6 +16,12 @@ public class Config {
     /** Порт Хаба. */
     public int hubPort = 6567;
 
+    /** Имя пользователя базы данных. */
+    public String jedisIp = "localhost";
+
+    /** Пароль пользователя базы данных. */
+    public int jedisPort = 6379;
+
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
 
@@ -39,12 +45,6 @@ public class Config {
 
     /** Ключ API для переводчика чата. */
     public String translatorApiKey = "key";
-
-    /** Имя пользователя базы данных. */
-    public String dbUser = "user";
-
-    /** Пароль пользователя базы данных. */
-    public String dbPassword = "password";
 
     public static void load() {
         Fi file = dataDirectory.child(configFileName);

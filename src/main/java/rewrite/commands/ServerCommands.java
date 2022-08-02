@@ -61,8 +61,8 @@ public enum ServerCommands implements Cons<String[]> {
                 netServer.openServer();
 
                 DarkdustryPlugin.info("Карта загружена.");
-            } catch (MapException e) {
-                DarkdustryPlugin.error("@: @", e.map.name(), e.getMessage());
+            } catch (MapException exception) {
+                DarkdustryPlugin.error("@: @", exception.map.name(), exception.getMessage());
             }
         });
     });
