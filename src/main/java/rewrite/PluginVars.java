@@ -13,6 +13,9 @@ public class PluginVars {
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
 
+    /** Список uuid игроков, просматривающих историю в данный момент. */
+    public static final Seq<String> activeHistory = new Seq<>();
+
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
 

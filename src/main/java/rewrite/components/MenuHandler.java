@@ -24,7 +24,7 @@ public class MenuHandler {
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option != 1) return;
-            PlayerData data = getPlayerData(player.uuid());
+            PlayerData data = getPlayerData(player);
             data.welcomeMessage = false;
             bundled(player, "welcome.disabled");
             setPlayerData(data);

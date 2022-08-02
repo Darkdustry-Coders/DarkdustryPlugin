@@ -63,7 +63,7 @@ public class DarkdustryPlugin extends Plugin {
 
         Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
         Timer.schedule(() -> Groups.player.each(player -> {
-            PlayerData data = getPlayerData(player.uuid());
+            PlayerData data = getPlayerData(player);
             data.playTime++;
 
             Rank rank = Ranks.getRank(data.rank);

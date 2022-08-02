@@ -8,6 +8,9 @@ import rewrite.DarkdustryPlugin;
 import rewrite.components.Database.PlayerData;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
+import rewrite.features.history.*;
+import rewrite.features.history.History.HistoryStack;
+import rewrite.utils.Find;
 
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
@@ -27,13 +30,23 @@ public class PluginEvents {
                 default -> {} // без этой строки vscode кидает ошибку
             }
         });
-        Events.on(BlockBuildEndEvent.class, event -> {});
+        Events.on(BlockBuildEndEvent.class, event -> {
+            if (!event.unit.isPlayer()) return;
+            if (History.enabled() && event.tile.build != null) History.put(new BlockEntry(event), event.tile);
+            if (event.breaking) return;
+
+            PlayerData data = getPlayerData(event.unit.getPlayer());
+            data.buildingsBuilt++;
+            setPlayerData(data);
+        });
         Events.on(BuildSelectEvent.class, event -> {});
         Events.on(ConfigEvent.class, event -> {});
-        Events.on(DepositEvent.class, event -> {});
-        Events.on(GameOverEvent.class, event -> {});
+        Events.on(DepositEvent.class, event -> {
+            if (History.enabled() && event.player != null) History.put(new DepositEntry(event), event.tile.tile);
+        });
+        Events.on(GameOverEvent.class, gameover = event -> {});
         Events.on(PlayerJoin.class, event -> {
-            PlayerData data = getPlayerData(event.player.uuid());
+            PlayerData data = getPlayerData(event.player);
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             Effects.onJoin(event.player);
@@ -78,9 +91,23 @@ public class PluginEvents {
             //     sendToChat("commands.vnw.left", event.player.name, votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         });
         Events.on(ServerLoadEvent.class, event -> {});
-        Events.on(TapEvent.class, event -> {});
-        Events.on(WithdrawEvent.class, event -> {});
-        Events.on(WorldLoadEvent.class, event -> {});
+        Events.on(TapEvent.class, event -> {
+            if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;
+
+            StringBuilder result = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
+            HistoryStack stack = History.get(event.tile.array());
+
+            if (stack.isEmpty()) result.append(format("history.empty", Find.locale(event.player.locale)));
+            else stack.each(entry -> result.append("\n").append(entry.getMessage(event.player)));
+
+            event.player.sendMessage(result.toString());
+        });
+        Events.on(WithdrawEvent.class, event -> {
+            if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
+        });
+        Events.on(WorldLoadEvent.class, event -> {
+            History.clear();
+        });
 
         Events.run("HexedGameOver", () -> gameover.get(null));
         Events.run("CastleGameOver", () -> gameover.get(null));

@@ -7,6 +7,7 @@ import rewrite.DarkdustryPlugin;
 
 import static rewrite.PluginVars.*;
 
+import mindustry.gen.Player;
 import mindustry.io.JsonIO;
 
 public class Database {
@@ -22,6 +23,10 @@ public class Database {
         } catch (Exception exception) {
             DarkdustryPlugin.error("Не удалось подключиться к базе данных.", exception);
         }
+    }
+
+    public static PlayerData getPlayerData(Player player) {
+        return getPlayerData(player.uuid());
     }
 
     public static PlayerData getPlayerData(String uuid) {
