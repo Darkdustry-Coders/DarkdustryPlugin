@@ -3,7 +3,6 @@ package pandorum.discord;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 import pandorum.features.Authme;
 
 import java.awt.*;
@@ -14,7 +13,7 @@ import static pandorum.discord.Bot.isAdmin;
 public class ButtonListener extends ListenerAdapter {
 
     @Override
-    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+    public void onButtonInteraction(ButtonInteractionEvent event) {
         if (!loginWaiting.containsKey(event.getMessage())) return;
 
         if (!isAdmin(event.getMember())) {
