@@ -5,6 +5,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ActionType;
 import mindustry.net.Administration.PlayerAction;
+import rewrite.discord.Bot;
 import rewrite.features.Translator;
 import rewrite.features.history.History;
 import rewrite.features.history.RotateEntry;
@@ -23,7 +24,7 @@ public class Filters {
     public static String chat(Player author, String text) {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-        // Bot.sendMessage(botChannel, "@ » @", Strings.stripColors(author.name), Strings.stripColors(text));
+        Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
 
         Groups.player.each(player -> player != author, player -> {
             PlayerData data = getPlayerData(player);

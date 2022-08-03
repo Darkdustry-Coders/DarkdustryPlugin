@@ -6,12 +6,17 @@ import mindustry.game.EventType.*;
 import mindustry.net.Administration.Config;
 import rewrite.DarkdustryPlugin;
 import rewrite.components.Database.PlayerData;
+import rewrite.discord.Bot;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.history.*;
 import rewrite.features.history.History.HistoryStack;
 import rewrite.utils.Find;
 
+import java.awt.Color;
+
+import static arc.Core.*;
+import static arc.util.Strings.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
@@ -54,8 +59,8 @@ public class PluginEvents {
             sendToChat("events.player.join", event.player.name);
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
         
-            // Bot.sendEmbed(botChannel, Color.green, "@ присоединился", Strings.stripColors(event.player.name));
-            // app.post(Bot::updateBotStatus); // TODO: добавить бота
+            Bot.sendEmbed(Bot.botChannel, Color.green, "@ присоединился", stripColors(event.player.name));
+            app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
                     new String[][] { { "ui.menus.close" }, { "welcome.menu.disable" } }, null, Config.serverName.string(), discordServerUrl);
@@ -65,8 +70,8 @@ public class PluginEvents {
             DarkdustryPlugin.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.leave", event.player.name);
 
-            // Bot.sendEmbed(botChannel, Color.red, "@ отключился", Strings.stripColors(event.player.name));
-            // app.post(Bot::updateBotStatus);
+            Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
+            app.post(Bot::updateBotStatus);
 
             // activeHistoryPlayers.remove(event.player.uuid());
             // activeSpectatingPlayers.remove(event.player.uuid());

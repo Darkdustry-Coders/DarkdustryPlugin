@@ -18,6 +18,7 @@ import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import rewrite.commands.*;
 import rewrite.components.*;
+import rewrite.discord.Bot;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.Translator;
@@ -51,6 +52,7 @@ public class DarkdustryPlugin extends Plugin {
         MapParser.load();
 
         Database.connect();
+        Bot.connect();
 
         Version.build = -1;
 
@@ -94,7 +96,7 @@ public class DarkdustryPlugin extends Plugin {
         for (ServerCommands command : ServerCommands.values()) handler.register(command.name(), command.params, command.description, command);
     }
 
-    public void registerDiscordCommands(CommandHandler handler) {
+    public static void registerDiscordCommands(CommandHandler handler) {
         discordCommands = handler;
         for (DiscordCommands command : DiscordCommands.values()) handler.register(command.name(), command.params, command.description, command);
     }
@@ -105,6 +107,10 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void info(String text, Object... values) {
         Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void disc(String text, Object... values) {
+        Log.infoTag("Discord", Strings.format(text, values));
     }
 
     public static void error(String text) {

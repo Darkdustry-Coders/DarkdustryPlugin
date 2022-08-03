@@ -1,7 +1,7 @@
 package rewrite.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import pandorum.discord.MessageContext;
+import rewrite.discord.MessageContext;
 
 public enum DiscordCommands implements CommandRunner<MessageContext> {
     help("Список всех команд.", (args, context) -> {
