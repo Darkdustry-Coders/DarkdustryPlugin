@@ -51,7 +51,7 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     // TODO это конечно хорошо, но тут нету блоков из в7. У них свои значения конфигов. Надо их добавить.
-    @Override
+    @Override // емлять, дарк, что это?!
     public String getMessage(Player player) {
         Block block = content.block(blockID);
         String date = formatDate(time);

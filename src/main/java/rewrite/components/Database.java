@@ -1,38 +1,52 @@
 package rewrite.components;
 
-import mindustry.io.JsonIO;
-import redis.clients.jedis.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import rewrite.DarkdustryPlugin;
 
-import static pandorum.PluginVars.*;
+import static rewrite.PluginVars.*;
+
+import mindustry.gen.Player;
+import mindustry.io.JsonIO;
 
 public class Database {
 
+    public static JedisPool jedisPool;
+    public static Jedis jedis;
+
     public static void connect() {
         try {
-            jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", jedisPoolPort);
-            jedisPool.getResource().ping();
-            DarkdustryPlugin.info( "База данных успешно подключена.");
-        } catch (Exception e) {
-            DarkdustryPlugin.error("Не удалось подключиться к базе данных: @", e.getMessage());
+            jedisPool = new JedisPool(new JedisPoolConfig(), config.jedisIp, config.jedisPort);
+            jedis = jedisPool.getResource();
+            DarkdustryPlugin.info("База данных успешно подключена.");
+        } catch (Exception exception) {
+            DarkdustryPlugin.error("Не удалось подключиться к базе данных: @", exception);
         }
+    }
+
+    public static PlayerData getPlayerData(Player player) {
+        return getPlayerData(player.uuid());
     }
 
     public static PlayerData getPlayerData(String uuid) {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.exists(uuid) ? JsonIO.json.fromJson(PlayerData.class, jedis.get(uuid)) : new PlayerData(uuid);
+        } catch (Exception ignored) {
+            return new PlayerData(uuid);
         }
     }
 
-    public static void setPlayerData(String uuid, PlayerData data) {
+    public static void setPlayerData(PlayerData data) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(uuid, JsonIO.json.toJson(data));
-        }
+            jedis.set(data.uuid, JsonIO.json.toJson(data));
+        } catch (Exception ignored) {}
     }
 
     public static class PlayerData {
+
         public String uuid;
-        public String translatorLanguage = "off";
+        public String language = "off";
 
         public boolean welcomeMessage = true;
         public boolean alertsEnabled = true;

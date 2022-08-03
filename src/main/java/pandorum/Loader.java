@@ -11,6 +11,7 @@ import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.Call;
 import mindustry.graphics.Pal;
+import mindustry.io.JsonIO;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
@@ -49,10 +50,10 @@ public class Loader {
     public static void loadConfig() {
         Fi configFile = dataDirectory.child(configFileName);
         if (configFile.exists()) {
-            config = gson.fromJson(configFile.reader(), PluginConfig.class);
+            config = JsonIO.json.fromJson(PluginConfig.class, configFile.reader());
             Log.info("[Darkdustry] Конфигурация загружена. (@)", configFile.absolutePath());
         } else {
-            configFile.writeString(gson.toJson(config = new PluginConfig()));
+            configFile.writeString(JsonIO.json.toJson(config = new PluginConfig()));
             Log.info("[Darkdustry] Файл конфигурации сгенерирован. (@)", configFile.absolutePath());
         }
     }

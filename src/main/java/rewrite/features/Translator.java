@@ -1,15 +1,20 @@
-package pandorum.components;
+package rewrite.features;
 
 import arc.func.Cons;
+import arc.struct.StringMap;
 import arc.util.Http;
-import arc.util.Log;
+import arc.util.Strings;
 import arc.util.serialization.Jval;
+import rewrite.DarkdustryPlugin;
 
-import static pandorum.PluginVars.*;
+import static rewrite.PluginVars.*;
 
 public class Translator {
 
-    public static void loadLanguages() {
+    public static int left = 50000;
+    public static StringMap cache = new StringMap();
+
+    public static void load() {
         translatorLanguages.putAll(
                 "id", "Indonesia",
                 "da", "Dansk",
@@ -39,31 +44,30 @@ public class Translator {
                 "th", "ไทย",
                 "zh", "简体中文",
                 "ja", "日本語",
-                "ko", "한국어"
-        );
+                "ko", "한국어");
 
-        mindustryLocales2Api.putAll(
+        mindustry2Api.putAll(
                 "in_ID", "id",
                 "nl_BE", "nl",
                 "pt_BR", "pt",
                 "pt_PT", "pt",
                 "uk_UA", "uk",
                 "zh_CN", "zh",
-                "zh_TW", "zh"
-        );
+                "zh_TW", "zh");
 
-        Log.info("[Darkdustry] Загружено языков для переводчика: @.", translatorLanguages.size);
+        DarkdustryPlugin.info("Загружено @ языков для переводчика.", translatorLanguages.size);
     }
 
     public static void translate(String to, String text, Cons<String> cons) {
-        Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
+        if (!cache.containsKey(to)) Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
-                .error(throwable -> cons.get(""))
+                .error(throwable -> cons.get("Requests left:" + (left = 0)))
                 .submit(response -> {
-                    String translatedText = Jval.read(response.getResultAsString()).getString("translated_text");
-                    cons.get(translatedText);
+                    left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
+                    cache.put(to, Jval.read(response.getResultAsString()).getString("translated_text"));
                 });
+        cons.get(cache.get(to));
     }
 }

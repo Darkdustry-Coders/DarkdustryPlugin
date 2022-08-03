@@ -1,5 +1,11 @@
 package rewrite.components;
 
+import arc.files.Fi;
+import mindustry.io.JsonIO;
+import rewrite.DarkdustryPlugin;
+
+import static mindustry.Vars.*;
+import static mindustry.net.Administration.Config.*;
 import static rewrite.PluginVars.*;
 
 public class Config {
@@ -9,6 +15,12 @@ public class Config {
 
     /** Порт Хаба. */
     public int hubPort = 6567;
+
+    /** Имя пользователя базы данных. */
+    public String jedisIp = "localhost";
+
+    /** Пароль пользователя базы данных. */
+    public int jedisPort = 6379;
 
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
@@ -34,11 +46,24 @@ public class Config {
     /** Ключ API для переводчика чата. */
     public String translatorApiKey = "key";
 
-    /** Имя пользователя базы данных. */
-    public String dbUser = "user";
+    public static void load() {
+        Fi file = dataDirectory.child(configFileName);
+        if (file.exists()) {
+            config = JsonIO.json.fromJson(Config.class, file.reader());
+            DarkdustryPlugin.info("Конфигурация загружена. (@)", file.absolutePath());
+        } else {
+            file.writeString(JsonIO.json.toJson(config = new Config()));
+            DarkdustryPlugin.info("Файл конфигурации сгенерирован. (@)", file.absolutePath());
+        }
 
-    /** Пароль пользователя базы данных. */
-    public String dbPassword = "password";
+        motd.set("off");
+        interactRateWindow.set(3);
+        interactRateLimit.set(50);
+        interactRateKick.set(1000);
+        showConnectMessages.set(false);
+        logging.set(true);
+        strict.set(true);
+    }
 
     public enum Gamemode {
         attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower, industry;
