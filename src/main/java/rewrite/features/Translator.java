@@ -1,13 +1,18 @@
 package rewrite.features;
 
 import arc.func.Cons;
+import arc.struct.StringMap;
 import arc.util.Http;
+import arc.util.Strings;
 import arc.util.serialization.Jval;
 import rewrite.DarkdustryPlugin;
 
 import static rewrite.PluginVars.*;
 
 public class Translator {
+
+    public static int left = 50000;
+    public static StringMap cache = new StringMap();
 
     public static void load() {
         translatorLanguages.putAll(
@@ -54,11 +59,15 @@ public class Translator {
     }
 
     public static void translate(String to, String text, Cons<String> cons) {
-        Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
+        if (!cache.containsKey(to)) Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
-                .error(throwable -> cons.get(""))
-                .submit(response -> cons.get(Jval.read(response.getResultAsString()).getString("translated_text")));
+                .error(throwable -> cons.get("Requests left:" + (left = 0)))
+                .submit(response -> {
+                    left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
+                    cache.put(to, Jval.read(response.getResultAsString()).getString("translated_text"));
+                });
+        cons.get(cache.get(to));
     }
 }

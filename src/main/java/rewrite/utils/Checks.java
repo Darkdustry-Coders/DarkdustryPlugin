@@ -24,8 +24,8 @@ public class Checks {
         return state.isMenu();
     }
 
-    public static boolean notFound(Gamemode mode, String name) {
-        if (mode == null) DarkdustryPlugin.error("Режим игры '@' не найден.", name);
+    public static boolean notFound(Gamemode mode, String[] name) {
+        if (mode == null) DarkdustryPlugin.error("Режим игры '@' не найден.", name[1]);
         return mode == null;
     }
 

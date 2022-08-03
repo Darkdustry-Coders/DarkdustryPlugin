@@ -26,10 +26,11 @@ public class Filters {
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
 
+        Translator.cache.clear();
         Groups.player.each(player -> player != author, player -> {
             PlayerData data = getPlayerData(player);
-            if (data.language.equals("off")) player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-            else Translator.translate(data.language, stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + (translated.isBlank() ? "" : " [white]([lightgray]" + translated + "[])"), author, text));
+            if (data.language.equals("off") || Translator.left == 0) player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+            else Translator.translate(data.language, stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([lightgray]" + translated + "[])", author, text));
         });
 
         return null;

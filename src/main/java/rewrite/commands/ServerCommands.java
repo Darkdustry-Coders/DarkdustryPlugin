@@ -30,7 +30,7 @@ public enum ServerCommands implements Cons<String[]> {
         if (isLanuched()) return;
 
         Gamemode mode = args.length > 1 ? Structs.find(Gamemode.all, m -> m.name().equalsIgnoreCase(args[1])) : Gamemode.survival;
-        if (notFound(mode, args[1])) return;
+        if (notFound(mode, args)) return;
 
         Map map;
         if (args.length > 0) {
