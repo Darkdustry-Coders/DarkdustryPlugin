@@ -73,7 +73,7 @@ public class PluginEvents {
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
-            // activeHistoryPlayers.remove(event.player.uuid());
+            activeHistory.remove(event.player.uuid());
             // activeSpectatingPlayers.remove(event.player.uuid());
 
             // if (currentVoteKick != null && event.player == currentVoteKick.target()) {
@@ -95,7 +95,10 @@ public class PluginEvents {
             // if (votesVnw.remove(event.player.uuid())) 
             //     sendToChat("commands.vnw.left", event.player.name, votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
         });
-        Events.on(ServerLoadEvent.class, event -> {});
+        Events.on(ServerLoadEvent.class, event -> {
+            DarkdustryPlugin.info("Сервер готов к работе");
+            Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен.");
+        });
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;
 

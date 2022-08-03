@@ -28,7 +28,7 @@ public class MapParser {
 
             DarkdustryPlugin.info("Загружено @ цветов блоков.", pixmap.width);
         } catch (Exception exception) {
-            DarkdustryPlugin.error("Файл block_colors.png не найден или повреждён: ", exception);
+            DarkdustryPlugin.error("Файл block_colors.png не найден или повреждён: @", exception);
         }
     }
 

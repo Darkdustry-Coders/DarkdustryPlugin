@@ -79,8 +79,6 @@ public class DarkdustryPlugin extends Plugin {
 
             setPlayerData(data);
         }), 0f, 60f);
-
-        info("Плагин инициализирован.");
     }
 
     @Override

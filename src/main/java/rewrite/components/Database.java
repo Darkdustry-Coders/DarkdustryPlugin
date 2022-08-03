@@ -21,7 +21,7 @@ public class Database {
             jedis = jedisPool.getResource();
             DarkdustryPlugin.info("База данных успешно подключена.");
         } catch (Exception exception) {
-            DarkdustryPlugin.error("Не удалось подключиться к базе данных.", exception);
+            DarkdustryPlugin.error("Не удалось подключиться к базе данных: @", exception);
         }
     }
 
