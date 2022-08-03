@@ -7,8 +7,7 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static rewrite.components.Bundle.format;
-import static rewrite.components.Bundle.get;
+import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 
 public class Ranks {
@@ -51,7 +50,7 @@ public class Ranks {
         }};
 
         developer = new Rank() {{
-            tag = "[accent]<[#86dca2]>[] ";
+            tag = "[accent]<[#86dca2]\uE816[]>[] ";
             name = "developer";
             effects = Effects.proPack; // тут полюбому будут эти эффекты, ибо я хочу их себе
         }};
@@ -63,13 +62,13 @@ public class Ranks {
         }};
 
         console = new Rank() {{
-            tag = "[accent]<[#8d56b1]>[] ";
+            tag = "[accent]<[#8d56b1]\uE85D[]>[] ";
             name = "console";
             effects = Effects.superPack;
         }};
         
         owner = new Rank() {{
-            tag = "[accent]<[#195080]>[] ";
+            tag = "[accent]<[#195080]\uE810[]>[] ";
             name = "owner";
             effects = Effects.superPack;
         }};
