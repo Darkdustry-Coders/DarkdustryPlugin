@@ -11,6 +11,7 @@ import rewrite.discord.MessageContext;
 
 import java.awt.Color;
 
+import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.components.Bundle.*;
 
@@ -46,6 +47,18 @@ public class Checks {
 
     public static boolean notAdmin(ButtonInteractionEvent event) {
         return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue());
+    }
+
+    public static boolean notPage(Player player, String[] page) {
+        return check(page.length > 0 && !canParseInt(page[0]), player, "commands.page-not-int");
+    }
+
+    public static boolean notPageDs(MessageContext context, String[] page) {
+        return check(page.length > 0 && !canParseInt(page[0]), context, ":interrobang: Страница должна быть числом.", "Зачем ты это делаешь?");
+    }
+
+    public static boolean notPageDs(MessageContext context, int page, int pages) {
+        return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
     }
 
     private static boolean check(boolean result, Runnable todo) {

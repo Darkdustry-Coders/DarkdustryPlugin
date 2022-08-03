@@ -2,11 +2,13 @@ package rewrite.commands;
 
 import arc.Events;
 import arc.func.Boolp;
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
@@ -16,6 +18,7 @@ import rewrite.discord.MessageContext;
 import java.awt.Color;
 
 import static arc.Core.*;
+import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.utils.Checks.*;
@@ -38,7 +41,27 @@ public enum DiscordCommands implements CommandRunner<MessageContext> {
         context.info(":desktop: " + stripAll(Config.serverName.string()), "IP: @:@", config.hubIp, Config.port.num());
     }),
     players("Список всех игроков на сервере.", "[страница]", (args, context) -> {
+        if (notPageDs(context, args)) return;
+        if (Groups.player.isEmpty()) {
+            context.info(":satellite: На сервере нет игроков.");
+            return;
+        }
 
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Mathf.ceil(Groups.player.size() / 16f);
+        if (notPageDs(context, page, pages)) return;
+
+        StringBuilder players = new StringBuilder();
+        Seq<Player> list = Groups.player.copy(new Seq<>());
+        for (int i = 16 * (page - 1); i < Math.min(16 * page, list.size); i++) {
+            Player player = list.get(i);
+            players.append("**").append(i + 1).append(".** ").append(stripColors(player.name)).append(" (ID: ").append(player.id).append(")\n");
+        }
+
+        context.sendEmbed(new EmbedBuilder()
+                .setColor(Color.cyan)
+                .setTitle(format(":satellite: Всего игроков на сервере: @", list.size))
+                .setDescription(players.toString())
+                .setFooter(format("Страница @ / @", page, pages)).build());
     }),
     status("Состояние сервера.", (args, context) -> {
         if (isMenu(context)) return;
