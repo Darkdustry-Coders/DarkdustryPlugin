@@ -6,13 +6,10 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Player;
 
-import java.util.Locale;
-
-import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 
 public class Ranks {
-
+    
     public static Rank player, active, activePlus, veteran, contributor, admin;
     public static ObjectMap<String, Rank> cache = new ObjectMap<>();
 
@@ -21,7 +18,6 @@ public class Ranks {
         EffectsPack pro = new EffectsPack(Fx.instBomb, Fx.instHit, Fx.instTrail);
 
         player = new Rank() {{
-            tag = "";
             name = "player";
             effects = def;
 
@@ -30,13 +26,13 @@ public class Ranks {
                 name = "active";
                 effects = def;
                 req = new Requirements(300, 25000, 20);
-
+                
                 next = activePlus = new Rank() {{
                     tag = "[accent]<[white]\uE813[]>[] ";
                     name = "active+";
                     effects = def;
                     req = new Requirements(750, 50000, 40);
-
+                    
                     next = veteran = new Rank() {{
                         tag = "[accent]<[gold]\uE809[]>[] ";
                         name = "veteran";
@@ -56,6 +52,24 @@ public class Ranks {
         admin = new Rank() {{
             tag = "[accent]<[scarlet]\uE817[]>[] ";
             name = "admin";
+            effects = pro;
+        }};
+        
+        owner = new Rank() {{
+            tag = "[accent]<[#195080]>[] ";
+            name = "owner";
+            effects = pro;
+        }};
+        
+        console = new Rank() {{
+            tag = "[accent]<[#8d56b1]>[] ";
+            name = "console";
+            effects = pro;
+        }};
+        
+        developer = new Rank() {{
+            tag = "[accent]<[#86dca2]>[] ";
+            name = "developer";
             effects = pro;
         }};
     }
@@ -84,7 +98,7 @@ public class Ranks {
         public String tag;
         public String name;
         public EffectsPack effects;
-
+        
         public Requirements req;
         public Rank next;
 
@@ -95,10 +109,6 @@ public class Ranks {
 
         public boolean checkNext(int playTime, int buildingsBuilt, int gamesPlayed) {
             return next != null && next.req != null && next.req.check(playTime, buildingsBuilt, gamesPlayed);
-        }
-
-        public String toString(Locale locale) {
-            return format("commands.rank.menu.requirements.content", locale, tag, get(name, locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
         }
     }
 
