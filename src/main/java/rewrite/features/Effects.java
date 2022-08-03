@@ -12,14 +12,12 @@ import static rewrite.features.Ranks.*;
 
 public class Effects {
 
-    public static EffectsPack defaultPack;
-    public static EffectsPack proPack;
-    public static EffectsPack superPack;
+    public static EffectsPack defaultPack, proPack, superPack;
 
     public static void load() {
-        defaultPack = new EffectsPack(Fx.greenBomb, Fx.greenLaserCharge, Fx.freezing);
-        proPack = new EffectsPack(Fx.instBomb, Fx.instHit, Fx.instTrail);
-        superPack = new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble);
+        defaultPack = new EffectsPack(Fx.greenBomb,          Fx.greenLaserCharge,   Fx.freezing,           true);
+        proPack =     new EffectsPack(Fx.instBomb,           Fx.instHit,            Fx.shootPayloadDriver, false);
+        superPack =   new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble,             true);
     }
 
     public static void on(Effect effect, float x, float y, float rotation, Color color) {
@@ -31,16 +29,17 @@ public class Effects {
     }
 
     public static void onMove(Player player) {
-        on(cache.get(player.uuid()).effects.move(), player.x, player.y);
+        EffectsPack pack = cache.get(player.uuid()).effects;
+        on(pack.move, player.x, player.y, pack.random ? Mathf.random(360f) : player.unit().rotation - 180f, Tmp.c1.rand());
     }
 
     public static void onJoin(Player player) {
-        on(cache.get(player.uuid()).effects.join(), player.x, player.y);
+        on(cache.get(player.uuid()).effects.join, player.x, player.y);
     }
 
     public static void onLeave(Player player) {
-        on(cache.get(player.uuid()).effects.leave(), player.x, player.y);
+        on(cache.get(player.uuid()).effects.leave, player.x, player.y);
     }
 
-    public record EffectsPack(Effect join, Effect leave, Effect move) {}
+    public static record EffectsPack(Effect join, Effect leave, Effect move, boolean random) {}
 }

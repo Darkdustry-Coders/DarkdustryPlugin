@@ -38,6 +38,7 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void init() {
+        Effects.load();
         Config.load();
         Bundle.load();
         Icons.load();
