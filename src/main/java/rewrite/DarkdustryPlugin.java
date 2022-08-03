@@ -96,7 +96,8 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void registerDiscordCommands(CommandHandler handler) {
         discordCommands = handler;
-        for (DiscordCommands command : DiscordCommands.values()) handler.register(command.name(), command.params, command.description, command);
+        for (DiscordCommands command : DiscordCommands.values()) 
+            if (command.enabled()) handler.register(command.name(), command.params, command.description, command);
     }
 
     public static void info(String text) {
