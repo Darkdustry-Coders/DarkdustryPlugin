@@ -3,6 +3,7 @@ package rewrite.utils;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Structs;
+import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -54,6 +55,10 @@ public class Find {
     public static Fi save(String name) {
         Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
         return canParsePositiveInt(name) && parseInt(name) < savesList.size ? savesList.get(parseInt(name)) : savesList.find(save -> deepEquals(save.nameWithoutExtension(), name));
+    }
+
+    public static Gamemode mode(String name) {
+        return Structs.find(Gamemode.all, mode -> mode.name().equalsIgnoreCase(name));
     }
 
     public static Block core(String name) {

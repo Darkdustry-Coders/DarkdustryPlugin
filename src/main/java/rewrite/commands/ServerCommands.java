@@ -1,7 +1,6 @@
 package rewrite.commands;
 
 import arc.func.Cons;
-import arc.util.Structs;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
@@ -29,8 +28,14 @@ public enum ServerCommands implements Cons<String[]> {
     host("Запустить сервер на выбранной карте.", "[карта] [режим]", (args) -> {
         if (isLanuched()) return;
 
-        Gamemode mode = args.length > 1 ? Structs.find(Gamemode.all, m -> m.name().equalsIgnoreCase(args[1])) : Gamemode.survival;
-        if (notFound(mode, args)) return;
+        Gamemode mode;
+        if (args.length > 1) {
+            mode = Find.mode(args[1]);
+            if (notFound(mode, args)) return;
+        } else {
+            mode = Gamemode.survival;
+            DarkdustryPlugin.info("Выбран режим по умолчанию: @.", mode.name());
+        }
 
         Map map;
         if (args.length > 0) {
@@ -38,7 +43,7 @@ public enum ServerCommands implements Cons<String[]> {
             if (notFound(map, args)) return;
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
-            DarkdustryPlugin.info("Случайным образом выбрана карта: '@'.", map.name());
+            DarkdustryPlugin.info("Случайным образом выбрана карта: @.", map.name());
         }
 
         logic.reset();
