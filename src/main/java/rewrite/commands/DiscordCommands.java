@@ -11,7 +11,6 @@ import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pandorum.components.MapParser;
 import rewrite.components.Config.Gamemode;
-import rewrite.discord.Bot;
 import rewrite.discord.MessageContext;
 
 import java.awt.Color;
@@ -19,6 +18,7 @@ import java.awt.Color;
 import static arc.Core.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
+import static rewrite.utils.Checks.*;
 import static rewrite.utils.Utils.*;
 
 public enum DiscordCommands implements CommandRunner<MessageContext> {
@@ -41,11 +41,7 @@ public enum DiscordCommands implements CommandRunner<MessageContext> {
 
     }),
     status("Состояние сервера.", (args, context) -> {
-        if (state.isMenu()) {
-            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
-            return;
-        }
-
+        if (isMenu(context)) return;
         context.channel.sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.green)
                 .setTitle(":desktop: " + stripAll(Config.serverName.string()))
@@ -76,15 +72,8 @@ public enum DiscordCommands implements CommandRunner<MessageContext> {
 
     }, () -> config.mode != Gamemode.hexed),
     gameover("Принудительно завершить игру.", (args, context) -> {
-        if (!Bot.isAdmin(context.member)) {
-            context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
-            return;
-        }
-
-        if (state.isMenu()) {
-            context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
-            return;
-        }
+        if (isMenu(context)) return;
+        if (notAdmin(context)) return;
 
         Events.fire(new GameOverEvent(state.rules.waveTeam));
         context.success(":map: Игра успешно завершена.");

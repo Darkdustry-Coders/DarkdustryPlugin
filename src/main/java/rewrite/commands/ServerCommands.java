@@ -10,6 +10,7 @@ import rewrite.utils.Find;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
+import static rewrite.utils.Checks.*;
 
 public enum ServerCommands implements Cons<String[]> {
     help("Список всех команд.", (args) -> {
@@ -26,24 +27,15 @@ public enum ServerCommands implements Cons<String[]> {
 
     }),
     host("Запустить сервер на выбранной карте.", "[карта] [режим]", (args) -> {
-        if (!state.isMenu()) {
-            DarkdustryPlugin.error("Сервер уже запущен.");
-            return;
-        }
+        if (isLanuched()) return;
 
         Gamemode mode = args.length > 1 ? Structs.find(Gamemode.all, m -> m.name().equalsIgnoreCase(args[1])) : Gamemode.survival;
-        if (mode == null) {
-            DarkdustryPlugin.error("Режим игры '@' не найден.", args[1]);
-            return;
-        }
+        if (notFound(mode, args[1])) return;
 
         Map map;
         if (args.length > 0) {
             map = Find.map(args[0]);
-            if (map == null) {
-                DarkdustryPlugin.error("Карта '@' не найдена.", args[0]);
-                return;
-            }
+            if (notFound(map, args[0])) return;
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
             DarkdustryPlugin.info("Случайным образом выбрана карта: '@'.", map.name());
