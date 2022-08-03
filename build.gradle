@@ -21,7 +21,6 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.2'
     implementation 'net.dv8tion:JDA:5.0.0-alpha.13'
     implementation 'redis.clients:jedis:4.2.3'
-    // implementation 'org.postgresql:postgresql:42.3.6'
 }
 
 jar {

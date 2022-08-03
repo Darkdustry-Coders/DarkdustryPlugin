@@ -1,6 +1,7 @@
 package rewrite.utils;
 
 import mindustry.game.Gamemode;
+import mindustry.gen.Player;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -11,6 +12,7 @@ import rewrite.discord.MessageContext;
 import java.awt.Color;
 
 import static mindustry.Vars.*;
+import static rewrite.components.Bundle.*;
 
 public class Checks {
 
@@ -22,6 +24,11 @@ public class Checks {
     public static boolean isMenu(MessageContext context) {
         if (state.isMenu()) context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
         return state.isMenu();
+    }
+
+    public static boolean isAdmin(Player player) {
+        if (player.admin) bundled(player, "commands.login.already-admin");
+        return player.admin;
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {

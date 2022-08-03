@@ -4,6 +4,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 import java.util.Locale;
@@ -93,6 +94,9 @@ public class Ranks {
 
         data.rank = rank.id;
         setPlayerData(data);
+
+        // обновляем ранг визуально, если игрок находится на сервере
+        Groups.player.each(player -> player.uuid().equals(uuid), player -> setRank(player, rank));
     }
 
     public static class Rank {

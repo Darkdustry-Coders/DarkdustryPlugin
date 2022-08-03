@@ -4,8 +4,11 @@ import arc.func.Boolp;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.gen.Player;
 import rewrite.components.Config.Gamemode;
+import rewrite.discord.Bot;
 
 import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Checks.*;
 
 public enum ClientCommands implements CommandRunner<Player> {
     help((args, player) -> {
@@ -42,7 +45,10 @@ public enum ClientCommands implements CommandRunner<Player> {
 
     }),
     login((args, player) -> {
+        if (isAdmin(player)) return;
 
+        Bot.sendMessageToAdmin(player);
+        bundled(player, "commands.login.sent");
     }),
     hub((args, player) -> {
 

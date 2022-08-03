@@ -5,10 +5,12 @@ import arc.util.Strings;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Message.MentionType;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import rewrite.DarkdustryPlugin;
 import rewrite.utils.Find;
@@ -19,6 +21,7 @@ import java.util.Locale;
 
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
+import static rewrite.features.Authme.*;
 
 public class Bot {
     
@@ -82,6 +85,16 @@ public class Bot {
                     reply != null ? format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
                     context.message.getContentDisplay());
         });
+    }
+
+    public static void sendMessageToAdmin(Player player) {
+        adminChannel.sendMessage(new MessageBuilder().setEmbeds(new EmbedBuilder()
+                .setColor(Color.cyan)
+                .setTitle("Запрос на получение прав администратора.")
+                .addField("Никнейм:", player.name, true)
+                .addField("UUID:", player.uuid(), true)
+                .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
+        ).setActionRows(ActionRow.of(confirm, deny, info)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {

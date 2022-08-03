@@ -3,6 +3,7 @@ package rewrite.discord;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import rewrite.features.Authme;
 
 import static arc.Core.*;
 import static rewrite.PluginVars.*;
@@ -27,10 +28,10 @@ public class DiscordListeners extends ListenerAdapter {
         if (!loginWaiting.containsKey(event.getMessage())) return;
         if (notAdmin(event)) return;
 
-        // switch (event.getComponentId()) { // TODO: добавить authme
-        //     case "authme.confirm" -> Authme.confirm(event);
-        //     case "authme.deny" -> Authme.deny(event);
-        //     case "authme.info" -> Authme.info(event);
-        // }
+        switch (event.getComponentId()) {
+            case "authme.confirm" -> Authme.confirm(event);
+            case "authme.deny" -> Authme.deny(event);
+            case "authme.info" -> Authme.info(event);
+        }
     }
 }
