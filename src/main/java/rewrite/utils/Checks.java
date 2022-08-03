@@ -16,38 +16,52 @@ import static rewrite.components.Bundle.*;
 
 public class Checks {
 
+    public static boolean isCooldowned(Player player, String cmd) {
+        return check(Cooldowns.runnable(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
+    }
+
     public static boolean isLanuched() {
-        if (!state.isMenu()) DarkdustryPlugin.error("Сервер уже запущен.");
-        return !state.isMenu();
+        return check(!state.isMenu(), "Сервер уже запущен.");
     }
 
     public static boolean isMenu(MessageContext context) {
-        if (state.isMenu()) context.err(":gear: Сервер не запущен.", ":thinking: Почему?");
-        return state.isMenu();
+        return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
     public static boolean isAdmin(Player player) {
-        if (player.admin) bundled(player, "commands.login.already-admin");
-        return player.admin;
+        return check(player.admin, player, "commands.login.already-admin");
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {
-        if (mode == null) DarkdustryPlugin.error("Режим игры '@' не найден.", name[1]);
-        return mode == null;
+        return check(mode == null, "Режим игры @ не найден.", name[1]);
     }
 
-    public static boolean notFound(Map map, String name) {
-        if (map == null) DarkdustryPlugin.error("Карта '@' не найдена.", name);
-        return map == null;
+    public static boolean notFound(Map map, String name[]) {
+        return check(map == null, "Карта @ не найдена.", name[0]);
     }
 
     public static boolean notAdmin(MessageContext context) {
-        if (!Bot.isAdmin(context.member)) context.err(":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
-        return !Bot.isAdmin(context.member);
+        return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
     public static boolean notAdmin(ButtonInteractionEvent event) {
-        if (!Bot.isAdmin(event.getMember())) event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue();
-        return !Bot.isAdmin(event.getMember());
+        return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue());
+    }
+
+    private static boolean check(boolean result, Runnable todo) {
+        if (result) todo.run();
+        return result; // я знаю, кринж, не бейте
+    }
+
+    private static boolean check(boolean result, String error, Object... values) {
+        return check(result, () -> DarkdustryPlugin.error(error, values));
+    }
+
+    private static boolean check(boolean result, Player player, String key, Object... values) {
+        return check(result, () -> bundled(player, key, values));
+    }
+
+    private static boolean check(boolean result, MessageContext context, String... values) {
+        return check(result, () -> context.err(values[0], values[1]));
     }
 }

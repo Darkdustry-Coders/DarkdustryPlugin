@@ -46,6 +46,7 @@ public enum ClientCommands implements CommandRunner<Player> {
     }),
     login((args, player) -> {
         if (isAdmin(player)) return;
+        if (isCooldowned(player, "login")) return;
 
         Bot.sendMessageToAdmin(player);
         bundled(player, "commands.login.sent");
@@ -121,8 +122,8 @@ public enum ClientCommands implements CommandRunner<Player> {
     }
 
     ClientCommands(CommandRunner<Player> runner, Boolp enabled) {
-        this.description = "commands." + name() + ".desc";
-        this.params = "commands." + name() + ".desc";
+        this.description = "commands." + name() + ".description";
+        this.params = "commands." + name() + ".params";
         this.runner = runner;
         this.enabled = enabled;
     }

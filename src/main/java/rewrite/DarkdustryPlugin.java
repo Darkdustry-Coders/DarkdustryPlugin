@@ -3,16 +3,12 @@
 
 package rewrite;
 
-import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Timer;
 import mindustry.core.Version;
-import mindustry.game.EventType.Trigger;
-import mindustry.gen.Call;
 import mindustry.gen.Groups;
-import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
@@ -28,14 +24,14 @@ import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
+import java.util.Locale;
+
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 import static rewrite.components.MenuHandler.*;
 import static rewrite.listeners.PluginEvents.*;
-
-import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -96,7 +92,7 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void registerDiscordCommands(CommandHandler handler) {
         discordCommands = handler;
-        for (DiscordCommands command : DiscordCommands.values()) 
+        for (DiscordCommands command : DiscordCommands.values())
             if (command.enabled()) handler.register(command.name(), command.params, command.description, command);
     }
 
