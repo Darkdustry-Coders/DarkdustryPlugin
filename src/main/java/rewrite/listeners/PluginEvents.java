@@ -113,9 +113,7 @@ public class PluginEvents {
         Events.on(WithdrawEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
         });
-        Events.on(WorldLoadEvent.class, event -> {
-            History.clear();
-        });
+        Events.on(WorldLoadEvent.class, event -> History.clear());
 
         Events.run("HexedGameOver", () -> gameover.get(null));
         Events.run("CastleGameOver", () -> gameover.get(null));

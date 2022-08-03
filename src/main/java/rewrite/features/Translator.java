@@ -11,7 +11,7 @@ import static rewrite.PluginVars.*;
 
 public class Translator {
 
-    public static int left = 50000;
+    public static int left = 500000;
     public static StringMap cache = new StringMap();
 
     public static void load() {
@@ -68,6 +68,7 @@ public class Translator {
                     left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
                     cache.put(to, Jval.read(response.getResultAsString()).getString("translated_text"));
                 });
+        // кстати не будет работать, т.к. запрос обрабатывается в отдельном потоке и в кэшэ тупо ничего не будет
         cons.get(cache.get(to));
     }
 }

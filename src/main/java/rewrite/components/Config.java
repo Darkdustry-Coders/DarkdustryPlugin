@@ -11,7 +11,7 @@ import static rewrite.PluginVars.*;
 public class Config {
 
     /** IP адрес Хаба. */
-    public String hubIp = "darkdustry.tk";
+    public String hubIp = "darkdustry.tk"; // TODO это айпи ХАБА а не всего сервера, вдруг я вынесу его на отдельный хост. Не надо его юзать там где не хаб
 
     /** Порт Хаба. */
     public int hubPort = 6567;

@@ -71,7 +71,7 @@ public class MenuHandler {
             if (option != 1) return;
 
             StringBuilder builder = new StringBuilder();
-            Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.toString(Find.locale(player.locale))).append("\n"));
+            Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
             showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] { { "ui.menus.close" } });
         });
 

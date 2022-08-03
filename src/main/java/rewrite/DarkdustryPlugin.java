@@ -3,39 +3,35 @@
 
 package rewrite;
 
-import arc.files.Fi;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Timer;
 import mindustry.core.Version;
-import mindustry.game.EventType.Trigger;
-import mindustry.gen.Call;
 import mindustry.gen.Groups;
-import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import rewrite.commands.*;
+import rewrite.commands.ClientCommands;
+import rewrite.commands.DiscordCommands;
+import rewrite.commands.ServerCommands;
 import rewrite.components.*;
 import rewrite.discord.Bot;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.Translator;
-import rewrite.features.Ranks.Rank;
 import rewrite.listeners.Filters;
 import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static rewrite.components.Bundle.get;
 import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.*;
-import static rewrite.listeners.PluginEvents.*;
-
-import java.util.Locale;
+import static rewrite.components.MenuHandler.rankIncreaseMenu;
+import static rewrite.components.MenuHandler.showMenu;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -45,6 +41,7 @@ public class DarkdustryPlugin extends Plugin {
         Config.load();
         Bundle.load();
         Icons.load();
+        Effects.load();
         Ranks.load();
         PluginEvents.load();
         MenuHandler.load();
@@ -68,7 +65,7 @@ public class DarkdustryPlugin extends Plugin {
             PlayerData data = getPlayerData(player);
             data.playTime++;
 
-            Rank rank = Ranks.getRank(data.rank);
+            Ranks.Rank rank = Ranks.getRank(data.rank);
             if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
                 Ranks.setRank(player, rank = rank.next);
                 data.rank = rank.id;
