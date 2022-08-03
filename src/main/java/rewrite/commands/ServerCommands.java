@@ -35,7 +35,7 @@ public enum ServerCommands implements Cons<String[]> {
         Map map;
         if (args.length > 0) {
             map = Find.map(args[0]);
-            if (notFound(map, args[0])) return;
+            if (notFound(map, args)) return;
         } else {
             map = maps.getShuffleMode().next(mode, state.map);
             DarkdustryPlugin.info("Случайным образом выбрана карта: '@'.", map.name());

@@ -12,26 +12,26 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import rewrite.commands.ClientCommands;
-import rewrite.commands.DiscordCommands;
-import rewrite.commands.ServerCommands;
+import rewrite.commands.*;
 import rewrite.components.*;
 import rewrite.discord.Bot;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.Translator;
+import rewrite.features.Ranks.Rank;
 import rewrite.listeners.Filters;
 import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.net;
-import static mindustry.Vars.netServer;
+import java.util.Locale;
+
+import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.get;
+import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.rankIncreaseMenu;
-import static rewrite.components.MenuHandler.showMenu;
+import static rewrite.components.MenuHandler.*;
+import static rewrite.listeners.PluginEvents.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -41,7 +41,6 @@ public class DarkdustryPlugin extends Plugin {
         Config.load();
         Bundle.load();
         Icons.load();
-        Effects.load();
         Ranks.load();
         PluginEvents.load();
         MenuHandler.load();
@@ -65,7 +64,7 @@ public class DarkdustryPlugin extends Plugin {
             PlayerData data = getPlayerData(player);
             data.playTime++;
 
-            Ranks.Rank rank = Ranks.getRank(data.rank);
+            Rank rank = Ranks.getRank(data.rank);
             if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
                 Ranks.setRank(player, rank = rank.next);
                 data.rank = rank.id;
@@ -93,7 +92,7 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void registerDiscordCommands(CommandHandler handler) {
         discordCommands = handler;
-        for (DiscordCommands command : DiscordCommands.values()) 
+        for (DiscordCommands command : DiscordCommands.values())
             if (command.enabled()) handler.register(command.name(), command.params, command.description, command);
     }
 
