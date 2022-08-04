@@ -21,9 +21,11 @@ public class Filters {
 
     public static String chat(Player author, String text) {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
-        Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
+
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-        Translator.translate(author, text, netServer.chatFormatter.format(author, text));
+        Translator.translate(author, text);
+
+        Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
         return null;
     }
 }

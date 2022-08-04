@@ -12,22 +12,28 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import rewrite.commands.*;
+import rewrite.commands.ClientCommands;
+import rewrite.commands.DiscordCommands;
+import rewrite.commands.ServerCommands;
 import rewrite.components.*;
 import rewrite.discord.Bot;
-import rewrite.features.*;
+import rewrite.features.Alerts;
+import rewrite.features.Effects;
+import rewrite.features.Ranks;
 import rewrite.features.Ranks.Rank;
-import rewrite.listeners.*;
+import rewrite.features.Translator;
+import rewrite.listeners.Filters;
+import rewrite.listeners.NetHandlers;
+import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
-import java.util.Locale;
-
-import static mindustry.Vars.*;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static rewrite.components.Bundle.get;
 import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.*;
-import static rewrite.listeners.PluginEvents.*;
+import static rewrite.components.MenuHandler.rankIncreaseMenu;
+import static rewrite.components.MenuHandler.showMenu;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {

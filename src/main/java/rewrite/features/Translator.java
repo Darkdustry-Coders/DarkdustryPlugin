@@ -10,6 +10,7 @@ import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
 import static arc.util.Strings.*;
+import static mindustry.Vars.netServer;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Database.*;
 
@@ -66,22 +67,30 @@ public class Translator {
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
-                .error(throwable -> cons.get("Requests left:" + (left = 0)))
+                .error(throwable -> cons.get(""))
                 .submit(response -> {
                     left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
                     cons.get(Jval.read(response.getResultAsString()).getString("translated_text"));
                 });
     }
 
-    public static void translate(Player author, String text, String message) {
+    public static void translate(Player author, String text) {
         StringMap cache = new StringMap();
+        String message = netServer.chatFormatter.format(author, text);
+
         Groups.player.each(player -> player != author, player -> {
             String language = getPlayerData(player).language;
             if (language.equals("off") || left == 0) player.sendMessage(message, author, text);
             else {
-                if (!cache.containsKey(language))
-                    translate(language, stripColors(text), translated -> cache.put(language, message + " [white]([lightgray]" + translated + "[])"));
-                player.sendMessage(cache.get(language), author, text);
+                if (cache.containsKey(language)) {
+                    player.sendMessage(cache.get(language), author, text);
+                    return;
+                }
+
+                translate(language, stripColors(text), translated -> {
+                    cache.put(language, message + " [white]([lightgray]" + translated + "[])");
+                    player.sendMessage(cache.get(language), author, text);
+                });
             }
         });
     }
