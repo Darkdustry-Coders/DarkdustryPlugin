@@ -1,5 +1,6 @@
 package rewrite.features;
 
+import arc.func.Func;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.util.Tmp;
@@ -15,9 +16,9 @@ public class Effects {
     public static EffectsPack defaultPack, proPack, superPack;
 
     public static void load() {
-        defaultPack = new EffectsPack(Fx.greenBomb,          Fx.greenLaserCharge,   Fx.freezing,           true);
-        proPack =     new EffectsPack(Fx.instBomb,           Fx.instHit,            Fx.shootPayloadDriver, false);
-        superPack =   new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble,             true);
+        defaultPack = new EffectsPack(Fx.greenBomb,          Fx.greenLaserCharge,   Fx.freezing,           player -> Mathf.random(360f));
+        proPack =     new EffectsPack(Fx.instBomb,           Fx.instHit,            Fx.shootPayloadDriver, player -> player.unit().rotation - 180f);
+        superPack =   new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble,             player -> 50f);
     }
 
     public static void on(Effect effect, float x, float y, float rotation, Color color) {
@@ -30,7 +31,7 @@ public class Effects {
 
     public static void onMove(Player player) {
         EffectsPack pack = cache.get(player.uuid()).effects;
-        on(pack.move, player.x, player.y, pack.random ? Mathf.random(360f) : player.unit().rotation - 180f, Tmp.c1.rand());
+        on(pack.move, player.x, player.y, pack.rotation.get(player), Tmp.c1.rand());
     }
 
     public static void onJoin(Player player) {
@@ -41,5 +42,5 @@ public class Effects {
         on(cache.get(player.uuid()).effects.leave, player.x, player.y);
     }
 
-    public static record EffectsPack(Effect join, Effect leave, Effect move, boolean random) {}
+    public static record EffectsPack(Effect join, Effect leave, Effect move, Func<Player, Float> rotation) {}
 }
