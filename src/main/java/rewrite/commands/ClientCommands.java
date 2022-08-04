@@ -2,7 +2,6 @@ package rewrite.commands;
 
 import arc.util.CommandHandler;
 import mindustry.gen.Player;
-import rewrite.components.Config.Gamemode;
 import rewrite.discord.Bot;
 
 import java.util.Locale;

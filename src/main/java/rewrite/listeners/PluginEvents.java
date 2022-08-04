@@ -13,6 +13,7 @@ import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.history.*;
 import rewrite.features.history.History.HistoryStack;
+import rewrite.features.votes.VoteKick;
 import rewrite.utils.Find;
 
 import java.awt.Color;
@@ -85,25 +86,8 @@ public class PluginEvents {
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
-
-            // if (currentVoteKick != null && event.player == currentVoteKick.target()) {
-            //     currentVoteKick.stop();
-            //     netServer.admins.handleKicked(event.player.uuid(), event.player.ip(), kickDuration);
-            //     sendToChat("commands.votekick.left", event.player.name, kickDuration / 60000);
-            // }
-
-            //     if (config.mode == Gamemode.pvp) {
-            //         Seq<String> teamVotes = votesSurrender.get(event.player.team(), Seq::new);
-            //         if (teamVotes.remove(event.player.uuid())) {
-            //             sendToChat("commands.surrender.left", coloredTeam(event.player.team()), event.player.name, teamVotes.size, Mathf.ceil(voteRatio * Groups.player.count(p -> p.team() == event.player.team())));
-            //         }
-            //     }
-
-            // if (votesRtv.remove(event.player.uuid())) TODO: переделать эту ср*нь
-            //     sendToChat("commands.rtv.left", event.player.name, votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
-
-            // if (votesVnw.remove(event.player.uuid())) 
-            //     sendToChat("commands.vnw.left", event.player.name, votesVnw.size, Mathf.ceil(voteRatio * Groups.player.size()));
+            if (vote instanceof VoteKick kick && kick.target == event.player) kick.success();
+            // if (vote != null) vote.left(event.player); // TODO: хэндлить выход игроков
         });
         Events.on(ServerLoadEvent.class, event -> {
             DarkdustryPlugin.info("Сервер готов к работе");

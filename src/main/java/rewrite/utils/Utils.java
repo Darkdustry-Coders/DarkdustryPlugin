@@ -4,7 +4,10 @@ import arc.files.Fi;
 import arc.struct.OrderedMap;
 import mindustry.game.Team;
 import mindustry.gen.Player;
+import mindustry.maps.MapException;
 import mindustry.net.NetConnection;
+import mindustry.net.WorldReloader;
+import rewrite.DarkdustryPlugin;
 
 import java.text.*;
 import java.time.*;
@@ -63,7 +66,28 @@ public class Utils {
         return builder.toString().trim();
     }
 
+    public static void load(Runnable load) {
+        try {
+            WorldReloader reloader = new WorldReloader();
+            reloader.begin();
+
+            load.run();
+            state.rules = state.map.applyRules(state.rules.mode());
+            logic.play();
+
+            reloader.end();
+        } catch (MapException e) {
+            DarkdustryPlugin.error("@: @", e.map.name(), e.getMessage());
+            net.closeServer();
+        }
+    }
+
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
+        if (!con.hasConnected) { // если игрок вышел во время голосования за кик, просто хэндлим его
+            netServer.admins.handleKicked(con.uuid, con.address, kickDuration);
+            return;
+        }
+
         String reason = format(key, locale, values);
         if (duration > 0) reason += format("kick.time", locale, Utils.formatDuration(duration, locale));
         if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);

@@ -6,11 +6,21 @@ import arc.util.CommandHandler;
 import net.dv8tion.jda.api.entities.Message;
 import rewrite.components.Config;
 import rewrite.components.Config.Gamemode;
+import rewrite.features.votes.VoteSession;
 
 import static mindustry.Vars.*;
 import static rewrite.components.Config.Gamemode.*;
 
 public class PluginVars {
+
+    /** Текущее голосование, всегда одно на весь сервер. */
+    public static VoteSession vote;
+
+    /** Необходимое количество игроков для успешного завершения голосования. */
+    public static final float voteRatio = 0.6f;
+
+    /** Время, после которого голосование автоматически завершится. */
+    public static final float voteDuration = 50f;
 
     /** Время, на которое игрок будет выгнан голосованием или через команду. */
     public static final long kickDuration = 2700000L;
