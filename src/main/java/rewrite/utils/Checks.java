@@ -53,6 +53,10 @@ public class Checks {
         return check(player == null, context, ":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
     }
 
+    public static boolean notAdmin(Player player) {
+        return check(!player.admin, player, "commands.permission-denied");
+    }
+
     public static boolean notAdmin(MessageContext context) {
         return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }

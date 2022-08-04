@@ -74,21 +74,16 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        clientCommands = handler;
-        for (ClientCommands command : ClientCommands.values())
-            if (command.enabled()) handler.register(command.name(), get(command.params, ""), get(command.description, ""), command);
+        new ClientCommands(clientCommands = handler, defaultLocale);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        serverCommands = handler;
-        for (ServerCommands command : ServerCommands.values()) handler.register(command.name(), command.params, command.description, command);
+        new ServerCommands(serverCommands = handler, consoleLocale);
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        discordCommands = handler;
-        for (DiscordCommands command : DiscordCommands.values())
-            if (command.enabled()) handler.register(command.name(), command.params, command.description, command);
+        new DiscordCommands(discordCommands = handler, consoleLocale);
     }
 
     public static void info(String text) {
