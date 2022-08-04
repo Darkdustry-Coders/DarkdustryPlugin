@@ -66,6 +66,7 @@ public class PluginEvents {
 
             Effects.onJoin(event.player);
             DarkdustryPlugin.info("@ зашел на сервер. [@]", event.player.name, event.player.uuid());
+
             sendToChat("events.player.join", event.player.name);
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
         
@@ -78,6 +79,7 @@ public class PluginEvents {
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
             DarkdustryPlugin.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
+
             sendToChat("events.player.leave", event.player.name);
 
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));

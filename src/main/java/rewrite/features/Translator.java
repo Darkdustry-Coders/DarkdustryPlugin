@@ -10,7 +10,7 @@ import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
 import static arc.util.Strings.*;
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Database.*;
 
@@ -82,14 +82,10 @@ public class Translator {
             String language = getPlayerData(player).language;
             if (language.equals("off") || left == 0) player.sendMessage(message, author, text);
             else {
-                if (cache.containsKey(language)) {
-                    player.sendMessage(cache.get(language), author, text);
-                    return;
-                }
-
-                translate(language, stripColors(text), translated -> {
+                if (cache.containsKey(language)) player.sendMessage(cache.get(language), author, text);
+                else translate(language, stripColors(text), translated -> {
                     cache.put(language, message + " [white]([lightgray]" + translated + "[])");
-                    player.sendMessage(cache.get(language), author, text);
+                    player.sendMessage(cache.get(language), author, text); // нужно именно здесь, ибо асинхронность
                 });
             }
         });
