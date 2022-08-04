@@ -12,6 +12,9 @@ import static rewrite.components.Config.Gamemode.*;
 
 public class PluginVars {
 
+    /** Время, на которое игрок будет выгнан голосованием или через команду. */
+    public static final long kickDuration = 2700000L;
+
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. */
     public static final int alertsDistance = 8 * tilesize;
 

@@ -19,7 +19,7 @@ public class Ranks {
         player = new Rank() {{
             tag = "";
             name = "player";
-            effects = Effects.superPack;
+            effects = Effects.defaultPack;
 
             next = active = new Rank() {{
                 tag = "[accent]<[white]\uE800[]>[] ";
