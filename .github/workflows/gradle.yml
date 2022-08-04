@@ -31,7 +31,7 @@ jobs:
       - name: Получение нового тега
         id: newtag
         run: |
-          tag=$(cat build.gradle | grep "project.version*" | cut -d "=" -f 2,3 | tr -d "'" | tr -d \"," ")
+          tag=$(cat src/main/resources/plugin.json | grep "version*" | cut -d ":" -f 2,3 | tr -d \"," ")
           echo '::set-output name=tag::'$tag
 
       - name: Создание релиза
