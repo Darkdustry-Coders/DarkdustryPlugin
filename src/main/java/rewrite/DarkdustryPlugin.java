@@ -15,13 +15,9 @@ import mindustry.net.Packets.ConnectPacket;
 import rewrite.commands.*;
 import rewrite.components.*;
 import rewrite.discord.Bot;
-import rewrite.features.Effects;
-import rewrite.features.Ranks;
-import rewrite.features.Translator;
+import rewrite.features.*;
 import rewrite.features.Ranks.Rank;
-import rewrite.listeners.Filters;
-import rewrite.listeners.NetHandlers;
-import rewrite.listeners.PluginEvents;
+import rewrite.listeners.*;
 import rewrite.utils.Find;
 
 import java.util.Locale;
@@ -39,6 +35,7 @@ public class DarkdustryPlugin extends Plugin {
     @Override
     public void init() {
         Effects.load();
+        Alerts.load();
         Config.load();
         Bundle.load();
         Icons.load();

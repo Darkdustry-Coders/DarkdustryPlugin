@@ -7,9 +7,13 @@ import net.dv8tion.jda.api.entities.Message;
 import rewrite.components.Config;
 import rewrite.components.Config.Gamemode;
 
+import static mindustry.Vars.*;
 import static rewrite.components.Config.Gamemode.*;
 
 public class PluginVars {
+
+    /** Расстояние до ядра, в котором отслеживаются опасные блоки. */
+    public static final int alertsDistance = 8 * tilesize;
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;

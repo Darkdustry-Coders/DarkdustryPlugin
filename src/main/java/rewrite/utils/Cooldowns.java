@@ -10,7 +10,8 @@ public class Cooldowns {
             "sync",     15,
             "login",    900,
             "kick",     300,
-            "nominate", 150);
+            "nominate", 150,
+            "alerts",   3);
 
     public static boolean runnable(String uuid, String cmd) {
         if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(cmd)) return true;
