@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 apply plugin: "java"
 
 compileJava.options.encoding = 'UTF-8'
@@ -9,8 +11,12 @@ repositories {
 }
 
 ext {
-    project.version = '2.1'
-    mindustryVersion = 'v136.1'
+    def json = new JsonSlurper()
+    def pluginFile = file("${sourceSets.main.resources.srcDirs.last()}/plugin.json")
+    def plugin = json.parseText(pluginFile.text)
+
+    project.version = plugin.version
+    mindustryVersion = plugin.minGameVersion
 }
 
 dependencies {
