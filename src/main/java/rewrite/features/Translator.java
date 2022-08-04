@@ -5,14 +5,17 @@ import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Strings;
 import arc.util.serialization.Jval;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
+import static arc.util.Strings.*;
 import static rewrite.PluginVars.*;
+import static rewrite.components.Database.*;
 
 public class Translator {
 
     public static int left = 500000;
-    public static StringMap cache = new StringMap();
 
     public static void load() {
         translatorLanguages.putAll(
@@ -59,16 +62,27 @@ public class Translator {
     }
 
     public static void translate(String to, String text, Cons<String> cons) {
-        if (!cache.containsKey(to)) Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
+        Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
                 .error(throwable -> cons.get("Requests left:" + (left = 0)))
                 .submit(response -> {
                     left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
-                    cache.put(to, Jval.read(response.getResultAsString()).getString("translated_text"));
+                    cons.get(Jval.read(response.getResultAsString()).getString("translated_text"));
                 });
-        // кстати не будет работать, т.к. запрос обрабатывается в отдельном потоке и в кэшэ тупо ничего не будет
-        cons.get(cache.get(to));
+    }
+
+    public static void translate(Player author, String text, String message) {
+        StringMap cache = new StringMap();
+        Groups.player.each(player -> player != author, player -> {
+            String language = getPlayerData(player).language;
+            if (language.equals("off") || left == 0) player.sendMessage(message, author, text);
+            else {
+                if (!cache.containsKey(language))
+                    translate(language, stripColors(text), translated -> cache.put(language, message + " [white]([lightgray]" + translated + "[])"));
+                player.sendMessage(cache.get(language), author, text);
+            }
+        });
     }
 }

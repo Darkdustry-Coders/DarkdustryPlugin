@@ -1,7 +1,6 @@
 package rewrite.listeners;
 
 import arc.util.Log;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.ActionType;
 import mindustry.net.Administration.PlayerAction;
@@ -12,7 +11,6 @@ import rewrite.features.history.RotateEntry;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
-import static rewrite.components.Database.*;
 
 public class Filters {
     
@@ -23,16 +21,9 @@ public class Filters {
 
     public static String chat(Player author, String text) {
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
-        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
-
-        Translator.cache.clear();
-        Groups.player.each(player -> player != author, player -> {
-            PlayerData data = getPlayerData(player);
-            if (data.language.equals("off") || Translator.left == 0) player.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-            else Translator.translate(data.language, stripColors(text), translated -> player.sendMessage(netServer.chatFormatter.format(author, text) + " [white]([lightgray]" + translated + "[])", author, text));
-        });
-
+        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+        Translator.translate(author, text, netServer.chatFormatter.format(author, text));
         return null;
     }
 }
