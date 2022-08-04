@@ -22,7 +22,7 @@ import static rewrite.components.Bundle.*;
 public class Checks {
 
     public static boolean isCooldowned(Player player, String cmd) {
-        return check(Cooldowns.runnable(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
+        return check(Cooldowns.canRun(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
     }
 
     public static boolean isLanuched() {

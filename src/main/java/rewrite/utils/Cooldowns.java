@@ -11,15 +11,14 @@ public class Cooldowns {
             "login",    900,
             "kick",     300,
             "nominate", 150,
-            "alerts",   3);
+            "alerts",   3); // плохая идея для алертов
 
-    public static boolean runnable(String uuid, String cmd) {
-        if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(cmd)) return true;
-        return cooldowns.get(uuid).get(cmd) <= Time.millis();
+    public static boolean canRun(String uuid, String command) {
+        if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(command)) return true;
+        return cooldowns.get(uuid).get(command) <= Time.millis();
     }
 
-    public static void runned(String uuid, String cmd) {
-        if (!cooldowns.containsKey(uuid)) cooldowns.put(uuid, new ObjectMap<>());
-        cooldowns.get(uuid).put(cmd, Time.millis() + defaults.get(cmd) * 1000L);
+    public static void run(String uuid, String command) {
+        cooldowns.get(uuid, ObjectMap::new).put(command, Time.millis() + defaults.get(command) * 1000L);
     }
 }

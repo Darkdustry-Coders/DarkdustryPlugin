@@ -6,9 +6,9 @@ import arc.util.Structs;
 import mindustry.game.Team;
 import rewrite.DarkdustryPlugin;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.content;
 import static rewrite.PluginVars.*;
-import static rewrite.utils.Utils.*;
+import static rewrite.utils.Utils.coloredTeam;
 
 public class Icons {
 
@@ -25,7 +25,7 @@ public class Icons {
             Team.sharded.emoji = get("sharded");
             Team.crux.emoji = get("crux");
             Team.malis.emoji = get("malis");
-            Team.green.emoji = get("shocked");
+            Team.green.emoji = get("electrified");
             Team.blue.emoji = get("wet");
 
             content.items().each(item -> items += " " + get(item.name) + item.name);

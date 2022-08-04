@@ -41,8 +41,8 @@ public class Alerts {
     }
 
     public static void buildAlert(BuildSelectEvent event) {
-        if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !Cooldowns.runnable("", "alerts")) return;
-        Cooldowns.runned("", "alerts");
+        if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !Cooldowns.canRun("", "alerts")) return;
+        Cooldowns.run("", "alerts");
 
         event.team.data().players.each(Alerts::isAlertsEnabled, player -> {
             bundled(player, "alerts.dangerous-building", event.builder.getPlayer().name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
