@@ -3,10 +3,12 @@ package rewrite.listeners;
 import arc.Events;
 import arc.func.Cons;
 import mindustry.game.EventType.*;
+import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import rewrite.DarkdustryPlugin;
 import rewrite.components.Database.PlayerData;
 import rewrite.discord.Bot;
+import rewrite.features.Alerts;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
 import rewrite.features.history.*;
@@ -44,12 +46,20 @@ public class PluginEvents {
             data.buildingsBuilt++;
             setPlayerData(data);
         });
-        Events.on(BuildSelectEvent.class, event -> {});
+        Events.on(BuildSelectEvent.class, event -> {
+            if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.isPlayer()) return;
+            Alerts.buildAlert(event);
+        });
         Events.on(ConfigEvent.class, event -> {});
         Events.on(DepositEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new DepositEntry(event), event.tile.tile);
+            Alerts.depositAlert(event);
         });
-        Events.on(GameOverEvent.class, gameover = event -> {});
+        Events.on(GameOverEvent.class, gameover = event -> Groups.player.each(player -> {
+            PlayerData data = getPlayerData(player.uuid());
+            data.gamesPlayed++;
+            setPlayerData(data);
+        }));
         Events.on(PlayerJoin.class, event -> {
             PlayerData data = getPlayerData(event.player);
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
@@ -73,8 +83,6 @@ public class PluginEvents {
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
-            activeHistory.remove(event.player.uuid());
-            // activeSpectatingPlayers.remove(event.player.uuid());
 
             // if (currentVoteKick != null && event.player == currentVoteKick.target()) {
             //     currentVoteKick.stop();
@@ -113,7 +121,10 @@ public class PluginEvents {
         Events.on(WithdrawEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
         });
-        Events.on(WorldLoadEvent.class, event -> History.clear());
+        Events.on(WorldLoadEvent.class, event -> {
+            activeHistory.clear();
+            History.clear();
+        });
 
         Events.run("HexedGameOver", () -> gameover.get(null));
         Events.run("CastleGameOver", () -> gameover.get(null));
