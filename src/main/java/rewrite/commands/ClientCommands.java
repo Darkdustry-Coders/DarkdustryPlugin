@@ -40,19 +40,13 @@ public class ClientCommands extends Commands<Player> {
         register("players", (args, player) -> {
 
         });
-
-        if (config.mode != Gamemode.hub) register("hub", (args, player) -> {
-
-        });
-
-        if (config.mode == Gamemode.pvp) register("surrender", (args, player) -> {
-
-        });
-
-        register("votekick", (args, player) -> {
+        register("hub", (args, player) -> {
 
         });
         register("vote", (args, player) -> {
+
+        });
+        register("votekick", (args, player) -> {
 
         });
 
@@ -67,16 +61,16 @@ public class ClientCommands extends Commands<Player> {
         register("nominate", (args, player) -> {
 
         });
-        register("history", (args, player) -> {
-
-        });
-        register("alerts", (args, player) -> {
-
-        });
         register("maps", (args, player) -> {
 
         });
         register("saves", (args, player) -> {
+
+        });
+        register("history", (args, player) -> {
+
+        });
+        register("alerts", (args, player) -> {
 
         });
         register("login", (args, player) -> {
