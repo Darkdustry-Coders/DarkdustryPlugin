@@ -25,12 +25,6 @@ public class ClientCommands extends Commands<Player> {
         register("t", (args, player) -> {
 
         });
-        register("votekick", (args, player) -> {
-
-        });
-        register("vote", (args, player) -> {
-
-        });
         register("sync", (args, player) -> {
 
         });
@@ -55,18 +49,28 @@ public class ClientCommands extends Commands<Player> {
 
         });
 
+        register("votekick", (args, player) -> {
+
+        });
+        register("vote", (args, player) -> {
+
+        });
+
         if (!config.mode.isDefault()) return;
 
-        register("history", (args, player) -> {
-
-        });
-        register("alerts", (args, player) -> {
-
-        });
         register("rtv", (args, player) -> {
 
         });
         register("vnw", (args, player) -> {
+
+        });
+        register("nominate", (args, player) -> {
+
+        });
+        register("history", (args, player) -> {
+
+        });
+        register("alerts", (args, player) -> {
 
         });
         register("maps", (args, player) -> {
@@ -75,13 +79,6 @@ public class ClientCommands extends Commands<Player> {
         register("saves", (args, player) -> {
 
         });
-        register("nominate", (args, player) -> {
-
-        });
-        register("voting", (args, player) -> {
-
-        });
-
         register("login", (args, player) -> {
             if (isAdmin(player) || isCooldowned(player, "login")) return;
 
