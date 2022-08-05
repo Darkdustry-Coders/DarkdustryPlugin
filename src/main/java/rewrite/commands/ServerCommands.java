@@ -1,6 +1,12 @@
 package rewrite.commands;
 
+import arc.struct.Seq;
 import arc.util.CommandHandler;
+import arc.util.Log;
+import arc.util.OS;
+import arc.util.CommandHandler.Command;
+import mindustry.core.Version;
+import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
@@ -11,6 +17,7 @@ import java.util.Locale;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 import static rewrite.utils.Checks.*;
 
 public class ServerCommands extends Commands<NullPointerException> {
@@ -19,17 +26,27 @@ public class ServerCommands extends Commands<NullPointerException> {
         super(handler, locale);
 
         register("help", args -> {
-
+            Seq<Command> commandsList = serverCommands.getCommandList();
+            DarkdustryPlugin.info("Команды для консоли: (@)", commandsList.size);
+            commandsList.each(command -> Log.info("  &b&lb" + command.text
+                                                            + (command.paramText.isEmpty() ? "" : " &lc&fi")
+                                                            + command.paramText + "&fr - &lw"
+                                                            + command.description));
         });
         register("version", args -> {
-
+            DarkdustryPlugin.info("Mindustry @-@ @ / билд @",
+                    Version.number, Version.modifier, Version.type,
+                    Version.build + (Version.revision == 0 ? "" : "." + Version.revision));
+            DarkdustryPlugin.info("Версия Java: @", OS.javaVersion);
         });
         register("exit", args -> {
             DarkdustryPlugin.info("Выключаю сервер...");
             System.exit(2);
         });
         register("stop", args -> {
-
+            net.closeServer();
+            state.set(State.menu);
+            DarkdustryPlugin.info("Сервер остановлен.");
         });
         register("host", args -> {
             if (isLanuched()) return;

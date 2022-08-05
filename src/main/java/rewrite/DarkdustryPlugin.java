@@ -20,6 +20,7 @@ import rewrite.features.Ranks.Rank;
 import rewrite.listeners.*;
 import rewrite.utils.Find;
 
+import static arc.Core.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
@@ -74,16 +75,16 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        new ClientCommands(clientCommands = handler, defaultLocale);
+        app.post(() -> new ClientCommands(clientCommands = handler, defaultLocale));
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        new ServerCommands(serverCommands = handler, consoleLocale);
+        app.post(() -> new ServerCommands(serverCommands = handler, consoleLocale));
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler, consoleLocale);
+        app.post(() -> new DiscordCommands(discordCommands = handler, consoleLocale));
     }
 
     public static void info(String text) {
