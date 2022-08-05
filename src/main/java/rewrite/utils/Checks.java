@@ -23,6 +23,10 @@ import static rewrite.components.Bundle.*;
 
 public class Checks { // TODO: рефакторнуть
 
+    public static boolean isCooldowned(Player player) {
+        return check(Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
+    }
+
     public static boolean isCooldowned(Player player, String cmd) {
         return check(Cooldowns.canRun(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
     }
@@ -61,6 +65,10 @@ public class Checks { // TODO: рефакторнуть
 
     public static boolean notVoting(Player player) {
         return check(vote == null, player, "commands.no-voting");
+    }
+
+    public static boolean notFound(Player player, String language) {
+        return check(!translatorLanguages.containsKey(language), player, "commands.tr.not-found");
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {

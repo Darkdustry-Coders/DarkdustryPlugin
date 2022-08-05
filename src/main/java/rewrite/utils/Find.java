@@ -18,6 +18,7 @@ import java.util.Locale;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.utils.Utils.*;
 
@@ -63,5 +64,10 @@ public class Find {
 
     public static Block core(String name) {
         return content.blocks().select(block -> block instanceof CoreBlock).find(block -> block.name.split("-")[1].equalsIgnoreCase(name));
+    }
+
+    public static String language(String name) {
+        if (mindustry2Api.containsKey(name)) return mindustry2Api.get(name);
+        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(language -> name.equals(language) || name.startsWith(language)), defaultLanguage);
     }
 }

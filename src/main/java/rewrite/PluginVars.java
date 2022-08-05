@@ -11,7 +11,7 @@ import rewrite.features.votes.VoteSession;
 import static mindustry.Vars.*;
 import static rewrite.components.Config.Gamemode.*;
 
-public class PluginVars {
+public class PluginVars { // TODO: класс для итераций seq по страницам
 
     /** Текущее голосование, всегда одно на весь сервер. */
     public static VoteSession vote;
