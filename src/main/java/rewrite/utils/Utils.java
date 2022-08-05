@@ -20,6 +20,14 @@ import static rewrite.components.Bundle.*;
 
 public class Utils {
 
+    public static int voteChoice(String sign) {
+        return switch (sign.toLowerCase()) {
+            case "y", "yes", "+" -> 1;
+            case "n", "no", "-" -> -1;
+            default -> 0;
+        };
+    }
+
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
     }

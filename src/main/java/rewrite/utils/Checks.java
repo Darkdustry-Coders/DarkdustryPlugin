@@ -5,6 +5,7 @@ import mindustry.game.Gamemode;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
+import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -17,9 +18,10 @@ import java.util.List;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 
-public class Checks {
+public class Checks { // TODO: рефакторнуть
 
     public static boolean isCooldowned(Player player, String cmd) {
         return check(Cooldowns.canRun(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
@@ -33,8 +35,32 @@ public class Checks {
         return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
+    public static boolean isVoted(Player player) {
+        return check(vote.voted.contains(player.uuid()), player, "commands.already-voted");
+    }
+
+    public static boolean isVoting(Player player) {
+        return check(vote != null, player, "commands.vote-already-started");
+    }
+
+    public static boolean isDisabled(Player player) {
+        return check(!Config.enableVotekick.bool(), player, "commands.votekick.disabled");
+    }
+
+    public static boolean isInvalide(Player player, Player target) {
+        return check(target == player, player, "commands.votekick.player-is-you") || check(target.admin, player, "commands.votekick.player-is-admin") || check(target.team() != player.team(), player, "commands.votekick.player-is-enemy");
+    }
+
+    public static boolean isInvalide(Player player, int sign) {
+        return check(sign == 0, player, "commands.vote.incorrect-sign");
+    }
+
     public static boolean isAdmin(Player player) {
         return check(player.admin, player, "commands.login.already-admin");
+    }
+
+    public static boolean notVoting(Player player) {
+        return check(vote == null, player, "commands.no-voting");
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {
@@ -43,6 +69,18 @@ public class Checks {
 
     public static boolean notFound(Map map, String name[]) {
         return check(map == null, "Карта @ не найдена.", name[0]);
+    }
+
+    public static boolean notFound(Player player, Map map) {
+        return check(map == null, player, "commands.nominate.map.not-found");
+    }
+
+    public static boolean notFound(Player player, Fi file) {
+        return check(file == null, player, "commands.nominate.load.not-found");
+    }
+
+    public static boolean notFound(Player player, Player target, String name) {
+        return check(target == null, player, "commands.player-not-found", name);
     }
 
     public static boolean notFound(MessageContext context, Map map) {

@@ -9,7 +9,7 @@ public class Cooldowns {
     public static final ObjectMap<String, Long> defaults = ObjectMap.of(
             "sync",     15,
             "login",    900,
-            "kick",     300,
+            "votekick", 300,
             "nominate", 150,
             "alerts",   3); // плохая идея для алертов
 

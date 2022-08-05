@@ -48,13 +48,13 @@ public class Find {
     }
 
     public static Map map(String name) {
-        Seq<Map> mapsList = maps.customMaps();
-        return canParsePositiveInt(name) && parseInt(name) < mapsList.size ? mapsList.get(parseInt(name)) : mapsList.find(map -> deepEquals(map.name(), name));
+        Seq<Map> list = maps.customMaps();
+        return canParsePositiveInt(name) && parseInt(name) < list.size ? list.get(parseInt(name)) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        Seq<Fi> savesList = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return canParsePositiveInt(name) && parseInt(name) < savesList.size ? savesList.get(parseInt(name)) : savesList.find(save -> deepEquals(save.nameWithoutExtension(), name));
+        Seq<Fi> list = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
+        return canParsePositiveInt(name) && parseInt(name) < list.size ? list.get(parseInt(name)) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {
