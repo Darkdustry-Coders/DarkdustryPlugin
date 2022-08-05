@@ -81,7 +81,7 @@ public class MenuHandler {
     }
 
     public static void showMenu(Player player, int menu, String title, String cont, String[][] buttons) {
-        showMenu(player, menu, title, cont, buttons);
+        showMenu(player, menu, title, cont, buttons, null);
     }
 
     public static void showMenu(Player player, int menu, String title, String cont, String[][] buttons, Object titleobj, Object... contobjs) {

@@ -7,11 +7,11 @@ public class Cooldowns {
 
     public static final ObjectMap<String, ObjectMap<String, Long>> cooldowns = new ObjectMap<>();
     public static final ObjectMap<String, Long> defaults = ObjectMap.of(
-            "sync",     15,
-            "login",    900,
-            "votekick", 300,
-            "nominate", 150,
-            "alerts",   3); // плохая идея для алертов
+            "sync",     15L,
+            "login",    900L,
+            "votekick", 300L,
+            "nominate", 150L,
+            "alerts",   3L); // плохая идея для алертов
 
     public static boolean canRun(String uuid, String command) {
         if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(command)) return true;

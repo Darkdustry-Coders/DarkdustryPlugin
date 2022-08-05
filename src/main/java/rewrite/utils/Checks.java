@@ -24,11 +24,11 @@ import static rewrite.components.Bundle.*;
 public class Checks { // TODO: рефакторнуть
 
     public static boolean isCooldowned(Player player) {
-        return check(Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
+        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
     }
 
     public static boolean isCooldowned(Player player, String cmd) {
-        return check(Cooldowns.canRun(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
+        return check(!Cooldowns.canRun(player.uuid(), cmd), player, "commands.cooldown", Cooldowns.defaults.get(cmd) / 60L);
     }
 
     public static boolean isLanuched() {
@@ -109,14 +109,6 @@ public class Checks { // TODO: рефакторнуть
 
     public static boolean notAdmin(ButtonInteractionEvent event) {
         return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue());
-    }
-
-    public static boolean notPage(Player player, String[] page) {
-        return check(page.length > 0 && !canParseInt(page[0]), player, "commands.page-not-int");
-    }
-
-    public static boolean notPage(Player player, int page, int pages) {
-        return check(--page >= pages || page < 0, player, "commands.under-page", pages);
     }
 
     public static boolean notPage(MessageContext context, String[] page) {
