@@ -53,7 +53,7 @@ public class PluginVars {
     public static final String defaultLanguage = "en";
 
     /** Язык консоли и дискорда. */
-    public static final String consoleLanguage = "ru";
+    public static final String consoleLanguage = "cs";
 
     /** Название файла, в котором хранится конфигурация сервера. */
     public static final String configFileName = "config.json";

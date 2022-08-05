@@ -20,11 +20,11 @@ public class Commands<T> {
 
     public void register(String name, CommandRunner<T> runner) {
         String params = get("commands." + name + ".params", locale);
-        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description"), runner);
+        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description", locale), runner);
     }
 
     public void register(String name, Cons<String[]> runner) {
         String params = get("commands." + name + ".params", locale);
-        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description"), runner);
+        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description", locale), runner);
     }
 }

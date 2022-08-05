@@ -25,6 +25,9 @@ public class ServerCommands extends Commands<NullPointerException> {
     public ServerCommands(CommandHandler handler, Locale locale) {
         super(handler, locale);
 
+        for (String command : new String[] { "mod", "mods", "fillitems", "pause", "shuffle", "runwave" })
+            handler.removeCommand(command);
+
         register("help", args -> {
             Seq<Command> commandsList = serverCommands.getCommandList();
             DarkdustryPlugin.info("Команды для консоли: (@)", commandsList.size);
