@@ -11,8 +11,8 @@ import static rewrite.utils.Checks.*;
 
 public class AdminCommands extends Commands<Player> {
 
-    public AdminCommands(CommandHandler handler, Locale locale) {
-        super(handler, locale);
+    public AdminCommands(CommandHandler handler, Locale def) {
+        super(handler, def);
 
         register("a", (args, player) -> {
 

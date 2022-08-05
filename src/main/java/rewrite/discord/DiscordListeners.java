@@ -25,8 +25,7 @@ public class DiscordListeners extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (!loginWaiting.containsKey(event.getMessage())) return;
-        if (notAdmin(event)) return;
+        if (!loginWaiting.containsKey(event.getMessage()) || notAdmin(event)) return;
 
         switch (event.getComponentId()) {
             case "authme.confirm" -> Authme.confirm(event);

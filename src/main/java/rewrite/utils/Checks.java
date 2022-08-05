@@ -107,11 +107,15 @@ public class Checks { // TODO: рефакторнуть
         return check(page.length > 0 && !canParseInt(page[0]), player, "commands.page-not-int");
     }
 
-    public static boolean notPageDs(MessageContext context, String[] page) {
+    public static boolean notPage(Player player, int page, int pages) {
+        return check(--page >= pages || page < 0, player, "commands.under-page", pages);
+    }
+
+    public static boolean notPage(MessageContext context, String[] page) {
         return check(page.length > 0 && !canParseInt(page[0]), context, ":interrobang: Страница должна быть числом.", "Зачем ты это делаешь?");
     }
 
-    public static boolean notPageDs(MessageContext context, int page, int pages) {
+    public static boolean notPage(MessageContext context, int page, int pages) {
         return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
     }
 

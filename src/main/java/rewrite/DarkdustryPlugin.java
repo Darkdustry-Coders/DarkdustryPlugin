@@ -20,7 +20,6 @@ import rewrite.features.Ranks.Rank;
 import rewrite.listeners.*;
 import rewrite.utils.Find;
 
-import static arc.Core.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
@@ -35,7 +34,6 @@ public class DarkdustryPlugin extends Plugin {
         Effects.load();
         Alerts.load();
         Config.load();
-        Bundle.load();
         Icons.load();
         Ranks.load();
         PluginEvents.load();
@@ -75,16 +73,18 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        app.post(() -> new ClientCommands(clientCommands = handler, defaultLocale));
+        new ClientCommands(clientCommands = handler, defaultLocale);
+        new AdminCommands(handler, defaultLocale);
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        app.post(() -> new ServerCommands(serverCommands = handler, consoleLocale));
+        Bundle.load(); // загружаем бандлы тут, т.к. они используются для регистрации команд
+        new ServerCommands(serverCommands = handler, consoleLocale);
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        app.post(() -> new DiscordCommands(discordCommands = handler, consoleLocale));
+        new DiscordCommands(discordCommands = handler, consoleLocale);
     }
 
     public static void info(String text) {

@@ -22,8 +22,8 @@ import static rewrite.utils.Checks.*;
 
 public class ServerCommands extends Commands<NullPointerException> {
 
-    public ServerCommands(CommandHandler handler, Locale locale) {
-        super(handler, locale);
+    public ServerCommands(CommandHandler handler, Locale def) {
+        super(handler, def);
 
         for (String command : new String[] { "mod", "mods", "fillitems", "pause", "shuffle", "runwave" })
             handler.removeCommand(command);

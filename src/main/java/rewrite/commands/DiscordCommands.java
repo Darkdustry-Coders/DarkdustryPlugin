@@ -31,8 +31,8 @@ import static rewrite.utils.Utils.*;
 
 public class DiscordCommands extends Commands<MessageContext> {
 
-    public DiscordCommands(CommandHandler handler, Locale locale) {
-        super(handler, locale);
+    public DiscordCommands(CommandHandler handler, Locale def) {
+        super(handler, def);
 
         register("help", (args, context) -> {
             StringBuilder commands = new StringBuilder();
@@ -50,14 +50,14 @@ public class DiscordCommands extends Commands<MessageContext> {
         });
 
         register("players", (args, context) -> {
-            if (notPageDs(context, args)) return;
+            if (notPage(context, args)) return;
             if (Groups.player.isEmpty()) {
                 context.info(":satellite: На сервере нет игроков.");
                 return;
             }
 
             int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Mathf.ceil(Groups.player.size() / 16f);
-            if (notPageDs(context, page, pages)) return;
+            if (notPage(context, page, pages)) return;
 
             StringBuilder result = new StringBuilder();
             Seq<Player> list = Groups.player.copy(new Seq<>());
@@ -133,14 +133,14 @@ public class DiscordCommands extends Commands<MessageContext> {
         });
 
         register("maps", (args, context) -> {
-            if (notPageDs(context, args)) return;
+            if (notPage(context, args)) return;
             if (maps.customMaps().isEmpty()) {
                 context.info(":map: На сервере нет карт.");
                 return;
             }
 
             int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Mathf.ceil(maps.customMaps().size / 16f);
-            if (notPageDs(context, page, pages)) return;
+            if (notPage(context, page, pages)) return;
 
             StringBuilder result = new StringBuilder();
             Seq<Map> list = maps.customMaps();
