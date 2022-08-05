@@ -9,7 +9,7 @@ import mindustry.gen.Player;
 
 import static rewrite.PluginVars.*;
 
-public abstract class VoteSession { // TODO: сори, я забыл добавить vote для rtv и vnw, если сможешь, сделай пж, если нет, ладно ;-;
+public abstract class VoteSession {
 
     /** Общий счёт голосов. */
     public int votes;
@@ -22,8 +22,8 @@ public abstract class VoteSession { // TODO: сори, я забыл добав�
         end = Timer.schedule(this::fail, voteDuration);
     }
 
-    public void vote(Player player, int sing) {
-        votes += sing;
+    public void vote(Player player, int sign) {
+        votes += sign;
         voted.add(player.uuid());
         if (votes >= votesRequired()) success();
     }

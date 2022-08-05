@@ -18,8 +18,8 @@ public class VoteMap extends VoteSession {
     }
 
     @Override
-    public void vote(Player player, int sing) {
-        super.vote(player, sing);
+    public void vote(Player player, int sign) {
+        super.vote(player, sign);
         sendToChat("commands.nominate.map.vote", player.name, target.name(), votes, votesRequired());
     }
 
