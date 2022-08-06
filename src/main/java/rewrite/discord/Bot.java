@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.AllowedMentions;
 import rewrite.DarkdustryPlugin;
 import rewrite.utils.Find;
@@ -33,8 +34,16 @@ public class Bot {
 
     public static void connect() {
         try {
-            jda = JDABuilder.createLight(config.discordBotToken).addEventListeners(new DiscordListeners()).build();
-            jda.awaitReady();
+            EnumSet<GatewayIntent> intents = EnumSet.allOf(GatewayIntent.class);
+            intents.remove(GatewayIntent.GUILD_PRESENCES); // Съедает слишком много трафика
+            intents.remove(GatewayIntent.GUILD_WEBHOOKS); // Абсолютно бесполезный
+            intents.remove(GatewayIntent.GUILD_MESSAGE_TYPING); // Абсолютно бесполезный
+            intents.remove(GatewayIntent.DIRECT_MESSAGE_TYPING); // Абсолютно бесполезный
+
+            jda = JDABuilder.createLight(config.discordBotToken, intents)
+                    .addEventListeners(new DiscordListeners())
+                    .build()
+                    .awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);
