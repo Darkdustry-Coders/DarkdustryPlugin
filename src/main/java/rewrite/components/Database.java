@@ -42,6 +42,7 @@ public class Database {
     }
 
     public static class PlayerData {
+
         public String uuid;
         public String language = "off";
 

@@ -33,6 +33,7 @@ public class History {
     }
 
     public static class HistoryStack extends Queue<HistoryEntry> {
+
         public HistoryStack() {
             super(maxHistoryCapacity);
         }
