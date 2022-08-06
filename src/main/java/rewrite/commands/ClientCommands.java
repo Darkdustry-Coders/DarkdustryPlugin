@@ -22,7 +22,7 @@ import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 import static rewrite.utils.Checks.*;
-import static rewrite.utils.Utils.voteChoice;
+import static rewrite.utils.Utils.*;
 
 public class ClientCommands extends Commands<Player> {
 

@@ -8,11 +8,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static mindustry.Vars.netServer;
-import static rewrite.PluginVars.loginWaiting;
-import static rewrite.components.Bundle.bundled;
+import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
 
 public class Authme {
 
@@ -28,18 +28,14 @@ public class Authme {
             player.admin(true);
 
             bundled(player, "commands.login.confirm");
-            return new EmbedBuilder()
-                    .setColor(Color.green)
-                    .setTitle("Запрос подтвержден");
+            return new EmbedBuilder().setColor(Color.green).setTitle("Запрос подтвержден");
         });
     }
 
     public static void deny(ButtonInteractionEvent event) {
         remove(event, player -> {
             bundled(player, "commands.login.deny");
-            return new EmbedBuilder()
-                    .setColor(Color.red)
-                    .setTitle("Запрос отклонён");
+            return new EmbedBuilder().setColor(Color.red).setTitle("Запрос отклонён");
         });
     }
 

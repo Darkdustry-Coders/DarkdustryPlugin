@@ -6,9 +6,9 @@ import arc.util.Structs;
 import mindustry.game.Team;
 import rewrite.DarkdustryPlugin;
 
-import static mindustry.Vars.content;
+import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
-import static rewrite.utils.Utils.coloredTeam;
+import static rewrite.utils.Utils.*;
 
 public class Icons {
 

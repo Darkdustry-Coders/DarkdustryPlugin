@@ -6,8 +6,8 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static rewrite.PluginVars.config;
-import static rewrite.utils.Checks.notAdmin;
+import static rewrite.PluginVars.*;
+import static rewrite.utils.Checks.*;
 
 public class AdminCommands extends Commands<Player> {
 

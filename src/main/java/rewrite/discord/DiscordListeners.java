@@ -5,11 +5,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rewrite.features.Authme;
 
-import static arc.Core.app;
-import static rewrite.PluginVars.loginWaiting;
-import static rewrite.discord.Bot.handleMessage;
-import static rewrite.discord.Bot.sendMessageToGame;
-import static rewrite.utils.Checks.notAdmin;
+import static arc.Core.*;
+import static rewrite.PluginVars.*;
+import static rewrite.discord.Bot.*;
+import static rewrite.utils.Checks.*;
 
 public class DiscordListeners extends ListenerAdapter {
 

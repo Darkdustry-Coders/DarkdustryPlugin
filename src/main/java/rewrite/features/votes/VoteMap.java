@@ -4,10 +4,9 @@ import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 
-import static mindustry.Vars.state;
-import static mindustry.Vars.world;
-import static rewrite.components.Bundle.sendToChat;
-import static rewrite.utils.Utils.reloadWorld;
+import static mindustry.Vars.*;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Utils.*;
 
 public class VoteMap extends VoteSession {
 

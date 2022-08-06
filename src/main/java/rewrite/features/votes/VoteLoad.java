@@ -5,8 +5,8 @@ import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static rewrite.components.Bundle.sendToChat;
-import static rewrite.utils.Utils.reloadWorld;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Utils.*;
 
 public class VoteLoad extends VoteSession {
 

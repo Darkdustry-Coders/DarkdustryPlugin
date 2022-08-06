@@ -11,24 +11,19 @@ import rewrite.discord.Bot;
 import rewrite.features.Alerts;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
-import rewrite.features.history.BlockEntry;
-import rewrite.features.history.DepositEntry;
-import rewrite.features.history.History;
+import rewrite.features.history.*;
 import rewrite.features.history.History.HistoryStack;
-import rewrite.features.history.WithdrawEntry;
 import rewrite.features.votes.VoteKick;
 import rewrite.utils.Find;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static arc.Core.app;
-import static arc.util.Strings.stripColors;
+import static arc.Core.*;
+import static arc.util.Strings.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
-import static rewrite.components.Database.getPlayerData;
-import static rewrite.components.Database.setPlayerData;
-import static rewrite.components.MenuHandler.showMenu;
-import static rewrite.components.MenuHandler.welcomeMenu;
+import static rewrite.components.Database.*;
+import static rewrite.components.MenuHandler.*;
 
 public class PluginEvents {
 
@@ -53,8 +48,7 @@ public class PluginEvents {
             setPlayerData(data);
         });
         Events.on(BuildSelectEvent.class, event -> {
-            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer())
-                return;
+            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer()) return;
             Alerts.buildAlert(event);
         });
         Events.on(ConfigEvent.class, event -> {});

@@ -2,15 +2,14 @@ package rewrite.listeners;
 
 import arc.util.Log;
 import mindustry.gen.Player;
-import mindustry.net.Administration.ActionType;
-import mindustry.net.Administration.PlayerAction;
+import mindustry.net.Administration.*;
 import rewrite.discord.Bot;
 import rewrite.features.Translator;
 import rewrite.features.history.History;
 import rewrite.features.history.RotateEntry;
 
-import static arc.util.Strings.stripColors;
-import static mindustry.Vars.netServer;
+import static arc.util.Strings.*;
+import static mindustry.Vars.*;
 
 public class Filters {
 

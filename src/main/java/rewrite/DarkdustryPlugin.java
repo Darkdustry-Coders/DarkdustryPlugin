@@ -12,56 +12,24 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import rewrite.commands.AdminCommands;
-import rewrite.commands.ClientCommands;
-import rewrite.commands.DiscordCommands;
-import rewrite.commands.ServerCommands;
+import rewrite.commands.*;
 import rewrite.components.*;
 import rewrite.discord.Bot;
-import rewrite.features.Alerts;
-import rewrite.features.Effects;
-import rewrite.features.Ranks;
+import rewrite.features.*;
 import rewrite.features.Ranks.Rank;
-import rewrite.features.Translator;
 import rewrite.listeners.Filters;
 import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.net;
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.rankIncreaseMenu;
-import static rewrite.components.MenuHandler.showMenu;
+import static rewrite.components.MenuHandler.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
-
-    public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler, consoleLocale);
-    }
-
-    public static void info(String text) {
-        Log.infoTag("Darkdustry", text);
-    }
-
-    public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", Strings.format(text, values));
-    }
-
-    public static void disc(String text, Object... values) {
-        Log.infoTag("Discord", Strings.format(text, values));
-    }
-
-    public static void error(String text) {
-        Log.errTag("Darkdustry", text);
-    }
-
-    public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", Strings.format(text, values));
-    }
 
     @Override
     public void init() {
@@ -115,5 +83,29 @@ public class DarkdustryPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         Bundle.load(); // загружаем бандлы тут, т.к. они используются для регистрации команд
         new ServerCommands(serverCommands = handler, consoleLocale);
+    }
+
+    public static void registerDiscordCommands(CommandHandler handler) {
+        new DiscordCommands(discordCommands = handler, consoleLocale);
+    }
+
+    public static void info(String text) {
+        Log.infoTag("Darkdustry", text);
+    }
+
+    public static void info(String text, Object... values) {
+        Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void disc(String text, Object... values) {
+        Log.infoTag("Discord", Strings.format(text, values));
+    }
+
+    public static void error(String text) {
+        Log.errTag("Darkdustry", text);
+    }
+
+    public static void error(String text, Object... values) {
+        Log.errTag("Darkdustry", Strings.format(text, values));
     }
 }

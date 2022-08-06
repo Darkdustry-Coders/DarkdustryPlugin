@@ -13,15 +13,13 @@ import rewrite.DarkdustryPlugin;
 import rewrite.discord.Bot;
 import rewrite.discord.MessageContext;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 import java.util.Objects;
 
-import static arc.util.Strings.canParseInt;
-import static mindustry.Vars.mapExtension;
-import static mindustry.Vars.state;
-import static rewrite.PluginVars.translatorLanguages;
-import static rewrite.PluginVars.vote;
+import static arc.util.Strings.*;
+import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.bundled;
 
 public class Checks { // TODO: рефакторнуть

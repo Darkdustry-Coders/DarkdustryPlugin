@@ -3,7 +3,7 @@ package rewrite.components;
 import arc.util.Http;
 import mindustry.mod.Mods.LoadedMod;
 
-import static rewrite.utils.Utils.getPlugin;
+import static rewrite.utils.Utils.*;
 
 public class PluginUpdater {
 

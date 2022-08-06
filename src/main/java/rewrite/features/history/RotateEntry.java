@@ -7,9 +7,9 @@ import mindustry.net.Administration.PlayerAction;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.content;
-import static rewrite.components.Bundle.format;
-import static rewrite.utils.Utils.formatDate;
+import static mindustry.Vars.*;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Utils.*;
 
 public class RotateEntry implements HistoryEntry {
 
