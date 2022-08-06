@@ -6,7 +6,6 @@ import arc.util.Time;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import rewrite.components.MenuHandler;
 import rewrite.discord.Bot;
 import rewrite.features.Ranks;
 import rewrite.features.Ranks.Rank;
@@ -21,6 +20,7 @@ import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
+import static rewrite.components.MenuHandler.*;
 import static rewrite.utils.Checks.*;
 import static rewrite.utils.Utils.*;
 
@@ -74,7 +74,15 @@ public class ClientCommands extends Commands<Player> {
         });
 
         register("stats", (args, player) -> {
+            Player target = args.length > 0 ? Find.player(args[0]) : player;
+            if (notFound(player, target, args[0])) return;
 
+            PlayerData data = getPlayerData(target.uuid());
+            Rank rank = Ranks.getRank(data.rank);
+
+            showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
+                    new String[][] {{"ui.menus.close"}}, target.name, rank.tag, rank.localisedName(Find.locale(player.locale)),
+                    data.playTime, data.buildingsBuilt, data.gamesPlayed);
         });
 
         register("rank", (args, player) -> {
@@ -98,7 +106,7 @@ public class ClientCommands extends Commands<Player> {
                         data.gamesPlayed,
                         next.req.gamesPlayed()));
 
-            Call.menu(player.con, MenuHandler.rankInfoMenu,
+            Call.menu(player.con, rankInfoMenu,
                     format("commands.rank.menu.header", locale, target.name),
                     builder.toString(),
                     new String[][] {{format("ui.menus.close", locale)}, {format("commands.rank.menu.requirements", locale)}});
