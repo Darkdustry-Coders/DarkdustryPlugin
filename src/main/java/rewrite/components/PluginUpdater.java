@@ -12,6 +12,8 @@ public class PluginUpdater {
         LoadedMod plugin = getPlugin();
         String version = plugin.meta.version;
 
-        Http.get(plugin.meta.repo).submit(response -> {});
+        Http.get(plugin.meta.repo).submit(response -> {
+            if (response.getHeader("version") == version) return;
+        });
     }
 }

@@ -2,10 +2,12 @@ package rewrite.utils;
 
 import arc.files.Fi;
 import mindustry.game.Gamemode;
+import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
+import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -86,6 +88,18 @@ public class Checks { // TODO: рефакторнуть
 
     public static boolean notFound(Player player, Fi file) {
         return check(file == null, player, "commands.nominate.load.not-found");
+    }
+
+    public static boolean notFound(Player player, Team team){
+        return check(team == null, player, "commands.team-not-found", teams);
+    }
+
+    public static boolean notFound(Player player, Block block){
+        return check(block == null, player, "commands.block-not-found");
+    }
+
+    public static boolean notFoundCore(Player player, Block block){
+        return check(block == null, player, "commands.core.core-not-found");
     }
 
     public static boolean notFound(Player player, Player target, String name) {
