@@ -31,6 +31,9 @@ public class PluginVars {
     /** Максимальное количество создаваемых юнитов. */
     public static final int maxSpawnAmount = 25;
 
+    /** Максимальная площадь для заливки. */
+    public static final int maxFillAmount = 512;
+
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
 

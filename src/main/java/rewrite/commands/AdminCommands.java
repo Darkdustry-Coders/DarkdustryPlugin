@@ -1,5 +1,6 @@
 package rewrite.commands;
 
+import arc.math.Mathf;
 import arc.util.CommandHandler;
 import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
@@ -8,10 +9,12 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
 
@@ -121,13 +124,67 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("tp", (args, player) -> {
+            if (invalideTpAmount(player, args)) return;
+            int x = Mathf.clamp(Strings.parseInt(args[0]), 0, world.width()), y = Mathf.clamp(Strings.parseInt(args[1]), 0, world.height());
 
+            boolean spawnedNyCore = player.unit().spawnedByCore();
+            Unit unit = player.unit();
+
+            unit.spawnedByCore(false);
+            player.clearUnit();
+
+            unit.set(x * tilesize, y * tilesize);
+            Call.setPosition(player.con, x * tilesize, y * tilesize);
+            Call.setCameraPosition(player.con, x * tilesize, y * tilesize);
+
+            player.unit(unit);
+            unit.spawnedByCore(spawnedNyCore);
         });
-        register("fill", (args, player) -> { // старый добрый fill
 
+        register("fill", (args, player) -> {
+            if (invalideFillAmount(player, args)) return;
+            int width = Strings.parseInt(args[1]), height = Strings.parseInt(args[2]);
+            if (invalideFillAmount(player, width, height)) return;
+
+            Block block = Find.block(args[0]);
+            if (notFound(player, block)) return;
+
+            for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {
+                for (int y = player.tileY(); y < player.tileY() + height; y += block.size) {
+                    Tile tile = world.tile(x, y);
+                    if (tile == null) continue;
+
+                    if (block.isFloor() && !block.isOverlay()) tile.setFloorNet(block, tile.overlay());
+                    else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
+                    else tile.setNet(block, player.team(), 0);
+                }
+            }
+
+            bundled(player, "commands.fill.success", width, height, Icons.get(block.name, block.name));
         });
-        register("full", (args, player) -> { // специально для мода, принимает 4 координаты и 3 блока
 
+        register("full", (args, player) -> {
+            if (invalideFullAmount(player, args)) return;
+            int x1 = Strings.parseInt(args[3]), y1 = Strings.parseInt(args[4]),
+                x2 = Strings.parseInt(args[5]), y2 = Strings.parseInt(args[6]),
+                width = Math.abs(x1 - x2) + 1, height = Math.abs(y1 - y2) + 1;
+            if (invalideFillAmount(player, width, height)) return;
+
+            x1 = Math.min(x1, x2);
+            y1 = Math.min(y1, y2);
+
+            Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
+            for (int x = x1; x < x1 + width; x++) {
+                for (int y = y1; y < y1 + height; y++) {
+                    Tile tile = world.tile(x, y);
+                    if (tile == null) continue;
+
+                    tile.setFloorNet(floor == null ? tile.floor() : floor, overlay == null ? tile.overlay() : overlay);
+                    if (block != null) tile.setNet(block);
+                }
+            }
+
+            bundled(player, "commands.full.success", width, height);
         });
     }
 

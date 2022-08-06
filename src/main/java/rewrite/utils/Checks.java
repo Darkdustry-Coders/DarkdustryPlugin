@@ -105,12 +105,29 @@ public class Checks {
         return check(args.length > 1 && !canParsePositiveInt(args[1]), player, "commands.not-int");
     }
 
+    public static boolean invalideTpAmount(Player player, String[] args) {
+        return check(!canParsePositiveInt(args[0]) || !canParsePositiveInt(args[1]), player, "commands.tp.incorrect-number-format");
+    }
+
+    public static boolean invalideFillAmount(Player player, String[] args) {
+        return check(!canParsePositiveInt(args[1]) || !canParsePositiveInt(args[2]), player, "commands.fill.incorrect-number-format");
+    }
+
+    public static boolean invalideFullAmount(Player player, String[] args) {
+        return check(!canParsePositiveInt(args[3]) || !canParsePositiveInt(args[4]) ||
+                     !canParsePositiveInt(args[5]) || !canParsePositiveInt(args[6]), player, "commands.full.incorrect-number-format");
+    }
+
     public static boolean invalideGiveAmount(Player player, int amount) {
         return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
     }
 
     public static boolean invalideSpawnAmount(Player player, int amount) {
         return check(amount < 1 || amount > maxSpawnAmount, player, "commands.spawn.limit", maxSpawnAmount);
+    }
+
+    public static boolean invalideFillAmount(Player player, int width, int height) {
+        return check(width * height > maxFillAmount, player, "commands.fill.too-big-area", maxSpawnAmount);
     }
 
     public static boolean isVoting(Player player) {
