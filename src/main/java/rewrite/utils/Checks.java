@@ -17,22 +17,15 @@ import rewrite.discord.MessageContext;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Objects;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.bundled;
 
-public class Checks { // TODO: рефакторнуть
+public class Checks {
 
-    public static boolean alreadySynced(Player player) {
-        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
-    }
-
-    public static boolean isCooldowned(Player player, String command) {
-        return check(!Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", Cooldowns.defaults.get(command) / 60L);
-    }
+    // region Console
 
     public static boolean isLaunched() {
         return check(!state.isMenu(), "Сервер уже запущен.");
@@ -42,12 +35,47 @@ public class Checks { // TODO: рефакторнуть
         return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
-    public static boolean alreadyVoted(Player player) {
-        return check(vote.voted.contains(player.uuid()), player, "commands.already-voted");
+    public static boolean notFound(Gamemode mode, String[] name) {
+        return check(mode == null, "Режим игры @ не найден.", name[1]);
     }
 
-    public static boolean isVoting(Player player) {
-        return check(vote != null, player, "commands.vote-already-started");
+    public static boolean notFound(Map map, String[] name) {
+        return check(map == null, "Карта @ не найдена.", name[0]);
+    }
+
+    // endregion
+    // region Client
+
+    public static boolean notAdmin(Player player) {
+        return check(!player.admin, player, "commands.permission-denied");
+    }
+
+    public static boolean notFound(Player player, Map map) {
+        return check(map == null, player, "commands.nominate.map.not-found");
+    }
+
+    public static boolean notFound(Player player, Fi file) {
+        return check(file == null, player, "commands.nominate.load.not-found");
+    }
+
+    public static boolean notFound(Player player, Team team) {
+        return check(team == null, player, "commands.team-not-found", teams);
+    }
+
+    public static boolean notFound(Player player, Block block) {
+        return check(block == null, player, "commands.block-not-found");
+    }
+
+    public static boolean notFoundCore(Player player, Block block) {
+        return check(block == null, player, "commands.core.core-not-found");
+    }
+
+    public static boolean notFound(Player player, Player target, String name) {
+        return check(target == null, player, "commands.player-not-found", name);
+    }
+
+    public static boolean notFound(Player player, String language) {
+        return check(!translatorLanguages.containsKey(language), player, "commands.tr.not-found");
     }
 
     public static boolean votekickDisabled(Player player) {
@@ -62,48 +90,41 @@ public class Checks { // TODO: рефакторнуть
         return check(sign == 0, player, "commands.vote.incorrect-sign");
     }
 
-    public static boolean alreadyAdmin(Player player) {
-        return check(player.admin, player, "commands.login.already-admin");
+    public static boolean isVoting(Player player) {
+        return check(vote != null, player, "commands.vote-already-started");
     }
 
     public static boolean notVoting(Player player) {
         return check(vote == null, player, "commands.no-voting");
     }
 
-    public static boolean notFound(Player player, String language) {
-        return check(!translatorLanguages.containsKey(language), player, "commands.tr.not-found");
+    public static boolean alreadyAdmin(Player player) {
+        return check(player.admin, player, "commands.login.already-admin");
     }
 
-    public static boolean notFound(Gamemode mode, String[] name) {
-        return check(mode == null, "Режим игры @ не найден.", name[1]);
+    public static boolean alreadyVoted(Player player) {
+        return check(vote.voted.contains(player.uuid()), player, "commands.already-voted");
     }
 
-    public static boolean notFound(Map map, String[] name) {
-        return check(map == null, "Карта @ не найдена.", name[0]);
+    public static boolean alreadySynced(Player player) {
+        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
     }
 
-    public static boolean notFound(Player player, Map map) {
-        return check(map == null, player, "commands.nominate.map.not-found");
+    public static boolean isCooldowned(Player player, String command) {
+        return check(!Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", Cooldowns.defaults.get(command) / 60L);
     }
 
-    public static boolean notFound(Player player, Fi file) {
-        return check(file == null, player, "commands.nominate.load.not-found");
+    // endregion
+    // region Discord
+
+    public static boolean notAdmin(MessageContext context) {
+        return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
-    public static boolean notFound(Player player, Team team){
-        return check(team == null, player, "commands.team-not-found", teams);
-    }
-
-    public static boolean notFound(Player player, Block block){
-        return check(block == null, player, "commands.block-not-found");
-    }
-
-    public static boolean notFoundCore(Player player, Block block){
-        return check(block == null, player, "commands.core.core-not-found");
-    }
-
-    public static boolean notFound(Player player, Player target, String name) {
-        return check(target == null, player, "commands.player-not-found", name);
+    public static boolean notAdmin(ButtonInteractionEvent event) {
+        return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(
+                new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
+        ).setEphemeral(true).queue());
     }
 
     public static boolean notFound(MessageContext context, Map map) {
@@ -114,29 +135,9 @@ public class Checks { // TODO: рефакторнуть
         return check(player == null, context, ":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
     }
 
-    public static boolean notAdmin(Player player) {
-        return check(!player.admin, player, "commands.permission-denied");
-    }
-
-    public static boolean notAdmin(MessageContext context) {
-        return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
-    }
-
-    public static boolean notAdmin(ButtonInteractionEvent event) {
-        return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()).setEphemeral(true).queue());
-    }
-
-    public static boolean invalidPage(MessageContext context, String[] page) {
-        return check(page.length > 0 && !canParseInt(page[0]), context, ":interrobang: Страница должна быть числом.", "Зачем ты это делаешь?");
-    }
-
-    public static boolean invalidPage(MessageContext context, int page, int pages) {
-        return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
-    }
-
     public static boolean notMap(MessageContext context) {
         List<Attachment> attachments = context.message.getAttachments();
-        return check(attachments.size() != 1 || !Objects.equals(attachments.get(0).getFileExtension(), mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
+        return check(attachments.size() != 1 || !attachments.get(0).getFileExtension().equals(mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 
     public static boolean notMap(MessageContext context, Fi file) {
@@ -145,6 +146,17 @@ public class Checks { // TODO: рефакторнуть
             file.delete();
         });
     }
+
+    public static boolean invalidPage(MessageContext context, String[] page) { // TODO: после переноса maps и players на PageIterator убрать это
+        return check(page.length > 0 && !canParseInt(page[0]), context, ":interrobang: Страница должна быть числом.", "Зачем ты это делаешь?");
+    }
+
+    public static boolean invalidPage(MessageContext context, int page, int pages) {
+        return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
+    }
+
+    // endregion
+    // region Checks
 
     private static boolean check(boolean result, Runnable todo) {
         if (result) todo.run();
@@ -162,4 +174,6 @@ public class Checks { // TODO: рефакторнуть
     private static boolean check(boolean result, MessageContext context, String... values) {
         return check(result, () -> context.err(values[0], values[1]));
     }
+
+    // endregion
 }
