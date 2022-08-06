@@ -8,6 +8,7 @@ import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
 import mindustry.type.Item;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
@@ -64,6 +65,10 @@ public class Checks {
         return check(item == null, player, "commands.item-not-found", items);
     }
 
+    public static boolean notFound(Player player, UnitType type) {
+        return check(type == null, player, "commands.unit-not-found", units);
+    }
+
     public static boolean notFound(Player player, Block block) {
         return check(block == null, player, "commands.block-not-found");
     }
@@ -100,8 +105,12 @@ public class Checks {
         return check(args.length > 1 && !canParsePositiveInt(args[1]), player, "commands.not-int");
     }
 
-    public static boolean invalideAmount(Player player, int amount) {
+    public static boolean invalideGiveAmount(Player player, int amount) {
         return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
+    }
+
+    public static boolean invalideSpawnAmount(Player player, int amount) {
+        return check(amount < 1 || amount > maxSpawnAmount, player, "commands.spawn.limit", maxSpawnAmount);
     }
 
     public static boolean isVoting(Player player) {

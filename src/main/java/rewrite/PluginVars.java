@@ -28,6 +28,9 @@ public class PluginVars {
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;
 
+    /** Максимальное количество создаваемых юнитов. */
+    public static final int maxSpawnAmount = 25;
+
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
 

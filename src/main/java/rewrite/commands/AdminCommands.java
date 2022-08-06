@@ -10,6 +10,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
@@ -81,7 +82,7 @@ public class AdminCommands extends Commands<Player> {
             if (notFound(player, item)) return;
 
             int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-            if (invalideAmount(player, amount)) return;
+            if (invalideGiveAmount(player, amount)) return;
 
             Team team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team) || notFoundCore(player, team)) return;
@@ -91,11 +92,34 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("unit", (args, player) -> {
+            UnitType type = Find.unit(args[0]);
+            if (notFound(player, type)) return;
 
+            Player target = args.length > 1 ? Find.player(args[1]) : player;
+            if (notFound(player, target, args[0])) return;
+
+            target.unit().spawnedByCore(true);
+            target.unit(type.spawn(target.team(), target.x, target.y));
+            bundled(target, "commands.unit.success", Icons.get(type.name));
+            if (target != player) bundled(player, "commands.unit.success.player", target.name, Icons.get(type.name));
         });
+
         register("spawn", (args, player) -> {
+            if (invalideAmount(player, args)) return;
 
+            UnitType type = Find.unit(args[0]);
+            if (notFound(player, type)) return;
+
+            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            if (invalideSpawnAmount(player, amount)) return;
+
+            Team team = args.length > 2 ? Find.team(args[2]) : player.team();
+            if (notFound(player, team)) return;
+
+            for (int i = 0; i < amount; i++) type.spawn(team, player);
+            bundled(player, "commands.spawn.success", amount, Icons.get(type.name), coloredTeam(team));
         });
+
         register("tp", (args, player) -> {
 
         });
