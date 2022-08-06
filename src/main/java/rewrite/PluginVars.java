@@ -25,6 +25,9 @@ public class PluginVars {
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 8 * tilesize, alertsTimer = 3;
 
+    /** Максимальное количество выдаваемых ресурсов. */
+    public static final int maxGiveAmount = 100000;
+
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
 

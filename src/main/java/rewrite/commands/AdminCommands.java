@@ -1,6 +1,7 @@
 package rewrite.commands;
 
 import arc.util.CommandHandler;
+import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
@@ -8,6 +9,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.graphics.Pal;
+import mindustry.type.Item;
 import mindustry.world.Block;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
@@ -73,8 +75,21 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("give", (args, player) -> {
+            if (invalideAmount(player, args)) return;
 
+            Item item = Find.item(args[0]);
+            if (notFound(player, item)) return;
+
+            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            if (invalideAmount(player, amount)) return;
+
+            Team team = args.length > 2 ? Find.team(args[2]) : player.team();
+            if (notFound(player, team) || notFoundCore(player, team)) return;
+
+            team.core().items.add(item, amount);
+            bundled(player, "commands.give.success", amount, Icons.get(item.name), coloredTeam(team));
         });
+
         register("unit", (args, player) -> {
 
         });
@@ -95,8 +110,8 @@ public class AdminCommands extends Commands<Player> {
     @Override
     public void register(String name, CommandRunner<Player> runner) {
         super.register(name, (args, player) -> {
-            if (notAdmin(player)) return;
-            runner.accept(args, player);
+            if (player.admin) runner.accept(args, player);
+            else bundled(player, "commands.permission-denied");
         });
     }
 }

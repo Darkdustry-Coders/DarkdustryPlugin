@@ -7,6 +7,7 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
+import mindustry.type.Item;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
@@ -22,6 +23,7 @@ import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.bundled;
+import static rewrite.utils.Utils.*;
 
 public class Checks {
 
@@ -46,10 +48,6 @@ public class Checks {
     // endregion
     // region Client
 
-    public static boolean notAdmin(Player player) {
-        return check(!player.admin, player, "commands.permission-denied");
-    }
-
     public static boolean notFound(Player player, Map map) {
         return check(map == null, player, "commands.nominate.map.not-found");
     }
@@ -62,12 +60,12 @@ public class Checks {
         return check(team == null, player, "commands.team-not-found", teams);
     }
 
-    public static boolean notFound(Player player, Block block) {
-        return check(block == null, player, "commands.block-not-found");
+    public static boolean notFound(Player player, Item item) {
+        return check(item == null, player, "commands.item-not-found", items);
     }
 
-    public static boolean notFoundCore(Player player, Block block) {
-        return check(block == null, player, "commands.core.core-not-found");
+    public static boolean notFound(Player player, Block block) {
+        return check(block == null, player, "commands.block-not-found");
     }
 
     public static boolean notFound(Player player, Player target, String name) {
@@ -76,6 +74,14 @@ public class Checks {
 
     public static boolean notFound(Player player, String language) {
         return check(!translatorLanguages.containsKey(language), player, "commands.tr.not-found");
+    }
+
+    public static boolean notFoundCore(Player player, Block block) {
+        return check(block == null, player, "commands.core.core-not-found");
+    }
+
+    public static boolean notFoundCore(Player player, Team team) {
+        return check(team.core() == null, player, "commands.give.no-core", coloredTeam(team));
     }
 
     public static boolean votekickDisabled(Player player) {
@@ -88,6 +94,14 @@ public class Checks {
 
     public static boolean invalidVoteSign(Player player, int sign) {
         return check(sign == 0, player, "commands.vote.incorrect-sign");
+    }
+
+    public static boolean invalideAmount(Player player, String[] args) {
+        return check(args.length > 1 && !canParsePositiveInt(args[1]), player, "commands.not-int");
+    }
+
+    public static boolean invalideAmount(Player player, int amount) {
+        return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
     }
 
     public static boolean isVoting(Player player) {
