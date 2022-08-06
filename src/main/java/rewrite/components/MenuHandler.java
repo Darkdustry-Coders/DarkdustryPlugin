@@ -12,10 +12,10 @@ import rewrite.utils.Find;
 
 import java.util.Locale;
 
-import static mindustry.Vars.state;
+import static mindustry.Vars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-import static rewrite.utils.Utils.coloredTeam;
+import static rewrite.utils.Utils.*;
 
 public class MenuHandler {
 

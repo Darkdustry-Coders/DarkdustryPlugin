@@ -7,8 +7,7 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static rewrite.components.Bundle.format;
-import static rewrite.components.Bundle.get;
+import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 
 public class Ranks {

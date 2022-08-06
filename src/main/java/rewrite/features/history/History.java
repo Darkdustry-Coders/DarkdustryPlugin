@@ -3,9 +3,8 @@ package rewrite.features.history;
 import arc.struct.Queue;
 import mindustry.world.Tile;
 
-import static mindustry.Vars.world;
-import static rewrite.PluginVars.config;
-import static rewrite.PluginVars.maxHistoryCapacity;
+import static mindustry.Vars.*;
+import static rewrite.PluginVars.*;
 
 public class History {
 

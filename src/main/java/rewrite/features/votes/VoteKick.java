@@ -3,9 +3,9 @@ package rewrite.features.votes;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import static rewrite.PluginVars.kickDuration;
-import static rewrite.components.Bundle.sendToChat;
-import static rewrite.utils.Utils.kick;
+import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Utils.*;
 
 public class VoteKick extends VoteSession {
 

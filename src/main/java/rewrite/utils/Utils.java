@@ -10,21 +10,14 @@ import mindustry.net.NetConnection;
 import mindustry.net.WorldReloader;
 import rewrite.DarkdustryPlugin;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.text.*;
+import java.time.*;
+import java.util.*;
 
-import static arc.util.Strings.stripColors;
-import static arc.util.Strings.stripGlyphs;
+import static arc.util.Strings.*;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.discordServerUrl;
-import static rewrite.PluginVars.kickDuration;
-import static rewrite.components.Bundle.defaultLocale;
-import static rewrite.components.Bundle.format;
+import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
 
 public class Utils {
 

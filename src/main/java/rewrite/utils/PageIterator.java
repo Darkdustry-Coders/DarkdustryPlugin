@@ -11,10 +11,9 @@ import mindustry.io.SaveIO;
 
 import java.util.Locale;
 
-import static arc.util.Strings.canParseInt;
-import static arc.util.Strings.parseInt;
+import static arc.util.Strings.*;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.clientCommands;
+import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 
 /** Страшно, но очень полезно. */

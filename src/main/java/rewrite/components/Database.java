@@ -7,7 +7,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import rewrite.DarkdustryPlugin;
 
-import static rewrite.PluginVars.config;
+import static rewrite.PluginVars.*;
 
 public class Database {
 

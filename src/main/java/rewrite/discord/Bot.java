@@ -15,13 +15,12 @@ import net.dv8tion.jda.api.utils.AllowedMentions;
 import rewrite.DarkdustryPlugin;
 import rewrite.utils.Find;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.EnumSet;
 import java.util.Locale;
 
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.bundled;
-import static rewrite.components.Bundle.format;
+import static rewrite.components.Bundle.*;
 import static rewrite.features.Authme.*;
 
 public class Bot {

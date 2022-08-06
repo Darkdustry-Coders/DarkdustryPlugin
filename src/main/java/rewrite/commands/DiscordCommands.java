@@ -18,10 +18,10 @@ import rewrite.components.Config.Gamemode;
 import rewrite.discord.MessageContext;
 import rewrite.utils.Find;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Locale;
 
-import static arc.Core.graphics;
+import static arc.Core.*;
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;

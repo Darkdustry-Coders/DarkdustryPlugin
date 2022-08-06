@@ -1,14 +1,14 @@
 package rewrite.features.history;
 
 import arc.util.Time;
-import mindustry.game.EventType.WithdrawEvent;
+import mindustry.game.EventType.*;
 import mindustry.gen.Player;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.content;
-import static rewrite.components.Bundle.format;
-import static rewrite.utils.Utils.formatDate;
+import static mindustry.Vars.*;
+import static rewrite.components.Bundle.*;
+import static rewrite.utils.Utils.*;
 
 public class WithdrawEntry implements HistoryEntry {
 

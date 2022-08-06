@@ -2,8 +2,8 @@ package rewrite.features.votes;
 
 import mindustry.gen.Player;
 
-import static mindustry.Vars.state;
-import static rewrite.components.Bundle.sendToChat;
+import static mindustry.Vars.*;
+import static rewrite.components.Bundle.*;
 
 public class VoteVnw extends VoteSession {
 

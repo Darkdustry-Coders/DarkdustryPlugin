@@ -13,9 +13,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static rewrite.PluginVars.consoleLanguage;
-import static rewrite.PluginVars.defaultLanguage;
-import static rewrite.utils.Utils.getPluginResource;
+import static rewrite.PluginVars.*;
+import static rewrite.utils.Utils.*;
 
 public class Bundle { // TODO: переделать bundle.properties с нуля, ибо команды сильно поменялись
 

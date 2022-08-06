@@ -4,7 +4,7 @@ import arc.files.Fi;
 import mindustry.io.JsonIO;
 import rewrite.DarkdustryPlugin;
 
-import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 import static rewrite.PluginVars.*;
 

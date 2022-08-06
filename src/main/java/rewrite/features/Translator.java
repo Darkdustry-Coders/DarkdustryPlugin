@@ -9,10 +9,10 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import rewrite.DarkdustryPlugin;
 
-import static arc.util.Strings.stripColors;
-import static mindustry.Vars.netServer;
+import static arc.util.Strings.*;
+import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
-import static rewrite.components.Database.getPlayerData;
+import static rewrite.components.Database.*;
 
 public class Translator {
 

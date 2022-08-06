@@ -15,11 +15,10 @@ import rewrite.utils.Find;
 
 import java.util.Locale;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.serverCommands;
-import static rewrite.utils.Checks.isLaunched;
-import static rewrite.utils.Checks.notFound;
+import static rewrite.PluginVars.*;
+import static rewrite.utils.Checks.*;
 
 public class ServerCommands extends Commands<NullPointerException> {
 
