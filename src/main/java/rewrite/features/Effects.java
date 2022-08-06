@@ -9,16 +9,16 @@ import mindustry.entities.Effect;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 
-import static rewrite.features.Ranks.*;
+import static rewrite.features.Ranks.cache;
 
 public class Effects {
 
     public static EffectsPack defaultPack, proPack, superPack;
 
     public static void load() {
-        defaultPack = new EffectsPack(Fx.greenBomb,          Fx.greenLaserCharge,   Fx.freezing,           player -> Mathf.random(360f));
-        proPack =     new EffectsPack(Fx.instBomb,           Fx.instHit,            Fx.shootPayloadDriver, player -> player.unit().rotation - 180f);
-        superPack =   new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble,             player -> 50f);
+        defaultPack = new EffectsPack(Fx.greenBomb, Fx.greenLaserCharge, Fx.freezing, player -> Mathf.random(360f));
+        proPack = new EffectsPack(Fx.instBomb, Fx.instHit, Fx.shootPayloadDriver, player -> player.unit().rotation - 180f);
+        superPack = new EffectsPack(Fx.coreBuildShockwave, Fx.coreBuildShockwave, Fx.bubble, player -> 50f);
     }
 
     public static void on(Effect effect, float x, float y, float rotation, Color color) {

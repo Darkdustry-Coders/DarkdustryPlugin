@@ -6,8 +6,8 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static rewrite.PluginVars.*;
-import static rewrite.utils.Checks.*;
+import static rewrite.PluginVars.config;
+import static rewrite.utils.Checks.notAdmin;
 
 public class AdminCommands extends Commands<Player> {
 
@@ -50,7 +50,7 @@ public class AdminCommands extends Commands<Player> {
         register("fill", (args, player) -> { // старый добрый fill
 
         });
-        register("full", (args, player) -> { // специально для мода, принимает 4 корды и 3 блока
+        register("full", (args, player) -> { // специально для мода, принимает 4 координаты и 3 блока
 
         });
     }

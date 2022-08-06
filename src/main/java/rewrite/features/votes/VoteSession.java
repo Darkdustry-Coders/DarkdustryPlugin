@@ -11,12 +11,12 @@ import static rewrite.PluginVars.*;
 
 public abstract class VoteSession {
 
-    /** Общий счёт голосов. */
-    public int votes;
     /** Список uuid проголосовавших игроков. */
     public final Seq<String> voted = new Seq<>();
     /** Задача на завершение голосования. */
     public final Task end;
+    /** Общий счёт голосов. */
+    public int votes;
 
     public VoteSession() {
         end = Timer.schedule(this::fail, voteDuration);

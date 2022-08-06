@@ -12,76 +12,32 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import rewrite.commands.*;
+import rewrite.commands.AdminCommands;
+import rewrite.commands.ClientCommands;
+import rewrite.commands.DiscordCommands;
+import rewrite.commands.ServerCommands;
 import rewrite.components.*;
 import rewrite.discord.Bot;
-import rewrite.features.*;
+import rewrite.features.Alerts;
+import rewrite.features.Effects;
+import rewrite.features.Ranks;
 import rewrite.features.Ranks.Rank;
-import rewrite.listeners.*;
+import rewrite.features.Translator;
+import rewrite.listeners.Filters;
+import rewrite.listeners.NetHandlers;
+import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.*;
+import static rewrite.components.MenuHandler.rankIncreaseMenu;
+import static rewrite.components.MenuHandler.showMenu;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
-
-    @Override
-    public void init() {
-        Effects.load();
-        Alerts.load();
-        Config.load();
-        Icons.load();
-        Ranks.load();
-        PluginEvents.load();
-        MenuHandler.load();
-        Translator.load();
-        MapParser.load();
-
-        Database.connect();
-        Bot.connect();
-
-        Version.build = -1;
-
-        net.handleServer(Connect.class, NetHandlers::connect);
-        net.handleServer(ConnectPacket.class, NetHandlers::packet);
-
-        netServer.admins.addActionFilter(Filters::action);
-        netServer.admins.addChatFilter(Filters::chat);
-        netServer.invalidHandler = NetHandlers::invalide;
-
-        Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
-        Timer.schedule(() -> Groups.player.each(player -> {
-            PlayerData data = getPlayerData(player);
-            data.playTime++;
-
-            Rank rank = Ranks.getRank(data.rank);
-            if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                Ranks.setRank(player, rank = rank.next);
-                data.rank = rank.id;
-
-                showMenu(player, rankIncreaseMenu, "events.rank-increase.menu.header", "events.rank-increase.menu.content", new String[][] { { "ui.menus.close" } },
-                        null, rank.tag, get(rank.name, Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
-            }
-
-            setPlayerData(data);
-        }), 0f, 60f);
-    }
-
-    @Override
-    public void registerClientCommands(CommandHandler handler) {
-        new ClientCommands(clientCommands = handler, defaultLocale);
-        new AdminCommands(handler, defaultLocale);
-    }
-
-    @Override
-    public void registerServerCommands(CommandHandler handler) {
-        Bundle.load(); // загружаем бандлы тут, т.к. они используются для регистрации команд
-        new ServerCommands(serverCommands = handler, consoleLocale);
-    }
 
     public static void registerDiscordCommands(CommandHandler handler) {
         new DiscordCommands(discordCommands = handler, consoleLocale);
@@ -105,5 +61,59 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void error(String text, Object... values) {
         Log.errTag("Darkdustry", Strings.format(text, values));
+    }
+
+    @Override
+    public void init() {
+        Effects.load();
+        Alerts.load();
+        Config.load();
+        Icons.load();
+        Ranks.load();
+        PluginEvents.load();
+        MenuHandler.load();
+        Translator.load();
+        MapParser.load();
+
+        Database.connect();
+        Bot.connect();
+
+        Version.build = -1;
+
+        net.handleServer(Connect.class, NetHandlers::connect);
+        net.handleServer(ConnectPacket.class, NetHandlers::packet);
+
+        netServer.admins.addActionFilter(Filters::action);
+        netServer.admins.addChatFilter(Filters::chat);
+        netServer.invalidHandler = NetHandlers::invalidResponse;
+
+        Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
+        Timer.schedule(() -> Groups.player.each(player -> {
+            PlayerData data = getPlayerData(player);
+            data.playTime++;
+
+            Rank rank = Ranks.getRank(data.rank);
+            if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                Ranks.setRank(player, rank = rank.next);
+                data.rank = rank.id;
+
+                showMenu(player, rankIncreaseMenu, "events.rank-increase.menu.header", "events.rank-increase.menu.content", new String[][] {{"ui.menus.close"}},
+                        null, rank.tag, get(rank.name, Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+            }
+
+            setPlayerData(data);
+        }), 0f, 60f);
+    }
+
+    @Override
+    public void registerClientCommands(CommandHandler handler) {
+        new ClientCommands(clientCommands = handler, defaultLocale);
+        new AdminCommands(handler, defaultLocale);
+    }
+
+    @Override
+    public void registerServerCommands(CommandHandler handler) {
+        Bundle.load(); // загружаем бандлы тут, т.к. они используются для регистрации команд
+        new ServerCommands(serverCommands = handler, consoleLocale);
     }
 }

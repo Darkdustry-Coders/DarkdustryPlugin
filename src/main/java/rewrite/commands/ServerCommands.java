@@ -2,11 +2,11 @@ package rewrite.commands;
 
 import arc.struct.Seq;
 import arc.util.CommandHandler;
+import arc.util.CommandHandler.Command;
 import arc.util.Log;
 import arc.util.OS;
-import arc.util.CommandHandler.Command;
-import mindustry.core.Version;
 import mindustry.core.GameState.State;
+import mindustry.core.Version;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
@@ -15,26 +15,27 @@ import rewrite.utils.Find;
 
 import java.util.Locale;
 
-import static arc.Core.*;
+import static arc.Core.app;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
-import static rewrite.utils.Checks.*;
+import static rewrite.PluginVars.serverCommands;
+import static rewrite.utils.Checks.isLaunched;
+import static rewrite.utils.Checks.notFound;
 
 public class ServerCommands extends Commands<NullPointerException> {
 
     public ServerCommands(CommandHandler handler, Locale def) {
         super(handler, def);
 
-        for (String command : new String[] { "mod", "mods", "fillitems", "pause", "shuffle", "runwave" })
+        for (String command : new String[] {"mod", "mods", "fillitems", "pause", "shuffle", "runwave"})
             handler.removeCommand(command);
 
         register("help", args -> {
             Seq<Command> commandsList = serverCommands.getCommandList();
             DarkdustryPlugin.info("Команды для консоли: (@)", commandsList.size);
             commandsList.each(command -> Log.info("  &b&lb" + command.text
-                                                            + (command.paramText.isEmpty() ? "" : " &lc&fi")
-                                                            + command.paramText + "&fr - &lw"
-                                                            + command.description));
+                    + (command.paramText.isEmpty() ? "" : " &lc&fi")
+                    + command.paramText + "&fr - &lw"
+                    + command.description));
         });
         register("version", args -> {
             DarkdustryPlugin.info("Mindustry @-@ @ / билд @",
@@ -52,7 +53,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             DarkdustryPlugin.info("Сервер остановлен.");
         });
         register("host", args -> {
-            if (isLanuched()) return;
+            if (isLaunched()) return;
 
             Gamemode mode;
             if (args.length > 1) {

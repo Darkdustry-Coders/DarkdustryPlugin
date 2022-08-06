@@ -1,14 +1,13 @@
 package rewrite.components;
 
+import mindustry.gen.Player;
+import mindustry.io.JsonIO;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import rewrite.DarkdustryPlugin;
 
-import static rewrite.PluginVars.*;
-
-import mindustry.gen.Player;
-import mindustry.io.JsonIO;
+import static rewrite.PluginVars.config;
 
 public class Database {
 

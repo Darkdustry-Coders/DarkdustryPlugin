@@ -11,9 +11,10 @@ import mindustry.io.SaveIO;
 
 import java.util.Locale;
 
-import static arc.util.Strings.*;
+import static arc.util.Strings.canParseInt;
+import static arc.util.Strings.parseInt;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
+import static rewrite.PluginVars.clientCommands;
 import static rewrite.components.Bundle.*;
 
 /** Страшно, но очень полезно. */
@@ -22,11 +23,10 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
     public static void commands(String[] args, Player player) {
         Locale locale = Find.locale(player.name);
         client(args, player, clientCommands.getCommandList(), "help",
-                (builder, i, command) -> {
-                    builder.append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
-                            .append(get("commands." + command.text + ".params", command.paramText, locale)).append("[lightgray] - ")
-                            .append(get("commands." + command.text + ".description", command.description, locale));
-                }, null);
+                (builder, i, command) -> builder
+                        .append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
+                        .append(get("commands." + command.text + ".params", command.paramText, locale)).append("[lightgray] - ")
+                        .append(get("commands." + command.text + ".description", command.description, locale)), null);
     }
 
     public static void players(String[] args, Player player) {
@@ -52,7 +52,6 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
     public static <T> void client(String[] args, Player player, Seq<T> content, String command, Cons3<StringBuilder, Integer, T> cons, Cons<StringBuilder> result) {
         iterate(content, 8, args, (page, pages) -> format("commands." + command + ".page", Find.locale(player.locale), page, pages),
                 pages -> bundled(player, "commands.page-not-int"),
-                pages -> {},
                 pages -> bundled(player, "commands.under-page", pages),
                 cons, builder -> {
                     if (result != null) result.get(builder);
@@ -62,16 +61,11 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
 
     public static <T> void iterate(
             Seq<T> content, int size, String[] args, BuilderPrefix start,
-            Cons<Integer> notint, Cons<Integer> empty, Cons<Integer> outrange,
+            Cons<Integer> notint, Cons<Integer> outrange,
             Cons3<StringBuilder, Integer, T> cons, Cons<StringBuilder> result) {
 
         if (args.length > 0 && !canParseInt(args[0])) {
             notint.get(0);
-            return;
-        }
-
-        if (content.isEmpty()) {
-            empty.get(0);
             return;
         }
 

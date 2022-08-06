@@ -4,8 +4,8 @@ import arc.files.Fi;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static arc.Core.*;
-import static rewrite.components.Bundle.*;
+import static arc.Core.app;
+import static rewrite.components.Bundle.sendToChat;
 
 public class VoteSave extends VoteSession {
 

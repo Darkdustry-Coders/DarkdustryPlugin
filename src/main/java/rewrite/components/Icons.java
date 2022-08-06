@@ -6,9 +6,9 @@ import arc.util.Structs;
 import mindustry.game.Team;
 import rewrite.DarkdustryPlugin;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.content;
 import static rewrite.PluginVars.*;
-import static rewrite.utils.Utils.*;
+import static rewrite.utils.Utils.coloredTeam;
 
 public class Icons {
 
@@ -21,10 +21,11 @@ public class Icons {
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            Team.derelict.emoji = get("derelict");
-            Team.sharded.emoji = get("sharded");
-            Team.crux.emoji = get("crux");
-            Team.malis.emoji = get("malis");
+            for (Team team : Team.baseTeams) {
+                team.emoji = get(team.name, "");
+            }
+
+            // Временная мера, т.к. Анюк в будущем добавит эмодзи этим двум командам
             Team.green.emoji = get("electrified");
             Team.blue.emoji = get("wet");
 

@@ -11,19 +11,24 @@ import rewrite.discord.Bot;
 import rewrite.features.Alerts;
 import rewrite.features.Effects;
 import rewrite.features.Ranks;
-import rewrite.features.history.*;
+import rewrite.features.history.BlockEntry;
+import rewrite.features.history.DepositEntry;
+import rewrite.features.history.History;
 import rewrite.features.history.History.HistoryStack;
+import rewrite.features.history.WithdrawEntry;
 import rewrite.features.votes.VoteKick;
 import rewrite.utils.Find;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static arc.Core.*;
-import static arc.util.Strings.*;
+import static arc.Core.app;
+import static arc.util.Strings.stripColors;
 import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
-import static rewrite.components.Database.*;
-import static rewrite.components.MenuHandler.*;
+import static rewrite.components.Database.getPlayerData;
+import static rewrite.components.Database.setPlayerData;
+import static rewrite.components.MenuHandler.showMenu;
+import static rewrite.components.MenuHandler.welcomeMenu;
 
 public class PluginEvents {
 
@@ -48,7 +53,8 @@ public class PluginEvents {
             setPlayerData(data);
         });
         Events.on(BuildSelectEvent.class, event -> {
-            if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.isPlayer()) return;
+            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer())
+                return;
             Alerts.buildAlert(event);
         });
         Events.on(ConfigEvent.class, event -> {});
@@ -70,12 +76,12 @@ public class PluginEvents {
 
             sendToChat("events.player.join", event.player.name);
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
-        
+
             Bot.sendEmbed(Bot.botChannel, Color.green, "@ присоединился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                    new String[][] { { "ui.menus.close" }, { "welcome.menu.disable" } }, null, Config.serverName.string(), discordServerUrl);
+                    new String[][] {{"ui.menus.close"}, {"welcome.menu.disable"}}, null, Config.serverName.string(), discordServerUrl);
         });
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);

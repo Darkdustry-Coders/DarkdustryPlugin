@@ -5,18 +5,26 @@ import arc.struct.OrderedMap;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.MapException;
+import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.NetConnection;
 import mindustry.net.WorldReloader;
 import rewrite.DarkdustryPlugin;
 
-import java.text.*;
-import java.time.*;
-import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
-import static arc.util.Strings.*;
+import static arc.util.Strings.stripColors;
+import static arc.util.Strings.stripGlyphs;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static rewrite.PluginVars.discordServerUrl;
+import static rewrite.PluginVars.kickDuration;
+import static rewrite.components.Bundle.defaultLocale;
+import static rewrite.components.Bundle.format;
 
 public class Utils {
 
@@ -32,8 +40,12 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
+    public static LoadedMod getPlugin() {
+        return mods.getMod("darkdustry-plugin");
+    }
+
     public static Fi getPluginResource(String name) {
-        return mods.getMod("darkdustry-plugin").root.child(name);
+        return getPlugin().root.child(name);
     }
 
     public static String coloredTeam(Team team) {
@@ -68,13 +80,13 @@ public class Utils {
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-                    if (value > 0) builder.append(format(key, locale, value)).append(" ");
-                });
+            if (value > 0) builder.append(format(key, locale, value)).append(" ");
+        });
 
         return builder.toString().trim();
     }
 
-    public static void load(Runnable load) {
+    public static void reloadWorld(Runnable load) {
         try {
             WorldReloader reloader = new WorldReloader();
             reloader.begin();

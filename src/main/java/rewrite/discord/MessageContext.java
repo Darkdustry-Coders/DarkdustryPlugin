@@ -2,12 +2,11 @@ package rewrite.discord;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static arc.util.Strings.*;
+import static arc.util.Strings.format;
 
 public class MessageContext {
 
@@ -20,13 +19,6 @@ public class MessageContext {
         this.message = event.getMessage();
         this.member = event.getMember();
         this.user = event.getAuthor();
-        this.channel = event.getChannel();
-    }
-
-    public MessageContext(ButtonInteractionEvent event) {
-        this.message = event.getMessage();
-        this.member = event.getMember();
-        this.user = event.getUser();
         this.channel = event.getChannel();
     }
 

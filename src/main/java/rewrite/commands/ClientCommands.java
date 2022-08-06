@@ -22,7 +22,7 @@ import static rewrite.PluginVars.*;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
 import static rewrite.utils.Checks.*;
-import static rewrite.utils.Utils.*;
+import static rewrite.utils.Utils.voteChoice;
 
 public class ClientCommands extends Commands<Player> {
 
@@ -33,12 +33,10 @@ public class ClientCommands extends Commands<Player> {
 
         register("discord", (args, player) -> bundled(player, "commands.discord.link", discordServerUrl));
 
-        register("t", (args, player) -> player.team().data().players.each(teammate -> {
-            bundled(teammate, "commands.t.chat", player.team().color, player.name, args[0]);
-        }));
+        register("t", (args, player) -> player.team().data().players.each(teammate -> bundled(teammate, "commands.t.chat", player.team().color, player.name, args[0])));
 
         register("sync", (args, player) -> {
-            if (isCooldowned(player)) return;
+            if (alreadySynced(player)) return;
 
             player.getInfo().lastSyncTime = Time.millis();
             Call.worldDataBegin(player.con);
@@ -103,7 +101,7 @@ public class ClientCommands extends Commands<Player> {
             Call.menu(player.con, MenuHandler.rankInfoMenu,
                     format("commands.rank.menu.header", locale, target.name),
                     builder.toString(),
-                    new String[][] { { format("ui.menus.close", locale) }, { format("commands.rank.menu.requirements", locale) } });
+                    new String[][] {{format("ui.menus.close", locale)}, {format("commands.rank.menu.requirements", locale)}});
         });
 
         register("players", PageIterator::players);
@@ -113,7 +111,7 @@ public class ClientCommands extends Commands<Player> {
                 exception -> bundled(player, "commands.hub.offline")));
 
         register("vote", (args, player) -> {
-            if (notVoting(player) || isVoted(player)) return;
+            if (notVoting(player) || alreadyVoted(player)) return;
             if (vote instanceof VoteKick kick) {
                 if (kick.target == player) {
                     bundled(player, "commands.vote.player-is-you");
@@ -125,14 +123,14 @@ public class ClientCommands extends Commands<Player> {
             }
 
             int sign = voteChoice(args[0]);
-            if (isInvalide(player, sign)) return;
+            if (invalidVoteSign(player, sign)) return;
             vote.vote(player, sign);
         });
 
         register("votekick", (args, player) -> {
-            if (isVoting(player) || isCooldowned(player, "votekick") || isDisabled(player)) return;
+            if (isVoting(player) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
             Player target = Find.player(args[0]);
-            if (notFound(player, target, args[0]) || isInvalide(player, target)) return;
+            if (notFound(player, target, args[0]) || invalidVoteTarget(player, target)) return;
 
             vote = new VoteKick(player, target);
             vote.vote(player, 1);
@@ -202,9 +200,9 @@ public class ClientCommands extends Commands<Player> {
         });
 
         register("login", (args, player) -> {
-            if (isAdmin(player) || isCooldowned(player, "login")) return;
+            if (alreadyAdmin(player) || isCooldowned(player, "login")) return;
 
-            Bot.sendMessageToAdmin(player);
+            Bot.sendAdminRequest(player);
             bundled(player, "commands.login.sent");
             Cooldowns.run(player.uuid(), "login");
         });

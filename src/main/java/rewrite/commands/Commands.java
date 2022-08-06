@@ -6,7 +6,7 @@ import arc.util.CommandHandler.CommandRunner;
 
 import java.util.Locale;
 
-import static rewrite.components.Bundle.*;
+import static rewrite.components.Bundle.get;
 
 public class Commands<T> {
 

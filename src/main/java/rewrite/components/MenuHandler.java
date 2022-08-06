@@ -1,7 +1,7 @@
 package rewrite.components;
 
 import arc.Events;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -10,12 +10,12 @@ import mindustry.ui.Menus;
 import rewrite.features.Ranks.Rank;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.*;
+import java.util.Locale;
+
+import static mindustry.Vars.state;
 import static rewrite.components.Bundle.*;
 import static rewrite.components.Database.*;
-import static rewrite.utils.Utils.*;
-
-import java.util.Locale;
+import static rewrite.utils.Utils.coloredTeam;
 
 public class MenuHandler {
 
@@ -72,7 +72,7 @@ public class MenuHandler {
 
             StringBuilder builder = new StringBuilder();
             Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
-            showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] { { "ui.menus.close" } });
+            showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] {{"ui.menus.close"}});
         });
 
         ranksRequirementsMenu = emptyMenu();

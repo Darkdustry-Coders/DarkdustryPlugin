@@ -8,11 +8,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static mindustry.Vars.netServer;
+import static rewrite.PluginVars.loginWaiting;
+import static rewrite.components.Bundle.bundled;
 
 public class Authme {
 
@@ -67,7 +67,8 @@ public class Authme {
 
         if (player != null) event.getChannel().sendMessageEmbeds(func.get(player)
                 .addField("Администратор:", event.getUser().getAsMention(), true)
-                .addField("Игрок:", player.name, true).build());
+                .addField("Игрок:", player.name, true).build()).queue();
+
         event.getMessage().delete().queue();
     }
 }

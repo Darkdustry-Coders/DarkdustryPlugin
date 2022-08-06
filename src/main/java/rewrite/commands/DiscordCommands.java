@@ -18,10 +18,10 @@ import rewrite.components.Config.Gamemode;
 import rewrite.discord.MessageContext;
 import rewrite.utils.Find;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Locale;
 
-import static arc.Core.*;
+import static arc.Core.graphics;
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
@@ -50,14 +50,14 @@ public class DiscordCommands extends Commands<MessageContext> {
         });
 
         register("players", (args, context) -> {
-            if (notPage(context, args)) return;
+            if (invalidPage(context, args)) return;
             if (Groups.player.isEmpty()) {
                 context.info(":satellite: На сервере нет игроков.");
                 return;
             }
 
             int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Mathf.ceil(Groups.player.size() / 16f);
-            if (notPage(context, page, pages)) return;
+            if (invalidPage(context, page, pages)) return;
 
             StringBuilder result = new StringBuilder();
             Seq<Player> list = Groups.player.copy(new Seq<>());
@@ -133,14 +133,14 @@ public class DiscordCommands extends Commands<MessageContext> {
         });
 
         register("maps", (args, context) -> {
-            if (notPage(context, args)) return;
+            if (invalidPage(context, args)) return;
             if (maps.customMaps().isEmpty()) {
                 context.info(":map: На сервере нет карт.");
                 return;
             }
 
             int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Mathf.ceil(maps.customMaps().size / 16f);
-            if (notPage(context, page, pages)) return;
+            if (invalidPage(context, page, pages)) return;
 
             StringBuilder result = new StringBuilder();
             Seq<Map> list = maps.customMaps();
@@ -153,7 +153,7 @@ public class DiscordCommands extends Commands<MessageContext> {
                     .setDescription(result.toString())
                     .setFooter(format("Страница @ / @", page, pages)).build());
         });
-    
+
         register("addmap", (args, context) -> {
             if (notAdmin(context) || notMap(context)) return;
 
@@ -169,7 +169,7 @@ public class DiscordCommands extends Commands<MessageContext> {
                 return null;
             });
         });
-    
+
         register("removemap", (args, context) -> {
             if (notAdmin(context)) return;
             Map map = Find.map(args[0]);

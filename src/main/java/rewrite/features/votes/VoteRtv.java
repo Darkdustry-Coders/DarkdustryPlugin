@@ -1,11 +1,11 @@
 package rewrite.features.votes;
 
 import arc.Events;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Player;
 
-import static mindustry.Vars.*;
-import static rewrite.components.Bundle.*;
+import static mindustry.Vars.state;
+import static rewrite.components.Bundle.sendToChat;
 
 public class VoteRtv extends VoteSession {
 

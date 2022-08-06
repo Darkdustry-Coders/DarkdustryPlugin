@@ -12,8 +12,8 @@ import rewrite.DarkdustryPlugin;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static mindustry.Vars.*;
-import static rewrite.utils.Utils.*;
+import static mindustry.Vars.content;
+import static rewrite.utils.Utils.getPluginResource;
 
 public class MapParser {
 

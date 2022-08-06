@@ -7,7 +7,8 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static rewrite.components.Bundle.*;
+import static rewrite.components.Bundle.format;
+import static rewrite.components.Bundle.get;
 import static rewrite.components.Database.*;
 
 public class Ranks {
@@ -52,7 +53,7 @@ public class Ranks {
         developer = new Rank() {{
             tag = "[accent]<[#86dca2]\uE816[]>[] ";
             name = "developer";
-            effects = Effects.proPack; // тут полюбому будут эти эффекты, ибо я хочу их себе
+            effects = Effects.proPack; // тут по любому будут эти эффекты, ибо я хочу их себе
         }};
 
         admin = new Rank() {{
@@ -66,7 +67,7 @@ public class Ranks {
             name = "console";
             effects = Effects.superPack;
         }};
-        
+
         owner = new Rank() {{
             tag = "[accent]<[#195080]\uE810[]>[] ";
             name = "owner";
@@ -116,7 +117,7 @@ public class Ranks {
 
         // TODO добавить бандлы
         public String localisedName(Locale locale) {
-            return get("ranks." + name + ".name");
+            return get("ranks." + name + ".name", locale);
         }
 
         public String localisedReq(Locale locale) {

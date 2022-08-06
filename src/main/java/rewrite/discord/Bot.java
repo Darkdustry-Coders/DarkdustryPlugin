@@ -1,9 +1,9 @@
 package rewrite.discord;
 
 import arc.util.CommandHandler;
-import arc.util.Strings;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
+import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
@@ -15,16 +15,17 @@ import net.dv8tion.jda.api.utils.AllowedMentions;
 import rewrite.DarkdustryPlugin;
 import rewrite.utils.Find;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.EnumSet;
 import java.util.Locale;
 
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static rewrite.components.Bundle.bundled;
+import static rewrite.components.Bundle.format;
 import static rewrite.features.Authme.*;
 
 public class Bot {
-    
+
     public static JDA jda;
 
     public static Guild botGuild;
@@ -40,7 +41,6 @@ public class Bot {
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
-            assert adminRole != null && botChannel != null && adminChannel != null;
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
             botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
@@ -87,7 +87,7 @@ public class Bot {
         });
     }
 
-    public static void sendMessageToAdmin(Player player) {
+    public static void sendAdminRequest(Player player) {
         adminChannel.sendMessage(new MessageBuilder().setEmbeds(new EmbedBuilder()
                 .setColor(Color.cyan)
                 .setTitle("Запрос на получение прав администратора.")

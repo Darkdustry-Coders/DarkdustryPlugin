@@ -7,13 +7,13 @@ import mindustry.net.Administration.PlayerAction;
 import rewrite.components.Icons;
 import rewrite.utils.Find;
 
-import static mindustry.Vars.*;
-import static rewrite.components.Bundle.*;
-import static rewrite.utils.Utils.*;
+import static mindustry.Vars.content;
+import static rewrite.components.Bundle.format;
+import static rewrite.utils.Utils.formatDate;
 
 public class RotateEntry implements HistoryEntry {
 
-    public static final char[] sides = { Iconc.right, Iconc.up, Iconc.left, Iconc.down };
+    public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public final String name;
     public final short blockID;

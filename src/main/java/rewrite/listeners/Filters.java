@@ -9,11 +9,11 @@ import rewrite.features.Translator;
 import rewrite.features.history.History;
 import rewrite.features.history.RotateEntry;
 
-import static arc.util.Strings.*;
-import static mindustry.Vars.*;
+import static arc.util.Strings.stripColors;
+import static mindustry.Vars.netServer;
 
 public class Filters {
-    
+
     public static boolean action(PlayerAction action) {
         if (History.enabled() && action.type == ActionType.rotate) History.put(new RotateEntry(action), action.tile);
         return true;

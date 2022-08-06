@@ -4,31 +4,35 @@ import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.Colors;
 import arc.struct.Seq;
-import arc.util.Time;
 import arc.util.CommandHandler.Command;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.CommandHandler.ResponseType;
+import arc.util.Time;
 import mindustry.core.Version;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.ConnectPacketEvent;
+import mindustry.game.EventType.ConnectionEvent;
+import mindustry.game.EventType.PlayerConnect;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.NetConnection;
 import mindustry.net.Administration.PlayerInfo;
+import mindustry.net.NetConnection;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import rewrite.utils.Find;
 
 import java.util.Locale;
 
-import static arc.util.Strings.*;
+import static arc.util.Strings.levenshtein;
+import static arc.util.Strings.utf8;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
-import static rewrite.utils.Utils.*;
+import static rewrite.components.Bundle.format;
+import static rewrite.utils.Utils.kick;
+import static rewrite.utils.Utils.notNullElse;
 
 public class NetHandlers {
 
-    public static String invalide(Player player, CommandResponse response) {
+    public static String invalidResponse(Player player, CommandResponse response) {
         Locale locale = Find.locale(player.locale);
         if (response.type == ResponseType.manyArguments)
             return format("commands.unknown.many-arguments", locale, response.command.text, response.command.paramText);
@@ -159,11 +163,12 @@ public class NetHandlers {
                 String next = name.substring(i);
                 String result = checkColor(next);
                 name = prev + result;
-        }
+            }
 
         StringBuilder result = new StringBuilder();
         int curChar = 0;
-        while (curChar < name.length() && result.toString().getBytes(utf8).length < maxNameLength) result.append(name.charAt(curChar++));
+        while (curChar < name.length() && result.toString().getBytes(utf8).length < maxNameLength)
+            result.append(name.charAt(curChar++));
         return result.toString();
     }
 

@@ -5,8 +5,8 @@ import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static rewrite.components.Bundle.*;
-import static rewrite.utils.Utils.*;
+import static rewrite.components.Bundle.sendToChat;
+import static rewrite.utils.Utils.reloadWorld;
 
 public class VoteLoad extends VoteSession {
 
@@ -27,7 +27,7 @@ public class VoteLoad extends VoteSession {
     public void success() {
         stop();
         sendToChat("commands.nominate.load.passed", target.nameWithoutExtension());
-        Timer.schedule(() -> load(() -> SaveIO.load(target)), 10f);
+        Timer.schedule(() -> reloadWorld(() -> SaveIO.load(target)), 10f);
     }
 
     @Override
