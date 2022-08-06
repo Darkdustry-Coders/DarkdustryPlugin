@@ -70,7 +70,7 @@ public class Bot {
     public static void sendMessageToGame(MessageContext context) {
         if (context.channel != botChannel || context.message.getContentDisplay().length() == 0) return;
 
-        DarkdustryPlugin.disc("@: @", context.member.getEffectiveName(), context.message.getContentDisplay());
+        DarkdustryPlugin.discord("@: @", context.member.getEffectiveName(), context.message.getContentDisplay());
 
         var roles = context.member.getRoles();
         var reply = context.message.getReferencedMessage();

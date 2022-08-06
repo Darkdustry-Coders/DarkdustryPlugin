@@ -62,7 +62,6 @@ public class MenuHandler {
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             sendToChat("commands.artv.info", player.name);
-
         });
 
         statsMenu = emptyMenu();

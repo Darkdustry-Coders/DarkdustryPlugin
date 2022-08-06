@@ -51,7 +51,7 @@ public class DarkdustryPlugin extends Plugin {
         Log.infoTag("Darkdustry", Strings.format(text, values));
     }
 
-    public static void disc(String text, Object... values) {
+    public static void discord(String text, Object... values) {
         Log.infoTag("Discord", Strings.format(text, values));
     }
 

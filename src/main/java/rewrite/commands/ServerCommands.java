@@ -38,9 +38,9 @@ public class ServerCommands extends Commands<NullPointerException> {
                     + command.description));
         });
         register("version", args -> {
-            DarkdustryPlugin.info("Mindustry @-@ @ / билд @",
+            DarkdustryPlugin.info("Mindustry @-@ @ / билд @.@",
                     Version.number, Version.modifier, Version.type,
-                    Version.build + (Version.revision == 0 ? "" : "." + Version.revision));
+                    Version.build, Version.revision);
             DarkdustryPlugin.info("Версия Java: @", OS.javaVersion);
         });
         register("exit", args -> {

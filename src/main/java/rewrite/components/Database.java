@@ -12,12 +12,11 @@ import static rewrite.PluginVars.config;
 public class Database {
 
     public static JedisPool jedisPool;
-    public static Jedis jedis;
 
     public static void connect() {
         try {
             jedisPool = new JedisPool(new JedisPoolConfig(), config.jedisIp, config.jedisPort);
-            jedis = jedisPool.getResource();
+            jedisPool.getResource();
             DarkdustryPlugin.info("База данных успешно подключена.");
         } catch (Exception exception) {
             DarkdustryPlugin.error("Не удалось подключиться к базе данных: @", exception);
@@ -43,7 +42,6 @@ public class Database {
     }
 
     public static class PlayerData {
-
         public String uuid;
         public String language = "off";
 

@@ -7,5 +7,5 @@
     "description": "Core plugin for Darkdustry servers.",
     "version": "2.3",
     "main": "rewrite.DarkdustryPlugin",
-    "repo": "https://github.com/Darkdustry-Coders/DarkdustryPlugin"
+    "repo": "Darkdustry-Coders/DarkdustryPlugin"
 }
