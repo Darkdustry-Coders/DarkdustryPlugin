@@ -12,6 +12,7 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
+import mindustry.server.ServerLauncher;
 import rewrite.commands.*;
 import rewrite.components.*;
 import rewrite.discord.Bot;
@@ -21,6 +22,8 @@ import rewrite.listeners.Filters;
 import rewrite.listeners.NetHandlers;
 import rewrite.listeners.PluginEvents;
 import rewrite.utils.Find;
+
+import java.util.Locale;
 
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
@@ -35,6 +38,7 @@ public class DarkdustryPlugin extends Plugin {
     public void init() {
         Effects.load();
         Alerts.load();
+        Bundle.load();
         Config.load();
         Icons.load();
         Ranks.load();
@@ -81,28 +85,20 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        Bundle.load(); // загружаем бандлы тут, т.к. они используются для регистрации команд
-        new ServerCommands(serverCommands = handler, consoleLocale);
+
+        new ServerCommands(serverCommands = handler, Locale.ROOT);
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler, consoleLocale);
-    }
-
-    public static void info(String text) {
-        Log.infoTag("Darkdustry", text);
+        new DiscordCommands(handler, Locale.ROOT);
     }
 
     public static void info(String text, Object... values) {
         Log.infoTag("Darkdustry", Strings.format(text, values));
     }
 
-    public static void disc(String text, Object... values) {
+    public static void discord(String text, Object... values) {
         Log.infoTag("Discord", Strings.format(text, values));
-    }
-
-    public static void error(String text) {
-        Log.errTag("Darkdustry", text);
     }
 
     public static void error(String text, Object... values) {
