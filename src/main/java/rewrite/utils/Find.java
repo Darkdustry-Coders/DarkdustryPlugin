@@ -9,6 +9,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -30,6 +31,11 @@ public class Find {
 
     public static Player player(String name) {
         return canParsePositiveInt(name) ? Groups.player.getByID(parseInt(name)) : Groups.player.find(player -> deepEquals(player.name, name));
+    }
+
+    public static PlayerInfo playerInfo(String name) {
+        Player player = player(name);
+        return player != null ? player.getInfo() : netServer.admins.getInfoOptional(name);
     }
 
     public static UnitType unit(String name) {

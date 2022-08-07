@@ -48,8 +48,8 @@ public class Checks {
         return check(player == null, "No player @ found.", name[0]);
     }
 
-    public static boolean notFound(PlayerInfo info, String[] name) {
-        return check(info == null, "No player @ found.", name[0]);
+    public static boolean notFound(PlayerInfo info, String name) {
+        return check(info == null, "No player @ found.", name);
     }
 
     // endregion
