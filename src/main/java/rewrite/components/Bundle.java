@@ -19,6 +19,7 @@ import static rewrite.utils.Utils.*;
 public class Bundle { // TODO: переделать bundle.properties с нуля, ибо команды сильно поменялись
 
     public static final Locale defaultLocale = new Locale(defaultLanguage);
+    public static final Locale consoleLocale = new Locale(consoleLanguage);
     public static final Seq<Locale> supportedLocales = new Seq<>();
 
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();

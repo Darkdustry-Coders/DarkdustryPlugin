@@ -51,9 +51,7 @@ public class Bot {
             botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
             updateBotStatus();
 
-            discordCommands = new CommandHandler(config.discordBotPrefix);
-            DarkdustryPlugin.registerDiscordCommands(discordCommands);
-
+            DarkdustryPlugin.registerDiscordCommands(new CommandHandler(config.discordBotPrefix));
             DarkdustryPlugin.info("Bot has been successfully connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception exception) {
             DarkdustryPlugin.error("Failed to start bot: @", exception);

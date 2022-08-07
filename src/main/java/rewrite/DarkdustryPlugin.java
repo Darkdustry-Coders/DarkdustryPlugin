@@ -87,12 +87,12 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        Bundle.load(); // что-то сделать с серверными командами
-        new ServerCommands(serverCommands = handler, Locale.ROOT);
+        Bundle.load(); // меня всё устраивает
+        new ServerCommands(serverCommands = handler, consoleLocale);
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(handler, Locale.ROOT);
+        new DiscordCommands(discordCommands = handler, consoleLocale);
     }
 
     public static void info(String text, Object... values) {
