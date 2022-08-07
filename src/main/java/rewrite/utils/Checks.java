@@ -35,8 +35,6 @@ public class Checks {
         return check(!state.isMenu(), "Сервер уже запущен.");
     }
 
-    public static boolean isMenu(MessageContext context) {
-        return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {
@@ -157,6 +155,10 @@ public class Checks {
 
     // endregion
     // region Discord
+
+    public static boolean isMenu(MessageContext context) {
+        return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
+    }
 
     public static boolean notAdmin(MessageContext context) {
         return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");

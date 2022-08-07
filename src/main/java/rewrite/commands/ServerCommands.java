@@ -1,23 +1,20 @@
 package rewrite.commands;
 
-import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.Command;
 import arc.util.Log;
-import arc.util.OS;
 import mindustry.core.GameState.State;
-import mindustry.core.Version;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
 import rewrite.DarkdustryPlugin;
+import rewrite.discord.Bot;
 import rewrite.utils.Find;
 
 import java.util.Locale;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
+import static rewrite.components.Bundle.*;
 import static rewrite.utils.Checks.*;
 
 public class ServerCommands extends Commands<NullPointerException> {
@@ -25,32 +22,20 @@ public class ServerCommands extends Commands<NullPointerException> {
     public ServerCommands(CommandHandler handler, Locale def) {
         super(handler, def);
 
-        for (String command : new String[] {"mod", "mods", "fillitems", "pause", "shuffle", "runwave"})
+        for (String command : new String[] {"fillitems", "pause", "shuffle", "runwave"})
             handler.removeCommand(command);
 
-        register("help", args -> {
-            Seq<Command> commandsList = serverCommands.getCommandList();
-            DarkdustryPlugin.info("Команды для консоли: (@)", commandsList.size);
-            commandsList.each(command -> Log.info("  &b&lb" + command.text
-                    + (command.paramText.isEmpty() ? "" : " &lc&fi")
-                    + command.paramText + "&fr - &lw"
-                    + command.description));
-        });
-        register("version", args -> {
-            DarkdustryPlugin.info("Mindustry @-@ @ / билд @.@",
-                    Version.number, Version.modifier, Version.type,
-                    Version.build, Version.revision);
-            DarkdustryPlugin.info("Версия Java: @", OS.javaVersion);
-        });
         register("exit", args -> {
             DarkdustryPlugin.info("Выключаю сервер...");
             System.exit(2);
         });
+
         register("stop", args -> {
             net.closeServer();
             state.set(State.menu);
             DarkdustryPlugin.info("Сервер остановлен.");
         });
+
         register("host", args -> {
             if (isLaunched()) return;
 
@@ -88,6 +73,12 @@ public class ServerCommands extends Commands<NullPointerException> {
                     DarkdustryPlugin.error("@: @", exception.map.name(), exception.getMessage());
                 }
             });
+        });
+
+        register("say", args -> {
+            Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
+            sendToChat("commands.say.chat", args[0]);
+            Bot.sendMessage(Bot.botChannel, "Сервер » @", args[0]);
         });
     }
 }
