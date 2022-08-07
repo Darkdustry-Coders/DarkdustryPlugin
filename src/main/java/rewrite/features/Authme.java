@@ -5,8 +5,11 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
 import java.awt.Color;
 
@@ -21,7 +24,13 @@ public class Authme {
             deny = Button.danger("authme.deny", "Отклонить"),
             info = Button.primary("authme.info", "Информация");
 
-    public static void confirm(ButtonInteractionEvent event) {
+    public static final SelectMenu menu = SelectMenu.create("authme")
+            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос и выдать игроку права администратора", Emoji.fromFormatted("✅"))
+            .addOption("Отклонить", "authme.deny", "Отклонить запрос", Emoji.fromFormatted("❌"))
+            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке", Emoji.fromFormatted("ℹ"))
+            .setPlaceholder("Выбери действие...").build();
+
+    public static void confirm(GenericComponentInteractionCreateEvent event) {
         remove(event, player -> {
             netServer.admins.adminPlayer(player.uuid(), player.usid());
             Ranks.setRankNet(player.uuid(), Ranks.admin);
@@ -32,14 +41,14 @@ public class Authme {
         });
     }
 
-    public static void deny(ButtonInteractionEvent event) {
+    public static void deny(GenericComponentInteractionCreateEvent event) {
         remove(event, player -> {
             bundled(player, "commands.login.deny");
             return new EmbedBuilder().setColor(Color.red).setTitle("Запрос отклонён");
         });
     }
 
-    public static void info(ButtonInteractionEvent event) {
+    public static void info(GenericComponentInteractionCreateEvent event) {
         String uuid = loginWaiting.get(event.getMessage());
         PlayerInfo info = netServer.admins.getInfo(uuid);
 
@@ -57,7 +66,7 @@ public class Authme {
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
     }
 
-    private static void remove(ButtonInteractionEvent event, Func<Player, EmbedBuilder> func) {
+    private static void remove(GenericComponentInteractionCreateEvent event, Func<Player, EmbedBuilder> func) {
         String uuid = loginWaiting.remove(event.getMessage());
         Player player = Groups.player.find(p -> p.uuid().equals(uuid));
 

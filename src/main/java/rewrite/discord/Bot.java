@@ -99,7 +99,7 @@ public class Bot {
                 .addField("Никнейм:", player.name, true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
-        ).setActionRows(ActionRow.of(confirm, deny, info)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
+        ).setActionRows(ActionRow.of(menu), ActionRow.of(confirm, deny, info)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {

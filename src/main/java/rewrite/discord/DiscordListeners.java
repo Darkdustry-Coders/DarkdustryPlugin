@@ -1,6 +1,7 @@
 package rewrite.discord;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rewrite.features.Authme;
@@ -31,6 +32,19 @@ public class DiscordListeners extends ListenerAdapter {
             case "authme.confirm" -> Authme.confirm(event);
             case "authme.deny" -> Authme.deny(event);
             case "authme.info" -> Authme.info(event);
+        }
+    }
+
+    @Override
+    public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
+        if (!loginWaiting.containsKey(event.getMessage()) || notAdmin(event)) return;
+
+        if (event.getComponentId().equals("authme")) {
+            switch (event.getValues().get(0)) {
+                case "authme.confirm" -> Authme.confirm(event);
+                case "authme.deny" -> Authme.deny(event);
+                case "authme.info" -> Authme.info(event);
+            }
         }
     }
 }

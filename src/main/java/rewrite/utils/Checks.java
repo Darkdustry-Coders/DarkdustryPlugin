@@ -12,13 +12,14 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import rewrite.DarkdustryPlugin;
 import rewrite.discord.Bot;
 import rewrite.discord.MessageContext;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.Objects;
 
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
@@ -161,7 +162,7 @@ public class Checks {
         return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
-    public static boolean notAdmin(ButtonInteractionEvent event) {
+    public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
         return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(
                 new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
         ).setEphemeral(true).queue());
@@ -177,7 +178,7 @@ public class Checks {
 
     public static boolean notMap(MessageContext context) {
         List<Attachment> attachments = context.message.getAttachments();
-        return check(attachments.size() != 1 || !attachments.get(0).getFileExtension().equals(mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
+        return check(attachments.size() != 1 || !Objects.equals(attachments.get(0).getFileExtension(), mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 
     public static boolean notMap(MessageContext context, Fi file) {

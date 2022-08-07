@@ -12,10 +12,10 @@ import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
-import mindustry.server.ServerLauncher;
 import rewrite.commands.*;
 import rewrite.components.*;
 import rewrite.discord.Bot;
+import rewrite.discord.SlashCommands;
 import rewrite.features.*;
 import rewrite.features.Ranks.Rank;
 import rewrite.listeners.Filters;
@@ -48,6 +48,9 @@ public class DarkdustryPlugin extends Plugin {
 
         Database.connect();
         Bot.connect();
+
+        // TEST
+        SlashCommands.load();
 
         Version.build = -1;
 
