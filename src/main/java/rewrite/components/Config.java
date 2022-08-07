@@ -50,10 +50,10 @@ public class Config {
         Fi file = dataDirectory.child(configFileName);
         if (file.exists()) {
             config = JsonIO.json.fromJson(Config.class, file.reader());
-            DarkdustryPlugin.info("Конфигурация загружена. (@)", file.absolutePath());
+            DarkdustryPlugin.info("Configuration has been loaded. (@)", file.absolutePath());
         } else {
             file.writeString(JsonIO.json.toJson(config = new Config()));
-            DarkdustryPlugin.info("Файл конфигурации сгенерирован. (@)", file.absolutePath());
+            DarkdustryPlugin.info("Configuration file has been generated. (@)", file.absolutePath());
         }
 
         motd.set("off");

@@ -54,9 +54,9 @@ public class Bot {
             discordCommands = new CommandHandler(config.discordBotPrefix);
             DarkdustryPlugin.registerDiscordCommands(discordCommands);
 
-            DarkdustryPlugin.info("Бот успешно подключен. (@)", jda.getSelfUser().getAsTag());
+            DarkdustryPlugin.info("Bot has been successfully connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception exception) {
-            DarkdustryPlugin.error("Не удалось запустить бота: @", exception);
+            DarkdustryPlugin.error("Failed to start bot: @", exception);
         }
     }
 

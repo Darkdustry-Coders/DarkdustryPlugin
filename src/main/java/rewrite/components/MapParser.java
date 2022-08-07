@@ -26,9 +26,9 @@ public class MapParser {
                 else block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
             }
 
-            DarkdustryPlugin.info("Загружено @ цветов блоков.", pixmap.width);
+            DarkdustryPlugin.info("Loaded @ block colors.", pixmap.width);
         } catch (Exception exception) {
-            DarkdustryPlugin.error("Файл block_colors.png не найден или повреждён: @", exception);
+            DarkdustryPlugin.error("File block_colors.png not found or corrupt: @", exception);
         }
     }
 

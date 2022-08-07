@@ -66,7 +66,7 @@ public class PluginEvents {
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             Effects.onJoin(event.player);
-            DarkdustryPlugin.info("@ зашел на сервер. [@]", event.player.name, event.player.uuid());
+            DarkdustryPlugin.info("@ has connected. [@]", event.player.name, event.player.uuid());
 
             sendToChat("events.player.join", event.player.name);
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
@@ -79,7 +79,7 @@ public class PluginEvents {
         });
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
-            DarkdustryPlugin.info("@ вышел с сервера. [@]", event.player.name, event.player.uuid());
+            DarkdustryPlugin.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
 
             sendToChat("events.player.leave", event.player.name);
 
@@ -90,7 +90,6 @@ public class PluginEvents {
             // if (vote != null) vote.left(event.player); // TODO: хэндлить выход игроков
         });
         Events.on(ServerLoadEvent.class, event -> {
-            DarkdustryPlugin.info("Сервер готов к работе");
             Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен.");
         });
         Events.on(TapEvent.class, event -> {

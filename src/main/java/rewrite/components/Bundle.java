@@ -44,7 +44,7 @@ public class Bundle { // TODO: переделать bundle.properties с нул�
             formats.put(locale, new MessageFormat("", locale));
         });
 
-        DarkdustryPlugin.info("Загружено @ локалей, локаль по умолчанию: @.", supportedLocales.size, defaultLocale.toLanguageTag());
+        DarkdustryPlugin.info("Loaded @ locales, default locale is @.", supportedLocales.size, defaultLocale.toLanguageTag());
     }
 
     public static String get(String key, String defaultValue, Locale locale) {

@@ -6,7 +6,6 @@ import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
-import rewrite.DarkdustryPlugin;
 import rewrite.discord.Bot;
 import rewrite.utils.Find;
 
@@ -26,14 +25,14 @@ public class ServerCommands extends Commands<NullPointerException> {
             handler.removeCommand(command);
 
         register("exit", args -> {
-            DarkdustryPlugin.info("Выключаю сервер...");
+            Log.info("Shutting down server.");
             System.exit(2);
         });
 
         register("stop", args -> {
             net.closeServer();
             state.set(State.menu);
-            DarkdustryPlugin.info("Сервер остановлен.");
+            Log.info("Stopped server.");
         });
 
         register("host", args -> {
@@ -45,7 +44,7 @@ public class ServerCommands extends Commands<NullPointerException> {
                 if (notFound(mode, args)) return;
             } else {
                 mode = Gamemode.survival;
-                DarkdustryPlugin.info("Выбран режим по умолчанию: @.", mode.name());
+                Log.info("Default mode selected to be @.", mode.name());
             }
 
             Map map;
@@ -54,23 +53,23 @@ public class ServerCommands extends Commands<NullPointerException> {
                 if (notFound(map, args)) return;
             } else {
                 map = maps.getShuffleMode().next(mode, state.map);
-                DarkdustryPlugin.info("Случайным образом выбрана карта: @.", map.name());
+                Log.info("Randomized next map to be @.", map.name());
             }
 
             logic.reset();
 
             app.post(() -> {
                 try {
-                    DarkdustryPlugin.info("Загружаю карту...");
+                    Log.info("Loading map...");
 
                     world.loadMap(map, map.applyRules(mode));
                     state.rules = map.applyRules(mode);
                     logic.play();
                     netServer.openServer();
 
-                    DarkdustryPlugin.info("Карта загружена.");
+                    Log.info("Map loaded.");
                 } catch (MapException exception) {
-                    DarkdustryPlugin.error("@: @", exception.map.name(), exception.getMessage());
+                    Log.err("@: @", exception.map.name(), exception.getMessage());
                 }
             });
         });

@@ -33,7 +33,7 @@ public class Icons {
             content.units().each(unit -> units += " " + get(unit.name) + unit.name);
             Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
 
-            DarkdustryPlugin.info("Загружено @ иконок контента.", icons.size);
+            DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
         });
     }
 

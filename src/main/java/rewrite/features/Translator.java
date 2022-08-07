@@ -59,7 +59,7 @@ public class Translator {
                 "zh_CN", "zh",
                 "zh_TW", "zh");
 
-        DarkdustryPlugin.info("Загружено @ языков для переводчика.", translatorLanguages.size);
+        DarkdustryPlugin.info("Uploaded @ languages for translator.", translatorLanguages.size);
     }
 
     public static void translate(String to, String text, Cons<String> cons) {

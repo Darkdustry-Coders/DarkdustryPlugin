@@ -32,17 +32,15 @@ public class Checks {
     // region Console
 
     public static boolean isLaunched() {
-        return check(!state.isMenu(), "Сервер уже запущен.");
-    }
-
+        return check(!state.isMenu(), "Already hosting.");
     }
 
     public static boolean notFound(Gamemode mode, String[] name) {
-        return check(mode == null, "Режим игры @ не найден.", name[1]);
+        return check(mode == null, "No gamemode @ found.", name[1]);
     }
 
     public static boolean notFound(Map map, String[] name) {
-        return check(map == null, "Карта @ не найдена.", name[0]);
+        return check(map == null, "No map @ found.", name[0]);
     }
 
     // endregion
