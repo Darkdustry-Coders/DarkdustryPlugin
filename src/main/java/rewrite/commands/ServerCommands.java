@@ -88,7 +88,7 @@ public class ServerCommands extends Commands<NullPointerException> {
 
         register("kick", args -> {
             Player target = Find.player(args[0]);
-            if (notFound(player, args)) return;
+            if (notFound(target, args)) return;
             
             kick(target, kickDuration, true, "kick.kicked");
             Log.info("Player @ has been kicked.", target.name);
