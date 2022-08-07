@@ -87,11 +87,21 @@ public class ServerCommands extends Commands<NullPointerException> {
 
         register("kick", args -> {
             Player target = Find.player(args[0]);
-            if(notFound(player, args))
+            if (notFound(player, args)) return;
             
             kick(target, kickDuration, true, "kick.kicked");
             Log.info("Player @ has been kicked.", target.name);
             sendToChat("events.server.kick", target.name);
+        });
+
+        register("pardon", args -> {
+            PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
+            if (info == null) info = netServer.admins.findByIP(args[0]);
+            if (notFound(info, args)) return;
+
+            info.lastKicked = 0L;
+            info.ips.each(netServer.admins.kickedIPs::remove);
+            Log.info("Player @ has been pardoned.", info.lastName);
         });
 
         register("ban", args -> {
@@ -114,6 +124,16 @@ public class ServerCommands extends Commands<NullPointerException> {
                 kick(player, 0, true, "kick.banned");
                 sendToChat("events.server.ban", player.name);
             });
+        });
+
+        register("unban", args -> {
+            PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
+            if (info == null) info = netServer.admins.findByIP(args[0]);
+            if (notFound(info, args)) return;
+
+            netServer.admins.unbanPlayerID(info.id);
+            info.ips.each(netServer.admins::unbanPlayerIP);
+            Log.info("Player @ has been unbanned.", info.lastName);
         });
     }
 }
