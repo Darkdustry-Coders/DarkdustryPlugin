@@ -1,5 +1,6 @@
 package rewrite.commands;
 
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.core.GameState.State;
@@ -134,6 +135,35 @@ public class ServerCommands extends Commands<NullPointerException> {
             netServer.admins.unbanPlayerID(info.id);
             info.ips.each(netServer.admins::unbanPlayerIP);
             Log.info("Player @ has been unbanned.", info.lastName);
+        });
+
+        register("bans", args -> {
+            if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
+                netServer.admins.getBanned().each(info -> netServer.admins.unbanPlayerID(info.id));
+                netServer.admins.getBannedIPs().each(netServer.admins::unbanPlayerIP);
+                Log.info("Ban list has been cleared.");
+                return;
+            }
+
+            Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
+            if (bannedIDs.isEmpty())
+                Log.info("No ID-banned players have been found.");
+            else {
+                Log.info("ID-banned players: (@)", bannedIDs.size);
+                bannedIDs.each(ban -> Log.info("  @ / Last known name: @", ban.id, ban.lastName));
+            }
+
+            Seq<String> bannedIPs = netServer.admins.getBannedIPs();
+            if (bannedIPs.isEmpty())
+                Log.info("No IP-banned players have been found.");
+            else {
+                Log.info("IP-banned players: (@)", bannedIPs.size);
+                bannedIPs.each(ip -> {
+                    PlayerInfo info = netServer.admins.findByIP(ip);
+                    if (info == null) Log.info("  @ / (No known name or info)", ip);
+                    else Log.info("  @ / Last known name: @ / ID: @", ip, info.lastName, info.id);
+                });
+            }
         });
     }
 }
