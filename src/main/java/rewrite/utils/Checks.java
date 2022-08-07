@@ -1,19 +1,20 @@
 package rewrite.utils;
 
 import arc.files.Fi;
+import arc.util.Log;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
-import rewrite.DarkdustryPlugin;
 import rewrite.discord.Bot;
 import rewrite.discord.MessageContext;
 
@@ -41,6 +42,14 @@ public class Checks {
 
     public static boolean notFound(Map map, String[] name) {
         return check(map == null, "No map @ found.", name[0]);
+    }
+
+    public static boolean notFound(Player player, String[] name) {
+        return check(player == null, "No player @ found.", name[0]);
+    }
+
+    public static boolean notFound(PlayerInfo info, String[] name) {
+        return check(info == null, "No player @ found.", name[0]);
     }
 
     // endregion
@@ -205,7 +214,7 @@ public class Checks {
     }
 
     private static boolean check(boolean result, String error, Object... values) {
-        return check(result, () -> DarkdustryPlugin.error(error, values));
+        return check(result, () -> Log.err(error, values));
     }
 
     private static boolean check(boolean result, Player player, String key, Object... values) {
