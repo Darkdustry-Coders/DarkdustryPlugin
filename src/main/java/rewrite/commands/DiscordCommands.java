@@ -45,10 +45,6 @@ public class DiscordCommands extends Commands<MessageContext> {
             context.info(":newspaper: Доступные команды:", commands.toString());
         });
 
-        register("ip", (args, context) -> {
-            context.info(":desktop: " + stripAll(Config.serverName.string()), "IP: @:@", config.hubIp, Config.port.num());
-        });
-
         register("players", (args, context) -> {
             if (invalidPage(context, args)) return;
             if (Groups.player.isEmpty()) {
@@ -71,19 +67,6 @@ public class DiscordCommands extends Commands<MessageContext> {
                     .setTitle(format(":satellite: Всего игроков на сервере: @", list.size))
                     .setDescription(result.toString())
                     .setFooter(format("Страница @ / @", page, pages)).build());
-        });
-
-        register("status", (args, context) -> {
-            if (isMenu(context)) return;
-            context.channel.sendMessageEmbeds(new EmbedBuilder()
-                    .setColor(Color.green)
-                    .setTitle(":desktop: " + stripAll(Config.serverName.string()))
-                    .addField("Игроков:", String.valueOf(Groups.player.size()), true)
-                    .addField("Карта:", state.map.name(), true)
-                    .addField("Волна:", String.valueOf(state.wave), true)
-                    .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
-                    .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
-                    .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
         });
 
         register("kick", (args, context) -> {

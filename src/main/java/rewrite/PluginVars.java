@@ -43,6 +43,9 @@ public class PluginVars {
     /** Список uuid игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, String> loginWaiting = new OrderedMap<>();
 
+    /** IP адрес серверов Darkdustry. */
+    public static final String serverIp = "darkdustry.tk";
+
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
 
