@@ -3,12 +3,10 @@ package rewrite.discord;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
 import mindustry.gen.Groups;
-import mindustry.net.Administration;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
 import rewrite.components.MapParser;
@@ -21,7 +19,6 @@ import static pandorum.util.Utils.stripAll;
 import static rewrite.PluginVars.serverIp;
 import static rewrite.discord.Bot.botGuild;
 import static rewrite.discord.Bot.jda;
-import static rewrite.utils.Checks.isMenu;
 import static rewrite.utils.Utils.formatDuration;
 
 public class SlashCommands extends ListenerAdapter {
