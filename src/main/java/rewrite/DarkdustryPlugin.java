@@ -51,6 +51,7 @@ public class DarkdustryPlugin extends Plugin {
 
         // TEST
         SlashCommands.load();
+        SchemeSize.load(); // :3
 
         Version.build = -1;
 
