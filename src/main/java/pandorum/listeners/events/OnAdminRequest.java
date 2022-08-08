@@ -12,6 +12,7 @@ public class OnAdminRequest implements Cons<AdminRequestEvent> {
             case wave -> sendToChat("events.admin.wave", event.player.name);
             case kick -> sendToChat("events.admin.kick", event.player.name, event.other.name);
             case ban -> sendToChat("events.admin.ban", event.player.name, event.other.name);
+            default -> {}
         }
     }
 }

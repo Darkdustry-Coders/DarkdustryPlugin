@@ -10,7 +10,6 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import pandorum.components.MapParser;
@@ -21,7 +20,6 @@ import rewrite.utils.Find;
 import java.awt.Color;
 import java.util.Locale;
 
-import static arc.Core.*;
 import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.*;
