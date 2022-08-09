@@ -16,7 +16,7 @@ import java.awt.*;
 import static arc.Core.graphics;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
-import static pandorum.util.Utils.stripAll;
+import static rewrite.utils.Utils.stripAll;
 import static rewrite.PluginVars.serverIp;
 import static rewrite.discord.Bot.botGuild;
 import static rewrite.discord.Bot.jda;

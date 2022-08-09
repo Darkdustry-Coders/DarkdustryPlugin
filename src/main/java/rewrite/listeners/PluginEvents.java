@@ -1,9 +1,12 @@
 package rewrite.listeners;
 
 import arc.Events;
+import arc.math.geom.Point2;
+import arc.util.Structs;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
+import rewrite.features.history.ConfigEntry;
 import rewrite.DarkdustryPlugin;
 import rewrite.components.Database.PlayerData;
 import rewrite.discord.Bot;
@@ -51,7 +54,22 @@ public class PluginEvents {
             Alerts.buildAlert(event);
         });
 
-        Events.on(ConfigEvent.class, event -> {});
+        Events.on(ConfigEvent.class, event -> {
+            if (History.enabled() && event.player != null) {
+                boolean connect = false;
+
+                if (event.tile.block.configurations.containsKey(Point2.class)) {
+                    connect = (int) event.value != -1;
+                }
+
+                if (event.tile.block.configurations.containsKey(Point2[].class)) {
+                    var link = Point2.unpack((int) event.value).sub(event.tile.tileX(), event.tile.tileY());
+                    connect = Structs.contains((Point2[]) event.tile.config(), point2 -> point2.equals(link));
+                }
+
+                History.put(new ConfigEntry(event, connect), event.tile.tile);
+            }
+        });
 
         Events.on(DepositEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new DepositEntry(event), event.tile.tile);

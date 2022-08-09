@@ -12,7 +12,7 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import pandorum.components.MapParser;
+import rewrite.components.MapParser;
 import rewrite.components.Config.Gamemode;
 import rewrite.discord.MessageContext;
 import rewrite.utils.Find;
