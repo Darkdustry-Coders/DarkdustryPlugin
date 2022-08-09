@@ -7,26 +7,20 @@ import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static mindustry.Vars.*;
-import static rewrite.PluginVars.*;
-import static rewrite.components.Bundle.*;
+import static mindustry.Vars.netServer;
+import static rewrite.PluginVars.loginWaiting;
+import static rewrite.components.Bundle.bundled;
 
 public class Authme {
 
-    public static final Button
-            confirm = Button.success("authme.confirm", "Подтвердить"),
-            deny = Button.danger("authme.deny", "Отклонить"),
-            info = Button.primary("authme.info", "Информация");
-
     public static final SelectMenu menu = SelectMenu.create("authme")
-            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос и выдать игроку права администратора", Emoji.fromFormatted("✅"))
-            .addOption("Отклонить", "authme.deny", "Отклонить запрос", Emoji.fromFormatted("❌"))
-            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке", Emoji.fromFormatted("ℹ"))
+            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.", Emoji.fromFormatted("✅"))
+            .addOption("Отклонить", "authme.deny", "Отклонить запрос.", Emoji.fromFormatted("❌"))
+            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("ℹ"))
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {

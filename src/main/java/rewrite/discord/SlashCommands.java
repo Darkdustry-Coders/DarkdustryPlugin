@@ -14,7 +14,8 @@ import rewrite.components.MapParser;
 import java.awt.*;
 
 import static arc.Core.graphics;
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
 import static pandorum.util.Utils.stripAll;
 import static rewrite.PluginVars.serverIp;
 import static rewrite.discord.Bot.botGuild;
@@ -44,8 +45,6 @@ public class SlashCommands extends ListenerAdapter {
                     .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                     .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
         }).queue();
-
-
     }
 
     public static CommandCreateAction registerCommand(String name, String description, Cons<SlashContext> cons) {

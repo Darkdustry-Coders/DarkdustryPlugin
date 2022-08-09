@@ -162,30 +162,6 @@ public class AdminCommands extends Commands<Player> {
 
             bundled(player, "commands.fill.success", width, height, Icons.get(block.name, block.name));
         });
-
-        register("full", (args, player) -> {
-            if (invalideFullAmount(player, args)) return;
-            int x1 = Strings.parseInt(args[3]), y1 = Strings.parseInt(args[4]),
-                x2 = Strings.parseInt(args[5]), y2 = Strings.parseInt(args[6]),
-                width = Math.abs(x1 - x2) + 1, height = Math.abs(y1 - y2) + 1;
-            if (invalideFillAmount(player, width, height)) return;
-
-            x1 = Math.min(x1, x2);
-            y1 = Math.min(y1, y2);
-
-            Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
-            for (int x = x1; x < x1 + width; x++) {
-                for (int y = y1; y < y1 + height; y++) {
-                    Tile tile = world.tile(x, y);
-                    if (tile == null) continue;
-
-                    tile.setFloorNet(floor == null ? tile.floor() : floor, overlay == null ? tile.overlay() : overlay);
-                    if (block != null) tile.setNet(block);
-                }
-            }
-
-            bundled(player, "commands.full.success", width, height);
-        });
     }
 
     @Override

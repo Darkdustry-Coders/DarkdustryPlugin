@@ -47,6 +47,8 @@ public class Config {
     public String translatorApiKey = "key";
 
     public static void load() {
+        JsonIO.json.setUsePrototypes(false);
+
         Fi file = dataDirectory.child(configFileName);
         if (file.exists()) {
             config = JsonIO.json.fromJson(Config.class, file.reader());
@@ -55,6 +57,8 @@ public class Config {
             file.writeString(JsonIO.json.toJson(config = new Config()));
             DarkdustryPlugin.info("Configuration file has been generated. (@)", file.absolutePath());
         }
+
+        JsonIO.json.setUsePrototypes(true);
 
         motd.set("off");
         interactRateWindow.set(3);

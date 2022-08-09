@@ -1,7 +1,6 @@
 package rewrite.listeners;
 
 import arc.Events;
-import arc.func.Cons;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
@@ -27,8 +26,6 @@ import static rewrite.components.MenuHandler.*;
 
 public class PluginEvents {
 
-    public static Cons<GameOverEvent> gameover;
-
     public static void load() {
         Events.on(AdminRequestEvent.class, event -> {
             switch (event.action) {
@@ -38,6 +35,7 @@ public class PluginEvents {
                 default -> {} // без этой строки vscode кидает ошибку
             }
         });
+
         Events.on(BlockBuildEndEvent.class, event -> {
             if (!event.unit.isPlayer()) return;
             if (History.enabled() && event.tile.build != null) History.put(new BlockEntry(event), event.tile);
@@ -47,20 +45,25 @@ public class PluginEvents {
             data.buildingsBuilt++;
             setPlayerData(data);
         });
+
         Events.on(BuildSelectEvent.class, event -> {
             if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer()) return;
             Alerts.buildAlert(event);
         });
+
         Events.on(ConfigEvent.class, event -> {});
+
         Events.on(DepositEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new DepositEntry(event), event.tile.tile);
             Alerts.depositAlert(event);
         });
-        Events.on(GameOverEvent.class, gameover = event -> Groups.player.each(player -> {
+
+        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
             PlayerData data = getPlayerData(player.uuid());
             data.gamesPlayed++;
             setPlayerData(data);
         }));
+
         Events.on(PlayerJoin.class, event -> {
             PlayerData data = getPlayerData(event.player);
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
@@ -77,6 +80,7 @@ public class PluginEvents {
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
                     new String[][] {{"ui.menus.close"}, {"welcome.menu.disable"}}, null, Config.serverName.string(), discordServerUrl);
         });
+
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
             DarkdustryPlugin.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
@@ -89,9 +93,9 @@ public class PluginEvents {
             if (vote instanceof VoteKick kick && kick.target == event.player) kick.success();
             // if (vote != null) vote.left(event.player); // TODO: хэндлить выход игроков
         });
-        Events.on(ServerLoadEvent.class, event -> {
-            Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен.");
-        });
+
+        Events.on(ServerLoadEvent.class, event -> Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен."));
+
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;
 
@@ -103,15 +107,14 @@ public class PluginEvents {
 
             event.player.sendMessage(result.toString());
         });
+
         Events.on(WithdrawEvent.class, event -> {
             if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
         });
+
         Events.on(WorldLoadEvent.class, event -> {
             activeHistory.clear();
             History.clear();
         });
-
-        Events.run("HexedGameOver", () -> gameover.get(null));
-        Events.run("CastleGameOver", () -> gameover.get(null));
     }
 }

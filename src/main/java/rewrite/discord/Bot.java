@@ -96,8 +96,8 @@ public class Bot {
                 .setTitle("Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.name, true)
                 .addField("UUID:", player.uuid(), true)
-                .setFooter("Нажмите на кнопку, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
-        ).setActionRows(ActionRow.of(menu), ActionRow.of(confirm, deny, info)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
+                .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
+        ).setActionRows(ActionRow.of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {

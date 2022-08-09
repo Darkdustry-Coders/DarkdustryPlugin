@@ -1,6 +1,5 @@
 package rewrite.discord;
 
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -22,17 +21,6 @@ public class DiscordListeners extends ListenerAdapter {
             handleMessage(context);
             sendMessageToGame(context);
         });
-    }
-
-    @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (!loginWaiting.containsKey(event.getMessage()) || notAdmin(event)) return;
-
-        switch (event.getComponentId()) {
-            case "authme.confirm" -> Authme.confirm(event);
-            case "authme.deny" -> Authme.deny(event);
-            case "authme.info" -> Authme.info(event);
-        }
     }
 
     @Override
