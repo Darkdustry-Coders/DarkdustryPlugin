@@ -35,7 +35,9 @@ public class Find {
 
     public static PlayerInfo playerInfo(String name) {
         Player player = player(name);
-        return player != null ? player.getInfo() : netServer.admins.getInfoOptional(name);
+        if (player != null) return player.getInfo();
+
+        return Utils.notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
     }
 
     public static UnitType unit(String name) {

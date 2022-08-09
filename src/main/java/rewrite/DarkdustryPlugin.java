@@ -35,6 +35,7 @@ public class DarkdustryPlugin extends Plugin {
     public void init() {
         Effects.load();
         Alerts.load();
+        Bundle.load();
         Config.load();
         Icons.load();
         Ranks.load();
@@ -84,12 +85,11 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        Bundle.load(); // меня всё устраивает
-        new ServerCommands(serverCommands = handler, consoleLocale);
+        new ServerCommands(serverCommands = handler);
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler, consoleLocale);
+        new DiscordCommands(discordCommands = handler);
     }
 
     public static void info(String text, Object... values) {

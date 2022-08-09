@@ -28,7 +28,7 @@ public class MapParser {
 
             DarkdustryPlugin.info("Loaded @ block colors.", pixmap.width);
         } catch (Exception exception) {
-            DarkdustryPlugin.error("File block_colors.png not found or corrupt: @", exception);
+            DarkdustryPlugin.error("File block_colors.png is not found or corrupt: @", exception);
         }
     }
 

@@ -14,8 +14,6 @@ import rewrite.discord.Bot;
 import rewrite.features.Ranks;
 import rewrite.utils.Find;
 
-import java.util.Locale;
-
 import static arc.Core.app;
 import static mindustry.Vars.*;
 import static rewrite.PluginVars.kickDuration;
@@ -27,24 +25,21 @@ import static rewrite.utils.Utils.kick;
 
 public class ServerCommands extends Commands<NullPointerException> {
 
-    public ServerCommands(CommandHandler handler, Locale def) {
-        super(handler, def);
+    public ServerCommands(CommandHandler handler) {
+        super(handler);
 
-        for (String command : new String[] {"fillitems", "pause", "shuffle", "runwave"})
-            handler.removeCommand(command);
-
-        register("exit", args -> {
+        register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
             System.exit(2);
         });
 
-        register("stop", args -> {
+        register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
             state.set(State.menu);
             Log.info("Stopped server.");
         });
 
-        register("host", args -> {
+        register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (isLaunched()) return;
 
             Gamemode mode;
@@ -83,13 +78,13 @@ public class ServerCommands extends Commands<NullPointerException> {
             });
         });
 
-        register("say", args -> {
+        register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
             Bot.sendMessage(Bot.botChannel, "Сервер » @", args[0]);
         });
 
-        register("kick", args -> {
+        register("kick", "<username/id...>", "Kick a player.", args -> {
             Player target = Find.player(args[0]);
             if (notFound(target, args)) return;
             
@@ -98,9 +93,8 @@ public class ServerCommands extends Commands<NullPointerException> {
             sendToChat("events.server.kick", target.name);
         });
 
-        register("pardon", args -> {
-            PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
-            if (info == null) info = netServer.admins.findByIP(args[0]);
+        register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
+            PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
             info.lastKicked = 0L;
@@ -108,7 +102,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             Log.info("Player @ has been pardoned.", info.lastName);
         });
 
-        register("ban", args -> {
+        register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             Player target = Find.player(args[0]);
             if (target != null) {
                 netServer.admins.banPlayer(target.uuid());
@@ -118,8 +112,7 @@ public class ServerCommands extends Commands<NullPointerException> {
                 return;
             }
 
-            PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
-            if (info == null) info = netServer.admins.findByIP(args[0]);
+            PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
             netServer.admins.banPlayer(info.id);
@@ -130,9 +123,8 @@ public class ServerCommands extends Commands<NullPointerException> {
             });
         });
 
-        register("unban", args -> {
-            PlayerInfo info = netServer.admins.getInfoOptional(args[0]);
-            if (info == null) info = netServer.admins.findByIP(args[0]);
+        register("unban", "<uuid/ip>", "Unban a player.", args -> {
+            PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
             netServer.admins.unbanPlayerID(info.id);
@@ -140,14 +132,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             Log.info("Player @ has been unbanned.", info.lastName);
         });
 
-        register("bans", args -> {
-            if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
-                netServer.admins.getBanned().each(info -> netServer.admins.unbanPlayerID(info.id));
-                netServer.admins.getBannedIPs().each(netServer.admins::unbanPlayerIP);
-                Log.info("Ban list has been cleared.");
-                return;
-            }
-
+        register("bans", "List all banned IPs and IDs.", args -> {
             Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
             if (bannedIDs.isEmpty())
                 Log.info("No ID-banned players have been found.");
@@ -169,7 +154,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             }
         });
 
-        register("admin", args -> {
+        register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
             Player target = Find.player(args[1]);
             PlayerInfo info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
@@ -197,16 +182,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             }
         });
 
-        register("admins", args -> {
-            if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
-                netServer.admins.getAdmins().each(info -> {
-                    netServer.admins.unAdminPlayer(info.id);
-                    Ranks.setRankNet(info.id, Ranks.player);
-                });
-                Log.info("Admins list has been cleared.");
-                return;
-            }
-    
+        register("admins", "List all admins.", args -> {
             Seq<PlayerInfo> admins = netServer.admins.getAdmins();
             if (admins.isEmpty())  Log.info("No admins have been found.");
             else {

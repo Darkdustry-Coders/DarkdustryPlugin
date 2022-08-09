@@ -52,10 +52,10 @@ public class Config {
         Fi file = dataDirectory.child(configFileName);
         if (file.exists()) {
             config = JsonIO.json.fromJson(Config.class, file.reader());
-            DarkdustryPlugin.info("Configuration has been loaded. (@)", file.absolutePath());
+            DarkdustryPlugin.info("Config loaded. (@)", file.absolutePath());
         } else {
             file.writeString(JsonIO.json.toJson(config = new Config()));
-            DarkdustryPlugin.info("Configuration file has been generated. (@)", file.absolutePath());
+            DarkdustryPlugin.info("Config file generated. (@)", file.absolutePath());
         }
 
         JsonIO.json.setUsePrototypes(true);

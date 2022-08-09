@@ -34,13 +34,9 @@ public class Bot {
 
     public static void connect() {
         try {
-            EnumSet<GatewayIntent> intents = EnumSet.allOf(GatewayIntent.class);
-            intents.remove(GatewayIntent.GUILD_PRESENCES); // Съедает слишком много трафика
-            intents.remove(GatewayIntent.GUILD_WEBHOOKS); // Абсолютно бесполезный
-            intents.remove(GatewayIntent.GUILD_MESSAGE_TYPING); // Абсолютно бесполезный
-            intents.remove(GatewayIntent.DIRECT_MESSAGE_TYPING); // Абсолютно бесполезный
-
-            jda = JDABuilder.createLight(config.discordBotToken, intents).addEventListeners(new DiscordListeners()).build().awaitReady();
+            jda = JDABuilder.createLight(config.discordBotToken)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
+                    .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);
@@ -52,9 +48,9 @@ public class Bot {
             updateBotStatus();
 
             DarkdustryPlugin.registerDiscordCommands(new CommandHandler(config.discordBotPrefix));
-            DarkdustryPlugin.info("Bot has been successfully connected. (@)", jda.getSelfUser().getAsTag());
+            DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception exception) {
-            DarkdustryPlugin.error("Failed to start bot: @", exception);
+            DarkdustryPlugin.error("Failed to connect bot: @", exception);
         }
     }
 

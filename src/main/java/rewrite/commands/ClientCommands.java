@@ -2,6 +2,7 @@ package rewrite.commands;
 
 import arc.files.Fi;
 import arc.util.CommandHandler;
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -26,8 +27,11 @@ import static rewrite.utils.Utils.*;
 
 public class ClientCommands extends Commands<Player> {
 
-    public ClientCommands(CommandHandler handler, Locale def) {
-        super(handler, def);
+    public Locale defaultLocale;
+
+    public ClientCommands(CommandHandler handler, Locale defaultLocale) {
+        super(handler);
+        this.defaultLocale = defaultLocale;
 
         register("help", PageIterator::commands);
 
@@ -214,5 +218,9 @@ public class ClientCommands extends Commands<Player> {
             bundled(player, "commands.login.sent");
             Cooldowns.run(player.uuid(), "login");
         });
+    }
+
+    public void register(String name, CommandRunner<Player> runner) {
+        register(name, get("commands." + name + ".params", defaultLocale), get("commands." + name + ".description", defaultLocale), runner);
     }
 }

@@ -11,20 +11,27 @@ import static rewrite.components.Bundle.*;
 public class Commands<T> {
 
     public CommandHandler handler;
-    public Locale locale;
 
-    public Commands(CommandHandler handler, Locale locale) {
+    public Commands(CommandHandler handler) {
         this.handler = handler;
-        this.locale = locale;
     }
 
-    public void register(String name, CommandRunner<T> runner) {
-        String params = get("commands." + name + ".params", locale);
-        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description", locale), runner);
+    public void register(String name, String params, String description, CommandRunner<T> runner) {
+
+        //String params = get("commands." + name + ".params", locale);
+        handler.register(name, params, description, runner);
     }
 
-    public void register(String name, Cons<String[]> runner) {
-        String params = get("commands." + name + ".params", locale);
-        handler.register(name, params.startsWith("commands") ? "" : params, get("commands." + name + ".description", locale), runner);
+    public void register(String name, String description, CommandRunner<T> runner) {
+        register(name, "", description, runner);
+    }
+
+
+    public void register(String name, String params, String description, Cons<String[]> runner) {
+        handler.register(name, params, description, runner);
+    }
+
+    public void register(String name, String description, Cons<String[]> runner) {
+        register(name, "", description, runner);
     }
 }

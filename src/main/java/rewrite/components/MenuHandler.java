@@ -79,16 +79,16 @@ public class MenuHandler {
         rankIncreaseMenu = emptyMenu();
     }
 
-    public static void showMenu(Player player, int menu, String title, String cont, String[][] buttons) {
-        showMenu(player, menu, title, cont, buttons, null);
+    public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {
+        showMenu(player, menu, title, content, buttons, null);
     }
 
-    public static void showMenu(Player player, int menu, String title, String cont, String[][] buttons, Object titleobj, Object... contobjs) {
+    public static void showMenu(Player player, int menu, String title, String content, String[][] buttons, Object titleObject, Object... contentObjects) {
         Locale locale = Find.locale(player.name);
         for (int i = 0; i < buttons.length; i++)
             for (int j = 0; j < buttons[i].length; j++)
                 buttons[i][j] = get(buttons[i][j], locale);
-        Call.menu(player.con, menu, format(title, titleobj), format(cont, contobjs), buttons);
+        Call.menu(player.con, menu, format(title, titleObject), format(content, contentObjects), buttons);
     }
 
     private static int emptyMenu() {

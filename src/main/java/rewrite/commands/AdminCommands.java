@@ -27,10 +27,10 @@ import static rewrite.components.MenuHandler.*;
 import static rewrite.utils.Checks.*;
 import static rewrite.utils.Utils.*;
 
-public class AdminCommands extends Commands<Player> {
+public class AdminCommands extends ClientCommands {
 
-    public AdminCommands(CommandHandler handler, Locale def) {
-        super(handler, def);
+    public AdminCommands(CommandHandler handler, Locale defaultLocale) {
+        super(handler, defaultLocale);
 
         register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.name, args[0])));
 
@@ -79,13 +79,13 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("give", (args, player) -> {
-            if (invalideAmount(player, args)) return;
+            if (invalidAmount(player, args)) return;
 
             Item item = Find.item(args[0]);
             if (notFound(player, item)) return;
 
             int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
-            if (invalideGiveAmount(player, amount)) return;
+            if (invalidGiveAmount(player, amount)) return;
 
             Team team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team) || notFoundCore(player, team)) return;
@@ -108,7 +108,7 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("spawn", (args, player) -> {
-            if (invalideAmount(player, args)) return;
+            if (invalidAmount(player, args)) return;
 
             UnitType type = Find.unit(args[0]);
             if (notFound(player, type)) return;
@@ -142,9 +142,9 @@ public class AdminCommands extends Commands<Player> {
         });
 
         register("fill", (args, player) -> {
-            if (invalideFillAmount(player, args)) return;
+            if (invalidFillAmount(player, args)) return;
             int width = Strings.parseInt(args[1]), height = Strings.parseInt(args[2]);
-            if (invalideFillAmount(player, width, height)) return;
+            if (invalidFillAmount(player, width, height)) return;
 
             Block block = Find.block(args[0]);
             if (notFound(player, block)) return;
