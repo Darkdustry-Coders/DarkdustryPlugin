@@ -47,7 +47,7 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer)) return;
 
         event.team.data().players.each(Alerts::isAlertsEnabled, player -> {
-            bundled(player, "alerts.dangerous-building", event.builder.getPlayer().name, Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
+            bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
         });
     }
 
@@ -55,7 +55,7 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
         event.player.team().data().players.each(Alerts::isAlertsEnabled, player -> {
-            bundled(player, "alerts.dangerous-deposit", event.player.name, Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+            bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
         });
     }
 

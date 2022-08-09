@@ -19,7 +19,7 @@ public class WithdrawEntry implements HistoryEntry {
     public final long time;
 
     public WithdrawEntry(WithdrawEvent event) {
-        this.name = event.player.name;
+        this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
         this.itemID = event.item.id;
         this.amount = event.amount;

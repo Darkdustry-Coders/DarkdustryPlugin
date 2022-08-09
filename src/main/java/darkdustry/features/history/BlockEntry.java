@@ -22,7 +22,7 @@ public class BlockEntry implements HistoryEntry {
     public final long time;
 
     public BlockEntry(BlockBuildEndEvent event) {
-        this.name = event.unit.getPlayer().name;
+        this.name = event.unit.getPlayer().coloredName();
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
         this.rotation = event.tile.build.rotation;
         this.breaking = event.breaking;

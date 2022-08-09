@@ -12,7 +12,7 @@ public class VoteRtv extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.rtv.vote", player.name, votes, votesRequired());
+        sendToChat("commands.rtv.vote", player.coloredName(), votes, votesRequired());
     }
 
     @Override

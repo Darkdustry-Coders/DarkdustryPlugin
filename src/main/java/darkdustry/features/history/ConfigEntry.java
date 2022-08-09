@@ -30,7 +30,7 @@ public class ConfigEntry implements HistoryEntry {
     public final long time;
 
     public ConfigEntry(ConfigEvent event, boolean connect) {
-        this.name = event.player.name;
+        this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
         this.value = event.value;
         this.connect = connect;

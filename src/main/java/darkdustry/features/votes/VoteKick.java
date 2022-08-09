@@ -21,20 +21,20 @@ public class VoteKick extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.votekick.vote", player.name, target.name, votes, votesRequired());
+        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes, votesRequired());
     }
 
     @Override
     public void success() {
         stop();
-        sendToChat("commands.votekick.passed", target.name, kickDuration / 60000);
-        kick(target, kickDuration, true, "kick.votekicked", starter.name);
+        sendToChat("commands.votekick.passed", target.coloredName(), kickDuration / 60000);
+        kick(target, kickDuration, true, "kick.votekicked", starter.coloredName());
     }
 
     @Override
     public void fail() {
         stop();
-        sendToChat("commands.votekick.failed", target.name);
+        sendToChat("commands.votekick.failed", target.coloredName());
     }
 
     @Override

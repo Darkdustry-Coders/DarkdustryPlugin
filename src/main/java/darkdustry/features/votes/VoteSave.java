@@ -19,7 +19,7 @@ public class VoteSave extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.nominate.save.vote", player.name, target.nameWithoutExtension(), votes, votesRequired());
+        sendToChat("commands.nominate.save.vote", player.coloredName(), target.nameWithoutExtension(), votes, votesRequired());
     }
 
     @Override

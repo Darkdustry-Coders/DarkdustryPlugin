@@ -32,9 +32,9 @@ public class PluginEvents {
     public static void load() {
         Events.on(AdminRequestEvent.class, event -> {
             switch (event.action) {
-                case wave -> sendToChat("events.admin.wave", event.player.name);
-                case kick -> sendToChat("events.admin.kick", event.player.name, event.other.name);
-                case ban -> sendToChat("events.admin.ban", event.player.name, event.other.name);
+                case wave -> sendToChat("events.admin.wave", event.player.coloredName());
+                case kick -> sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());
+                case ban -> sendToChat("events.admin.ban", event.player.coloredName(), event.other.coloredName());
                 default -> {} // без этой строки vscode кидает ошибку
             }
         });
@@ -89,7 +89,7 @@ public class PluginEvents {
             Effects.onJoin(event.player);
             DarkdustryPlugin.info("@ has connected. [@]", event.player.name, event.player.uuid());
 
-            sendToChat("events.player.join", event.player.name);
+            sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
 
             Bot.sendEmbed(Bot.botChannel, Color.green, "@ присоединился", stripColors(event.player.name));
@@ -103,7 +103,7 @@ public class PluginEvents {
             Effects.onLeave(event.player);
             DarkdustryPlugin.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
 
-            sendToChat("events.player.leave", event.player.name);
+            sendToChat("events.player.leave", event.player.coloredName());
 
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);

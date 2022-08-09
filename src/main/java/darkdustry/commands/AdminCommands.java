@@ -32,7 +32,7 @@ public class AdminCommands extends ClientCommands {
     public AdminCommands(CommandHandler handler, Locale defaultLocale) {
         super(handler, defaultLocale);
 
-        register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.name, args[0])));
+        register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.coloredName(), args[0])));
 
         if (!config.mode.isDefault()) return;
 
@@ -63,7 +63,7 @@ public class AdminCommands extends ClientCommands {
 
             target.team(team);
             bundled(target, "commands.team.success", coloredTeam(team));
-            if (target != player) bundled(player, "commands.team.success.player", target.name, coloredTeam(team));
+            if (target != player) bundled(player, "commands.team.success.player", target.coloredName(), coloredTeam(team));
         });
 
         register("core", (args, player) -> {
@@ -104,7 +104,7 @@ public class AdminCommands extends ClientCommands {
             target.unit().spawnedByCore(true);
             target.unit(type.spawn(target.team(), target.x, target.y));
             bundled(target, "commands.unit.success", Icons.get(type.name));
-            if (target != player) bundled(player, "commands.unit.success.player", target.name, Icons.get(type.name));
+            if (target != player) bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type.name));
         });
 
         register("spawn", (args, player) -> {

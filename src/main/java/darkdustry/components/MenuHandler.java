@@ -61,7 +61,7 @@ public class MenuHandler {
             if (!player.admin || option != 0) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
-            sendToChat("commands.artv.info", player.name);
+            sendToChat("commands.artv.info", player.coloredName());
         });
 
         statsMenu = emptyMenu();
@@ -84,7 +84,7 @@ public class MenuHandler {
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons, Object titleObject, Object... contentObjects) {
-        Locale locale = Find.locale(player.name);
+        Locale locale = Find.locale(player.locale);
         for (int i = 0; i < buttons.length; i++)
             for (int j = 0; j < buttons[i].length; j++)
                 buttons[i][j] = get(buttons[i][j], locale);

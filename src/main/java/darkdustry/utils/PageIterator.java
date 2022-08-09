@@ -20,7 +20,7 @@ import static darkdustry.components.Bundle.*;
 public class PageIterator { // TODO: сделаешь ещё итераторы для карт и игроков в дискорде
 
     public static void commands(String[] args, Player player) {
-        Locale locale = Find.locale(player.name);
+        Locale locale = Find.locale(player.locale);
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
                         .append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
@@ -33,7 +33,7 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
                 (builder, i, p) -> {
                     builder.append("\n[#9c88ee]* [white]");
                     if (p.admin) builder.append(Iconc.admin).append(" ");
-                    builder.append(p.name).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])").append(" [lightgray]([accent]Locale: ").append(p.locale).append("[lightgray])");
+                    builder.append(p.coloredName()).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])").append(" [lightgray]([accent]Locale: ").append(p.locale).append("[lightgray])");
                 }, null);
     }
 

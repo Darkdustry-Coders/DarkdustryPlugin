@@ -37,7 +37,7 @@ public class ClientCommands extends Commands<Player> {
 
         register("discord", (args, player) -> bundled(player, "commands.discord.link", discordServerUrl));
 
-        register("t", (args, player) -> player.team().data().players.each(teammate -> bundled(teammate, "commands.t.chat", player.team().color, player.name, args[0])));
+        register("t", (args, player) -> player.team().data().players.each(teammate -> bundled(teammate, "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 
         register("sync", (args, player) -> {
             if (alreadySynced(player)) return;
@@ -85,7 +85,7 @@ public class ClientCommands extends Commands<Player> {
             Rank rank = Ranks.getRank(data.rank);
 
             showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
-                    new String[][] {{"ui.menus.close"}}, target.name, rank.tag, rank.localisedName(Find.locale(player.locale)),
+                    new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.tag, rank.localisedName(Find.locale(player.locale)),
                     data.playTime, data.buildingsBuilt, data.gamesPlayed);
         });
 
@@ -111,7 +111,7 @@ public class ClientCommands extends Commands<Player> {
                         next.req.gamesPlayed()));
 
             Call.menu(player.con, rankInfoMenu,
-                    format("commands.rank.menu.header", locale, target.name),
+                    format("commands.rank.menu.header", locale, target.coloredName()),
                     builder.toString(),
                     new String[][] {{format("ui.menus.close", locale)}, {format("commands.rank.menu.requirements", locale)}});
         });
