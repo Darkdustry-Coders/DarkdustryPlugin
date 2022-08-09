@@ -44,46 +44,44 @@ public class ServerCommands extends Commands<NullPointerException> {
             Log.info("Stopped server.");
         });
 
-        /**
-         * register("host", args -> {
-         *             if (isLaunched()) return;
-         *
-         *             Gamemode mode;
-         *             if (args.length > 1) {
-         *                 mode = Find.mode(args[1]);
-         *                 if (notFound(mode, args)) return;
-         *             } else {
-         *                 mode = Gamemode.survival;
-         *                 Log.info("Default mode selected to be @.", mode.name());
-         *             }
-         *
-         *             Map map;
-         *             if (args.length > 0) {
-         *                 map = Find.map(args[0]);
-         *                 if (notFound(map, args)) return;
-         *             } else {
-         *                 map = maps.getShuffleMode().next(mode, state.map);
-         *                 Log.info("Randomized next map to be @.", map.name());
-         *             }
-         *
-         *             app.post(() -> {
-         *                 try {
-         *                     Log.info("Loading map...");
-         *
-         *                     logic.reset();
-         *                     world.loadMap(map, map.applyRules(mode));
-         *                     state.rules = map.applyRules(mode);
-         *                     logic.play();
-         *
-         *                     Log.info("Map loaded.");
-         *
-         *                     netServer.openServer();
-         *                 } catch (MapException exception) {
-         *                     Log.err("@: @", exception.map.name(), exception.getMessage());
-         *                 }
-         *             });
-         *         });
-         */
+        register("host", args -> {
+            if (isLaunched()) return;
+
+            Gamemode mode;
+            if (args.length > 1) {
+                mode = Find.mode(args[1]);
+                if (notFound(mode, args)) return;
+            } else {
+                mode = Gamemode.survival;
+                Log.info("Default mode selected to be @.", mode.name());
+            }
+
+            Map map;
+            if (args.length > 0) {
+                map = Find.map(args[0]);
+                if (notFound(map, args)) return;
+            } else {
+                map = maps.getShuffleMode().next(mode, state.map);
+                Log.info("Randomized next map to be @.", map.name());
+            }
+
+            app.post(() -> {
+                try {
+                    Log.info("Loading map...");
+
+                    logic.reset();
+                    world.loadMap(map, map.applyRules(mode));
+                    state.rules = map.applyRules(mode);
+                    logic.play();
+
+                    Log.info("Map loaded.");
+
+                    netServer.openServer();
+                } catch (MapException exception) {
+                    Log.err("@: @", exception.map.name(), exception.getMessage());
+                }
+            });
+        });
 
         register("say", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
