@@ -5,6 +5,6 @@
     "author": "Darkness6030 & xzxADIxzx",
     "description": "Core plugin for Darkdustry servers.",
     "version": "2.3",
-    "main": "rewrite.DarkdustryPlugin",
+    "main": "darkdustry.DarkdustryPlugin",
     "repo": "Darkdustry-Coders/DarkdustryPlugin"
 }

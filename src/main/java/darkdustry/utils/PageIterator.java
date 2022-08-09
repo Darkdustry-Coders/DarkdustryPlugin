@@ -5,7 +5,6 @@ import arc.func.Cons3;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import mindustry.gen.Groups;
-import mindustry.gen.Iconc;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
@@ -16,8 +15,9 @@ import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 
-/** Страшно, но очень полезно. */
-public class PageIterator { // TODO: сделаешь ещё итераторы для карт и игроков в дискорде
+// Страшно, но очень полезно.
+// (C) xzxADIxzx, 2023 год
+public class PageIterator {
 
     public static void commands(String[] args, Player player) {
         Locale locale = Find.locale(player.locale);
@@ -30,11 +30,10 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
 
     public static void players(String[] args, Player player) {
         client(args, player, Groups.player.copy(new Seq<>()), "players",
-                (builder, i, p) -> {
-                    builder.append("\n[#9c88ee]* [white]");
-                    if (p.admin) builder.append(Iconc.admin).append(" ");
-                    builder.append(p.coloredName()).append(" [lightgray]([accent]ID: ").append(p.id).append("[lightgray])").append(" [lightgray]([accent]Locale: ").append(p.locale).append("[lightgray])");
-                }, null);
+                (builder, i, p) -> builder
+                        .append("\n[#9c88ee]* [white]")
+                        .append(p.admin ? "[\uE82C] " : "[\uE872] ")
+                        .append(p.coloredName()).append(" [lightgray]|[accent] ID: ").append(p.id).append(" [lightgray]|[accent] Locale: ").append(p.locale), null);
     }
 
     public static void maps(String[] args, Player player) {
@@ -50,7 +49,7 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
 
     public static <T> void client(String[] args, Player player, Seq<T> content, String command, Cons3<StringBuilder, Integer, T> cons, Cons<StringBuilder> result) {
         iterate(content, 8, args, (page, pages) -> format("commands." + command + ".page", Find.locale(player.locale), page, pages),
-                pages -> bundled(player, "commands.page-not-int"),
+                () -> bundled(player, "commands.page-not-int"),
                 pages -> bundled(player, "commands.under-page", pages),
                 cons, builder -> {
                     if (result != null) result.get(builder);
@@ -60,11 +59,11 @@ public class PageIterator { // TODO: сделаешь ещё итераторы 
 
     public static <T> void iterate(
             Seq<T> content, int size, String[] args, BuilderPrefix start,
-            Cons<Integer> notint, Cons<Integer> outrange,
+            Runnable notint, Cons<Integer> outrange,
             Cons3<StringBuilder, Integer, T> cons, Cons<StringBuilder> result) {
 
         if (args.length > 0 && !canParseInt(args[0])) {
-            notint.get(0);
+            notint.run();
             return;
         }
 

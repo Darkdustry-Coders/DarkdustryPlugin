@@ -221,6 +221,6 @@ public class ClientCommands extends Commands<Player> {
     }
 
     public void register(String name, CommandRunner<Player> runner) {
-        register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", "", defaultLocale), runner);
+        super.register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", "", defaultLocale), runner);
     }
 }
