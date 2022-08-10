@@ -13,13 +13,11 @@ public class Commands<T> {
     }
 
     public void register(String name, String params, String description, CommandRunner<T> runner) {
-
-        //String params = get("commands." + name + ".params", locale);
         handler.register(name, params, description, runner);
     }
 
     public void register(String name, String description, CommandRunner<T> runner) {
-        register(name, "", description, runner);
+        handler.register(name, "", description, runner);
     }
 
 
@@ -28,6 +26,6 @@ public class Commands<T> {
     }
 
     public void register(String name, String description, Cons<String[]> runner) {
-        register(name, "", description, runner);
+        handler.register(name, "", description, runner);
     }
 }
