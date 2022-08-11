@@ -27,10 +27,10 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 
-public class AdminCommands extends ClientCommands {
+public class AdminCommands extends Commands<Player> {
 
-    public AdminCommands(CommandHandler handler, Locale defaultLocale) {
-        super(handler, defaultLocale);
+    public AdminCommands(CommandHandler handler) {
+        super(handler);
 
         register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.coloredName(), args[0])));
 
@@ -164,9 +164,8 @@ public class AdminCommands extends ClientCommands {
         });
     }
 
-    @Override
     public void register(String name, CommandRunner<Player> runner) {
-        super.register(name, (args, player) -> {
+        super.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
             if (player.admin) runner.accept(args, player);
             else bundled(player, "commands.permission-denied");
         });

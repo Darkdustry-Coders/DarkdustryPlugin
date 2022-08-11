@@ -27,11 +27,8 @@ import static darkdustry.utils.Utils.*;
 
 public class ClientCommands extends Commands<Player> {
 
-    public Locale defaultLocale;
-
-    public ClientCommands(CommandHandler handler, Locale defaultLocale) {
+    public ClientCommands(CommandHandler handler) {
         super(handler);
-        this.defaultLocale = defaultLocale;
 
         register("help", PageIterator::commands);
 
@@ -221,6 +218,6 @@ public class ClientCommands extends Commands<Player> {
     }
 
     public void register(String name, CommandRunner<Player> runner) {
-        super.register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", "", defaultLocale), runner);
+        super.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
     }
 }

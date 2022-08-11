@@ -24,7 +24,6 @@ import darkdustry.utils.Find;
 
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
 
@@ -79,8 +78,8 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        new ClientCommands(clientCommands = handler, defaultLocale);
-        new AdminCommands(handler, defaultLocale);
+        new ClientCommands(clientCommands = handler);
+        new AdminCommands(handler);
     }
 
     @Override
