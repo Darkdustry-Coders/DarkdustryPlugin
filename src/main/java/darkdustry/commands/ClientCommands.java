@@ -218,6 +218,6 @@ public class ClientCommands extends Commands<Player> {
     }
 
     public void register(String name, CommandRunner<Player> runner) {
-        super.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
+        handler.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
     }
 }

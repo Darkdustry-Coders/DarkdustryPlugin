@@ -31,7 +31,7 @@ public class DiscordCommands extends Commands<MessageContext> {
     public DiscordCommands(CommandHandler handler) {
         super(handler);
 
-        register("help", "Список всех команд.", (args, context) -> {
+        handler.<MessageContext>register("help", "Список всех команд.", (args, context) -> {
             StringBuilder commands = new StringBuilder();
             for (Command command : discordCommands.getCommandList()) {
                 commands.append(discordCommands.getPrefix()).append("**").append(command.text).append("**");
@@ -42,7 +42,7 @@ public class DiscordCommands extends Commands<MessageContext> {
             context.info(":newspaper: Доступные команды:", commands.toString());
         });
 
-        register("players", "[страница]", "Список всех игроков на сервере.", (args, context) -> {
+        handler.<MessageContext>register("players", "[страница]", "Список всех игроков на сервере.", (args, context) -> {
             if (invalidPage(context, args)) return;
             if (Groups.player.isEmpty()) {
                 context.info(":satellite: На сервере нет игроков.");
@@ -66,7 +66,7 @@ public class DiscordCommands extends Commands<MessageContext> {
                     .setFooter(format("Страница @ / @", page, pages)).build());
         });
 
-        register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", (args, context) -> {
+        handler.<MessageContext>register("kick", "<ID/никнейм...>", "Выгнать игрока с сервера.", (args, context) -> {
             if (notAdmin(context)) return;
             Player target = Find.player(args[0]);
             if (notFound(context, target)) return;
@@ -76,7 +76,7 @@ public class DiscordCommands extends Commands<MessageContext> {
             context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
         });
 
-        register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", (args, context) -> {
+        handler.<MessageContext>register("ban", "<ID/никнейм...>", "Забанить игрока на сервере.", (args, context) -> {
             if (notAdmin(context)) return;
             Player target = Find.player(args[0]);
             if (notFound(context, target)) return;
@@ -89,14 +89,14 @@ public class DiscordCommands extends Commands<MessageContext> {
 
         if (config.mode == Gamemode.hexed) return;
 
-        register("gameover", "Принудительно завершить игру.", (args, context) -> {
+        handler.<MessageContext>register("gameover", "Принудительно завершить игру.", (args, context) -> {
             if (isMenu(context) || notAdmin(context)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             context.success(":map: Игра успешно завершена.");
         });
 
-        register("map", "<название...>", "Получить карту с сервера.", (args, context) -> {
+        handler.<MessageContext>register("map", "<название...>", "Получить карту с сервера.", (args, context) -> {
             Map map = Find.map(args[0]);
             if (notFound(context, map)) return;
 
@@ -112,7 +112,7 @@ public class DiscordCommands extends Commands<MessageContext> {
             context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
         });
 
-        register("maps", "[страница]", "Список всех карт сервера.", (args, context) -> {
+        handler.<MessageContext>register("maps", "[страница]", "Список всех карт сервера.", (args, context) -> {
             if (invalidPage(context, args)) return;
             if (maps.customMaps().isEmpty()) {
                 context.info(":map: На сервере нет карт.");
@@ -134,7 +134,7 @@ public class DiscordCommands extends Commands<MessageContext> {
                     .setFooter(format("Страница @ / @", page, pages)).build());
         });
 
-        register("addmap", "Добавить карту на сервер.", (args, context) -> {
+        handler.<MessageContext>register("addmap", "Добавить карту на сервер.", (args, context) -> {
             if (notAdmin(context) || notMap(context)) return;
 
             Attachment attachment = context.message.getAttachments().get(0);
@@ -150,7 +150,7 @@ public class DiscordCommands extends Commands<MessageContext> {
             });
         });
 
-        register("removemap", "<название...>", "Удалить карту с сервера.", (args, context) -> {
+        handler.<MessageContext>register("removemap", "<название...>", "Удалить карту с сервера.", (args, context) -> {
             if (notAdmin(context)) return;
             Map map = Find.map(args[0]);
             if (notFound(context, map)) return;

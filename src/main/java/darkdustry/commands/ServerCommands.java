@@ -25,21 +25,23 @@ import static darkdustry.utils.Utils.kick;
 
 public class ServerCommands extends Commands<NullPointerException> {
 
+    // Зарежу дарка
+    // (C) xzxADIxzx, 2023 год вне н.э.
     public ServerCommands(CommandHandler handler) {
         super(handler);
 
-        register("exit", "Exit the server application.", args -> {
+        handler.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
             System.exit(2);
         });
 
-        register("stop", "Stop hosting the server.", args -> {
+        handler.register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
             state.set(State.menu);
             Log.info("Stopped server.");
         });
 
-        register("host", "[map] [mode]", "Start server on selected map.", args -> {
+        handler.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (isLaunched()) return;
 
             Gamemode mode;
@@ -78,13 +80,13 @@ public class ServerCommands extends Commands<NullPointerException> {
             });
         });
 
-        register("say", "<message...>", "Send a message to all players.", args -> {
+        handler.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
             Bot.sendMessage(Bot.botChannel, "Сервер » @", args[0]);
         });
 
-        register("kick", "<username/id...>", "Kick a player.", args -> {
+        handler.register("kick", "<username/id...>", "Kick a player.", args -> {
             Player target = Find.player(args[0]);
             if (notFound(target, args)) return;
             
@@ -93,7 +95,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             sendToChat("events.server.kick", target.name);
         });
 
-        register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
+        handler.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
             PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -102,7 +104,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             Log.info("Player @ has been pardoned.", info.lastName);
         });
 
-        register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
+        handler.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             Player target = Find.player(args[0]);
             if (target != null) {
                 netServer.admins.banPlayer(target.uuid());
@@ -123,7 +125,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             });
         });
 
-        register("unban", "<uuid/ip>", "Unban a player.", args -> {
+        handler.register("unban", "<uuid/ip>", "Unban a player.", args -> {
             PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -132,7 +134,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             Log.info("Player @ has been unbanned.", info.lastName);
         });
 
-        register("bans", "List all banned IPs and IDs.", args -> {
+        handler.register("bans", "List all banned IPs and IDs.", args -> {
             Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
             if (bannedIDs.isEmpty())
                 Log.info("No ID-banned players have been found.");
@@ -154,7 +156,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             }
         });
 
-        register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
+        handler.register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
             Player target = Find.player(args[1]);
             PlayerInfo info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
@@ -182,7 +184,7 @@ public class ServerCommands extends Commands<NullPointerException> {
             }
         });
 
-        register("admins", "List all admins.", args -> {
+        handler.register("admins", "List all admins.", args -> {
             Seq<PlayerInfo> admins = netServer.admins.getAdmins();
             if (admins.isEmpty())  Log.info("No admins have been found.");
             else {

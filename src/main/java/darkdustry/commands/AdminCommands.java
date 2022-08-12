@@ -18,8 +18,6 @@ import mindustry.world.Tile;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
 
-import java.util.Locale;
-
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -165,7 +163,7 @@ public class AdminCommands extends Commands<Player> {
     }
 
     public void register(String name, CommandRunner<Player> runner) {
-        super.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
+        handler.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
             if (player.admin) runner.accept(args, player);
             else bundled(player, "commands.permission-denied");
         });
