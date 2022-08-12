@@ -1,7 +1,9 @@
 package darkdustry.discord;
 
+import arc.Events;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,17 +12,15 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
 import darkdustry.components.MapParser;
+import darkdustry.components.Config.Gamemode;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static arc.Core.graphics;
-import static mindustry.Vars.state;
-import static mindustry.Vars.world;
-import static darkdustry.utils.Utils.stripAll;
-import static darkdustry.PluginVars.serverIp;
-import static darkdustry.discord.Bot.botGuild;
-import static darkdustry.discord.Bot.jda;
-import static darkdustry.utils.Utils.formatDuration;
+import static arc.Core.*;
+import static mindustry.Vars.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.discord.Bot.*;
+import static darkdustry.utils.Utils.*;
 
 public class SlashCommands extends ListenerAdapter {
 
@@ -44,6 +44,15 @@ public class SlashCommands extends ListenerAdapter {
                     .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
                     .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                     .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
+        }).queue();
+
+        if (config.mode == Gamemode.hexed) return;
+
+        registerCommand("gameover", "Принудительно завершить игру.", context -> {
+            // if (isMenu(context) || notAdmin(context)) return;
+
+            Events.fire(new GameOverEvent(state.rules.waveTeam));
+            context.success(":map: Игра успешно завершена.");
         }).queue();
     }
 

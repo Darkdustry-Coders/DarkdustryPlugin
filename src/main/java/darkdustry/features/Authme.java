@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
-import java.awt.*;
+import java.awt.Color;
 
 import static mindustry.Vars.netServer;
 import static darkdustry.PluginVars.loginWaiting;

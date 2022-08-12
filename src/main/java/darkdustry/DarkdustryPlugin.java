@@ -13,8 +13,7 @@ import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import darkdustry.commands.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
-import darkdustry.discord.SlashCommands;
+import darkdustry.discord.*;
 import darkdustry.features.*;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.listeners.Filters;
@@ -46,10 +45,9 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Bot.connect();
 
-        // TEST
         SlashCommands.load();
         SchemeSize.load();
-        //Version.build = -1;
+        // Version.build = -1;
 
         net.handleServer(Connect.class, NetHandlers::connect);
         net.handleServer(ConnectPacket.class, NetHandlers::packet);

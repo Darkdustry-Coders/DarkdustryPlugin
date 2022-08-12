@@ -1,12 +1,10 @@
 package darkdustry.commands;
 
-import arc.Events;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.Command;
-import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
@@ -88,13 +86,6 @@ public class DiscordCommands extends Commands<MessageContext> {
         });
 
         if (config.mode == Gamemode.hexed) return;
-
-        handler.<MessageContext>register("gameover", "Принудительно завершить игру.", (args, context) -> {
-            if (isMenu(context) || notAdmin(context)) return;
-
-            Events.fire(new GameOverEvent(state.rules.waveTeam));
-            context.success(":map: Игра успешно завершена.");
-        });
 
         handler.<MessageContext>register("map", "<название...>", "Получить карту с сервера.", (args, context) -> {
             Map map = Find.map(args[0]);
