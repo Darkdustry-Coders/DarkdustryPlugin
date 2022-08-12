@@ -119,11 +119,6 @@ public class Checks {
         return check(!canParsePositiveInt(args[1]) || !canParsePositiveInt(args[2]), player, "commands.fill.incorrect-number-format");
     }
 
-    public static boolean invalideFullAmount(Player player, String[] args) {
-        return check(!canParsePositiveInt(args[3]) || !canParsePositiveInt(args[4]) ||
-                     !canParsePositiveInt(args[5]) || !canParsePositiveInt(args[6]), player, "commands.full.incorrect-number-format");
-    }
-
     public static boolean invalidGiveAmount(Player player, int amount) {
         return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
     }
@@ -133,7 +128,11 @@ public class Checks {
     }
 
     public static boolean invalidFillAmount(Player player, int width, int height) {
-        return check(width * height > maxFillAmount, player, "commands.fill.too-big-area", maxSpawnAmount);
+        return check(width * height > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
+    }
+
+    public static boolean invalidFillAmount(Player player, int radius) {
+        return check(Math.PI * radius * radius > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
     }
 
     public static boolean isVoting(Player player) {

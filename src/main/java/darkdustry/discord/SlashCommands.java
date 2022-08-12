@@ -28,6 +28,7 @@ public class SlashCommands extends ListenerAdapter {
 
     public static void load() {
         jda.addEventListener(new SlashCommands());
+        botGuild.updateCommands().queue(); // удаляем старые команды
 
         registerCommand("ip", "Узнать IP адрес сервера.", context -> {
             context.info(":desktop: " + stripAll(Config.serverName.string()), "IP: @:@", serverIp, Config.port.num());
