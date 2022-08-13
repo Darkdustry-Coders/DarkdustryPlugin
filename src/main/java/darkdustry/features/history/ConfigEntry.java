@@ -1,6 +1,5 @@
 package darkdustry.features.history;
 
-import arc.graphics.Color;
 import arc.math.geom.Point2;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -8,18 +7,16 @@ import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.Block;
-import mindustry.world.Tile;
 import mindustry.world.blocks.power.LightBlock;
-import mindustry.world.blocks.units.UnitFactory;
 
+import java.util.Arrays;
 import java.util.Locale;
 
-import static mindustry.Vars.content;
-import static mindustry.Vars.world;
-import static darkdustry.components.Icons.get;
 import static darkdustry.components.Bundle.format;
+import static darkdustry.components.Icons.get;
 import static darkdustry.utils.Find.locale;
 import static darkdustry.utils.Utils.formatDate;
+import static mindustry.Vars.content;
 
 public class ConfigEntry implements HistoryEntry {
 
@@ -29,10 +26,10 @@ public class ConfigEntry implements HistoryEntry {
     public final boolean connect;
     public final long time;
 
-    public ConfigEntry(ConfigEvent event, boolean connect) {
+    public ConfigEntry(ConfigEvent event, Object value, boolean connect) {
         this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
-        this.value = event.value;
+        this.value = value;
         this.connect = connect;
         this.time = Time.millis();
     }
@@ -53,32 +50,24 @@ public class ConfigEntry implements HistoryEntry {
             return format("history.config", locale, name, get(block.name), get(content.name), date);
         }
 
-        if (value instanceof Boolean enabled) {
-            return enabled ? format("history.config.on", locale, name, get(block.name), date) : format("history.config.off", locale, name, get(block.name), date);
+        if (value instanceof Boolean on) {
+            return on ? format("history.config.on", locale, name, get(block.name), date) : format("history.config.off", locale, name, get(block.name), date);
         }
 
-        if (value instanceof String message) {
-            return !message.isEmpty() ? format("history.config.message", locale, name, get(block.name), message, date) : format("history.config.default", locale, name, get(block.name), date);
+        if (value instanceof String text) {
+            return !text.isEmpty() ? format("history.config.text", locale, name, get(block.name), text, date) : format("history.config.default", locale, name, get(block.name), date);
         }
 
-        if (block.configurations.containsKey(Point2.class)) {
-            Tile tile = world.tile((int) value);
-            return connect ? format("history.config.connect", locale, name, get(block.name), tile.x, tile.y, date) : format("history.config.disconnect", locale, name, get(block.name), date);
+        if (value instanceof Point2 point) {
+            return connect ? format("history.config.connect", locale, name, get(block.name), point.x, point.y, date) : format("history.config.disconnect", locale, name, get(block.name), date);
         }
 
-        if (block.configurations.containsKey(Point2[].class)) {
-            Tile tile = world.tile((int) value);
-            return connect ? format("history.config.power-node.connect", locale, name, get(block.name), tile.x, tile.y, date) : format("history.config.power-node.disconnect", locale, name, get(block.name), tile.x, tile.y, date);
+        if (value instanceof Point2[] points) {
+            return connect ? "coming soon" : "cumming soon" + Arrays.toString(points);
         }
 
         if (block instanceof LightBlock) {
-            Color color = Tmp.c1.set((int) value);
-            return format("history.config.illuminator", locale, name, get(block.name), color.toString(), date);
-        }
-
-        if (block instanceof UnitFactory factory) {
-            int buildPlan = (int) value;
-            return buildPlan != -1 ? format("history.config", locale, name, get(block.name), get(factory.plans.get(buildPlan).unit.name), date) : format("history.config.default", locale, name, get(block.name), date);
+            return format("history.config.color", locale, name, get(block.name), Tmp.c1.set((int) value).toString(), date);
         }
 
         return format("history.config.default", locale, name, get(block.name), date);

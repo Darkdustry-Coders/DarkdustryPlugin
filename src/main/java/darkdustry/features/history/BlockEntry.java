@@ -31,7 +31,7 @@ public class BlockEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         Block block = content.block(blockID);
-        String key = breaking ? "history.block.deconstruct" : block.rotate ? "history.block.construct.rotate" : "history.block.construct";
+        String key = breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct";
         return format(key, Find.locale(player.locale), name, Icons.get(block.name), formatDate(time), sides[rotation]);
     }
 }

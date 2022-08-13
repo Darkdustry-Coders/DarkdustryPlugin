@@ -3,10 +3,6 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.math.geom.Point2;
 import arc.util.Structs;
-import mindustry.game.EventType.*;
-import mindustry.gen.Groups;
-import mindustry.net.Administration.Config;
-import darkdustry.features.history.ConfigEntry;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.discord.Bot;
@@ -17,15 +13,21 @@ import darkdustry.features.history.*;
 import darkdustry.features.history.History.HistoryStack;
 import darkdustry.features.votes.VoteKick;
 import darkdustry.utils.Find;
+import mindustry.game.EventType.*;
+import mindustry.gen.Groups;
+import mindustry.net.Administration.Config;
+import mindustry.world.blocks.units.UnitFactory;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static arc.Core.*;
-import static arc.util.Strings.*;
+import static arc.Core.app;
+import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MenuHandler.showMenu;
+import static darkdustry.components.MenuHandler.welcomeMenu;
 
 public class PluginEvents {
 
@@ -50,24 +52,30 @@ public class PluginEvents {
         });
 
         Events.on(BuildSelectEvent.class, event -> {
-            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer()) return;
+            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer())
+                return;
             Alerts.buildAlert(event);
         });
 
         Events.on(ConfigEvent.class, event -> {
             if (History.enabled() && event.player != null) {
-                boolean connect = false;
+                var value = event.value;
+                var connect = false;
 
-                if (event.tile.block.configurations.containsKey(Point2.class)) {
-                    connect = (int) event.value != -1;
+                if (event.value instanceof Integer number) {
+                    if (event.tile.block.configurations.containsKey(Point2.class)) {
+                        value = Point2.unpack(number);
+                        connect = (int) value != -1;
+                    } else if (event.tile.block.configurations.containsKey(Point2[].class)) {
+                        value = new Point2[] {Point2.unpack(number)};
+                        var link = ((Point2[]) value)[0].sub(event.tile.tileX(), event.tile.tileY());
+                        connect = Structs.contains((Point2[]) event.tile.config(), point2 -> point2.equals(link));
+                    } else if (event.tile.block instanceof UnitFactory factory) {
+                        value = number != -1 ? factory.plans.get(number).unit : null;
+                    }
                 }
 
-                if (event.tile.block.configurations.containsKey(Point2[].class)) {
-                    var link = Point2.unpack((int) event.value).sub(event.tile.tileX(), event.tile.tileY());
-                    connect = Structs.contains((Point2[]) event.tile.config(), point2 -> point2.equals(link));
-                }
-
-                History.put(new ConfigEntry(event, connect), event.tile.tile);
+                History.put(new ConfigEntry(event, value, connect), event.tile.tile);
             }
         });
 
