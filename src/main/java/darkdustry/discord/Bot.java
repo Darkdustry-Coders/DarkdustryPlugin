@@ -36,7 +36,7 @@ public class Bot {
         try {
             jda = JDABuilder.createLight(config.discordBotToken)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
-                    .addEventListeners(new DiscordListeners()).build().awaitReady();
+                    .addEventListeners(new DiscordListeners(), new SlashCommands()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);
@@ -44,7 +44,9 @@ public class Bot {
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
+            botGuild.updateCommands().queue();
             botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
+
             updateBotStatus();
 
             DarkdustryPlugin.registerDiscordCommands(new CommandHandler(config.discordBotPrefix));

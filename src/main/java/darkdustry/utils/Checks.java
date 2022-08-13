@@ -2,6 +2,7 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.util.Log;
+import darkdustry.discord.SlashContext;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -162,11 +163,11 @@ public class Checks {
     // endregion
     // region Discord
 
-    public static boolean isMenu(MessageContext context) {
+    public static boolean isMenu(SlashContext context) {
         return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
-    public static boolean notAdmin(MessageContext context) {
+    public static boolean notAdmin(SlashContext context) {
         return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
@@ -176,31 +177,27 @@ public class Checks {
         ).setEphemeral(true).queue());
     }
 
-    public static boolean notFound(MessageContext context, Map map) {
+    public static boolean notFound(SlashContext context, Map map) {
         return check(map == null, context, ":mag: Карта не найдена.", "Проверь, правильно ли введено название.");
     }
 
-    public static boolean notFound(MessageContext context, Player player) {
+    public static boolean notFound(SlashContext context, Player player) {
         return check(player == null, context, ":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
     }
 
-    public static boolean notMap(MessageContext context) {
-        List<Attachment> attachments = context.message.getAttachments();
-        return check(attachments.size() != 1 || !Objects.equals(attachments.get(0).getFileExtension(), mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
+    public static boolean notMap(SlashContext context) {
+        Attachment attachment = context.getOption("map").getAsAttachment();
+        return check(!Objects.equals(attachment.getFileExtension(), mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 
-    public static boolean notMap(MessageContext context, Fi file) {
+    public static boolean notMap(SlashContext context, Fi file) {
         return check(!SaveIO.isSaveValid(file), () -> {
             context.err(":no_entry_sign: Файл поврежден или не является картой!");
             file.delete();
         });
     }
 
-    public static boolean invalidPage(MessageContext context, String[] page) { // TODO: после переноса maps и players на PageIterator убрать это
-        return check(page.length > 0 && !canParseInt(page[0]), context, ":interrobang: Страница должна быть числом.", "Зачем ты это делаешь?");
-    }
-
-    public static boolean invalidPage(MessageContext context, int page, int pages) {
+    public static boolean invalidPage(SlashContext context, int page, int pages) { // TODO: после переноса maps и players на PageIterator убрать это
         return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
     }
 
@@ -220,7 +217,7 @@ public class Checks {
         return check(result, () -> bundled(player, key, values));
     }
 
-    private static boolean check(boolean result, MessageContext context, String... values) {
+    private static boolean check(boolean result, SlashContext context, String... values) {
         return check(result, () -> context.err(values[0], values[1]));
     }
 

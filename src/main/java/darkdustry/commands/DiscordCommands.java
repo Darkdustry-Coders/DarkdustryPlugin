@@ -1,35 +1,14 @@
 package darkdustry.commands;
 
-import arc.files.Fi;
-import arc.math.Mathf;
-import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.Command;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.maps.Map;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message.Attachment;
-import darkdustry.components.MapParser;
-import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.MessageContext;
-import darkdustry.utils.Find;
-
-import java.awt.Color;
-
-import static arc.util.Strings.*;
-import static mindustry.Vars.*;
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.sendToChat;
-import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
 
 public class DiscordCommands extends Commands<MessageContext> {
 
     public DiscordCommands(CommandHandler handler) {
         super(handler);
 
-        handler.<MessageContext>register("help", "Список всех команд.", (args, context) -> {
+        /*handler.<MessageContext>register("help", "Список всех команд.", (args, context) -> {
             StringBuilder commands = new StringBuilder();
             for (Command command : discordCommands.getCommandList()) {
                 commands.append(discordCommands.getPrefix()).append("**").append(command.text).append("**");
@@ -150,5 +129,6 @@ public class DiscordCommands extends Commands<MessageContext> {
             maps.reload();
             context.success(":dagger: Карта удалена с сервера.");
         });
+         */
     }
 }

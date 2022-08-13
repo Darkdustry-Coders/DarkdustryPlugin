@@ -27,12 +27,6 @@ public class SlashCommands extends ListenerAdapter {
     public static final ObjectMap<String, Cons<SlashContext>> commands = new ObjectMap<>();
 
     public static void load() {
-        jda.addEventListener(new SlashCommands());
-        botGuild.updateCommands().queue(); // удаляем старые команды
-
-        registerCommand("ip", "Узнать IP адрес сервера.", context -> {
-            context.info(":desktop: " + stripAll(Config.serverName.string()), "IP: @:@", serverIp, Config.port.num());
-        }).queue();
 
         registerCommand("status", "Посмотреть статус сервера.", context -> {
             // if (isMenu(context)) return;
@@ -49,12 +43,7 @@ public class SlashCommands extends ListenerAdapter {
 
         if (config.mode == Gamemode.hexed) return;
 
-        registerCommand("gameover", "Принудительно завершить игру.", context -> {
-            // if (isMenu(context) || notAdmin(context)) return;
 
-            Events.fire(new GameOverEvent(state.rules.waveTeam));
-            context.success(":map: Игра успешно завершена.");
-        }).queue();
     }
 
     public static CommandCreateAction registerCommand(String name, String description, Cons<SlashContext> cons) {

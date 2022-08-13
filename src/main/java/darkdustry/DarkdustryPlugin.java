@@ -86,7 +86,7 @@ public class DarkdustryPlugin extends Plugin {
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler);
+        new DiscordCommand(discordCommands = handler);
     }
 
     public static void info(String text, Object... values) {
