@@ -2,7 +2,7 @@ package darkdustry.features;
 
 import arc.Events;
 import arc.math.geom.Geometry;
-import arc.struct.IntSeq;
+import arc.struct.ObjectMap;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Call;
@@ -16,18 +16,16 @@ import static mindustry.Vars.*;
 
 public class SchemeSize {
 
-    public static IntSeq SSUsers = new IntSeq();
+    /** Список id пользователей Scheme Size'а */
+    public static ObjectMap<Integer, String> SSUsers = new ObjectMap<>();
 
     public static void load() {
-        Events.on(PlayerJoin.class, event -> Call.clientPacketReliable(event.player.con, "AreYouUsingSS", null));
-        Events.on(PlayerLeave.class, event -> SSUsers.removeValue(event.player.id));
+        Events.on(PlayerJoin.class, event -> Call.clientPacketReliable(event.player.con, "GiveYourPlayerData", null));
+        Events.on(PlayerLeave.class, event -> SSUsers.remove(event.player.id));
 
-        netServer.addPacketHandler("IUseSS", (player, args) -> {
-            SSUsers.add(player.id);
-        });
-
+        netServer.addPacketHandler("ThisIsMyPlayerData", (player, args) -> SSUsers.put(player.id, args.replace("#", "").replace("=", "")));
         netServer.addPacketHandler("GivePlayerDataPlease", (player, args) -> {
-            Call.clientPacketReliable(player.con, "ThisIsYourPlayerData", SSUsers.toString(" "));
+            Call.clientPacketReliable(player.con, "ThisIsYourPlayerData", SSUsers.toString("#"));
         });
 
         // всё то, что дальше, не нужно для интеграции сервера с модом
