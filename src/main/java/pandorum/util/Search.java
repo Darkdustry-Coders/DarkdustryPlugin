@@ -48,7 +48,13 @@ public class Search {
     }
 
     public static Player findPlayer(String name) {
-        return Strings.canParsePositiveInt(name) ? Groups.player.getByID(Strings.parseInt(name)) : Groups.player.find(player -> Utils.deepEquals(player.name, name));
+        Player target = Groups.player.find(player -> Utils.deepEquals(name, player.name));
+
+        if (target == null) {
+            target = Groups.player.getByID(Strings.parseInt(name));
+        }
+
+        return target;
     }
 
     public static Block findBlock(String name) {
