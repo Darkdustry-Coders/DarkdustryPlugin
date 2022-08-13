@@ -17,10 +17,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import darkdustry.discord.Bot;
-import darkdustry.discord.MessageContext;
 
 import java.awt.Color;
-import java.util.List;
 import java.util.Objects;
 
 import static arc.util.Strings.*;

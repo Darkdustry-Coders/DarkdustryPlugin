@@ -16,9 +16,7 @@ import darkdustry.components.*;
 import darkdustry.discord.*;
 import darkdustry.features.*;
 import darkdustry.features.Ranks.Rank;
-import darkdustry.listeners.Filters;
-import darkdustry.listeners.NetHandlers;
-import darkdustry.listeners.PluginEvents;
+import darkdustry.listeners.*;
 import darkdustry.utils.Find;
 
 import static mindustry.Vars.*;
@@ -45,7 +43,7 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Bot.connect();
 
-        SlashCommands.load();
+        DiscordCommand.load();
         SchemeSize.load();
         // Version.build = -1;
 
@@ -86,7 +84,7 @@ public class DarkdustryPlugin extends Plugin {
     }
 
     public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommand(discordCommands = handler);
+        new DiscordCommands(discordCommands = handler);
     }
 
     public static void info(String text, Object... values) {

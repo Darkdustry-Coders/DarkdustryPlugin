@@ -36,7 +36,7 @@ public class Bot {
         try {
             jda = JDABuilder.createLight(config.discordBotToken)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
-                    .addEventListeners(new DiscordListeners(), new SlashCommands()).build().awaitReady();
+                    .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
             adminRole = botGuild.getRoleById(config.discordAdminRoleId);

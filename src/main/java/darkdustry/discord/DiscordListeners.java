@@ -1,8 +1,10 @@
 package darkdustry.discord;
 
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import darkdustry.commands.DiscordCommand;
 import darkdustry.features.Authme;
 
 import static arc.Core.*;
@@ -34,5 +36,10 @@ public class DiscordListeners extends ListenerAdapter {
                 case "authme.info" -> Authme.info(event);
             }
         }
+    }
+
+    @Override
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        DiscordCommand.commands.get(event.getName()).get(new SlashContext(event));
     }
 }

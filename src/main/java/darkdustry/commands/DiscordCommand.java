@@ -1,45 +1,54 @@
 package darkdustry.commands;
 
 import arc.Events;
+import arc.func.Cons;
 import arc.math.Mathf;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.CommandHandler;
+import darkdustry.components.MapParser;
 import darkdustry.components.Config.Gamemode;
-import darkdustry.discord.MessageContext;
+import darkdustry.discord.SlashContext;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static arc.util.Strings.format;
-import static arc.util.Strings.stripColors;
-import static darkdustry.PluginVars.config;
-import static darkdustry.discord.SlashCommands.registerCommand;
-import static mindustry.Vars.state;
+import static arc.Core.*;
+import static arc.util.Strings.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
 
-public class DiscordCommand extends Commands<MessageContext> {
+public class DiscordCommand {
 
-    public DiscordCommand(CommandHandler handler) {
-        // TODO тут не нужен хандлер, и вообще Commands нам не нужны
-        super(handler);
+    public static final ObjectMap<String, Cons<SlashContext>> commands = new ObjectMap<>();
 
-        registerCommand("help", "Список всех команд.", context -> {
-
-        });
-
-        registerCommand("status", "Посмотреть состояние сервера.", context -> {
-
-        });
+    public static void load() {
+        registerCommand("status", "Посмотреть статус сервера.", context -> {
+            if (isMenu(context)) return;
+            context.event.replyEmbeds(new EmbedBuilder()
+                    .setColor(Color.green)
+                    .setTitle(":desktop: " + stripAll(Config.serverName.string()))
+                    .addField("Игроков:", String.valueOf(Groups.player.size()), true)
+                    .addField("Карта:", state.map.name(), true)
+                    .addField("Волна:", String.valueOf(state.wave), true)
+                    .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
+                    .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
+                    .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
+        }).queue();
 
         registerCommand("players", "Список всех игроков на сервере.", context -> {
-            //if (Groups.player.isEmpty()) {
-            //    context.info(":satellite: На сервере нет игроков.");
-            //    return;
-            //}
+            // if (Groups.player.isEmpty()) {
+            // context.info(":satellite: На сервере нет игроков.");
+            // return;
+            // }
 
             int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Mathf.ceil(Groups.player.size() / 8f);
             if (invalidPage(context, page, pages)) return;
@@ -85,10 +94,15 @@ public class DiscordCommand extends Commands<MessageContext> {
         });
 
         registerCommand("gameover", "Принудительно завершить игру.", context -> {
-            // if (notAdmin(context) || isMenu(context)) return;
+            if (notAdmin(context) || isMenu(context)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             context.success(":map: Игра успешно завершена.");
         }).queue();
+    }
+
+    public static CommandCreateAction registerCommand(String name, String description, Cons<SlashContext> cons) {
+        commands.put(name, cons);
+        return botGuild.upsertCommand(name, description);
     }
 }

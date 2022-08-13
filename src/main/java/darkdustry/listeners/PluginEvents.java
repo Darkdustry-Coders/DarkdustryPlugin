@@ -18,16 +18,14 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import mindustry.world.blocks.units.UnitFactory;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
-import static darkdustry.components.MenuHandler.showMenu;
-import static darkdustry.components.MenuHandler.welcomeMenu;
+import static darkdustry.components.Database.*;
+import static darkdustry.components.MenuHandler.*;
 
 public class PluginEvents {
 
