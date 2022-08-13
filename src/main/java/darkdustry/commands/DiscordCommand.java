@@ -31,7 +31,7 @@ public class DiscordCommand {
     public static final ObjectMap<String, Cons<SlashContext>> commands = new ObjectMap<>();
 
     public static void load() {
-        registerCommand("status", "Посмотреть статус сервера.", context -> {
+        register("status", "Посмотреть статус сервера.", context -> {
             if (isMenu(context)) return;
             context.event.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.green)
@@ -44,7 +44,7 @@ public class DiscordCommand {
                     .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
         }).queue();
 
-        registerCommand("players", "Список всех игроков на сервере.", context -> {
+        register("players", "Список всех игроков на сервере.", context -> {
             // if (Groups.player.isEmpty()) {
             // context.info(":satellite: На сервере нет игроков.");
             // return;
@@ -67,33 +67,33 @@ public class DiscordCommand {
                     .setFooter(format("Страница @ / @", page, pages)).build());
         }).addOption(OptionType.INTEGER, "page", "Страница списка игроков.", false).queue();
 
-        registerCommand("kick", "Выгнать игрока с сервера.", context -> {
+        register("kick", "Выгнать игрока с сервера.", context -> {
 
         });
 
-        registerCommand("ban", "Забанить игрока на сервере.", context -> {
+        register("ban", "Забанить игрока на сервере.", context -> {
 
         });
 
         if (config.mode == Gamemode.hexed) return;
 
-        registerCommand("map", "Получить карту с сервера.", context -> {
+        register("map", "Получить карту с сервера.", context -> {
 
         });
 
-        registerCommand("maps", "Список всех карт сервера.", context -> {
+        register("maps", "Список всех карт сервера.", context -> {
 
         });
 
-        registerCommand("addmap", "Добавить карту на сервер.", context -> {
+        register("addmap", "Добавить карту на сервер.", context -> {
 
         }).addOption(OptionType.ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.").queue();
 
-        registerCommand("removemap", "Удалить карту с сервера.", context -> {
+        register("removemap", "Удалить карту с сервера.", context -> {
 
         });
 
-        registerCommand("gameover", "Принудительно завершить игру.", context -> {
+        register("gameover", "Принудительно завершить игру.", context -> {
             if (notAdmin(context) || isMenu(context)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
@@ -101,7 +101,7 @@ public class DiscordCommand {
         }).queue();
     }
 
-    public static CommandCreateAction registerCommand(String name, String description, Cons<SlashContext> cons) {
+    public static CommandCreateAction register(String name, String description, Cons<SlashContext> cons) {
         commands.put(name, cons);
         return botGuild.upsertCommand(name, description);
     }

@@ -1,12 +1,11 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler;
-import darkdustry.discord.MessageContext;
 
-public class DiscordCommands extends Commands<MessageContext> {
-
+public class DiscordCommands {
+    
     public DiscordCommands(CommandHandler handler) {
-        super(handler);
+        // super(handler);
 
         /*handler.<MessageContext>register("help", "Список всех команд.", (args, context) -> {
             StringBuilder commands = new StringBuilder();

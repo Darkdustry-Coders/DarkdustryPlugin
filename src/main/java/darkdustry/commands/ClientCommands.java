@@ -25,11 +25,9 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 
-public class ClientCommands extends Commands<Player> {
+public class ClientCommands {
 
     public ClientCommands(CommandHandler handler) {
-        super(handler);
-
         register("help", PageIterator::commands);
 
         register("discord", (args, player) -> bundled(player, "commands.discord.link", discordServerUrl));
@@ -218,6 +216,6 @@ public class ClientCommands extends Commands<Player> {
     }
 
     public void register(String name, CommandRunner<Player> runner) {
-        handler.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
+        clientCommands.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
     }
 }

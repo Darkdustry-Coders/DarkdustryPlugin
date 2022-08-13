@@ -14,22 +14,18 @@ import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.utils.Find;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static mindustry.Vars.*;
-import static darkdustry.PluginVars.kickDuration;
-import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Bundle.sendToChat;
-import static darkdustry.utils.Checks.isLaunched;
-import static darkdustry.utils.Checks.notFound;
-import static darkdustry.utils.Utils.kick;
+import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.*;
+import static darkdustry.utils.Checks.*;
+import static darkdustry.utils.Utils.*;
 
-public class ServerCommands extends Commands<NullPointerException> {
+public class ServerCommands {
 
     // Зарежу дарка
     // (C) xzxADIxzx, 2023 год вне н.э.
     public ServerCommands(CommandHandler handler) {
-        super(handler);
-
         handler.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
             System.exit(2);
