@@ -55,7 +55,7 @@ public class DiscordCommand {
             // return;
             // }
 
-            int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Mathf.ceil(Groups.player.size() / 8f);
+            int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Mathf.ceil(Groups.player.size() / 6f);
             if (invalidPage(context, page, pages)) return;
 
             StringBuilder result = new StringBuilder();
@@ -80,7 +80,7 @@ public class DiscordCommand {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.name);
             context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
-        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно выгнать.", true);
+        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно выгнать.", true).queue();
 
         register("ban", "Забанить игрока на сервере.", context -> {
             if (notAdmin(context)) return;
@@ -91,7 +91,7 @@ public class DiscordCommand {
             kick(target, 0, true, "kick.banned");
             sendToChat("events.server.ban", target.name);
             context.info(":dagger: Игрок успешно забанен.", "@ больше не сможет зайти на сервер.", target.name);
-        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно забанить.", true);
+        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно забанить.", true).queue();
 
         if (config.mode == Gamemode.hexed) return;
 
@@ -109,11 +109,11 @@ public class DiscordCommand {
             if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
             context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
-        }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true);
+        }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true).queue();
 
         register("maps", "Список всех карт сервера.", context -> {
 
-        });
+        }).addOption(OptionType.INTEGER, "page", "Страница списка карт.", false).queue();
 
         register("addmap", "Добавить карту на сервер.", context -> {
             if (notAdmin(context) || notMap(context)) return;
@@ -139,7 +139,7 @@ public class DiscordCommand {
             maps.removeMap(map);
             maps.reload();
             context.success(":dagger: Карта удалена с сервера.");
-        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
+        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.", true).queue();
 
         register("gameover", "Принудительно завершить игру.", context -> {
             if (notAdmin(context) || isMenu(context)) return;
