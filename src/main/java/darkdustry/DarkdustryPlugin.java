@@ -83,10 +83,6 @@ public class DarkdustryPlugin extends Plugin {
         new ServerCommands(serverCommands = handler);
     }
 
-    public static void registerDiscordCommands(CommandHandler handler) {
-        new DiscordCommands(discordCommands = handler);
-    }
-
     public static void info(String text, Object... values) {
         Log.infoTag("Darkdustry", Strings.format(text, values));
     }

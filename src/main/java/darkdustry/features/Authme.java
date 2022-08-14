@@ -18,9 +18,9 @@ import static darkdustry.components.Bundle.bundled;
 public class Authme {
 
     public static final SelectMenu menu = SelectMenu.create("authme")
-            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.", Emoji.fromFormatted("✅"))
-            .addOption("Отклонить", "authme.deny", "Отклонить запрос.", Emoji.fromFormatted("❌"))
-            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("ℹ"))
+            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.",                  Emoji.fromFormatted("✅"))
+            .addOption("Отклонить",   "authme.deny",    "Отклонить запрос.",                    Emoji.fromFormatted("❌"))
+            .addOption("Информация",  "authme.info",    "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("ℹ"))
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {

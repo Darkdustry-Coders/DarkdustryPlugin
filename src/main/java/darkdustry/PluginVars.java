@@ -77,5 +77,5 @@ public class PluginVars {
     public static String items, units, teams;
 
     /** Кэшированные хэндлеры, которые использовались для регистрации команд. */
-    public static CommandHandler clientCommands, serverCommands, discordCommands;
+    public static CommandHandler clientCommands, serverCommands;
 }

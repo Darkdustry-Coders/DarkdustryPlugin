@@ -1,8 +1,5 @@
 package darkdustry.discord;
 
-import arc.util.CommandHandler;
-import arc.util.CommandHandler.CommandResponse;
-import arc.util.CommandHandler.ResponseType;
 import arc.util.Strings;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -49,42 +46,27 @@ public class Bot {
 
             updateBotStatus();
 
-            DarkdustryPlugin.registerDiscordCommands(new CommandHandler(config.discordBotPrefix));
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception exception) {
             DarkdustryPlugin.error("Failed to connect bot: @", exception);
         }
     }
 
-    public static void handleMessage(MessageContext context) {
-        CommandResponse response = discordCommands.handleMessage(context.message.getContentRaw(), context);
-        if (response.type == ResponseType.noCommand || response.type == ResponseType.valid) return;
+    public static void sendMessageToGame(Member member, Message message) {
+        DarkdustryPlugin.discord("@: @", member.getEffectiveName(), message.getContentDisplay());
 
-        if (response.type == ResponseType.unknownCommand)
-            context.err(":interrobang: Неизвестная команда.", "Используй: **@help**, чтобы получить список доступных команд.", discordCommands.getPrefix());
-        else if (response.type == ResponseType.fewArguments)
-            context.err(":interrobang: Слишком мало аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
-        else if (response.type == ResponseType.manyArguments)
-            context.err(":interrobang: Слишком много аргументов.", "Использование: **@@** @", discordCommands.getPrefix(), response.command.text, response.command.paramText);
-    }
-
-    public static void sendMessageToGame(MessageContext context) {
-        if (context.channel != botChannel || context.message.getContentDisplay().length() == 0) return;
-
-        DarkdustryPlugin.discord("@: @", context.member.getEffectiveName(), context.message.getContentDisplay());
-
-        var roles = context.member.getRoles();
-        var reply = context.message.getReferencedMessage();
+        var roles = member.getRoles();
+        var reply = message.getReferencedMessage();
 
         Groups.player.each(player -> {
             Locale locale = Find.locale(player.locale);
 
             bundled(player, "discord.chat",
-                    Integer.toHexString(context.member.getColorRaw()),
+                    Integer.toHexString(member.getColorRaw()),
                     roles.isEmpty() ? format("discord.chat.no-role", locale) : roles.get(0).getName(),
-                    context.member.getEffectiveName(),
+                    member.getEffectiveName(),
                     reply != null ? format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
-                    context.message.getContentDisplay());
+                    message.getContentDisplay());
         });
     }
 

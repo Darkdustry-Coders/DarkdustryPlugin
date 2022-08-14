@@ -16,13 +16,9 @@ public class DiscordListeners extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.isFromGuild() || event.getAuthor().isBot()) return;
-
-        MessageContext context = new MessageContext(event);
-        app.post(() -> {
-            handleMessage(context);
-            sendMessageToGame(context);
-        });
+        if (event.getAuthor().isBot() || event.getMessage().getContentDisplay().isEmpty()) return;
+        if (event.isFromGuild() && event.getChannel() == botChannel) // можно кнч объединить в один if, но он будет просто огромным
+            app.post(() -> sendMessageToGame(event.getMember(), event.getMessage()));
     }
 
     @Override
