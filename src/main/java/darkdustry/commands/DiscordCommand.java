@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.Events;
+import arc.files.Fi;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
@@ -12,8 +13,10 @@ import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 
@@ -101,12 +104,30 @@ public class DiscordCommand {
         });
 
         register("addmap", "Добавить карту на сервер.", context -> {
+            if (notAdmin(context) || notMap(context)) return;
 
-        }).addOption(OptionType.ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.").queue();
+            Attachment attachment = context.getOption("map").getAsAttachment();
+            attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
+                Fi mapFile = new Fi(file);
+                if (notMap(context, mapFile)) return;
+
+                maps.reload();
+                context.success(":map: Карта добавлена на сервер.");
+            }).exceptionally(e -> {
+                context.error(":no_entry_sign: Файл поврежден или не является картой!");
+                return null;
+            });
+        }).addOption(OptionType.ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true).queue();
 
         register("removemap", "Удалить карту с сервера.", context -> {
+            if (notAdmin(context)) return;
+            Map map = Find.map(context.getOption("nickname").getAsString());
+            if (notFound(context, map)) return;
 
-        });
+            maps.removeMap(map);
+            maps.reload();
+            context.success(":dagger: Карта удалена с сервера.");
+        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.");
 
         register("gameover", "Принудительно завершить игру.", context -> {
             if (notAdmin(context) || isMenu(context)) return;

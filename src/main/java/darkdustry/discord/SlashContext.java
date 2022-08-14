@@ -47,11 +47,11 @@ public class SlashContext {
         sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.yellow).build());
     }
 
-    public void err(String title, String text, Object... args) {
+    public void error(String title, String text, Object... args) {
         sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.red).build());
     }
 
-    public void err(String text, Object... args) {
+    public void error(String text, Object... args) {
         sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.red).build());
     }
 }
