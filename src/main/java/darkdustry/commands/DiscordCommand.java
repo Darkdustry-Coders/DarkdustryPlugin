@@ -8,6 +8,7 @@ import arc.struct.Seq;
 import darkdustry.components.MapParser;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.SlashContext;
+import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -21,6 +22,7 @@ import java.awt.Color;
 import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -68,12 +70,25 @@ public class DiscordCommand {
         }).addOption(OptionType.INTEGER, "page", "Страница списка игроков.", false).queue();
 
         register("kick", "Выгнать игрока с сервера.", context -> {
+            if (notAdmin(context)) return;
+            Player target = Find.player(context.getOption("nickname").getAsString());
+            if (notFound(context, target)) return;
 
-        });
+            kick(target, kickDuration, true, "kick.kicked");
+            sendToChat("events.server.kick", target.name);
+            context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
+        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно выгнать.", true);
 
         register("ban", "Забанить игрока на сервере.", context -> {
+            if (notAdmin(context)) return;
+            Player target = Find.player(context.getOption("nickname").getAsString());
+            if (notFound(context, target)) return;
 
-        });
+            netServer.admins.banPlayer(target.uuid());
+            kick(target, 0, true, "kick.banned");
+            sendToChat("events.server.ban", target.name);
+            context.info(":dagger: Игрок успешно забанен.", "@ больше не сможет зайти на сервер.", target.name);
+        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно забанить.", true);
 
         if (config.mode == Gamemode.hexed) return;
 
