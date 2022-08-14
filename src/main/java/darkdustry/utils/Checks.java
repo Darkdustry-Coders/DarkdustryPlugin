@@ -195,10 +195,6 @@ public class Checks {
         });
     }
 
-    public static boolean invalidPage(SlashContext context, int page, int pages) { // TODO: после переноса maps и players на PageIterator убрать это
-        return check(--page >= pages || page < 0, context, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до " + pages);
-    }
-
     // endregion
     // region Checks
 
