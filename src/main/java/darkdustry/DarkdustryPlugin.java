@@ -43,7 +43,7 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Bot.connect();
 
-        DiscordCommand.load();
+        DiscordCommands.load();
         SchemeSize.load();
         // Version.build = -1;
 

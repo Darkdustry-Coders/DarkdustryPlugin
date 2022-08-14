@@ -29,7 +29,7 @@ import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
-public class DiscordCommand {
+public class DiscordCommands {
 
     public static final ObjectMap<String, Cons<SlashContext>> commands = new ObjectMap<>();
 
