@@ -96,8 +96,20 @@ public class DiscordCommand {
         if (config.mode == Gamemode.hexed) return;
 
         register("map", "Получить карту с сервера.", context -> {
+            Map map = Find.map(context.getOption("map").getAsString());
+            if (notFound(context, map)) return;
 
-        });
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(Color.yellow)
+                    .setTitle(":map: " + map.name())
+                    .setFooter(map.width + "x" + map.height)
+                    .setImage("attachment://map.png");
+
+            if (!map.author().equals("unknown")) embed.setAuthor(map.author());
+            if (!map.description().equals("unknown")) embed.setDescription(map.description());
+
+            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+        }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true);
 
         register("maps", "Список всех карт сервера.", context -> {
 
@@ -127,7 +139,7 @@ public class DiscordCommand {
             maps.removeMap(map);
             maps.reload();
             context.success(":dagger: Карта удалена с сервера.");
-        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.");
+        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
 
         register("gameover", "Принудительно завершить игру.", context -> {
             if (notAdmin(context) || isMenu(context)) return;
