@@ -12,6 +12,7 @@ import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import static darkdustry.components.Bundle.format;
@@ -31,7 +32,7 @@ public class ConfigEntry implements HistoryEntry {
     public ConfigEntry(ConfigEvent event) {
         this.name = event.player.coloredName();
         this.blockID = event.tile.block.id;
-        this.value = event.value instanceof Integer number ? getValue(event, number) : event.value;
+        this.value = getValue(event);
         this.connect = value instanceof Point2 point && getConnect(event, point);
         this.time = Time.millis();
     }
@@ -69,9 +70,7 @@ public class ConfigEntry implements HistoryEntry {
                 return format("history.config.disconnect", locale, name, get(block.name), date);
             }
 
-            StringBuilder builder = new StringBuilder();
-            Structs.each(point -> builder.append(point.toString()), points);
-            return format("history.config.connects", locale, name, get(block.name), builder.toString(), date);
+            return format("history.config.connects", locale, name, get(block.name), Arrays.toString(points), date);
         }
 
         if (block instanceof LightBlock) {
@@ -85,26 +84,34 @@ public class ConfigEntry implements HistoryEntry {
         return format("history.config.default", locale, name, get(block.name), date);
     }
 
-    public static Object getValue(ConfigEvent event, int number) {
-        Object value = event.value;
-
-        if (event.tile.block instanceof UnitFactory factory)
-            value = number == -1 ? null : factory.plans.get(number).unit;
-        if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
-            value = Point2.unpack(number);
+    public static Object getValue(ConfigEvent event) {
+        if (event.value instanceof Integer number) {
+            if (event.tile.block instanceof UnitFactory factory)
+                return number == -1 ? null : factory.plans.get(number).unit;
+            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
+                return Point2.unpack(number);
+            }
         }
 
-        return value;
+        if (event.value instanceof Point2 point) {
+            return point.add(event.tile.tileX(), event.tile.tileY());
+        }
+
+        if (event.value instanceof Point2[] points) {
+            Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
+            return points;
+        }
+
+        return event.value;
     }
 
     public static boolean getConnect(ConfigEvent event, Point2 point) {
         if (event.tile.block.configurations.containsKey(Point2.class)) {
-            return point.pack() != -1;
+            return point.pack() != -1 && point.pack() != event.tile.pos();
         }
 
         if (event.tile.block.configurations.containsKey(Point2[].class)) {
-            Point2 link = point.cpy().sub(event.tile.tileX(), event.tile.tileY());
-            return Structs.contains((Point2[]) event.tile.config(), link::equals);
+            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
         }
 
         return false;
