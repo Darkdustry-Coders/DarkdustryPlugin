@@ -26,8 +26,8 @@ public class MenuHandler {
             if (option != 1) return;
             PlayerData data = getPlayerData(player);
             data.welcomeMessage = false;
-            bundled(player, "welcome.disabled");
             setPlayerData(data);
+            bundled(player, "welcome.disabled");
         });
 
         despawnMenu = Menus.registerMenu((player, option) -> {
@@ -64,7 +64,7 @@ public class MenuHandler {
             sendToChat("commands.artv.info", player.coloredName());
         });
 
-        statsMenu = emptyMenu();
+        statsMenu = -1;
 
         rankInfoMenu = Menus.registerMenu((player, option) -> {
             if (option != 1) return;
@@ -74,9 +74,9 @@ public class MenuHandler {
             showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] {{"ui.menus.close"}});
         });
 
-        ranksRequirementsMenu = emptyMenu();
+        ranksRequirementsMenu = -1;
 
-        rankIncreaseMenu = emptyMenu();
+        rankIncreaseMenu = -1;
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {
@@ -89,9 +89,5 @@ public class MenuHandler {
             for (int j = 0; j < buttons[i].length; j++)
                 buttons[i][j] = get(buttons[i][j], locale);
         Call.menu(player.con, menu, format(title, titleObject), format(content, contentObjects), buttons);
-    }
-
-    private static int emptyMenu() {
-        return Menus.registerMenu((player, option) -> {});
     }
 }

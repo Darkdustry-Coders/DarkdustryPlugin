@@ -15,7 +15,9 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 
@@ -48,8 +50,7 @@ public class DiscordCommands {
                     .setImage("attachment://minimap.png").build()).addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
         }).queue();
 
-        register("players", "Список всех игроков на сервере.", PageIterator::players)
-                .addOption(OptionType.INTEGER, "page", "Страница списка игроков.", false).queue();
+        register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(OptionType.INTEGER, "page", "Страница списка игроков.", false).queue();
 
         register("kick", "Выгнать игрока с сервера.", context -> {
             if (notAdmin(context)) return;
@@ -59,7 +60,9 @@ public class DiscordCommands {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.name);
             context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
-        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно выгнать.", true).queue();
+        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно выгнать.")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.KICK_MEMBERS))
+                .queue();
 
         register("ban", "Забанить игрока на сервере.", context -> {
             if (notAdmin(context)) return;
@@ -70,7 +73,9 @@ public class DiscordCommands {
             kick(target, 0, true, "kick.banned");
             sendToChat("events.server.ban", target.name);
             context.info(":dagger: Игрок успешно забанен.", "@ больше не сможет зайти на сервер.", target.name);
-        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно забанить.", true).queue();
+        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно забанить.")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.BAN_MEMBERS))
+                .queue();
 
         if (config.mode == Gamemode.hexed) return;
 
@@ -88,10 +93,9 @@ public class DiscordCommands {
             if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
             context.event.replyEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
-        }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true).queue();
+        }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.").queue();
 
-        register("maps", "Список всех карт сервера.", PageIterator::maps)
-                .addOption(OptionType.INTEGER, "page", "Страница списка карт.", false).queue();
+        register("maps", "Список всех карт сервера.", PageIterator::maps).addOption(OptionType.INTEGER, "page", "Страница списка карт.", false).queue();
 
         register("addmap", "Добавить карту на сервер.", context -> {
             if (notAdmin(context) || notMap(context)) return;
@@ -103,11 +107,10 @@ public class DiscordCommands {
 
                 maps.reload();
                 context.success(":map: Карта добавлена на сервер.");
-            }).exceptionally(e -> {
-                context.error(":no_entry_sign: Файл поврежден или не является картой!");
-                return null;
             });
-        }).addOption(OptionType.ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true).queue();
+        }).addOption(OptionType.ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true)
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
+                .queue();
 
         register("removemap", "Удалить карту с сервера.", context -> {
             if (notAdmin(context)) return;
@@ -117,14 +120,16 @@ public class DiscordCommands {
             maps.removeMap(map);
             maps.reload();
             context.success(":dagger: Карта удалена с сервера.");
-        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.", true).queue();
+        }).addOption(OptionType.STRING, "map", "Название карты, которую необходимо удалить с сервера.")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
+                .queue();
 
         register("gameover", "Принудительно завершить игру.", context -> {
             if (notAdmin(context) || isMenu(context)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             context.success(":map: Игра успешно завершена.");
-        }).queue();
+        }).setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)).queue();
     }
 
     public static CommandCreateAction register(String name, String description, Cons<SlashContext> cons) {
