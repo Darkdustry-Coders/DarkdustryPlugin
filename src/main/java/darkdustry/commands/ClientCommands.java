@@ -92,12 +92,12 @@ public class ClientCommands {
             Rank rank = Ranks.getRank(data.rank), next = rank.next;
             Locale locale = Find.locale(player.locale);
 
-            StringBuilder builder = new StringBuilder(format("commands.rank.menu.content", locale, rank.tag, get(rank.name, locale)));
+            StringBuilder builder = new StringBuilder(format("commands.rank.menu.content", locale, rank.tag, rank.localisedName(locale)));
             if (next != null && next.req != null)
                 builder.append(format("commands.rank.menu.next",
                         locale,
                         next.tag,
-                        get(next.name, locale),
+                        next.localisedName(locale),
                         data.playTime,
                         next.req.playTime(),
                         data.buildingsBuilt,

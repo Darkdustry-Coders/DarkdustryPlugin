@@ -7,6 +7,7 @@ import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.Block;
+import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
 
 import java.util.Arrays;
@@ -68,6 +69,10 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof LightBlock) {
             return format("history.config.color", locale, name, get(block.name), Tmp.c1.set((int) value).toString(), date);
+        }
+
+        if (block instanceof LogicBlock) {
+
         }
 
         return format("history.config.default", locale, name, get(block.name), date);

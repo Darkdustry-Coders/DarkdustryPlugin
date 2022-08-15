@@ -53,7 +53,7 @@ public class Ranks {
         developer = new Rank() {{
             tag = "[accent]<[#86dca2]\uE816[]>[] ";
             name = "developer";
-            effects = Effects.proPack; // тут по любому будут эти эффекты, ибо я хочу их себе
+            effects = Effects.proPack;
         }};
 
         admin = new Rank() {{
@@ -115,13 +115,12 @@ public class Ranks {
             return next != null && next.req != null && next.req.check(playTime, buildingsBuilt, gamesPlayed);
         }
 
-        // TODO добавить бандлы
         public String localisedName(Locale locale) {
             return get("ranks." + name + ".name", locale);
         }
 
         public String localisedReq(Locale locale) {
-            return format("commands.rank.menu.requirements.content", locale, tag, get(name, locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
+            return format("ranks.req", locale, tag, localisedName(locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
         }
     }
 
