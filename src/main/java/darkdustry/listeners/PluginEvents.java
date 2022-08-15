@@ -60,7 +60,8 @@ public class PluginEvents {
                 var value = event.value;
                 var connect = false;
 
-                if (event.value instanceof Integer number) {
+                /* не рабочий кринж
+                 if (event.value instanceof Integer number) {
                     if (event.tile.block.configurations.containsKey(Point2.class)) {
                         value = Point2.unpack(number);
                         connect = (int) value != -1;
@@ -72,6 +73,7 @@ public class PluginEvents {
                         value = number != -1 ? factory.plans.get(number).unit : null;
                     }
                 }
+                 */
 
                 History.put(new ConfigEntry(event, value, connect), event.tile.tile);
             }
