@@ -43,13 +43,13 @@ public class PageIterator {
 
     public static void maps(String[] args, Player player) {
         client(args, player, maps.customMaps(), "maps",
-                (builder, i, map) -> builder.append("\n[lightgray] ").append(i).append(". [orange]").append(map.name()),
+                (builder, i, map) -> builder.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name()),
                 result -> result.append(format("commands.maps.current", Find.locale(player.locale), state.map.name())));
     }
 
     public static void saves(String[] args, Player player) {
         client(args, player, Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid), "saves",
-                (builder, i, save) -> builder.append("\n[lightgray] ").append(i).append(". [orange]").append(save.nameWithoutExtension()), null);
+                (builder, i, save) -> builder.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()), null);
     }
 
     private static <T> void client(
@@ -61,15 +61,15 @@ public class PageIterator {
             return;
         }
 
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / 8f));
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) perPage));
 
-        if (page - 1 >= pages || page <= 0) {
+        if (page > pages || page <= 0) {
             bundled(player, "commands.under-page", pages);
             return;
         }
 
         StringBuilder builder = new StringBuilder(format("commands." + command + ".page", Find.locale(player.locale), page, pages));
-        for (int i = 8 * (page - 1); i < Math.min(8 * page, content.size); i++)
+        for (int i = perPage * (page - 1); i < Math.min(perPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
         if (result != null) result.get(builder);
@@ -81,41 +81,39 @@ public class PageIterator {
 
     public static void players(SlashContext context) {
         discord(context, Groups.player.copy(new Seq<>()),
-                (builder, p) -> builder.append(stripColors(p.name)).append(" (ID: ").append(p.id).append(")\n"),
-                ":satellite: Всего игроков на сервере: @");
+                size -> Strings.format(":satellite: Всего игроков на сервере: @", size),
+                (builder, p) -> builder.append(stripColors(p.name)).append(" | ID: ").append(p.id).append("\n")
+        );
     }
 
     public static void maps(SlashContext context) {
         discord(context, maps.customMaps(),
-                (builder, map) -> builder.append(stripColors(map.name())).append("\n"),
-                ":map: Всего карт на сервере: @");
+                size -> Strings.format(":map: Всего карт на сервере: @", size),
+                (builder, map) -> builder.append(stripColors(map.name())).append("\n")
+        );
     }
 
     private static <T> void discord(
             SlashContext context, Seq<T> content,
-            Cons2<StringBuilder, T> cons, String result) {
+            Func<Integer, String> header, Cons2<StringBuilder, T> cons) {
 
-        int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(Groups.player.size() / 16f));
+        int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) perPage));
 
-        if (page - 1 >= pages || page <= 0) {
+        if (page > pages || page <= 0) {
             context.error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages);
             return;
         }
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 8 * (page - 1); i < Math.min(8 * page, content.size); i++)
-            cons.get(builder.append("**").append(i).append(".** "), content.get(i));
+        for (int i = perPage * (page - 1); i < Math.min(perPage * page, content.size); i++)
+            cons.get(builder.append("**").append(i + 1).append(".** "), content.get(i));
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle(Strings.format(":satellite: Всего игроков на сервере: @", content.size))
+                .setTitle(header.get(content.size))
                 .setDescription(builder.toString())
                 .setFooter(Strings.format("Страница @ / @", page, pages)).build());
     }
 
     // endregion
-
-    public interface BuilderPrefix {
-        String get(int page, int pages);
-    }
 }

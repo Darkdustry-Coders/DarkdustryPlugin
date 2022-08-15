@@ -7,6 +7,7 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Timer;
+import mindustry.core.Version;
 import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
@@ -45,7 +46,8 @@ public class DarkdustryPlugin extends Plugin {
 
         DiscordCommands.load();
         SchemeSize.load();
-        // Version.build = -1;
+
+        Version.build = -1;
 
         net.handleServer(Connect.class, NetHandlers::connect);
         net.handleServer(ConnectPacket.class, NetHandlers::packet);

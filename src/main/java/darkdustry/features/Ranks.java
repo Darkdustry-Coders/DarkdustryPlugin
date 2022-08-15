@@ -12,8 +12,9 @@ import static darkdustry.components.Database.*;
 
 public class Ranks {
 
+    public static final ObjectMap<String, Rank> cache = new ObjectMap<>();
+
     public static Rank player, active, activePlus, veteran, contributor, developer, admin, console, owner;
-    public static ObjectMap<String, Rank> cache = new ObjectMap<>();
 
     public static void load() {
         player = new Rank() {{

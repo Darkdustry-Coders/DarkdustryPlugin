@@ -36,6 +36,7 @@ public class DiscordCommands {
     public static void load() {
         register("status", "Посмотреть статус сервера.", context -> {
             if (isMenu(context)) return;
+
             context.event.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.green)
                     .setTitle(":desktop: " + stripAll(Config.serverName.string()))
@@ -52,24 +53,24 @@ public class DiscordCommands {
 
         register("kick", "Выгнать игрока с сервера.", context -> {
             if (notAdmin(context)) return;
-            Player target = Find.player(context.getOption("nickname").getAsString());
+            Player target = Find.player(context.getOption("name").getAsString());
             if (notFound(context, target)) return;
 
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.name);
             context.info(":skull: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration));
-        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно выгнать.", true).queue();
+        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно выгнать.", true).queue();
 
         register("ban", "Забанить игрока на сервере.", context -> {
             if (notAdmin(context)) return;
-            Player target = Find.player(context.getOption("nickname").getAsString());
+            Player target = Find.player(context.getOption("name").getAsString());
             if (notFound(context, target)) return;
 
             netServer.admins.banPlayer(target.uuid());
             kick(target, 0, true, "kick.banned");
             sendToChat("events.server.ban", target.name);
             context.info(":dagger: Игрок успешно забанен.", "@ больше не сможет зайти на сервер.", target.name);
-        }).addOption(OptionType.STRING, "nickname", "Имя игрока, которого нужно забанить.", true).queue();
+        }).addOption(OptionType.STRING, "name", "Имя игрока, которого нужно забанить.", true).queue();
 
         if (config.mode == Gamemode.hexed) return;
 
@@ -86,7 +87,7 @@ public class DiscordCommands {
             if (!map.author().equals("unknown")) embed.setAuthor(map.author());
             if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
-            context.channel.sendMessageEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+            context.event.replyEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
         }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true).queue();
 
         register("maps", "Список всех карт сервера.", PageIterator::maps)

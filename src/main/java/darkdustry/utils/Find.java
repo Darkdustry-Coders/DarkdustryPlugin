@@ -58,12 +58,12 @@ public class Find {
 
     public static Map map(String name) {
         Seq<Map> list = maps.customMaps();
-        return canParsePositiveInt(name) && parseInt(name) < list.size ? list.get(parseInt(name)) : list.find(map -> deepEquals(map.name(), name));
+        return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
         Seq<Fi> list = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return canParsePositiveInt(name) && parseInt(name) < list.size ? list.get(parseInt(name)) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
+        return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {

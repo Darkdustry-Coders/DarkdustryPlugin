@@ -42,7 +42,6 @@ public class Bot {
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
             botGuild.updateCommands().queue();
-            botGuild.getSelfMember().modifyNickname("[" + config.discordBotPrefix + "] " + jda.getSelfUser().getName()).queue();
 
             updateBotStatus();
 

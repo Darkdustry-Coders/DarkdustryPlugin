@@ -28,9 +28,6 @@ public class Config {
     /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /** Префикс бота, привязанного к серверу. */
-    public String discordBotPrefix = "prefix";
-
     /** ID сервера в Discord. */
     public long discordGuildId = 0L;
 

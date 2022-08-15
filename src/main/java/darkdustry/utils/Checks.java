@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.math.Mathf;
 import arc.util.Log;
 import darkdustry.discord.SlashContext;
 import mindustry.game.Gamemode;
@@ -131,7 +132,7 @@ public class Checks {
     }
 
     public static boolean invalidFillAmount(Player player, int radius) {
-        return check(Math.PI * radius * radius > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
+        return check(Math.PI * Mathf.sqr(radius) > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
     }
 
     public static boolean isVoting(Player player) {

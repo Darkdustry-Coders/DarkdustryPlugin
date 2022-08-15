@@ -37,6 +37,9 @@ public class PluginVars {
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
 
+    /** Количество команд/игроков/карт/сохранений на одной странице списка. */
+    public static final int perPage = 8;
+
     /** Список uuid игроков, просматривающих историю в данный момент. */
     public static final Seq<String> activeHistory = new Seq<>();
 

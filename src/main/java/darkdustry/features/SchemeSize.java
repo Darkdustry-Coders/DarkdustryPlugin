@@ -34,13 +34,13 @@ public class SchemeSize {
         netServer.addPacketHandler("fill", (player, args) -> {
             try {
                 if (player.admin) fill(player, args.split(" "));
-            } catch (Throwable e) {}
+            } catch (Throwable ignored) {}
         });
 
         netServer.addPacketHandler("brush", (player, args) -> {
             try {
                 if (player.admin) brush(player, args.split(" "));
-            } catch (Throwable e) {}
+            } catch (Throwable ignored) {}
         });
     }
 
