@@ -20,7 +20,7 @@ public class VoteLoad extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.nominate.load.vote", player.coloredName(), target.nameWithoutExtension(), votes, votesRequired());
+        sendToChat("commands.nominate.load.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
     }
 
     @Override
