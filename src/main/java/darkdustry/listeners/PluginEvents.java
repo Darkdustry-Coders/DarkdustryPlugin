@@ -95,7 +95,7 @@ public class PluginEvents {
             app.post(Bot::updateBotStatus);
 
             if (vote instanceof VoteKick kick && kick.target == event.player) kick.success();
-            // if (vote != null) vote.left(event.player); // TODO: хэндлить выход игроков
+            if (vote != null) vote.left(event.player);
         });
 
         Events.on(ServerLoadEvent.class, event -> Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен."));

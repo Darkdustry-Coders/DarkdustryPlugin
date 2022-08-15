@@ -148,7 +148,7 @@ public class Checks {
     }
 
     public static boolean alreadyVoted(Player player) {
-        return check(vote.voted.contains(player.uuid()), player, "commands.already-voted");
+        return check(vote.voted.containsKey(player.uuid()), player, "commands.already-voted");
     }
 
     public static boolean alreadySynced(Player player) {

@@ -10,7 +10,7 @@ public class VoteVnw extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.vnw.vote", player.coloredName(), votes, votesRequired());
+        sendToChat("commands.vnw.vote", player.coloredName(), votes(), votesRequired());
     }
 
     @Override

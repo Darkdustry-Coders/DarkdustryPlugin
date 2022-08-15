@@ -21,7 +21,7 @@ public class VoteKick extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes, votesRequired());
+        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes(), votesRequired());
     }
 
     @Override
