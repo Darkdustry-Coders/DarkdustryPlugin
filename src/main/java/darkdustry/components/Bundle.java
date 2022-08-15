@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
 
-public class Bundle { // TODO: переделать bundle.properties с нуля, ибо команды сильно поменялись
+public class Bundle {
 
     public static final Locale defaultLocale = new Locale(defaultLanguage);
     public static final Seq<Locale> supportedLocales = new Seq<>();

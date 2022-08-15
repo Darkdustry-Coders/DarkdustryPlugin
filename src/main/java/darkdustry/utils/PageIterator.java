@@ -61,7 +61,7 @@ public class PageIterator {
             return;
         }
 
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) perPage));
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
             bundled(player, "commands.under-page", pages);
@@ -69,7 +69,7 @@ public class PageIterator {
         }
 
         StringBuilder builder = new StringBuilder(format("commands." + command + ".page", Find.locale(player.locale), page, pages));
-        for (int i = perPage * (page - 1); i < Math.min(perPage * page, content.size); i++)
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
         if (result != null) result.get(builder);
@@ -97,7 +97,7 @@ public class PageIterator {
             SlashContext context, Seq<T> content,
             Func<Integer, String> header, Cons2<StringBuilder, T> cons) {
 
-        int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) perPage));
+        int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
             context.error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages);
@@ -105,7 +105,7 @@ public class PageIterator {
         }
 
         StringBuilder builder = new StringBuilder();
-        for (int i = perPage * (page - 1); i < Math.min(perPage * page, content.size); i++)
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder.append("**").append(i + 1).append(".** "), content.get(i));
 
         context.sendEmbed(new EmbedBuilder()
