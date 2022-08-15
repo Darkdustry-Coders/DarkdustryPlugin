@@ -1,8 +1,6 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.math.geom.Point2;
-import arc.util.Structs;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.discord.Bot;
@@ -16,7 +14,6 @@ import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
-import mindustry.world.blocks.units.UnitFactory;
 
 import java.awt.Color;
 
@@ -56,27 +53,8 @@ public class PluginEvents {
         });
 
         Events.on(ConfigEvent.class, event -> {
-            if (History.enabled() && event.player != null) {
-                var value = event.value;
-                var connect = false;
-
-                /* не рабочий кринж
-                 if (event.value instanceof Integer number) {
-                    if (event.tile.block.configurations.containsKey(Point2.class)) {
-                        value = Point2.unpack(number);
-                        connect = (int) value != -1;
-                    } else if (event.tile.block.configurations.containsKey(Point2[].class)) {
-                        value = new Point2[] {Point2.unpack(number)};
-                        var link = ((Point2[]) value)[0].sub(event.tile.tileX(), event.tile.tileY());
-                        connect = Structs.contains((Point2[]) event.tile.config(), point2 -> point2.equals(link));
-                    } else if (event.tile.block instanceof UnitFactory factory) {
-                        value = number != -1 ? factory.plans.get(number).unit : null;
-                    }
-                }
-                 */
-
-                History.put(new ConfigEntry(event, value, connect), event.tile.tile);
-            }
+            if (!History.enabled() || event.player == null) return;
+            History.put(new ConfigEntry(event, event.value, event.tile, event.tile.block), event.tile.tile);
         });
 
         Events.on(DepositEvent.class, event -> {

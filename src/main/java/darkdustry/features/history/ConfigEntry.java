@@ -1,14 +1,17 @@
 package darkdustry.features.history;
 
 import arc.math.geom.Point2;
+import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
+import mindustry.gen.Building;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
+import mindustry.world.blocks.units.UnitFactory;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -27,9 +30,23 @@ public class ConfigEntry implements HistoryEntry {
     public final boolean connect;
     public final long time;
 
-    public ConfigEntry(ConfigEvent event, Object value, boolean connect) {
+    public ConfigEntry(ConfigEvent event, Object value, Building build, Block block) {
+        boolean connect = value instanceof Point2[] points ? points.length != 0 : false;
+        if (value instanceof Integer number) {
+            if (block instanceof UnitFactory factory) value = number == -1 ? null : factory.plans.get(number).unit;
+            if (block.configurations.containsKey(Point2.class)) {
+                value = Point2.unpack(number);
+                connect = (int) number != -1; // todo: при дабл клике на мост, выдаёт не disconect а connect to
+            }
+            if (block.configurations.containsKey(Point2[].class)) {
+                value = Point2.unpack(number);
+                Point2 link = ((Point2) value).sub(build.tileX(), build.tileY());
+                connect = Structs.contains((Point2[]) build.config(), point2 -> point2.equals(link));
+            }
+        }
+
         this.name = event.player.coloredName();
-        this.blockID = event.tile.block.id;
+        this.blockID = block.id;
         this.value = value;
         this.connect = connect;
         this.time = Time.millis();
