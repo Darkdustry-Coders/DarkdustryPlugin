@@ -35,23 +35,23 @@ public class MenuHandler {
 
             switch (option) {
                 case 0 -> {
-                    Groups.unit.each(Unit::kill);
+                    Groups.unit.each(Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.all");
                 }
                 case 2 -> {
-                    Groups.unit.each(Unit::isPlayer, Unit::kill);
+                    Groups.unit.each(Unit::isPlayer, Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.players");
                 }
                 case 3 -> {
-                    Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Unit::kill);
+                    Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
-                    Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Unit::kill);
+                    Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
-                    Call.unitCapDeath(player.unit());
+                    Call.unitEnvDeath(player.unit());
                     bundled(player, "commands.despawn.success.suicide");
                 }
             }
