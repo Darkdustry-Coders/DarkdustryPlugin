@@ -6,14 +6,12 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
-import mindustry.gen.Building;
 import mindustry.gen.Player;
 import mindustry.world.Block;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 import static darkdustry.components.Bundle.format;
@@ -30,25 +28,11 @@ public class ConfigEntry implements HistoryEntry {
     public final boolean connect;
     public final long time;
 
-    public ConfigEntry(ConfigEvent event, Object value, Building build, Block block) {
-        boolean connect = value instanceof Point2[] points ? points.length != 0 : false;
-        if (value instanceof Integer number) {
-            if (block instanceof UnitFactory factory) value = number == -1 ? null : factory.plans.get(number).unit;
-            if (block.configurations.containsKey(Point2.class)) {
-                value = Point2.unpack(number);
-                connect = (int) number != -1; // todo: при дабл клике на мост, выдаёт не disconect а connect to
-            }
-            if (block.configurations.containsKey(Point2[].class)) {
-                value = Point2.unpack(number);
-                Point2 link = ((Point2) value).sub(build.tileX(), build.tileY());
-                connect = Structs.contains((Point2[]) build.config(), point2 -> point2.equals(link));
-            }
-        }
-
+    public ConfigEntry(ConfigEvent event) {
         this.name = event.player.coloredName();
-        this.blockID = block.id;
-        this.value = value;
-        this.connect = connect;
+        this.blockID = event.tile.block.id;
+        this.value = event.value instanceof Integer number ? getValue(event, number) : event.value;
+        this.connect = value instanceof Point2 point && getConnect(event, point);
         this.time = Time.millis();
     }
 
@@ -81,7 +65,13 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (value instanceof Point2[] points) {
-            return connect ? "coming soon" : "cumming soon" + Arrays.toString(points);
+            if (points.length == 0) {
+                return format("history.config.disconnect", locale, name, get(block.name), date);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            Structs.each(point -> builder.append(point.toString()), points);
+            return format("history.config.connects", locale, name, get(block.name), builder.toString(), date);
         }
 
         if (block instanceof LightBlock) {
@@ -89,9 +79,34 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (block instanceof LogicBlock) {
-
+            return format("history.config.code", locale, name, get(block.name), date);
         }
 
         return format("history.config.default", locale, name, get(block.name), date);
+    }
+
+    public static Object getValue(ConfigEvent event, int number) {
+        Object value = event.value;
+
+        if (event.tile.block instanceof UnitFactory factory)
+            value = number == -1 ? null : factory.plans.get(number).unit;
+        if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
+            value = Point2.unpack(number);
+        }
+
+        return value;
+    }
+
+    public static boolean getConnect(ConfigEvent event, Point2 point) {
+        if (event.tile.block.configurations.containsKey(Point2.class)) {
+            return point.pack() != -1;
+        }
+
+        if (event.tile.block.configurations.containsKey(Point2[].class)) {
+            Point2 link = point.cpy().sub(event.tile.tileX(), event.tile.tileY());
+            return Structs.contains((Point2[]) event.tile.config(), link::equals);
+        }
+
+        return false;
     }
 }

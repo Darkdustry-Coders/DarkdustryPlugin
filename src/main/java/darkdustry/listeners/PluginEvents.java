@@ -53,8 +53,7 @@ public class PluginEvents {
         });
 
         Events.on(ConfigEvent.class, event -> {
-            if (!History.enabled() || event.player == null) return;
-            History.put(new ConfigEntry(event, event.value, event.tile, event.tile.block), event.tile.tile);
+            if (History.enabled() && event.player != null) History.put(new ConfigEntry(event), event.tile.tile);
         });
 
         Events.on(DepositEvent.class, event -> {
