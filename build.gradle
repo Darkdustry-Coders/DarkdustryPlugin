@@ -22,7 +22,6 @@ ext {
 dependencies {
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-    compileOnly "com.github.Anuken.Mindustry:server:$mindustryVersion"
 
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.18.0'
     implementation 'net.dv8tion:JDA:5.0.0-alpha.17'

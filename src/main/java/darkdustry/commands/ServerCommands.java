@@ -1,5 +1,6 @@
 package darkdustry.commands;
 
+import arc.Core;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -45,7 +46,7 @@ public class ServerCommands {
                 mode = Find.mode(args[1]);
                 if (notFound(mode, args)) return;
             } else {
-                mode = Gamemode.survival;
+                mode = notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
                 Log.info("Default mode selected to be @.", mode.name());
             }
 
@@ -57,6 +58,8 @@ public class ServerCommands {
                 map = maps.getShuffleMode().next(mode, state.map);
                 Log.info("Randomized next map to be @.", map.name());
             }
+
+            Core.settings.put("lastServerMode", mode.name());
 
             app.post(() -> {
                 try {
