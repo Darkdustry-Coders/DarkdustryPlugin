@@ -9,6 +9,7 @@ import mindustry.entities.Effect;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 
+import static mindustry.Vars.*;
 import static darkdustry.features.Ranks.*;
 
 public class Effects {
@@ -30,6 +31,7 @@ public class Effects {
     }
 
     public static void onMove(Player player) {
+        if (state.rules.fog) return;
         EffectsPack pack = cache.get(player.uuid()).effects;
         on(pack.move, player.x, player.y, pack.rotation.get(player), Tmp.c1.rand());
     }
