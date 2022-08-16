@@ -1,7 +1,6 @@
 package darkdustry.components;
 
 import arc.files.Fi;
-import mindustry.io.JsonIO;
 import darkdustry.DarkdustryPlugin;
 
 import static mindustry.Vars.*;
@@ -44,18 +43,14 @@ public class Config {
     public String translatorApiKey = "key";
 
     public static void load() {
-        JsonIO.json.setUsePrototypes(false);
-
         Fi file = dataDirectory.child(configFileName);
         if (file.exists()) {
-            config = JsonIO.json.fromJson(Config.class, file.reader());
+            config = gson.fromJson(file.reader(), Config.class);
             DarkdustryPlugin.info("Config loaded. (@)", file.absolutePath());
         } else {
-            file.writeString(JsonIO.json.toJson(config = new Config()));
+            file.writeString(gson.toJson(config = new Config()));
             DarkdustryPlugin.info("Config file generated. (@)", file.absolutePath());
         }
-
-        JsonIO.json.setUsePrototypes(true);
 
         motd.set("off");
         interactRateWindow.set(3);
