@@ -1,14 +1,13 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import darkdustry.DarkdustryPlugin;
+import arc.util.Log;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
 import darkdustry.features.Effects;
 import darkdustry.features.Ranks;
 import darkdustry.features.history.*;
 import darkdustry.features.history.History.HistoryStack;
-import darkdustry.features.votes.VoteKick;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
@@ -71,7 +70,7 @@ public class PluginEvents {
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             Effects.onJoin(event.player);
-            DarkdustryPlugin.info("@ has connected. [@]", event.player.name, event.player.uuid());
+            Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
 
             sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
@@ -85,7 +84,7 @@ public class PluginEvents {
 
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
-            DarkdustryPlugin.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
+            Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
 
             sendToChat("events.player.leave", event.player.coloredName());
 
