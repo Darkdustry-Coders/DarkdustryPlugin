@@ -44,7 +44,6 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Bot.connect();
 
-        DiscordCommands.load();
         SchemeSize.load();
 
         Version.build = -1;

@@ -1,6 +1,7 @@
 package darkdustry.discord;
 
 import arc.util.Strings;
+import darkdustry.commands.DiscordCommands;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
@@ -42,6 +43,8 @@ public class Bot {
 
             AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
             botGuild.updateCommands().queue();
+
+            DiscordCommands.load();
 
             updateBotStatus();
 
