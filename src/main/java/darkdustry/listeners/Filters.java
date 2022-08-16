@@ -24,7 +24,7 @@ public class Filters {
 
     public static String chat(Player author, String text) {
         int sign = voteChoice(text);
-        if (sign != 0 && !notVoting(player, vote) && !alreadyVoted(player, vote)) {
+        if (sign != 0 && !notVoting(author, vote) && !alreadyVoted(author, vote)) {
             vote.vote(author, sign);
             return null;
         }
