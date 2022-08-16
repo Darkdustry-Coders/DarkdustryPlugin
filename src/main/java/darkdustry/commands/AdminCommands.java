@@ -41,7 +41,7 @@ public class AdminCommands {
 
                 Call.unitEnvDeath(target.unit());
                 bundled(target, "commands.despawn.success.suicide");
-                if (target != player) bundled(player, "commands.despawn.success.player");
+                if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
             } else showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
                         {"ui.menus.yes", "ui.menus.no"}, {"commands.despawn.menu.players"},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
