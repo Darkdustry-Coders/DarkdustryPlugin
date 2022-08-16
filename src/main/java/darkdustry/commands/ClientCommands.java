@@ -74,7 +74,7 @@ public class ClientCommands {
 
         register("stats", (args, player) -> {
             Player target = args.length > 0 ? Find.player(args[0]) : player;
-            if (notFound(player, target, args)) return;
+            if (args.length > 0 && notFound(player, target, args[0])) return;
 
             PlayerData data = getPlayerData(target.uuid());
             Rank rank = Ranks.getRank(data.rank);
@@ -86,7 +86,7 @@ public class ClientCommands {
 
         register("rank", (args, player) -> {
             Player target = args.length > 0 ? Find.player(args[0]) : player;
-            if (notFound(player, target, args)) return;
+            if (args.length > 0 && notFound(player, target, args[0])) return;
 
             PlayerData data = getPlayerData(target.uuid());
             Rank rank = Ranks.getRank(data.rank), next = rank.next;
@@ -116,7 +116,7 @@ public class ClientCommands {
             if (isVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
 
             Player target = Find.player(args[0]);
-            if (notFound(player, target, args) || invalidVoteTarget(player, target)) return;
+            if (notFound(player, target, args[0]) || invalidVoteTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);
             voteKick.vote(player, 1);

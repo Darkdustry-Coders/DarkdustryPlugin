@@ -80,8 +80,8 @@ public class Checks {
         return check(block == null, player, "commands.block-not-found");
     }
 
-    public static boolean notFound(Player player, Player target, String[] args) {
-        return check(args.length > 0 && target == null, player, "commands.player-not-found", args[0]);
+    public static boolean notFound(Player player, Player target, String name) {
+        return check(target == null, player, "commands.player-not-found", name);
     }
 
     public static boolean notFound(Player player, String language) {

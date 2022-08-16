@@ -37,7 +37,7 @@ public class AdminCommands {
         register("despawn", (args, player) -> {
             if (args.length > 0) {
                 Player target = Find.player(args[0]);
-                if (notFound(player, target, args)) return;
+                if (notFound(player, target, args[0])) return;
 
                 Call.unitEnvDeath(target.unit());
                 bundled(target, "commands.despawn.success.suicide");
@@ -54,7 +54,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             Player target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target, args)) return;
+            if (args.length > 1 && notFound(player, target, args[1])) return;
 
             target.team(team);
             bundled(target, "commands.team.success", coloredTeam(team));
@@ -94,7 +94,7 @@ public class AdminCommands {
             if (notFound(player, type)) return;
 
             Player target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target, args)) return;
+            if (args.length > 1 && notFound(player, target, args[1])) return;
 
             target.unit().spawnedByCore(true);
             target.unit(type.spawn(target.team(), target.x, target.y));
