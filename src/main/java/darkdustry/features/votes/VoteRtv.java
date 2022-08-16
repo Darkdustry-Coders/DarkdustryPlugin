@@ -23,6 +23,7 @@ public class VoteRtv extends VoteSession {
     public void vote(Player player, int sign) {
         super.vote(player, sign);
         sendToChat("commands.rtv.vote", player.coloredName(), target.name(), votes(), votesRequired());
+        if (votes() >= votesRequired()) success();
     }
 
     @Override

@@ -4,6 +4,7 @@ import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import darkdustry.features.votes.VoteKick;
+import mindustry.content.Blocks;
 import net.dv8tion.jda.api.entities.Message;
 import darkdustry.components.Config;
 import darkdustry.components.Config.Gamemode;
@@ -24,7 +25,7 @@ public class PluginVars {
     public static final long kickDuration = 2700000L;
 
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
-    public static final int alertsDistance = 8 * tilesize, alertsTimer = 3;
+    public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;

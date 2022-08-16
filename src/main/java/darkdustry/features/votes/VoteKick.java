@@ -18,16 +18,17 @@ public class VoteKick extends VoteSession {
     }
 
     @Override
+    public void vote(Player player, int sign) {
+        super.vote(player, sign);
+        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes(), votesRequired());
+        if (votes() >= votesRequired()) success();
+    }
+
+    @Override
     public void left(Player player) {
         super.left(player);
         sendToChat("commands.votekick.left", player.coloredName(), votes(), votesRequired());
         if (target == player) success();
-    }
-
-    @Override
-    public void vote(Player player, int sign) {
-        super.vote(player, sign);
-        sendToChat("commands.votekick.vote", player.coloredName(), target.coloredName(), votes(), votesRequired());
     }
 
     @Override

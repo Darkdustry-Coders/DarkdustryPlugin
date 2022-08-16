@@ -37,9 +37,9 @@ public class AdminCommands {
         register("despawn", (args, player) -> {
             if (args.length > 0) {
                 Player target = Find.player(args[0]);
-                if (notFound(player, target, args[0])) return;
+                if (notFound(player, target, args)) return;
 
-                Call.unitCapDeath(target.unit());
+                Call.unitEnvDeath(target.unit());
                 bundled(target, "commands.despawn.success.suicide");
                 if (target != player) bundled(player, "commands.despawn.success.player");
             } else showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
@@ -54,7 +54,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             Player target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target, args[1])) return;
+            if (notFound(player, target, args)) return;
 
             target.team(team);
             bundled(target, "commands.team.success", coloredTeam(team));
@@ -94,7 +94,7 @@ public class AdminCommands {
             if (notFound(player, type)) return;
 
             Player target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target, args[0])) return;
+            if (notFound(player, target, args)) return;
 
             target.unit().spawnedByCore(true);
             target.unit(type.spawn(target.team(), target.x, target.y));
@@ -134,6 +134,7 @@ public class AdminCommands {
 
             player.unit(unit);
             unit.spawnedByCore(spawnedNyCore);
+            bundled(player, "commands.tp.success", x, y);
         });
 
         register("fill", (args, player) -> {

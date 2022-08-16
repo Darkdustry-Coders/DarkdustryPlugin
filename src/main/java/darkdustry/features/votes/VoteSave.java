@@ -19,6 +19,7 @@ public class VoteSave extends VoteSession {
     public void vote(Player player, int sign) {
         super.vote(player, sign);
         sendToChat("commands.savemap.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
+        if (votes() >= votesRequired()) success();
     }
 
     @Override

@@ -22,7 +22,6 @@ public abstract class VoteSession {
 
     public void vote(Player player, int sign) {
         voted.put(player.uuid(), sign);
-        if (votes() >= votesRequired()) success();
     }
 
     public void left(Player player) {
