@@ -28,10 +28,14 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.exists(uuid) ? gson.fromJson(jedis.get(uuid), PlayerData.class) : new PlayerData(uuid);
-        } catch (Exception ignored) {
-            return new PlayerData(uuid);
-        }
+            if (jedis.exists(uuid)) {
+                PlayerData data = gson.fromJson(jedis.get(uuid), PlayerData.class);
+                data.uuid = uuid;
+                return data;
+            }
+        } catch (Exception ignored) {}
+
+        return new PlayerData(uuid);
     }
 
     public static void setPlayerData(PlayerData data) {
@@ -49,7 +53,6 @@ public class Database {
     }
 
     public static class PlayerData {
-
         public String uuid;
         public String language = "off";
 

@@ -28,6 +28,8 @@ import static darkdustry.components.MenuHandler.*;
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
 
+    // TODO (Дарк) доделать left в голосованиях
+
     @Override
     public void init() {
         Effects.load();
