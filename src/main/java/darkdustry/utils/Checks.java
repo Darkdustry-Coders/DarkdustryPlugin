@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.Log;
+import darkdustry.components.Database.PlayerData;
 import darkdustry.discord.SlashContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
@@ -25,10 +26,10 @@ import java.awt.Color;
 import java.util.Objects;
 
 import static arc.util.Strings.*;
+import static darkdustry.components.Database.hasPlayerData;
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.hasPlayerData;
 import static darkdustry.utils.Utils.*;
 
 public class Checks {
@@ -55,12 +56,12 @@ public class Checks {
         return check(info == null, "No player @ found.", name);
     }
 
-    public static boolean notFound(String uuid) {
-        return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
-    }
-
     public static boolean notFound(Rank rank, String name) {
         return check(rank == null, "No rank @ found.", name);
+    }
+
+    public static boolean noData(String uuid) {
+        return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
     }
 
     // endregion

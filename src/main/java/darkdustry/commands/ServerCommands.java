@@ -192,20 +192,19 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("rank", "<uuid> [rank]", "Set or get rank.", args -> {
-            if (notFound(args[0])) return;
-
-            if (args.length < 2) {
-                Log.info("All ranks: (@)", Rank.ranks.size);
-                Rank.ranks.each(rank -> Log.info("  @ / @", rank.id, rank.name));
-                return;
-            }
+        serverCommands.register("setrank", "<uuid> <rank>", "Set a player's rank.", args -> {
+            if (noData(args[0])) return;
 
             Rank rank = Find.rank(args[1]);
             if (notFound(rank, args[1])) return;
 
             Ranks.setRankNet(args[0], rank);
-            Log.info("Successful set rank of @ to @.", args[0], args[1]);
+            Log.info("Successful set rank of @ to @.", args[0], rank.name);
+        });
+
+        serverCommands.register("ranks", "List all ranks.", args -> {
+            Log.info("Ranks: (@)", Rank.ranks.size);
+            Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
     }
 }
