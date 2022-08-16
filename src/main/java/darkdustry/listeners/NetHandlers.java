@@ -2,9 +2,10 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.graphics.Color;
-import arc.graphics.Colors;
 import arc.struct.Seq;
 import arc.util.CommandHandler.*;
+import arc.util.Reflect;
+import arc.util.Strings;
 import arc.util.Time;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
@@ -18,7 +19,6 @@ import darkdustry.utils.Find;
 
 import java.util.Locale;
 
-import static arc.util.Strings.*;
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -37,7 +37,7 @@ public class NetHandlers {
         Command closest = null;
 
         for (Command command : clientCommands.getCommandList()) {
-            int dst = levenshtein(command.text, response.runCommand);
+            int dst = Strings.levenshtein(command.text, response.runCommand);
             if (dst < 3 && (closest == null || dst < minDst)) {
                 minDst = dst;
                 closest = command;
@@ -57,7 +57,7 @@ public class NetHandlers {
 
         Events.fire(new ConnectPacketEvent(con, packet));
 
-        String uuid = packet.uuid, usid = packet.usid, ip = con.address, name = fixName(packet.name);
+        String uuid = packet.uuid, usid = packet.usid, ip = con.address, name = Reflect.invoke(netServer, "fixName", new String[] {packet.name}, String.class);
         Locale locale = Find.locale(packet.locale = notNullElse(packet.locale, defaultLanguage));
 
         if (con.hasBegunConnecting || uuid == null || usid == null) {
@@ -145,43 +145,5 @@ public class NetHandlers {
         netServer.sendWorldData(player);
 
         Events.fire(new PlayerConnect(player));
-    }
-
-    private static String fixName(String name) {
-        name = name.trim().replace("\n", "").replace("\t", "");
-        if (name.equals("[") || name.equals("]")) return "";
-
-        for (int i = 0; i < name.length(); i++)
-            if (name.charAt(i) == '[' && i != name.length() - 1 && name.charAt(i + 1) != '[' && (i == 0 || name.charAt(i - 1) != '[')) {
-                String prev = name.substring(0, i);
-                String next = name.substring(i);
-                String result = checkColor(next);
-                name = prev + result;
-            }
-
-        StringBuilder result = new StringBuilder();
-        int curChar = 0;
-        while (curChar < name.length() && result.toString().getBytes(utf8).length < maxNameLength) result.append(name.charAt(curChar++));
-        return result.toString();
-    }
-
-    private static String checkColor(String str) {
-        for (int i = 1; i < str.length(); i++) {
-            if (str.charAt(i) != ']') continue;
-            String color = str.substring(1, i);
-
-            if (Colors.get(color.toUpperCase()) != null || Colors.get(color.toLowerCase()) != null) {
-                Color result = (Colors.get(color.toLowerCase()) == null ? Colors.get(color.toUpperCase()) : Colors.get(color.toLowerCase()));
-                if (result.a <= 0.8f) return str.substring(i + 1);
-            } else {
-                try {
-                    Color result = Color.valueOf(color);
-                    if (result.a <= 0.8f) return str.substring(i + 1);
-                } catch (Exception e) {
-                    return str;
-                }
-            }
-        }
-        return str;
     }
 }

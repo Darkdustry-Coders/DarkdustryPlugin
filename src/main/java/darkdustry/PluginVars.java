@@ -3,6 +3,7 @@ package darkdustry;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
+import darkdustry.features.votes.VoteKick;
 import net.dv8tion.jda.api.entities.Message;
 import darkdustry.components.Config;
 import darkdustry.components.Config.Gamemode;
@@ -31,6 +32,9 @@ public class PluginVars {
     /** Максимальное количество создаваемых юнитов. */
     public static final int maxSpawnAmount = 25;
 
+    /** Максимальное количество пропущенных волн. */
+    public static final int maxVnwAmount = 10;
+
     /** Максимальная площадь для заливки. */
     public static final int maxFillAmount = 512;
 
@@ -39,6 +43,9 @@ public class PluginVars {
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
+
+    /** Время, после которого будет загружена карта. */
+    public static final int mapLoadTime = 10;
 
     /** Список uuid игроков, просматривающих историю в данный момент. */
     public static final Seq<String> activeHistory = new Seq<>();
@@ -70,8 +77,11 @@ public class PluginVars {
     /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
 
-    /** Текущее голосование, всегда одно на весь сервер. */
+    /** Текущее голосование. */
     public static VoteSession vote;
+
+    /** Текущее голосование за кик игрока. */
+    public static VoteKick voteKick;
     
     /** Конфигурация сервера. */
     public static Config config;

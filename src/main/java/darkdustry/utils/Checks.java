@@ -4,6 +4,7 @@ import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.Log;
 import darkdustry.discord.SlashContext;
+import darkdustry.features.votes.VoteSession;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -56,11 +57,11 @@ public class Checks {
     // region Client
 
     public static boolean notFound(Player player, Map map) {
-        return check(map == null, player, "commands.nominate.map.not-found");
+        return check(map == null, player, "commands.map-not-found");
     }
 
     public static boolean notFound(Player player, Fi file) {
-        return check(file == null, player, "commands.nominate.load.not-found");
+        return check(file == null, player, "commands.save-not-found");
     }
 
     public static boolean notFound(Player player, Team team) {
@@ -107,16 +108,20 @@ public class Checks {
         return check(sign == 0, player, "commands.vote.incorrect-sign");
     }
 
-    public static boolean invalidAmount(Player player, String[] args) {
-        return check(args.length > 1 && !canParsePositiveInt(args[1]), player, "commands.not-int");
+    public static boolean invalidAmount(Player player, String[] args, int index) {
+        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int");
     }
 
-    public static boolean invalideTpAmount(Player player, String[] args) {
+    public static boolean invalidTpCoords(Player player, String[] args) {
         return check(!canParsePositiveInt(args[0]) || !canParsePositiveInt(args[1]), player, "commands.tp.incorrect-number-format");
     }
 
     public static boolean invalidFillAmount(Player player, String[] args) {
         return check(!canParsePositiveInt(args[1]) || !canParsePositiveInt(args[2]), player, "commands.fill.incorrect-number-format");
+    }
+
+    public static boolean invalidVnwAmount(Player player, int amount) {
+        return check(amount < 1 || amount > maxVnwAmount, player, "commands.vnw.limit", maxVnwAmount);
     }
 
     public static boolean invalidGiveAmount(Player player, int amount) {
@@ -135,20 +140,20 @@ public class Checks {
         return check(Math.PI * Mathf.sqr(radius) > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
     }
 
-    public static boolean isVoting(Player player) {
-        return check(vote != null, player, "commands.vote-already-started");
+    public static boolean isVoting(Player player, VoteSession session) {
+        return check(session != null, player, "commands.vote-already-started");
     }
 
-    public static boolean notVoting(Player player) {
-        return check(vote == null, player, "commands.no-voting");
+    public static boolean notVoting(Player player, VoteSession session) {
+        return check(session == null, player, "commands.no-voting");
     }
 
     public static boolean alreadyAdmin(Player player) {
         return check(player.admin, player, "commands.login.already-admin");
     }
 
-    public static boolean alreadyVoted(Player player) {
-        return check(vote.voted.containsKey(player.uuid()), player, "commands.already-voted");
+    public static boolean alreadyVoted(Player player, VoteSession session) {
+        return check(session.voted.containsKey(player.uuid()), player, "commands.already-voted");
     }
 
     public static boolean alreadySynced(Player player) {
@@ -167,7 +172,7 @@ public class Checks {
     }
 
     public static boolean notAdmin(SlashContext context) {
-        return check(!Bot.isAdmin(context.member), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+        return check(!Bot.isAdmin(context.event().getMember()), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {

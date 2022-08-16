@@ -27,7 +27,6 @@ public abstract class VoteSession {
 
     public void left(Player player) {
         voted.remove(player.uuid());
-        if (votes() >= votesRequired()) success();
     }
 
     public abstract void success();

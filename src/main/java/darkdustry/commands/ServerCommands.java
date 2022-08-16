@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.Core;
 import arc.struct.Seq;
-import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -26,19 +25,19 @@ public class ServerCommands {
 
     // Зарежу дарка
     // (C) xzxADIxzx, 2023 год вне н.э.
-    public ServerCommands(CommandHandler handler) {
-        handler.register("exit", "Exit the server application.", args -> {
+    public static void load() {
+        serverCommands.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
             System.exit(2);
         });
 
-        handler.register("stop", "Stop hosting the server.", args -> {
+        serverCommands.register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
             state.set(State.menu);
             Log.info("Stopped server.");
         });
 
-        handler.register("host", "[map] [mode]", "Start server on selected map.", args -> {
+        serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (isLaunched()) return;
 
             Gamemode mode;
@@ -79,13 +78,13 @@ public class ServerCommands {
             });
         });
 
-        handler.register("say", "<message...>", "Send a message to all players.", args -> {
+        serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
             Bot.sendMessage(Bot.botChannel, "Сервер » @", args[0]);
         });
 
-        handler.register("kick", "<username/id...>", "Kick a player.", args -> {
+        serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
             Player target = Find.player(args[0]);
             if (notFound(target, args)) return;
             
@@ -94,7 +93,7 @@ public class ServerCommands {
             sendToChat("events.server.kick", target.name);
         });
 
-        handler.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
+        serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
             PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -103,7 +102,7 @@ public class ServerCommands {
             Log.info("Player @ has been pardoned.", info.lastName);
         });
 
-        handler.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
+        serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             Player target = Find.player(args[0]);
             if (target != null) {
                 netServer.admins.banPlayer(target.uuid());
@@ -124,7 +123,7 @@ public class ServerCommands {
             });
         });
 
-        handler.register("unban", "<uuid/ip>", "Unban a player.", args -> {
+        serverCommands.register("unban", "<uuid/ip>", "Unban a player.", args -> {
             PlayerInfo info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -133,7 +132,7 @@ public class ServerCommands {
             Log.info("Player @ has been unbanned.", info.lastName);
         });
 
-        handler.register("bans", "List all banned IPs and IDs.", args -> {
+        serverCommands.register("bans", "List all banned IPs and IDs.", args -> {
             Seq<PlayerInfo> bannedIDs = netServer.admins.getBanned();
             if (bannedIDs.isEmpty())
                 Log.info("No ID-banned players have been found.");
@@ -155,7 +154,7 @@ public class ServerCommands {
             }
         });
 
-        handler.register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
+        serverCommands.register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
             Player target = Find.player(args[1]);
             PlayerInfo info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
@@ -183,7 +182,7 @@ public class ServerCommands {
             }
         });
 
-        handler.register("admins", "List all admins.", args -> {
+        serverCommands.register("admins", "List all admins.", args -> {
             Seq<PlayerInfo> admins = netServer.admins.getAdmins();
             if (admins.isEmpty())  Log.info("No admins have been found.");
             else {

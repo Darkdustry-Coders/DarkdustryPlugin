@@ -3,7 +3,7 @@
     "minGameVersion": "137",
     "displayName": "Darkdustry Plugin",
     "author": "Darkness6030 & xzxADIxzx",
-    "description": "Core plugin for Darkdustry servers.",
+    "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
     "version": "2.3",
     "main": "darkdustry.DarkdustryPlugin",
     "repo": "Darkdustry-Coders/DarkdustryPlugin"

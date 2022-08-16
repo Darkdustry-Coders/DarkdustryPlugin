@@ -2,7 +2,6 @@ package darkdustry.listeners;
 
 import arc.Events;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.components.Database.PlayerData;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
 import darkdustry.features.Effects;
@@ -93,8 +92,8 @@ public class PluginEvents {
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
-            if (vote instanceof VoteKick kick && kick.target == event.player) kick.success();
             if (vote != null) vote.left(event.player);
+            if (voteKick != null) voteKick.left(event.player);
         });
 
         Events.on(ServerLoadEvent.class, event -> Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен."));

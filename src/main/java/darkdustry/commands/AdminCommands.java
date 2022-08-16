@@ -1,7 +1,6 @@
 package darkdustry.commands;
 
 import arc.math.Mathf;
-import arc.util.CommandHandler;
 import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.content.Blocks;
@@ -27,7 +26,7 @@ import static darkdustry.utils.Utils.*;
 
 public class AdminCommands {
 
-    public AdminCommands(CommandHandler handler) {
+    public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.coloredName(), args[0])));
 
         if (!config.mode.isDefault()) return;
@@ -75,7 +74,7 @@ public class AdminCommands {
         });
 
         register("give", (args, player) -> {
-            if (invalidAmount(player, args)) return;
+            if (invalidAmount(player, args, 1)) return;
 
             Item item = Find.item(args[0]);
             if (notFound(player, item)) return;
@@ -104,7 +103,7 @@ public class AdminCommands {
         });
 
         register("spawn", (args, player) -> {
-            if (invalidAmount(player, args)) return;
+            if (invalidAmount(player, args, 1)) return;
 
             UnitType type = Find.unit(args[0]);
             if (notFound(player, type)) return;
@@ -120,7 +119,7 @@ public class AdminCommands {
         });
 
         register("tp", (args, player) -> {
-            if (invalideTpAmount(player, args)) return;
+            if (invalidTpCoords(player, args)) return;
             int x = Mathf.clamp(Strings.parseInt(args[0]), 0, world.width()), y = Mathf.clamp(Strings.parseInt(args[1]), 0, world.height());
 
             boolean spawnedNyCore = player.unit().spawnedByCore();
@@ -160,7 +159,7 @@ public class AdminCommands {
         });
     }
 
-    public void register(String name, CommandRunner<Player> runner) {
+    public static void register(String name, CommandRunner<Player> runner) {
         clientCommands.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
             if (player.admin) runner.accept(args, player);
             else bundled(player, "commands.permission-denied");

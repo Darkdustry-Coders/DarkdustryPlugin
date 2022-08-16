@@ -10,7 +10,10 @@ public class Cooldowns {
             "sync", 15L,
             "login", 900L,
             "votekick", 300L,
-            "nominate", 150L
+            "rtv", 60L,
+            "vnw", 60L,
+            "savemap", 180L,
+            "loadsave", 180L
     );
 
     public static boolean canRun(String uuid, String command) {

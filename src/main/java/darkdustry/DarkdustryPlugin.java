@@ -76,13 +76,15 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        new ClientCommands(clientCommands = handler);
-        new AdminCommands(handler);
+        clientCommands = handler;
+        ClientCommands.load();
+        AdminCommands.load();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        new ServerCommands(serverCommands = handler);
+        serverCommands = handler;
+        ServerCommands.load();
     }
 
     public static void info(String text, Object... values) {

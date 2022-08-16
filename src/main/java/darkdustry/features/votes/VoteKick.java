@@ -13,9 +13,15 @@ public class VoteKick extends VoteSession {
     public final Player target;
 
     public VoteKick(Player starter, Player target) {
-        super();
         this.starter = starter;
         this.target = target;
+    }
+
+    @Override
+    public void left(Player player) {
+        super.left(player);
+        sendToChat("commands.votekick.left", player.coloredName(), votes(), votesRequired());
+        if (target == player) success();
     }
 
     @Override
@@ -35,6 +41,12 @@ public class VoteKick extends VoteSession {
     public void fail() {
         stop();
         sendToChat("commands.votekick.failed", target.coloredName());
+    }
+
+    @Override
+    public void stop() {
+        voteKick = null;
+        end.cancel();
     }
 
     @Override

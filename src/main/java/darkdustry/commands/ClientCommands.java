@@ -1,7 +1,6 @@
 package darkdustry.commands;
 
 import arc.files.Fi;
-import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
 import mindustry.gen.Call;
@@ -17,6 +16,7 @@ import darkdustry.utils.PageIterator;
 
 import java.util.Locale;
 
+import static arc.util.Strings.parseInt;
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -27,7 +27,7 @@ import static darkdustry.utils.Utils.*;
 
 public class ClientCommands {
 
-    public ClientCommands(CommandHandler handler) {
+    public static void load() {
         register("help", PageIterator::commands);
 
         register("discord", (args, player) -> bundled(player, "commands.discord.link", discordServerUrl));
@@ -94,16 +94,11 @@ public class ClientCommands {
 
             StringBuilder builder = new StringBuilder(format("commands.rank.menu.content", locale, rank.tag, rank.localisedName(locale)));
             if (next != null && next.req != null)
-                builder.append(format("commands.rank.menu.next",
-                        locale,
-                        next.tag,
-                        next.localisedName(locale),
-                        data.playTime,
-                        next.req.playTime(),
-                        data.buildingsBuilt,
-                        next.req.buildingsBuilt(),
-                        data.gamesPlayed,
-                        next.req.gamesPlayed()));
+                builder.append(format("commands.rank.menu.next", locale,
+                        next.tag, next.localisedName(locale),
+                        data.playTime, next.req.playTime(),
+                        data.buildingsBuilt, next.req.buildingsBuilt(),
+                        data.gamesPlayed, next.req.gamesPlayed()));
 
             Call.menu(player.con, rankInfoMenu,
                     format("commands.rank.menu.header", locale, target.coloredName()),
@@ -117,73 +112,76 @@ public class ClientCommands {
                 host -> Call.connect(player.con, host.address, host.port),
                 exception -> bundled(player, "commands.hub.offline")));
 
+        register("votekick", (args, player) -> {
+            if (isVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
+
+            Player target = Find.player(args[0]);
+            if (notFound(player, target, args[0]) || invalidVoteTarget(player, target)) return;
+
+            voteKick = new VoteKick(player, target);
+            voteKick.vote(player, 1);
+            Cooldowns.run(player.uuid(), "votekick");
+        });
+
         register("vote", (args, player) -> {
-            if (notVoting(player) || alreadyVoted(player)) return;
-            if (vote instanceof VoteKick kick) {
-                if (kick.target == player) {
-                    bundled(player, "commands.vote.player-is-you");
-                    return;
-                } else if (kick.target.team() != player.team()) {
-                    bundled(player, "commands.vote.player-is-enemy");
-                    return;
-                }
+            if (notVoting(player, voteKick) || alreadyVoted(player, voteKick)) return;
+
+            if (voteKick.target == player) {
+                bundled(player, "commands.vote.player-is-you");
+                return;
+            } else if (voteKick.target.team() != player.team()) {
+                bundled(player, "commands.vote.player-is-enemy");
+                return;
             }
 
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
-            vote.vote(player, sign);
-        });
-
-        register("votekick", (args, player) -> {
-            if (isVoting(player) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
-            Player target = Find.player(args[0]);
-            if (notFound(player, target, args[0]) || invalidVoteTarget(player, target)) return;
-
-            vote = new VoteKick(player, target);
-            vote.vote(player, 1);
-            Cooldowns.run(player.uuid(), "votekick");
+            voteKick.vote(player, sign);
         });
 
         if (!config.mode.isDefault()) return;
 
         register("rtv", (args, player) -> {
-            if (isVoting(player)) return;
-            vote = new VoteRtv();
+            if (isVoting(player, vote) || isCooldowned(player, "rtv")) return;
+
+            Map map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+            if (notFound(player, map)) return;
+
+            vote = new VoteRtv(map);
             vote.vote(player, 1);
+            Cooldowns.run(player.uuid(), "rtv");
         });
 
         register("vnw", (args, player) -> {
-            if (isVoting(player)) return;
-            vote = new VoteVnw();
+            if (isVoting(player, vote) || isCooldowned(player, "vnw")) return;
+
+            if (invalidAmount(player, args, 0)) return;
+
+            int waves = args.length > 0 ? parseInt(args[0]) : 1;
+            if (invalidVnwAmount(player, waves)) return;
+
+            vote = new VoteVnw(waves);
             vote.vote(player, 1);
+            Cooldowns.run(player.uuid(), "vnw");
         });
 
-        register("nominate", (args, player) -> {
-            if (isVoting(player) || isCooldowned(player, "nominate")) return;
+        register("savemap", (args, player) -> {
+            if (isVoting(player, vote) || isCooldowned(player, "savemap")) return;
 
-            switch (args[0].toLowerCase()) {
-                case "map" -> {
-                    Map map = Find.map(args[1]);
-                    if (notFound(player, map)) return;
-                    vote = new VoteMap(map);
-                    vote.vote(player, 1);
-                }
-                case "save" -> {
-                    vote = new VoteSave(saveDirectory.child(args[1] + "." + saveExtension));
-                    vote.vote(player, 1);
-                }
-                case "load" -> {
-                    Fi save = Find.save(args[1]);
-                    if (notFound(player, save)) return;
-                    vote = new VoteLoad(save);
-                    vote.vote(player, 1);
-                }
-                default -> {
-                    bundled(player, "commands.nominate.incorrect-mode");
-                    return; // чтобы Cooldowns.run не вызвалось
-                }
-            }
-            Cooldowns.run(player.uuid(), "nominate");
+            vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
+            vote.vote(player, 1);
+            Cooldowns.run(player.uuid(), "savemap");
+        });
+
+        register("loadsave", (args, player) -> {
+            if (isVoting(player, vote) || isCooldowned(player, "loadsave")) return;
+
+            Fi save = Find.save(args[0]);
+            if (notFound(player, save)) return;
+
+            vote = new VoteLoad(save);
+            vote.vote(player, 1);
+            Cooldowns.run(player.uuid(), "loadsave");
         });
 
         register("maps", PageIterator::maps);
@@ -215,7 +213,7 @@ public class ClientCommands {
         });
     }
 
-    public void register(String name, CommandRunner<Player> runner) {
+    public static void register(String name, CommandRunner<Player> runner) {
         clientCommands.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
     }
 }

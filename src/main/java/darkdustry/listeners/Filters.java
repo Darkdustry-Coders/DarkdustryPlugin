@@ -9,6 +9,10 @@ import darkdustry.features.history.History;
 import darkdustry.features.history.RotateEntry;
 
 import static arc.util.Strings.*;
+import static darkdustry.PluginVars.vote;
+import static darkdustry.utils.Checks.alreadyVoted;
+import static darkdustry.utils.Checks.notVoting;
+import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.*;
 
 public class Filters {
@@ -19,6 +23,12 @@ public class Filters {
     }
 
     public static String chat(Player author, String text) {
+        int sign = voteChoice(text);
+        if (sign != 0 && !notVoting(player, vote) && !alreadyVoted(player, vote)) {
+            vote.vote(author, sign);
+            return null;
+        }
+
         Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
 
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);

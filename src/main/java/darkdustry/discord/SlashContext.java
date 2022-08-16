@@ -9,19 +9,7 @@ import java.awt.Color;
 
 import static arc.util.Strings.format;
 
-public class SlashContext {
-
-    public final SlashCommandInteractionEvent event;
-
-    public final Member member;
-    public final MessageChannel channel;
-
-    public SlashContext(SlashCommandInteractionEvent event) {
-        this.event = event;
-
-        this.member = event.getMember();
-        this.channel = event.getChannel();
-    }
+public record SlashContext(SlashCommandInteractionEvent event) {
 
     public OptionMapping getOption(String name) {
         return event.getOption(name);

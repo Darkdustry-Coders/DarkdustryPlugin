@@ -39,7 +39,7 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", context -> {
             if (isMenu(context)) return;
 
-            context.event.replyEmbeds(new EmbedBuilder()
+            context.event().replyEmbeds(new EmbedBuilder()
                     .setColor(Color.green)
                     .setTitle(":desktop: " + stripAll(Config.serverName.string()))
                     .addField("Игроков:", String.valueOf(Groups.player.size()), true)
@@ -92,7 +92,7 @@ public class DiscordCommands {
             if (!map.author().equals("unknown")) embed.setAuthor(map.author());
             if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
-            context.event.replyEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+            context.event().replyEmbeds(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
         }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.").queue();
 
         register("maps", "Список всех карт сервера.", PageIterator::maps).addOption(OptionType.INTEGER, "page", "Страница списка карт.", false).queue();
