@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Structs;
+import darkdustry.features.Ranks.Rank;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
@@ -55,6 +56,11 @@ public class Find {
     public static Block block(String name) {
         return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
+
+    public static Rank rank(String name) {
+        return canParsePositiveInt(name) ? Rank.ranks.get(parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
+    }
+
 
     public static Map map(String name) {
         Seq<Map> list = maps.customMaps();

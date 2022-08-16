@@ -27,17 +27,21 @@ public class Database {
     }
 
     public static PlayerData getPlayerData(String uuid) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.exists(uuid) ? gson.fromJson(jedis.get(uuid), PlayerData.class) : new PlayerData(uuid);
-        } catch (Exception ignored) {
-            return new PlayerData(uuid);
-        }
+        return hasPlayerData(uuid) ? gson.fromJson(jedisPool.getResource().get(uuid), PlayerData.class) : new PlayerData(uuid);
     }
 
     public static void setPlayerData(PlayerData data) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(data.uuid, gson.toJson(data));
         } catch (Exception ignored) {}
+    }
+
+    public static boolean hasPlayerData(String uuid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.exists(uuid);
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     public static class PlayerData {

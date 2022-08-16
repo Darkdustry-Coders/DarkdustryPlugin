@@ -12,6 +12,7 @@ import mindustry.maps.MapException;
 import mindustry.net.Administration.PlayerInfo;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
+import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 
 import static arc.Core.*;
@@ -189,6 +190,22 @@ public class ServerCommands {
                 Log.info("Admins: (@)", admins.size);
                 admins.each(admin -> Log.info("  @ / ID: @ / IP: @", admin.lastName, admin.id, admin.lastIP));
             }
+        });
+
+        serverCommands.register("rank", "<uuid> [rank]", "Set or get rank.", args -> {
+            if (notFound(args[0])) return;
+
+            if (args.length < 2) {
+                Log.info("All ranks: (@)", Rank.ranks.size);
+                Rank.ranks.each(rank -> Log.info("  @ / @", rank.id, rank.name));
+                return;
+            }
+
+            Rank rank = Find.rank(args[1]);
+            if (notFound(rank, args[1])) return;
+
+            Ranks.setRankNet(args[0], rank);
+            Log.info("Successful set rank of @ to @.", args[0], args[1]);
         });
     }
 }

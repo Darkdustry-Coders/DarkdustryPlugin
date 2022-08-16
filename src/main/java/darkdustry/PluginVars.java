@@ -26,6 +26,9 @@ public class PluginVars {
     /** Время, на которое игрок будет выгнан голосованием или через команду. */
     public static final long kickDuration = 2700000L;
 
+    /** Время, после которого будет загружена карта. */
+    public static final int mapLoadTime = 10;
+
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
@@ -46,9 +49,6 @@ public class PluginVars {
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
-
-    /** Время, после которого будет загружена карта. */
-    public static final int mapLoadTime = 10;
 
     /** Список uuid игроков, просматривающих историю в данный момент. */
     public static final Seq<String> activeHistory = new Seq<>();
