@@ -30,7 +30,7 @@ public class Icons {
             Team.blue.emoji = get("wet");
 
             content.items().each(item -> items += " " + get(item.name) + item.name);
-            content.units().each(unit -> units += " " + get(unit.name) + unit.name);
+            content.units().each(unit -> !unit.internal, unit -> units += " " + get(unit.name) + unit.name);
             Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);

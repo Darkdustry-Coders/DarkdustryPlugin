@@ -110,8 +110,4 @@ public class Utils {
     public static void kick(Player player, long duration, boolean showDisclaimer, String key, Object... values) {
         kick(player.con, duration, showDisclaimer, key, Find.locale(player.locale), values);
     }
-
-    public static void kick(Player player, boolean showDisclaimer, String key, Object... values) {
-        kick(player, 0, showDisclaimer, key, values);
-    }
 }

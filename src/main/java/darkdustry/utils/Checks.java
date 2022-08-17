@@ -83,7 +83,7 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(type == null, player, "commands.unit-not-found", units);
+        return check(type == null || type.internal, player, "commands.unit-not-found", units);
     }
 
     public static boolean notFound(Player player, Block block) {
