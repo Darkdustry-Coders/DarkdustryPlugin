@@ -84,9 +84,6 @@ public class PluginEvents {
         });
 
         Events.on(PlayerLeave.class, event -> {
-            cache.remove(event.player.uuid());
-            activeHistory.remove(event.player.uuid());
-
             Effects.onLeave(event.player);
             Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
 
@@ -94,6 +91,9 @@ public class PluginEvents {
 
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
+
+            cache.remove(event.player.uuid());
+            activeHistory.remove(event.player.uuid());
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
