@@ -15,7 +15,6 @@ public class VoteRtv extends VoteSession {
     public final Map target;
 
     public VoteRtv(Map target) {
-        super();
         this.target = target;
     }
 
