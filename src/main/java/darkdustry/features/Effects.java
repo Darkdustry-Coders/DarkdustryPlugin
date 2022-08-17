@@ -18,7 +18,7 @@ public class Effects {
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6;
 
     public static void load() {
-        pack1 = new FxPack(player -> on(Fx.greenBomb, player),        player -> on(Fx.greenLaserCharge, player), player -> on(Fx.regenSuppressSeek, player, 0f, Tmp.c1.randHue(), player.unit()));
+        pack1 = new FxPack(player -> on(Fx.greenBomb, player),        player -> on(Fx.greenLaserCharge, player), player -> on(Fx.freezing, player));
         pack2 = new FxPack(player -> on(Fx.dynamicSpikes, player, Mathf.random(40f, 120f), Color.lime),          player -> on(Fx.dynamicSpikes, player, Mathf.random(40f, 120f), Color.scarlet), player -> on(Fx.burning, player));
         pack3 = new FxPack(player -> on(Fx.scatheExplosion, player),  player -> on(Fx.scatheExplosion, player),  player -> on(Fx.electrified, player));
         pack4 = new FxPack(player -> on(Fx.instBomb, player),         player -> on(Fx.instBomb, player),         player -> on(Fx.shootPayloadDriver, player, player.unit().rotation - 180f, Color.white));
