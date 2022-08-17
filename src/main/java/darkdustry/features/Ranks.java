@@ -4,6 +4,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import darkdustry.features.Effects.FxPack;
 
 import java.util.Locale;
 
@@ -20,24 +21,24 @@ public class Ranks {
         player = new Rank() {{
             tag = "";
             name = "player";
-            effects = Effects.defaultPack;
+            effects = Effects.pack1;
 
             next = active = new Rank() {{
                 tag = "[accent]<[white]\uE800[]>[] ";
                 name = "active";
-                effects = Effects.defaultPack;
+                effects = Effects.pack2;
                 req = new Requirements(300, 25000, 20);
 
                 next = activePlus = new Rank() {{
                     tag = "[accent]<[white]\uE813[]>[] ";
                     name = "active+";
-                    effects = Effects.defaultPack;
+                    effects = Effects.pack2;
                     req = new Requirements(750, 50000, 40);
 
                     next = veteran = new Rank() {{
                         tag = "[accent]<[gold]\uE809[]>[] ";
                         name = "veteran";
-                        effects = Effects.defaultPack;
+                        effects = Effects.pack3;
                         req = new Requirements(1500, 100000, 100);
                     }};
                 }};
@@ -47,31 +48,31 @@ public class Ranks {
         contributor = new Rank() {{
             tag = "[accent]<[yellow]\uE80F[]>[] ";
             name = "contributor";
-            effects = Effects.proPack;
+            effects = Effects.pack4;
         }};
 
         developer = new Rank() {{
             tag = "[accent]<[#86dca2]\uE816[]>[] ";
             name = "developer";
-            effects = Effects.proPack;
+            effects = Effects.pack4;
         }};
 
         admin = new Rank() {{
             tag = "[accent]<[scarlet]\uE817[]>[] ";
             name = "admin";
-            effects = Effects.superPack;
+            effects = Effects.pack5;
         }};
 
         console = new Rank() {{
             tag = "[accent]<[#8d56b1]\uE85D[]>[] ";
             name = "console";
-            effects = Effects.superPack;
+            effects = Effects.pack5;
         }};
 
         owner = new Rank() {{
-            tag = "[accent]<[#195080]\uE810[]>[] ";
+            tag = "[accent]<[#0088ff]\uE810[]>[] ";
             name = "owner";
-            effects = Effects.superPack;
+            effects = Effects.pack5;
         }};
     }
 
@@ -100,7 +101,7 @@ public class Ranks {
         public int id;
         public String tag;
         public String name;
-        public Effects.EffectsPack effects;
+        public FxPack effects;
 
         public Requirements req;
         public Rank next;

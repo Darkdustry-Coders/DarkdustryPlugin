@@ -71,8 +71,8 @@ public class PluginEvents {
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             Effects.onJoin(event.player);
-            Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
 
+            Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
 
@@ -85,11 +85,11 @@ public class PluginEvents {
 
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
+
             Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
-
             sendToChat("events.player.leave", event.player.coloredName());
-
             Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
+
             app.post(Bot::updateBotStatus);
 
             cache.remove(event.player.uuid());
