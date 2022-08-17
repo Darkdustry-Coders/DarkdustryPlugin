@@ -24,9 +24,7 @@ public abstract class VoteSession {
         voted.put(player.uuid(), sign);
     }
 
-    public void left(Player player) {
-        voted.remove(player.uuid());
-    }
+    public abstract void left(Player player);
 
     public abstract void success();
 

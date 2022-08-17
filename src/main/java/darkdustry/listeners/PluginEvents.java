@@ -21,6 +21,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.features.Ranks.*;
 
 public class PluginEvents {
 
@@ -83,6 +84,9 @@ public class PluginEvents {
         });
 
         Events.on(PlayerLeave.class, event -> {
+            cache.remove(event.player.uuid());
+            activeHistory.remove(event.player.uuid());
+
             Effects.onLeave(event.player);
             Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
 

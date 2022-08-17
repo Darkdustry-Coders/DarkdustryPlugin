@@ -28,8 +28,8 @@ public class VoteRtv extends VoteSession {
 
     @Override
     public void left(Player player) {
-        super.left(player);
-        sendToChat("commands.rtv.left", player.coloredName(), votes(), votesRequired());
+        if (voted.remove(player.uuid()) != 0)
+            sendToChat("commands.rtv.left", player.coloredName(), votes(), votesRequired());
     }
 
     @Override

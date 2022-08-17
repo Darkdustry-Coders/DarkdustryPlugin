@@ -22,8 +22,8 @@ public class VoteVnw extends VoteSession {
 
     @Override
     public void left(Player player) {
-        super.left(player);
-        sendToChat("commands.vnw.left", player.coloredName(), votes(), votesRequired());
+        if (voted.remove(player.uuid()) != 0)
+            sendToChat("commands.vnw.left", player.coloredName(), votes(), votesRequired());
     }
 
     @Override

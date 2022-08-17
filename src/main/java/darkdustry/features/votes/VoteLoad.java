@@ -26,8 +26,8 @@ public class VoteLoad extends VoteSession {
 
     @Override
     public void left(Player player) {
-        super.left(player);
-        sendToChat("commands.loadsave.left", player.coloredName(), votes(), votesRequired());
+        if (voted.remove(player.uuid()) != 0)
+            sendToChat("commands.loadsave.left", player.coloredName(), votes(), votesRequired());
     }
 
     @Override
