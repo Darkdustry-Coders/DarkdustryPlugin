@@ -70,7 +70,7 @@ public class PluginEvents {
             PlayerData data = getPlayerData(event.player);
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
-            Effects.onJoin(event.player);
+            app.post(() -> Effects.onJoin(event.player));
 
             Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());

@@ -127,7 +127,7 @@ public class Checks {
     }
 
     public static boolean invalidFillAmount(Player player, String[] args) {
-        return check(!canParsePositiveInt(args[1]) || !canParsePositiveInt(args[2]), player, "commands.fill.incorrect-number-format");
+        return check(!canParsePositiveInt(args[0]) || !canParsePositiveInt(args[1]), player, "commands.fill.incorrect-number-format");
     }
 
     public static boolean invalidVnwAmount(Player player, int amount) {

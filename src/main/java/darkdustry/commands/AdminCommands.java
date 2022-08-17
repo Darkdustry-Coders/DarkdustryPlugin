@@ -96,8 +96,8 @@ public class AdminCommands {
             Player target = args.length > 1 ? Find.player(args[1]) : player;
             if (args.length > 1 && notFound(player, target, args[1])) return;
 
-            target.unit().spawnedByCore(true);
             target.unit(type.spawn(target.team(), target.x, target.y));
+            target.unit().spawnedByCore(true);
             bundled(target, "commands.unit.success", Icons.get(type.name));
             if (target != player) bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type.name));
         });
@@ -139,10 +139,10 @@ public class AdminCommands {
 
         register("fill", (args, player) -> {
             if (invalidFillAmount(player, args)) return;
-            int width = Strings.parseInt(args[1]), height = Strings.parseInt(args[2]);
+            int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
             if (invalidFillAmount(player, width, height)) return;
 
-            Block block = Find.block(args[0]);
+            Block block = Find.block(args[2]);
             if (notFound(player, block)) return;
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {
