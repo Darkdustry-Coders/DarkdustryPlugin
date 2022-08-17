@@ -72,7 +72,7 @@ public class Ranks {
         owner = new Rank() {{
             tag = "[accent]<[#0088ff]\uE810[]>[] ";
             name = "owner";
-            effects = Effects.pack5;
+            effects = Effects.pack6;
         }};
     }
 
