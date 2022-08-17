@@ -4,6 +4,7 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.math.geom.Vec2;
 import arc.util.Tmp;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
@@ -23,7 +24,7 @@ public class Effects {
         pack3 = new FxPack(player -> on(Fx.scatheExplosion, player),  player -> on(Fx.scatheExplosion, player),  player -> on(Fx.electrified, player));
         pack4 = new FxPack(player -> on(Fx.instBomb, player),         player -> on(Fx.instBomb, player),         player -> on(Fx.shootPayloadDriver, player, player.unit().rotation - 180f, Color.white));
         pack5 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player),         player -> {
-            if (Mathf.chance(0.1)) on(Fx.chainLightning, player, 0f, Tmp.c1.randHue(), player);
+            if (Mathf.chance(0.1)) on(Fx.chainLightning, player, 0f, Tmp.c1.randHue(), new Vec2().set(player));
         });
         pack6 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player), player -> on(Fx.regenSuppressSeek, player, 0f, Color.white, player));
     }
