@@ -88,6 +88,6 @@ public class MenuHandler {
         for (int i = 0; i < buttons.length; i++)
             for (int j = 0; j < buttons[i].length; j++)
                 buttons[i][j] = get(buttons[i][j], locale);
-        Call.menu(player.con, menu, format(title, titleObject), format(content, contentObjects), buttons);
+        Call.menu(player.con, menu, format(title, locale, titleObject), format(content, locale, contentObjects), buttons);
     }
 }
