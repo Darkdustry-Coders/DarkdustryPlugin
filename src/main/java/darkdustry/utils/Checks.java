@@ -63,6 +63,10 @@ public class Checks {
         return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
     }
 
+    public static boolean invalidAmount(String[] args, int index) {
+        return check(args.length > index && !canParsePositiveInt(args[index]), "Значение должно быть числом!");
+    }
+
     // endregion
     // region Client
 

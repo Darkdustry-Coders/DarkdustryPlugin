@@ -3,6 +3,9 @@ package darkdustry.commands;
 import arc.Core;
 import arc.struct.Seq;
 import arc.util.Log;
+import arc.util.Strings;
+import darkdustry.components.Database;
+import darkdustry.components.Database.PlayerData;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
@@ -215,8 +218,25 @@ public class ServerCommands {
             Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
 
-        serverCommands.register("setstats", "Set a player's stats.", args -> {
-            // TODO
+        serverCommands.register("setstats", "<uuid> <playtime/buildings/games> <value>", "Set a player's stats.", args -> {
+            if (noData(args[0]) || invalidAmount(args, 2)) return;
+
+            // TODO пофикмить, протестить
+
+            PlayerData data = Database.getPlayerData(args[0]);
+            int value = Strings.parseInt(args[2]);
+
+            switch (args[1].toLowerCase()) {
+                case "playtime" -> data.playTime = value;
+                case "buildings" -> data.buildingsBuilt = value;
+                case "games" -> data.gamesPlayed = value;
+                default -> {
+                    Log.err(""); // TODO придумать норм ошибку
+                    return;
+                }
+            }
+
+            Database.setPlayerData(data);
         });
     }
 }
