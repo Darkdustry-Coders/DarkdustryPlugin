@@ -41,6 +41,6 @@ public class VoteRtv extends VoteSession {
     @Override
     public void fail() {
         stop();
-        sendToChat("commands.rtv.failed");
+        sendToChat("commands.rtv.failed", target.name());
     }
 }

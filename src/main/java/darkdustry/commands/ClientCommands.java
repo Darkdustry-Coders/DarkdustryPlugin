@@ -116,7 +116,7 @@ public class ClientCommands {
             if (isVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
 
             Player target = Find.player(args[0]);
-            if (notFound(player, target, args[0]) || invalidVoteTarget(player, target)) return;
+            if (notFound(player, target, args[0]) || invalidVotekickTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);
             voteKick.vote(player, 1);
@@ -126,13 +126,7 @@ public class ClientCommands {
         register("vote", (args, player) -> {
             if (notVoting(player, voteKick) || alreadyVoted(player, voteKick)) return;
 
-            if (voteKick.target == player) {
-                bundled(player, "commands.vote.player-is-you");
-                return;
-            } else if (voteKick.target.team() != player.team()) {
-                bundled(player, "commands.vote.player-is-enemy");
-                return;
-            }
+            if (invalidVoteTarget(player, voteKick.target)) return;
 
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
@@ -189,8 +183,7 @@ public class ClientCommands {
         register("saves", PageIterator::saves);
 
         register("history", (args, player) -> {
-            if (activeHistory.remove(player.uuid()))
-                bundled(player, "commands.history.disabled");
+            if (activeHistory.remove(player.uuid())) bundled(player, "commands.history.disabled");
             else {
                 activeHistory.add(player.uuid());
                 bundled(player, "commands.history.enabled");

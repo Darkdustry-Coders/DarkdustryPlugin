@@ -110,8 +110,12 @@ public class Checks {
         return check(!Config.enableVotekick.bool(), player, "commands.votekick.disabled");
     }
 
-    public static boolean invalidVoteTarget(Player player, Player target) {
+    public static boolean invalidVotekickTarget(Player player, Player target) {
         return check(target == player, player, "commands.votekick.player-is-you") || check(target.admin, player, "commands.votekick.player-is-admin") || check(target.team() != player.team(), player, "commands.votekick.player-is-enemy");
+    }
+
+    public static boolean invalidVoteTarget(Player player, Player target) {
+        return check(target == player, "commands.vote.player-is-you") || check(target.team() != player.team(), player, "commands.vote.player-is-enemy");
     }
 
     public static boolean invalidVoteSign(Player player, int sign) {

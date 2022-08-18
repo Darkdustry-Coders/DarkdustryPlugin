@@ -18,7 +18,7 @@ import static darkdustry.components.Config.Gamemode.*;
 public class PluginVars {
 
     /** Необходимое количество игроков для успешного завершения голосования. */
-    public static final float voteRatio = 0.6f;
+    public static final float voteRatio = 0.5f;
 
     /** Время, после которого голосование автоматически завершится. */
     public static final float voteDuration = 50f;
@@ -60,7 +60,7 @@ public class PluginVars {
     public static final String serverIp = "darkdustry.tk";
 
     /** Ссылка на наш Discord сервер */
-    public static final String discordServerUrl = "discord.gg/uDPPVN6V3E";
+    public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
 
     /** Ссылка на API переводчика. */
     public static final String translatorApiUrl = "https://translo.p.rapidapi.com/api/v3/translate", translatorApiHost = "translo.p.rapidapi.com";

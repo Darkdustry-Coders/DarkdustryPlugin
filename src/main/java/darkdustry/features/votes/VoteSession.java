@@ -40,6 +40,6 @@ public abstract class VoteSession {
     }
 
     public int votesRequired() {
-        return Mathf.ceil(Groups.player.size() * voteRatio);
+        return Groups.player.size() > 2 ? Mathf.ceil(Groups.player.size() * voteRatio) : Groups.player.size();
     }
 }
