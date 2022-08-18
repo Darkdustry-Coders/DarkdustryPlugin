@@ -1,9 +1,10 @@
 {
-  "name": "darkdustry-plugin",
-  "displayName": "Darkdustry Plugin",
-  "description": "Core plugin for Darkdustry servers.",
-  "author": "Darkness6030",
-  "version": "2.1",
-  "minGameVersion": "135",
-  "main": "pandorum.PandorumPlugin"
+    "name": "darkdustry-plugin",
+    "minGameVersion": "137",
+    "displayName": "Darkdustry Plugin",
+    "author": "Darkness6030 & xzxADIxzx",
+    "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
+    "version": "2.3",
+    "main": "darkdustry.DarkdustryPlugin",
+    "repo": "Darkdustry-Coders/DarkdustryPlugin"
 }
