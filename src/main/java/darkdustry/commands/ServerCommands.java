@@ -216,7 +216,7 @@ public class ServerCommands {
         });
 
         serverCommands.register("setstats", "Set a player's stats.", args -> {
-
+            // TODO
         });
     }
 }
