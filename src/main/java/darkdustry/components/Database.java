@@ -28,11 +28,7 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         try (Jedis jedis = jedisPool.getResource()) {
-            if (jedis.exists(uuid)) {
-                PlayerData data = gson.fromJson(jedis.get(uuid), PlayerData.class);
-                data.uuid = uuid;
-                return data;
-            }
+            if (jedis.exists(uuid)) return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception ignored) {}
 
         return new PlayerData(uuid);

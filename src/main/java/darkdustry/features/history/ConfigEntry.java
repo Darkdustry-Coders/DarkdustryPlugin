@@ -8,6 +8,7 @@ import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.Block;
+import mindustry.world.blocks.logic.CanvasBlock;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
@@ -79,6 +80,10 @@ public class ConfigEntry implements HistoryEntry {
 
         if (block instanceof LogicBlock) {
             return format("history.config.code", locale, name, get(block.name), date);
+        }
+
+        if (block instanceof CanvasBlock) {
+            return format("history.config.image", locale, name, get(block.name), date);
         }
 
         return format("history.config.default", locale, name, get(block.name), date);
