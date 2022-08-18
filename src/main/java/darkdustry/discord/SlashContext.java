@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.awt.Color;
 
@@ -15,31 +16,31 @@ public record SlashContext(SlashCommandInteractionEvent event) {
         return event.getOption(name);
     }
 
-    public void sendEmbed(MessageEmbed embed) {
-        event.replyEmbeds(embed).queue();
+    public ReplyCallbackAction sendEmbed(MessageEmbed embed) {
+        return event.replyEmbeds(embed);
     }
 
-    public void success(String title, String text, Object... args) {
-        sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.green).build());
+    public ReplyCallbackAction success(String title, String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.green).build());
     }
 
-    public void success(String text, Object... args) {
-        sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.green).build());
+    public ReplyCallbackAction success(String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.green).build());
     }
 
-    public void info(String title, String text, Object... args) {
-        sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.yellow).build());
+    public ReplyCallbackAction info(String title, String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.yellow).build());
     }
 
-    public void info(String text, Object... args) {
-        sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.yellow).build());
+    public ReplyCallbackAction info(String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.yellow).build());
     }
 
-    public void error(String title, String text, Object... args) {
-        sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.red).build());
+    public ReplyCallbackAction error(String title, String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().addField(title, format(text, args), true).setColor(Color.red).build());
     }
 
-    public void error(String text, Object... args) {
-        sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.red).build());
+    public ReplyCallbackAction error(String text, Object... args) {
+        return sendEmbed(new EmbedBuilder().setTitle(format(text, args)).setColor(Color.red).build());
     }
 }

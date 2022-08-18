@@ -14,6 +14,7 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
 import mindustry.net.Administration.PlayerInfo;
+import mindustry.net.Packets.KickReason;
 
 import static arc.Core.app;
 import static arc.Core.settings;
@@ -33,7 +34,10 @@ public class ServerCommands {
     public static void load() {
         serverCommands.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
-            System.exit(2);
+
+            netServer.kickAll(KickReason.serverRestarting);
+            Bot.exit();
+            Core.app.exit();
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
@@ -209,6 +213,10 @@ public class ServerCommands {
         serverCommands.register("ranks", "List all ranks.", args -> {
             Log.info("Ranks: (@)", Rank.ranks.size);
             Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
+        });
+
+        serverCommands.register("setstats", "Set a player's stats.", args -> {
+
         });
     }
 }

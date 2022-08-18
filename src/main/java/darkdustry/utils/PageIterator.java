@@ -100,7 +100,7 @@ public class PageIterator {
         int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
-            context.error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages);
+            context.error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages).queue();
             return;
         }
 
@@ -112,7 +112,7 @@ public class PageIterator {
                 .setColor(Color.cyan)
                 .setTitle(header.get(content.size))
                 .setDescription(builder.toString())
-                .setFooter(Strings.format("Страница @ / @", page, pages)).build());
+                .setFooter(Strings.format("Страница @ / @", page, pages)).build()).queue();
     }
 
     // endregion

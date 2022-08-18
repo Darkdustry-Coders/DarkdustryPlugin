@@ -54,6 +54,10 @@ public class Bot {
         }
     }
 
+    public static void exit() {
+        jda.shutdownNow();
+    }
+
     public static void sendMessageToGame(Member member, Message message) {
         DarkdustryPlugin.discord("@: @", member.getEffectiveName(), message.getContentDisplay());
 

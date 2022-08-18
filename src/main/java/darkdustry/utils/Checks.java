@@ -210,7 +210,7 @@ public class Checks {
 
     public static boolean notMap(SlashContext context, Fi file) {
         return check(!SaveIO.isSaveValid(file), () -> {
-            context.error(":no_entry_sign: Файл поврежден или не является картой!");
+            context.error(":no_entry_sign: Файл поврежден или не является картой!").queue();
             file.delete();
         });
     }
@@ -232,7 +232,7 @@ public class Checks {
     }
 
     private static boolean check(boolean result, SlashContext context, String... values) {
-        return check(result, () -> context.error(values[0], values[1]));
+        return check(result, () -> context.error(values[0], values[1]).queue());
     }
 
     // endregion
