@@ -10,9 +10,9 @@ repositories {
 }
 
 dependencies {
-    val boobs = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<String, String>
-    val mindustryVersion = boobs["minGameVersion"]
-    project.version = "2.3"
+    val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<String, String>
+    val mindustryVersion = json["minGameVersion"]
+    project.version = json["version"]
 
     compileOnly("com.github.Anuken.Arc:arc-core:$mindustryVersion")
     compileOnly("com.github.Anuken.Mindustry:core:$mindustryVersion")
