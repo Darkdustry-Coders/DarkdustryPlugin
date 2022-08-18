@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     java
 }
@@ -8,7 +10,8 @@ repositories {
 }
 
 dependencies {
-    val mindustryVersion = "v137"
+    val boobs = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<String, String>
+    val mindustryVersion = boobs["minGameVersion"]
     project.version = "2.3"
 
     compileOnly("com.github.Anuken.Arc:arc-core:$mindustryVersion")
@@ -23,10 +26,6 @@ dependencies {
 tasks.jar {
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-    /*from(resources) {
-        include("plugin.json")
-    }*/
 }
 
 tasks.withType<JavaCompile> {
