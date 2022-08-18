@@ -3,7 +3,10 @@ package darkdustry.commands;
 import arc.Core;
 import arc.struct.Seq;
 import arc.util.Log;
-import darkdustry.components.Database;
+import darkdustry.discord.Bot;
+import darkdustry.features.Ranks;
+import darkdustry.features.Ranks.Rank;
+import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.gen.Groups;
@@ -11,23 +14,17 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.maps.MapException;
 import mindustry.net.Administration.PlayerInfo;
-import darkdustry.discord.Bot;
-import darkdustry.features.Ranks;
-import darkdustry.features.Ranks.Rank;
-import darkdustry.utils.Find;
-import redis.clients.jedis.Jedis;
 
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static arc.Core.*;
-import static darkdustry.components.Database.jedisPool;
-import static darkdustry.components.Database.setPlayerData;
-import static mindustry.Vars.*;
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
+import static arc.Core.app;
+import static arc.Core.settings;
+import static darkdustry.PluginVars.kickDuration;
+import static darkdustry.PluginVars.serverCommands;
+import static darkdustry.components.Bundle.bundled;
+import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.kick;
+import static darkdustry.utils.Utils.notNullElse;
+import static mindustry.Vars.*;
 
 public class ServerCommands {
 
@@ -212,38 +209,6 @@ public class ServerCommands {
         serverCommands.register("ranks", "List all ranks.", args -> {
             Log.info("Ranks: (@)", Rank.ranks.size);
             Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
-        });
-
-        serverCommands.register("reformat-db", "Testing only", args -> {
-            try (Jedis jedis = jedisPool.getResource()) {
-                Set<String> keys = jedis.keys("*");
-                if (keys.size() == 0) {
-                    return;
-                }
-
-                AtomicInteger correct = new AtomicInteger();
-                AtomicInteger incorrect = new AtomicInteger();
-
-                keys.forEach(key -> {
-                    try {
-                        if ("AAAAAAAAAAAAAAAAZSLfaQ==".length() == key.length()) {
-                            Database.PlayerData data = gson.fromJson(jedis.get(key), Database.PlayerData.class);
-                            data.uuid = key;
-                            data.playTime = data.playTime / 60;
-                            setPlayerData(data);
-                            correct.getAndIncrement();
-                        } else {
-                            jedis.del(key);
-                            incorrect.getAndIncrement();
-                        }
-                    } catch (Exception ignored) {
-                        Log.err("Error.");
-                    }
-                });
-
-                Log.info("Found @ UUIDs, @ correct, @ incorrect.", keys.size(), correct.get(), incorrect.get());
-                Log.info("DATABASE CONVERTED.");
-            }
         });
     }
 }
