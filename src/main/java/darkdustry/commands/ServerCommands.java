@@ -238,6 +238,7 @@ public class ServerCommands {
             }
 
             Database.setPlayerData(data);
+            Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
         });
     }
 }
