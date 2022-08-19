@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<String, String>
+    val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     val mindustryVersion = json["minGameVersion"]
     project.version = json["version"]!!
 

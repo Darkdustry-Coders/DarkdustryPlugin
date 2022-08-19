@@ -218,7 +218,7 @@ public class ServerCommands {
             if (noData(args[0])) return;
             PlayerData data = Database.getPlayerData(args[0]);
 
-            if (args.length < 2) {
+            if (args.length < 3) {
                 Log.info("Player: @" + args[0]);
                 Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 return;
@@ -237,7 +237,7 @@ public class ServerCommands {
                 }
             }
 
-            Database.setPlayerData(data); // TODO: дарк, у меня бд нету, я протестить не могу
+            Database.setPlayerData(data);
         });
     }
 }
