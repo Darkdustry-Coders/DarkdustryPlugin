@@ -29,8 +29,6 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.coloredName(), args[0])));
 
-        if (!config.mode.isDefault()) return;
-
         register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.menu.header", "commands.artv.menu.content",
                 new String[][] {{"ui.menus.yes", "ui.menus.no"}}));
 
