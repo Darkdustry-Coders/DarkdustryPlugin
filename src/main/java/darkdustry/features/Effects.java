@@ -15,15 +15,16 @@ import static mindustry.Vars.state;
 
 public class Effects {
 
-    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6;
+    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
 
     public static void load() {
-        pack1 = new FxPack(player -> on(Fx.greenBomb, player),        player -> on(Fx.greenLaserCharge, player), player -> on(Fx.freezing, player));
-        pack2 = new FxPack(player -> on(Fx.dynamicSpikes, player, Mathf.random(40f, 120f), Color.lime),          player -> on(Fx.dynamicSpikes, player, Mathf.random(40f, 120f), Color.scarlet), player -> on(Fx.burning, player));
-        pack3 = new FxPack(player -> on(Fx.scatheExplosion, player),  player -> on(Fx.scatheExplosion, player),  player -> on(Fx.electrified, player));
-        pack4 = new FxPack(player -> on(Fx.instBomb, player),         player -> on(Fx.instBomb, player),         player -> on(Fx.shootPayloadDriver, player, player.unit().rotation - 180f, Color.white));
-        pack5 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player),         player -> on(Fx.chainLightning, player, 0f, Tmp.c1.randHue(), player.unit()));
-        pack6 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player),         player -> on(Fx.regenSuppressSeek, player, 0f, Color.white, player.unit()));
+        pack1 = new FxPack(p -> on(Fx.greenBomb, p),                                          p -> on(Fx.greenLaserCharge, p),                                      p -> on(Fx.freezing, p));
+        pack2 = new FxPack(p -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), Color.lime), p -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), Color.scarlet), p -> on(Fx.burning, p));
+        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),                                     p -> on(Fx.titanExplosion, p),                                        p -> on(Fx.melting, p));
+        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),                                    p -> on(Fx.scatheExplosion, p),                                       p -> on(Fx.electrified, p));
+        pack5 = new FxPack(p -> on(Fx.instBomb, p),                                           p -> on(Fx.instBomb, p),                                              p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f, Color.white));
+        pack6 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.smeltsmoke, p, 0f, Color.red));
+        pack7 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.chainLightning, p, 0f, Tmp.c1.randHue(), p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {

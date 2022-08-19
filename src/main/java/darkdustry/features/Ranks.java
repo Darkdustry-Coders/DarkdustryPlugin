@@ -32,13 +32,13 @@ public class Ranks {
                 next = activePlus = new Rank() {{
                     tag = "[accent]<[white]\uE813[]>[] ";
                     name = "active+";
-                    effects = Effects.pack2;
+                    effects = Effects.pack3;
                     req = new Requirements(750, 50000, 40);
 
                     next = veteran = new Rank() {{
                         tag = "[accent]<[gold]\uE809[]>[] ";
                         name = "veteran";
-                        effects = Effects.pack3;
+                        effects = Effects.pack4;
                         req = new Requirements(1500, 100000, 100);
                     }};
                 }};
@@ -48,31 +48,31 @@ public class Ranks {
         contributor = new Rank() {{
             tag = "[accent]<[yellow]\uE80F[]>[] ";
             name = "contributor";
-            effects = Effects.pack4;
+            effects = Effects.pack5;
         }};
 
         developer = new Rank() {{
             tag = "[accent]<[#86dca2]\uE816[]>[] ";
             name = "developer";
-            effects = Effects.pack4;
+            effects = Effects.pack5;
         }};
 
         admin = new Rank() {{
             tag = "[accent]<[scarlet]\uE817[]>[] ";
             name = "admin";
-            effects = Effects.pack5;
+            effects = Effects.pack6;
         }};
 
         console = new Rank() {{
             tag = "[accent]<[#8d56b1]\uE85D[]>[] ";
             name = "console";
-            effects = Effects.pack5;
+            effects = Effects.pack6;
         }};
 
         owner = new Rank() {{
             tag = "[accent]<[#0088ff]\uE810[]>[] ";
             name = "owner";
-            effects = Effects.pack6;
+            effects = Effects.pack7;
         }};
     }
 
