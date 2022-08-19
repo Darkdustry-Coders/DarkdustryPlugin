@@ -15,7 +15,7 @@ public class Ranks {
 
     public static final ObjectMap<String, Rank> cache = new ObjectMap<>();
 
-    public static Rank player, active, activePlus, veteran, contributor, developer, admin, console, owner;
+    public static Rank player, active, activePlus, veteran, goldenPlayer, contributor, developer, admin, console, owner, none;
 
     public static void load() {
         player = new Rank() {{
@@ -40,6 +40,14 @@ public class Ranks {
                         name = "veteran";
                         effects = Effects.pack4;
                         req = new Requirements(1500, 100000, 100);
+                        
+                        // эффекты поменять, если что мог сделать что то неправильно
+                        next = GoldenPlayer = new Rank() {{
+                            tag = "[accent]<[gold]\ue86e[]>[] ";
+                            name = "Golden player"
+                                Effect.pack4;
+                            req = new Requirements(6000, 300000, 200);
+                        }};
                     }};
                 }};
             }};
@@ -64,7 +72,7 @@ public class Ranks {
         }};
 
         console = new Rank() {{
-            tag = "[accent]<[#8d56b1]\uE85D[]>[] ";
+            tag = "[accent]<[#8d56b1]\ue87c[]>[] ";
             name = "console";
             effects = Effects.pack6;
         }};
@@ -73,6 +81,12 @@ public class Ranks {
             tag = "[accent]<[#0088ff]\uE810[]>[] ";
             name = "owner";
             effects = Effects.pack7;
+        }};
+        
+        none = new Rank() {{
+            tag = "";
+            name = "";
+            effect = pack8;
         }};
     }
 
