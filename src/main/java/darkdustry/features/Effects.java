@@ -15,7 +15,7 @@ import static mindustry.Vars.state;
 
 public class Effects {
 
-    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
+    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8;
 
     public static void load() {
         pack1 = new FxPack(p -> on(Fx.greenBomb, p),                                          p -> on(Fx.greenLaserCharge, p),                                      p -> on(Fx.freezing, p));
@@ -25,6 +25,7 @@ public class Effects {
         pack5 = new FxPack(p -> on(Fx.instBomb, p),                                           p -> on(Fx.instBomb, p),                                              p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f, Color.white));
         pack6 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.smeltsmoke, p, 0f, Color.red));
         pack7 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.chainLightning, p, 0f, Tmp.c1.randHue(), p.unit()));
+        pack1 = new FxPack(p -> on(Fx.none, p),                                               p -> on(Fx.none, p),                                                  p -> on(Fx.none, p));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
