@@ -64,7 +64,7 @@ public class Checks {
     }
 
     public static boolean invalidAmount(String[] args, int index) {
-        return check(args.length > index && !canParsePositiveInt(args[index]), "Значение должно быть числом!");
+        return check(args.length <= index || !canParsePositiveInt(args[index]), "Value must be a number!");
     }
 
     // endregion

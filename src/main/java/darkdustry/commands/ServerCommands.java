@@ -19,15 +19,11 @@ import mindustry.maps.MapException;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 
-import static arc.Core.app;
-import static arc.Core.settings;
-import static darkdustry.PluginVars.kickDuration;
-import static darkdustry.PluginVars.serverCommands;
-import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Bundle.sendToChat;
+import static arc.Core.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.kick;
-import static darkdustry.utils.Utils.notNullElse;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class ServerCommands {
@@ -218,12 +214,17 @@ public class ServerCommands {
             Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
 
-        serverCommands.register("setstats", "<uuid> <playtime/buildings/games> <value>", "Set a player's stats.", args -> {
-            if (noData(args[0]) || invalidAmount(args, 2)) return;
-
-            // TODO пофикмить, протестить
-
+        serverCommands.register("stats", "<uuid> [playtime/buildings/games] [value]", "Set a player's stats.", args -> {
+            if (noData(args[0])) return;
             PlayerData data = Database.getPlayerData(args[0]);
+
+            if (args.length < 2) {
+                Log.info("Player: @" + args[0]);
+                Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                return;
+            }
+
+            if (invalidAmount(args, 2)) return;
             int value = Strings.parseInt(args[2]);
 
             switch (args[1].toLowerCase()) {
@@ -231,12 +232,12 @@ public class ServerCommands {
                 case "buildings" -> data.buildingsBuilt = value;
                 case "games" -> data.gamesPlayed = value;
                 default -> {
-                    Log.err(""); // TODO придумать норм ошибку
+                    Log.err("Second argument must be playtime, buildings or games.");
                     return;
                 }
             }
 
-            Database.setPlayerData(data);
+            Database.setPlayerData(data); // TODO: дарк, у меня бд нету, я протестить не могу
         });
     }
 }
