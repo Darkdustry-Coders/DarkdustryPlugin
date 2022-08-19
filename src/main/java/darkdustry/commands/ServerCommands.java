@@ -219,7 +219,7 @@ public class ServerCommands {
             PlayerData data = Database.getPlayerData(args[0]);
 
             if (args.length < 3) {
-                Log.info("Player: @" + args[0]);
+                Log.info("Player: @", args[0]);
                 Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 return;
             }
