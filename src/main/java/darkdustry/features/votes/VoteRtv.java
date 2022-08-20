@@ -4,7 +4,7 @@ import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 
-import static darkdustry.PluginVars.mapLoadTime;
+import static darkdustry.PluginVars.mapLoadDelay;
 import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.utils.Utils.reloadWorld;
 import static mindustry.Vars.state;
@@ -34,8 +34,8 @@ public class VoteRtv extends VoteSession {
     @Override
     public void success() {
         stop();
-        sendToChat("commands.rtv.passed", target.name(), mapLoadTime);
-        Timer.schedule(() -> reloadWorld(() -> world.loadMap(target, target.applyRules(state.rules.mode()))), mapLoadTime);
+        sendToChat("commands.rtv.passed", target.name(), mapLoadDelay);
+        Timer.schedule(() -> reloadWorld(() -> world.loadMap(target, target.applyRules(state.rules.mode()))), mapLoadDelay);
     }
 
     @Override

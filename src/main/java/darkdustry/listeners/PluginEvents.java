@@ -2,6 +2,7 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
+import arc.util.Time;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
 import darkdustry.features.Effects;
@@ -117,9 +118,15 @@ public class PluginEvents {
             if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
         });
 
+        Events.on(ServerLoadEvent.class, event -> serverLoadTime = Time.millis());
+
         Events.on(WorldLoadEvent.class, event -> {
+            mapLoadTime = Time.millis();
+
             activeHistory.clear();
             History.clear();
         });
+
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
     }
 }

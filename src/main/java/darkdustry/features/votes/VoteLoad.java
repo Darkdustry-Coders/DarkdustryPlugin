@@ -5,7 +5,7 @@ import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
-import static darkdustry.PluginVars.mapLoadTime;
+import static darkdustry.PluginVars.mapLoadDelay;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Utils.*;
 
@@ -33,8 +33,8 @@ public class VoteLoad extends VoteSession {
     @Override
     public void success() {
         stop();
-        sendToChat("commands.loadsave.passed", target.nameWithoutExtension(), mapLoadTime);
-        Timer.schedule(() -> reloadWorld(() -> SaveIO.load(target)), mapLoadTime);
+        sendToChat("commands.loadsave.passed", target.nameWithoutExtension(), mapLoadDelay);
+        Timer.schedule(() -> reloadWorld(() -> SaveIO.load(target)), mapLoadDelay);
     }
 
     @Override

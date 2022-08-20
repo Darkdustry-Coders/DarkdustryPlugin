@@ -27,7 +27,7 @@ public class PluginVars {
     public static final long kickDuration = 2700000L;
 
     /** Время, после которого будет загружена карта. */
-    public static final int mapLoadTime = 10;
+    public static final int mapLoadDelay = 10;
 
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
@@ -94,6 +94,9 @@ public class PluginVars {
 
     /** Текстовый список всех предметов, юнитов и команд. */
     public static String items, units, teams;
+
+    /** Точное время запуска сервера и загрузки последней карты. */
+    public static long serverLoadTime, mapLoadTime;
 
     /** Кэшированные хэндлеры, которые использовались для регистрации команд. */
     public static CommandHandler clientCommands, serverCommands;

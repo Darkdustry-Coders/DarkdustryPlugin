@@ -55,7 +55,6 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addChatFilter(Filters::chat);
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        Timer.schedule(() -> Groups.player.each(player -> player.unit().moving(), Effects::onMove), 0f, 0.1f);
         Timer.schedule(() -> Groups.player.each(player -> {
             PlayerData data = getPlayerData(player);
             data.playTime++;
