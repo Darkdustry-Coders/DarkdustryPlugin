@@ -23,8 +23,8 @@ public class Utils {
 
     public static int voteChoice(String sign) {
         return switch (sign.toLowerCase()) {
-            case "y", "yes" -> 1;
-            case "n", "no" -> -1;
+            case "y" -> 1;
+            case "n" -> -1;
             default -> 0;
         };
     }
