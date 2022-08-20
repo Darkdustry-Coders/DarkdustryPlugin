@@ -1,5 +1,3 @@
-<img src=".github/splash.png" alt="Image" />
-
 <div align="center">
     <h1>Darkdustry Plugin</h1>
     <p>Основной плагин для серверов Darkdustry.</p>
