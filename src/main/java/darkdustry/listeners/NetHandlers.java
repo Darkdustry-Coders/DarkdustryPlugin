@@ -2,7 +2,6 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.graphics.Color;
-import arc.struct.Seq;
 import arc.util.CommandHandler.*;
 import arc.util.Reflect;
 import arc.util.Strings;
@@ -12,7 +11,6 @@ import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
@@ -34,6 +32,7 @@ public class NetHandlers {
 
         var closest = clientCommands.getCommandList()
                 .map(command -> command.text)
+                .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
                 .min(command -> Strings.levenshtein(command, response.runCommand));
 
         return closest != null ? format("commands.unknown.closest", locale, closest) : format("commands.unknown", locale);
