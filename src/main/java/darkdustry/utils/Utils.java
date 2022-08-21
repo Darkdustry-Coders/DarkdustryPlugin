@@ -56,7 +56,7 @@ public class Utils {
     }
 
     public static String formatDate(long time) {
-        DateFormat format = new SimpleDateFormat("HH:mm:ss");
+        var format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
         return format.format(new Date(time));
     }
@@ -66,8 +66,8 @@ public class Utils {
     }
 
     public static String formatDuration(long time, Locale locale) {
-        Duration duration = Duration.ofMillis(time);
-        StringBuilder builder = new StringBuilder();
+        var duration = Duration.ofMillis(time);
+        var builder = new StringBuilder();
         OrderedMap.<String, Integer>of(
                 "time.days", (int) duration.toDaysPart(),
                 "time.hours", duration.toHoursPart(),
@@ -81,7 +81,7 @@ public class Utils {
 
     public static void reloadWorld(Runnable load) {
         try {
-            WorldReloader reloader = new WorldReloader();
+            var reloader = new WorldReloader();
             reloader.begin();
 
             load.run();
@@ -96,7 +96,7 @@ public class Utils {
     }
 
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
-        if (!con.hasConnected) { // если игрок вышел во время голосования за кик, просто хэндлим его
+        if (!con.hasConnected) { // если игрок по какой-то причине не находится на сервере, просто записываем, что он был кикнут
             netServer.admins.handleKicked(con.uuid, con.address, kickDuration);
             return;
         }
