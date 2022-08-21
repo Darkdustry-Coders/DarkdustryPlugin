@@ -7,14 +7,12 @@ import arc.util.Tmp;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
-import mindustry.world.Block;
 import mindustry.world.blocks.logic.CanvasBlock;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Icons.get;
@@ -42,9 +40,9 @@ public class ConfigEntry implements HistoryEntry {
     // (C) Овлер, 2021 год до н.э.
     @Override
     public String getMessage(Player player) {
-        Block block = content.block(blockID);
+        var block = content.block(blockID);
+        var locale = locale(player.locale);
         String date = formatDate(time);
-        Locale locale = locale(player.locale);
 
         if (value == null) {
             return format("history.config.default", locale, name, get(block.name), date);

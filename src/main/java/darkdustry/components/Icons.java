@@ -17,11 +17,11 @@ public class Icons {
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136.1/core/assets/icons/icons.properties").submit(response -> {
             for (String line : response.getResultAsString().split("\n")) {
-                String[] values = line.split("\\|")[0].split("=");
+                var values = line.split("\\|")[0].split("=");
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            for (Team team : Team.baseTeams) {
+            for (var team : Team.baseTeams) {
                 team.emoji = get(team.name, "");
             }
 

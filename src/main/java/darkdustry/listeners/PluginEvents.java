@@ -8,7 +8,6 @@ import darkdustry.features.Alerts;
 import darkdustry.features.Effects;
 import darkdustry.features.Ranks;
 import darkdustry.features.history.*;
-import darkdustry.features.history.History.HistoryStack;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
@@ -41,7 +40,7 @@ public class PluginEvents {
             if (History.enabled() && event.tile.build != null) History.put(new BlockEntry(event), event.tile);
             if (event.breaking) return;
 
-            PlayerData data = getPlayerData(event.unit.getPlayer());
+            var data = getPlayerData(event.unit.getPlayer());
             data.buildingsBuilt++;
             setPlayerData(data);
         });
@@ -62,13 +61,13 @@ public class PluginEvents {
         });
 
         Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
-            PlayerData data = getPlayerData(player.uuid());
+            var data = getPlayerData(player.uuid());
             data.gamesPlayed++;
             setPlayerData(data);
         }));
 
         Events.on(PlayerJoin.class, event -> {
-            PlayerData data = getPlayerData(event.player);
+            var data = getPlayerData(event.player);
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             app.post(() -> Effects.onJoin(event.player));
@@ -105,13 +104,13 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;
 
-            StringBuilder result = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
-            HistoryStack stack = History.get(event.tile.array());
+            var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
+            var stack = History.get(event.tile.array());
 
-            if (stack.isEmpty()) result.append(format("history.empty", Find.locale(event.player.locale)));
-            else stack.each(entry -> result.append("\n").append(entry.getMessage(event.player)));
+            if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
+            else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-            event.player.sendMessage(result.toString());
+            event.player.sendMessage(builder.toString());
         });
 
         Events.on(WithdrawEvent.class, event -> {

@@ -56,10 +56,10 @@ public class DarkdustryPlugin extends Plugin {
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
         Timer.schedule(() -> Groups.player.each(player -> {
-            PlayerData data = getPlayerData(player);
+            var data = getPlayerData(player);
             data.playTime++;
 
-            Rank rank = Ranks.getRank(data.rank);
+            var rank = Ranks.getRank(data.rank);
             if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
                 Ranks.setRank(player, rank = rank.next);
                 data.rank = rank.id;

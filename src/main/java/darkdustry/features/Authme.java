@@ -3,7 +3,6 @@ package darkdustry.features;
 import arc.func.Func;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
@@ -43,7 +42,7 @@ public class Authme {
 
     public static void info(GenericComponentInteractionCreateEvent event) {
         String uuid = loginWaiting.get(event.getMessage());
-        PlayerInfo info = netServer.admins.getInfo(uuid);
+        var info = netServer.admins.getInfo(uuid);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.yellow)
@@ -61,7 +60,7 @@ public class Authme {
 
     private static void remove(GenericComponentInteractionCreateEvent event, Func<Player, EmbedBuilder> func) {
         String uuid = loginWaiting.remove(event.getMessage());
-        Player player = Groups.player.find(p -> p.uuid().equals(uuid));
+        var player = Groups.player.find(p -> p.uuid().equals(uuid));
 
         if (player != null) event.getChannel().sendMessageEmbeds(func.get(player)
                 .addField("Администратор:", event.getUser().getAsMention(), true)

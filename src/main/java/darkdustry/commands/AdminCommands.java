@@ -4,15 +4,10 @@ import arc.math.Mathf;
 import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.content.Blocks;
-import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
-import mindustry.type.Item;
-import mindustry.type.UnitType;
-import mindustry.world.Block;
 import mindustry.world.Tile;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
@@ -34,13 +29,14 @@ public class AdminCommands {
 
         register("despawn", (args, player) -> {
             if (args.length > 0) {
-                Player target = Find.player(args[0]);
+                var target = Find.player(args[0]);
                 if (notFound(player, target, args[0])) return;
 
                 Call.unitEnvDeath(target.unit());
                 bundled(target, "commands.despawn.success.suicide");
                 if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
-            } else showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
+            } else
+                showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
                         {"ui.menus.yes", "ui.menus.no"}, {"commands.despawn.menu.players"},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},
@@ -48,10 +44,10 @@ public class AdminCommands {
         });
 
         register("team", (args, player) -> {
-            Team team = Find.team(args[0]);
+            var team = Find.team(args[0]);
             if (notFound(player, team)) return;
 
-            Player target = args.length > 1 ? Find.player(args[1]) : player;
+            var target = args.length > 1 ? Find.player(args[1]) : player;
             if (args.length > 1 && notFound(player, target, args[1])) return;
 
             target.team(team);
@@ -60,10 +56,10 @@ public class AdminCommands {
         });
 
         register("core", (args, player) -> {
-            Block core = args.length > 0 ? Find.core(args[0].toLowerCase()) : Blocks.coreShard;
+            var core = args.length > 0 ? Find.core(args[0].toLowerCase()) : Blocks.coreShard;
             if (notFoundCore(player, core)) return;
 
-            Team team = args.length > 1 ? Find.team(args[1]) : player.team();
+            var team = args.length > 1 ? Find.team(args[1]) : player.team();
             if (notFound(player, team)) return;
 
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
@@ -74,13 +70,13 @@ public class AdminCommands {
         register("give", (args, player) -> {
             if (invalidAmount(player, args, 1)) return;
 
-            Item item = Find.item(args[0]);
+            var item = Find.item(args[0]);
             if (notFound(player, item)) return;
 
             int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
             if (invalidGiveAmount(player, amount)) return;
 
-            Team team = args.length > 2 ? Find.team(args[2]) : player.team();
+            var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team) || notFoundCore(player, team)) return;
 
             team.core().items.add(item, amount);
@@ -88,10 +84,10 @@ public class AdminCommands {
         });
 
         register("unit", (args, player) -> {
-            UnitType type = Find.unit(args[0]);
+            var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
 
-            Player target = args.length > 1 ? Find.player(args[1]) : player;
+            var target = args.length > 1 ? Find.player(args[1]) : player;
             if (args.length > 1 && notFound(player, target, args[1])) return;
 
             target.unit(type.spawn(target.team(), target.x, target.y));
@@ -103,13 +99,13 @@ public class AdminCommands {
         register("spawn", (args, player) -> {
             if (invalidAmount(player, args, 1)) return;
 
-            UnitType type = Find.unit(args[0]);
+            var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
 
             int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
             if (invalideSpawnAmount(player, amount)) return;
 
-            Team team = args.length > 2 ? Find.team(args[2]) : player.team();
+            var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team)) return;
 
             for (int i = 0; i < amount; i++) type.spawn(team, player);
@@ -121,7 +117,7 @@ public class AdminCommands {
             int x = Mathf.clamp(Strings.parseInt(args[0]), 0, world.width()), y = Mathf.clamp(Strings.parseInt(args[1]), 0, world.height());
 
             boolean spawnedNyCore = player.unit().spawnedByCore();
-            Unit unit = player.unit();
+            var unit = player.unit();
 
             unit.spawnedByCore(false);
             player.clearUnit();
@@ -140,7 +136,7 @@ public class AdminCommands {
             int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
             if (invalidFillAmount(player, width, height)) return;
 
-            Block block = Find.block(args[2]);
+            var block = Find.block(args[2]);
             if (notFound(player, block)) return;
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {

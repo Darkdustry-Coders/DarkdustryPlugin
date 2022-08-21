@@ -75,7 +75,7 @@ public class Translator {
     }
 
     public static void translate(Player author, String text) {
-        StringMap cache = new StringMap();
+        var cache = new StringMap();
         String message = netServer.chatFormatter.format(author, text);
 
         Groups.player.each(player -> player != author, player -> {

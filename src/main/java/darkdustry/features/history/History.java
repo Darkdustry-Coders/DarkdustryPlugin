@@ -27,7 +27,7 @@ public class History {
     }
 
     public static HistoryStack get(int index) {
-        HistoryStack entries = history[index];
+        var entries = history[index];
         if (entries == null) history[index] = entries = new HistoryStack();
         return entries;
     }

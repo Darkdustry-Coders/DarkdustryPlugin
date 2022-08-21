@@ -4,7 +4,6 @@ import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
-import mindustry.world.Block;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.environment.OreBlock;
 import darkdustry.DarkdustryPlugin;
@@ -19,12 +18,14 @@ public class MapParser {
 
     public static void load() {
         try {
-            Pixmap pixmap = new Pixmap(getPluginResource("block_colors.png"));
+            var pixmap = new Pixmap(getPluginResource("block_colors.png"));
             for (int i = 0; i < pixmap.width; i++) {
-                Block block = content.block(i);
+                var block = content.block(i);
                 if (block instanceof OreBlock) block.mapColor.set(block.itemDrop.color);
                 else block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
             }
+
+            pixmap.dispose();
 
             DarkdustryPlugin.info("Loaded @ block colors.", pixmap.width);
         } catch (Exception exception) {
@@ -45,8 +46,8 @@ public class MapParser {
     }
 
     public static byte[] parseImage(Pixmap pixmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PngWriter writer = new PngWriter(pixmap.width * pixmap.height);
+        var writer = new PngWriter(pixmap.width * pixmap.height);
+        var stream = new ByteArrayOutputStream();
 
         try {
             writer.setFlipY(false);

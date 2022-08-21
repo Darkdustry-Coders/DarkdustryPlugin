@@ -1,6 +1,5 @@
 package darkdustry.components;
 
-import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.gen.Groups;
@@ -25,10 +24,10 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static void load() {
-        Seq<Fi> files = getPluginResource("bundles").seq();
+        var files = getPluginResource("bundles").seq();
 
         files.each(file -> {
-            String[] codes = file.nameWithoutExtension().split("_");
+            var codes = file.nameWithoutExtension().split("_");
 
             if (codes.length == 1) { // bundle.properties
                 supportedLocales.add(Locale.ROOT);
@@ -49,7 +48,7 @@ public class Bundle {
 
     public static String get(String key, String defaultValue, Locale locale) {
         try {
-            ResourceBundle bundle = bundles.get(locale, bundles.get(defaultLocale));
+            var bundle = bundles.get(locale, bundles.get(defaultLocale));
             return bundle.getString(key);
         } catch (MissingResourceException ignored) {
             return defaultValue;
@@ -74,7 +73,7 @@ public class Bundle {
             return pattern;
         }
 
-        MessageFormat format = formats.get(locale, formats.get(defaultLocale));
+        var format = formats.get(locale, formats.get(defaultLocale));
         format.applyPattern(pattern);
         return format.format(values);
     }

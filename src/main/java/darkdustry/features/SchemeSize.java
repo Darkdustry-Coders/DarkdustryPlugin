@@ -8,7 +8,6 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.world.Block;
-import mindustry.world.Tile;
 
 import static arc.util.Strings.*;
 import static darkdustry.utils.Checks.*;
@@ -24,9 +23,7 @@ public class SchemeSize {
         Events.on(PlayerLeave.class, event -> SSUsers.remove(event.player.id));
 
         netServer.addPacketHandler("ThisIsMyPlayerData", (player, args) -> SSUsers.put(player.id, args.replace("#", "").replace("=", "")));
-        netServer.addPacketHandler("GivePlayerDataPlease", (player, args) -> {
-            Call.clientPacketReliable(player.con, "ThisIsYourPlayerData", SSUsers.toString("#"));
-        });
+        netServer.addPacketHandler("GivePlayerDataPlease", (player, args) -> Call.clientPacketReliable(player.con, "ThisIsYourPlayerData", SSUsers.toString("#")));
 
         // всё то, что дальше, не нужно для интеграции сервера с модом
         // оно просто перенесёно сюда, чтобы не захламлять AdminsCommands
@@ -63,7 +60,7 @@ public class SchemeSize {
     }
 
     private static void edit(Block floor, Block block, Block overlay, int x, int y) {
-        Tile tile = world.tile(x, y);
+        var tile = world.tile(x, y);
         if (tile == null) return;
 
         tile.setFloorNet(floor == null ? tile.floor() : floor, overlay == null ? tile.overlay() : overlay);

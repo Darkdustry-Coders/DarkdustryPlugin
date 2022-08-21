@@ -1,7 +1,6 @@
 package darkdustry.components;
 
 import mindustry.gen.Player;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import darkdustry.DarkdustryPlugin;
@@ -27,7 +26,7 @@ public class Database {
     }
 
     public static PlayerData getPlayerData(String uuid) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (var jedis = jedisPool.getResource()) {
             if (jedis.exists(uuid)) return gson.fromJson(jedis.get(uuid), PlayerData.class);
         } catch (Exception ignored) {}
 
@@ -35,13 +34,13 @@ public class Database {
     }
 
     public static void setPlayerData(PlayerData data) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (var jedis = jedisPool.getResource()) {
             jedis.set(data.uuid, gson.toJson(data));
         } catch (Exception ignored) {}
     }
 
     public static boolean hasPlayerData(String uuid) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (var jedis = jedisPool.getResource()) {
             return jedis.exists(uuid);
         } catch (Exception ignored) {
             return false;

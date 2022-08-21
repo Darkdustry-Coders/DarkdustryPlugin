@@ -11,7 +11,6 @@ import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.Color;
-import java.util.Locale;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -25,7 +24,7 @@ public class PageIterator {
     // region Client
 
     public static void commands(String[] args, Player player) {
-        Locale locale = Find.locale(player.locale);
+        var locale = Find.locale(player.locale);
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
                         .append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
@@ -68,7 +67,7 @@ public class PageIterator {
             return;
         }
 
-        StringBuilder builder = new StringBuilder(format("commands." + command + ".page", Find.locale(player.locale), page, pages));
+        var builder = new StringBuilder(format("commands." + command + ".page", Find.locale(player.locale), page, pages));
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
@@ -104,7 +103,7 @@ public class PageIterator {
             return;
         }
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder.append("**").append(i + 1).append(".** "), content.get(i));
 

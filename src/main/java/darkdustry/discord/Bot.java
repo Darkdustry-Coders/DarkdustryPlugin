@@ -16,7 +16,6 @@ import darkdustry.utils.Find;
 
 import java.awt.Color;
 import java.util.EnumSet;
-import java.util.Locale;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -65,7 +64,7 @@ public class Bot {
         var reply = message.getReferencedMessage();
 
         Groups.player.each(player -> {
-            Locale locale = Find.locale(player.locale);
+            var locale = Find.locale(player.locale);
 
             bundled(player, "discord.chat",
                     Integer.toHexString(member.getColorRaw()),

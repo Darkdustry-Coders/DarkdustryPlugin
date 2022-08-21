@@ -10,8 +10,6 @@ import mindustry.ui.Menus;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 
-import java.util.Locale;
-
 import static mindustry.Vars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
@@ -24,7 +22,7 @@ public class MenuHandler {
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option != 1) return;
-            PlayerData data = getPlayerData(player);
+            var data = getPlayerData(player);
             data.welcomeMessage = false;
             setPlayerData(data);
             bundled(player, "welcome.disabled");
@@ -69,7 +67,7 @@ public class MenuHandler {
         rankInfoMenu = Menus.registerMenu((player, option) -> {
             if (option != 1) return;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
             showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] {{"ui.menus.close"}});
         });
@@ -84,7 +82,7 @@ public class MenuHandler {
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons, Object titleObject, Object... contentObjects) {
-        Locale locale = Find.locale(player.locale);
+        var locale = Find.locale(player.locale);
         for (int i = 0; i < buttons.length; i++)
             for (int j = 0; j < buttons[i].length; j++)
                 buttons[i][j] = get(buttons[i][j], locale);

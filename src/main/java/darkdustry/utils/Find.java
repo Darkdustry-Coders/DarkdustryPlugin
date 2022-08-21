@@ -35,7 +35,7 @@ public class Find {
     }
 
     public static PlayerInfo playerInfo(String name) {
-        Player player = player(name);
+        var player = player(name);
         if (player != null) return player.getInfo();
 
         return Utils.notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
@@ -61,14 +61,13 @@ public class Find {
         return canParsePositiveInt(name) ? Rank.ranks.get(parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
-
     public static Map map(String name) {
-        Seq<Map> list = maps.customMaps();
+        var list = maps.customMaps();
         return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        Seq<Fi> list = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
+        var list = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
         return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 

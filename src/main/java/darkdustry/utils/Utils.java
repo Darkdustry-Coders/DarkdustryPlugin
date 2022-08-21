@@ -2,13 +2,13 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.struct.OrderedMap;
+import arc.util.Log;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.NetConnection;
 import mindustry.net.WorldReloader;
-import darkdustry.DarkdustryPlugin;
 
 import java.text.*;
 import java.time.*;
@@ -90,7 +90,7 @@ public class Utils {
 
             reloader.end();
         } catch (MapException e) {
-            DarkdustryPlugin.error("@: @", e.map.name(), e.getMessage());
+            Log.err("@: @", e.map.name(), e.getMessage());
             net.closeServer();
         }
     }

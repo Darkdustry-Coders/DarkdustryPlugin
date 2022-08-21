@@ -86,7 +86,7 @@ public class Ranks {
     }
 
     public static void setRankNet(String uuid, Rank rank) {
-        PlayerData data = getPlayerData(uuid);
+        var data = getPlayerData(uuid);
 
         data.rank = rank.id;
         setPlayerData(data);

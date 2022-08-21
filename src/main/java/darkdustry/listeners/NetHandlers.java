@@ -6,6 +6,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.*;
 import arc.util.Reflect;
 import arc.util.Strings;
+import arc.util.Structs;
 import arc.util.Time;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
@@ -17,8 +18,6 @@ import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import darkdustry.utils.Find;
 
-import java.util.Locale;
-
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -27,24 +26,17 @@ import static darkdustry.utils.Utils.*;
 public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
-        Locale locale = Find.locale(player.locale);
+        var locale = Find.locale(player.locale);
         if (response.type == ResponseType.manyArguments)
             return format("commands.unknown.many-arguments", locale, response.command.text, response.command.paramText);
         if (response.type == ResponseType.fewArguments)
             return format("commands.unknown.few-arguments", locale, response.command.text, response.command.paramText);
 
-        int minDst = 0;
-        Command closest = null;
+        var closest = clientCommands.getCommandList()
+                .map(command -> command.text)
+                .min(command -> Strings.levenshtein(command, response.runCommand));
 
-        for (Command command : clientCommands.getCommandList()) {
-            int dst = Strings.levenshtein(command.text, response.runCommand);
-            if (dst < 3 && (closest == null || dst < minDst)) {
-                minDst = dst;
-                closest = command;
-            }
-        }
-
-        return closest != null ? format("commands.unknown.closest", locale, closest.text) : format("commands.unknown", locale);
+        return closest != null ? format("commands.unknown.closest", locale, closest) : format("commands.unknown", locale);
     }
 
     public static void connect(NetConnection con, Connect packet) {
@@ -57,8 +49,12 @@ public class NetHandlers {
 
         Events.fire(new ConnectPacketEvent(con, packet));
 
-        String uuid = packet.uuid, usid = packet.usid, ip = con.address, name = Reflect.invoke(netServer, "fixName", new String[] {packet.name}, String.class);
-        Locale locale = Find.locale(packet.locale = notNullElse(packet.locale, defaultLanguage));
+        String uuid = packet.uuid,
+                usid = packet.usid,
+                ip = con.address,
+                name = Reflect.invoke(netServer, "fixName", Structs.arr(packet.name), String.class);
+
+        var locale = Find.locale(packet.locale = notNullElse(packet.locale, defaultLanguage));
 
         if (con.hasBegunConnecting || uuid == null || usid == null) {
             kick(con, 0, false, "kick.already-connected", locale);
@@ -82,8 +78,8 @@ public class NetHandlers {
             return;
         }
 
-        Seq<String> extraMods = packet.mods.copy();
-        Seq<String> missingMods = mods.getIncompatibility(extraMods);
+        var extraMods = packet.mods.copy();
+        var missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any() || missingMods.any()) {
             String reason = format("kick.incompatible-mods", locale);
@@ -92,7 +88,7 @@ public class NetHandlers {
             con.kick(reason, 0);
         }
 
-        PlayerInfo info = netServer.admins.getInfo(uuid);
+        var info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
             info.lastName = name;

@@ -11,7 +11,6 @@ import darkdustry.features.history.RotateEntry;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.vote;
 import static darkdustry.utils.Checks.alreadyVoted;
-import static darkdustry.utils.Checks.notVoting;
 import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.*;
 
@@ -24,7 +23,7 @@ public class Filters {
 
     public static String chat(Player author, String text) {
         int sign = voteChoice(text);
-        if (sign != 0 && !notVoting(author, vote) && !alreadyVoted(author, vote)) {
+        if (sign != 0 && vote != null && !alreadyVoted(author, vote)) {
             vote.vote(author, sign);
             return null;
         }
