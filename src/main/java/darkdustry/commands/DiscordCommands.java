@@ -14,13 +14,10 @@ import darkdustry.utils.Find;
 import darkdustry.utils.PageIterator;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
@@ -62,7 +59,7 @@ public class DiscordCommands {
 
         register("kick", "Выгнать игрока с сервера.", context -> {
             if (notAdmin(context)) return;
-            Player target = Find.player(context.getOption("name").getAsString());
+            var target = Find.player(context.getOption("name").getAsString());
             if (notFound(context, target)) return;
 
             kick(target, kickDuration, true, "kick.kicked");
@@ -74,7 +71,7 @@ public class DiscordCommands {
 
         register("ban", "Забанить игрока на сервере.", context -> {
             if (notAdmin(context)) return;
-            Player target = Find.player(context.getOption("name").getAsString());
+            var target = Find.player(context.getOption("name").getAsString());
             if (notFound(context, target)) return;
 
             netServer.admins.banPlayer(target.uuid());
@@ -99,7 +96,7 @@ public class DiscordCommands {
         if (config.mode == Gamemode.hexed) return;
 
         register("map", "Получить карту с сервера.", context -> {
-            Map map = Find.map(context.getOption("map").getAsString());
+            var map = Find.map(context.getOption("map").getAsString());
             if (notFound(context, map)) return;
 
             EmbedBuilder embed = new EmbedBuilder()
@@ -119,9 +116,9 @@ public class DiscordCommands {
         register("addmap", "Добавить карту на сервер.", context -> {
             if (notAdmin(context) || notMap(context)) return;
 
-            Attachment attachment = context.getOption("map").getAsAttachment();
+            var attachment = context.getOption("map").getAsAttachment();
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
-                Fi mapFile = new Fi(file);
+                var mapFile = new Fi(file);
                 if (notMap(context, mapFile)) return;
 
                 maps.reload();
@@ -133,7 +130,7 @@ public class DiscordCommands {
 
         register("removemap", "Удалить карту с сервера.", context -> {
             if (notAdmin(context)) return;
-            Map map = Find.map(context.getOption("map").getAsString());
+            var map = Find.map(context.getOption("map").getAsString());
             if (notFound(context, map)) return;
 
             maps.removeMap(map);

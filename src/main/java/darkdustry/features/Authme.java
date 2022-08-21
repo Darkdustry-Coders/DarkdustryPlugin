@@ -25,7 +25,6 @@ public class Authme {
     public static void confirm(GenericComponentInteractionCreateEvent event) {
         remove(event, player -> {
             netServer.admins.adminPlayer(player.uuid(), player.usid());
-            Ranks.setRankNet(player.uuid(), Ranks.admin);
             player.admin(true);
 
             bundled(player, "commands.login.confirm");

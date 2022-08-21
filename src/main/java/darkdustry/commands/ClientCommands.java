@@ -1,20 +1,15 @@
 package darkdustry.commands;
 
-import arc.files.Fi;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import mindustry.maps.Map;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
-import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.*;
 import darkdustry.utils.Cooldowns;
 import darkdustry.utils.Find;
 import darkdustry.utils.PageIterator;
-
-import java.util.Locale;
 
 import static arc.util.Strings.parseInt;
 import static mindustry.Vars.*;
@@ -44,11 +39,11 @@ public class ClientCommands {
         });
 
         register("tr", (args, player) -> {
-            PlayerData data = getPlayerData(player.uuid());
+            var data = getPlayerData(player.uuid());
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
                 case "list" -> {
-                    StringBuilder builder = new StringBuilder(get("commands.tr.list", Find.locale(player.locale)));
+                    var builder = new StringBuilder(get("commands.tr.list", Find.locale(player.locale)));
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
                     Call.infoMessage(player.con, builder.toString());
                 }
@@ -73,11 +68,11 @@ public class ClientCommands {
         });
 
         register("stats", (args, player) -> {
-            Player target = args.length > 0 ? Find.player(args[0]) : player;
+            var target = args.length > 0 ? Find.player(args[0]) : player;
             if (args.length > 0 && notFound(player, target, args[0])) return;
 
-            PlayerData data = getPlayerData(target.uuid());
-            Rank rank = Ranks.getRank(data.rank);
+            var data = getPlayerData(target.uuid());
+            var rank = Ranks.getRank(data.rank);
 
             showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
                     new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.tag, rank.localisedName(Find.locale(player.locale)),
@@ -85,12 +80,13 @@ public class ClientCommands {
         });
 
         register("rank", (args, player) -> {
-            Player target = args.length > 0 ? Find.player(args[0]) : player;
+            var target = args.length > 0 ? Find.player(args[0]) : player;
             if (args.length > 0 && notFound(player, target, args[0])) return;
 
-            PlayerData data = getPlayerData(target.uuid());
-            Rank rank = Ranks.getRank(data.rank), next = rank.next;
-            Locale locale = Find.locale(player.locale);
+            var data = getPlayerData(target.uuid());
+            var rank = Ranks.getRank(data.rank);
+            var next = rank.next;
+            var locale = Find.locale(player.locale);
 
             StringBuilder builder = new StringBuilder(format("commands.rank.menu.content", locale, rank.tag, rank.localisedName(locale)));
             if (next != null && next.req != null)
@@ -115,7 +111,7 @@ public class ClientCommands {
         register("votekick", (args, player) -> {
             if (isVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
 
-            Player target = Find.player(args[0]);
+            var target = Find.player(args[0]);
             if (notFound(player, target, args[0]) || invalidVotekickTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);
@@ -138,7 +134,7 @@ public class ClientCommands {
         register("rtv", (args, player) -> {
             if (isVoting(player, vote) || isCooldowned(player, "rtv")) return;
 
-            Map map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+            var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
             if (notFound(player, map)) return;
 
             vote = new VoteRtv(map);
@@ -170,7 +166,7 @@ public class ClientCommands {
         register("loadsave", (args, player) -> {
             if (isVoting(player, vote) || isCooldowned(player, "loadsave")) return;
 
-            Fi save = Find.save(args[0]);
+            var save = Find.save(args[0]);
             if (notFound(player, save)) return;
 
             vote = new VoteLoad(save);
@@ -191,7 +187,7 @@ public class ClientCommands {
         });
 
         register("alerts", (args, player) -> {
-            PlayerData data = getPlayerData(player.uuid());
+            var data = getPlayerData(player.uuid());
             data.alertsEnabled = !data.alertsEnabled;
             setPlayerData(data);
             bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
