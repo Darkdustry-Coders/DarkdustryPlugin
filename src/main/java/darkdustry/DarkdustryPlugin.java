@@ -27,18 +27,6 @@ import static darkdustry.components.MenuHandler.*;
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
 
-    public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", Strings.format(text, values));
-    }
-
-    public static void discord(String text, Object... values) {
-        Log.infoTag("Discord", Strings.format(text, values));
-    }
-
-    public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", Strings.format(text, values));
-    }
-
     @Override
     public void init() {
         Effects.load();
@@ -94,5 +82,17 @@ public class DarkdustryPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         serverCommands = handler;
         ServerCommands.load();
+    }
+
+    public static void info(String text, Object... values) {
+        Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void discord(String text, Object... values) {
+        Log.infoTag("Discord", Strings.format(text, values));
+    }
+
+    public static void error(String text, Object... values) {
+        Log.errTag("Darkdustry", Strings.format(text, values));
     }
 }

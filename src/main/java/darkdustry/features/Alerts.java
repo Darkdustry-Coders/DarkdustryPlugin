@@ -35,17 +35,16 @@ public class Alerts {
     }
 
     public static void load() {
-        dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
+        dangerousBuildBlocks.put(Blocks.incinerator,   () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
 
         dangerousDepositBlocks.put(Blocks.combustionGenerator, Items.blastCompound);
-        dangerousDepositBlocks.put(Blocks.steamGenerator, Items.blastCompound);
-        dangerousDepositBlocks.put(Blocks.thoriumReactor, Items.thorium);
+        dangerousDepositBlocks.put(Blocks.steamGenerator,      Items.blastCompound);
+        dangerousDepositBlocks.put(Blocks.thoriumReactor,      Items.thorium);
     }
 
     public static void buildAlert(BuildSelectEvent event) {
-        if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
-            return;
+        if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer)) return;
 
         event.team.data().players.each(Alerts::isAlertsEnabled, player ->
                 bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y));
