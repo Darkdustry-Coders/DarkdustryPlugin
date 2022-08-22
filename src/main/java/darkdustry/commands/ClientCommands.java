@@ -97,10 +97,7 @@ public class ClientCommands {
                         data.buildingsBuilt, next.req.buildingsBuilt(),
                         data.gamesPlayed, next.req.gamesPlayed()));
 
-            Call.menu(player.con, rankInfoMenu,
-                    format("commands.rank.menu.header", locale, target.coloredName()),
-                    builder.toString(),
-                    new String[][] {{format("ui.menus.close", locale)}, {format("commands.rank.menu.requirements", locale)}});
+            showMenu(player, rankInfoMenu, "commands.rank.menu.header", builder.toString(), new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName());
         });
 
         register("players", PageIterator::players);

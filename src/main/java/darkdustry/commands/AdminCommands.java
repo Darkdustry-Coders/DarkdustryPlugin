@@ -1,28 +1,28 @@
 package darkdustry.commands;
 
 import arc.math.Mathf;
-import arc.util.Strings;
 import arc.util.CommandHandler.CommandRunner;
 import mindustry.content.Blocks;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.graphics.Pal;
 import mindustry.world.Tile;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
 
+import static arc.util.Strings.parseInt;
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
+import static mindustry.graphics.Pal.adminChat;
 
 public class AdminCommands {
 
     public static void load() {
-        register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", Pal.adminChat, player.coloredName(), args[0])));
+        register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
         register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.menu.header", "commands.artv.menu.content",
                 new String[][] {{"ui.menus.yes", "ui.menus.no"}}));
@@ -73,7 +73,7 @@ public class AdminCommands {
             var item = Find.item(args[0]);
             if (notFound(player, item)) return;
 
-            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            int amount = args.length > 1 ? parseInt(args[1]) : 1;
             if (invalidGiveAmount(player, amount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
@@ -103,7 +103,7 @@ public class AdminCommands {
             var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
 
-            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
+            int amount = args.length > 1 ? parseInt(args[1]) : 1;
             if (invalideSpawnAmount(player, amount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
@@ -115,7 +115,9 @@ public class AdminCommands {
 
         register("tp", (args, player) -> {
             if (invalidTpCoords(player, args)) return;
-            int x = Mathf.clamp(Strings.parseInt(args[0]), 0, world.width()), y = Mathf.clamp(Strings.parseInt(args[1]), 0, world.height());
+            float
+                    x = Mathf.clamp(parseInt(args[0]), 0, world.width()) * tilesize,
+                    y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;
 
             boolean spawnedNyCore = player.unit().spawnedByCore();
             var unit = player.unit();
@@ -123,18 +125,18 @@ public class AdminCommands {
             unit.spawnedByCore(false);
             player.clearUnit();
 
-            unit.set(x * tilesize, y * tilesize);
-            Call.setPosition(player.con, x * tilesize, y * tilesize);
-            Call.setCameraPosition(player.con, x * tilesize, y * tilesize);
+            unit.set(x, y);
+            Call.setPosition(player.con, x, y);
+            Call.setCameraPosition(player.con, x, y);
 
             player.unit(unit);
             unit.spawnedByCore(spawnedNyCore);
-            bundled(player, "commands.tp.success", x, y);
+            bundled(player, "commands.tp.success", x / tilesize, y / tilesize);
         });
 
         register("fill", (args, player) -> {
             if (invalidFillAmount(player, args)) return;
-            int width = Strings.parseInt(args[0]), height = Strings.parseInt(args[1]);
+            int width = parseInt(args[0]), height = parseInt(args[1]);
             if (invalidFillAmount(player, width, height)) return;
 
             var block = Find.block(args[2]);
@@ -145,8 +147,8 @@ public class AdminCommands {
                     Tile tile = world.tile(x, y);
                     if (tile == null) continue;
 
-                    if (block.isFloor() && !block.isOverlay()) tile.setFloorNet(block, tile.overlay());
-                    else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
+                    if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
+                    else if (block.isFloor()) tile.setFloorNet(block, tile.overlay());
                     else tile.setNet(block, player.team(), 0);
                 }
             }
