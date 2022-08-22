@@ -116,7 +116,11 @@ public class Ranks {
         }
 
         public String localisedName(Locale locale) {
-            return get("ranks." + name + ".name", locale);
+            return get("ranks." + name + ".name", "", locale);
+        }
+
+        public String localisedDesc(Locale locale) {
+            return get("ranks." + name + ".desc", "", locale);
         }
 
         public String localisedReq(Locale locale) {

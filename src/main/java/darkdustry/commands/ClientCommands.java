@@ -88,7 +88,8 @@ public class ClientCommands {
             var next = rank.next;
             var locale = Find.locale(player.locale);
 
-            StringBuilder builder = new StringBuilder(format("commands.rank.menu.content", locale, rank.tag, rank.localisedName(locale)));
+            StringBuilder builder = new StringBuilder("\n").append(rank.tag).append(rank.localisedName(locale)).append("\n").append(rank.localisedDesc(locale));
+
             if (next != null && next.req != null)
                 builder.append(format("commands.rank.menu.next", locale,
                         next.tag, next.localisedName(locale),
