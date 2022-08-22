@@ -41,8 +41,8 @@ public class MapParser {
         }
     }
 
-    public static byte[] parseTiles(Tiles tiles) {
-        return parseImage(MapIO.generatePreview(tiles));
+    public static byte[] parseWorld() {
+        return parseImage(MapIO.generatePreview(world.tiles));
     }
 
     public static byte[] parseImage(Pixmap pixmap) {
