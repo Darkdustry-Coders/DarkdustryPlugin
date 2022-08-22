@@ -10,16 +10,16 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
 import java.awt.Color;
 
-import static mindustry.Vars.netServer;
 import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
+import static mindustry.Vars.netServer;
 
 public class Authme {
 
     public static final SelectMenu menu = SelectMenu.create("authme")
             .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.",                  Emoji.fromFormatted("✅"))
             .addOption("Отклонить",   "authme.deny",    "Отклонить запрос.",                    Emoji.fromFormatted("❌"))
-            .addOption("Информация",  "authme.info",    "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("ℹ"))
+            .addOption("Информация",  "authme.info",    "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("🔎"))
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {

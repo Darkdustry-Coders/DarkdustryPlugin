@@ -69,6 +69,7 @@ public class Translator {
                 .header("X-RapidAPI-Host", translatorApiHost)
                 .error(throwable -> cons.get(""))
                 .submit(response -> {
+                    // TODO немного переделать left
                     left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
                     cons.get(Jval.read(response.getResultAsString()).getString("translated_text"));
                 });

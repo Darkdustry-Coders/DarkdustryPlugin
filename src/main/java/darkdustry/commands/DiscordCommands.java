@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.awt.Color;
 
@@ -52,7 +53,7 @@ public class DiscordCommands {
                             .addField("Время игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapLoadTime)), true)
                             .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                             .setImage("attachment://minimap.png").build())
-                    .addFile(MapParser.parseTiles(world.tiles), "minimap.png").queue();
+                    .addFiles(FileUpload.fromData(MapParser.parseTiles(world.tiles), "minimap.png")).queue();
         }).queue();
 
         register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(OptionType.INTEGER, "page", "Страница списка игроков.", false).queue();
@@ -108,7 +109,9 @@ public class DiscordCommands {
             if (!map.author().equals("unknown")) embed.setAuthor(map.author());
             if (!map.description().equals("unknown")) embed.setDescription(map.description());
 
-            context.sendEmbed(embed.build()).addFile(map.file.file()).addFile(MapParser.parseMap(map), "map.png").queue();
+            context.sendEmbed(embed.build())
+                    .addFiles(FileUpload.fromData(map.file.file()))
+                    .addFiles(FileUpload.fromData(MapParser.parseMap(map), "map.png")).queue();
         }).addOption(OptionType.STRING, "map", "Название карты, которую вы хотите получить.", true).queue();
 
         register("maps", "Список всех карт сервера.", PageIterator::maps).addOption(OptionType.INTEGER, "page", "Страница списка карт.", false).queue();

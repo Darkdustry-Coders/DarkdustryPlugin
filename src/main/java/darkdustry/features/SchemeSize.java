@@ -16,7 +16,7 @@ import static mindustry.Vars.*;
 public class SchemeSize {
 
     /** Список id пользователей Scheme Size'а */
-    public static ObjectMap<Integer, String> SSUsers = new ObjectMap<>();
+    public static final ObjectMap<Integer, String> SSUsers = new ObjectMap<>();
 
     public static void load() {
         Events.on(PlayerJoin.class, event -> Call.clientPacketReliable(event.player.con, "GiveYourPlayerData", null));

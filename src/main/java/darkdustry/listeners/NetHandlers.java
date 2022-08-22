@@ -109,7 +109,7 @@ public class NetHandlers {
             return;
         }
 
-        if (name.trim().length() <= 0) {
+        if (name.trim().length() == 0) {
             kick(con, 0, false, "kick.name-is-empty", locale);
             return;
         }

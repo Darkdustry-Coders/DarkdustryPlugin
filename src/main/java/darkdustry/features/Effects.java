@@ -52,5 +52,5 @@ public class Effects {
         cache.get(player.uuid()).effects.leave.get(player);
     }
 
-    public static record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}
+    public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}
 }

@@ -10,9 +10,10 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.AllowedMentions;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -40,7 +41,7 @@ public class Bot {
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 
-            AllowedMentions.setDefaultMentions(EnumSet.noneOf(MentionType.class));
+            MessageRequest.setDefaultMentions(EnumSet.of(MentionType.CHANNEL, MentionType.EMOJI));
             botGuild.updateCommands().queue();
 
             DiscordCommands.load();
@@ -54,7 +55,7 @@ public class Bot {
     }
 
     public static void exit() {
-        jda.shutdownNow();
+        jda.shutdown();
     }
 
     public static void sendMessageToGame(Member member, Message message) {
@@ -76,13 +77,13 @@ public class Bot {
     }
 
     public static void sendAdminRequest(Player player) {
-        adminChannel.sendMessage(new MessageBuilder().setEmbeds(new EmbedBuilder()
+        adminChannel.sendMessage(new MessageCreateBuilder().setEmbeds(new EmbedBuilder()
                 .setColor(Color.cyan)
                 .setTitle("Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.name, true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
-        ).setActionRows(ActionRow.of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
+        ).setComponents(ActionRow.of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {

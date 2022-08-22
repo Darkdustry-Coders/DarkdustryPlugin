@@ -56,7 +56,7 @@ public class AdminCommands {
         });
 
         register("core", (args, player) -> {
-            var core = args.length > 0 ? Find.core(args[0].toLowerCase()) : Blocks.coreShard;
+            var core = args.length > 0 ? Find.core(args[0]) : Blocks.coreShard;
             if (notFoundCore(player, core)) return;
 
             var team = args.length > 1 ? Find.team(args[1]) : player.team();

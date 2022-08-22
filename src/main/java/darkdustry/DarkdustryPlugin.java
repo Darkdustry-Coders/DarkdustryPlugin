@@ -16,7 +16,6 @@ import darkdustry.commands.*;
 import darkdustry.components.*;
 import darkdustry.discord.*;
 import darkdustry.features.*;
-import darkdustry.features.Ranks.Rank;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
 

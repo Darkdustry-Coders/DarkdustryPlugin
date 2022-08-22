@@ -81,6 +81,6 @@ public class Find {
 
     public static String language(String name) {
         if (mindustry2Api.containsKey(name)) return mindustry2Api.get(name);
-        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(language -> name.equals(language) || name.startsWith(language)), defaultLanguage);
+        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
     }
 }
