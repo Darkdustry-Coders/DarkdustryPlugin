@@ -42,18 +42,18 @@ public class DiscordCommands {
             if (isMenu(context)) return;
 
             context.sendEmbed(new EmbedBuilder()
-                            .setColor(Color.green)
-                            .setTitle(":desktop: " + stripAll(Config.serverName.string()))
-                            .addField("Игроков:", String.valueOf(Groups.player.size()), true)
-                            .addField("Карта:", state.map.name(), true)
-                            .addField("Волна:", String.valueOf(state.wave), true)
-                            .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
-                            .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", true)
-                            .addField("Сервер онлайн уже:", formatDuration(Time.timeSinceMillis(serverLoadTime)), true)
-                            .addField("Время игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapLoadTime)), true)
-                            .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
-                            .setImage("attachment://minimap.png").build()
-                    ).addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты")).queue();
+                    .setColor(Color.green)
+                    .setTitle(":desktop: " + stripAll(Config.serverName.string()))
+                    .addField("Игроков:", String.valueOf(Groups.player.size()), true)
+                    .addField("Карта:", state.map.name(), true)
+                    .addField("Волна:", String.valueOf(state.wave), true)
+                    .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
+                    .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", true)
+                    .addField("Сервер онлайн уже:", formatDuration(Time.timeSinceMillis(serverLoadTime)), true)
+                    .addField("Время игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapLoadTime)), true)
+                    .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
+                    .setImage("attachment://minimap.png").build()
+            ).addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты")).queue();
         }).queue();
 
         register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(INTEGER, "page", "Страница списка игроков.", false).queue();

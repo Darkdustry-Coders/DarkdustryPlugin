@@ -93,7 +93,7 @@ public class ServerCommands {
         serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args)) return;
-            
+
             kick(target, kickDuration, true, "kick.kicked");
             Log.info("Player @ has been kicked.", target.name);
             sendToChat("events.server.kick", target.name);
@@ -188,7 +188,7 @@ public class ServerCommands {
 
         serverCommands.register("admins", "List all admins.", args -> {
             var admins = netServer.admins.getAdmins();
-            if (admins.isEmpty())  Log.info("No admins have been found.");
+            if (admins.isEmpty()) Log.info("No admins have been found.");
             else {
                 Log.info("Admins: (@)", admins.size);
                 admins.each(admin -> Log.info("  @ / ID: @ / IP: @", admin.lastName, admin.id, admin.lastIP));

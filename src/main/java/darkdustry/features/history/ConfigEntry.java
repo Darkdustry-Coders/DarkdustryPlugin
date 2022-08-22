@@ -36,6 +36,39 @@ public class ConfigEntry implements HistoryEntry {
         this.time = Time.millis();
     }
 
+    public static Object getValue(ConfigEvent event) {
+        if (event.value instanceof Integer number) {
+            if (event.tile.block instanceof UnitFactory factory)
+                return number == -1 ? null : factory.plans.get(number).unit;
+            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
+                return Point2.unpack(number);
+            }
+        }
+
+        if (event.value instanceof Point2 point) {
+            return point.add(event.tile.tileX(), event.tile.tileY());
+        }
+
+        if (event.value instanceof Point2[] points) {
+            Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
+            return points;
+        }
+
+        return event.value;
+    }
+
+    public static boolean getConnect(ConfigEvent event, Point2 point) {
+        if (event.tile.block.configurations.containsKey(Point2.class)) {
+            return point.pack() != -1 && point.pack() != event.tile.pos();
+        }
+
+        if (event.tile.block.configurations.containsKey(Point2[].class)) {
+            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
+        }
+
+        return false;
+    }
+
     // Ифы сила, Дарк могила
     // (C) Овлер, 2021 год до н.э.
     @Override
@@ -85,38 +118,5 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         return format("history.config.default", locale, name, get(block.name), date);
-    }
-
-    public static Object getValue(ConfigEvent event) {
-        if (event.value instanceof Integer number) {
-            if (event.tile.block instanceof UnitFactory factory)
-                return number == -1 ? null : factory.plans.get(number).unit;
-            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
-                return Point2.unpack(number);
-            }
-        }
-
-        if (event.value instanceof Point2 point) {
-            return point.add(event.tile.tileX(), event.tile.tileY());
-        }
-
-        if (event.value instanceof Point2[] points) {
-            Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
-            return points;
-        }
-
-        return event.value;
-    }
-
-    public static boolean getConnect(ConfigEvent event, Point2 point) {
-        if (event.tile.block.configurations.containsKey(Point2.class)) {
-            return point.pack() != -1 && point.pack() != event.tile.pos();
-        }
-
-        if (event.tile.block.configurations.containsKey(Point2[].class)) {
-            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
-        }
-
-        return false;
     }
 }

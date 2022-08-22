@@ -52,7 +52,8 @@ public class AdminCommands {
 
             target.team(team);
             bundled(target, "commands.team.success", coloredTeam(team));
-            if (target != player) bundled(player, "commands.team.success.player", target.coloredName(), coloredTeam(team));
+            if (target != player)
+                bundled(player, "commands.team.success.player", target.coloredName(), coloredTeam(team));
         });
 
         register("core", (args, player) -> {
@@ -92,7 +93,8 @@ public class AdminCommands {
             target.unit(type.spawn(target.team(), target.x, target.y));
             target.unit().spawnedByCore(true);
             bundled(target, "commands.unit.success", Icons.get(type.name));
-            if (target != player) bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type.name));
+            if (target != player)
+                bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type.name));
         });
 
         register("spawn", (args, player) -> {

@@ -88,7 +88,7 @@ public class PluginVars {
 
     /** Текущее голосование за кик игрока. */
     public static VoteKick voteKick;
-    
+
     /** Конфигурация сервера. */
     public static Config config;
 

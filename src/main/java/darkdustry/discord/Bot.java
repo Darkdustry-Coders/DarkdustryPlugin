@@ -7,9 +7,6 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -21,6 +18,10 @@ import java.util.EnumSet;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.features.Authme.*;
+import static net.dv8tion.jda.api.Permission.*;
+import static net.dv8tion.jda.api.entities.Message.MentionType.*;
+import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
+import static net.dv8tion.jda.api.requests.GatewayIntent.*;
 
 public class Bot {
 
@@ -33,7 +34,7 @@ public class Bot {
     public static void connect() {
         try {
             jda = JDABuilder.createLight(config.discordBotToken)
-                    .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
+                    .enableIntents(GUILD_MEMBERS, MESSAGE_CONTENT)
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
@@ -41,7 +42,7 @@ public class Bot {
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 
-            MessageRequest.setDefaultMentions(EnumSet.of(MentionType.CHANNEL, MentionType.EMOJI));
+            MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
             botGuild.updateCommands().queue();
 
             DiscordCommands.load();
@@ -83,11 +84,11 @@ public class Bot {
                 .addField("Никнейм:", player.name, true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
-        ).setComponents(ActionRow.of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
+        ).setComponents(of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {
-        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(Permission.ADMINISTRATOR));
+        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(ADMINISTRATOR));
     }
 
     public static void updateBotStatus() {
