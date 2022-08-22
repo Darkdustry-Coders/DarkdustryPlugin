@@ -69,7 +69,7 @@ public class ClientCommands {
 
         register("stats", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
-            if (args.length > 0 && notFound(player, target, args[0])) return;
+            if (notFound(player, target)) return;
 
             var data = getPlayerData(target.uuid());
             var rank = Ranks.getRank(data.rank);
@@ -81,7 +81,7 @@ public class ClientCommands {
 
         register("rank", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
-            if (args.length > 0 && notFound(player, target, args[0])) return;
+            if (notFound(player, target)) return;
 
             var data = getPlayerData(target.uuid());
             var rank = Ranks.getRank(data.rank);
@@ -106,13 +106,13 @@ public class ClientCommands {
 
         register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort,
                 host -> Call.connect(player.con, host.address, host.port),
-                exception -> bundled(player, "commands.hub.offline")));
+                exception -> bundled(player, "commands.hub.failed", exception.getMessage())));
 
         register("votekick", (args, player) -> {
             if (isVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
 
             var target = Find.player(args[0]);
-            if (notFound(player, target, args[0]) || invalidVotekickTarget(player, target)) return;
+            if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);
             voteKick.vote(player, 1);

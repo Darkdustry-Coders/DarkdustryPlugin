@@ -70,12 +70,8 @@ public class Checks {
     // endregion
     // region Client
 
-    public static boolean notFound(Player player, Map map) {
-        return check(map == null, player, "commands.map-not-found");
-    }
-
-    public static boolean notFound(Player player, Fi file) {
-        return check(file == null, player, "commands.save-not-found");
+    public static boolean notFound(Player player, Player target) {
+        return check(target == null, player, "commands.player-not-found");
     }
 
     public static boolean notFound(Player player, Team team) {
@@ -94,16 +90,20 @@ public class Checks {
         return check(block == null, player, "commands.block-not-found");
     }
 
-    public static boolean notFound(Player player, Player target, String name) {
-        return check(target == null, player, "commands.player-not-found", name);
+    public static boolean notFoundCore(Player player, Block block) {
+        return check(block == null, player, "commands.core-not-found");
+    }
+
+    public static boolean notFound(Player player, Map map) {
+        return check(map == null, player, "commands.map-not-found");
+    }
+
+    public static boolean notFound(Player player, Fi file) {
+        return check(file == null, player, "commands.save-not-found");
     }
 
     public static boolean notFound(Player player, String language) {
-        return check(!translatorLanguages.containsKey(language), player, "commands.tr.not-found");
-    }
-
-    public static boolean notFoundCore(Player player, Block block) {
-        return check(block == null, player, "commands.core.core-not-found");
+        return check(!translatorLanguages.containsKey(language), player, "commands.language-not-found");
     }
 
     public static boolean notFoundCore(Player player, Team team) {

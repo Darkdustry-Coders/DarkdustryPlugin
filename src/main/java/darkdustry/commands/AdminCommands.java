@@ -30,7 +30,7 @@ public class AdminCommands {
         register("despawn", (args, player) -> {
             if (args.length > 0) {
                 var target = Find.player(args[0]);
-                if (notFound(player, target, args[0])) return;
+                if (notFound(player, target)) return;
 
                 Call.unitEnvDeath(target.unit());
                 bundled(target, "commands.despawn.success.suicide");
@@ -48,7 +48,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (args.length > 1 && notFound(player, target, args[1])) return;
+            if (notFound(player, target)) return;
 
             target.team(team);
             bundled(target, "commands.team.success", coloredTeam(team));
@@ -63,8 +63,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-            bundled(player, player.tileOn() != null && player.tileOn().block() == core ? "commands.core.success" : "commands.core.failed",
-                    Icons.get(core.name), coloredTeam(team));
+            bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core.name), coloredTeam(team));
         });
 
         register("give", (args, player) -> {
@@ -88,7 +87,7 @@ public class AdminCommands {
             if (notFound(player, type)) return;
 
             var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (args.length > 1 && notFound(player, target, args[1])) return;
+            if (notFound(player, target)) return;
 
             target.unit(type.spawn(target.team(), target.x, target.y));
             target.unit().spawnedByCore(true);

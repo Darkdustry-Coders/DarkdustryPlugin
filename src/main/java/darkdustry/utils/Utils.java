@@ -42,7 +42,7 @@ public class Utils {
     }
 
     public static String coloredTeam(Team team) {
-        return team.emoji + "[#" + team.color + "]" + team.name + "[]";
+        return "[#" + team.color + "]" + team.emoji + team.name + "[]";
     }
 
     public static boolean deepEquals(String first, String second) {
