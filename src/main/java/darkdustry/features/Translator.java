@@ -81,7 +81,7 @@ public class Translator {
 
         Groups.player.each(player -> player != author, player -> {
             String language = getPlayerData(player).language;
-            if (language.equals("off") || language.equals(Find.language(player.locale))) {
+            if (language.equals("off") || language.equals(Find.language(author.locale))) {
                 player.sendMessage(message, author, text);
                 return;
             }
