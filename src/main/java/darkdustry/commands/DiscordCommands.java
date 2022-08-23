@@ -16,6 +16,7 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
@@ -37,11 +38,10 @@ import static net.dv8tion.jda.api.utils.FileUpload.*;
 public class DiscordCommands {
 
     public static final ObjectMap<String, Cons<SlashContext>> commands = new ObjectMap<>();
+    public static final Seq<SlashCommandData> datas = new Seq<>();
 
     public static void load() {
-        var commands = new Seq<>();
-
-        commands.add(register("status", "Посмотреть статус сервера.", context -> {
+        register("status", "Посмотреть статус сервера.", context -> {
             if (isMenu(context)) return;
 
             context.sendEmbed(new EmbedBuilder()
@@ -57,7 +57,7 @@ public class DiscordCommands {
                     .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
                     .setImage("attachment://minimap.png").build()
             ).addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты")).queue();
-        }));
+        });
 
         register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(INTEGER, "page", "Страница списка игроков.");
 
@@ -143,15 +143,19 @@ public class DiscordCommands {
             context.success(":map: Игра успешно завершена.").queue();
         }).setDefaultPermissions(enabledFor(ADMINISTRATOR));
 
-        commands.each(command -> {
-            // доделать
+        botGuild.retrieveCommands().queue(list -> { // TODO дарк, retrieveCommands возвращает пустой list, я хз чё с этим делать
+            var commands = new Seq<Command>();
+            list.forEach(commands::add);
 
-            var list = botGuild.retrieveCommands().complete();
+            datas.each(data -> {
+                Command command = commands.find(cmd -> cmd.getName() == data.getName());
+                return command == null || !command.getOptions().equals(data.getOptions());
+            }, data -> botGuild.upsertCommand(data).queue());
         });
     }
 
     public static SlashCommandData register(String name, String description, Cons<SlashContext> cons) {
         commands.put(name, cons);
-        return new CommandDataImpl(name, description);
+        return datas.add(new CommandDataImpl(name, description)).peek();
     }
 }
