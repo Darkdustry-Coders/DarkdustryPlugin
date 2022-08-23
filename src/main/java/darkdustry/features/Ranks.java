@@ -111,12 +111,16 @@ public class Ranks {
             ranks.add(this);
         }
 
+        public boolean hasNext() {
+            return next != null && next.req != null;
+        }
+
         public boolean checkNext(int playTime, int buildingsBuilt, int gamesPlayed) {
-            return next != null && next.req != null && next.req.check(playTime, buildingsBuilt, gamesPlayed);
+            return hasNext() && next.req.check(playTime, buildingsBuilt, gamesPlayed);
         }
 
         public String localisedName(Locale locale) {
-            return get("ranks." + name + ".name", "", locale);
+            return tag + get("ranks." + name + ".name", "", locale);
         }
 
         public String localisedDesc(Locale locale) {

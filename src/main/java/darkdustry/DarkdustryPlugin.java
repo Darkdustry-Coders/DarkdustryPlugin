@@ -64,7 +64,7 @@ public class DarkdustryPlugin extends Plugin {
                 data.rank = rank.id;
 
                 showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
-                        null, rank.tag, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                        null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
             }
 
             setPlayerData(data);

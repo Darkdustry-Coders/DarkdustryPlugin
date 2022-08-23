@@ -27,7 +27,7 @@ import static darkdustry.utils.Utils.*;
 public class Find {
 
     public static Locale locale(String name) {
-        return notNullElse(supportedLocales.find(locale -> name.equals(locale.toString()) || name.startsWith(locale.toString())), defaultLocale);
+        return notNullElse(supportedLocales.find(locale -> name.startsWith(locale.toString())), defaultLocale);
     }
 
     public static Player player(String name) {

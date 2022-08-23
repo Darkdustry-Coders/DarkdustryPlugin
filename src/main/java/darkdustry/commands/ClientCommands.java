@@ -75,7 +75,7 @@ public class ClientCommands {
             var rank = Ranks.getRank(data.rank);
 
             showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
-                    new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.tag, rank.localisedName(Find.locale(player.locale)),
+                    new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
                     data.playTime, data.buildingsBuilt, data.gamesPlayed);
         });
 
@@ -85,19 +85,18 @@ public class ClientCommands {
 
             var data = getPlayerData(target.uuid());
             var rank = Ranks.getRank(data.rank);
-            var next = rank.next;
             var locale = Find.locale(player.locale);
 
-            StringBuilder builder = new StringBuilder("\n").append(rank.tag).append(rank.localisedName(locale)).append("\n").append(rank.localisedDesc(locale));
-
-            if (next != null && next.req != null)
-                builder.append(format("commands.rank.menu.next", locale,
-                        next.tag, next.localisedName(locale),
-                        data.playTime, next.req.playTime(),
-                        data.buildingsBuilt, next.req.buildingsBuilt(),
-                        data.gamesPlayed, next.req.gamesPlayed()));
-
-            showMenu(player, rankInfoMenu, "commands.rank.menu.header", builder.toString(), new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName());
+            if (!rank.hasNext()) {
+                showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
+            } else {
+                showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content.next", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
+                        rank.next.localisedName(locale),
+                        data.playTime, rank.next.req.playTime(),
+                        data.buildingsBuilt, rank.next.req.buildingsBuilt(),
+                        data.gamesPlayed, rank.next.req.gamesPlayed()
+                );
+            }
         });
 
         register("players", PageIterator::players);
