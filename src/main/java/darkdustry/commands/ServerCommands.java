@@ -33,7 +33,7 @@ public class ServerCommands {
             Log.info("Shutting down server.");
 
             netServer.kickAll(KickReason.serverRestarting);
-            Bot.exit();
+            Core.app.post(Bot::exit);
             Core.app.exit();
         });
 

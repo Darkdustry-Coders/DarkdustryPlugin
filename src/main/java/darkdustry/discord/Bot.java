@@ -43,8 +43,9 @@ public class Bot {
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
-            botGuild.updateCommands().queue();
 
+            // TODO придумать что делать с командами
+            botGuild.updateCommands().queue();
             DiscordCommands.load();
 
             updateBotStatus();

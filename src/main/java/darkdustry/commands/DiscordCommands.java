@@ -89,7 +89,7 @@ public class DiscordCommands {
             // Сервер перезапустится только после отправки сообщения
             context.info(":gear: Сервер перезапускается...").queue(hook -> {
                 netServer.kickAll(KickReason.serverRestarting);
-                Bot.exit();
+                Core.app.post(Bot::exit);
                 Core.app.exit();
             });
         }).setDefaultPermissions(enabledFor(ADMINISTRATOR)).queue();

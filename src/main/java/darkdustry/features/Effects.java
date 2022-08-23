@@ -4,7 +4,7 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Call;
@@ -18,14 +18,13 @@ public class Effects {
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
 
     public static void load() {
-        Cons2<Player, Color> spikes = (p, c) -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), c); // просто то, что было до этого, было кринжом
         pack1 = new FxPack(p -> on(Fx.greenBomb, p),        p -> on(Fx.greenLaserCharge, p),   p -> on(Fx.freezing, p));
-        pack2 = new FxPack(p -> spikes.get(p, Color.lime),  p -> spikes.get(p, Color.scarlet), p -> on(Fx.burning, p));
+        pack2 = new FxPack(p -> spikes(p, Color.lime),      p -> spikes(p, Color.scarlet),     p -> on(Fx.burning, p));
         pack3 = new FxPack(p -> on(Fx.titanExplosion, p),   p -> on(Fx.titanExplosion, p),     p -> on(Fx.melting, p));
         pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),  p -> on(Fx.scatheExplosion, p),    p -> on(Fx.electrified, p));
         pack5 = new FxPack(p -> on(Fx.instBomb, p),         p -> on(Fx.instHit, p),            p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
         pack6 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p),           p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack7 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p),           p -> on(Fx.regenSuppressSeek, p, 0f, Tmp.c1.randHue(), p.unit()));
+        pack7 = new FxPack(Effects::particles,              Effects::particles,                p -> on(Fx.regenSuppressSeek, p, 0f, Color.valueOf("8982ed"), p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
@@ -42,6 +41,17 @@ public class Effects {
 
     public static void on(Effect effect, Position pos) {
         Call.effect(effect, pos.getX(), pos.getY(), Mathf.random(360f), Tmp.c1.randHue());
+    }
+
+    public static void spikes(Player player, Color color) {
+        on(Fx.dynamicSpikes, player, Mathf.random(40f, 100f), color);
+    }
+
+    public static void particles(Player player) {
+        for (int deg = 0; deg < 180; deg += 5)
+            for (int i = 0; i < 3; i++) {
+                on(Fx.regenSuppressSeek, Tmp.v1.set(player).add(Mathf.cosDeg(deg + 120f * i) * deg, Mathf.sinDeg(deg + 120f * i) * deg), 0f, Color.valueOf("8982ed"), player.bestCore());
+            }
     }
 
     public static void onMove(Player player) {
