@@ -1,6 +1,6 @@
 package darkdustry.features;
 
-import arc.func.Cons;
+import arc.func.*;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
@@ -18,13 +18,14 @@ public class Effects {
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
 
     public static void load() {
-        pack1 = new FxPack(p -> on(Fx.greenBomb, p),                                          p -> on(Fx.greenLaserCharge, p),                                      p -> on(Fx.freezing, p));
-        pack2 = new FxPack(p -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), Color.lime), p -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), Color.scarlet), p -> on(Fx.burning, p));
-        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),                                     p -> on(Fx.titanExplosion, p),                                        p -> on(Fx.melting, p));
-        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),                                    p -> on(Fx.scatheExplosion, p),                                       p -> on(Fx.electrified, p));
-        pack5 = new FxPack(p -> on(Fx.instBomb, p),                                           p -> on(Fx.instBomb, p),                                              p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f, Color.white));
-        pack6 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack7 = new FxPack(p -> on(Fx.teleportActivate, p),                                   p -> on(Fx.teleport, p),                                              p -> on(Fx.chainLightning, p, 0f, Tmp.c1.randHue(), p.unit()));
+        Cons2<Player, Color> spikes = (p, c) -> on(Fx.dynamicSpikes, p, Mathf.random(40f, 100f), c); // просто то, что было до этого, было кринжом
+        pack1 = new FxPack(p -> on(Fx.greenBomb, p),        p -> on(Fx.greenLaserCharge, p),   p -> on(Fx.freezing, p));
+        pack2 = new FxPack(p -> spikes.get(p, Color.lime),  p -> spikes.get(p, Color.scarlet), p -> on(Fx.burning, p));
+        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),   p -> on(Fx.titanExplosion, p),     p -> on(Fx.melting, p));
+        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),  p -> on(Fx.scatheExplosion, p),    p -> on(Fx.electrified, p));
+        pack5 = new FxPack(p -> on(Fx.instBomb, p),         p -> on(Fx.instHit, p),            p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
+        pack6 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p),           p -> on(Fx.smeltsmoke, p, 0f, Color.red));
+        pack7 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p),           p -> on(Fx.regenSuppressSeek, p, 0f, Tmp.c1.randHue(), p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
@@ -35,8 +36,12 @@ public class Effects {
         Call.effect(effect, pos.getX(), pos.getY(), rotation, color);
     }
 
+    public static void on(Effect effect, Position pos, float rotation) {
+        Call.effect(effect, pos.getX(), pos.getY(), rotation, Tmp.c1.randHue());
+    }
+
     public static void on(Effect effect, Position pos) {
-        on(effect, pos, Mathf.random(360f), Tmp.c1.randHue());
+        Call.effect(effect, pos.getX(), pos.getY(), Mathf.random(360f), Tmp.c1.randHue());
     }
 
     public static void onMove(Player player) {
