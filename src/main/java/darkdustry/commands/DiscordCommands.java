@@ -25,6 +25,7 @@ import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MapParser.*;
+import static darkdustry.discord.Bot.botGuild;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -144,6 +145,8 @@ public class DiscordCommands {
 
         commands.each(command -> {
             // доделать
+
+            var list = botGuild.retrieveCommands().complete();
         });
     }
 
