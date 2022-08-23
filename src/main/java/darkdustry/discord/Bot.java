@@ -44,7 +44,6 @@ public class Bot {
 
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
 
-            // TODO придумать что делать с командами
             botGuild.updateCommands().queue();
             DiscordCommands.load();
 

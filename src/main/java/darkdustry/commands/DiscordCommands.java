@@ -16,7 +16,6 @@ import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
@@ -26,7 +25,7 @@ import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MapParser.*;
-import static darkdustry.discord.Bot.botGuild;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -54,9 +53,11 @@ public class DiscordCommands {
                     .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", true)
                     .addField("Сервер онлайн уже:", formatDuration(Time.timeSinceMillis(serverLoadTime)), true)
                     .addField("Время игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapLoadTime)), true)
-                    .addField("До следующей волны:", formatDuration((int) state.wavetime / 60 * 1000L), true)
+                    .addField("До следующей волны:", formatDuration((long) (state.wavetime / 60 * 1000)), true)
                     .setImage("attachment://minimap.png").build()
-            ).addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты")).queue();
+            )
+                    .addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты"))
+                    .queue();
         });
 
         register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(INTEGER, "page", "Страница списка игроков.");
@@ -100,15 +101,17 @@ public class DiscordCommands {
             if (notFound(context, map)) return;
 
             context.sendEmbed(new EmbedBuilder()
-                            .setColor(Color.yellow)
-                            .setTitle(":map: " + map.name())
-                            .setAuthor(map.tags.get("author"))
-                            .setDescription(map.tags.get("description"))
-                            .setFooter(map.width + "x" + map.height)
-                            .setImage("attachment://map.png")
-                            .build()
-                    ).addFiles(fromData(map.file.file()).setDescription("Файл карты"))
-                    .addFiles(fromData(parseMap(map), "map.png").setDescription("Изображение карты")).queue();
+                    .setColor(Color.yellow)
+                    .setTitle(":map: " + map.name())
+                    .setAuthor(map.tags.get("author"))
+                    .setDescription(map.tags.get("description"))
+                    .setFooter(map.width + "x" + map.height)
+                    .setImage("attachment://map.png")
+                    .build()
+            )
+                    .addFiles(fromData(map.file.file()).setDescription("Файл карты"))
+                    .addFiles(fromData(parseMap(map), "map.png").setDescription("Изображение карты"))
+                    .queue();
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
         register("maps", "Список всех карт сервера.", PageIterator::maps).addOption(INTEGER, "page", "Страница списка карт.");
@@ -143,15 +146,8 @@ public class DiscordCommands {
             context.success(":map: Игра успешно завершена.").queue();
         }).setDefaultPermissions(enabledFor(ADMINISTRATOR));
 
-        botGuild.retrieveCommands().queue(list -> { // TODO дарк, retrieveCommands возвращает пустой list, я хз чё с этим делать
-            var commands = new Seq<Command>();
-            list.forEach(commands::add);
-
-            datas.each(data -> {
-                Command command = commands.find(cmd -> cmd.getName() == data.getName());
-                return command == null || !command.getOptions().equals(data.getOptions());
-            }, data -> botGuild.upsertCommand(data).queue());
-        });
+        // Регистрируем все команды одним запросом
+        jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
     }
 
     public static SlashCommandData register(String name, String description, Cons<SlashContext> cons) {
