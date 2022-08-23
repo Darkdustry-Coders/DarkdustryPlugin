@@ -2,14 +2,16 @@ package darkdustry.features;
 
 import arc.func.Cons;
 import arc.struct.StringMap;
-import arc.util.Http;
-import arc.util.Strings;
+import arc.util.*;
 import arc.util.serialization.Jval;
+import darkdustry.utils.Find;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import darkdustry.DarkdustryPlugin;
 
+// import static arc.util.Strings.*;
 import static arc.util.Strings.*;
+import static darkdustry.components.Bundle.bundled;
 import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
@@ -62,16 +64,15 @@ public class Translator {
         DarkdustryPlugin.info("Loaded @ languages for translator.", translatorLanguages.size);
     }
 
-    public static void translate(String to, String text, Cons<String> cons) {
+    public static void translate(String to, String text, Cons<String> result, Cons<Throwable> error) {
         Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("X-RapidAPI-Key", config.translatorApiKey)
                 .header("X-RapidAPI-Host", translatorApiHost)
-                .error(throwable -> cons.get(""))
+                .error(error)
                 .submit(response -> {
-                    // TODO немного переделать left
-                    left = Strings.parseInt(response.getHeader("x-ratelimit-requests-remaining"));
-                    cons.get(Jval.read(response.getResultAsString()).getString("translated_text"));
+                    left = parseInt(response.getHeader("x-ratelimit-requests-remaining"));
+                    result.get(Jval.read(response.getResultAsString()).getString("translated_text"));
                 });
     }
 
@@ -81,14 +82,20 @@ public class Translator {
 
         Groups.player.each(player -> player != author, player -> {
             String language = getPlayerData(player).language;
-            if (language.equals("off")) player.sendMessage(message, author, text);
-            else {
-                if (cache.containsKey(language)) player.sendMessage(cache.get(language), author, text);
-                else translate(language, stripColors(text), translated -> {
-                    cache.put(language, message + " [white]([lightgray]" + translated + "[])");
-                    player.sendMessage(cache.get(language), author, text); // нужно именно здесь, ибо асинхронность
-                });
+            if (language.equals("off") || language.equals(Find.language(player.locale))) {
+                player.sendMessage(message, author, text);
+                return;
             }
+
+            if (cache.containsKey(language)) {
+                player.sendMessage(cache.get(language), author, text);
+                return;
+            }
+
+            translate(language, stripColors(text), result -> {
+                cache.put(language, message + " [white]([lightgray]" + result + "[])");
+                player.sendMessage(cache.get(language), author, text);
+            }, throwable -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
         });
     }
 }

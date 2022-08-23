@@ -4,7 +4,6 @@ import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
-import mindustry.world.Tiles;
 import mindustry.world.blocks.environment.OreBlock;
 import darkdustry.DarkdustryPlugin;
 

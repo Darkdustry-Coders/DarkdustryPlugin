@@ -63,10 +63,6 @@ public class Bundle {
         return get(key, defaultValue, defaultLocale);
     }
 
-    public static String get(String key) {
-        return get(key, defaultLocale);
-    }
-
     public static String format(String key, Locale locale, Object... values) {
         String pattern = get(key, locale);
         if (values.length == 0) {
@@ -76,10 +72,6 @@ public class Bundle {
         var format = formats.get(locale, formats.get(defaultLocale));
         format.applyPattern(pattern);
         return format.format(values);
-    }
-
-    public static String format(String key, Object... values) {
-        return format(key, defaultLocale, values);
     }
 
     public static void bundled(Player player, String key, Object... values) {

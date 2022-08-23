@@ -22,10 +22,6 @@ public class History {
         tile.getLinkedTiles(t -> get(t.array()).add(entry));
     }
 
-    public static HistoryStack get(int x, int y) {
-        return get(y * world.width() + x);
-    }
-
     public static HistoryStack get(int index) {
         var entries = history[index];
         if (entries == null) history[index] = entries = new HistoryStack();
