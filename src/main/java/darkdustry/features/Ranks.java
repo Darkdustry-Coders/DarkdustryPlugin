@@ -128,7 +128,7 @@ public class Ranks {
         }
 
         public String localisedReq(Locale locale) {
-            return format("ranks.req", locale, tag, localisedName(locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
+            return format("ranks.req", locale, localisedName(locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
         }
     }
 
