@@ -3,10 +3,8 @@
 
 package darkdustry;
 
-import arc.util.CommandHandler;
-import arc.util.Log;
-import arc.util.Strings;
-import arc.util.Timer;
+import arc.graphics.*;
+import arc.util.*;
 import mindustry.core.Version;
 import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
@@ -69,6 +67,9 @@ public class DarkdustryPlugin extends Plugin {
 
             setPlayerData(data);
         }), 0f, 60f);
+
+        // Эта строчка исправляет обнаружение некоторых цветов
+        Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
     }
 
     @Override
