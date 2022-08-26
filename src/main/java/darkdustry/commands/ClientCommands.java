@@ -126,6 +126,14 @@ public class ClientCommands {
             voteKick.vote(player, sign);
         });
 
+        register("login", (args, player) -> {
+            if (alreadyAdmin(player) || isCooldowned(player, "login")) return;
+
+            Bot.sendAdminRequest(player);
+            bundled(player, "commands.login.sent");
+            Cooldowns.run(player.uuid(), "login");
+        });
+
         if (!config.mode.isDefault()) return;
 
         register("rtv", (args, player) -> {
@@ -188,14 +196,6 @@ public class ClientCommands {
             data.alertsEnabled = !data.alertsEnabled;
             setPlayerData(data);
             bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
-        });
-
-        register("login", (args, player) -> {
-            if (alreadyAdmin(player) || isCooldowned(player, "login")) return;
-
-            Bot.sendAdminRequest(player);
-            bundled(player, "commands.login.sent");
-            Cooldowns.run(player.uuid(), "login");
         });
     }
 
