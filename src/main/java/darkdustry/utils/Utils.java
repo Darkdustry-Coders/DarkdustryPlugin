@@ -51,13 +51,13 @@ public class Utils {
         return first.equalsIgnoreCase(second) || first.toLowerCase().contains(second.toLowerCase());
     }
 
-    public static String stripAll(CharSequence str) {
+    public static String stripAll(String str) {
         return stripColors(stripGlyphs(str));
     }
 
     public static String formatDate(long time) {
         var format = new SimpleDateFormat("HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Moscow")));
+        format.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         return format.format(new Date(time));
     }
 
@@ -68,12 +68,13 @@ public class Utils {
     public static String formatDuration(long time, Locale locale) {
         var duration = Duration.ofMillis(time);
         var builder = new StringBuilder();
-        OrderedMap.<String, Integer>of(
-                "time.days", (int) duration.toDaysPart(),
+        OrderedMap.<String, Number>of(
+                "time.days", duration.toDaysPart(),
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-            if (value > 0) builder.append(format(key, locale, value)).append(" ");
+                    if (value.intValue() > 0)
+                        builder.append(format(key, locale, value)).append(" ");
         });
 
         return builder.toString().trim();
@@ -96,7 +97,7 @@ public class Utils {
     }
 
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
-        if (!con.hasConnected) { // если игрок по какой-то причине не находится на сервере, просто записываем, что он был кикнут
+        if (!con.isConnected()) { // если игрок по какой-то причине не находится на сервере, просто записываем, что он был кикнут
             netServer.admins.handleKicked(con.uuid, con.address, kickDuration);
             return;
         }

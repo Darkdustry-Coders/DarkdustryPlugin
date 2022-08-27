@@ -1,8 +1,6 @@
 package darkdustry.commands;
 
-import arc.Core;
 import arc.util.Log;
-import arc.util.Strings;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
@@ -16,6 +14,7 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 
 import static arc.Core.*;
+import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.getPlayerData;
@@ -33,8 +32,8 @@ public class ServerCommands {
             Log.info("Shutting down server.");
 
             netServer.kickAll(KickReason.serverRestarting);
-            Core.app.post(Bot::exit);
-            Core.app.exit();
+            app.post(Bot::exit);
+            app.exit();
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
@@ -64,7 +63,7 @@ public class ServerCommands {
                 Log.info("Randomized next map to be @.", map.name());
             }
 
-            Core.settings.put("lastServerMode", mode.name());
+            settings.put("lastServerMode", mode.name());
 
             app.post(() -> {
                 try {
@@ -221,7 +220,7 @@ public class ServerCommands {
             }
 
             if (invalidAmount(args, 2)) return;
-            int value = Strings.parseInt(args[2]);
+            int value = parseInt(args[2]);
 
             switch (args[1].toLowerCase()) {
                 case "playtime" -> data.playTime = value;

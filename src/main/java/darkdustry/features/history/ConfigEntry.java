@@ -4,6 +4,7 @@ import arc.math.geom.Point2;
 import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
+import darkdustry.utils.Find;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
@@ -16,7 +17,6 @@ import java.util.Arrays;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Icons.get;
-import static darkdustry.utils.Find.locale;
 import static darkdustry.utils.Utils.formatDate;
 import static mindustry.Vars.content;
 
@@ -41,7 +41,7 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        var locale = locale(player.locale);
+        var locale = Find.locale(player.locale);
         String date = formatDate(time);
 
         if (value == null) {

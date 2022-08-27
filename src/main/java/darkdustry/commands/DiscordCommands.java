@@ -1,11 +1,9 @@
 package darkdustry.commands;
 
-import arc.Core;
 import arc.Events;
 import arc.files.Fi;
 import arc.func.Cons;
 import arc.struct.*;
-import arc.util.Time;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
 import darkdustry.discord.SlashContext;
@@ -22,6 +20,7 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import java.awt.Color;
 
 import static arc.Core.*;
+import static arc.util.Time.timeSinceMillis;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MapParser.*;
@@ -44,19 +43,19 @@ public class DiscordCommands {
             if (isMenu(context)) return;
 
             context.sendEmbed(new EmbedBuilder()
-                    .setColor(Color.green)
-                    .setTitle(":desktop: " + stripAll(Config.serverName.string()))
-                    .addField("Игроков:", String.valueOf(Groups.player.size()), true)
-                    .addField("Карта:", state.map.name(), true)
-                    .addField("Волна:", String.valueOf(state.wave), true)
-                    .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), true)
-                    .addField("Потребление ОЗУ:", Core.app.getJavaHeap() / 1024 / 1024 + " MB", true)
-                    .addField("Сервер онлайн уже:", formatDuration(Time.timeSinceMillis(serverLoadTime)), true)
-                    .addField("Время игры на текущей карте:", formatDuration(Time.timeSinceMillis(mapLoadTime)), true)
-                    .addField("До следующей волны:", formatDuration((long) (state.wavetime / 60 * 1000)), true)
-                    .setImage("attachment://minimap.png").build()
-            )
-                    .addFiles(fromData(parseWorld(), "minimap.png").setDescription("Изображение мини-карты"))
+                            .setColor(Color.green)
+                            .setTitle(":desktop: " + stripAll(Config.serverName.string()))
+                            .addField("Игроков:", Integer.toString(Groups.player.size()), true)
+                            .addField("Юнитов:", Integer.toString(Groups.unit.size()), true)
+                            .addField("Карта:", state.map.name(), true)
+                            .addField("Волна:", Integer.toString(state.wave), true)
+                            .addField("TPS:", Integer.toString(graphics.getFramesPerSecond()), true)
+                            .addField("Потребление ОЗУ:", app.getJavaHeap() / 1024 / 1024 + " MB", true)
+                            .addField("Время работы сервера:", formatDuration(timeSinceMillis(serverLoadTime)), true)
+                            .addField("Время игры на текущей карте:", formatDuration(timeSinceMillis(mapLoadTime)), true)
+                            .addField("До следующей волны:", formatDuration((long) (state.wavetime / 60 * 1000)), true)
+                            .setImage("attachment://minimap.png").build()
+                    ).addFiles(fromData(minimapImage(), "minimap.png"))
                     .queue();
         });
 
@@ -89,8 +88,8 @@ public class DiscordCommands {
             // Сервер перезапустится только после отправки сообщения
             context.info(":gear: Сервер перезапускается...").queue(hook -> {
                 netServer.kickAll(KickReason.serverRestarting);
-                Core.app.post(Bot::exit);
-                Core.app.exit();
+                app.post(Bot::exit);
+                app.exit();
             });
         }).setDefaultPermissions(enabledFor(ADMINISTRATOR));
 
@@ -101,16 +100,15 @@ public class DiscordCommands {
             if (notFound(context, map)) return;
 
             context.sendEmbed(new EmbedBuilder()
-                    .setColor(Color.yellow)
-                    .setTitle(":map: " + map.name())
-                    .setAuthor(map.tags.get("author"))
-                    .setDescription(map.tags.get("description"))
-                    .setFooter(map.width + "x" + map.height)
-                    .setImage("attachment://map.png")
-                    .build()
-            )
-                    .addFiles(fromData(map.file.file()).setDescription("Файл карты"))
-                    .addFiles(fromData(parseMap(map), "map.png").setDescription("Изображение карты"))
+                            .setColor(Color.yellow)
+                            .setTitle(":map: " + map.name())
+                            .setAuthor(map.tags.get("author"))
+                            .setDescription(map.tags.get("description"))
+                            .setFooter(map.width + "x" + map.height)
+                            .setImage("attachment://map.png")
+                            .build()
+                    ).addFiles(fromData(map.file.file()))
+                    .addFiles(fromData(mapImage(map), "map.png"))
                     .queue();
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
@@ -121,8 +119,7 @@ public class DiscordCommands {
 
             var attachment = context.getOption("map").getAsAttachment();
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
-                var mapFile = new Fi(file);
-                if (notMap(context, mapFile)) return;
+                if (notMap(context, new Fi(file))) return;
 
                 maps.reload();
                 context.success(":map: Карта добавлена на сервер.").queue();

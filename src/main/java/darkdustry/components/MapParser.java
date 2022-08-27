@@ -32,7 +32,7 @@ public class MapParser {
         }
     }
 
-    public static byte[] parseMap(Map map) {
+    public static byte[] mapImage(Map map) {
         try {
             return parseImage(MapIO.generatePreview(map));
         } catch (IOException e) {
@@ -40,7 +40,7 @@ public class MapParser {
         }
     }
 
-    public static byte[] parseWorld() {
+    public static byte[] minimapImage() {
         return parseImage(MapIO.generatePreview(world.tiles));
     }
 
