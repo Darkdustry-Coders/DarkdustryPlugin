@@ -2,34 +2,31 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.math.Mathf;
-import arc.util.Log;
-import darkdustry.discord.SlashContext;
+import arc.util.*;
+import darkdustry.discord.Bot;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
-import mindustry.game.Gamemode;
-import mindustry.game.Team;
+import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
-import mindustry.net.Administration.Config;
-import mindustry.net.Administration.PlayerInfo;
-import mindustry.type.Item;
-import mindustry.type.UnitType;
+import mindustry.net.Administration.*;
+import mindustry.type.*;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
-import darkdustry.discord.Bot;
 
-import java.awt.Color;
 import java.util.Objects;
 
-import static arc.util.Strings.*;
-import static darkdustry.components.Database.hasPlayerData;
-import static mindustry.Vars.*;
+import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.components.Database.hasPlayerData;
+import static darkdustry.discord.Bot.Palette.ERROR;
+import static darkdustry.utils.Utils.coloredTeam;
+import static mindustry.Vars.*;
 
 public class Checks {
 
@@ -185,34 +182,34 @@ public class Checks {
     // endregion
     // region Discord
 
-    public static boolean isMenu(SlashContext context) {
-        return check(state.isMenu(), context, ":gear: Сервер не запущен.", ":thinking: Почему?");
+    public static boolean isMenu(SlashCommandInteractionEvent event) {
+        return check(state.isMenu(), event, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
-    public static boolean notAdmin(SlashContext context) {
-        return check(!Bot.isAdmin(context.event().getMember()), context, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
+    public static boolean notAdmin(SlashCommandInteractionEvent event) {
+        return check(!Bot.isAdmin(event.getMember()), event, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
     }
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
         return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(
-                new EmbedBuilder().setColor(Color.red).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
+                new EmbedBuilder().setColor(ERROR).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
         ).setEphemeral(true).queue());
     }
 
-    public static boolean notFound(SlashContext context, Map map) {
-        return check(map == null, context, ":mag: Карта не найдена.", "Проверь, правильно ли введено название.");
+    public static boolean notFound(SlashCommandInteractionEvent event, Map map) {
+        return check(map == null, event, ":mag: Карта не найдена.", "Проверь, правильно ли введено название.");
     }
 
-    public static boolean notFound(SlashContext context, Player player) {
-        return check(player == null, context, ":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
+    public static boolean notFound(SlashCommandInteractionEvent event, Player player) {
+        return check(player == null, event, ":mag: Игрок не найден.", "Проверь, правильно ли введен никнейм.");
     }
 
-    public static boolean notMap(SlashContext context) {
-        Attachment attachment = context.getOption("map").getAsAttachment();
-        return check(!Objects.equals(attachment.getFileExtension(), mapExtension), context, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
+    public static boolean notMap(SlashCommandInteractionEvent event) {
+        Attachment attachment = event.getOption("map").getAsAttachment();
+        return check(!Objects.equals(attachment.getFileExtension(), mapExtension), event, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 
-    public static boolean notMap(SlashContext context, Fi file) {
+    public static boolean notMap(SlashCommandInteractionEvent event, Fi file) {
         return check(!SaveIO.isSaveValid(file), () -> {
             context.error(":no_entry_sign: Файл поврежден или не является картой!").queue();
             file.delete();
@@ -235,8 +232,9 @@ public class Checks {
         return check(result, () -> bundled(player, key, values));
     }
 
-    private static boolean check(boolean result, SlashContext context, String... values) {
-        return check(result, () -> context.error(values[0], values[1]).queue());
+    private static boolean check(boolean result, SlashCommandInteractionEvent event, String... values) {
+        // return check(result, () -> context.error(values[0], values[1]).queue());
+        return check(result, () -> event.replyEmbeds(Bot.error(Strings.format("", values[0], values[1])).build()).queue());
     }
 
     // endregion

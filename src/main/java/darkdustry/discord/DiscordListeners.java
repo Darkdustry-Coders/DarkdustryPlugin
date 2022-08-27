@@ -39,6 +39,6 @@ public class DiscordListeners extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         DarkdustryPlugin.discord("@ использует /@", requireNonNull(event.getMember()).getEffectiveName(), event.getName());
-        DiscordCommands.commands.get(event.getName()).get(new SlashContext(event));
+        DiscordCommands.commands.get(event.getName()).get(event);
     }
 }

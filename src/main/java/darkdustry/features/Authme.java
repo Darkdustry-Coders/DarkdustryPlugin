@@ -8,10 +8,9 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
-import java.awt.Color;
-
 import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
+import static darkdustry.discord.Bot.Palette.*;
 import static mindustry.Vars.netServer;
 
 public class Authme {
@@ -28,14 +27,14 @@ public class Authme {
             player.admin(true);
 
             bundled(player, "commands.login.confirm");
-            return new EmbedBuilder().setColor(Color.green).setTitle("Запрос подтвержден");
+            return new EmbedBuilder().setColor(SUCCESS).setTitle("Запрос подтвержден");
         });
     }
 
     public static void deny(GenericComponentInteractionCreateEvent event) {
         remove(event, player -> {
             bundled(player, "commands.login.deny");
-            return new EmbedBuilder().setColor(Color.red).setTitle("Запрос отклонён");
+            return new EmbedBuilder().setColor(ERROR).setTitle("Запрос отклонён");
         });
     }
 
@@ -44,7 +43,7 @@ public class Authme {
         var info = netServer.admins.getInfo(uuid);
 
         EmbedBuilder embed = new EmbedBuilder()
-                .setColor(Color.yellow)
+                .setColor(INFO)
                 .setTitle("Информация об игроке")
                 .addField("Никнейм:", info.lastName, true)
                 .addField("UUID:", info.id, true)

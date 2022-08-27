@@ -13,14 +13,14 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 import mindustry.net.Administration.Config;
 
-import java.awt.Color;
-
 import static arc.Core.*;
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.discord.Bot.Palette.*;
+import static darkdustry.discord.Bot.sendEmbed;
 import static darkdustry.features.Ranks.*;
 
 public class PluginEvents {
@@ -76,7 +76,7 @@ public class PluginEvents {
             sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
 
-            Bot.sendEmbed(Bot.botChannel, Color.green, "@ присоединился", stripColors(event.player.name));
+            sendEmbed(Bot.botChannel, SUCCESS, "@ присоединился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
@@ -88,7 +88,7 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.leave", event.player.coloredName());
-            Bot.sendEmbed(Bot.botChannel, Color.red, "@ отключился", stripColors(event.player.name));
+            sendEmbed(Bot.botChannel, ERROR, "@ отключился", stripColors(event.player.name));
 
             app.post(Bot::updateBotStatus);
 
@@ -117,7 +117,11 @@ public class PluginEvents {
             if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
         });
 
-        Events.on(ServerLoadEvent.class, event -> serverLoadTime = Time.millis());
+        Events.on(ServerLoadEvent.class, event -> {
+            serverLoadTime = Time.millis();
+
+            sendEmbed(Bot.botChannel, INFO, "@ Сервер запущен (@).", Bot.Emojis.owlonks.getFormatted(), serverLoadTime);
+        });
 
         Events.on(WorldLoadEvent.class, event -> {
             mapLoadTime = Time.millis();

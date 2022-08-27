@@ -4,13 +4,11 @@ import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Strings;
-import darkdustry.discord.SlashContext;
+import darkdustry.discord.*;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
-import net.dv8tion.jda.api.EmbedBuilder;
-
-import java.awt.Color;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -78,28 +76,28 @@ public class PageIterator {
     // endregion
     // region Discord
 
-    public static void players(SlashContext context) {
-        discord(context, Groups.player.copy(new Seq<>()),
-                size -> Strings.format(":satellite: Всего игроков на сервере: @", size),
+    public static void players(SlashCommandInteractionEvent event) {
+        discord(event, Groups.player.copy(new Seq<>()),
+                size -> Strings.format(":bar_chart: Всего игроков на сервере: @", size),
                 (builder, i, p) -> builder.append(p.admin ? ":red_square:" : ":orange_square:").append(" `").append(p.id).append("` | ").append(stripColors(p.name)).append("\n")
         );
     }
 
-    public static void maps(SlashContext context) {
-        discord(context, maps.customMaps(),
+    public static void maps(SlashCommandInteractionEvent event) {
+        discord(event, maps.customMaps(),
                 size -> Strings.format(":map: Всего карт на сервере: @", size),
                 (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append("\n")
         );
     }
 
     private static <T> void discord(
-            SlashContext context, Seq<T> content,
+            SlashCommandInteractionEvent event, Seq<T> content,
             Func<Integer, String> header, Cons3<StringBuilder, Integer, T> cons) {
 
-        int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+        int page = event.getOption("page") != null ? event.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
-            context.error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages).queue();
+            event.replyEmbeds(Bot.error(":interrobang: Неверная страница.").setDescription(Strings.format("Страница должна быть числом от 1 до @", pages)).build()).queue();
             return;
         }
 
@@ -107,9 +105,7 @@ public class PageIterator {
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
-        context.sendEmbed(new EmbedBuilder()
-                .setColor(Color.cyan)
-                .setTitle(header.get(content.size))
+        event.replyEmbeds(Bot.neutral(header.get(content.size))
                 .setDescription(builder.toString())
                 .setFooter(Strings.format("Страница @ / @", page, pages)).build()).queue();
     }
