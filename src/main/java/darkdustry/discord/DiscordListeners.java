@@ -31,7 +31,7 @@ public class DiscordListeners extends ListenerAdapter {
             switch (event.getValues().get(0)) {
                 case "authme.confirm" -> Authme.confirm(event);
                 case "authme.deny" -> Authme.deny(event);
-                case "authme.info" -> Authme.info(event);
+                case "authme.info" -> Authme.information(event);
             }
         }
     }

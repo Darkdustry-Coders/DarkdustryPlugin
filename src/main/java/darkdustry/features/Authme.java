@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.discord.Bot.Palette.*;
 import static mindustry.Vars.netServer;
 
 public class Authme {
@@ -39,13 +38,11 @@ public class Authme {
         });
     }
 
-    public static void info(GenericComponentInteractionCreateEvent event) {
+    public static void information(GenericComponentInteractionCreateEvent event) {
         String uuid = loginWaiting.get(event.getMessage());
         var info = netServer.admins.getInfo(uuid);
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(INFO)
-                .setTitle("Информация об игроке")
+        EmbedBuilder embed = info("Информация об игроке")
                 .addField("Никнейм:", info.lastName, true)
                 .addField("UUID:", info.id, true)
                 .addField("IP адрес:", info.lastIP, true)

@@ -4,22 +4,21 @@ import arc.util.Strings;
 import darkdustry.commands.DiscordCommands;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.net.Administration.Config;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;
 import java.util.EnumSet;
 
-import static arc.util.Strings.format;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.features.Authme.*;
+import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.Permission.*;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
@@ -80,13 +79,12 @@ public class Bot {
     }
 
     public static void sendAdminRequest(Player player) {
-        adminChannel.sendMessage(new MessageCreateBuilder().setEmbeds(new EmbedBuilder()
-                .setColor(NEUTRAL)
-                .setTitle("Запрос на получение прав администратора.")
+        adminChannel.sendMessageEmbeds(neutral(":eyes: Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.name, true)
                 .addField("UUID:", player.uuid(), true)
-                .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!").build()
-        ).setComponents(of(menu)).build()).queue(message -> loginWaiting.put(message, player.uuid()));
+                .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
+                .build()
+        ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.uuid()));
     }
 
     public static boolean isAdmin(Member member) {
@@ -94,7 +92,7 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(Activity.playing(Groups.player.size() + " игроков на " + serverIp + ":" + Config.port.num()));
+        jda.getPresence().setActivity(Activity.playing(stripColors(state.map.name()) + " | " + Groups.player.size() + " игроков"));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... args) {

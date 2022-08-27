@@ -11,7 +11,6 @@ import darkdustry.features.history.*;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
-import mindustry.net.Administration.Config;
 
 import static arc.Core.*;
 import static arc.util.Strings.stripColors;
@@ -22,6 +21,7 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.features.Ranks.*;
+import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {
 
@@ -74,13 +74,13 @@ public class PluginEvents {
 
             Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
-            bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
+            bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             sendEmbed(botChannel, SUCCESS, "@ присоединился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                    new String[][] {{"ui.menus.close"}, {"welcome.menu.disable"}}, null, Config.serverName.string(), discordServerUrl);
+                    new String[][] {{"ui.menus.close"}, {"welcome.menu.disable"}}, null, serverName.string(), discordServerUrl);
         });
 
         Events.on(PlayerLeave.class, event -> {
@@ -119,7 +119,6 @@ public class PluginEvents {
 
         Events.on(ServerLoadEvent.class, event -> {
             serverLoadTime = Time.millis();
-
             sendEmbed(botChannel, INFO, "Сервер запущен");
         });
 

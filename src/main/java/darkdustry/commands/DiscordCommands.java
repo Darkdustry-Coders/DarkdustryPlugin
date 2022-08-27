@@ -11,7 +11,6 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
-import mindustry.net.Administration.Config;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -28,6 +27,7 @@ import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
+import static mindustry.net.Administration.Config.serverName;
 import static net.dv8tion.jda.api.Permission.*;
 import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.*;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
@@ -42,16 +42,18 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", event -> {
             if (isMenu(event)) return;
 
-            EmbedBuilder embed = info(":desktop: " + stripAll(Config.serverName.string()))
-                    .addField("Игроков:", Integer.toString(Groups.player.size()), true)
-                    .addField("Юнитов:", Integer.toString(Groups.unit.size()), true)
-                    .addField("Карта:", state.map.name(), true)
-                    .addField("Волна:", Integer.toString(state.wave), true)
-                    .addField("TPS:", Integer.toString(graphics.getFramesPerSecond()), true)
-                    .addField("Потребление ОЗУ:", app.getJavaHeap() / 1024 / 1024 + " MB", true)
-                    .addField("Время работы сервера:", formatDuration(timeSinceMillis(serverLoadTime)), true)
-                    .addField("Время игры на текущей карте:", formatDuration(timeSinceMillis(mapLoadTime)), true)
-                    .addField("До следующей волны:", formatDuration((long) (state.wavetime / 60 * 1000)), true)
+            String status = "Игроков: " + Groups.player.size() + "\n" +
+                    "Карта: " + state.map.name() + "\n" +
+                    "Волна: " + state.wave + "\n" +
+                    "TPS: " + graphics.getFramesPerSecond() + "\n" +
+                    "Потребление ОЗУ: " + app.getJavaHeap() / 1024 / 1024 + " МБ\n" +
+                    "Время работы сервера: " + formatDuration(timeSinceMillis(serverLoadTime)) + "\n" +
+                    "Время игры на текущей карте: " + formatDuration(timeSinceMillis(mapLoadTime)) + "\n" +
+                    "До следующей волны: " + formatDuration((long) (state.wavetime / 60 * 1000));
+
+            // TODO заменить на format() или что-то подобное, это жопа какая-то
+
+            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()), status)
                     .setImage("attachment://minimap.png");
 
             event.replyEmbeds(embed.build())
@@ -71,7 +73,7 @@ public class DiscordCommands {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.name);
 
-            event.replyEmbeds(info(":knife: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)).build()).queue();
+            event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 

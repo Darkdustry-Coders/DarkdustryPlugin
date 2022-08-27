@@ -78,15 +78,15 @@ public class PageIterator {
 
     public static void players(SlashCommandInteractionEvent event) {
         discord(event, Groups.player.copy(new Seq<>()),
-                size -> format(":bar_chart: Всего игроков на сервере: @", size),
-                (builder, i, p) -> builder.append(p.admin ? ":red_square:" : ":orange_square:").append(" `").append(p.id).append("` | ").append(stripColors(p.name)).append("\n")
+                size -> format(":bar_chart: Игроков на сервере: @", size),
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" ").append(p.id).append("` | ").append(stripColors(p.name)).append("\n")
         );
     }
 
     public static void maps(SlashCommandInteractionEvent event) {
         discord(event, maps.customMaps(),
-                size -> format(":map: Всего карт на сервере: @", size),
-                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append("\n")
+                size -> format(":map: Карт в плейлисте сервера: @", size),
+                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")\n")
         );
     }
 

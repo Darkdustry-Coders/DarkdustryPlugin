@@ -9,7 +9,7 @@ import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
-import mindustry.net.Administration.*;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,6 +28,7 @@ import static darkdustry.discord.Bot.Palette.ERROR;
 import static darkdustry.utils.Utils.coloredTeam;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
+import static mindustry.net.Administration.Config.enableVotekick;
 
 public class Checks {
 
@@ -109,7 +110,7 @@ public class Checks {
     }
 
     public static boolean votekickDisabled(Player player) {
-        return check(!Config.enableVotekick.bool(), player, "commands.votekick.disabled");
+        return check(!enableVotekick.bool(), player, "commands.votekick.disabled");
     }
 
     public static boolean invalidVotekickTarget(Player player, Player target) {
