@@ -9,6 +9,8 @@ import darkdustry.discord.Bot;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
+import mindustry.io.MapIO;
+import mindustry.maps.Map;
 import mindustry.net.Administration.Config;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -126,10 +128,21 @@ public class DiscordCommands {
 
             var attachment = requireNonNull(event.getOption("map")).getAsAttachment();
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
-                if (notMap(event, new Fi(file))) return;
+                Fi mapFile = new Fi(file);
 
-                maps.reload();
-                event.replyEmbeds(success(":map: Карта добавлена на сервер.").build()).queue();
+                Map map;
+
+                try {
+                    map = MapIO.createMap(mapFile, true);
+                    maps.all().add(map);
+                    maps.all().sort();
+                } catch (Exception e) {
+                    mapFile.delete();
+                    // тут типа надо дединсайднуться и ответить что чел клоун, возможно через Checks
+                    return;
+                }
+
+                event.replyEmbeds(success(":map: Карта добавлена на сервер.", "Название карты: @", map.name()).build()).queue();
             });
         }).setDefaultPermissions(DISABLED)
                 .addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true);
