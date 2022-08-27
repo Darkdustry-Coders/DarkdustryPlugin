@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import java.awt.Color;
 import java.util.EnumSet;
 
+import static arc.util.Strings.format;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
@@ -109,12 +110,24 @@ public class Bot {
         return new EmbedBuilder().setColor(SUCCESS).setTitle(title);
     }
 
+    public static EmbedBuilder success(String title, String description, Object... args) {
+        return success(title).setDescription(format(description, args));
+    }
+
     public static EmbedBuilder info(String title) {
         return new EmbedBuilder().setColor(INFO).setTitle(title);
     }
 
+    public static EmbedBuilder info(String title, String description, Object... args) {
+        return info(title).setDescription(format(description, args));
+    }
+
     public static EmbedBuilder error(String title) {
         return new EmbedBuilder().setColor(ERROR).setTitle(title);
+    }
+
+    public static EmbedBuilder error(String title, String description, Object... args) {
+        return error(title).setDescription(format(description, args));
     }
 
     public static EmbedBuilder neutral(String title) {

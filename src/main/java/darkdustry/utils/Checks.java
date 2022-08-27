@@ -3,7 +3,6 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.game.*;
@@ -24,8 +23,10 @@ import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.Database.hasPlayerData;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.ERROR;
 import static darkdustry.utils.Utils.coloredTeam;
+import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
 
 public class Checks {
@@ -186,12 +187,8 @@ public class Checks {
         return check(state.isMenu(), event, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
-    public static boolean notAdmin(SlashCommandInteractionEvent event) {
-        return check(!Bot.isAdmin(event.getMember()), event, ":no_entry_sign: Эта команда только для администрации.", "У тебя нет прав на ее использование.");
-    }
-
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
-        return check(!Bot.isAdmin(event.getMember()), () -> event.replyEmbeds(
+        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(
                 new EmbedBuilder().setColor(ERROR).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
         ).setEphemeral(true).queue());
     }
@@ -205,7 +202,7 @@ public class Checks {
     }
 
     public static boolean notMap(SlashCommandInteractionEvent event) {
-        Attachment attachment = event.getOption("map").getAsAttachment();
+        Attachment attachment = requireNonNull(event.getOption("map")).getAsAttachment();
         return check(!Objects.equals(attachment.getFileExtension(), mapExtension), event, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 
@@ -232,9 +229,8 @@ public class Checks {
         return check(result, () -> bundled(player, key, values));
     }
 
-    private static boolean check(boolean result, SlashCommandInteractionEvent event, String... values) {
-        // return check(result, () -> context.error(values[0], values[1]).queue());
-        return check(result, () -> event.replyEmbeds(Bot.error(Strings.format("", values[0], values[1])).build()).queue());
+    private static boolean check(boolean result, SlashCommandInteractionEvent event, String title, String description, Object... values) {
+        return check(result, () -> event.replyEmbeds(error(title, description, values).build()).queue());
     }
 
     // endregion

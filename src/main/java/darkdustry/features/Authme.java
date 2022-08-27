@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
 import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static mindustry.Vars.netServer;
 
@@ -27,14 +28,14 @@ public class Authme {
             player.admin(true);
 
             bundled(player, "commands.login.confirm");
-            return new EmbedBuilder().setColor(SUCCESS).setTitle("Запрос подтвержден");
+            return success("Запрос подтвержден");
         });
     }
 
     public static void deny(GenericComponentInteractionCreateEvent event) {
         remove(event, player -> {
             bundled(player, "commands.login.deny");
-            return new EmbedBuilder().setColor(ERROR).setTitle("Запрос отклонён");
+            return error("Запрос отклонен");
         });
     }
 

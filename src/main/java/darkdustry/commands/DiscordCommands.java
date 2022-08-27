@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import static arc.Core.*;
-import static arc.util.Strings.format;
 import static arc.util.Time.timeSinceMillis;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
@@ -28,7 +27,7 @@ import static darkdustry.utils.Utils.*;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
 import static net.dv8tion.jda.api.Permission.*;
-import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.enabledFor;
+import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.*;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 import static net.dv8tion.jda.api.utils.FileUpload.fromData;
 
@@ -58,7 +57,10 @@ public class DiscordCommands {
                     .queue();
         });
 
-        register("players", "Список всех игроков на сервере.", PageIterator::players).addOption(INTEGER, "page", "Страница списка игроков.");
+
+        register("players", "Список всех игроков на сервере.", PageIterator::players)
+                .addOption(INTEGER, "page", "Страница списка игроков.");
+
 
         register("kick", "Выгнать игрока с сервера.", event -> {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
@@ -67,12 +69,10 @@ public class DiscordCommands {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.name);
 
-            EmbedBuilder embed = info(":knife: Игрок успешно выгнан с сервера.")
-                    .setDescription(format("@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)));
+            event.replyEmbeds(info(":knife: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)).build()).queue();
+        }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
+                .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 
-            event.replyEmbeds(embed.build()).queue();
-        }).addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true)
-                .setDefaultPermissions(enabledFor(KICK_MEMBERS));
 
         register("ban", "Забанить игрока на сервере.", event -> {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
@@ -82,12 +82,10 @@ public class DiscordCommands {
             kick(target, 0, true, "kick.banned");
             sendToChat("events.server.ban", target.name);
 
-            EmbedBuilder embed = info(":wheelchair: Игрок успешно заблокирован.")
-                    .setDescription(format("@ больше не сможет зайти на сервер.", target.name));
+            event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.name).build()).queue();
+        }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
+                .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
 
-            event.replyEmbeds(embed.build()).queue();
-        }).addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true)
-                .setDefaultPermissions(enabledFor(BAN_MEMBERS));
 
         register("restart", "Перезапустить сервер.", event -> {
             // Сервер перезапустится только после отправки сообщения
@@ -97,7 +95,8 @@ public class DiscordCommands {
                 app.post(Bot::exit);
                 app.exit();
             });
-        }).setDefaultPermissions(enabledFor(ADMINISTRATOR));
+        }).setDefaultPermissions(DISABLED);
+
 
         if (config.mode == Gamemode.hexed) return;
 
@@ -115,10 +114,12 @@ public class DiscordCommands {
                     .addFiles(fromData(map.file.file()))
                     .addFiles(fromData(renderMap(map), "map.png"))
                     .queue();
-
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
-        register("maps", "Список всех карт сервера.", PageIterator::maps).addOption(INTEGER, "page", "Страница списка карт.");
+
+        register("maps", "Список всех карт сервера.", PageIterator::maps)
+                .addOption(INTEGER, "page", "Страница списка карт.");
+
 
         register("addmap", "Добавить карту на сервер.", event -> {
             if (notMap(event)) return;
@@ -130,8 +131,9 @@ public class DiscordCommands {
                 maps.reload();
                 event.replyEmbeds(success(":map: Карта добавлена на сервер.").build()).queue();
             });
-        }).addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true)
-                .setDefaultPermissions(enabledFor(ADMINISTRATOR));
+        }).setDefaultPermissions(DISABLED)
+                .addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true);
+
 
         register("removemap", "Удалить карту с сервера.", event -> {
             var map = Find.map(requireNonNull(event.getOption("map")).getAsString());
@@ -140,19 +142,18 @@ public class DiscordCommands {
             maps.removeMap(map);
             maps.reload();
 
-            EmbedBuilder embed = success(":knife: Карта удалена с сервера.")
-                    .setDescription(format("Название карты: @", map.name()));
+            event.replyEmbeds(success(":knife: Карта удалена с сервера.", "Название карты: @", map.name()).build()).queue();
+        }).setDefaultPermissions(DISABLED)
+                .addOption(STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
 
-            event.replyEmbeds(embed.build()).queue();
-        }).addOption(STRING, "map", "Название карты, которую необходимо удалить с сервера.", true)
-                .setDefaultPermissions(enabledFor(ADMINISTRATOR));
 
         register("gameover", "Принудительно завершить игру.", event -> {
             if (isMenu(event)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":map: Игра успешно завершена.").build()).queue();
-        }).setDefaultPermissions(enabledFor(ADMINISTRATOR));
+        }).setDefaultPermissions(DISABLED);
+
 
         // Регистрируем все команды одним запросом
         jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
