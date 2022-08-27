@@ -24,7 +24,7 @@ public class Effects {
         pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),  p -> on(Fx.scatheExplosion, p),    p -> on(Fx.electrified, p));
         pack5 = new FxPack(p -> on(Fx.instBomb, p),         p -> on(Fx.instHit, p),            p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
         pack6 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p),           p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack7 = new FxPack(Effects::particles,              Effects::particles,                p -> on(Fx.regenSuppressSeek, p, 0f, null, p.unit()));
+        pack7 = new FxPack(Effects::particles,              Effects::particles,                p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
@@ -50,7 +50,10 @@ public class Effects {
     public static void particles(Player player) {
         for (int deg = 0; deg < 180; deg += 5)
             for (int i = 0; i < 3; i++) {
-                on(Fx.regenSuppressSeek, Tmp.v1.set(player).add(Mathf.cosDeg(deg + 120f * i) * deg, Mathf.sinDeg(deg + 120f * i) * deg), 0f, null, Tmp.v2.set(player));
+                on(Fx.regenSuppressSeek, Tmp.v1.set(player).add(
+                        Mathf.cosDeg(deg + 120f * i) * deg,
+                        Mathf.sinDeg(deg + 120f * i) * deg
+                ), 0f, Color.white, Tmp.v2.set(player));
             }
     }
 

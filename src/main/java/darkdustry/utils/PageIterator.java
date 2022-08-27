@@ -81,20 +81,20 @@ public class PageIterator {
     public static void players(SlashContext context) {
         discord(context, Groups.player.copy(new Seq<>()),
                 size -> Strings.format(":satellite: Всего игроков на сервере: @", size),
-                (builder, p) -> builder.append(stripColors(p.name)).append(" | ID: ").append(p.id).append("\n")
+                (builder, i, p) -> builder.append(p.admin ? ":red_square:" : ":orange_square:").append(" `").append(p.id).append("` | ").append(stripColors(p.name)).append("\n")
         );
     }
 
     public static void maps(SlashContext context) {
         discord(context, maps.customMaps(),
                 size -> Strings.format(":map: Всего карт на сервере: @", size),
-                (builder, map) -> builder.append(stripColors(map.name())).append("\n")
+                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append("\n")
         );
     }
 
     private static <T> void discord(
             SlashContext context, Seq<T> content,
-            Func<Integer, String> header, Cons2<StringBuilder, T> cons) {
+            Func<Integer, String> header, Cons3<StringBuilder, Integer, T> cons) {
 
         int page = context.getOption("page") != null ? context.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
@@ -105,7 +105,7 @@ public class PageIterator {
 
         var builder = new StringBuilder();
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder.append("**").append(i + 1).append(".** "), content.get(i));
+            cons.get(builder, i, content.get(i));
 
         context.sendEmbed(new EmbedBuilder()
                 .setColor(Color.cyan)
