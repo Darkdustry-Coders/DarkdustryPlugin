@@ -55,7 +55,7 @@ public class DiscordCommands {
                             .addField("Время игры на текущей карте:", formatDuration(timeSinceMillis(mapLoadTime)), true)
                             .addField("До следующей волны:", formatDuration((long) (state.wavetime / 60 * 1000)), true)
                             .setImage("attachment://minimap.png").build()
-                    ).addFiles(fromData(minimapImage(), "minimap.png"))
+                    ).addFiles(fromData(renderMinimap(), "minimap.png"))
                     .queue();
         });
 
@@ -108,7 +108,7 @@ public class DiscordCommands {
                             .setImage("attachment://map.png")
                             .build()
                     ).addFiles(fromData(map.file.file()))
-                    .addFiles(fromData(mapImage(map), "map.png"))
+                    .addFiles(fromData(renderMap(map), "map.png"))
                     .queue();
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
