@@ -19,8 +19,8 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.*;
-import static darkdustry.discord.Bot.sendEmbed;
 import static darkdustry.features.Ranks.*;
 
 public class PluginEvents {
@@ -76,7 +76,7 @@ public class PluginEvents {
             sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", Config.serverName.string(), discordServerUrl);
 
-            sendEmbed(Bot.botChannel, SUCCESS, "@ присоединился", stripColors(event.player.name));
+            sendEmbed(botChannel, SUCCESS, "@ присоединился", stripColors(event.player.name));
             app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
@@ -88,7 +88,7 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
             sendToChat("events.player.leave", event.player.coloredName());
-            sendEmbed(Bot.botChannel, ERROR, "@ отключился", stripColors(event.player.name));
+            sendEmbed(botChannel, ERROR, "@ отключился", stripColors(event.player.name));
 
             app.post(Bot::updateBotStatus);
 
@@ -120,7 +120,7 @@ public class PluginEvents {
         Events.on(ServerLoadEvent.class, event -> {
             serverLoadTime = Time.millis();
 
-            sendEmbed(Bot.botChannel, INFO, "@ Сервер запущен (@).", Bot.Emojis.owlonks.getFormatted(), serverLoadTime);
+            sendEmbed(botChannel, INFO, "Сервер запущен");
         });
 
         Events.on(WorldLoadEvent.class, event -> {

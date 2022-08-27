@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
-import net.dv8tion.jda.api.entities.emoji.*;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
@@ -140,12 +139,5 @@ public class Bot {
                 INFO = Color.decode("#fcf47c"),
                 ERROR = Color.decode("#f93c3c"),
                 NEUTRAL = Color.decode("#2c94ec");
-    }
-
-    public static class Emojis {
-        public static Emoji
-                owlonks = Emoji.fromCustom("owlonks", 835910249722282064L, false),
-                troll = Emoji.fromCustom("proizoshel_trolling", 855134390573465620L, false),
-                skat = Emoji.fromCustom("cool-skat-1", 1013085030890864650L, false);
     }
 }
