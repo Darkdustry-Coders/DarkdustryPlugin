@@ -1,6 +1,5 @@
 package darkdustry.discord;
 
-import arc.util.Strings;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
 import darkdustry.utils.Find;
@@ -21,6 +20,7 @@ import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.features.Authme.menu;
 import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
+import static net.dv8tion.jda.api.entities.Activity.watching;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;
@@ -93,15 +93,15 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(Activity.playing(stripColors(state.map.name()) + " | " + Groups.player.size() + " игроков"));
+        jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... args) {
-        channel.sendMessage(Strings.format(text, args)).queue();
+        channel.sendMessage(format(text, args)).queue();
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
-        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(text, args)).build()).queue();
+        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, args)).build()).queue();
     }
 
     public static EmbedBuilder success(String title) {

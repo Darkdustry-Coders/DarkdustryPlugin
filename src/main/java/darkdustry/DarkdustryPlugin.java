@@ -66,7 +66,7 @@ public class DarkdustryPlugin extends Plugin {
             }
 
             setPlayerData(data);
-        }), 0f, 60f);
+        }), 60f, 60f);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
