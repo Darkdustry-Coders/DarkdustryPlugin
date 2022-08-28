@@ -1,11 +1,9 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.graphics.Color;
 import arc.util.CommandHandler.*;
 import arc.util.*;
 import darkdustry.utils.Find;
-import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.NetConnection;
@@ -39,14 +37,18 @@ public class NetHandlers {
 
     public static void packet(NetConnection con, ConnectPacket packet) {
         if (con.kicked) return;
+
         con.connectTime = Time.millis();
 
         Events.fire(new ConnectPacketEvent(con, packet));
 
-        String uuid = packet.uuid,
-                usid = packet.usid,
+        String uuid = con.uuid = packet.uuid,
+                usid = con.usid = packet.usid,
                 ip = con.address,
                 name = Reflect.invoke(netServer, "fixName", Structs.arr(packet.name), String.class);
+
+        con.mobile = packet.mobile;
+        con.modclient = packet.version == -1;
 
         var locale = Find.locale(packet.locale = notNullElse(packet.locale, defaultLanguage));
 
@@ -88,8 +90,8 @@ public class NetHandlers {
             info.lastName = name;
             info.lastIP = ip;
             info.adminUsid = usid;
-            if (!info.names.contains(name)) info.names.add(name);
-            if (!info.ips.contains(ip)) info.ips.add(ip);
+            info.names.addUnique(name);
+            info.ips.addUnique(ip);
             kick(con, 0, false, "kick.not-whitelisted", locale, discordServerUrl);
             return;
         }
@@ -109,23 +111,19 @@ public class NetHandlers {
             return;
         }
 
-        if (packet.version != Version.build && packet.version != -1 && Version.build != -1 && !packet.versionType.equals("bleeding-edge")) {
-            kick(con, 0, false, packet.version > Version.build ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, Version.build);
+        if (packet.version != mindustryVersion && packet.version != -1 && !packet.versionType.equals("bleeding-edge")) {
+            kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
 
         netServer.admins.updatePlayerJoined(uuid, ip, name);
 
         Player player = Player.create();
-        player.admin(netServer.admins.isAdmin(uuid, usid));
+        player.con(con);
         player.name(name);
         player.locale(packet.locale);
-        player.color(new Color(packet.color).a(1f));
-        player.con(con);
-        player.con.usid = usid;
-        player.con.uuid = uuid;
-        player.con.mobile = packet.mobile;
-        player.con.modclient = packet.version == -1;
+        player.admin(netServer.admins.isAdmin(uuid, usid));
+        player.color.set(packet.color).a(1f);
 
         if (!player.admin && !info.admin) info.adminUsid = usid;
 

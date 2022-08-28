@@ -26,21 +26,22 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void init() {
-        Effects.load();
-        Alerts.load();
         Bundle.load();
         Config.load();
         Icons.load();
-        Ranks.load();
-        PluginEvents.load();
-        MenuHandler.load();
-        Translator.load();
         MapParser.load();
+        MenuHandler.load();
+
+        Alerts.load();
+        Effects.load();
+        Ranks.load();
+        SchemeSize.load();
+        Translator.load();
+
+        PluginEvents.load();
 
         Database.connect();
         Bot.connect();
-
-        SchemeSize.load();
 
         Version.build = -1;
 
@@ -56,7 +57,7 @@ public class DarkdustryPlugin extends Plugin {
             data.playTime++;
 
             var rank = Ranks.getRank(data.rank);
-            if (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+            while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
                 Ranks.setRank(player, rank = rank.next);
                 data.rank = rank.id;
 

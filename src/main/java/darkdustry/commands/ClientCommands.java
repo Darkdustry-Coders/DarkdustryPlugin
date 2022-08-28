@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
-import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
@@ -13,6 +12,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.discord.Bot.sendAdminRequest;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.*;
@@ -126,7 +126,7 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player) || isCooldowned(player, "login")) return;
 
-            Bot.sendAdminRequest(player);
+            sendAdminRequest(player);
             bundled(player, "commands.login.sent");
             Cooldowns.run(player.uuid(), "login");
         });

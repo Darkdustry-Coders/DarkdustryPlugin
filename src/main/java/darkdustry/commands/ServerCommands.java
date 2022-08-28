@@ -17,6 +17,7 @@ import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -84,7 +85,7 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
-            Bot.sendMessage(Bot.botChannel, "Сервер » @", args[0]);
+            sendMessage(botChannel, "Сервер » @", args[0]);
         });
 
         serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
