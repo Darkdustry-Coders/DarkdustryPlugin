@@ -2,18 +2,17 @@ package darkdustry.features;
 
 import arc.func.Cons;
 import arc.struct.StringMap;
-import arc.util.*;
+import arc.util.Http;
 import arc.util.serialization.Jval;
-import darkdustry.utils.Find;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.utils.Find;
+import mindustry.gen.*;
 
 import static arc.util.Strings.*;
-import static darkdustry.components.Bundle.bundled;
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.Bundle.bundled;
+import static darkdustry.components.Database.getPlayerData;
+import static mindustry.Vars.netServer;
 
 public class Translator {
 
@@ -86,7 +85,7 @@ public class Translator {
                 return;
             }
 
-            if (cache.containsKey(language)) 
+            if (cache.containsKey(language))
                 player.sendMessage(cache.get(language), author, text);
             else translate(language, stripColors(text), result -> {
                 cache.put(language, message + " [white]([lightgray]" + result + "[])");

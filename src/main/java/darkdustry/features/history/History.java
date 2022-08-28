@@ -3,8 +3,8 @@ package darkdustry.features.history;
 import arc.struct.Queue;
 import mindustry.world.Tile;
 
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
+import static mindustry.Vars.world;
 
 public class History {
 

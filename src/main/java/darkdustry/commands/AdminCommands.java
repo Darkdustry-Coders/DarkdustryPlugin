@@ -2,21 +2,19 @@ package darkdustry.commands;
 
 import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
-import mindustry.content.Blocks;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.world.Tile;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
+import mindustry.content.Blocks;
+import mindustry.gen.*;
+import mindustry.world.Tile;
 
 import static arc.util.Strings.parseInt;
-import static mindustry.Vars.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.clientCommands;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.coloredTeam;
+import static mindustry.Vars.*;
 import static mindustry.graphics.Pal.adminChat;
 
 public class AdminCommands {

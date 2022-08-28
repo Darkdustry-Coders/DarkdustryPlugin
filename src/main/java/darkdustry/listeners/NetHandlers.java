@@ -3,23 +3,18 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.graphics.Color;
 import arc.util.CommandHandler.*;
-import arc.util.Reflect;
-import arc.util.Strings;
-import arc.util.Structs;
-import arc.util.Time;
+import arc.util.*;
+import darkdustry.utils.Find;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
-import darkdustry.utils.Find;
+import mindustry.net.Packets.*;
 
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
+import static darkdustry.components.Bundle.format;
 import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
 
 public class NetHandlers {
 

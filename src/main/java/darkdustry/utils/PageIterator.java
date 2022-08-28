@@ -3,13 +3,14 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.*;
 import static java.util.Objects.requireNonNull;

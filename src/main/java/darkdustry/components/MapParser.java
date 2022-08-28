@@ -2,16 +2,15 @@ package darkdustry.components;
 
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
+import darkdustry.DarkdustryPlugin;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
 import mindustry.world.blocks.environment.OreBlock;
-import darkdustry.DarkdustryPlugin;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 
+import static darkdustry.utils.Utils.getPluginResource;
 import static mindustry.Vars.*;
-import static darkdustry.utils.Utils.*;
 
 public class MapParser {
 

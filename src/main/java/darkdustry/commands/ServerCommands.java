@@ -8,8 +8,7 @@ import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.gen.Groups;
-import mindustry.maps.Map;
-import mindustry.maps.MapException;
+import mindustry.maps.*;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.Packets.KickReason;
 
@@ -17,8 +16,7 @@ import static arc.Core.*;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.Database.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -95,7 +93,7 @@ public class ServerCommands {
 
             kick(target, kickDuration, true, "kick.kicked");
             Log.info("Player @ has been kicked.", target.name);
-            sendToChat("events.server.kick", target.name);
+            sendToChat("events.server.kick", target.coloredName());
         });
 
         serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
@@ -113,7 +111,7 @@ public class ServerCommands {
                 netServer.admins.banPlayer(target.uuid());
                 kick(target, 0, true, "kick.banned");
                 Log.info("Player @ has been banned.", target.name);
-                sendToChat("events.server.ban", target.name);
+                sendToChat("events.server.ban", target.coloredName());
                 return;
             }
 
@@ -124,7 +122,7 @@ public class ServerCommands {
             Log.info("Player @ has been banned.", info.lastName);
             Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
                 kick(player, 0, true, "kick.banned");
-                sendToChat("events.server.ban", player.name);
+                sendToChat("events.server.ban", player.coloredName());
             });
         });
 

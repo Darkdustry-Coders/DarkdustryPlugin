@@ -3,9 +3,9 @@ package darkdustry.components;
 import arc.files.Fi;
 import darkdustry.DarkdustryPlugin;
 
-import static mindustry.Vars.*;
-import static mindustry.net.Administration.Config.*;
 import static darkdustry.PluginVars.*;
+import static mindustry.Vars.dataDirectory;
+import static mindustry.net.Administration.Config.*;
 
 public class Config {
 

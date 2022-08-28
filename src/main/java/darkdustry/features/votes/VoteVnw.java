@@ -2,8 +2,8 @@ package darkdustry.features.votes;
 
 import mindustry.gen.Player;
 
-import static mindustry.Vars.*;
-import static darkdustry.components.Bundle.*;
+import static darkdustry.components.Bundle.sendToChat;
+import static mindustry.Vars.logic;
 
 public class VoteVnw extends VoteSession {
 

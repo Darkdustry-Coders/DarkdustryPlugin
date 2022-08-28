@@ -1,25 +1,26 @@
 package darkdustry.discord;
 
 import arc.util.Strings;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import darkdustry.utils.Find;
+import mindustry.gen.*;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
-import darkdustry.DarkdustryPlugin;
-import darkdustry.utils.Find;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;
 import java.util.EnumSet;
 
+import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
-import static darkdustry.features.Authme.*;
+import static darkdustry.features.Authme.menu;
 import static mindustry.Vars.state;
-import static net.dv8tion.jda.api.Permission.*;
+import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;

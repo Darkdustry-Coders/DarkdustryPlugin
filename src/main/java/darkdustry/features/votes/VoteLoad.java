@@ -6,8 +6,8 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
 import static darkdustry.PluginVars.mapLoadDelay;
-import static darkdustry.components.Bundle.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.components.Bundle.sendToChat;
+import static darkdustry.utils.Utils.reloadWorld;
 
 public class VoteLoad extends VoteSession {
 

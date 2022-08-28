@@ -1,8 +1,7 @@
 package darkdustry.features;
 
 import arc.func.Func;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
@@ -16,9 +15,9 @@ import static mindustry.Vars.netServer;
 public class Authme {
 
     public static final SelectMenu menu = SelectMenu.create("authme")
-            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.",                  Emoji.fromFormatted("✅"))
-            .addOption("Отклонить",   "authme.deny",    "Отклонить запрос.",                    Emoji.fromFormatted("❌"))
-            .addOption("Информация",  "authme.info",    "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("🔎"))
+            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.", Emoji.fromFormatted("✅"))
+            .addOption("Отклонить", "authme.deny", "Отклонить запрос.", Emoji.fromFormatted("❌"))
+            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("🔎"))
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {

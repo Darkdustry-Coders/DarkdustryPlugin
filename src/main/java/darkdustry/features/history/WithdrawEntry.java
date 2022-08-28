@@ -1,14 +1,14 @@
 package darkdustry.features.history;
 
 import arc.util.Time;
-import mindustry.game.EventType.*;
-import mindustry.gen.Player;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
+import mindustry.game.EventType.WithdrawEvent;
+import mindustry.gen.Player;
 
-import static mindustry.Vars.*;
-import static darkdustry.components.Bundle.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.components.Bundle.format;
+import static darkdustry.utils.Utils.formatDate;
+import static mindustry.Vars.content;
 
 public class WithdrawEntry implements HistoryEntry {
 

@@ -1,15 +1,14 @@
 package darkdustry.features.history;
 
 import arc.util.Time;
-import mindustry.gen.Iconc;
-import mindustry.gen.Player;
-import mindustry.net.Administration.PlayerAction;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
+import mindustry.gen.*;
+import mindustry.net.Administration.PlayerAction;
 
-import static mindustry.Vars.*;
-import static darkdustry.components.Bundle.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.components.Bundle.format;
+import static darkdustry.utils.Utils.formatDate;
+import static mindustry.Vars.content;
 
 public class RotateEntry implements HistoryEntry {
 

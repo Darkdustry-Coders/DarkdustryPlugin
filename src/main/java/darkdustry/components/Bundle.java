@@ -1,23 +1,19 @@
 package darkdustry.components;
 
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import arc.struct.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
+import mindustry.gen.*;
 
 import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.getPluginResource;
 
 public class Bundle {
 
-    public static final Locale defaultLocale = new Locale(defaultLanguage);
+    public static final Locale defaultLocale = new Locale(defaultLanguage), discordLocale = new Locale(discordLanguage);
     public static final Seq<Locale> supportedLocales = new Seq<>();
 
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();

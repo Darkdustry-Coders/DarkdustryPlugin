@@ -7,17 +7,17 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
-import mindustry.net.NetConnection;
-import mindustry.net.WorldReloader;
+import mindustry.net.*;
 
-import java.text.*;
-import java.time.*;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 
 import static arc.util.Strings.*;
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
+import static mindustry.Vars.*;
 
 public class Utils {
 
@@ -62,7 +62,7 @@ public class Utils {
     }
 
     public static String formatDuration(long time) {
-        return formatDuration(time, defaultLocale);
+        return formatDuration(time, discordLocale);
     }
 
     public static String formatDuration(long time, Locale locale) {
@@ -73,8 +73,8 @@ public class Utils {
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-                    if (value.intValue() > 0)
-                        builder.append(format(key, locale, value)).append(" ");
+            if (value.intValue() > 0)
+                builder.append(format(key, locale, value)).append(" ");
         });
 
         return builder.toString().trim();

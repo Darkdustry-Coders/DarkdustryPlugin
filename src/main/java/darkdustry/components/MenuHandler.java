@@ -1,19 +1,16 @@
 package darkdustry.components;
 
 import arc.Events;
-import mindustry.game.EventType.GameOverEvent;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
-import mindustry.ui.Menus;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
+import mindustry.game.EventType.GameOverEvent;
+import mindustry.gen.*;
+import mindustry.ui.Menus;
 
-import static mindustry.Vars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.coloredTeam;
+import static mindustry.Vars.state;
 
 public class MenuHandler {
 

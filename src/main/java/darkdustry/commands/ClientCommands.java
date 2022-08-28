@@ -2,23 +2,20 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.features.votes.*;
-import darkdustry.utils.Cooldowns;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
+import darkdustry.utils.*;
+import mindustry.gen.*;
 
 import static arc.util.Strings.parseInt;
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.voteChoice;
+import static mindustry.Vars.*;
 
 public class ClientCommands {
 

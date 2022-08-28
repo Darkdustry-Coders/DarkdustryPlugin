@@ -2,7 +2,7 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.math.Mathf;
-import arc.util.*;
+import arc.util.Log;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.game.*;
@@ -12,7 +12,6 @@ import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
@@ -24,7 +23,6 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.Database.hasPlayerData;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.discord.Bot.Palette.ERROR;
 import static darkdustry.utils.Utils.coloredTeam;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
@@ -190,7 +188,7 @@ public class Checks {
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
         return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(
-                new EmbedBuilder().setColor(ERROR).setTitle(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
+                error(":no_entry_sign: Взаимодействовать с запросами могут только админы.").build()
         ).setEphemeral(true).queue());
     }
 

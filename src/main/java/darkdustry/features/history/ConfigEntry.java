@@ -1,15 +1,12 @@
 package darkdustry.features.history;
 
 import arc.math.geom.Point2;
-import arc.util.Structs;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import darkdustry.utils.Find;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
-import mindustry.world.blocks.logic.CanvasBlock;
-import mindustry.world.blocks.logic.LogicBlock;
+import mindustry.world.blocks.logic.*;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
 
@@ -34,6 +31,39 @@ public class ConfigEntry implements HistoryEntry {
         this.value = getValue(event);
         this.connect = value instanceof Point2 point && getConnect(event, point);
         this.time = Time.millis();
+    }
+
+    public static Object getValue(ConfigEvent event) {
+        if (event.value instanceof Integer number) {
+            if (event.tile.block instanceof UnitFactory factory)
+                return number == -1 ? null : factory.plans.get(number).unit;
+            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
+                return Point2.unpack(number);
+            }
+        }
+
+        if (event.value instanceof Point2 point) {
+            return point.add(event.tile.tileX(), event.tile.tileY());
+        }
+
+        if (event.value instanceof Point2[] points) {
+            Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
+            return points;
+        }
+
+        return event.value;
+    }
+
+    public static boolean getConnect(ConfigEvent event, Point2 point) {
+        if (event.tile.block.configurations.containsKey(Point2.class)) {
+            return point.pack() != -1 && point.pack() != event.tile.pos();
+        }
+
+        if (event.tile.block.configurations.containsKey(Point2[].class)) {
+            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
+        }
+
+        return false;
     }
 
     // Ифы сила, Дарк могила
@@ -85,38 +115,5 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         return format("history.config.default", locale, name, get(block.name), date);
-    }
-
-    public static Object getValue(ConfigEvent event) {
-        if (event.value instanceof Integer number) {
-            if (event.tile.block instanceof UnitFactory factory)
-                return number == -1 ? null : factory.plans.get(number).unit;
-            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
-                return Point2.unpack(number);
-            }
-        }
-
-        if (event.value instanceof Point2 point) {
-            return point.add(event.tile.tileX(), event.tile.tileY());
-        }
-
-        if (event.value instanceof Point2[] points) {
-            Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
-            return points;
-        }
-
-        return event.value;
-    }
-
-    public static boolean getConnect(ConfigEvent event, Point2 point) {
-        if (event.tile.block.configurations.containsKey(Point2.class)) {
-            return point.pack() != -1 && point.pack() != event.tile.pos();
-        }
-
-        if (event.tile.block.configurations.containsKey(Point2[].class)) {
-            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
-        }
-
-        return false;
     }
 }

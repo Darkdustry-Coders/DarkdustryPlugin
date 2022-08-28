@@ -5,25 +5,36 @@ package darkdustry;
 
 import arc.graphics.*;
 import arc.util.*;
-import mindustry.core.Version;
-import mindustry.gen.Groups;
-import mindustry.mod.Plugin;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
 import darkdustry.commands.*;
 import darkdustry.components.*;
-import darkdustry.discord.*;
+import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
+import mindustry.core.Version;
+import mindustry.gen.Groups;
+import mindustry.mod.Plugin;
+import mindustry.net.Packets.*;
 
-import static mindustry.Vars.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
+
+    public static void info(String text, Object... values) {
+        Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void discord(String text, Object... values) {
+        Log.infoTag("Discord", Strings.format(text, values));
+    }
+
+    public static void error(String text, Object... values) {
+        Log.errTag("Darkdustry", Strings.format(text, values));
+    }
 
     @Override
     public void init() {
@@ -83,17 +94,5 @@ public class DarkdustryPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         serverCommands = handler;
         ServerCommands.load();
-    }
-
-    public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", Strings.format(text, values));
-    }
-
-    public static void discord(String text, Object... values) {
-        Log.infoTag("Discord", Strings.format(text, values));
-    }
-
-    public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", Strings.format(text, values));
     }
 }

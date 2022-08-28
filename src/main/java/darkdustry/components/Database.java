@@ -1,9 +1,8 @@
 package darkdustry.components;
 
-import mindustry.gen.Player;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import darkdustry.DarkdustryPlugin;
+import mindustry.gen.Player;
+import redis.clients.jedis.*;
 
 import static darkdustry.PluginVars.*;
 

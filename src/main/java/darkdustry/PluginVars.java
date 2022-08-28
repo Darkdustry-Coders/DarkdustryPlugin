@@ -1,19 +1,15 @@
 package darkdustry;
 
-import arc.struct.OrderedMap;
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.CommandHandler;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import darkdustry.features.votes.VoteKick;
-import net.dv8tion.jda.api.entities.Message;
+import com.google.gson.*;
 import darkdustry.components.Config;
 import darkdustry.components.Config.Gamemode;
-import darkdustry.features.votes.VoteSession;
+import darkdustry.features.votes.*;
+import net.dv8tion.jda.api.entities.Message;
 
-import static mindustry.Vars.*;
 import static darkdustry.components.Config.Gamemode.*;
+import static mindustry.Vars.tilesize;
 
 public class PluginVars {
 
@@ -71,8 +67,8 @@ public class PluginVars {
     /** Словарь для перевода локалей миндастри в локали переводчика */
     public static final OrderedMap<String, String> mindustry2Api = new OrderedMap<>();
 
-    /** Язык по умолчанию. */
-    public static final String defaultLanguage = "en";
+    /** Язык по умолчанию. Язык Discord сервера. */
+    public static final String defaultLanguage = "en", discordLanguage = "ru";
 
     /** Название файла, в котором хранится конфигурация сервера. */
     public static final String configFileName = "config.json";

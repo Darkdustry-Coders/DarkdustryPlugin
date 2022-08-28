@@ -9,8 +9,6 @@ import darkdustry.discord.Bot;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import mindustry.io.MapIO;
-import mindustry.maps.Map;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -42,18 +40,17 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", event -> {
             if (isMenu(event)) return;
 
-            String status = "Игроков: " + Groups.player.size() + "\n" +
-                    "Карта: " + state.map.name() + "\n" +
-                    "Волна: " + state.wave + "\n" +
-                    "TPS: " + graphics.getFramesPerSecond() + "\n" +
-                    "Потребление ОЗУ: " + app.getJavaHeap() / 1024 / 1024 + " МБ\n" +
-                    "Время работы сервера: " + formatDuration(timeSinceMillis(serverLoadTime)) + "\n" +
-                    "Время игры на текущей карте: " + formatDuration(timeSinceMillis(mapLoadTime)) + "\n" +
-                    "До следующей волны: " + formatDuration((long) (state.wavetime / 60 * 1000));
-
-            // TODO заменить на format() или что-то подобное, это жопа какая-то
-
-            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()), status)
+            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()), """
+                            Игроков: @
+                            Карта: @
+                            Волна: @
+                            TPS: @
+                            Потребление ОЗУ: @ МБ
+                            Время работы сервера: @
+                            Время игры на текущей карте: @
+                            """, Groups.player.size(), state.map.name(), state.wave,
+                    graphics.getFramesPerSecond(), app.getJavaHeap() / 1024 / 1024,
+                    formatDuration(timeSinceMillis(serverLoadTime)), formatDuration(timeSinceMillis(mapLoadTime)))
                     .setImage("attachment://minimap.png");
 
             event.replyEmbeds(embed.build())
@@ -71,7 +68,7 @@ public class DiscordCommands {
             if (notFound(event, target)) return;
 
             kick(target, kickDuration, true, "kick.kicked");
-            sendToChat("events.server.kick", target.name);
+            sendToChat("events.server.kick", target.coloredName());
 
             event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
@@ -84,7 +81,7 @@ public class DiscordCommands {
 
             netServer.admins.banPlayer(target.uuid());
             kick(target, 0, true, "kick.banned");
-            sendToChat("events.server.ban", target.name);
+            sendToChat("events.server.ban", target.coloredName());
 
             event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.name).build()).queue();
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
@@ -130,21 +127,8 @@ public class DiscordCommands {
 
             var attachment = requireNonNull(event.getOption("map")).getAsAttachment();
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
-                Fi mapFile = new Fi(file);
-
-                Map map;
-
-                try {
-                    map = MapIO.createMap(mapFile, true);
-                    maps.all().add(map);
-                    maps.all().sort();
-                } catch (Exception e) {
-                    mapFile.delete();
-                    // тут типа надо дединсайднуться и ответить что чел клоун, возможно через Checks
-                    return;
-                }
-
-                event.replyEmbeds(success(":map: Карта добавлена на сервер.", "Название карты: @", map.name()).build()).queue();
+                if (notMap(event, new Fi(file))) return;
+                event.replyEmbeds(success(":map: Карта добавлена на сервер.", "Файл карты: @", file.getName()).build()).queue();
             });
         }).setDefaultPermissions(DISABLED)
                 .addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true);
