@@ -70,7 +70,7 @@ public class DiscordCommands {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.coloredName());
 
-            event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.name, formatDuration(kickDuration)).build()).queue();
+            event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 
@@ -83,7 +83,7 @@ public class DiscordCommands {
             kick(target, 0, true, "kick.banned");
             sendToChat("events.server.ban", target.coloredName());
 
-            event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.name).build()).queue();
+            event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
 

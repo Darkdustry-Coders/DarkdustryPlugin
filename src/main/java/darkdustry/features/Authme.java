@@ -59,7 +59,7 @@ public class Authme {
 
         if (player != null) event.getChannel().sendMessageEmbeds(func.get(player)
                 .addField("Администратор:", event.getUser().getAsMention(), true)
-                .addField("Игрок:", player.name, true).build()).queue();
+                .addField("Игрок:", player.plainName(), true).build()).queue();
 
         event.getMessage().delete().queue();
     }

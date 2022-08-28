@@ -27,12 +27,12 @@ public class Filters {
             return null;
         }
 
-        Log.info("&fi@: @", "&lc" + author.name, "&lw" + text);
+        Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
 
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Translator.translate(author, text);
 
-        Bot.sendMessage(Bot.botChannel, "@ » @", stripColors(author.name), stripColors(text));
+        Bot.sendMessage(Bot.botChannel, "**@:** @", author.plainName(), stripColors(text));
         return null;
     }
 }

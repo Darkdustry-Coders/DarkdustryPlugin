@@ -69,11 +69,11 @@ public class PluginEvents {
 
             app.post(() -> Effects.onJoin(event.player));
 
-            Log.info("@ has connected. [@]", event.player.name, event.player.uuid());
+            Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.player.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
-            sendEmbed(botChannel, SUCCESS, "@ присоединился", stripColors(event.player.name));
+            sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
             app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
@@ -83,9 +83,9 @@ public class PluginEvents {
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);
 
-            Log.info("@ has disconnected. [@]", event.player.name, event.player.uuid());
+            Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.player.leave", event.player.coloredName());
-            sendEmbed(botChannel, ERROR, "@ отключился", stripColors(event.player.name));
+            sendEmbed(botChannel, ERROR, "@ отключился", event.player.plainName());
 
             app.post(Bot::updateBotStatus);
 

@@ -92,7 +92,7 @@ public class ServerCommands {
             if (notFound(target, args)) return;
 
             kick(target, kickDuration, true, "kick.kicked");
-            Log.info("Player @ has been kicked.", target.name);
+            Log.info("Player @ has been kicked.", target.plainName());
             sendToChat("events.server.kick", target.coloredName());
         });
 
@@ -110,7 +110,7 @@ public class ServerCommands {
             if (target != null) {
                 netServer.admins.banPlayer(target.uuid());
                 kick(target, 0, true, "kick.banned");
-                Log.info("Player @ has been banned.", target.name);
+                Log.info("Player @ has been banned.", target.plainName());
                 sendToChat("events.server.ban", target.coloredName());
                 return;
             }

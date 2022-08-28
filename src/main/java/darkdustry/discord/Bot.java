@@ -81,7 +81,7 @@ public class Bot {
 
     public static void sendAdminRequest(Player player) {
         adminChannel.sendMessageEmbeds(neutral(":eyes: Запрос на получение прав администратора.")
-                .addField("Никнейм:", player.name, true)
+                .addField("Никнейм:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
                 .build()

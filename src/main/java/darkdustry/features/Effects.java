@@ -17,13 +17,13 @@ public class Effects {
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
 
     public static void load() {
-        pack1 = new FxPack(p -> on(Fx.greenBomb, p), p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
-        pack2 = new FxPack(p -> spikes(p, Color.lime), p -> spikes(p, Color.scarlet), p -> on(Fx.burning, p));
-        pack3 = new FxPack(p -> on(Fx.titanExplosion, p), p -> on(Fx.titanExplosion, p), p -> on(Fx.melting, p));
-        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p), p -> on(Fx.scatheExplosion, p), p -> on(Fx.electrified, p));
-        pack5 = new FxPack(p -> on(Fx.instBomb, p), p -> on(Fx.instHit, p), p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
-        pack6 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p), p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack7 = new FxPack(Effects::particles, Effects::particles, p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
+        pack1 = new FxPack(p -> on(Fx.greenBomb, p),              p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
+        pack2 = new FxPack(p -> spikes(p, Color.lime),             p -> spikes(p, Color.scarlet),  p -> on(Fx.burning, p));
+        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),          p -> on(Fx.titanExplosion, p),  p -> on(Fx.melting, p));
+        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),         p -> on(Fx.scatheExplosion, p), p -> on(Fx.electrified, p));
+        pack5 = new FxPack(p -> on(Fx.instBomb, p),                p -> on(Fx.instHit, p),         p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
+        pack6 = new FxPack(p -> on(Fx.teleportActivate, p),        p -> on(Fx.teleport, p),        p -> on(Fx.smeltsmoke, p, 0f, Color.red));
+        pack7 = new FxPack(Effects::particles,                     Effects::particles,             p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {

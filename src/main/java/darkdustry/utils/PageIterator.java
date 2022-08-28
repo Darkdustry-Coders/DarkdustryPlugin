@@ -80,7 +80,7 @@ public class PageIterator {
     public static void players(SlashCommandInteractionEvent event) {
         discord(event, Groups.player.copy(new Seq<>()),
                 size -> format(":bar_chart: Игроков на сервере: @", size),
-                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" ").append(p.id).append("` | ").append(stripColors(p.name)).append("\n")
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" ").append(p.id).append("` | ").append(p.plainName()).append("\n")
         );
     }
 
