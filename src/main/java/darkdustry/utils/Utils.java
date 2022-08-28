@@ -96,19 +96,21 @@ public class Utils {
         }
     }
 
-    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, Locale locale, Object... values) {
+    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String language, Object... values) {
         if (!con.isConnected()) { // если игрок по какой-то причине не находится на сервере, просто записываем, что он был кикнут
             netServer.admins.handleKicked(con.uuid, con.address, kickDuration);
             return;
         }
 
+        var locale = Find.locale(language);
         String reason = format(key, locale, values);
-        if (duration > 0) reason += format("kick.time", locale, Utils.formatDuration(duration, locale));
+
+        if (duration > 0) reason += format("kick.time", locale, formatDuration(duration, locale));
         if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);
         con.kick(reason, duration);
     }
 
     public static void kick(Player player, long duration, boolean showDisclaimer, String key, Object... values) {
-        kick(player.con, duration, showDisclaimer, key, Find.locale(player.locale), values);
+        kick(player.con, duration, showDisclaimer, key, player.locale, values);
     }
 }

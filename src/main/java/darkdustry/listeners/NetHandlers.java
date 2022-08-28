@@ -36,8 +36,6 @@ public class NetHandlers {
     }
 
     public static void packet(NetConnection con, ConnectPacket packet) {
-        if (con.kicked) return;
-
         con.connectTime = Time.millis();
 
         Events.fire(new ConnectPacketEvent(con, packet));
@@ -45,12 +43,11 @@ public class NetHandlers {
         String uuid = con.uuid = packet.uuid,
                 usid = con.usid = packet.usid,
                 ip = con.address,
+                locale = notNullElse(packet.locale, defaultLanguage),
                 name = Reflect.invoke(netServer, "fixName", Structs.arr(packet.name), String.class);
 
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
-
-        var locale = Find.locale(packet.locale = notNullElse(packet.locale, defaultLanguage));
 
         if (con.hasBegunConnecting || uuid == null || usid == null) {
             kick(con, 0, false, "kick.already-connected", locale);
@@ -64,7 +61,7 @@ public class NetHandlers {
             return;
         }
 
-        if (Time.millis() < netServer.admins.getKickTime(uuid, ip)) {
+        if (netServer.admins.getKickTime(uuid, ip) > Time.millis()) {
             kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.recent-kick", locale);
             return;
         }
@@ -77,11 +74,14 @@ public class NetHandlers {
         var extraMods = packet.mods.copy();
         var missingMods = mods.getIncompatibility(extraMods);
 
-        if (extraMods.any() || missingMods.any()) {
-            String reason = format("kick.incompatible-mods", locale);
-            if (extraMods.any()) reason += format("kick.unnecessary-mods", locale, extraMods.toString("\n> "));
-            if (missingMods.any()) reason += format("kick.missing-mods", locale, missingMods.toString("\n> "));
-            con.kick(reason, 0);
+        if (extraMods.any()) {
+            kick(con, 0, false, "kick.extra-mods", locale, extraMods.toString("\n> "));
+            return;
+        }
+
+        if (missingMods.any()) {
+            kick(con, 0, false, "kick.missing-mods", locale, missingMods.toString("\n> "));
+            return;
         }
 
         var info = netServer.admins.getInfo(uuid);
@@ -101,33 +101,35 @@ public class NetHandlers {
             return;
         }
 
+        if (packet.version != mindustryVersion && packet.version != -1 && !packet.versionType.equals("bleeding-edge")) {
+            kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
+            return;
+        }
+
         if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
             kick(con, 0, false, "kick.already-connected", locale);
             return;
         }
 
-        if (name.trim().length() == 0) {
+        if (name.isBlank()) {
             kick(con, 0, false, "kick.name-is-empty", locale);
             return;
         }
 
-        if (packet.version != mindustryVersion && packet.version != -1 && !packet.versionType.equals("bleeding-edge")) {
-            kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
-            return;
-        }
+        if (con.kicked) return;
 
         netServer.admins.updatePlayerJoined(uuid, ip, name);
 
         Player player = Player.create();
         player.con(con);
         player.name(name);
-        player.locale(packet.locale);
+        player.locale(locale);
         player.admin(netServer.admins.isAdmin(uuid, usid));
         player.color.set(packet.color).a(1f);
 
-        if (!player.admin && !info.admin) info.adminUsid = usid;
-
         con.player = player;
+
+        if (!player.admin && !info.admin) info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
