@@ -14,7 +14,7 @@ public class Icons {
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136.1/core/assets/icons/icons.properties").submit(response -> {
+        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136.1/core/assets/icons/icons.properties", response -> {
             for (String line : response.getResultAsString().split("\n")) {
                 var values = line.split("\\|")[0].split("=");
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
@@ -33,7 +33,7 @@ public class Icons {
             Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
-        });
+        }, e -> DarkdustryPlugin.error("Unable to fetch content icons from GitHub. Check your internet connection."));
     }
 
     public static String get(String key) {

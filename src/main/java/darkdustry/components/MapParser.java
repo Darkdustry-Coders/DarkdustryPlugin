@@ -7,8 +7,7 @@ import mindustry.io.MapIO;
 import mindustry.maps.Map;
 import mindustry.world.blocks.environment.OreBlock;
 
-import java.io.*;
-
+import static arc.util.io.Streams.*;
 import static darkdustry.utils.Utils.getPluginResource;
 import static mindustry.Vars.*;
 
@@ -26,16 +25,16 @@ public class MapParser {
             pixmap.dispose();
 
             DarkdustryPlugin.info("Loaded @ block colors.", pixmap.width);
-        } catch (Exception exception) {
-            DarkdustryPlugin.error("File block_colors.png is not found or corrupt: @", exception);
+        } catch (Exception e) {
+            DarkdustryPlugin.error("File block_colors.png is not found or corrupt: @", e);
         }
     }
 
     public static byte[] renderMap(Map map) {
         try {
             return parseImage(MapIO.generatePreview(map));
-        } catch (IOException e) {
-            return new byte[0];
+        } catch (Exception e) {
+            return emptyBytes;
         }
     }
 
@@ -45,14 +44,14 @@ public class MapParser {
 
     public static byte[] parseImage(Pixmap pixmap) {
         var writer = new PngWriter(pixmap.width * pixmap.height);
-        var stream = new ByteArrayOutputStream();
+        var stream = new OptimizedByteArrayOutputStream(pixmap.width * pixmap.height);
 
         try {
             writer.setFlipY(false);
             writer.write(stream, pixmap);
             return stream.toByteArray();
-        } catch (IOException e) {
-            return new byte[0];
+        } catch (Exception e) {
+            return emptyBytes;
         } finally {
             writer.dispose();
         }

@@ -15,8 +15,8 @@ public class Database {
             jedisPool = new JedisPool(new JedisPoolConfig(), config.jedisIp, config.jedisPort);
             jedisPool.getResource();
             DarkdustryPlugin.info("Database connected.");
-        } catch (Exception exception) {
-            DarkdustryPlugin.error("Failed to connect to the database: @", exception);
+        } catch (Exception e) {
+            DarkdustryPlugin.error("Failed to connect to the database: @", e);
         }
     }
 

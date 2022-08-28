@@ -52,8 +52,8 @@ public class Bot {
             updateBotStatus();
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
-        } catch (Exception exception) {
-            DarkdustryPlugin.error("Failed to connect bot: @", exception);
+        } catch (Exception e) {
+            DarkdustryPlugin.error("Failed to connect bot: @", e);
         }
     }
 

@@ -10,7 +10,6 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 
 import static arc.Core.app;
-import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
@@ -95,8 +94,6 @@ public class PluginEvents {
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
         });
-
-        Events.on(ServerLoadEvent.class, event -> Bot.sendEmbed(Bot.botChannel, Color.yellow, "Сервер запущен."));
 
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;

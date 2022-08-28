@@ -90,7 +90,7 @@ public class Translator {
             else translate(language, stripColors(text), result -> {
                 cache.put(language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(language), author, text);
-            }, throwable -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
+            }, e -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
         });
     }
 }
