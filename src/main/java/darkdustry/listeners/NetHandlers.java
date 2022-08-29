@@ -51,7 +51,7 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || uuid == null || usid == null || Groups.player.contains(p -> Objects.equals(p.ip(), ip))) {
+        if (con.hasBegunConnecting || uuid == null || usid == null || Groups.player.count(p -> Objects.equals(p.ip(), ip)) > maxIdenticalIPCount) {
             kick(con, 0, false, "kick.already-connected", locale);
             return;
         }

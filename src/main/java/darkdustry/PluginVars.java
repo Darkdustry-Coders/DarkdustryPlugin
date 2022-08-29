@@ -14,6 +14,9 @@ import static mindustry.Vars.tilesize;
 
 public class PluginVars {
 
+    /** Максимально допустимое количество игроков с одинаковыми IP адресами */
+    public static final int maxIdenticalIPCount = 2;
+
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.5f;
 
