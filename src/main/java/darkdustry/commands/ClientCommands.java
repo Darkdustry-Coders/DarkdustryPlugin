@@ -22,7 +22,7 @@ public class ClientCommands {
     public static void load() {
         register("help", PageIterator::commands);
 
-        register("discord", (args, player) -> bundled(player, "commands.discord.link", discordServerUrl));
+        register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
         register("t", (args, player) -> player.team().data().players.each(teammate -> bundled(teammate, "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 

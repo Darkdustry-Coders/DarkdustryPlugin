@@ -7,6 +7,7 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
 import mindustry.ui.Menus;
 
+import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.utils.Utils.coloredTeam;
@@ -18,12 +19,14 @@ public class MenuHandler {
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
-            if (option != 1) return;
 
-            var data = getPlayerData(player);
-            data.welcomeMessage = false;
-            setPlayerData(data);
-            bundled(player, "welcome.disabled");
+            if (option == 1) {
+                var data = getPlayerData(player);
+                data.welcomeMessage = false;
+                setPlayerData(data);
+                bundled(player, "welcome.disabled");
+            } else if (option == 2)
+                Call.openURI(player.con, discordServerUrl);
         });
 
         despawnMenu = Menus.registerMenu((player, option) -> {
