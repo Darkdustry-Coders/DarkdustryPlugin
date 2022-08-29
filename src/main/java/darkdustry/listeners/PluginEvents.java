@@ -73,10 +73,11 @@ public class PluginEvents {
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
-            app.post(Bot::updateBotStatus);
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
                     new String[][] {{"ui.menus.close"}, {"welcome.menu.disable"}}, null, serverName.string(), discordServerUrl);
+
+            app.post(Bot::updateBotStatus);
         });
 
         Events.on(PlayerLeave.class, event -> {
@@ -86,13 +87,13 @@ public class PluginEvents {
             sendToChat("events.player.leave", event.player.coloredName());
             sendEmbed(botChannel, ERROR, "@ отключился", event.player.plainName());
 
-            app.post(Bot::updateBotStatus);
-
             cache.remove(event.player.uuid());
             activeHistory.remove(event.player.uuid());
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
+
+            app.post(Bot::updateBotStatus);
         });
 
         Events.on(TapEvent.class, event -> {
@@ -121,6 +122,8 @@ public class PluginEvents {
 
             activeHistory.clear();
             History.clear();
+
+            app.post(Bot::updateBotStatus);
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
