@@ -9,6 +9,8 @@ import mindustry.gen.*;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 
+import java.util.Objects;
+
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.utils.Utils.*;
@@ -49,7 +51,7 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || uuid == null || usid == null) {
+        if (con.hasBegunConnecting || uuid == null || usid == null || Groups.player.contains(p -> Objects.equals(p.ip(), ip))) {
             kick(con, 0, false, "kick.already-connected", locale);
             return;
         }
