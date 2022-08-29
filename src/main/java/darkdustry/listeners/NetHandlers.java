@@ -1,7 +1,6 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.struct.Seq;
 import arc.util.CommandHandler.*;
 import arc.util.*;
 import darkdustry.utils.Find;
@@ -9,8 +8,6 @@ import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
-
-import java.util.Objects;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
@@ -52,31 +49,17 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if(Groups.player.contains(p -> Objects.equals(p.ip(), ip))){
-            var targets = new Seq<Player>();
-            for(var p : Groups.player){
-                if(Objects.equals(p.ip(), ip)){
-                    targets.add(p);
-                }
-            }
-            //единичка за того кто подключается, но еще не подключился
-            if((targets.size+1)>maxIdenticalIPCount){
-                targets.each(p->kick(p.con, 0, false, "kick.already-connected", p.locale));
-                kick(con, 0, false, "kick.already-connected", locale);
-                return;
-            }
-
-        }
-
-        //TODO: вылечить шызу даркнеса
-        //для совсем тупых: если в пакете нету ююида или юсида при его чтении вылетит ошибка десериализации
-        //а хэз бегин коннектинг вызовет айди ин юсе netserver строка 153
-        if (con.hasBegunConnecting || uuid == null || usid == null) {
+        if (con.hasBegunConnecting || Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
             kick(con, 0, false, "kick.already-connected", locale);
             return;
         }
 
         con.hasBegunConnecting = true;
+
+        if (Groups.player.count(player -> player.ip().equals(ip)) >= maxIdenticalIPs) {
+            kick(con, 0, false, "kick.too-many-connections", locale);
+            return;
+        }
 
         if (netServer.admins.isIDBanned(uuid) || netServer.admins.isIPBanned(ip) || netServer.admins.isSubnetBanned(ip)) {
             kick(con, 0, true, "kick.banned", locale);
@@ -89,7 +72,7 @@ public class NetHandlers {
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            kick(con, 0, false, "kick.player-limit", locale);
+            kick(con, 0, false, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
             return;
         }
 
@@ -125,11 +108,6 @@ public class NetHandlers {
 
         if (packet.version != mindustryVersion && packet.version != -1 && !packet.versionType.equals("bleeding-edge")) {
             kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
-            return;
-        }
-
-        if (netServer.admins.isStrict() && Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            kick(con, 0, false, "kick.already-connected", locale);
             return;
         }
 

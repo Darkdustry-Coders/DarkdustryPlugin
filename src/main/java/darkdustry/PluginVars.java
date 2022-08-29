@@ -14,9 +14,6 @@ import static mindustry.Vars.tilesize;
 
 public class PluginVars {
 
-    /** Максимально допустимое количество игроков с одинаковыми IP адресами */
-    public static final int maxIdenticalIPCount = 2;
-
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.5f;
 
@@ -49,6 +46,9 @@ public class PluginVars {
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
+
+    /** Максимально допустимое количество игроков с одинаковыми IP адресами. */
+    public static final int maxIdenticalIPs = 3;
 
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;
