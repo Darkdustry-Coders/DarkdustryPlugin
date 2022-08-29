@@ -84,7 +84,7 @@ public class ConfigEntry implements HistoryEntry {
         return format("history.config.default", locale, name, get(block.name), date);
     }
 
-    public static Object getValue(ConfigEvent event) {
+    public Object getValue(ConfigEvent event) {
         if (event.value instanceof Integer number) {
             if (event.tile.block instanceof UnitFactory factory)
                 return number == -1 ? null : factory.plans.get(number).unit;
@@ -105,7 +105,7 @@ public class ConfigEntry implements HistoryEntry {
         return event.value;
     }
 
-    public static boolean getConnect(ConfigEvent event, Point2 point) {
+    public boolean getConnect(ConfigEvent event, Point2 point) {
         if (event.tile.block.configurations.containsKey(Point2.class)) {
             return point.pack() != -1 && point.pack() != event.tile.pos();
         }

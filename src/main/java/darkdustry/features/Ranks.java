@@ -1,6 +1,6 @@
 package darkdustry.features;
 
-import arc.struct.*;
+import arc.struct.Seq;
 import darkdustry.features.Effects.FxPack;
 import mindustry.gen.*;
 
@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Database.*;
+import static darkdustry.features.Effects.cache;
 
 public class Ranks {
 
@@ -82,7 +83,7 @@ public class Ranks {
 
     public static void setRank(Player player, Rank rank) {
         player.name(rank.tag + player.getInfo().lastName);
-        Effects.cache.put(player.uuid(), rank.effects);
+        cache.put(player.uuid(), rank.effects);
     }
 
     public static void setRankNet(String uuid, Rank rank) {
