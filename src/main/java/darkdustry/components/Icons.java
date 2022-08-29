@@ -14,7 +14,7 @@ public class Icons {
     private static final StringMap icons = new StringMap();
 
     public static void load() {
-        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v136.1/core/assets/icons/icons.properties", response -> {
+        Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/v" + mindustryVersion + "/core/assets/icons/icons.properties", response -> {
             for (String line : response.getResultAsString().split("\n")) {
                 var values = line.split("\\|")[0].split("=");
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));

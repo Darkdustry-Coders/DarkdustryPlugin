@@ -25,9 +25,7 @@ public class Bundle {
         files.each(file -> {
             var codes = file.nameWithoutExtension().split("_");
 
-            if (codes.length == 1) { // bundle.properties
-                supportedLocales.add(Locale.ROOT);
-            } else if (codes.length == 2) { // bundle_ru.properties
+            if (codes.length == 2) { // bundle_ru.properties
                 supportedLocales.add(new Locale(codes[1]));
             } else if (codes.length == 3) { // bundle_uk_UA.properties
                 supportedLocales.add(new Locale(codes[1], codes[2]));
@@ -46,7 +44,7 @@ public class Bundle {
         try {
             var bundle = bundles.get(locale, bundles.get(defaultLocale));
             return bundle.getString(key);
-        } catch (MissingResourceException ignored) {
+        } catch (MissingResourceException e) {
             return defaultValue;
         }
     }

@@ -19,6 +19,7 @@ public class MenuHandler {
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
             if (option != 1) return;
+
             var data = getPlayerData(player);
             data.welcomeMessage = false;
             setPlayerData(data);
@@ -38,11 +39,11 @@ public class MenuHandler {
                     bundled(player, "commands.despawn.success.players");
                 }
                 case 3 -> {
-                    Groups.unit.each(unit -> unit.team == state.rules.defaultTeam, Call::unitEnvDeath);
+                    state.rules.defaultTeam.data().units.each(Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.defaultTeam));
                 }
                 case 4 -> {
-                    Groups.unit.each(unit -> unit.team == state.rules.waveTeam, Call::unitEnvDeath);
+                    state.rules.waveTeam.data().units.each(Call::unitEnvDeath);
                     bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.waveTeam));
                 }
                 case 5 -> {
