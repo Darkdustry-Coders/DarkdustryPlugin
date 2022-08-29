@@ -103,7 +103,7 @@ public class ServerCommands {
 
             info.lastKicked = 0L;
             info.ips.each(netServer.admins.kickedIPs::remove);
-            Log.info("Player @ has been pardoned.", info.lastName);
+            Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
@@ -120,7 +120,7 @@ public class ServerCommands {
             if (notFound(info, args[0])) return;
 
             netServer.admins.banPlayer(info.id);
-            Log.info("Player @ has been banned.", info.lastName);
+            Log.info("Player @ has been banned.", info.plainLastName());
             Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
                 kick(player, 0, true, "kick.banned");
                 sendToChat("events.server.ban", player.coloredName());
@@ -133,7 +133,7 @@ public class ServerCommands {
 
             netServer.admins.unbanPlayerID(info.id);
             info.ips.each(netServer.admins::unbanPlayerIP);
-            Log.info("Player @ has been unbanned.", info.lastName);
+            Log.info("Player @ has been unbanned.", info.plainLastName());
         });
 
         serverCommands.register("bans", "List all banned IPs and IDs.", args -> {
@@ -142,7 +142,7 @@ public class ServerCommands {
                 Log.info("No ID-banned players have been found.");
             else {
                 Log.info("ID-banned players: (@)", bannedIDs.size);
-                bannedIDs.each(ban -> Log.info("  @ / Last known name: @", ban.id, ban.lastName));
+                bannedIDs.each(info -> Log.info("  @ / Last known name: @", info.id, info.plainLastName()));
             }
 
             var bannedIPs = netServer.admins.getBannedIPs();
@@ -153,7 +153,7 @@ public class ServerCommands {
                 bannedIPs.each(ip -> {
                     PlayerInfo info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / (No known name or info)", ip);
-                    else Log.info("  @ / Last known name: @ / ID: @", ip, info.lastName, info.id);
+                    else Log.info("  @ / Last known name: @ / ID: @", ip, info.plainLastName(), info.id);
                 });
             }
         });
@@ -166,7 +166,7 @@ public class ServerCommands {
             switch (args[0].toLowerCase()) {
                 case "add" -> {
                     netServer.admins.adminPlayer(info.id, info.adminUsid);
-                    Log.info("Player @ is now admin.", info.lastName);
+                    Log.info("Player @ is now admin.", info.plainLastName());
                     if (target != null) {
                         target.admin(true);
                         bundled(target, "events.server.admin");
@@ -174,7 +174,7 @@ public class ServerCommands {
                 }
                 case "remove" -> {
                     netServer.admins.unAdminPlayer(info.id);
-                    Log.info("Player @ is no longer an admin.", info.lastName);
+                    Log.info("Player @ is no longer an admin.", info.plainLastName());
                     if (target != null) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
@@ -189,7 +189,7 @@ public class ServerCommands {
             if (admins.isEmpty()) Log.info("No admins have been found.");
             else {
                 Log.info("Admins: (@)", admins.size);
-                admins.each(admin -> Log.info("  @ / ID: @ / IP: @", admin.lastName, admin.id, admin.lastIP));
+                admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
             }
         });
 

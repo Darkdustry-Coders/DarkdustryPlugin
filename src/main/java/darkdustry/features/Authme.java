@@ -42,7 +42,7 @@ public class Authme {
         var info = netServer.admins.getInfo(uuid);
 
         EmbedBuilder embed = info("Информация об игроке")
-                .addField("Никнейм:", info.lastName, true)
+                .addField("Никнейм:", info.plainLastName(), true)
                 .addField("UUID:", info.id, true)
                 .addField("IP адрес:", info.lastIP, true)
                 .addField("Зашел на сервер:", info.timesJoined + " раз", true)
