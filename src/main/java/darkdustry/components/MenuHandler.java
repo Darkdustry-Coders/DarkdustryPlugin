@@ -21,12 +21,13 @@ public class MenuHandler {
         welcomeMenu = Menus.registerMenu((player, option) -> {
 
             if (option == 1) {
+                Call.openURI(player.con, discordServerUrl);
+            } else if (option == 2) {
                 var data = getPlayerData(player);
                 data.welcomeMessage = false;
                 setPlayerData(data);
                 bundled(player, "welcome.disabled");
-            } else if (option == 2)
-                Call.openURI(player.con, discordServerUrl);
+            }
         });
 
         despawnMenu = Menus.registerMenu((player, option) -> {

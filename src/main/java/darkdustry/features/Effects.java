@@ -4,26 +4,30 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.struct.ObjectMap;
 import arc.util.Tmp;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;
 
-import static darkdustry.features.Ranks.cache;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.features.Ranks.getRank;
 import static mindustry.Vars.state;
 
 public class Effects {
 
+    public static final ObjectMap<String, FxPack> cache = new ObjectMap<>();
+
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7;
 
     public static void load() {
-        pack1 = new FxPack(p -> on(Fx.greenBomb, p),              p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
-        pack2 = new FxPack(p -> spikes(p, Color.lime),             p -> spikes(p, Color.scarlet),  p -> on(Fx.burning, p));
-        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),          p -> on(Fx.titanExplosion, p),  p -> on(Fx.melting, p));
-        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),         p -> on(Fx.scatheExplosion, p), p -> on(Fx.electrified, p));
-        pack5 = new FxPack(p -> on(Fx.instBomb, p),                p -> on(Fx.instHit, p),         p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
-        pack6 = new FxPack(p -> on(Fx.teleportActivate, p),        p -> on(Fx.teleport, p),        p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack7 = new FxPack(Effects::particles,                     Effects::particles,             p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
+        pack1 = new FxPack(p -> on(Fx.greenBomb, p),               p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
+        pack2 = new FxPack(p -> spikes(p, Color.lime),             p -> spikes(p, Color.scarlet),   p -> on(Fx.burning, p));
+        pack3 = new FxPack(p -> on(Fx.titanExplosion, p),          p -> on(Fx.titanExplosion, p),   p -> on(Fx.melting, p));
+        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),         p -> on(Fx.scatheExplosion, p),  p -> on(Fx.electrified, p));
+        pack5 = new FxPack(p -> on(Fx.instBomb, p),                p -> on(Fx.instHit, p),          p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
+        pack6 = new FxPack(p -> on(Fx.teleportActivate, p),        p -> on(Fx.teleport, p),         p -> on(Fx.smeltsmoke, p, 0f, Color.red));
+        pack7 = new FxPack(Effects::particles,                     Effects::particles,              p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
@@ -58,15 +62,15 @@ public class Effects {
 
     public static void onMove(Player player) {
         if (state.rules.fog) return;
-        cache.get(player.uuid()).effects.move.get(player);
+        cache.get(player.uuid()).move.get(player);
     }
 
     public static void onJoin(Player player) {
-        cache.get(player.uuid()).effects.join.get(player);
+        getRank(player.uuid()).effects.join.get(player);
     }
 
     public static void onLeave(Player player) {
-        cache.get(player.uuid()).effects.leave.get(player);
+        getRank(player.uuid()).effects.leave.get(player);
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}

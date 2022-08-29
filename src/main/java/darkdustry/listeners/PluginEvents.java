@@ -16,7 +16,7 @@ import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Ranks.cache;
+import static darkdustry.features.Effects.cache;
 import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {

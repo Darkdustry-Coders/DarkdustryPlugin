@@ -11,8 +11,6 @@ import static darkdustry.components.Database.*;
 
 public class Ranks {
 
-    public static final ObjectMap<String, Rank> cache = new ObjectMap<>();
-
     public static Rank player, active, activePlus, veteran, contributor, developer, admin, console, owner;
 
     public static void load() {
@@ -78,9 +76,13 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
+    public static Rank getRank(String uuid) {
+        return getRank(getPlayerData(uuid).rank);
+    }
+
     public static void setRank(Player player, Rank rank) {
         player.name(rank.tag + player.getInfo().lastName);
-        cache.put(player.uuid(), rank);
+        Effects.cache.put(player.uuid(), rank.effects);
     }
 
     public static void setRankNet(String uuid, Rank rank) {
