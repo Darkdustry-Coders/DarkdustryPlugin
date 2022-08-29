@@ -1,6 +1,7 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.CommandHandler.*;
 import arc.util.*;
 import darkdustry.utils.Find;
@@ -51,7 +52,26 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || uuid == null || usid == null || Groups.player.count(p -> Objects.equals(p.ip(), ip)) > maxIdenticalIPCount) {
+        if(Groups.player.contains(p -> Objects.equals(p.ip(), ip))){
+            var targets = new Seq<Player>();
+            for(var p : Groups.player){
+                if(Objects.equals(p.ip(), ip)){
+                    targets.add(p);
+                }
+            }
+            //единичка за того кто подключается, но еще не подключился
+            if((targets.size+1)>maxIdenticalIPCount){
+                targets.each(p->kick(p.con, 0, false, "kick.already-connected", p.locale));
+                kick(con, 0, false, "kick.already-connected", locale);
+                return;
+            }
+
+        }
+
+        //TODO: вылечить шызу даркнеса
+        //для совсем тупых: если в пакете нету ююида или юсида при его чтении вылетит ошибка десериализации
+        //а хэз бегин коннектинг вызовет айди ин юсе netserver строка 153
+        if (con.hasBegunConnecting || uuid == null || usid == null) {
             kick(con, 0, false, "kick.already-connected", locale);
             return;
         }
