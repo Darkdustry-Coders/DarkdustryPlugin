@@ -106,7 +106,7 @@ public class NetHandlers {
             return;
         }
 
-        if (packet.version != mindustryVersion && packet.version != -1 && !packet.versionType.equals("bleeding-edge")) {
+        if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
             kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
