@@ -48,7 +48,8 @@ public class Translator {
                 "th", "ไทย",
                 "zh", "简体中文",
                 "ja", "日本語",
-                "ko", "한국어");
+                "ko", "한국어"
+        );
 
         mindustry2Api.putAll(
                 "in_ID", "id",
@@ -57,7 +58,8 @@ public class Translator {
                 "pt_PT", "pt",
                 "uk_UA", "uk",
                 "zh_CN", "zh",
-                "zh_TW", "zh");
+                "zh_TW", "zh"
+        );
 
         DarkdustryPlugin.info("Loaded @ languages for translator.", translatorLanguages.size);
     }

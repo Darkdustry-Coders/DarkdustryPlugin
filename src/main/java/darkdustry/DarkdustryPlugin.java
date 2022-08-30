@@ -36,6 +36,7 @@ public class DarkdustryPlugin extends Plugin {
         Effects.load();
         Ranks.load();
         SchemeSize.load();
+        Scripts.load();
         Translator.load();
 
         PluginEvents.load();
