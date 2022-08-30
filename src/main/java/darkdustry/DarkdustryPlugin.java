@@ -26,6 +26,9 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void init() {
+        info("Loading Darkdustry plugin.");
+        Time.mark();
+
         Bundle.load();
         Config.load();
         Icons.load();
@@ -71,6 +74,8 @@ public class DarkdustryPlugin extends Plugin {
 
         // эта строчка исправляет обнаружение некоторых цветов
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
+
+        info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
     }
 
     @Override

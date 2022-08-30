@@ -20,10 +20,10 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static void load() {
-        var files = getPluginResource("bundles").seq();
+        var files = getPluginResource("bundles").seq().filter(fi -> fi.extension().equals("properties"));
 
-        files.each(file -> {
-            var codes = file.nameWithoutExtension().split("_");
+        files.each(fi -> {
+            var codes = fi.nameWithoutExtension().split("_");
 
             if (codes.length == 2) { // bundle_ru.properties
                 supportedLocales.add(new Locale(codes[1]));

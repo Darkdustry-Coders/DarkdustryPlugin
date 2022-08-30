@@ -1,5 +1,6 @@
 package darkdustry.features;
 
+import arc.util.Time;
 import darkdustry.DarkdustryPlugin;
 
 import static mindustry.Vars.*;
@@ -7,10 +8,11 @@ import static mindustry.Vars.*;
 public class Scripts {
 
     public static void load() {
-        var scripts = dataDirectory.child("scripts").seq();
+        var scripts = dataDirectory.child("scripts").seq().filter(fi -> fi.extension().equals("js"));
 
         if (scripts.size > 0) {
             DarkdustryPlugin.info("Found @ startup scripts.", scripts.size);
+            Time.mark();
 
             scripts.each(fi -> {
                 try {
@@ -20,7 +22,7 @@ public class Scripts {
                 }
             });
 
-            DarkdustryPlugin.info("Loaded @ startup scripts.", scripts.size);
+            DarkdustryPlugin.info("Loaded @ startup scripts in @ ms.", scripts.size, Time.elapsed());
         }
     }
 }
