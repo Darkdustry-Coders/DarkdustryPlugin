@@ -20,7 +20,7 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static void load() {
-        var files = getPluginResource("bundles").seq().filter(fi -> fi.extension().equals("properties"));
+        var files = getPluginResource("bundles").seq().filter(fi -> fi.extEquals("properties"));
 
         files.each(fi -> {
             var codes = fi.nameWithoutExtension().split("_");
