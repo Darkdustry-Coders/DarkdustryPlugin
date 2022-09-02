@@ -20,22 +20,19 @@ import static darkdustry.PluginVars.config;
 public class MongoDB {
     public static MongoClient mongoClient;
     public static MongoDatabase database;
-    public static MongoCollection<Document> collection;
+    public static MongoCollection<PlayerData> collection;
 
     public static void connect() {
         mongoClient = MongoClients.create(new ConnectionString(config.mongoConnectionString));
         database = mongoClient.getDatabase("darkdustry");
-        collection = database.getCollection("playerData");
+        collection = database.getCollection("playerData", PlayerData.class);
     }
     public static PlayerData getPlayerData(Player player) {
         // todo
         return null;
     }
     public static void setPlayerData(PlayerData data) {
-        Gson gson = new Gson();
-        String json = gson.toJson(data);
-        Document doc = Document.parse(json);
-        // todo: отправлять документ в базу данных
+        collection.insertOne(data);
     }
     public static class PlayerData {
         public String uuid;
