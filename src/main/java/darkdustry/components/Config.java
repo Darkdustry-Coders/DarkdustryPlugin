@@ -22,7 +22,7 @@ public class Config {
     /**
      * Строка подключения к базе данных.
      */
-    public String mongoConnectionString;
+    public String mongoUrl;
 
     /**
      * Имя пользователя базы данных.
