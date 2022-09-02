@@ -30,7 +30,7 @@ public class MongoDB {
     }
 
     public static void setPlayerData(PlayerData data) {
-        Mono.from(collection.insertOne(data)).subscribe();
+        Mono.from(collection.replaceOne(eq(data.uuid), data)).subscribe();
     }
 
     public static class PlayerData {
