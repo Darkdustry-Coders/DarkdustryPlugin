@@ -25,6 +25,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.components.MapParser.renderMap;
 import static darkdustry.components.MapParser.renderMinimap;
+import static darkdustry.components.MenuHandler.linkMenu;
 import static darkdustry.components.MenuHandler.showMenu;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
@@ -71,8 +72,10 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            showMenu(target, 0, "discord.menu.link.header", "discord.menu.link.content", new String[][]{{"ui.menus.close"}, {"discord.button.link"}});
-            linkWaiting.put(requireNonNull(event.getMember()).getId(), target.uuid());
+            showMenu(target, linkMenu, "discord.menu.link.header", "discord.menu.link.content",
+                    new String[][]{{"ui.menus.close"}, {"discord.button.link"}});
+
+            linkWaiting.put(target.uuid(), requireNonNull(event.getMember()).getId());
 
             event.reply("Проверьте окно игры.").setEphemeral(true).queue();
         }).addOption(STRING, "name", "Имя игрока.", true);

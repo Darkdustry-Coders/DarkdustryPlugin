@@ -52,6 +52,7 @@ public class Database {
 
     public static class PlayerData {
         public String uuid;
+        public String discord;
         public String language = "off";
 
         public boolean welcomeMessage = true;
