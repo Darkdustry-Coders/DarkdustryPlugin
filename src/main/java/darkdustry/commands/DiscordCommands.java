@@ -75,7 +75,7 @@ public class DiscordCommands {
             showMenu(target, linkMenu, "discord.menu.link.header", "discord.menu.link.content",
                     new String[][]{{"ui.menus.close"}, {"discord.button.link"}});
 
-            linkWaiting.put(target.uuid(), requireNonNull(event.getMember()).getId());
+            linkWaiting.put(target.uuid(), event.getMember().getId());
 
             event.reply("Проверьте окно игры.").setEphemeral(true).queue();
         }).addOption(STRING, "name", "Имя игрока.", true);

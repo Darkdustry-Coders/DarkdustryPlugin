@@ -101,7 +101,7 @@ public class MenuHandler {
                 Database.setPlayerData(data);
 
                 var member = botGuild.getMemberById(id);
-                botChannel.sendMessage(Strings.format("@ вы были привязаны к аккаунту @.", requireNonNull(member).getAsMention(), player.name)).queue();
+                botChannel.sendMessage(Strings.format("@ вы были привязаны к аккаунту @.", member.getAsMention(), player.name)).queue();
             }
         });
     }
