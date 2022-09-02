@@ -53,7 +53,6 @@ public class DarkdustryPlugin extends Plugin {
         Translator.load();
 
         PluginEvents.load();
-
         Database.connect();
         Bot.connect();
 

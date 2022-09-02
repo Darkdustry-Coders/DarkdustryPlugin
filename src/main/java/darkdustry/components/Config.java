@@ -20,6 +20,11 @@ public class Config {
     public int hubPort = 6567;
 
     /**
+     * Строка подключения к базе данных.
+     */
+    public String mongoConnectionString;
+
+    /**
      * Имя пользователя базы данных.
      */
     public String jedisIp = "localhost";
