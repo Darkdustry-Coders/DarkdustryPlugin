@@ -1,18 +1,23 @@
 package darkdustry.utils;
 
-import arc.func.*;
+import arc.func.Cons;
+import arc.func.Cons3;
+import arc.func.Func;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.clientCommands;
+import static darkdustry.PluginVars.maxPerPage;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.discord.Bot.*;
+import static darkdustry.discord.Bot.error;
+import static darkdustry.discord.Bot.neutral;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
 

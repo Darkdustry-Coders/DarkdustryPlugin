@@ -2,12 +2,15 @@ package darkdustry.features;
 
 import arc.struct.Seq;
 import darkdustry.features.Effects.FxPack;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.Bundle.format;
+import static darkdustry.components.Bundle.get;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
 import static darkdustry.features.Effects.cache;
 
 public class Ranks {

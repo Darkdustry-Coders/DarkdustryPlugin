@@ -4,12 +4,16 @@ import arc.Events;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.ui.Menus;
 
 import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.state;
 
@@ -71,7 +75,7 @@ public class MenuHandler {
 
             var builder = new StringBuilder();
             Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
-            showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][] {{"ui.menus.close"}});
+            showMenu(player, ranksRequirementsMenu, "commands.rank.menu.requirements.header", builder.toString(), new String[][]{{"ui.menus.close"}});
         });
 
         ranksRequirementsMenu = -1;

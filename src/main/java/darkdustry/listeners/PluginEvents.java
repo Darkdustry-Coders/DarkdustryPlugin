@@ -1,9 +1,12 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.util.*;
+import arc.util.Log;
+import arc.util.Time;
 import darkdustry.discord.Bot;
-import darkdustry.features.*;
+import darkdustry.features.Alerts;
+import darkdustry.features.Effects;
+import darkdustry.features.Ranks;
 import darkdustry.features.history.*;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
@@ -12,10 +15,13 @@ import mindustry.gen.Groups;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MenuHandler.showMenu;
+import static darkdustry.components.MenuHandler.welcomeMenu;
 import static darkdustry.discord.Bot.Palette.*;
-import static darkdustry.discord.Bot.*;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendEmbed;
 import static darkdustry.features.Effects.cache;
 import static mindustry.net.Administration.Config.serverName;
 
@@ -27,7 +33,8 @@ public class PluginEvents {
                 case wave -> sendToChat("events.admin.wave", event.player.coloredName());
                 case kick -> sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());
                 case ban -> sendToChat("events.admin.ban", event.player.coloredName(), event.other.coloredName());
-                default -> {} // без этой строки vscode кидает ошибку
+                default -> {
+                } // без этой строки vscode кидает ошибку
             }
         });
 
@@ -75,7 +82,7 @@ public class PluginEvents {
             sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
 
             if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                    new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
+                    new String[][]{{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
 
             app.post(Bot::updateBotStatus);
         });

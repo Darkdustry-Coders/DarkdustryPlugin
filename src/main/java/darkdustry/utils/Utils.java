@@ -7,16 +7,21 @@ import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
-import mindustry.net.*;
+import mindustry.net.NetConnection;
+import mindustry.net.WorldReloader;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
-import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
+import static arc.util.Strings.stripColors;
+import static arc.util.Strings.stripGlyphs;
+import static darkdustry.PluginVars.discordServerUrl;
+import static darkdustry.PluginVars.kickDuration;
+import static darkdustry.components.Bundle.discordLocale;
 import static darkdustry.components.Bundle.format;
-import static darkdustry.components.Bundle.*;
 import static mindustry.Vars.*;
 
 public class Utils {

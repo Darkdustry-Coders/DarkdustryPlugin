@@ -3,27 +3,34 @@ package darkdustry.discord;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
 import darkdustry.utils.Find;
-import mindustry.gen.*;
-import net.dv8tion.jda.api.*;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.EnumSet;
+import java.util.Objects;
 
 import static arc.util.Strings.format;
-import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
+import static arc.util.Strings.stripColors;
+import static darkdustry.PluginVars.config;
+import static darkdustry.PluginVars.loginWaiting;
+import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.Bundle.format;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.features.Authme.menu;
 import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static net.dv8tion.jda.api.entities.Activity.watching;
-import static net.dv8tion.jda.api.entities.Message.MentionType.*;
+import static net.dv8tion.jda.api.entities.Message.MentionType.CHANNEL;
+import static net.dv8tion.jda.api.entities.Message.MentionType.EMOJI;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
-import static net.dv8tion.jda.api.requests.GatewayIntent.*;
+import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
+import static net.dv8tion.jda.api.requests.GatewayIntent.MESSAGE_CONTENT;
 
 public class Bot {
 
@@ -40,7 +47,7 @@ public class Bot {
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
-            adminRole = botGuild.getRoleById(config.discordAdminRoleId);
+            adminRole = Objects.requireNonNull(botGuild).getRoleById(config.discordAdminRoleId);
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 

@@ -7,7 +7,8 @@ import mindustry.maps.Map;
 import static darkdustry.PluginVars.mapLoadDelay;
 import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.utils.Utils.reloadWorld;
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
 
 public class VoteRtv extends VoteSession {
 

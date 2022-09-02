@@ -10,7 +10,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.loginWaiting;
-import static darkdustry.discord.Bot.*;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendMessageToGame;
 import static darkdustry.utils.Checks.notAdmin;
 import static java.util.Objects.requireNonNull;
 

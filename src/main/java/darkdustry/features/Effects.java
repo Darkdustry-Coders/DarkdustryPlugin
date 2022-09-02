@@ -8,7 +8,8 @@ import arc.struct.ObjectMap;
 import arc.util.Tmp;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Player;
 
 import static darkdustry.features.Ranks.getRank;
 import static mindustry.Vars.state;
@@ -72,5 +73,6 @@ public class Effects {
         getRank(player.uuid()).effects.leave.get(player);
     }
 
-    public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}
+    public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
+    }
 }

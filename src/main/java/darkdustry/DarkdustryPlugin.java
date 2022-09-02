@@ -3,23 +3,33 @@
 
 package darkdustry;
 
-import arc.graphics.*;
+import arc.graphics.Color;
+import arc.graphics.Colors;
 import arc.util.*;
-import darkdustry.commands.*;
+import darkdustry.commands.AdminCommands;
+import darkdustry.commands.ClientCommands;
+import darkdustry.commands.ServerCommands;
 import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
-import darkdustry.listeners.*;
+import darkdustry.listeners.Filters;
+import darkdustry.listeners.NetHandlers;
+import darkdustry.listeners.PluginEvents;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
 import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
-import mindustry.net.Packets.*;
+import mindustry.net.Packets.Connect;
+import mindustry.net.Packets.ConnectPacket;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.components.MenuHandler.*;
-import static mindustry.Vars.*;
+import static darkdustry.PluginVars.clientCommands;
+import static darkdustry.PluginVars.serverCommands;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MenuHandler.rankIncreaseMenu;
+import static darkdustry.components.MenuHandler.showMenu;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -65,7 +75,7 @@ public class DarkdustryPlugin extends Plugin {
                 Ranks.setRank(player, rank = rank.next);
                 data.rank = rank.id;
 
-                showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
+                showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][]{{"ui.menus.close"}},
                         null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
             }
 

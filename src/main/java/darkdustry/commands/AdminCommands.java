@@ -5,7 +5,9 @@ import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
 import mindustry.content.Blocks;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.world.Tile;
 
 import static arc.util.Strings.parseInt;
@@ -23,7 +25,7 @@ public class AdminCommands {
         register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
         register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.menu.header", "commands.artv.menu.content",
-                new String[][] {{"ui.menus.yes", "ui.menus.no"}}));
+                new String[][]{{"ui.menus.yes", "ui.menus.no"}}));
 
         register("despawn", (args, player) -> {
             if (args.length > 0) {
@@ -34,7 +36,7 @@ public class AdminCommands {
                 bundled(target, "commands.despawn.success.suicide");
                 if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
             } else
-                showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
+                showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][]{
                         {"ui.menus.yes", "ui.menus.no"}, {"commands.despawn.menu.players"},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},

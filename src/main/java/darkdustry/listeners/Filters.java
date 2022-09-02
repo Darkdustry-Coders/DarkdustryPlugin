@@ -2,13 +2,16 @@ package darkdustry.listeners;
 
 import arc.util.Log;
 import darkdustry.features.Translator;
-import darkdustry.features.history.*;
+import darkdustry.features.history.History;
+import darkdustry.features.history.RotateEntry;
 import mindustry.gen.Player;
-import mindustry.net.Administration.*;
+import mindustry.net.Administration.ActionType;
+import mindustry.net.Administration.PlayerAction;
 
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.vote;
-import static darkdustry.discord.Bot.*;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.utils.Checks.alreadyVoted;
 import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.netServer;
