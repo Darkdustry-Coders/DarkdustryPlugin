@@ -43,9 +43,7 @@ public class ServerCommands {
             app.exit();
         });
 
-        serverCommands.register("update", "Updates the server.", args -> {
-            Updater.init();
-        });
+        serverCommands.register("update", "Updates the server.", args -> Updater.init());
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
