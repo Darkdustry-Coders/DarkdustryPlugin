@@ -86,6 +86,7 @@ public class DarkdustryPlugin extends Plugin {
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
+        info("You can update plugin with the command update.");
     }
 
     @Override

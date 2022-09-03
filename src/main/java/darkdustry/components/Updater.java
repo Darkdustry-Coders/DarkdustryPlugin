@@ -2,6 +2,7 @@ package darkdustry.components;
 
 import arc.util.Http;
 import arc.util.serialization.JsonReader;
+import arc.util.serialization.Jval;
 import darkdustry.utils.Utils;
 
 import java.io.FileOutputStream;
@@ -21,16 +22,19 @@ public class Updater {
 
         if (json.exists() && repo != null) {
             var api = "https://api.github.com/repos/" + repo + "/releases/latest";
-            var version = new JsonReader().parse(json).getString("version");
+            var version = Jval.read(json.reader()).getString("version");
 
             Http.get(api, result -> {
-                var tag = new JsonReader().parse(result.getResultAsString()).getString("tag_name");
+                var text = result.getResultAsString();
+                var tag = new JsonReader().parse(text).getString("tag_name");
 
                 if (Objects.equals(version, tag)) {
-                    info("Main plugin \"@\" has latest version: @", mod.name, version);
+                    info("Main plugin \"@\" has latest version: @.", mod.name, version);
                 } else {
                     info("Main plugin will be updated and disabled");
                     var download = "https://github.com/" + repo + "/releases/download/" + tag + "/DarkdustryPlugin-" + tag + ".jar";
+                    // var download = Jval.read(text).get("assets").get("0").getString("browser_download_url");
+
                     Http.get(download, response -> {
                         OutputStream outputStream = new FileOutputStream(mod.file.file());
 
