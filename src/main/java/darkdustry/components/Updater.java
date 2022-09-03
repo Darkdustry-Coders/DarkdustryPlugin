@@ -35,6 +35,8 @@ public class Updater {
                         outputStream.write(response.getResultAsStream().readAllBytes());
                         outputStream.close();
                     });
+
+                    info("Main plugin \"@\" has been updated", mod.name);
                 }
             });
         } else {
