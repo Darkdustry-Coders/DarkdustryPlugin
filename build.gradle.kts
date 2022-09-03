@@ -21,11 +21,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.18.0")
     implementation("net.dv8tion:JDA:5.0.0-alpha.18")
     implementation("redis.clients:jedis:4.3.0-m1")
-    implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
-
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
-    implementation(("io.projectreactor:reactor-core:3.3.9"))
-
+    implementation("org.mongodb:mongodb-driver-sync:4.7.1")
 }
 
 tasks.jar {

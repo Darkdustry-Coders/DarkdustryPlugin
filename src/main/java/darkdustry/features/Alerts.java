@@ -18,7 +18,7 @@ import mindustry.world.Tile;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
 import static mindustry.Vars.state;
 
 public class Alerts {
@@ -75,6 +75,6 @@ public class Alerts {
     }
 
     private static boolean isAlertsEnabled(Player player) {
-        return getPlayerData(player.uuid()).alertsEnabled;
+        return getPlayerData(player).alertsEnabled;
     }
 }

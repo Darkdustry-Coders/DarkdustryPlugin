@@ -9,8 +9,8 @@ import java.util.Locale;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.get;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.MongoDB.setPlayerData;
 import static darkdustry.features.Effects.cache;
 
 public class Ranks {

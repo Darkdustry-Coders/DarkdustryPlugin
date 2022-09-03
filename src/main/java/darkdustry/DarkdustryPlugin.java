@@ -24,8 +24,8 @@ import mindustry.net.Packets.ConnectPacket;
 
 import static darkdustry.PluginVars.clientCommands;
 import static darkdustry.PluginVars.serverCommands;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.MongoDB.setPlayerData;
 import static darkdustry.components.MenuHandler.rankIncreaseMenu;
 import static darkdustry.components.MenuHandler.showMenu;
 import static mindustry.Vars.net;
@@ -54,7 +54,7 @@ public class DarkdustryPlugin extends Plugin {
 
         PluginEvents.load();
         MongoDB.connect();
-        Database.connect();
+        // Database.connect();
         Bot.connect();
 
         Version.build = -1;

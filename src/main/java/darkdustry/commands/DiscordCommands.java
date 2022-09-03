@@ -3,40 +3,31 @@ package darkdustry.commands;
 import arc.Events;
 import arc.files.Fi;
 import arc.func.Cons;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
+import arc.struct.*;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
+import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
-import static arc.Core.app;
-import static arc.Core.graphics;
+import static arc.Core.*;
 import static arc.util.Time.timeSinceMillis;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
-import static darkdustry.components.MapParser.renderMap;
-import static darkdustry.components.MapParser.renderMinimap;
-import static darkdustry.components.MenuHandler.linkMenu;
-import static darkdustry.components.MenuHandler.showMenu;
+import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.serverName;
-import static net.dv8tion.jda.api.Permission.BAN_MEMBERS;
-import static net.dv8tion.jda.api.Permission.KICK_MEMBERS;
-import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.DISABLED;
-import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.enabledFor;
+import static net.dv8tion.jda.api.Permission.*;
+import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.*;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 import static net.dv8tion.jda.api.utils.FileUpload.fromData;
 
@@ -66,19 +57,6 @@ public class DiscordCommands {
                     .addFiles(fromData(renderMinimap(), "minimap.png"))
                     .queue();
         });
-
-
-        register("discord", "Привязывает ваш дискорд к игровому аккаунту.", event -> {
-            var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
-            if (notFound(event, target)) return;
-
-            showMenu(target, linkMenu, "discord.menu.link.header", "discord.menu.link.content",
-                    new String[][]{{"ui.menus.close"}, {"discord.button.link"}});
-
-            linkWaiting.put(target.uuid(), event.getMember().getId());
-
-            event.reply("Проверьте окно игры.").setEphemeral(true).queue();
-        }).addOption(STRING, "name", "Имя игрока.", true);
 
 
         register("players", "Список всех игроков на сервере.", PageIterator::players)

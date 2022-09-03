@@ -23,7 +23,7 @@ import java.util.Objects;
 import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.hasPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
 import static darkdustry.discord.Bot.error;
 import static darkdustry.discord.Bot.isAdmin;
 import static darkdustry.utils.Utils.coloredTeam;
@@ -61,11 +61,11 @@ public class Checks {
     }
 
     public static boolean noData(String uuid) {
-        return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
+        return check(getPlayerData(uuid) == null, "No player data found by @.", uuid);
     }
 
     public static boolean invalidAmount(String[] args, int index) {
-        return check(args.length <= index || !canParsePositiveInt(args[index]), "Value must be a number!");
+        return check(args.length > index && !canParsePositiveInt(args[index]), "Value must be a number!");
     }
 
     // endregion
