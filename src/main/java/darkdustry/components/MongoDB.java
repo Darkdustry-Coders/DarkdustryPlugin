@@ -16,24 +16,24 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoDB {
 
     public static MongoCollection<PlayerData> collection;
+    public static MongoDatabase db;
 
     public static void connect() {
         try {
             MongoClient client = MongoClients.create(config.mongoUrl);
-            collection = client
-                    .getDatabase("darkdustry").withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build())))
-                    .getCollection("playerData", PlayerData.class);
+            db = client.getDatabase("darkdustry").withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build())));
+            collection = db.getCollection("players", PlayerData.class);
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
         }
 
-        getPlayerData("dddd", (data) -> {
-            Log.info("Мы получили плейер дату!");
-            data.gamesPlayed = 9999;
-            setPlayerData(data);
-        });
+//        getPlayerData("dddd", (data) -> {
+//            Log.info("Мы получили плейер дату!");
+//            data.gamesPlayed = 9999;
+//            setPlayerData(data);
+//        });
 
         for (int i = 0; i <= 10; i++) {
             Log.info(i);
@@ -45,8 +45,8 @@ public class MongoDB {
     }
 
     public static void setPlayerData(PlayerData data) {
-        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).subscribe(d->{
-            if(d.getModifiedCount()<1){
+        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).subscribe(d -> {
+            if(d.getModifiedCount() < 1) {
                 Mono.from(collection.insertOne(data)).subscribe();
             }
         });
