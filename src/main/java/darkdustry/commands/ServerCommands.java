@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.Log;
+import darkdustry.components.Updater;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
@@ -40,6 +41,10 @@ public class ServerCommands {
             netServer.kickAll(KickReason.serverRestarting);
             app.post(Bot::exit);
             app.exit();
+        });
+
+        serverCommands.register("update", "Updates the server.", args -> {
+            Updater.init();
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {

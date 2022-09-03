@@ -13,6 +13,7 @@ import static arc.util.Log.info;
 
 public class Updater {
     public static void init() {
+        info("Checking updates...");
         var mod = Utils.getPlugin();
 
         var json = mod.root.child("plugin.json");
@@ -28,6 +29,7 @@ public class Updater {
                 if (Objects.equals(version, tag)) {
                     info("Main plugin \"@\" has latest version: @", mod.name, version);
                 } else {
+                    info("Main plugin will be updated and disabled");
                     var download = "https://github.com/" + repo + "/releases/download/" + tag + "/DarkdustryPlugin-" + tag + ".jar";
                     Http.get(download, response -> {
                         OutputStream outputStream = new FileOutputStream(mod.file.file());
@@ -36,6 +38,8 @@ public class Updater {
                         outputStream.close();
 
                         info("Main plugin \"@\" has been updated", mod.name);
+
+                        System.exit(0);
                     });
                 }
             });
