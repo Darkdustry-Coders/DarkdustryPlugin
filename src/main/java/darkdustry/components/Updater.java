@@ -12,7 +12,7 @@ import static arc.util.Log.err;
 import static arc.util.Log.info;
 
 public class Updater {
-    public void init() {
+    public static void init() {
         var mod = Utils.getPlugin();
 
         var json = mod.root.child("plugin.json");

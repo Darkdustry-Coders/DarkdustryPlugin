@@ -3,6 +3,7 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.Log;
 import arc.util.Time;
+import darkdustry.components.Updater;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
 import darkdustry.features.Effects;

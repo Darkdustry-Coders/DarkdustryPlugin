@@ -39,6 +39,8 @@ public class DarkdustryPlugin extends Plugin {
         info("Loading Darkdustry plugin.");
         Time.mark();
 
+        Updater.init();
+
         Bundle.load();
         Config.load();
         Icons.load();
