@@ -1,16 +1,25 @@
 package darkdustry.components;
 
 import arc.Events;
+import arc.util.Strings;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.ui.Menus;
 
 import static darkdustry.PluginVars.discordServerUrl;
+import static darkdustry.PluginVars.linkWaiting;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.botGuild;
 import static darkdustry.utils.Utils.coloredTeam;
+import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.state;
 
 public class MenuHandler {
@@ -77,6 +86,24 @@ public class MenuHandler {
         ranksRequirementsMenu = -1;
 
         rankIncreaseMenu = -1;
+
+        linkMenu = Menus.registerMenu((player, options) -> {
+            if (options == 1) {
+                var data = Database.getPlayerData(player.uuid());
+                var id = linkWaiting.get(player.uuid());
+
+                if (id.isEmpty()) {
+                    player.sendMessage("[scarlet]Произошла ошибка во время привязки аккаунта.[]");
+                    return;
+                }
+
+                data.discord = id;
+                Database.setPlayerData(data);
+
+                var member = botGuild.getMemberById(id);
+                botChannel.sendMessage(Strings.format("@ вы были привязаны к аккаунту @.", member.getAsMention(), player.name)).queue();
+            }
+        });
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {

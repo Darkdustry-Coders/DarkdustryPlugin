@@ -13,7 +13,7 @@ import static arc.util.Strings.parseInt;
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.Database.getPlayerData;
 import static mindustry.Vars.netServer;
 
 public class Translator {
