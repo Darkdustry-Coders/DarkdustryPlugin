@@ -1,13 +1,10 @@
 package darkdustry.components;
 
+import arc.func.Cons;
 import arc.util.Log;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.utils.Utils;
-import org.bson.codecs.configuration.CodecProvider;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 import reactor.core.publisher.Mono;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -23,27 +20,32 @@ public class MongoDB {
     public static void connect() {
         try {
             MongoClient client = MongoClients.create(config.mongoUrl);
-            CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-            CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
             collection = client
-                    .getDatabase("darkdustry").withCodecRegistry(pojoCodecRegistry)
+                    .getDatabase("darkdustry").withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build())))
                     .getCollection("playerData", PlayerData.class);
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
         }
-        PlayerData data = getPlayerData("ddd");
-        data.gamesPlayed = 1000;
-        setPlayerData(data);
+
+        getPlayerData("dddd", (data) -> {
+            Log.info("Мы получили плейер дату!");
+            data.gamesPlayed = 9999;
+            setPlayerData(data);
+        });
+
+        for (int i = 0; i <= 10; i++) {
+            Log.info(i);
+        }
     }
 
-    public static PlayerData getPlayerData(String uuid) {
-        return Utils.notNullElse(Mono.from(collection.find(eq("uuid", uuid)).first()).block(), new PlayerData(uuid));
+    public static void getPlayerData(String uuid, Cons<PlayerData> cons) {
+        Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid)).subscribe(cons::get);
     }
 
     public static void setPlayerData(PlayerData data) {
-        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).block();
+        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).subscribe();
     }
 
     public static class PlayerData {
