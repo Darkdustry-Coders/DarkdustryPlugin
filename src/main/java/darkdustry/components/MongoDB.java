@@ -7,8 +7,6 @@ import darkdustry.DarkdustryPlugin;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.reactivestreams.client.MongoClients.getDefaultCodecRegistry;
 import static darkdustry.PluginVars.config;
@@ -47,15 +45,11 @@ public class MongoDB {
     }
 
     public static void setPlayerData(PlayerData data) {
-        try {
-            long result = Objects.requireNonNull(Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).block()).getModifiedCount();
-            if(result==0){
+        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).subscribe(d->{
+            if(d.getModifiedCount()<1){
                 Mono.from(collection.insertOne(data)).subscribe();
             }
-        } catch (Exception e){
-            e.printStackTrace();
-            Mono.from(collection.insertOne(data)).subscribe();
-        }
+        });
     }
 
     public static class PlayerData {
