@@ -45,11 +45,10 @@ public class MongoDB {
     }
 
     public static void setPlayerData(PlayerData data) {
-        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data)).subscribe(d -> {
-            if(d.getModifiedCount() < 1) {
-                Mono.from(collection.insertOne(data)).subscribe();
-            }
-        });
+        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
+                .filter(r -> r.getModifiedCount() < 1)
+                .flatMap(r -> Mono.from(collection.insertOne(data)))
+                .subscribe();
     }
 
     public static class PlayerData {

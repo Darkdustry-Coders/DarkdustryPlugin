@@ -24,7 +24,7 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
-    implementation(("io.projectreactor:reactor-core:3.3.9"))
+    implementation(("io.projectreactor:reactor-core"))
 
 }
 
