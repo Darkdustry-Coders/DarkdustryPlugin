@@ -21,8 +21,8 @@ import static darkdustry.PluginVars.kickDuration;
 import static darkdustry.PluginVars.serverCommands;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.Bundle.sendToChat;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.MongoDB.setPlayerData;
 import static darkdustry.discord.Bot.botChannel;
 import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.utils.Checks.*;
@@ -220,29 +220,29 @@ public class ServerCommands {
 
         serverCommands.register("stats", "<uuid> [playtime/buildings/games] [value]", "Set a player's stats.", args -> {
             if (noData(args[0])) return;
-            var data = getPlayerData(args[0]);
-
-            if (args.length < 3) {
-                Log.info("Player: @", args[0]);
-                Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
-                return;
-            }
-
-            if (invalidAmount(args, 2)) return;
-            int value = parseInt(args[2]);
-
-            switch (args[1].toLowerCase()) {
-                case "playtime" -> data.playTime = value;
-                case "buildings" -> data.buildingsBuilt = value;
-                case "games" -> data.gamesPlayed = value;
-                default -> {
-                    Log.err("Second argument must be playtime, buildings or games.");
+            getPlayerData(args[0]).subscribe(data -> {
+                if (args.length < 3) {
+                    Log.info("Player: @", args[0]);
+                    Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
                     return;
                 }
-            }
 
-            setPlayerData(data);
-            Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
+                if (invalidAmount(args, 2)) return;
+                int value = parseInt(args[2]);
+
+                switch (args[1].toLowerCase()) {
+                    case "playtime" -> data.playTime = value;
+                    case "buildings" -> data.buildingsBuilt = value;
+                    case "games" -> data.gamesPlayed = value;
+                    default -> {
+                        Log.err("Second argument must be playtime, buildings or games.");
+                        return;
+                    }
+                }
+
+                setPlayerData(data);
+                Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
+            });
         });
     }
 }

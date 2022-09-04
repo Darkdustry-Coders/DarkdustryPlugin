@@ -9,8 +9,8 @@ import java.util.Locale;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.get;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.MongoDB.setPlayerData;
 import static darkdustry.features.Effects.cache;
 
 public class Ranks {
@@ -80,20 +80,16 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
-    public static Rank getRank(String uuid) {
-        return getRank(getPlayerData(uuid).rank);
-    }
-
     public static void setRank(Player player, Rank rank) {
         player.name(rank.tag + player.getInfo().lastName);
         cache.put(player.uuid(), rank.effects);
     }
 
     public static void setRankNet(String uuid, Rank rank) {
-        var data = getPlayerData(uuid);
-
-        data.rank = rank.id;
-        setPlayerData(data);
+        getPlayerData(uuid).subscribe(data -> {
+            data.rank = rank.id;
+            setPlayerData(data);
+        });
 
         // обновляем ранг визуально, если игрок находится на сервере
         Groups.player.each(player -> player.uuid().equals(uuid), player -> setRank(player, rank));

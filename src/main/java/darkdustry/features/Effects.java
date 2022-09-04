@@ -11,7 +11,7 @@ import mindustry.entities.Effect;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 
-import static darkdustry.features.Ranks.getRank;
+import static darkdustry.components.MongoDB.getPlayerData;
 import static mindustry.Vars.state;
 
 public class Effects {
@@ -66,11 +66,15 @@ public class Effects {
     }
 
     public static void onJoin(Player player) {
-        getRank(player.uuid()).effects.join.get(player);
+        getPlayerData(player.uuid()).subscribe(data -> {
+            Ranks.Rank.ranks.get(data.rank).effects.join.get(player);
+        });
     }
 
     public static void onLeave(Player player) {
-        getRank(player.uuid()).effects.leave.get(player);
+        getPlayerData(player.uuid()).subscribe(data -> {
+            Ranks.Rank.ranks.get(data.rank).effects.leave.get(player);
+        });
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {

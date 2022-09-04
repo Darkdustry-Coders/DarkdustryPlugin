@@ -24,12 +24,11 @@ import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.attribute.GroupPrincipal;
 import java.util.stream.StreamSupport;
 
 import static darkdustry.PluginVars.clientCommands;
 import static darkdustry.PluginVars.serverCommands;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
 import static darkdustry.components.MenuHandler.rankIncreaseMenu;
 import static darkdustry.components.MenuHandler.showMenu;
 import static darkdustry.components.MongoDB.*;
@@ -73,10 +72,11 @@ public class DarkdustryPlugin extends Plugin {
 
 
         Timer.schedule(() -> {
+            if (Groups.player.size() == 0) return;
             var ids = StreamSupport.stream(Groups.player.spliterator(), false)
                     .map(Player::uuid)
                     .toList();
-            MongoDB.getPlayersDataAsync(ids).doOnNext(data->{
+            MongoDB.getPlayersData(ids).doOnNext(data->{
                 Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
                 if(player!=null){
                     data.playTime++;
@@ -89,7 +89,7 @@ public class DarkdustryPlugin extends Plugin {
                     }
                 }
             }).collectList()
-                    .flatMap(MongoDB::setPlayerDatas).subscribe();
+                    .flatMap(MongoDB::setPlayersData).subscribe();
         }, 60f, 60f);
 
         // эта строчка исправляет обнаружение некоторых цветов

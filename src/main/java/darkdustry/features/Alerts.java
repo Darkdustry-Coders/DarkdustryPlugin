@@ -11,14 +11,17 @@ import mindustry.game.EventType.BuildSelectEvent;
 import mindustry.game.EventType.DepositEvent;
 import mindustry.game.Team;
 import mindustry.gen.Building;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 
+import java.util.stream.StreamSupport;
+
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.MongoDB.*;
 import static mindustry.Vars.state;
 
 public class Alerts {
@@ -51,15 +54,31 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        event.team.data().players.each(Alerts::isAlertsEnabled, player ->
-                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y));
+        var ids = StreamSupport.stream(event.team.data().players.spliterator(), false)
+                .map(Player::uuid)
+                .toList();
+
+        getPlayersData(ids).doOnNext(data -> {
+            if (data.alertsEnabled) {
+                Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
+                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
+            }
+        }).subscribe();
     }
 
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        event.player.team().data().players.each(Alerts::isAlertsEnabled, player ->
-                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY()));
+        var ids = StreamSupport.stream(event.player.team().data().players.spliterator(), false)
+                .map(Player::uuid)
+                .toList();
+
+        getPlayersData(ids).doOnNext(data -> {
+           if (data.alertsEnabled) {
+               Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
+               bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+           }
+        }).subscribe();
     }
 
     private static boolean isDangerous(Block block, Team team, Tile tile) {
@@ -72,9 +91,5 @@ public class Alerts {
 
     private static boolean isNearCore(Team team, Position position) {
         return team.cores().contains(core -> core.dst(position) < alertsDistance);
-    }
-
-    private static boolean isAlertsEnabled(Player player) {
-        return getPlayerData(player.uuid()).alertsEnabled;
     }
 }

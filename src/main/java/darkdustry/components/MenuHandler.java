@@ -14,8 +14,8 @@ import mindustry.ui.Menus;
 import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.PluginVars.linkWaiting;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.setPlayerData;
+import static darkdustry.components.MongoDB.getPlayerData;
+import static darkdustry.components.MongoDB.setPlayerData;
 import static darkdustry.discord.Bot.botChannel;
 import static darkdustry.discord.Bot.botGuild;
 import static darkdustry.utils.Utils.coloredTeam;
@@ -32,9 +32,10 @@ public class MenuHandler {
             if (option == 1) {
                 Call.openURI(player.con, discordServerUrl);
             } else if (option == 2) {
-                var data = getPlayerData(player);
-                data.welcomeMessage = false;
-                setPlayerData(data);
+                getPlayerData(player.uuid()).subscribe(data -> {
+                    data.welcomeMessage = false;
+                    setPlayerData(data);
+                });
                 bundled(player, "welcome.disabled");
             }
         });
@@ -89,19 +90,20 @@ public class MenuHandler {
 
         linkMenu = Menus.registerMenu((player, options) -> {
             if (options == 1) {
-                var data = Database.getPlayerData(player.uuid());
-                var id = linkWaiting.get(player.uuid());
+                getPlayerData(player.uuid()).subscribe(data -> {
+                    var id = linkWaiting.get(player.uuid());
 
-                if (id.isEmpty()) {
-                    player.sendMessage("[scarlet]Произошла ошибка во время привязки аккаунта.[]");
-                    return;
-                }
+                    if (id.isEmpty()) {
+                        player.sendMessage("[scarlet]Произошла ошибка во время привязки аккаунта.[]");
+                        return;
+                    }
 
-                data.discord = id;
-                Database.setPlayerData(data);
+                    data.discord = id;
+                    setPlayerData(data);
 
-                var member = botGuild.getMemberById(id);
-                botChannel.sendMessage(Strings.format("@ вы были привязаны к аккаунту @.", member.getAsMention(), player.name)).queue();
+                    var member = botGuild.getMemberById(id);
+                    botChannel.sendMessage(Strings.format("@ вы были привязаны к аккаунту @.", member.getAsMention(), player.name)).queue();
+                });
             }
         });
     }

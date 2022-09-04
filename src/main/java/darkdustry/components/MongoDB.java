@@ -51,30 +51,24 @@ public class MongoDB {
         }
     }
 
-    public static void getPlayerData(String uuid, Cons<PlayerData> cons) {
-        Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid)).subscribe(cons::get);
-    }
-
-    public static Mono<PlayerData> getPlayerDataAsync(String uuid){
+    public static Mono<PlayerData> getPlayerData(String uuid){
         return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersDataAsync(List<String> uuids){
+    public static Flux<PlayerData> getPlayersData(List<String> uuids){
         return Flux.from(collection.find(all("uuid",uuids))).defaultIfEmpty(new PlayerData());
     }
-
-    public static Mono<Void> setPlayerDatas(List<PlayerData> data){
-        return Mono.from(collection.bulkWrite(data.stream()
-                        .map(p -> new ReplaceOneModel<>(eq("uuid", p.uuid), p))
-                        .toList()))
-                .then();
-    }
-
     public static void setPlayerData(PlayerData data) {
         Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
                 .filter(r -> r.getModifiedCount() < 1)
                 .flatMap(r -> Mono.from(collection.insertOne(data)))
                 .subscribe();
+    }
+    public static Mono<Void> setPlayersData(List<PlayerData> data){
+        return Mono.from(collection.bulkWrite(data.stream()
+                        .map(p -> new ReplaceOneModel<>(eq("uuid", p.uuid), p))
+                        .toList()))
+                .then();
     }
 
     public static Mono<Void> insertPlayer(String uuid){
