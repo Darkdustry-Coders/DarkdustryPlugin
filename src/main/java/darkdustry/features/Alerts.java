@@ -44,13 +44,13 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        var ids = event.team.data().players
-                .map(Player::uuid);
+        var name = event.builder.getPlayer().coloredName();
+        var block = event.builder.buildPlan().block.name;
 
-        getPlayersData(ids).doOnNext(data -> {
+        getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
                 Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
-                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
+                bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
             }
         }).subscribe();
     }
@@ -58,13 +58,14 @@ public class Alerts {
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        var ids = event.player.team().data().players
-                .map(Player::uuid);
+        var name = event.player.coloredName();
+        var block = event.tile.block.name;
+        var item = event.item.name;
 
-        getPlayersData(ids).doOnNext(data -> {
+        getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
                 Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
-                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+                bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
             }
         }).subscribe();
     }
