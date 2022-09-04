@@ -3,8 +3,7 @@ package darkdustry.features.history;
 import arc.struct.Queue;
 import mindustry.world.Tile;
 
-import static darkdustry.PluginVars.config;
-import static darkdustry.PluginVars.maxHistoryCapacity;
+import static darkdustry.PluginVars.*;
 import static mindustry.Vars.world;
 
 public class History {

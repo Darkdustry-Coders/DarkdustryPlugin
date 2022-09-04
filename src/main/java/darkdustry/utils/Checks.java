@@ -5,14 +5,12 @@ import arc.math.Mathf;
 import arc.util.Log;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
-import mindustry.game.Gamemode;
-import mindustry.game.Team;
+import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
-import mindustry.type.Item;
-import mindustry.type.UnitType;
+import mindustry.type.*;
 import mindustry.world.Block;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,13 +21,10 @@ import java.util.Objects;
 import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.hasPlayerData;
-import static darkdustry.discord.Bot.error;
-import static darkdustry.discord.Bot.isAdmin;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static java.util.Objects.requireNonNull;
-import static mindustry.Vars.mapExtension;
-import static mindustry.Vars.state;
+import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
 
 public class Checks {
@@ -58,10 +53,6 @@ public class Checks {
 
     public static boolean notFound(Rank rank, String name) {
         return check(rank == null, "No rank @ found.", name);
-    }
-
-    public static boolean noData(String uuid) {
-        return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
     }
 
     public static boolean invalidAmount(String[] args, int index) {

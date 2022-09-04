@@ -1,16 +1,14 @@
 package darkdustry.components;
 
 import arc.util.Http;
-import arc.util.serialization.JsonReader;
-import arc.util.serialization.Jval;
+import arc.util.serialization.*;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Utils;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Objects;
 
-import static arc.util.Log.err;
-import static arc.util.Log.info;
+import static arc.util.Log.*;
 
 public class Updater {
     public static void init() {
@@ -43,7 +41,7 @@ public class Updater {
 
                         info("Main plugin \"@\" has been updated", mod.name);
 
-                        System.exit(0);
+                        DarkdustryPlugin.exit();
                     });
                 }
             });

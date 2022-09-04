@@ -7,11 +7,9 @@ import mindustry.io.MapIO;
 import mindustry.maps.Map;
 import mindustry.world.blocks.environment.OreBlock;
 
-import static arc.util.io.Streams.OptimizedByteArrayOutputStream;
-import static arc.util.io.Streams.emptyBytes;
+import static arc.util.io.Streams.*;
 import static darkdustry.utils.Utils.getPluginResource;
-import static mindustry.Vars.content;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class MapParser {
 

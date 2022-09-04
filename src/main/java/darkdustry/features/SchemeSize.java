@@ -4,22 +4,17 @@ import arc.Events;
 import arc.math.geom.Geometry;
 import arc.struct.ObjectMap;
 import darkdustry.utils.Find;
-import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.PlayerLeave;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
+import mindustry.game.EventType.*;
+import mindustry.gen.*;
 import mindustry.world.Block;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.utils.Checks.invalidFillAmount;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class SchemeSize {
 
-    /**
-     * Список id пользователей Scheme Size'а
-     */
+    /** Список id пользователей Scheme Size'а */
     public static final ObjectMap<Integer, String> SSUsers = new ObjectMap<>();
 
     public static void load() {

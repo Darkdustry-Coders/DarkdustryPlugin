@@ -9,64 +9,40 @@ import static mindustry.net.Administration.Config.*;
 
 public class Config {
 
-    /**
-     * IP адрес Хаба.
-     */
+    /** IP адрес Хаба. */
     public String hubIp = "darkdustry.tk";
 
-    /**
-     * Порт Хаба.
-     */
+    /** Порт Хаба. */
     public int hubPort = 6567;
 
-    /**
-     * Строка подключения к базе данных.
-     */
+    /** Строка подключения к базе данных. */
     public String mongoUrl;
 
-    /**
-     * Имя пользователя базы данных.
-     */
+    /** Айпи базы данных. */
     public String jedisIp = "localhost";
 
-    /**
-     * Пароль пользователя базы данных.
-     */
+    /** Порт базы данных. */
     public int jedisPort = 6379;
 
-    /**
-     * Режим игры на сервере.
-     */
+    /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
 
-    /**
-     * Токен бота, привязанного к серверу.
-     */
+    /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /**
-     * ID сервера в Discord.
-     */
+    /** ID сервера в Discord. */
     public long discordGuildId = 0L;
 
-    /**
-     * ID канала в Discord, куда отправляются все сообщения.
-     */
+    /** ID канала в Discord, куда отправляются все сообщения. */
     public long discordBotChannelId = 0L;
 
-    /**
-     * ID канала в Discord, куда отправляются подтверждения для администраторов.
-     */
+    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
     public long discordAdminChannelId = 0L;
 
-    /**
-     * ID роли администраторов в Discord.
-     */
+    /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
 
-    /**
-     * Ключ API для переводчика чата.
-     */
+    /** Ключ API для переводчика чата. */
     public String translatorApiKey = "key";
 
     public static void load() {

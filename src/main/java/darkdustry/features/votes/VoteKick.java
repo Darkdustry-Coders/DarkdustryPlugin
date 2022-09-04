@@ -1,10 +1,8 @@
 package darkdustry.features.votes;
 
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 
-import static darkdustry.PluginVars.kickDuration;
-import static darkdustry.PluginVars.voteKick;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.utils.Utils.kick;
 

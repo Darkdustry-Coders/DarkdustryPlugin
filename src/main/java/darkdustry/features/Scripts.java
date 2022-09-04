@@ -3,8 +3,7 @@ package darkdustry.features;
 import arc.util.Time;
 import darkdustry.DarkdustryPlugin;
 
-import static mindustry.Vars.dataDirectory;
-import static mindustry.Vars.mods;
+import static mindustry.Vars.*;
 
 public class Scripts {
 

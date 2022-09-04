@@ -4,19 +4,14 @@ import arc.util.CommandHandler.CommandRunner;
 import arc.util.Time;
 import darkdustry.features.Ranks;
 import darkdustry.features.votes.*;
-import darkdustry.utils.Cooldowns;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
+import darkdustry.utils.*;
+import mindustry.gen.*;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Bundle.get;
-import static darkdustry.components.MongoDB.getPlayerData;
-import static darkdustry.components.MongoDB.setPlayerData;
+import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.sendAdminRequest;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.voteChoice;
@@ -79,7 +74,7 @@ public class ClientCommands {
                 var rank = Ranks.getRank(data.rank);
 
                 showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
-                        new String[][]{{"ui.menus.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
+                        new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
                         data.playTime, data.buildingsBuilt, data.gamesPlayed);
             });
         });
@@ -93,9 +88,9 @@ public class ClientCommands {
                 var locale = Find.locale(player.locale);
 
                 if (!rank.hasNext()) {
-                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content", new String[][]{{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
+                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
                 } else {
-                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content.next", new String[][]{{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
+                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content.next", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
                             rank.next.localisedName(locale),
                             data.playTime, rank.next.req.playTime(),
                             data.buildingsBuilt, rank.next.req.buildingsBuilt(),

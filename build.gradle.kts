@@ -25,7 +25,6 @@ dependencies {
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
     implementation(("io.projectreactor:reactor-core"))
-
 }
 
 tasks.jar {

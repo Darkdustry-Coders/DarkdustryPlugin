@@ -5,36 +5,28 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
 import darkdustry.components.Icons;
-import mindustry.content.Blocks;
-import mindustry.content.Items;
-import mindustry.game.EventType.BuildSelectEvent;
-import mindustry.game.EventType.DepositEvent;
+import mindustry.content.*;
+import mindustry.game.EventType.*;
 import mindustry.game.Team;
-import mindustry.gen.Building;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.type.Item;
-import mindustry.world.Block;
-import mindustry.world.Tile;
+import mindustry.world.*;
 
 import java.util.stream.StreamSupport;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.state;
 
 public class Alerts {
 
     public static final Interval alertsInterval = new Interval();
 
-    /**
-     * Блоки, которые опасно строить рядом с ядром.
-     */
+    /** Блоки, которые опасно строить рядом с ядром. */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
-    /**
-     * Блоки, в которые опасно переносить конкретные ресурсы.
-     */
+
+    /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
     public static boolean enabled() {
@@ -60,7 +52,7 @@ public class Alerts {
 
         getPlayersData(ids).doOnNext(data -> {
             if (data.alertsEnabled) {
-                Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
+                Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
                 bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y);
             }
         }).subscribe();
@@ -74,10 +66,10 @@ public class Alerts {
                 .toList();
 
         getPlayersData(ids).doOnNext(data -> {
-           if (data.alertsEnabled) {
-               Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
-               bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
-           }
+            if (data.alertsEnabled) {
+                Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
+                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY());
+            }
         }).subscribe();
     }
 

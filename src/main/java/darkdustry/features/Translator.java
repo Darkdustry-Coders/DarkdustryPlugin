@@ -6,18 +6,15 @@ import arc.util.Http;
 import arc.util.serialization.Jval;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 
 import java.util.stream.StreamSupport;
 
-import static arc.util.Strings.parseInt;
-import static arc.util.Strings.stripColors;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.netServer;
-import static mindustry.Vars.player;
 
 public class Translator {
 
@@ -90,7 +87,7 @@ public class Translator {
                 .toList();
         getPlayersData(ids).doOnNext(data -> {
             if (author.uuid().equals(data.uuid)) return;
-            Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
+            Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
             if (data.language.equals("off") || data.language.equals(Find.language(author.locale))) {
                 player.sendMessage(message, author, text);
                 return;

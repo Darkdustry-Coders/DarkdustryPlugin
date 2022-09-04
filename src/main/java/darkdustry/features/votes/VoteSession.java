@@ -4,20 +4,16 @@ import arc.math.Mathf;
 import arc.struct.ObjectIntMap;
 import arc.util.Timer;
 import arc.util.Timer.Task;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
 
-    /**
-     * Список uuid проголосовавших игроков и их голос.
-     */
+    /** Список uuid проголосовавших игроков и их голос. */
     public final ObjectIntMap<String> voted = new ObjectIntMap<>();
-    /**
-     * Задача на завершение голосования.
-     */
+
+    /** Задача на завершение голосования. */
     public final Task end;
 
     public VoteSession() {
