@@ -80,13 +80,10 @@ public class Translator {
         var cache = new StringMap();
         String message = netServer.chatFormatter.format(author, text);
 
-        var ids = Groups.player.copy(new Seq<>())
-                .map(Player::uuid);
+        getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+            Player player = Find.playerByUuid(data.uuid);
+            if (player == null || player == author) return;
 
-
-        getPlayersData(ids).doOnNext(data -> {
-            if (author.uuid().equals(data.uuid)) return;
-            Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
             if (data.language.equals("off") || data.language.equals(Find.language(author.locale))) {
                 player.sendMessage(message, author, text);
                 return;
@@ -98,6 +95,6 @@ public class Translator {
                 cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(data.language), author, text);
             }, e -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
-        });
+        }).subscribe();
     }
 }

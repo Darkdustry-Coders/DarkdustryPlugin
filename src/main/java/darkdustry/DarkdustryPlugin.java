@@ -30,6 +30,8 @@ public class DarkdustryPlugin extends Plugin {
         netServer.kickAll(KickReason.serverRestarting);
         app.post(Bot::exit);
         app.exit();
+
+        app.post(() -> System.exit(0));
     }
 
     public static void info(String text, Object... values) {
@@ -78,20 +80,17 @@ public class DarkdustryPlugin extends Plugin {
         Timer.schedule(() -> {
             if (Groups.player.size() == 0) return;
 
-            var ids = Groups.player.copy(new Seq<>())
-                    .map(Player::uuid);
+            getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+                Player player = Find.playerByUuid(data.uuid);
+                if (player == null) return;
 
-            getPlayersData(ids).doOnNext(data -> {
-                Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
-                if (player != null) {
-                    data.playTime++;
-                    var rank = Ranks.getRank(data.rank);
-                    while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                        Ranks.setRank(player, rank = rank.next);
-                        data.rank = rank.id;
-                        showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
-                                null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
-                    }
+                data.playTime++;
+                var rank = Ranks.getRank(data.rank);
+                while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                    Ranks.setRank(player, rank = rank.next);
+                    data.rank = rank.id;
+                    showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
+                            null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
         }, 60f, 60f);

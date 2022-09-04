@@ -5,6 +5,7 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
 import darkdustry.components.Icons;
+import darkdustry.utils.Find;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -49,8 +50,9 @@ public class Alerts {
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
-                Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
-                bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
+                Player player = Find.playerByUuid(data.uuid);
+                if (player != null)
+                    bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
             }
         }).subscribe();
     }
@@ -64,8 +66,9 @@ public class Alerts {
 
         getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
-                Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
-                bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
+                Player player = Find.playerByUuid(data.uuid);
+                if (player != null)
+                    bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
             }
         }).subscribe();
     }

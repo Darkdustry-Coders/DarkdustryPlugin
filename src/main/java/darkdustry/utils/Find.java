@@ -31,6 +31,10 @@ public class Find {
         return canParsePositiveInt(name) ? Groups.player.getByID(parseInt(name)) : Groups.player.find(player -> deepEquals(player.name, name));
     }
 
+    public static Player playerByUuid(String uuid) {
+        return Groups.player.find(player -> player.uuid().equals(uuid));
+    }
+
     public static PlayerInfo playerInfo(String name) {
         var player = player(name);
         if (player != null) return player.getInfo();
