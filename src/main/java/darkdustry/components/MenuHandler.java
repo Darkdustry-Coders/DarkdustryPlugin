@@ -15,7 +15,7 @@ import static mindustry.Vars.state;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu, linkMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -26,8 +26,8 @@ public class MenuHandler {
                 getPlayerData(player.uuid()).subscribe(data -> {
                     data.welcomeMessage = false;
                     setPlayerData(data);
+                    bundled(player, "welcome.disabled");
                 });
-                bundled(player, "welcome.disabled");
             }
         });
 

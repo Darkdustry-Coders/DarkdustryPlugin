@@ -1,14 +1,12 @@
 package darkdustry.features;
 
 import arc.func.Cons;
-import arc.struct.StringMap;
+import arc.struct.*;
 import arc.util.Http;
 import arc.util.serialization.Jval;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
-
-import java.util.stream.StreamSupport;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -82,9 +80,10 @@ public class Translator {
         var cache = new StringMap();
         String message = netServer.chatFormatter.format(author, text);
 
-        var ids = StreamSupport.stream(Groups.player.spliterator(), false)
-                .map(Player::uuid)
-                .toList();
+        var ids = Groups.player.copy(new Seq<>())
+                .map(Player::uuid);
+
+
         getPlayersData(ids).doOnNext(data -> {
             if (author.uuid().equals(data.uuid)) return;
             Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));

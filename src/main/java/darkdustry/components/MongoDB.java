@@ -1,10 +1,9 @@
 package darkdustry.components;
 
-import arc.Events;
+import arc.struct.Seq;
 import com.mongodb.client.model.ReplaceOneModel;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
-import mindustry.game.EventType;
 import reactor.core.publisher.*;
 
 import java.util.List;
@@ -27,10 +26,6 @@ public class MongoDB {
                     .getCollection("players", PlayerData.class);
 
             DarkdustryPlugin.info("Database connected.");
-
-            Events.on(EventType.PlayerJoin.class, e -> {
-                MongoDB.insertPlayer(e.player.uuid()).subscribe();
-            });
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
         }
@@ -40,8 +35,8 @@ public class MongoDB {
         return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersData(List<String> uuids) {
-        return Flux.from(collection.find(all("uuid", uuids))).defaultIfEmpty(new PlayerData());
+    public static Flux<PlayerData> getPlayersData(Seq<String> uuids) {
+        return Flux.from(collection.find(all("uuid", uuids)));
     }
 
     public static void setPlayerData(PlayerData data) {
@@ -55,12 +50,6 @@ public class MongoDB {
         return Mono.from(collection.bulkWrite(data.stream()
                         .map(p -> new ReplaceOneModel<>(eq("uuid", p.uuid), p))
                         .toList()))
-                .then();
-    }
-
-    public static Mono<Void> insertPlayer(String uuid) {
-        return Mono.from(collection.find(eq("uuid", uuid)).first())
-                .switchIfEmpty(Mono.from(collection.insertOne(new PlayerData(uuid))).then(Mono.empty()))
                 .then();
     }
 

@@ -4,6 +4,7 @@
 package darkdustry;
 
 import arc.graphics.*;
+import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -16,11 +17,10 @@ import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 
-import java.util.stream.StreamSupport;
-
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -77,11 +77,11 @@ public class DarkdustryPlugin extends Plugin {
 
         Timer.schedule(() -> {
             if (Groups.player.size() == 0) return;
-            var ids = StreamSupport.stream(Groups.player.spliterator(), false)
-                    .map(Player::uuid)
-                    .toList();
 
-            MongoDB.getPlayersData(ids).doOnNext(data -> {
+            var ids = Groups.player.copy(new Seq<>())
+                    .map(Player::uuid);
+
+            getPlayersData(ids).doOnNext(data -> {
                 Player player = Groups.player.find(pl -> pl.uuid().equals(data.uuid));
                 if (player != null) {
                     data.playTime++;

@@ -12,8 +12,6 @@ import mindustry.gen.*;
 import mindustry.type.Item;
 import mindustry.world.*;
 
-import java.util.stream.StreamSupport;
-
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.MongoDB.getPlayersData;
@@ -46,9 +44,8 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        var ids = StreamSupport.stream(event.team.data().players.spliterator(), false)
-                .map(Player::uuid)
-                .toList();
+        var ids = event.team.data().players
+                .map(Player::uuid);
 
         getPlayersData(ids).doOnNext(data -> {
             if (data.alertsEnabled) {
@@ -61,9 +58,8 @@ public class Alerts {
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        var ids = StreamSupport.stream(event.player.team().data().players.spliterator(), false)
-                .map(Player::uuid)
-                .toList();
+        var ids = event.player.team().data().players
+                .map(Player::uuid);
 
         getPlayersData(ids).doOnNext(data -> {
             if (data.alertsEnabled) {
