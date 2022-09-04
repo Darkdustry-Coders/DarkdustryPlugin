@@ -16,11 +16,12 @@ import static org.bson.codecs.pojo.PojoCodecProvider.builder;
 
 public class MongoDB {
 
+    public static MongoClient client;
     public static MongoCollection<PlayerData> collection;
 
     public static void connect() {
         try {
-            MongoClient client = MongoClients.create(config.mongoUrl);
+            client = MongoClients.create(config.mongoUrl);
             collection = client.getDatabase("darkdustry")
                     .withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(builder().automatic(true).build())))
                     .getCollection("players", PlayerData.class);

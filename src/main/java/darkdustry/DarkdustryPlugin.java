@@ -20,7 +20,7 @@ import mindustry.net.Packets.*;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
-import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.components.MongoDB.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -28,10 +28,9 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void exit() {
         netServer.kickAll(KickReason.serverRestarting);
+        app.post(client::close);
         app.post(Bot::exit);
         app.exit();
-
-        app.post(() -> System.exit(0));
     }
 
     public static void info(String text, Object... values) {
