@@ -34,7 +34,7 @@ public class MongoDB {
             DarkdustryPlugin.info("Database connected.");
 
             Events.on(EventType.PlayerJoin.class,e->{
-                MongoDB.insertPlayer(e.player.uuid());
+                MongoDB.insertPlayer(e.player.uuid()).subscribe();
             });
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
@@ -77,8 +77,10 @@ public class MongoDB {
                 .subscribe();
     }
 
-    public static void insertPlayer(String uuid){
-        Mono.from(collection.find(eq("uuid",uuid)).first()).subscribe((d)->{if(d==null){setPlayerData(new PlayerData(uuid));}});
+    public static Mono<Void> insertPlayer(String uuid){
+        return Mono.from(collection.find(eq("uuid",uuid)).first())
+                .switchIfEmpty(Mono.from(collection.insertOne(new PlayerData(uuid))).then(Mono.empty()))
+                .then();
     }
 
     public static class PlayerData {
