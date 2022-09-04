@@ -2,9 +2,11 @@ package darkdustry.components;
 
 import arc.func.Cons;
 import arc.util.Log;
+import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -42,6 +44,18 @@ public class MongoDB {
 
     public static void getPlayerData(String uuid, Cons<PlayerData> cons) {
         Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid)).subscribe(cons::get);
+    }
+
+    public static Mono<PlayerData> getPlayerDataAsync(String uuid){
+        return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
+    }
+
+    public static Flux<PlayerData> getPlayersDataAsync(List<String> uuids){
+        return Flux.from(collection.find(all("uuid",uuids))).defaultIfEmpty(new PlayerData());
+    }
+
+    public static Mono<InsertManyResult> setPlayerDatas(List<PlayerData> data){
+        return Mono.from(collection.insertMany(data));
     }
 
     public static void setPlayerData(PlayerData data) {

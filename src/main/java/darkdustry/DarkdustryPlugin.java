@@ -18,9 +18,13 @@ import darkdustry.listeners.PluginEvents;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
 import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.Connect;
 import mindustry.net.Packets.ConnectPacket;
+import reactor.core.publisher.Mono;
+
+import java.util.stream.StreamSupport;
 
 import static darkdustry.PluginVars.clientCommands;
 import static darkdustry.PluginVars.serverCommands;
@@ -28,6 +32,7 @@ import static darkdustry.components.Database.getPlayerData;
 import static darkdustry.components.Database.setPlayerData;
 import static darkdustry.components.MenuHandler.rankIncreaseMenu;
 import static darkdustry.components.MenuHandler.showMenu;
+import static darkdustry.components.MongoDB.*;
 import static mindustry.Vars.net;
 import static mindustry.Vars.netServer;
 
@@ -66,21 +71,60 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addChatFilter(Filters::chat);
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        Timer.schedule(() -> Groups.player.each(player -> {
-            var data = getPlayerData(player);
-            data.playTime++;
 
-            var rank = Ranks.getRank(data.rank);
-            while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                Ranks.setRank(player, rank = rank.next);
-                data.rank = rank.id;
+        Timer.schedule(() -> {
+            var ids = StreamSupport.stream(Groups.player.spliterator(), false)
+                    .map(Player::uuid)
+                    .toList();
+            MongoDB.getPlayersDataAsync(ids).doOnNext(data->{
+                Player player = Groups.player.find(pl-> pl.uuid().equals(data.uuid));
+                if(player!=null){
+                    data.playTime++;
+                    var rank = Ranks.getRank(data.rank);
+                    while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                        Ranks.setRank(player, rank = rank.next);
+                        data.rank = rank.id;
+                        showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][]{{"ui.menus.close"}},
+                                null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                    }
+                }
+                        //setPlayerData(data);
+            }).collectList()
+                    .flatMap(MongoDB::setPlayerDatas).subscribe();// подожди, а оно сохранит изменения? по идее должно, не может быть две записи с общим примари кей
+        }, 60f, 60f);
 
-                showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][]{{"ui.menus.close"}},
-                        null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
-            }
+        //в флукс лезем? // всм
+//        Timer.schedule(() -> {
+//            Groups.player.each(player -> {
+//                MongoDB.getPlayerDataAsync(player.uuid()).subscribe(data->{
+//                    data.playTime++;
+//                    var rank = Ranks.getRank(data.rank);
+//                    while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+//                        Ranks.setRank(player, rank = rank.next);
+//                        data.rank = rank.id;
+//                        showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][]{{"ui.menus.close"}},
+//                                null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+//                    }
+//                    setPlayerData(data);
+//                });
+//            });
+//        }, 60f, 60f);
 
-            setPlayerData(data);
-        }), 60f, 60f);
+//        Timer.schedule(() -> Groups.player.each(player -> {
+//            var data = getPlayerData(player.uuid(), data -> {
+//            data.playTime++;
+//
+//            var rank = Ranks.getRank(data.rank);
+//            while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+//                Ranks.setRank(player, rank = rank.next);
+//                data.rank = rank.id;
+//
+//                showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][]{{"ui.menus.close"}},
+//                        null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+//            }
+//
+//            setPlayerData(data);
+//        }), 60f, 60f);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
