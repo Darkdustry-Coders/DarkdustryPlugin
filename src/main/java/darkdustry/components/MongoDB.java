@@ -1,14 +1,19 @@
 package darkdustry.components;
 
+import arc.Events;
 import arc.func.Cons;
 import arc.util.Log;
-import com.mongodb.client.result.InsertManyResult;
+import com.mongodb.client.model.ReplaceOneModel;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
+import mindustry.game.EventType;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
+import static com.mongodb.client.model.Filters.all;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.reactivestreams.client.MongoClients.getDefaultCodecRegistry;
 import static darkdustry.PluginVars.config;
@@ -27,6 +32,10 @@ public class MongoDB {
             collection = db.getCollection("players", PlayerData.class);
 
             DarkdustryPlugin.info("Database connected.");
+
+            Events.on(EventType.PlayerJoin.class,e->{
+                MongoDB.insertPlayer(e.player.uuid());
+            });
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
         }
@@ -54,8 +63,11 @@ public class MongoDB {
         return Flux.from(collection.find(all("uuid",uuids))).defaultIfEmpty(new PlayerData());
     }
 
-    public static Mono<InsertManyResult> setPlayerDatas(List<PlayerData> data){
-        return Mono.from(collection.insertMany(data));
+    public static Mono<Void> setPlayerDatas(List<PlayerData> data){
+        return Mono.from(collection.bulkWrite(data.stream()
+                        .map(p -> new ReplaceOneModel<>(eq("uuid", p.uuid), p))
+                        .toList()))
+                .then();
     }
 
     public static void setPlayerData(PlayerData data) {
@@ -63,6 +75,10 @@ public class MongoDB {
                 .filter(r -> r.getModifiedCount() < 1)
                 .flatMap(r -> Mono.from(collection.insertOne(data)))
                 .subscribe();
+    }
+
+    public static void insertPlayer(String uuid){
+        Mono.from(collection.find(eq("uuid",uuid)).first()).subscribe((d)->{if(d==null){setPlayerData(new PlayerData(uuid));}});
     }
 
     public static class PlayerData {
