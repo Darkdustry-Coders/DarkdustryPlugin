@@ -21,9 +21,6 @@ public class Config {
     /** Пароль пользователя базы данных. */
     public int jedisPort = 6379;
 
-    /** Строка для подключения к базе данных Mongo. */
-    public String mongoUrl; // я в конфиг впишу
-
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;
 

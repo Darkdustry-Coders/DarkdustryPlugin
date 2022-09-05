@@ -35,8 +35,6 @@ public class DarkdustryPlugin extends Plugin {
         MapParser.load();
         MenuHandler.load();
 
-        MongoDatabase.load();
-
         Alerts.load();
         Effects.load();
         Ranks.load();
