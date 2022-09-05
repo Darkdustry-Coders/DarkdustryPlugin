@@ -39,7 +39,7 @@ public class PluginEvents {
 
             getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
                 data.buildingsBuilt++;
-                setPlayerData(data);
+                setPlayerData(data).subscribe();
             });
         });
 
@@ -60,7 +60,7 @@ public class PluginEvents {
 
         Events.on(GameOverEvent.class, event -> Groups.player.each(player -> getPlayerData(player.uuid()).subscribe(data -> {
             data.gamesPlayed++;
-            setPlayerData(data);
+            setPlayerData(data).subscribe();
         })));
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {

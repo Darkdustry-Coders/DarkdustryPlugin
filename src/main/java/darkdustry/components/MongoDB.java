@@ -1,15 +1,12 @@
 package darkdustry.components;
 
-import arc.struct.Seq;
-import com.mongodb.client.model.ReplaceOneModel;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import reactor.core.publisher.*;
 
-import java.util.List;
-
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
-import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.eq;
 import static darkdustry.PluginVars.config;
 import static org.bson.codecs.configuration.CodecRegistries.*;
 import static org.bson.codecs.pojo.PojoCodecProvider.builder;
@@ -36,22 +33,18 @@ public class MongoDB {
         return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersData(Seq<String> uuids) {
-        return Flux.from(collection.find(all("uuid", uuids)));
+    public static Flux<PlayerData> getPlayersData(Iterable<String> uuids) {
+        return Flux.fromIterable(uuids).flatMap(MongoDB::getPlayerData);
     }
 
-    public static void setPlayerData(PlayerData data) {
-        Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
+    public static Mono<InsertOneResult> setPlayerData(PlayerData data) {
+        return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
                 .filter(r -> r.getModifiedCount() < 1)
-                .flatMap(r -> Mono.from(collection.insertOne(data)))
-                .subscribe();
+                .flatMap(r -> Mono.from(collection.insertOne(data)));
     }
 
-    public static Mono<Void> setPlayersData(List<PlayerData> data) {
-        return Mono.from(collection.bulkWrite(data.stream()
-                        .map(p -> new ReplaceOneModel<>(eq("uuid", p.uuid), p))
-                        .toList()))
-                .then();
+    public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {
+        return Flux.fromIterable(datas).flatMap(MongoDB::setPlayerData).then();
     }
 
     public static class PlayerData {
@@ -67,6 +60,7 @@ public class MongoDB {
 
         public int rank = 0;
 
+        @SuppressWarnings("unused")
         public PlayerData() {}
 
         public PlayerData(String uuid) {

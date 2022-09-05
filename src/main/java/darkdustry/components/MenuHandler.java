@@ -25,7 +25,7 @@ public class MenuHandler {
             } else if (option == 2) {
                 getPlayerData(player.uuid()).subscribe(data -> {
                     data.welcomeMessage = false;
-                    setPlayerData(data);
+                    setPlayerData(data).subscribe();
                     bundled(player, "welcome.disabled");
                 });
             }

@@ -85,7 +85,7 @@ public class Ranks {
     public static void setRankNet(String uuid, Rank rank) {
         getPlayerData(uuid).subscribe(data -> {
             data.rank = rank.id;
-            setPlayerData(data);
+            setPlayerData(data).subscribe();
         });
 
         // обновляем ранг визуально, если игрок находится на сервере

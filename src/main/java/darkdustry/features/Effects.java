@@ -10,8 +10,6 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;
 
-import static darkdustry.components.MongoDB.getPlayerData;
-import static darkdustry.features.Ranks.Rank.ranks;
 import static mindustry.Vars.state;
 
 public class Effects {
@@ -61,16 +59,18 @@ public class Effects {
     }
 
     public static void onMove(Player player) {
-        if (state.rules.fog) return;
+        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
         cache.get(player.uuid()).move.get(player);
     }
 
     public static void onJoin(Player player) {
-        getPlayerData(player.uuid()).subscribe(data -> ranks.get(data.rank).effects.join.get(player));
+        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
+        cache.get(player.uuid()).join.get(player);
     }
 
     public static void onLeave(Player player) {
-        getPlayerData(player.uuid()).subscribe(data -> ranks.get(data.rank).effects.leave.get(player));
+        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
+        cache.get(player.uuid()).leave.get(player);
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {

@@ -225,7 +225,7 @@ public class ServerCommands {
                 }
             }
 
-            setPlayerData(data);
+            setPlayerData(data).subscribe();
             Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
         }));
     }

@@ -45,19 +45,19 @@ public class ClientCommands {
                 }
                 case "off" -> {
                     data.language = "off";
-                    setPlayerData(data);
+                    setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
                     data.language = Find.language(player.locale);
-                    setPlayerData(data);
+                    setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
                 }
                 default -> {
                     if (notFound(player, args[0])) return;
 
                     data.language = args[0];
-                    setPlayerData(data);
+                    setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.changed", translatorLanguages.get(data.language), data.language);
                 }
             }
@@ -191,7 +191,7 @@ public class ClientCommands {
 
         register("alerts", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
             data.alertsEnabled = !data.alertsEnabled;
-            setPlayerData(data);
+            setPlayerData(data).subscribe();
             bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
         }));
     }
