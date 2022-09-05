@@ -133,7 +133,7 @@ public class Bot {
     }
 
     public static class Palette {
-        public static Color
+        public static final Color
                 SUCCESS = Color.decode("#3cfb63"),
                 INFO = Color.decode("#fcf47c"),
                 ERROR = Color.decode("#f93c3c"),

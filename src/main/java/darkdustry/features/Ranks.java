@@ -95,7 +95,7 @@ public class Ranks {
     public static class Rank {
         public static final Seq<Rank> ranks = new Seq<>();
 
-        public int id;
+        public final int id;
         public String tag;
         public String name;
         public FxPack effects;

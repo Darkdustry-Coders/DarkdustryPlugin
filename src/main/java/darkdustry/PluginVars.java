@@ -68,7 +68,7 @@ public class PluginVars {
     /** Список всех языков переводчика. */
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
 
-    /** Словарь для перевода локалей миндастри в локали переводчика. */
+    /** Словарь для перевода локалей mindustry в локали переводчика. */
     public static final OrderedMap<String, String> mindustry2Api = new OrderedMap<>();
 
     /** Язык по умолчанию. Язык Discord сервера. */
