@@ -2,7 +2,6 @@ package darkdustry.components;
 
 import darkdustry.DarkdustryPlugin;
 import mindustry.gen.Player;
-import org.bson.codecs.pojo.annotations.BsonCreator;
 import redis.clients.jedis.*;
 
 import static darkdustry.PluginVars.*;
@@ -60,9 +59,6 @@ public class Database {
 
         public int rank = 0;
 
-        public PlayerData() {
-
-        }
         public PlayerData(String uuid) {
             this.uuid = uuid;
         }
