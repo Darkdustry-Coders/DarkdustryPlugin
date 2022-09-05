@@ -39,7 +39,7 @@ public class ClientCommands {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
                 case "list" -> {
-                    var builder = new StringBuilder(get("commands.tr.list", Find.locale(player.locale)));
+                    var builder = new StringBuilder(format("commands.tr.list", Find.locale(player.locale)));
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
                     Call.infoMessage(player.con, builder.toString());
                 }

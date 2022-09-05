@@ -41,7 +41,7 @@ public class Authme {
         String uuid = loginWaiting.get(event.getMessage());
         var info = netServer.admins.getInfo(uuid);
 
-        EmbedBuilder embed = info("Информация об игроке")
+        var embed = info("Информация об игроке")
                 .addField("Никнейм:", info.plainLastName(), true)
                 .addField("UUID:", info.id, true)
                 .addField("IP адрес:", info.lastIP, true)

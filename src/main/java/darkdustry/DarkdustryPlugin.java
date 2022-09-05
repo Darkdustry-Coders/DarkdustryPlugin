@@ -80,7 +80,7 @@ public class DarkdustryPlugin extends Plugin {
             if (Groups.player.size() == 0) return;
 
             getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
-                Player player = Find.playerByUuid(data.uuid);
+                var player = Find.playerByUuid(data.uuid);
                 if (player == null) return;
 
                 data.playTime++;

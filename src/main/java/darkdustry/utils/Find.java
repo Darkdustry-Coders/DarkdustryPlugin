@@ -39,7 +39,7 @@ public class Find {
         var player = player(name);
         if (player != null) return player.getInfo();
 
-        return Utils.notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
+        return notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
     }
 
     public static UnitType unit(String name) {
@@ -82,6 +82,6 @@ public class Find {
 
     public static String language(String name) {
         if (mindustry2Api.containsKey(name)) return mindustry2Api.get(name);
-        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
+        return notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
     }
 }

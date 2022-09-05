@@ -50,7 +50,7 @@ public class Alerts {
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
-                Player player = Find.playerByUuid(data.uuid);
+                var player = Find.playerByUuid(data.uuid);
                 if (player != null)
                     bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
             }
@@ -66,7 +66,7 @@ public class Alerts {
 
         getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
-                Player player = Find.playerByUuid(data.uuid);
+                var player = Find.playerByUuid(data.uuid);
                 if (player != null)
                     bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
             }

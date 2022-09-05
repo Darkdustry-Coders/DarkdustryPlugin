@@ -81,7 +81,7 @@ public class Translator {
         String message = netServer.chatFormatter.format(author, text);
 
         getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
-            Player player = Find.playerByUuid(data.uuid);
+            var player = Find.playerByUuid(data.uuid);
             if (player == null || player == author) return;
 
             if (data.language.equals("off") || data.language.equals(Find.language(author.locale))) {

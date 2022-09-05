@@ -26,19 +26,21 @@ public class AdminCommands {
                 new String[][] {{"ui.menus.yes", "ui.menus.no"}}));
 
         register("despawn", (args, player) -> {
-            if (args.length > 0) {
-                var target = Find.player(args[0]);
-                if (notFound(player, target)) return;
-
-                Call.unitEnvDeath(target.unit());
-                bundled(target, "commands.despawn.success.suicide");
-                if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
-            } else
+            if (args.length == 0) {
                 showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
                         {"ui.menus.yes", "ui.menus.no"}, {"commands.despawn.menu.players"},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
                         {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},
                         {"commands.despawn.menu.suicide"}}, null, Groups.unit.size());
+                return;
+            }
+
+            var target = Find.player(args[0]);
+            if (notFound(player, target)) return;
+
+            Call.unitEnvDeath(target.unit());
+            bundled(target, "commands.despawn.success.suicide");
+            if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
         });
 
         register("team", (args, player) -> {

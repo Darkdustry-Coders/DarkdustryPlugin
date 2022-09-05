@@ -39,7 +39,8 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", event -> {
             if (isMenu(event)) return;
 
-            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()), """
+            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()),
+                            """
                             Игроков: @
                             Карта: @
                             Волна: @

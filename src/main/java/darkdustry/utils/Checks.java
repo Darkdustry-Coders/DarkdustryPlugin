@@ -12,7 +12,6 @@ import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
-import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
@@ -196,7 +195,7 @@ public class Checks {
     }
 
     public static boolean notMap(SlashCommandInteractionEvent event) {
-        Attachment attachment = requireNonNull(event.getOption("map")).getAsAttachment();
+        var attachment = requireNonNull(event.getOption("map")).getAsAttachment();
         return check(!Objects.equals(attachment.getFileExtension(), mapExtension), event, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 

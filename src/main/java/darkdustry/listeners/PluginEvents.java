@@ -27,8 +27,7 @@ public class PluginEvents {
                 case wave -> sendToChat("events.admin.wave", event.player.coloredName());
                 case kick -> sendToChat("events.admin.kick", event.player.coloredName(), event.other.coloredName());
                 case ban -> sendToChat("events.admin.ban", event.player.coloredName(), event.other.coloredName());
-                default -> {
-                } // без этой строки vscode кидает ошибку
+                default -> {} // без этой строки vscode кидает ошибку
             }
         });
 

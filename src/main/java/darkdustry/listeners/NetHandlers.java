@@ -9,6 +9,7 @@ import mindustry.gen.*;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 
+import static arc.util.Strings.levenshtein;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.utils.Utils.*;
@@ -25,8 +26,8 @@ public class NetHandlers {
 
         var closest = clientCommands.getCommandList()
                 .map(command -> command.text)
-                .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
-                .min(command -> Strings.levenshtein(command, response.runCommand));
+                .filter(command -> levenshtein(command, response.runCommand) < 3)
+                .min(command -> levenshtein(command, response.runCommand));
 
         return closest != null ? format("commands.unknown.closest", locale, closest) : format("commands.unknown", locale);
     }

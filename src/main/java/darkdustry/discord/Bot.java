@@ -40,7 +40,7 @@ public class Bot {
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
-            adminRole = Objects.requireNonNull(botGuild).getRoleById(config.discordAdminRoleId);
+            adminRole = botGuild.getRoleById(config.discordAdminRoleId);
             botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
             adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
 
@@ -80,7 +80,7 @@ public class Bot {
     }
 
     public static void sendAdminRequest(Player player) {
-        adminChannel.sendMessageEmbeds(neutral(":eyes: Запрос на получение прав администратора.")
+        adminChannel.sendMessageEmbeds(neutral("Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")

@@ -1,6 +1,6 @@
 package darkdustry.components;
 
-import arc.graphics.Pixmap;
+import arc.graphics.*;
 import arc.graphics.PixmapIO.PngWriter;
 import darkdustry.DarkdustryPlugin;
 import mindustry.io.MapIO;
@@ -15,7 +15,8 @@ public class MapParser {
 
     public static void load() {
         try {
-            var pixmap = new Pixmap(getPluginResource("block_colors.png"));
+            var pixmap = PixmapIO.readPNG(getPluginResource("block_colors.png"));
+
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);
                 if (block instanceof OreBlock) block.mapColor.set(block.itemDrop.color);
@@ -26,7 +27,7 @@ public class MapParser {
 
             DarkdustryPlugin.info("Loaded @ block colors.", pixmap.width);
         } catch (Exception e) {
-            DarkdustryPlugin.error("File block_colors.png is not found or corrupt: @", e);
+            DarkdustryPlugin.error("Error reading file block_colors.png: @", e);
         }
     }
 

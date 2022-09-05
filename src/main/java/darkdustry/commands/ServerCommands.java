@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.components.Updater;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
@@ -10,7 +9,6 @@ import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.gen.Groups;
 import mindustry.maps.*;
-import mindustry.net.Administration.PlayerInfo;
 
 import static arc.Core.*;
 import static arc.util.Strings.parseInt;
@@ -31,8 +29,6 @@ public class ServerCommands {
             Log.info("Shutting down server.");
             DarkdustryPlugin.exit();
         });
-
-        serverCommands.register("update", "Updates the server.", args -> Updater.init());
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
@@ -150,7 +146,7 @@ public class ServerCommands {
             else {
                 Log.info("IP-banned players: (@)", bannedIPs.size);
                 bannedIPs.each(ip -> {
-                    PlayerInfo info = netServer.admins.findByIP(ip);
+                    var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / (No known name or info)", ip);
                     else Log.info("  @ / Last known name: @ / ID: @", ip, info.plainLastName(), info.id);
                 });
