@@ -58,32 +58,28 @@ public class PluginEvents {
             Alerts.depositAlert(event);
         });
 
-        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
-            getPlayerData(player.uuid()).subscribe(data -> {
-                data.gamesPlayed++;
-                setPlayerData(data);
-            });
+        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> getPlayerData(player.uuid()).subscribe(data -> {
+            data.gamesPlayed++;
+            setPlayerData(data);
+        })));
+
+        Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
+            Ranks.setRank(event.player, Ranks.getRank(data.rank));
+
+            app.post(() -> Effects.onJoin(event.player));
+
+            Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
+            sendToChat("events.player.join", event.player.coloredName());
+            bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
+
+            sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
+
+            if (data.welcomeMessage)
+                showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
+                        new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
+
+            app.post(Bot::updateBotStatus);
         }));
-
-        Events.on(PlayerJoin.class, event -> {
-            getPlayerData(event.player.uuid()).subscribe(data -> {
-                Ranks.setRank(event.player, Ranks.getRank(data.rank));
-
-                app.post(() -> Effects.onJoin(event.player));
-
-                Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
-                sendToChat("events.player.join", event.player.coloredName());
-                bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
-
-                sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
-
-                if (data.welcomeMessage)
-                    showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                            new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
-
-                app.post(Bot::updateBotStatus);
-            });
-        });
 
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);

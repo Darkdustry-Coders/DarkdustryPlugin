@@ -35,36 +35,33 @@ public class ClientCommands {
             Cooldowns.run(player.uuid(), "sync");
         });
 
-        register("tr", (args, player) -> {
-            getPlayerData(player.uuid()).subscribe(data -> {
-                switch (args[0].toLowerCase()) {
-                    case "current" -> bundled(player, "commands.tr.current", data.language);
-                    case "list" -> {
-                        var builder = new StringBuilder(get("commands.tr.list", Find.locale(player.locale)));
-                        translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
-                        Call.infoMessage(player.con, builder.toString());
-                    }
-                    case "off" -> {
-                        data.language = "off";
-                        setPlayerData(data);
-                        bundled(player, "commands.tr.disabled");
-                    }
-                    case "auto" -> {
-                        data.language = Find.language(player.locale);
-                        setPlayerData(data);
-                        bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
-                    }
-                    default -> {
-                        if (notFound(player, args[0])) return;
-
-                        data.language = args[0];
-                        setPlayerData(data);
-                        bundled(player, "commands.tr.changed", translatorLanguages.get(data.language), data.language);
-                    }
+        register("tr", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
+            switch (args[0].toLowerCase()) {
+                case "current" -> bundled(player, "commands.tr.current", data.language);
+                case "list" -> {
+                    var builder = new StringBuilder(get("commands.tr.list", Find.locale(player.locale)));
+                    translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
+                    Call.infoMessage(player.con, builder.toString());
                 }
-            });
+                case "off" -> {
+                    data.language = "off";
+                    setPlayerData(data);
+                    bundled(player, "commands.tr.disabled");
+                }
+                case "auto" -> {
+                    data.language = Find.language(player.locale);
+                    setPlayerData(data);
+                    bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
+                }
+                default -> {
+                    if (notFound(player, args[0])) return;
 
-        });
+                    data.language = args[0];
+                    setPlayerData(data);
+                    bundled(player, "commands.tr.changed", translatorLanguages.get(data.language), data.language);
+                }
+            }
+        }));
 
         register("stats", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
@@ -192,13 +189,11 @@ public class ClientCommands {
             }
         });
 
-        register("alerts", (args, player) -> {
-            getPlayerData(player.uuid()).subscribe(data -> {
-                data.alertsEnabled = !data.alertsEnabled;
-                setPlayerData(data);
-                bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
-            });
-        });
+        register("alerts", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
+            data.alertsEnabled = !data.alertsEnabled;
+            setPlayerData(data);
+            bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
+        }));
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
