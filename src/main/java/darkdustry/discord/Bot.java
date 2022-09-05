@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;
-import java.util.EnumSet;
+import java.util.*;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
@@ -80,7 +80,7 @@ public class Bot {
     }
 
     public static void sendAdminRequest(Player player) {
-        adminChannel.sendMessageEmbeds(neutral(":eyes: Запрос на получение прав администратора.")
+        adminChannel.sendMessageEmbeds(neutral("Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
@@ -133,7 +133,7 @@ public class Bot {
     }
 
     public static class Palette {
-        public static Color
+        public static final Color
                 SUCCESS = Color.decode("#3cfb63"),
                 INFO = Color.decode("#fcf47c"),
                 ERROR = Color.decode("#f93c3c"),

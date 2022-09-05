@@ -4,6 +4,7 @@
 package darkdustry;
 
 import arc.graphics.*;
+import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -12,17 +13,37 @@ import darkdustry.features.*;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 
+import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.MongoDB.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
+
+    public static void exit() {
+        netServer.kickAll(KickReason.serverRestarting);
+        app.post(client::close);
+        app.post(Bot::exit);
+        app.exit();
+    }
+
+    public static void info(String text, Object... values) {
+        Log.infoTag("Darkdustry", Strings.format(text, values));
+    }
+
+    public static void discord(String text, Object... values) {
+        Log.infoTag("Discord", Strings.format(text, values));
+    }
+
+    public static void error(String text, Object... values) {
+        Log.errTag("Darkdustry", Strings.format(text, values));
+    }
 
     @Override
     public void init() {
@@ -43,8 +64,7 @@ public class DarkdustryPlugin extends Plugin {
         Translator.load();
 
         PluginEvents.load();
-
-        Database.connect();
+        MongoDB.connect();
         Bot.connect();
 
         Version.build = -1;
@@ -56,21 +76,23 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addChatFilter(Filters::chat);
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        Timer.schedule(() -> Groups.player.each(player -> {
-            var data = getPlayerData(player);
-            data.playTime++;
+        Timer.schedule(() -> {
+            if (Groups.player.size() == 0) return;
 
-            var rank = Ranks.getRank(data.rank);
-            while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                Ranks.setRank(player, rank = rank.next);
-                data.rank = rank.id;
+            getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+                var player = Find.playerByUuid(data.uuid);
+                if (player == null) return;
 
-                showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
-                        null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
-            }
-
-            setPlayerData(data);
-        }), 60f, 60f);
+                data.playTime++;
+                var rank = Ranks.getRank(data.rank);
+                while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                    Ranks.setRank(player, rank = rank.next);
+                    data.rank = rank.id;
+                    showMenu(player, rankIncreaseMenu, "events.promotion.menu.header", "events.promotion.menu.content", new String[][] {{"ui.menus.close"}},
+                            null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                }
+            }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
+        }, 60f, 60f);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");
@@ -89,17 +111,5 @@ public class DarkdustryPlugin extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         serverCommands = handler;
         ServerCommands.load();
-    }
-
-    public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", Strings.format(text, values));
-    }
-
-    public static void discord(String text, Object... values) {
-        Log.infoTag("Discord", Strings.format(text, values));
-    }
-
-    public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", Strings.format(text, values));
     }
 }

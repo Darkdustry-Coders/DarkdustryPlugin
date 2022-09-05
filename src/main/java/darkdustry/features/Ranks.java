@@ -7,7 +7,7 @@ import mindustry.gen.*;
 import java.util.Locale;
 
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.features.Effects.cache;
 
 public class Ranks {
@@ -77,20 +77,16 @@ public class Ranks {
         return Rank.ranks.get(id);
     }
 
-    public static Rank getRank(String uuid) {
-        return getRank(getPlayerData(uuid).rank);
-    }
-
     public static void setRank(Player player, Rank rank) {
         player.name(rank.tag + player.getInfo().lastName);
         cache.put(player.uuid(), rank.effects);
     }
 
     public static void setRankNet(String uuid, Rank rank) {
-        var data = getPlayerData(uuid);
-
-        data.rank = rank.id;
-        setPlayerData(data);
+        getPlayerData(uuid).subscribe(data -> {
+            data.rank = rank.id;
+            setPlayerData(data).subscribe();
+        });
 
         // обновляем ранг визуально, если игрок находится на сервере
         Groups.player.each(player -> player.uuid().equals(uuid), player -> setRank(player, rank));
@@ -99,7 +95,7 @@ public class Ranks {
     public static class Rank {
         public static final Seq<Rank> ranks = new Seq<>();
 
-        public int id;
+        public final int id;
         public String tag;
         public String name;
         public FxPack effects;

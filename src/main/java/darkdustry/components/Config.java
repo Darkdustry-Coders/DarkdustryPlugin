@@ -15,11 +15,8 @@ public class Config {
     /** Порт Хаба. */
     public int hubPort = 6567;
 
-    /** Имя пользователя базы данных. */
-    public String jedisIp = "localhost";
-
-    /** Пароль пользователя базы данных. */
-    public int jedisPort = 6379;
+    /** Строка подключения к базе данных. */
+    public String mongoUrl = "url";
 
     /** Режим игры на сервере. */
     public Gamemode mode = Gamemode.survival;

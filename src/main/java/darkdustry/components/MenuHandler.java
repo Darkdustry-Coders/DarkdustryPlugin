@@ -9,7 +9,7 @@ import mindustry.ui.Menus;
 
 import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.state;
 
@@ -23,10 +23,11 @@ public class MenuHandler {
             if (option == 1) {
                 Call.openURI(player.con, discordServerUrl);
             } else if (option == 2) {
-                var data = getPlayerData(player);
-                data.welcomeMessage = false;
-                setPlayerData(data);
-                bundled(player, "welcome.disabled");
+                getPlayerData(player.uuid()).subscribe(data -> {
+                    data.welcomeMessage = false;
+                    setPlayerData(data).subscribe();
+                    bundled(player, "welcome.disabled");
+                });
             }
         });
 

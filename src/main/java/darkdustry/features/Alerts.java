@@ -5,6 +5,7 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
 import darkdustry.components.Icons;
+import darkdustry.utils.Find;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -14,7 +15,7 @@ import mindustry.world.*;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.state;
 
 public class Alerts {
@@ -23,6 +24,7 @@ public class Alerts {
 
     /** Блоки, которые опасно строить рядом с ядром. */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
+
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
@@ -43,15 +45,32 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        event.team.data().players.each(Alerts::isAlertsEnabled, player ->
-                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(event.builder.buildPlan().block.name), event.tile.x, event.tile.y));
+        var name = event.builder.getPlayer().coloredName();
+        var block = event.builder.buildPlan().block.name;
+
+        getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
+            if (data.alertsEnabled) {
+                var player = Find.playerByUuid(data.uuid);
+                if (player != null)
+                    bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
+            }
+        }).subscribe();
     }
 
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        event.player.team().data().players.each(Alerts::isAlertsEnabled, player ->
-                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(event.item.name), Icons.get(event.tile.block.name), event.tile.tileX(), event.tile.tileY()));
+        var name = event.player.coloredName();
+        var block = event.tile.block.name;
+        var item = event.item.name;
+
+        getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
+            if (data.alertsEnabled) {
+                var player = Find.playerByUuid(data.uuid);
+                if (player != null)
+                    bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
+            }
+        }).subscribe();
     }
 
     private static boolean isDangerous(Block block, Team team, Tile tile) {
@@ -64,9 +83,5 @@ public class Alerts {
 
     private static boolean isNearCore(Team team, Position position) {
         return team.cores().contains(core -> core.dst(position) < alertsDistance);
-    }
-
-    private static boolean isAlertsEnabled(Player player) {
-        return getPlayerData(player.uuid()).alertsEnabled;
     }
 }

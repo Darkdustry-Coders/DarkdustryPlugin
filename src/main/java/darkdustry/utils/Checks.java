@@ -12,7 +12,6 @@ import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
-import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
@@ -21,7 +20,6 @@ import java.util.Objects;
 import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.hasPlayerData;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static java.util.Objects.requireNonNull;
@@ -54,10 +52,6 @@ public class Checks {
 
     public static boolean notFound(Rank rank, String name) {
         return check(rank == null, "No rank @ found.", name);
-    }
-
-    public static boolean noData(String uuid) {
-        return check(!hasPlayerData(uuid), "No player data found by @.", uuid);
     }
 
     public static boolean invalidAmount(String[] args, int index) {
@@ -201,7 +195,7 @@ public class Checks {
     }
 
     public static boolean notMap(SlashCommandInteractionEvent event) {
-        Attachment attachment = requireNonNull(event.getOption("map")).getAsAttachment();
+        var attachment = requireNonNull(event.getOption("map")).getAsAttachment();
         return check(!Objects.equals(attachment.getFileExtension(), mapExtension), event, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
     }
 

@@ -31,11 +31,15 @@ public class Find {
         return canParsePositiveInt(name) ? Groups.player.getByID(parseInt(name)) : Groups.player.find(player -> deepEquals(player.name, name));
     }
 
+    public static Player playerByUuid(String uuid) {
+        return Groups.player.find(player -> player.uuid().equals(uuid));
+    }
+
     public static PlayerInfo playerInfo(String name) {
         var player = player(name);
         if (player != null) return player.getInfo();
 
-        return Utils.notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
+        return notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
     }
 
     public static UnitType unit(String name) {
@@ -78,6 +82,6 @@ public class Find {
 
     public static String language(String name) {
         if (mindustry2Api.containsKey(name)) return mindustry2Api.get(name);
-        return Utils.notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
+        return notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
     }
 }

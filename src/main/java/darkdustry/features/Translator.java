@@ -1,7 +1,7 @@
 package darkdustry.features;
 
 import arc.func.Cons;
-import arc.struct.StringMap;
+import arc.struct.*;
 import arc.util.Http;
 import arc.util.serialization.Jval;
 import darkdustry.DarkdustryPlugin;
@@ -11,7 +11,7 @@ import mindustry.gen.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.netServer;
 
 public class Translator {
@@ -80,19 +80,21 @@ public class Translator {
         var cache = new StringMap();
         String message = netServer.chatFormatter.format(author, text);
 
-        Groups.player.each(player -> player != author, player -> {
-            String language = getPlayerData(player).language;
-            if (language.equals("off") || language.equals(Find.language(author.locale))) {
+        getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+            var player = Find.playerByUuid(data.uuid);
+            if (player == null || player == author) return;
+
+            if (data.language.equals("off") || data.language.equals(Find.language(author.locale))) {
                 player.sendMessage(message, author, text);
                 return;
             }
 
-            if (cache.containsKey(language))
-                player.sendMessage(cache.get(language), author, text);
-            else translate(language, stripColors(text), result -> {
-                cache.put(language, message + " [white]([lightgray]" + result + "[])");
-                player.sendMessage(cache.get(language), author, text);
+            if (cache.containsKey(data.language)) {
+                player.sendMessage(cache.get(data.language), author, text);
+            } else translate(data.language, stripColors(text), result -> {
+                cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
+                player.sendMessage(cache.get(data.language), author, text);
             }, e -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
-        });
+        }).subscribe();
     }
 }

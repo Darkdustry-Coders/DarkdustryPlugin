@@ -12,6 +12,7 @@ public abstract class VoteSession {
 
     /** Список uuid проголосовавших игроков и их голос. */
     public final ObjectIntMap<String> voted = new ObjectIntMap<>();
+
     /** Задача на завершение голосования. */
     public final Task end;
 

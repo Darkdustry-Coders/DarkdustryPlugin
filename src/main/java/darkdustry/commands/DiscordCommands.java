@@ -4,12 +4,11 @@ import arc.Events;
 import arc.files.Fi;
 import arc.func.Cons;
 import arc.struct.*;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.components.Config.Gamemode;
-import darkdustry.discord.Bot;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import mindustry.net.Packets.KickReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.*;
@@ -40,7 +39,8 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", event -> {
             if (isMenu(event)) return;
 
-            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()), """
+            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()),
+                            """
                             Игроков: @
                             Карта: @
                             Волна: @
@@ -88,15 +88,8 @@ public class DiscordCommands {
                 .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
 
 
-        register("restart", "Перезапустить сервер.", event -> {
-            // Сервер перезапустится только после отправки сообщения
-
-            event.replyEmbeds(info(":gear: Сервер перезапускается...").build()).queue(hook -> {
-                netServer.kickAll(KickReason.serverRestarting);
-                app.post(Bot::exit);
-                app.exit();
-            });
-        }).setDefaultPermissions(DISABLED);
+        register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":gear: Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
+                .setDefaultPermissions(DISABLED);
 
 
         if (config.mode == Gamemode.hexed) return;

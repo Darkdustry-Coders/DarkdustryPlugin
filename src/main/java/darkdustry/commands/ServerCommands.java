@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.Log;
-import darkdustry.discord.Bot;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
@@ -9,14 +9,12 @@ import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.gen.Groups;
 import mindustry.maps.*;
-import mindustry.net.Administration.PlayerInfo;
-import mindustry.net.Packets.KickReason;
 
 import static arc.Core.*;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -29,10 +27,7 @@ public class ServerCommands {
     public static void load() {
         serverCommands.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
-
-            netServer.kickAll(KickReason.serverRestarting);
-            app.post(Bot::exit);
-            app.exit();
+            DarkdustryPlugin.exit();
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
@@ -151,7 +146,7 @@ public class ServerCommands {
             else {
                 Log.info("IP-banned players: (@)", bannedIPs.size);
                 bannedIPs.each(ip -> {
-                    PlayerInfo info = netServer.admins.findByIP(ip);
+                    var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / (No known name or info)", ip);
                     else Log.info("  @ / Last known name: @ / ID: @", ip, info.plainLastName(), info.id);
                 });
@@ -194,8 +189,6 @@ public class ServerCommands {
         });
 
         serverCommands.register("setrank", "<uuid> <rank>", "Set a player's rank.", args -> {
-            if (noData(args[0])) return;
-
             var rank = Find.rank(args[1]);
             if (notFound(rank, args[1])) return;
 
@@ -208,10 +201,7 @@ public class ServerCommands {
             Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
 
-        serverCommands.register("stats", "<uuid> [playtime/buildings/games] [value]", "Set a player's stats.", args -> {
-            if (noData(args[0])) return;
-            var data = getPlayerData(args[0]);
-
+        serverCommands.register("stats", "<uuid> [playtime/buildings/games] [value]", "Set a player's stats.", args -> getPlayerData(args[0]).subscribe(data -> {
             if (args.length < 3) {
                 Log.info("Player: @", args[0]);
                 Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
@@ -231,8 +221,8 @@ public class ServerCommands {
                 }
             }
 
-            setPlayerData(data);
+            setPlayerData(data).subscribe();
             Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
-        });
+        }));
     }
 }

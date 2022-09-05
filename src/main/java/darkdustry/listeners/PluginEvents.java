@@ -12,8 +12,8 @@ import mindustry.gen.Groups;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.Database.*;
 import static darkdustry.components.MenuHandler.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.cache;
@@ -36,9 +36,10 @@ public class PluginEvents {
             if (History.enabled() && event.tile.build != null) History.put(new BlockEntry(event), event.tile);
             if (event.breaking) return;
 
-            var data = getPlayerData(event.unit.getPlayer());
-            data.buildingsBuilt++;
-            setPlayerData(data);
+            getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
+                data.buildingsBuilt++;
+                setPlayerData(data).subscribe();
+            });
         });
 
         Events.on(BuildSelectEvent.class, event -> {
@@ -56,14 +57,12 @@ public class PluginEvents {
             Alerts.depositAlert(event);
         });
 
-        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
-            var data = getPlayerData(player.uuid());
+        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> getPlayerData(player.uuid()).subscribe(data -> {
             data.gamesPlayed++;
-            setPlayerData(data);
-        }));
+            setPlayerData(data).subscribe();
+        })));
 
-        Events.on(PlayerJoin.class, event -> {
-            var data = getPlayerData(event.player);
+        Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
             Ranks.setRank(event.player, Ranks.getRank(data.rank));
 
             app.post(() -> Effects.onJoin(event.player));
@@ -74,11 +73,12 @@ public class PluginEvents {
 
             sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
 
-            if (data.welcomeMessage) showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                    new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
+            if (data.welcomeMessage)
+                showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
+                        new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
 
             app.post(Bot::updateBotStatus);
-        });
+        }));
 
         Events.on(PlayerLeave.class, event -> {
             Effects.onLeave(event.player);

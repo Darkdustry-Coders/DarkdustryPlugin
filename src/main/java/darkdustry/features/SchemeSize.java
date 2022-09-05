@@ -21,11 +21,13 @@ public class SchemeSize {
         Events.on(PlayerJoin.class, event -> Call.clientPacketReliable(event.player.con, "GiveYourPlayerData", null));
         Events.on(PlayerLeave.class, event -> SSUsers.remove(event.player.id));
 
-        netServer.addPacketHandler("ThisIsMyPlayerData", (player, args) -> SSUsers.put(player.id, args.replace("#", "").replace("=", "")));
-        netServer.addPacketHandler("GivePlayerDataPlease", (player, args) -> Call.clientPacketReliable(player.con, "ThisIsYourPlayerData", SSUsers.toString("#")));
+        netServer.addPacketHandler("ThisIsMyPlayerData", (target, args) -> SSUsers.put(target.id, args.replace("|", "").replace("=", "")));
+        netServer.addPacketHandler("GivePlayerDataPlease", (target, args) -> {
+            Call.clientPacketReliable(target.con, "ThisIsYourPlayerData", headless ? "S" : "C" + SSUsers.toString("|"));
+        });
 
         // всё то, что дальше, не нужно для интеграции сервера с модом
-        // оно просто перенесёно сюда, чтобы не захламлять AdminCommands
+        // оно просто перенесено сюда, чтобы не захламлять AdminCommands
 
         netServer.addPacketHandler("fill", (player, args) -> {
             try {
