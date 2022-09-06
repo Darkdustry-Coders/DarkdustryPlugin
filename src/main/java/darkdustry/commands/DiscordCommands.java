@@ -121,6 +121,9 @@ public class DiscordCommands {
             var attachment = requireNonNull(event.getOption("map")).getAsAttachment();
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
                 if (notMap(event, new Fi(file))) return;
+
+                maps.reload();
+
                 event.replyEmbeds(success(":map: Карта добавлена на сервер.", "Файл карты: @", file.getName()).build()).queue();
             });
         }).setDefaultPermissions(DISABLED)
