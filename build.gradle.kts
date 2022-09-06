@@ -25,6 +25,9 @@ dependencies {
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
     implementation(("io.projectreactor:reactor-core"))
+
+    // TODO убрать
+    implementation("redis.clients:jedis:4.3.0-m1")
 }
 
 tasks.jar {
