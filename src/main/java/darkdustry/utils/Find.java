@@ -58,10 +58,6 @@ public class Find {
         return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
 
-    public static Rank rank(String name) {
-        return canParsePositiveInt(name) ? Rank.ranks.get(parseInt(name)) : Rank.ranks.find(rank -> rank.name.equalsIgnoreCase(name));
-    }
-
     public static Map map(String name) {
         var list = maps.customMaps();
         return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(map -> deepEquals(map.name(), name));

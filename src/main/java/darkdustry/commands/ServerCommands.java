@@ -2,8 +2,6 @@ package darkdustry.commands;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks;
-import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -11,10 +9,8 @@ import mindustry.gen.Groups;
 import mindustry.maps.*;
 
 import static arc.Core.*;
-import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -187,42 +183,5 @@ public class ServerCommands {
                 admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
             }
         });
-
-        serverCommands.register("setrank", "<uuid> <rank>", "Set a player's rank.", args -> {
-            var rank = Find.rank(args[1]);
-            if (notFound(rank, args[1])) return;
-
-            Ranks.setRankNet(args[0], rank);
-            Log.info("Successfully set rank of @ to @.", args[0], rank.name);
-        });
-
-        serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Rank.ranks.size);
-            Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
-        });
-
-        serverCommands.register("stats", "<uuid> [playtime/buildings/games] [value]", "Set a player's stats.", args -> getPlayerData(args[0]).subscribe(data -> {
-            if (args.length < 3) {
-                Log.info("Player: @", args[0]);
-                Log.info("  Playtime: @ / Buildings Built: @ / Games Played: @", data.playTime, data.buildingsBuilt, data.gamesPlayed);
-                return;
-            }
-
-            if (invalidAmount(args, 2)) return;
-            int value = parseInt(args[2]);
-
-            switch (args[1].toLowerCase()) {
-                case "playtime" -> data.playTime = value;
-                case "buildings" -> data.buildingsBuilt = value;
-                case "games" -> data.gamesPlayed = value;
-                default -> {
-                    Log.err("Second argument must be playtime, buildings or games.");
-                    return;
-                }
-            }
-
-            setPlayerData(data).subscribe();
-            Log.info("Successfully set @ of player @ to @", args[1], args[0], value);
-        }));
     }
 }
