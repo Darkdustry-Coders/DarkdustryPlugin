@@ -4,10 +4,8 @@ import arc.Events;
 import arc.files.Fi;
 import arc.func.Cons;
 import arc.struct.*;
-import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.components.Config.Gamemode;
-import darkdustry.components.MongoDB;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
@@ -15,7 +13,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
-import redis.clients.jedis.*;
 
 import static arc.Core.*;
 import static arc.util.Time.timeSinceMillis;
@@ -151,39 +148,6 @@ public class DiscordCommands {
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":map: Игра успешно завершена.").build()).queue();
         }).setDefaultPermissions(DISABLED);
-
-        register("migrate-database", "Перенести все данные с Redis на Mongo", event -> {
-            event.deferReply().queue(hook -> {
-
-                var pool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
-                var jedis = pool.getResource();
-
-                var keys = jedis.keys("*");
-                int total = keys.size(), invalid = 0, skipped = 0;
-
-                var datas = new Seq<MongoDB.PlayerData>();
-
-                for (var key : keys) {
-                    try {
-                        var data = gson.fromJson(jedis.get(key), MongoDB.PlayerData.class);
-                        if (data.playTime == 0 || data.uuid.isBlank()) {
-                            skipped++;
-                        } else {
-                            datas.add(data);
-                        }
-                    } catch (Exception e) {
-                        invalid++;
-                    }
-                }
-
-                int finalSkipped = skipped;
-                int finalInvalid = invalid;
-
-                MongoDB.setPlayersData(datas).subscribe(r -> {
-                    hook.editOriginal("Миграция базы данных проведена успешно! Найдено " + total + "записей данных игроков, из них " + finalInvalid + " были повреждены/неверно записаны, пропущено " + finalSkipped + " пустых записей.").queue();
-                });
-            });
-        });
 
 
         // Регистрируем все команды одним запросом
