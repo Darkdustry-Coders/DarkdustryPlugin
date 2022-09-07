@@ -38,7 +38,7 @@ public class ServerCommands {
             Gamemode mode;
             if (args.length > 1) {
                 mode = Find.mode(args[1]);
-                if (notFound(mode, args)) return;
+                if (notFound(mode, args[1])) return;
             } else {
                 mode = notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
                 Log.info("Default mode selected to be @.", mode.name());
@@ -47,7 +47,7 @@ public class ServerCommands {
             Map map;
             if (args.length > 0) {
                 map = Find.map(args[0]);
-                if (notFound(map, args)) return;
+                if (notFound(map, args[0])) return;
             } else {
                 map = maps.getShuffleMode().next(mode, state.map);
                 Log.info("Randomized next map to be @.", map.name());
@@ -81,7 +81,7 @@ public class ServerCommands {
 
         serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
             var target = Find.player(args[0]);
-            if (notFound(target, args)) return;
+            if (notFound(target, args[0])) return;
 
             kick(target, kickDuration, true, "kick.kicked");
             Log.info("Player @ has been kicked.", target.plainName());
