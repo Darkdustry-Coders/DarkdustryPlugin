@@ -37,7 +37,7 @@ public class DiscordCommands {
 
     public static void load() {
         register("status", "Посмотреть статус сервера.", event -> {
-            if (isMenu(event)) return;
+            if (notHosting(event)) return;
 
             EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()),
                             """
@@ -143,7 +143,7 @@ public class DiscordCommands {
 
 
         register("gameover", "Принудительно завершить игру.", event -> {
-            if (isMenu(event)) return;
+            if (notHosting(event)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":map: Игра успешно завершена.").build()).queue();

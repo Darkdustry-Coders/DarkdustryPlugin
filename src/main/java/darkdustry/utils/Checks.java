@@ -29,7 +29,7 @@ public class Checks {
 
     // region Console
 
-    public static boolean isLaunched() {
+    public static boolean alreadyHosting() {
         return check(!state.isMenu(), "Already hosting.");
     }
 
@@ -84,11 +84,11 @@ public class Checks {
         return check(file == null, player, "commands.save-not-found");
     }
 
-    public static boolean notFound(Player player, String language) {
+    public static boolean notLanguage(Player player, String language) {
         return check(!translatorLanguages.containsKey(language), player, "commands.language-not-found");
     }
 
-    public static boolean notFoundCore(Player player, Team team) {
+    public static boolean noCores(Player player, Team team) {
         return check(team.core() == null, player, "commands.give.no-core", coloredTeam(team));
     }
 
@@ -140,7 +140,7 @@ public class Checks {
         return check(Math.PI * Mathf.sqr(radius) > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
     }
 
-    public static boolean isVoting(Player player, VoteSession session) {
+    public static boolean alreadyVoting(Player player, VoteSession session) {
         return check(session != null, player, "commands.vote-already-started");
     }
 
@@ -167,7 +167,7 @@ public class Checks {
     // endregion
     // region Discord
 
-    public static boolean isMenu(SlashCommandInteractionEvent event) {
+    public static boolean notHosting(SlashCommandInteractionEvent event) {
         return check(state.isMenu(), event, ":gear: Сервер не запущен.", ":thinking: Почему?");
     }
 
@@ -192,7 +192,7 @@ public class Checks {
 
     public static boolean notMap(SlashCommandInteractionEvent event, Fi file) {
         return check(!SaveIO.isSaveValid(file), () -> {
-            event.replyEmbeds(error(":link: Файл поврежден или не является картой!").build()).queue();
+            event.replyEmbeds(error(":link: Неверное вложение.", "Файл поврежден или не является картой!").build()).queue();
             file.delete();
         });
     }

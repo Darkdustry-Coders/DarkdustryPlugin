@@ -33,7 +33,7 @@ public class ServerCommands {
         });
 
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
-            if (isLaunched()) return;
+            if (alreadyHosting()) return;
 
             Gamemode mode;
             if (args.length > 1) {
