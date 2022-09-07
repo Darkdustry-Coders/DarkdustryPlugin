@@ -20,7 +20,12 @@ import static mindustry.graphics.Pal.adminChat;
 public class AdminCommands {
 
     public static void load() {
-        register("a", (args, player) -> Groups.player.each(Player::admin, admin -> bundled(admin, "commands.a.chat", adminChat, player.coloredName(), args[0])));
+        register("a", (args, player) -> {
+            String text = netServer.admins.filterMessage(player, args[0]);
+            if (text == null) return;
+
+            Groups.player.each(Player::admin, p -> bundled(p, player, text, "commands.a.chat", adminChat, player.coloredName(), text));
+        });
 
         register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.menu.header", "commands.artv.menu.content",
                 new String[][] {{"ui.menus.yes", "ui.menus.no"}}));

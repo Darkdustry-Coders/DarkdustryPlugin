@@ -24,7 +24,12 @@ public class ClientCommands {
 
         register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
-        register("t", (args, player) -> player.team().data().players.each(teammate -> bundled(teammate, "commands.t.chat", player.team().color, player.coloredName(), args[0])));
+        register("t", (args, player) -> {
+            String text = netServer.admins.filterMessage(player, args[0]);
+            if (text == null) return;
+
+            player.team().data().players.each(p -> bundled(p, player, text, "commands.t.chat", player.team().color, player.coloredName(), text));
+        });
 
         register("sync", (args, player) -> {
             if (alreadySynced(player)) return;

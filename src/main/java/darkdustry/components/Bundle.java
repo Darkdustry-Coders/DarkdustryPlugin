@@ -72,6 +72,10 @@ public class Bundle {
         player.sendMessage(format(key, Find.locale(player.locale), values));
     }
 
+    public static void bundled(Player player, Player from, String text, String key, Object... values) {
+        player.sendMessage(format(key, Find.locale(player.locale), values), from, text);
+    }
+
     public static void sendToChat(String key, Object... values) {
         Groups.player.each(player -> bundled(player, key, values));
     }
