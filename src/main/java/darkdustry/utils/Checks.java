@@ -33,16 +33,16 @@ public class Checks {
         return check(!state.isMenu(), "Already hosting.");
     }
 
-    public static boolean notFound(Gamemode mode, String[] name) {
-        return check(mode == null, "No gamemode @ found.", name[1]);
+    public static boolean notFound(Gamemode mode, String name) {
+        return check(mode == null, "No gamemode @ found.", name);
     }
 
-    public static boolean notFound(Map map, String[] name) {
-        return check(map == null, "No map @ found.", name[0]);
+    public static boolean notFound(Map map, String name) {
+        return check(map == null, "No map @ found.", name);
     }
 
-    public static boolean notFound(Player player, String[] name) {
-        return check(player == null, "No player @ found.", name[0]);
+    public static boolean notFound(Player player, String name) {
+        return check(player == null, "No player @ found.", name);
     }
 
     public static boolean notFound(PlayerInfo info, String name) {
