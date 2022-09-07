@@ -42,46 +42,46 @@ public class ConfigEntry implements HistoryEntry {
         String date = formatDate(time);
 
         if (value == null) {
-            return format("history.config.default", locale, name, get(block.name), date);
+            return format("history.config.default", locale, name, get(block), date);
         }
 
         if (value instanceof MappableContent content) {
-            return format("history.config", locale, name, get(block.name), get(content.name), date);
+            return format("history.config", locale, name, get(block), get(content), date);
         }
 
         if (value instanceof Boolean on) {
-            return on ? format("history.config.on", locale, name, get(block.name), date) : format("history.config.off", locale, name, get(block.name), date);
+            return on ? format("history.config.on", locale, name, get(block), date) : format("history.config.off", locale, name, get(block), date);
         }
 
         if (value instanceof String text) {
-            return !text.isEmpty() ? format("history.config.text", locale, name, get(block.name), text, date) : format("history.config.default", locale, name, get(block.name), date);
+            return !text.isEmpty() ? format("history.config.text", locale, name, get(block), text, date) : format("history.config.default", locale, name, get(block), date);
         }
 
         if (value instanceof Point2 point) {
-            return connect ? format("history.config.connect", locale, name, get(block.name), point.x, point.y, date) : format("history.config.disconnect", locale, name, get(block.name), date);
+            return connect ? format("history.config.connect", locale, name, get(block), point.x, point.y, date) : format("history.config.disconnect", locale, name, get(block), date);
         }
 
         if (value instanceof Point2[] points) {
             if (points.length == 0) {
-                return format("history.config.disconnect", locale, name, get(block.name), date);
+                return format("history.config.disconnect", locale, name, get(block), date);
             }
 
-            return format("history.config.connects", locale, name, get(block.name), Arrays.toString(points), date);
+            return format("history.config.connects", locale, name, get(block), Arrays.toString(points), date);
         }
 
         if (block instanceof LightBlock) {
-            return format("history.config.color", locale, name, get(block.name), Tmp.c1.set((int) value).toString(), date);
+            return format("history.config.color", locale, name, get(block), Tmp.c1.set((int) value).toString(), date);
         }
 
         if (block instanceof LogicBlock) {
-            return format("history.config.code", locale, name, get(block.name), date);
+            return format("history.config.code", locale, name, get(block), date);
         }
 
         if (block instanceof CanvasBlock) {
-            return format("history.config.image", locale, name, get(block.name), date);
+            return format("history.config.image", locale, name, get(block), date);
         }
 
-        return format("history.config.default", locale, name, get(block.name), date);
+        return format("history.config.default", locale, name, get(block), date);
     }
 
     public Object getValue(ConfigEvent event) {

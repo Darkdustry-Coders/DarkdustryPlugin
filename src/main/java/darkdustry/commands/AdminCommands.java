@@ -64,7 +64,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-            bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core.name), coloredTeam(team));
+            bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
         });
 
         register("give", (args, player) -> {
@@ -80,7 +80,7 @@ public class AdminCommands {
             if (notFound(player, team) || noCores(player, team)) return;
 
             team.core().items.add(item, amount);
-            bundled(player, "commands.give.success", amount, Icons.get(item.name), coloredTeam(team));
+            bundled(player, "commands.give.success", amount, Icons.get(item), coloredTeam(team));
         });
 
         register("unit", (args, player) -> {
@@ -92,9 +92,9 @@ public class AdminCommands {
 
             target.unit(type.spawn(target.team(), target.x, target.y));
             target.unit().spawnedByCore(true);
-            bundled(target, "commands.unit.success", Icons.get(type.name));
+            bundled(target, "commands.unit.success", Icons.get(type));
             if (target != player)
-                bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type.name));
+                bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
         });
 
         register("spawn", (args, player) -> {
@@ -110,7 +110,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             for (int i = 0; i < amount; i++) type.spawn(team, player);
-            bundled(player, "commands.spawn.success", amount, Icons.get(type.name), coloredTeam(team));
+            bundled(player, "commands.spawn.success", amount, Icons.get(type), coloredTeam(team));
         });
 
         register("tp", (args, player) -> {
@@ -153,7 +153,7 @@ public class AdminCommands {
                 }
             }
 
-            bundled(player, "commands.fill.success", width, height, Icons.get(block.name, block.name));
+            bundled(player, "commands.fill.success", width, height, Icons.get(block));
         });
     }
 

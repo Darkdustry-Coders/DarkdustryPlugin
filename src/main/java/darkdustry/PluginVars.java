@@ -93,7 +93,7 @@ public class PluginVars {
     public static Config config;
 
     /** Текстовый список всех предметов, юнитов и команд. */
-    public static String items, units, teams;
+    public static String items = "", units = "", teams = "";
 
     /** Точное время запуска сервера и загрузки последней карты. */
     public static long serverLoadTime, mapLoadTime;

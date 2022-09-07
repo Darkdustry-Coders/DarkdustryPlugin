@@ -27,6 +27,6 @@ public class RotateEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return format("history.rotate", Find.locale(player.locale), name, Icons.get(content.block(blockID).name), sides[rotation], formatDate(time));
+        return format("history.rotate", Find.locale(player.locale), name, Icons.get(content.block(blockID)), sides[rotation], formatDate(time));
     }
 }

@@ -3,6 +3,7 @@ package darkdustry.components;
 import arc.struct.StringMap;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
+import mindustry.ctype.MappableContent;
 import mindustry.game.Team;
 
 import static darkdustry.PluginVars.*;
@@ -20,20 +21,20 @@ public class Icons {
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            for (var team : Team.baseTeams) {
+            content.items().each(Icons::contains, item -> items += get(item) + item.name + " ");
+            content.units().each(Icons::contains, unit -> units += get(unit) + unit.name + " ") ;
+
+            Structs.each(team -> {
                 team.emoji = get(team.name, "");
-            }
-
-            // Временная мера, т.к. Анюк в будущем добавит эмодзи этим двум командам
-            Team.green.emoji = get("electrified");
-            Team.blue.emoji = get("wet");
-
-            content.items().each(item -> items += " " + get(item.name) + item.name);
-            content.units().each(unit -> !unit.internal, unit -> units += " " + get(unit.name) + unit.name);
-            Structs.each(team -> teams += " " + coloredTeam(team), Team.baseTeams);
+                teams += coloredTeam(team) + " ";
+            }, Team.baseTeams);
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
         }, e -> DarkdustryPlugin.error("Unable to fetch content icons from GitHub. Check your internet connection."));
+    }
+
+    public static String get(MappableContent content) {
+        return get(content.name);
     }
 
     public static String get(String key) {
@@ -42,5 +43,9 @@ public class Icons {
 
     public static String get(String key, String defaultValue) {
         return icons.get(key, defaultValue);
+    }
+
+    public static boolean contains(MappableContent content) {
+        return icons.containsKey(content.name);
     }
 }

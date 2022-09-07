@@ -46,7 +46,7 @@ public class Alerts {
             return;
 
         var name = event.builder.getPlayer().coloredName();
-        var block = event.builder.buildPlan().block.name;
+        var block = event.builder.buildPlan().block;
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
@@ -61,8 +61,8 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
         var name = event.player.coloredName();
-        var block = event.tile.block.name;
-        var item = event.item.name;
+        var block = event.tile.block;
+        var item = event.item;
 
         getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
             if (data.alertsEnabled) {
