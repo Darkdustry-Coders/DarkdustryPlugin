@@ -71,6 +71,7 @@ public class DarkdustryPlugin extends Plugin {
 
         net.handleServer(Connect.class, NetHandlers::connect);
         net.handleServer(ConnectPacket.class, NetHandlers::packet);
+        net.handleServer(AdminRequestCallPacket.class, NetHandlers::request);
 
         netServer.admins.addActionFilter(Filters::action);
         netServer.admins.addChatFilter(Filters::chat);

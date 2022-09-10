@@ -9,9 +9,13 @@ import mindustry.gen.*;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 
+import java.util.ArrayList;
+
 import static arc.util.Strings.levenshtein;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
+import static darkdustry.components.MenuHandler.banMenu;
+import static darkdustry.components.MenuHandler.showMenu;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -136,5 +140,18 @@ public class NetHandlers {
         netServer.sendWorldData(player);
 
         Events.fire(new PlayerConnect(player));
+    }
+
+    public static void request(NetConnection con, AdminRequestCallPacket packet) {
+        packet.handled();
+        if(packet.action != AdminAction.ban) return;
+
+        // TODO delete this cringe
+        String[][] rules = new String[][]{
+                {"1.1"}, {"1.2"}, {"1.3"}, {"1.4"}, {"1.5"}, {"1.6"}, {"1.7"}, {"1.8"}, {"1.9"},
+                {"2.1"}, {"2.2"}, {"2.3"}, {"2.4"}, {"2.5"}, {"2.6"}
+        };
+
+        showMenu(con.player, banMenu, "Каким правилом вы его отпиздите?", "Выберите правило, соответствующее правилу в discord сервере:", rules);
     }
 }

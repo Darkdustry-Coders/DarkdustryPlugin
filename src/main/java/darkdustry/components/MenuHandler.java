@@ -11,11 +11,12 @@ import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.utils.Utils.coloredTeam;
+import static mindustry.Vars.player;
 import static mindustry.Vars.state;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu, banMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -78,6 +79,10 @@ public class MenuHandler {
         ranksRequirementsMenu = -1;
 
         rankIncreaseMenu = -1;
+
+        banMenu = Menus.registerMenu((player, options) -> {
+
+        });
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {
