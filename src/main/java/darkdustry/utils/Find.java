@@ -3,7 +3,6 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Structs;
-import darkdustry.features.Ranks.Rank;
 import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
