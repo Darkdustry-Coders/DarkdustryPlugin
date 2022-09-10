@@ -161,7 +161,7 @@ public class Checks {
     }
 
     public static boolean isCooldowned(Player player, String command) {
-        return check(!Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, Cooldowns.defaults.get(command) / 60L);
+        return check(!player.admin && !Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, Cooldowns.defaults.get(command) / 60L);
     }
 
     // endregion
