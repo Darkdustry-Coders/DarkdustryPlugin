@@ -57,10 +57,6 @@ public class Bot {
         }
     }
 
-    public static void exit() {
-        jda.shutdown();
-    }
-
     public static void sendMessageToGame(Member member, Message message) {
         DarkdustryPlugin.discord("@: @", member.getEffectiveName(), message.getContentDisplay());
 
@@ -96,36 +92,36 @@ public class Bot {
         jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
     }
 
-    public static void sendMessage(MessageChannel channel, String text, Object... args) {
-        channel.sendMessage(format(text, args)).queue();
+    public static void sendMessage(MessageChannel channel, String text, Object... values) {
+        channel.sendMessage(format(text, values)).queue();
     }
 
-    public static void sendEmbed(MessageChannel channel, Color color, String text, Object... args) {
-        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, args)).build()).queue();
+    public static void sendEmbed(MessageChannel channel, Color color, String text, Object... values) {
+        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, values)).build()).queue();
     }
 
     public static EmbedBuilder success(String title) {
         return new EmbedBuilder().setColor(SUCCESS).setTitle(title);
     }
 
-    public static EmbedBuilder success(String title, String description, Object... args) {
-        return success(title).setDescription(format(description, args));
+    public static EmbedBuilder success(String title, String description, Object... values) {
+        return success(title).setDescription(format(description, values));
     }
 
     public static EmbedBuilder info(String title) {
         return new EmbedBuilder().setColor(INFO).setTitle(title);
     }
 
-    public static EmbedBuilder info(String title, String description, Object... args) {
-        return info(title).setDescription(format(description, args));
+    public static EmbedBuilder info(String title, String description, Object... values) {
+        return info(title).setDescription(format(description, values));
     }
 
     public static EmbedBuilder error(String title) {
         return new EmbedBuilder().setColor(ERROR).setTitle(title);
     }
 
-    public static EmbedBuilder error(String title, String description, Object... args) {
-        return error(title).setDescription(format(description, args));
+    public static EmbedBuilder error(String title, String description, Object... values) {
+        return error(title).setDescription(format(description, values));
     }
 
     public static EmbedBuilder neutral(String title) {

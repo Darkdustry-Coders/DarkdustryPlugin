@@ -21,6 +21,7 @@ import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
+import static darkdustry.discord.Bot.jda;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -29,7 +30,7 @@ public class DarkdustryPlugin extends Plugin {
     public static void exit() {
         netServer.kickAll(KickReason.serverRestarting);
         app.post(client::close);
-        app.post(Bot::exit);
+        app.post(jda::shutdown);
         app.exit();
     }
 
@@ -70,7 +71,8 @@ public class DarkdustryPlugin extends Plugin {
         Version.build = -1;
 
         net.handleServer(Connect.class, NetHandlers::connect);
-        net.handleServer(ConnectPacket.class, NetHandlers::packet);
+        net.handleServer(ConnectPacket.class, NetHandlers::connect);
+        net.handleServer(AdminRequestCallPacket.class, NetHandlers::adminRequest);
 
         netServer.admins.addActionFilter(Filters::action);
         netServer.admins.addChatFilter(Filters::chat);

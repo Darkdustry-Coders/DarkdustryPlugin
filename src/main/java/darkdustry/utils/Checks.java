@@ -52,6 +52,10 @@ public class Checks {
     // endregion
     // region Client
 
+    public static boolean notAdmin(Player player) {
+        return check(!player.admin, player, "commands.permission-denied");
+    }
+
     public static boolean notFound(Player player, Player target) {
         return check(target == null, player, "commands.player-not-found");
     }

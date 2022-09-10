@@ -6,12 +6,14 @@ import arc.util.*;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
-import mindustry.net.NetConnection;
+import mindustry.net.*;
+import mindustry.net.Administration.*;
 import mindustry.net.Packets.*;
 
 import static arc.util.Strings.levenshtein;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.format;
+import static darkdustry.components.Bundle.*;
+import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -36,7 +38,7 @@ public class NetHandlers {
         Events.fire(new ConnectionEvent(con));
     }
 
-    public static void packet(NetConnection con, ConnectPacket packet) {
+    public static void connect(NetConnection con, ConnectPacket packet) {
         con.connectTime = Time.millis();
 
         Events.fire(new ConnectPacketEvent(con, packet));
@@ -136,5 +138,38 @@ public class NetHandlers {
         netServer.sendWorldData(player);
 
         Events.fire(new PlayerConnect(player));
+    }
+
+    public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
+        var player = con.player;
+        var other = packet.other;
+        var action = packet.action;
+
+        if (notAdmin(player) || other == null || (other.admin && other != player)) return;
+
+        Events.fire(new AdminRequestEvent(player, other, action));
+
+        switch (action) {
+            case kick -> {
+                kick(other, kickDuration, true, "kick.kicked-by-admin", player.coloredName());
+                Log.info("@ [@] has kicked @.", player.plainName(), player.uuid(), other.plainName());
+                sendToChat("events.admin.kick", player.coloredName(), other.coloredName());
+            }
+            case ban -> {
+                netServer.admins.banPlayer(other.uuid());
+                kick(other, 0, true, "kick.banned-by-admin", player.coloredName());
+                Log.info("@ [@] has banned @.", player.plainName(), player.uuid(), other.plainName());
+                sendToChat("events.admin.ban", player.coloredName(), other.coloredName());
+            }
+            case trace -> {
+                Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, other.getInfo().timesJoined, other.getInfo().timesKicked));
+                Log.info("@ [@] has requested trace info of @.", player.plainName(), player.uuid(), other.plainName());
+            }
+            case wave -> {
+                logic.runWave();
+                Log.info("@ [@] has skipped the wave.", player.plainName(), player.uuid());
+                sendToChat("events.admin.wave", player.coloredName());
+            }
+        }
     }
 }

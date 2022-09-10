@@ -159,8 +159,8 @@ public class AdminCommands {
 
     public static void register(String name, CommandRunner<Player> runner) {
         clientCommands.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
-            if (player.admin) runner.accept(args, player);
-            else bundled(player, "commands.permission-denied");
+            if (notAdmin(player)) return;
+            runner.accept(args, player);
         });
     }
 }

@@ -73,6 +73,5 @@ public class Effects {
         cache.get(player.uuid()).leave.get(player);
     }
 
-    public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
-    }
+    public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}
 }

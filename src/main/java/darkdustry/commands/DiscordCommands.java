@@ -67,7 +67,7 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            kick(target, kickDuration, true, "kick.kicked");
+            kick(target, kickDuration, true, "kick.kicked-by-admin", requireNonNull(event.getMember()).getEffectiveName());
             sendToChat("events.server.kick", target.coloredName());
 
             event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
@@ -80,7 +80,7 @@ public class DiscordCommands {
             if (notFound(event, target)) return;
 
             netServer.admins.banPlayer(target.uuid());
-            kick(target, 0, true, "kick.banned");
+            kick(target, 0, true, "kick.banned-by-admin", requireNonNull(event.getMember()).getEffectiveName());
             sendToChat("events.server.ban", target.coloredName());
 
             event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();

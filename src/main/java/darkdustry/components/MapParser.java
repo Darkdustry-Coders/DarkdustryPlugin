@@ -5,15 +5,10 @@ import arc.graphics.PixmapIO.PngWriter;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
 import mindustry.io.SaveIO;
-import mindustry.io.SaveVersion;
 import mindustry.maps.Map;
-import mindustry.world.Tile;
-import mindustry.world.Tiles;
-import mindustry.world.WorldContext;
-import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.*;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.InflaterInputStream;
 
 import static arc.util.io.Streams.*;
@@ -29,7 +24,7 @@ public class MapParser {
 
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);
-                if (block instanceof OreBlock) block.mapColor.set(block.itemDrop.color);
+                if (block.itemDrop != null) block.mapColor.set(block.itemDrop.color);
                 else block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
             }
 
@@ -69,19 +64,15 @@ public class MapParser {
     }
 
     public static Tiles parseTiles(Map map) throws IOException {
-        try (
-                var is = new InflaterInputStream(map.file.read(bufferSize));
-                var counter = new CounterInputStream(is);
-                var stream = new DataInputStream(counter)
-        ) {
+        try (var counter = new CounterInputStream(new InflaterInputStream(map.file.read(bufferSize))); var stream = new DataInputStream(counter)) {
             SaveIO.readHeader(stream);
-            SaveVersion ver = SaveIO.getSaveWriter(stream.readInt());
+            var version = SaveIO.getSaveWriter(stream.readInt());
 
-            Tiles tiles = new Tiles(map.width, map.height);
+            var tiles = new Tiles(map.width, map.height);
 
-            ver.region("meta", stream, counter, ver::readStringMap);
-            ver.region("content", stream, counter, ver::readContentHeader);
-            ver.region("preview_map", stream, counter, in -> ver.readMap(in, new WorldContext() {
+            version.region("meta", stream, counter, version::readStringMap);
+            version.region("content", stream, counter, version::readContentHeader);
+            version.region("preview_map", stream, counter, input -> version.readMap(input, new WorldContext() {
                 @Override public void resize(int width, int height) {}
                 @Override public boolean isGenerating() { return false; }
                 @Override public void begin() {}
@@ -94,7 +85,7 @@ public class MapParser {
 
                 @Override
                 public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
-                    Tile tile = new Tile(x, y, floorID, overlayID, wallID);
+                    var tile = new Tile(x, y, floorID, overlayID, wallID);
                     tiles.set(x, y, tile);
                     return tile;
                 }
