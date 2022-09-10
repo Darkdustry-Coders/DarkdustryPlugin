@@ -6,7 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url = "https://www.jitpack.io")
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
@@ -15,7 +15,12 @@ dependencies {
     project.version = json["version"]!!
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
+    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion") {
+        exclude("com.github.Anuken.Arc", "flabel")
+        exclude("com.github.Anuken.Arc", "freetype")
+        exclude("com.github.Anuken.Arc", "fx")
+        exclude("com.github.Anuken.Arc", "g3d")
+    }
 
     implementation("com.google.code.gson:gson:2.9.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.18.0")
