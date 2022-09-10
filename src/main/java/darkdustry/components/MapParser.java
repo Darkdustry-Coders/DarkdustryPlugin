@@ -89,14 +89,14 @@ public class MapParser {
                 @Override
                 public void onReadBuilding() {
                     if (tile.build != null) {
-                        int color = tile.build.team.color.rgba8888();
                         int size = tile.block().size;
                         int offsetx = -(size - 1) / 2;
                         int offsety = -(size - 1) / 2;
+
                         for (int x = 0; x < size; x++) {
                             for (int y = 0; y < size; y++) {
                                 int drawx = tile.x + x + offsetx, drawy = tile.y + y + offsety;
-                                walls.set(drawx, floors.height - 1 - drawy, color);
+                                walls.set(drawx, floors.height - 1 - drawy, tile.build.team.color.rgba8888());
                             }
                         }
                     }
