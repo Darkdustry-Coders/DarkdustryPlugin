@@ -6,7 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url = "https://jitpack.io")
+    maven(url = "https://www.jitpack.io")
 }
 
 dependencies {
@@ -14,8 +14,8 @@ dependencies {
     val mindustryVersion = json["minGameVersion"]!!
     project.version = json["version"]!!
 
-    compileOnly("com.github.Anuken.Arc:arc-core:$mindustryVersion")
-    compileOnly("com.github.Anuken.Mindustry:core:$mindustryVersion")
+    compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
+    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.9.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.18.0")
