@@ -62,15 +62,17 @@ public class MapParser {
                 public void setBlock(Block type) {
                     super.setBlock(type);
 
-                    int c = colorFor(block(), Blocks.air, Blocks.air, team());
-                    if (c != black) {
-                        walls.setRaw(x, floors.height - 1 - y, c);
+                    int color = colorFor(block(), Blocks.air, Blocks.air, team());
+                    if (color != black) {
+                        walls.setRaw(x, floors.height - 1 - y, color);
                         floors.set(x, floors.height - 1 - y + 1, shade);
                     }
                 }
             };
 
             version.region("content", stream, counter, version::readContentHeader);
+            content.setTemporaryMapper(null);
+
             version.region("preview_map", stream, counter, in -> version.readMap(in, new WorldContext() {
                 @Override
                 public void resize(int width, int height) {}
