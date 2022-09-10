@@ -6,7 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url = "https://www.jitpack.io")
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
