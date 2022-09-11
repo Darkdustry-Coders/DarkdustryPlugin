@@ -13,6 +13,7 @@ import mindustry.net.Packets.*;
 import static arc.util.Strings.levenshtein;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -53,14 +54,14 @@ public class NetHandlers {
         con.modclient = packet.version == -1;
 
         if (con.hasBegunConnecting || Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            kick(con, 0, false, "kick.already-connected", locale);
+            kick(con, "kick.already-connected", locale);
             return;
         }
 
         con.hasBegunConnecting = true;
 
         if (Groups.player.count(player -> player.ip().equals(ip)) >= maxIdenticalIPs) {
-            kick(con, 0, false, "kick.too-many-connections", locale);
+            kick(con, "kick.too-many-connections", locale);
             return;
         }
 
@@ -75,7 +76,7 @@ public class NetHandlers {
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            kick(con, 0, false, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
+            kick(con, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
             return;
         }
 
@@ -83,12 +84,12 @@ public class NetHandlers {
         var missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any()) {
-            kick(con, 0, false, "kick.extra-mods", locale, extraMods.toString("\n> "));
+            kick(con, "kick.extra-mods", locale, extraMods.toString("\n> "));
             return;
         }
 
         if (missingMods.any()) {
-            kick(con, 0, false, "kick.missing-mods", locale, missingMods.toString("\n> "));
+            kick(con, "kick.missing-mods", locale, missingMods.toString("\n> "));
             return;
         }
 
@@ -100,22 +101,22 @@ public class NetHandlers {
             info.adminUsid = usid;
             info.names.addUnique(name);
             info.ips.addUnique(ip);
-            kick(con, 0, false, "kick.not-whitelisted", locale, discordServerUrl);
+            kick(con, "kick.not-whitelisted", locale, discordServerUrl);
             return;
         }
 
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
-            kick(con, 0, false, "kick.custom-client", locale);
+            kick(con, "kick.custom-client", locale);
             return;
         }
 
         if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
-            kick(con, 0, false, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
+            kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
 
         if (name.isBlank()) {
-            kick(con, 0, false, "kick.name-is-empty", locale);
+            kick(con, "kick.name-is-empty", locale);
             return;
         }
 
@@ -151,16 +152,11 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> {
-                kick(other, kickDuration, true, "kick.kicked-by-admin", player.coloredName());
+                kick(other, player.coloredName());
                 Log.info("@ [@] has kicked @.", player.plainName(), player.uuid(), other.plainName());
                 sendToChat("events.admin.kick", player.coloredName(), other.coloredName());
             }
-            case ban -> {
-                netServer.admins.banPlayer(other.uuid());
-                kick(other, 0, true, "kick.banned-by-admin", player.coloredName());
-                Log.info("@ [@] has banned @.", player.plainName(), player.uuid(), other.plainName());
-                sendToChat("events.admin.ban", player.coloredName(), other.coloredName());
-            }
+            case ban -> ban(other, player.coloredName());
             case trace -> {
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, other.getInfo().timesJoined, other.getInfo().timesKicked));
                 Log.info("@ [@] has requested trace info of @.", player.plainName(), player.uuid(), other.plainName());

@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.utils.Find;
+import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.gen.Groups;
@@ -12,6 +12,7 @@ import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.*;
+import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -83,9 +84,7 @@ public class ServerCommands {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
-            kick(target, kickDuration, true, "kick.kicked");
-            Log.info("Player @ has been kicked.", target.plainName());
-            sendToChat("events.server.kick", target.coloredName());
+            kick(target);
         });
 
         serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
@@ -100,10 +99,7 @@ public class ServerCommands {
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
             if (target != null) {
-                netServer.admins.banPlayer(target.uuid());
-                kick(target, 0, true, "kick.banned");
-                Log.info("Player @ has been banned.", target.plainName());
-                sendToChat("events.server.ban", target.coloredName());
+                ban(target);
                 return;
             }
 
@@ -113,8 +109,7 @@ public class ServerCommands {
             netServer.admins.banPlayer(info.id);
             Log.info("Player @ has been banned.", info.plainLastName());
             Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
-                kick(player, 0, true, "kick.banned");
-                sendToChat("events.server.ban", player.coloredName());
+                ban(player);
             });
         });
 

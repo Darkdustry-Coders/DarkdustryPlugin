@@ -4,7 +4,7 @@ import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
-import static darkdustry.utils.Utils.kick;
+import static darkdustry.utils.Administration.kick;
 
 public class VoteKick extends VoteSession {
 

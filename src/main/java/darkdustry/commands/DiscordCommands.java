@@ -20,6 +20,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.*;
+import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static java.util.Objects.requireNonNull;
@@ -67,7 +68,7 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            kick(target, kickDuration, true, "kick.kicked-by-admin", requireNonNull(event.getMember()).getEffectiveName());
+            kick(target, requireNonNull(event.getMember()).getEffectiveName());
             sendToChat("events.server.kick", target.coloredName());
 
             event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
@@ -79,9 +80,7 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            netServer.admins.banPlayer(target.uuid());
-            kick(target, 0, true, "kick.banned-by-admin", requireNonNull(event.getMember()).getEffectiveName());
-            sendToChat("events.server.ban", target.coloredName());
+            ban(target, requireNonNull(event.getMember()).getEffectiveName());
 
             event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
