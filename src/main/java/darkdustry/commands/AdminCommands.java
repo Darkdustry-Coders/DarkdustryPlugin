@@ -22,16 +22,16 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.menu.header", "commands.artv.menu.content",
-                new String[][] {{"ui.menus.yes", "ui.menus.no"}}));
+        register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.header", "commands.artv.content",
+                new String[][] {{"ui.button.yes", "ui.button.no"}}));
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
-                showMenu(player, despawnMenu, "commands.despawn.menu.header", "commands.despawn.menu.content", new String[][] {
-                        {"ui.menus.yes", "ui.menus.no"}, {"commands.despawn.menu.players"},
-                        {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
-                        {format("commands.despawn.menu.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},
-                        {"commands.despawn.menu.suicide"}}, null, Groups.unit.size());
+                showMenu(player, despawnMenu, "commands.despawn.header", "commands.despawn.content", new String[][] {
+                        {"ui.button.yes", "ui.button.no"}, {"commands.despawn.button.players"},
+                        {format("commands.despawn.button.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
+                        {format("commands.despawn.button.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},
+                        {"commands.despawn.button.suicide"}}, null, Groups.unit.size());
                 return;
             }
 

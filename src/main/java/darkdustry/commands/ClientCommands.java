@@ -70,8 +70,8 @@ public class ClientCommands {
             getPlayerData(target.uuid()).subscribe(data -> {
                 var rank = Ranks.getRank(data.rank);
 
-                showMenu(player, statsMenu, "commands.stats.menu.header", "commands.stats.menu.content",
-                        new String[][] {{"ui.menus.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
+                showMenu(player, statsMenu, "commands.stats.header", "commands.stats.content",
+                        new String[][] {{"ui.button.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
                         data.playTime, data.buildingsBuilt, data.gamesPlayed);
             });
         });
@@ -85,9 +85,9 @@ public class ClientCommands {
                 var locale = Find.locale(player.locale);
 
                 if (!rank.hasNext()) {
-                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
+                    showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.content", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
                 } else {
-                    showMenu(player, rankInfoMenu, "commands.rank.menu.header", "commands.rank.menu.content.next", new String[][] {{"ui.menus.close"}, {"commands.rank.menu.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
+                    showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.next", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
                             rank.next.localisedName(locale),
                             data.playTime, rank.next.req.playTime(),
                             data.buildingsBuilt, rank.next.req.buildingsBuilt(),

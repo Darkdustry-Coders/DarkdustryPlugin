@@ -74,8 +74,8 @@ public class PluginEvents {
             sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
 
             if (data.welcomeMessage)
-                showMenu(event.player, welcomeMenu, "welcome.menu.header", "welcome.menu.content",
-                        new String[][] {{"ui.menus.close"}, {"welcome.menu.discord"}, {"welcome.menu.disable"}}, null, serverName.string());
+                showMenu(event.player, welcomeMenu, "welcome.header", "welcome.content",
+                        new String[][] {{"ui.button.close"}, {"welcome.button.discord"}, {"welcome.button.disable"}}, null, serverName.string());
 
             app.post(Bot::updateBotStatus);
         }));
