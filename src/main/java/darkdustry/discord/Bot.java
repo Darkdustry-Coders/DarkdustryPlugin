@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.EnumSet;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;

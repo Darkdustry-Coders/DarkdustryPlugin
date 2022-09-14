@@ -14,7 +14,7 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.sendAdminRequest;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.voteChoice;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class ClientCommands {
@@ -49,14 +49,15 @@ public class ClientCommands {
                     bundled(player, "commands.tr.disabled");
                 }
                 case "auto" -> {
-                    data.language = Find.language(player.locale);
+                    data.language = notNullElse(Find.language(player.locale), defaultLanguage);
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
                 }
                 default -> {
-                    if (notLanguage(player, args[0])) return;
+                    String language = Find.language(args[0]);
+                    if (notLanguage(player, language)) return;
 
-                    data.language = args[0];
+                    data.language = language;
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.changed", translatorLanguages.get(data.language), data.language);
                 }

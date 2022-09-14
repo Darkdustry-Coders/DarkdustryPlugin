@@ -89,7 +89,7 @@ public class Checks {
     }
 
     public static boolean notLanguage(Player player, String language) {
-        return check(!translatorLanguages.containsKey(language), player, "commands.language-not-found");
+        return check(language == null, player, "commands.language-not-found");
     }
 
     public static boolean noCores(Player player, Team team) {

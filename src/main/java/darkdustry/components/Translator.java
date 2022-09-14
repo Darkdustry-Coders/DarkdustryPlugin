@@ -1,4 +1,4 @@
-package darkdustry.features;
+package darkdustry.components;
 
 import arc.func.Cons;
 import arc.struct.*;
@@ -16,24 +16,26 @@ import static mindustry.Vars.netServer;
 
 public class Translator {
 
-    public static int left = 500000;
-
     public static void load() {
         translatorLanguages.putAll(
-                "id", "Indonesia",
+                "ca", "Català",
+                "id_ID", "Bahasa Indonesia",
                 "da", "Dansk",
                 "de", "Deutsch",
                 "et", "Eesti",
                 "en", "English",
                 "es", "Español",
                 "eu", "Euskara",
+                "fil", "Filipino",
                 "fr", "Français",
                 "it", "Italiano",
                 "lt", "Lietuvių",
                 "hu", "Magyar",
                 "nl", "Nederlands",
+                "nl_BE", "Nederlands (België)",
                 "pl", "Polski",
-                "pt", "Português",
+                "pt_BR", "Português (Brasil)",
+                "pt_PT", "Português (Portugal)",
                 "ro", "Română",
                 "fi", "Suomi",
                 "sv", "Svenska",
@@ -44,36 +46,22 @@ public class Translator {
                 "be", "Беларуская",
                 "bg", "Български",
                 "ru", "Русский",
-                "uk", "Українська",
+                "sr", "Српски",
+                "uk_UA", "Українська",
                 "th", "ไทย",
-                "zh", "简体中文",
+                "zh_CN", "简体中文",
+                "zh_TW", "正體中文",
                 "ja", "日本語",
                 "ko", "한국어"
         );
 
-        mindustry2Api.putAll(
-                "in_ID", "id",
-                "nl_BE", "nl",
-                "pt_BR", "pt",
-                "pt_PT", "pt",
-                "uk_UA", "uk",
-                "zh_CN", "zh",
-                "zh_TW", "zh"
-        );
-
-        DarkdustryPlugin.info("Loaded @ languages for translator.", translatorLanguages.size);
+        DarkdustryPlugin.info("Loaded @ translator languages.", translatorLanguages.size);
     }
 
-    public static void translate(String to, String text, Cons<String> result, Cons<Throwable> error) {
-        Http.post(translatorApiUrl, "to=" + to + "&text=" + text)
-                .header("content-type", "application/x-www-form-urlencoded")
-                .header("X-RapidAPI-Key", config.translatorApiKey)
-                .header("X-RapidAPI-Host", translatorApiHost)
+    public static void translate(String text, String from, String to, Cons<String> result, Cons<Throwable> error) {
+        Http.post(translatorApiUrl, "tl=" + to + "&sl=" + from + "&q=" + encode(text))
                 .error(error)
-                .submit(response -> {
-                    left = parseInt(response.getHeader("x-ratelimit-requests-remaining"));
-                    result.get(Jval.read(response.getResultAsString()).getString("translated_text"));
-                });
+                .submit(response -> result.get(Jval.read(response.getResultAsString()).asArray().get(0).asArray().get(0).asString()));
     }
 
     public static void translate(Player author, String text) {
@@ -84,17 +72,17 @@ public class Translator {
             var player = Find.playerByUuid(data.uuid);
             if (player == null || player == author) return;
 
-            if (data.language.equals("off") || data.language.equals(Find.language(author.locale))) {
+            if (data.language.equals("off") || data.language.equals(author.locale)) {
                 player.sendMessage(message, author, text);
                 return;
             }
 
             if (cache.containsKey(data.language)) {
                 player.sendMessage(cache.get(data.language), author, text);
-            } else translate(data.language, stripColors(text), result -> {
+            } else translate(stripColors(text), "auto", data.language, result -> {
                 cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(data.language), author, text);
-            }, e -> bundled(player, left == 0 ? "translator.limit" : "translator.error", message, left));
+            }, e -> bundled(player, "translator.error", message));
         }).subscribe();
     }
 }

@@ -15,7 +15,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import java.util.Locale;
 
 import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.translatorLanguages;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -76,7 +76,6 @@ public class Find {
     }
 
     public static String language(String name) {
-        if (mindustry2Api.containsKey(name)) return mindustry2Api.get(name);
-        return notNullElse(translatorLanguages.keys().toSeq().find(name::startsWith), defaultLanguage);
+        return translatorLanguages.orderedKeys().find(name::startsWith);
     }
 }

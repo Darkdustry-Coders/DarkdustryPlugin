@@ -63,13 +63,10 @@ public class PluginVars {
     public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
 
     /** Ссылка на API переводчика. */
-    public static final String translatorApiUrl = "https://translo.p.rapidapi.com/api/v3/translate", translatorApiHost = "translo.p.rapidapi.com";
+    public static final String translatorApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
     /** Список всех языков переводчика. */
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
-
-    /** Словарь для перевода локалей mindustry в локали переводчика. */
-    public static final OrderedMap<String, String> mindustry2Api = new OrderedMap<>();
 
     /** Язык по умолчанию. Язык Discord сервера. */
     public static final String defaultLanguage = "en", discordLanguage = "ru";

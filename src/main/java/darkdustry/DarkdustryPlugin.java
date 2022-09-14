@@ -51,6 +51,8 @@ public class DarkdustryPlugin extends Plugin {
         info("Loading Darkdustry plugin.");
         Time.mark();
 
+        PluginEvents.load();
+
         Bundle.load();
         Config.load();
         Icons.load();
@@ -62,9 +64,7 @@ public class DarkdustryPlugin extends Plugin {
         Ranks.load();
         SchemeSize.load();
         Scripts.load();
-        Translator.load();
 
-        PluginEvents.load();
         MongoDB.connect();
         Bot.connect();
 

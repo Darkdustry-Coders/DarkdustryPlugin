@@ -6,8 +6,8 @@ import arc.util.*;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
-import mindustry.net.*;
-import mindustry.net.Administration.*;
+import mindustry.net.Administration.TraceInfo;
+import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 
 import static arc.util.Strings.levenshtein;
@@ -15,7 +15,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.notNullElse;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
@@ -151,19 +151,15 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(player, other, action));
 
         switch (action) {
-            case kick -> {
-                kick(other, player.coloredName());
-                Log.info("@ [@] has kicked @.", player.plainName(), player.uuid(), other.plainName());
-                sendToChat("events.admin.kick", player.coloredName(), other.coloredName());
-            }
+            case kick -> kick(other, player.coloredName());
             case ban -> ban(other, player.coloredName());
             case trace -> {
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, other.getInfo().timesJoined, other.getInfo().timesKicked));
-                Log.info("@ [@] has requested trace info of @.", player.plainName(), player.uuid(), other.plainName());
+                Log.info("@ has requested trace info of @.", player.plainName(), other.plainName());
             }
             case wave -> {
                 logic.runWave();
-                Log.info("@ [@] has skipped the wave.", player.plainName(), player.uuid());
+                Log.info("@ has skipped the wave.", player.plainName());
                 sendToChat("events.admin.wave", player.coloredName());
             }
         }

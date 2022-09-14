@@ -36,9 +36,6 @@ public class Config {
     /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
 
-    /** Ключ API для переводчика чата. */
-    public String translatorApiKey = "key";
-
     public static void load() {
         Fi file = dataDirectory.child(configFileName);
         if (file.exists()) {

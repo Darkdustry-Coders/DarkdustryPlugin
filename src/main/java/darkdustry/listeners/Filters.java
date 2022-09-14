@@ -1,7 +1,7 @@
 package darkdustry.listeners;
 
 import arc.util.Log;
-import darkdustry.features.Translator;
+import darkdustry.components.Translator;
 import darkdustry.features.history.*;
 import mindustry.gen.Player;
 import mindustry.net.Administration.*;
