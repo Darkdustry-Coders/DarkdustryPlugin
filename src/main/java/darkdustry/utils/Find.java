@@ -1,7 +1,6 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.struct.Seq;
 import arc.util.Structs;
 import darkdustry.features.Ranks.Rank;
 import mindustry.game.*;
@@ -29,7 +28,7 @@ public class Find {
     }
 
     public static Player player(String name) {
-        return canParsePositiveInt(name) ? Groups.player.getByID(parseInt(name)) : Groups.player.find(player -> deepEquals(player.name, name));
+        return notNullElse(Groups.player.find(player -> deepEquals(player.name, name)), Groups.player.getByID(parseInt(name)));
     }
 
     public static Player playerByUuid(String uuid) {
@@ -65,12 +64,14 @@ public class Find {
 
     public static Map map(String name) {
         var list = maps.customMaps();
-        return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(map -> deepEquals(map.name(), name));
+        int index = parseInt(name) - 1;
+        return index >= 0 && index < list.size ? list.get(index) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        var list = Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid);
-        return parseInt(name) > 0 && parseInt(name) <= list.size ? list.get(parseInt(name) - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
+        var list = saveDirectory.seq().filter(SaveIO::isSaveValid);
+        int index = parseInt(name) - 1;
+        return index >= 0 && index < list.size ? list.get(index) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {
