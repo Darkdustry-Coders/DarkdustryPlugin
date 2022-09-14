@@ -5,11 +5,10 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
-import mindustry.gen.Groups;
 import mindustry.maps.*;
 
 import static arc.Core.*;
-import static darkdustry.PluginVars.serverCommands;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Administration.*;
@@ -84,7 +83,10 @@ public class ServerCommands {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
-            kick(target);
+            kick(target, kickDuration, true, "kick.kicked");
+            sendToChat("events.server.kick", target.coloredName());
+
+            Log.info("Player @ has been kicked.", player.plainName());
         });
 
         serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
@@ -93,24 +95,23 @@ public class ServerCommands {
 
             info.lastKicked = 0L;
             info.ips.each(netServer.admins.kickedIPs::remove);
+
             Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
-            if (target != null) {
-                ban(target);
-                return;
-            }
-
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
-            netServer.admins.banPlayer(info.id);
+            netServer.admins.banPlayerID(info.id);
+            netServer.admins.banPlayerIP(info.lastIP);
+            if (target != null) {
+                kick(target, 0, true, "kick.banned");
+                sendToChat("events.server.ban", target.coloredName());
+            }
+
             Log.info("Player @ has been banned.", info.plainLastName());
-            Groups.player.each(player -> netServer.admins.isIDBanned(player.uuid()) || netServer.admins.isIPBanned(player.ip()), player -> {
-                ban(player);
-            });
         });
 
         serverCommands.register("unban", "<uuid/ip>", "Unban a player.", args -> {
@@ -119,6 +120,7 @@ public class ServerCommands {
 
             netServer.admins.unbanPlayerID(info.id);
             info.ips.each(netServer.admins::unbanPlayerIP);
+
             Log.info("Player @ has been unbanned.", info.plainLastName());
         });
 
@@ -152,19 +154,21 @@ public class ServerCommands {
             switch (args[0].toLowerCase()) {
                 case "add" -> {
                     netServer.admins.adminPlayer(info.id, info.adminUsid);
-                    Log.info("Player @ is now admin.", info.plainLastName());
                     if (target != null) {
                         target.admin(true);
                         bundled(target, "events.server.admin");
                     }
+
+                    Log.info("Player @ is now admin.", info.plainLastName());
                 }
                 case "remove" -> {
                     netServer.admins.unAdminPlayer(info.id);
-                    Log.info("Player @ is no longer an admin.", info.plainLastName());
                     if (target != null) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
                     }
+
+                    Log.info("Player @ is no longer an admin.", info.plainLastName());
                 }
                 default -> Log.err("The first parameter must be either add/remove.");
             }

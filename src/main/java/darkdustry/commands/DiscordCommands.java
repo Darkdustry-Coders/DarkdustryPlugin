@@ -17,7 +17,6 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import static arc.Core.*;
 import static arc.util.Time.timeSinceMillis;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Administration.*;
@@ -69,7 +68,6 @@ public class DiscordCommands {
             if (notFound(event, target)) return;
 
             kick(target, requireNonNull(event.getMember()).getEffectiveName());
-            sendToChat("events.server.kick", target.coloredName());
 
             event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))

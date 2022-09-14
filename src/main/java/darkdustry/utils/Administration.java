@@ -15,11 +15,6 @@ public class Administration {
     // region Kick
 
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String stringLocale, Object... values) {
-        if (!con.isConnected()) { // если игрок по какой-то причине не находится на сервере, просто записываем, что он был кикнут
-            netServer.admins.handleKicked(con.uuid, con.address, kickDuration);
-            return;
-        }
-
         var locale = Find.locale(stringLocale);
         String reason = format(key, locale, values);
 
@@ -37,37 +32,21 @@ public class Administration {
     }
 
     // endregion
-    // region Admin
+    // region Administration
 
     public static void ban(Player player, String admin) {
         netServer.admins.banPlayerID(player.uuid());
         netServer.admins.banPlayerIP(player.ip());
 
         kick(player, 0, true, "kick.banned-by-admin", admin);
-        Log.info("@ has been banned by @.", player.plainName(), stripColors(admin));
+        Log.info("Player @ has been banned by @.", player.plainName(), stripColors(admin));
         sendToChat("events.admin.ban", admin, player.coloredName());
     }
 
     public static void kick(Player player, String admin) {
         kick(player, kickDuration, true, "kick.kicked-by-admin", admin);
-        Log.info("@ has been kicked by @.", player.plainName(), stripColors(admin));
+        Log.info("Player @ has been kicked by @.", player.plainName(), stripColors(admin));
         sendToChat("events.admin.kick", admin, player.coloredName());
-    }
-
-    // endregion
-    // region Server
-
-    public static void ban(Player player) {
-        netServer.admins.banPlayerID(player.uuid());
-        netServer.admins.banPlayerIP(player.ip());
-
-        kick(player, 0, true, "kick.banned");
-        Log.info("@ has been banned.", player.plainName());
-        sendToChat("events.server.ban", player.coloredName());
-    }
-
-    public static void kick(Player player) {
-        kick(player, kickDuration, true, "kick.kicked");
     }
 
     // endregion

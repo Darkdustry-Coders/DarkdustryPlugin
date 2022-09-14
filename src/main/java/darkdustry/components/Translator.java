@@ -19,7 +19,7 @@ public class Translator {
     public static void load() {
         translatorLanguages.putAll(
                 "ca", "Català",
-                "id_ID", "Bahasa Indonesia",
+                "id", "Bahasa Indonesia",
                 "da", "Dansk",
                 "de", "Deutsch",
                 "et", "Eesti",
@@ -32,10 +32,8 @@ public class Translator {
                 "lt", "Lietuvių",
                 "hu", "Magyar",
                 "nl", "Nederlands",
-                "nl_BE", "Nederlands (België)",
                 "pl", "Polski",
-                "pt_BR", "Português (Brasil)",
-                "pt_PT", "Português (Portugal)",
+                "pt", "Português",
                 "ro", "Română",
                 "fi", "Suomi",
                 "sv", "Svenska",
@@ -49,8 +47,7 @@ public class Translator {
                 "sr", "Српски",
                 "uk_UA", "Українська",
                 "th", "ไทย",
-                "zh_CN", "简体中文",
-                "zh_TW", "正體中文",
+                "zh", "简体中文",
                 "ja", "日本語",
                 "ko", "한국어"
         );
