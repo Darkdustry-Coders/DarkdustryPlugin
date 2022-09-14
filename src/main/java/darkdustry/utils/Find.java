@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.Structs;
+import darkdustry.features.Ranks.Rank;
 import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
@@ -17,6 +18,7 @@ import java.util.Locale;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.translatorLanguages;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.features.Ranks.Rank.ranks;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -55,6 +57,10 @@ public class Find {
 
     public static Block block(String name) {
         return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
+    }
+
+    public static Rank rank(String name) {
+        return canParsePositiveInt(name) ? ranks.get(parseInt(name)) : ranks.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
     public static Map map(String name) {

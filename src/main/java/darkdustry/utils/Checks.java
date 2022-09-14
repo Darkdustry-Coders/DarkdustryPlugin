@@ -3,6 +3,8 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.Log;
+import darkdustry.features.Ranks;
+import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.game.*;
 import mindustry.gen.Player;
@@ -47,6 +49,10 @@ public class Checks {
 
     public static boolean notFound(PlayerInfo info, String name) {
         return check(info == null, "No player @ found.", name);
+    }
+
+    public static boolean notFound(Rank rank, String name) {
+        return check(rank == null, "No rank @ found.", name);
     }
 
     // endregion

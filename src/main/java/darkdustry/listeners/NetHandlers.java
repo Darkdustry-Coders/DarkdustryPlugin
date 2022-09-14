@@ -115,7 +115,7 @@ public class NetHandlers {
             return;
         }
 
-        if (name.isBlank()) {
+        if (name.trim().isEmpty()) {
             kick(con, "kick.name-is-empty", locale);
             return;
         }
@@ -158,7 +158,7 @@ public class NetHandlers {
                 Log.info("@ has requested trace info of @.", player.plainName(), other.plainName());
             }
             case wave -> {
-                logic.runWave();
+                logic.skipWave();
                 Log.info("@ has skipped the wave.", player.plainName());
                 sendToChat("events.admin.wave", player.coloredName());
             }

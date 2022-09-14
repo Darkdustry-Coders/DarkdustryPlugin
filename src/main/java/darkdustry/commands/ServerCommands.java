@@ -2,6 +2,7 @@ package darkdustry.commands;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -10,8 +11,9 @@ import mindustry.maps.*;
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.utils.Administration.*;
+import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.notNullElse;
 import static mindustry.Vars.*;
@@ -181,6 +183,25 @@ public class ServerCommands {
                 Log.info("Admins: (@)", admins.size);
                 admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
             }
+        });
+
+        serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
+
+            var rank = Find.rank(args[1]);
+            if (notFound(rank, args[1])) return;
+
+            getPlayerData(info.id).subscribe(data -> {
+                data.rank = rank.id;
+                setPlayerData(data).subscribe();
+                Log.info("Successfully set rank of @ to @.", info.id, rank.name);
+            });
+        });
+
+        serverCommands.register("ranks", "List all ranks.", args -> {
+            Log.info("Ranks: (@)", Rank.ranks.size);
+            Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
     }
 }
