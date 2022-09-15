@@ -35,7 +35,7 @@ public class PageIterator {
         client(args, player, Groups.player.copy(new Seq<>()), "players",
                 (builder, i, p) -> builder
                         .append("\n[#9c88ee]* [white]").append(p.admin ? "[\uE82C] " : "[\uE872] ").append(p.coloredName())
-                        .append(" [lightgray]|[accent] ID: ").append(p.id)
+                        .append(" [lightgray]|[accent] ID: #").append(p.id)
                         .append(" [lightgray]|[accent] Locale: ").append(p.locale), null);
     }
 
@@ -80,7 +80,7 @@ public class PageIterator {
     public static void players(SlashCommandInteractionEvent event) {
         discord(event, Groups.player.copy(new Seq<>()),
                 size -> format(":bar_chart: Игроков на сервере: @", size),
-                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" ").append(p.id).append("` | ").append(p.plainName()).append("\n")
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("` | ").append(p.plainName()).append("\n")
         );
     }
 
