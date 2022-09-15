@@ -22,7 +22,7 @@ public class Icons {
             }
 
             content.items().each(Icons::contains, item -> items += get(item) + item.name + " ");
-            content.units().each(Icons::contains, unit -> units += get(unit) + unit.name + " ") ;
+            content.units().each(Icons::contains, unit -> units += get(unit) + unit.name + " ");
 
             Structs.each(team -> {
                 team.emoji = get(team.name, "");

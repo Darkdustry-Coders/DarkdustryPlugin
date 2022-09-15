@@ -27,16 +27,20 @@ public class Find {
         return notNullElse(supportedLocales.find(locale -> name.startsWith(locale.toString())), defaultLocale);
     }
 
-    public static Player player(String name) {
-        return notNullElse(Groups.player.find(player -> deepEquals(player.name, name)), Groups.player.getByID(parseInt(name)));
+    public static Player player(String nameOrId) {
+        return notNullElse(playerById(nameOrId), playerByName(nameOrId));
+    }
+
+    public static Player playerById(String id) {
+        return id.startsWith("#") ? Groups.player.getByID(parseInt(id.substring(1))) : null;
+    }
+
+    public static Player playerByName(String name) {
+        return Groups.player.find(player -> deepEquals(player.name, name));
     }
 
     public static Player playerByUuid(String uuid) {
         return Groups.player.find(player -> player.uuid().equals(uuid));
-    }
-
-    public static Player playerToKick(String id) {
-        return Groups.player.getByID(parseInt(id.substring(1)));
     }
 
     public static PlayerInfo playerInfo(String name) {

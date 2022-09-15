@@ -40,7 +40,7 @@ public class DiscordCommands {
             if (notHosting(event)) return;
 
             EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()),
-                            """
+                    """
                             Игроков: @
                             Карта: @
                             Волна: @

@@ -23,7 +23,7 @@ public class Administration {
         con.kick(reason, duration);
     }
 
-    public static void kick(NetConnection con, String key, String locale, Object...values) {
+    public static void kick(NetConnection con, String key, String locale, Object... values) {
         kick(con, 0, false, key, locale, values);
     }
 

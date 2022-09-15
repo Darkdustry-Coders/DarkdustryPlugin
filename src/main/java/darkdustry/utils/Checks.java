@@ -3,7 +3,6 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.Log;
-import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.game.*;

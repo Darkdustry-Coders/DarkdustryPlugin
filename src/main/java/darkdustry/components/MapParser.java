@@ -73,10 +73,17 @@ public class MapParser {
             version.region("meta", stream, counter, version::readStringMap);
             version.region("content", stream, counter, version::readContentHeader);
             version.region("preview_map", stream, counter, input -> version.readMap(input, new WorldContext() {
-                @Override public void resize(int width, int height) {}
-                @Override public boolean isGenerating() { return false; }
-                @Override public void begin() {}
-                @Override public void end() {}
+                @Override
+                public void resize(int width, int height) {}
+
+                @Override
+                public boolean isGenerating() {return false;}
+
+                @Override
+                public void begin() {}
+
+                @Override
+                public void end() {}
 
                 @Override
                 public Tile tile(int index) {
