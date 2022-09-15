@@ -4,11 +4,11 @@ import arc.struct.StringMap;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.ctype.MappableContent;
-import mindustry.game.Team;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.content;
+import static mindustry.game.Team.baseTeams;
 
 public class Icons {
 
@@ -27,7 +27,7 @@ public class Icons {
             Structs.each(team -> {
                 team.emoji = get(team.name, "");
                 teams += coloredTeam(team) + " ";
-            }, Team.baseTeams);
+            }, baseTeams);
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
         }, e -> DarkdustryPlugin.error("Unable to fetch content icons from GitHub. Check your internet connection."));

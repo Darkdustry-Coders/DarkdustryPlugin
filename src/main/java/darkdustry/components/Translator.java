@@ -80,7 +80,7 @@ public class Translator {
             } else translate(stripColors(text), "auto", data.language, result -> {
                 cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(data.language), author, text);
-            }, e -> bundled(player, "translator.error", message));
+            }, e -> player.sendMessage(message, author, text));
         }).subscribe();
     }
 }

@@ -67,7 +67,7 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            kick(target, requireNonNull(event.getMember()).getEffectiveName());
+            kick(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
 
             event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
@@ -78,7 +78,7 @@ public class DiscordCommands {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
 
-            ban(target, requireNonNull(event.getMember()).getEffectiveName());
+            ban(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
 
             event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
