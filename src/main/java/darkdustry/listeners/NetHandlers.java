@@ -10,7 +10,7 @@ import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 
-import static arc.util.Strings.levenshtein;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Administration.*;
@@ -115,7 +115,7 @@ public class NetHandlers {
             return;
         }
 
-        if (name.trim().isEmpty()) {
+        if (stripColors(name).trim().isEmpty()) {
             kick(con, "kick.name-is-empty", locale);
             return;
         }
