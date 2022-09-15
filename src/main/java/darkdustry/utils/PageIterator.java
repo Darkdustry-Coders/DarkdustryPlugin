@@ -46,7 +46,7 @@ public class PageIterator {
     }
 
     public static void saves(String[] args, Player player) {
-        client(args, player, Seq.with(saveDirectory.list()).filter(SaveIO::isSaveValid), "saves",
+        client(args, player, saveDirectory.seq().filter(SaveIO::isSaveValid), "saves",
                 (builder, i, save) -> builder.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()), null);
     }
 
