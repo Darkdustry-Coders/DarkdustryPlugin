@@ -107,7 +107,7 @@ public class ClientCommands {
         register("votekick", (args, player) -> {
             if (alreadyVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
 
-            var target = Find.player(args[0]);
+            var target = notNullElse(Find.playerToKick(args[0]), Find.player(args[0]));
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);

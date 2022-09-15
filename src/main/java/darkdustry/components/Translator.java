@@ -56,7 +56,8 @@ public class Translator {
     }
 
     public static void translate(String text, String from, String to, Cons<String> result, Cons<Throwable> error) {
-        Http.post(translatorApiUrl, "tl=" + to + "&sl=" + from + "&q=" + encode(text))
+        Http.post(translatorApiUrl)
+                .content("tl=" + to + "&sl=" + from + "&q=" + encode(text))
                 .error(error)
                 .submit(response -> result.get(Jval.read(response.getResultAsString()).asArray().get(0).asArray().get(0).asString()));
     }

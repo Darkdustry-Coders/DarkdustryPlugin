@@ -35,6 +35,10 @@ public class Find {
         return Groups.player.find(player -> player.uuid().equals(uuid));
     }
 
+    public static Player playerToKick(String id) {
+        return Groups.player.getByID(parseInt(id.substring(1)));
+    }
+
     public static PlayerInfo playerInfo(String name) {
         var player = player(name);
         if (player != null) return player.getInfo();
