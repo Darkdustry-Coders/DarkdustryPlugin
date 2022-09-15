@@ -72,14 +72,14 @@ public class Find {
 
     public static Map map(String name) {
         var list = maps.customMaps();
-        int index = parseInt(name) - 1;
-        return index >= 0 && index < list.size ? list.get(index) : list.find(map -> deepEquals(map.name(), name));
+        int index = parseInt(name);
+        return index > 0 && index <= list.size ? list.get(index - 1) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
         var list = saveDirectory.seq().filter(SaveIO::isSaveValid);
-        int index = parseInt(name) - 1;
-        return index >= 0 && index < list.size ? list.get(index) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
+        int index = parseInt(name);
+        return index > 0 && index <= list.size ? list.get(index - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {
