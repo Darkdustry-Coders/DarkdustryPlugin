@@ -38,17 +38,17 @@ public class ClientCommands {
         register("tr", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
-                case "list" -> {
+                case "list", "all" -> {
                     var builder = new StringBuilder(format("commands.tr.list", Find.locale(player.locale)));
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
                     Call.infoMessage(player.con, builder.toString());
                 }
-                case "off" -> {
+                case "off", "disable" -> {
                     data.language = "off";
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.disabled");
                 }
-                case "auto" -> {
+                case "auto", "detect" -> {
                     data.language = notNullElse(Find.language(player.locale), defaultLanguage);
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
