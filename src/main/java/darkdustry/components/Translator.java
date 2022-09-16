@@ -10,7 +10,6 @@ import mindustry.gen.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.netServer;
 

@@ -77,7 +77,9 @@ public class MapParser {
                 public void resize(int width, int height) {}
 
                 @Override
-                public boolean isGenerating() {return false;}
+                public boolean isGenerating() {
+                    return false;
+                }
 
                 @Override
                 public void begin() {}

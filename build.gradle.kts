@@ -21,11 +21,13 @@ dependencies {
         exclude("com.github.Anuken.Arc", "fx")
         exclude("com.github.Anuken.Arc", "g3d")
     }
+    compileOnly("com.github.Anuken.Mindustry:server:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.9.1")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.18.0")
     implementation("net.dv8tion:JDA:5.0.0-alpha.18")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.18.0")
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
+    implementation("org.jline:jline-reader:3.21.0")
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
     implementation(("io.projectreactor:reactor-core"))
