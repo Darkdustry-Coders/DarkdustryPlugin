@@ -26,7 +26,7 @@ public class PageIterator {
         var locale = Find.locale(player.locale);
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
-                        .append("\n[orange] ").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
+                        .append("\n  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale)).append("[lightgray] - ")
                         .append(get("commands." + command.text + ".description", command.description, locale)), null);
     }
@@ -34,20 +34,20 @@ public class PageIterator {
     public static void players(String[] args, Player player) {
         client(args, player, Groups.player.copy(new Seq<>()), "players",
                 (builder, i, p) -> builder
-                        .append("\n[#9c88ee]* [white]").append(p.admin ? "[\uE82C] " : "[\uE872] ").append(p.coloredName())
+                        .append("\n  [white]").append(p.admin ? "[\uE82C] " : "[\uE872] ").append(p.coloredName())
                         .append(" [lightgray]|[accent] ID: #").append(p.id)
                         .append(" [lightgray]|[accent] Locale: ").append(p.locale), null);
     }
 
     public static void maps(String[] args, Player player) {
         client(args, player, maps.customMaps(), "maps",
-                (builder, i, map) -> builder.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(map.name()),
+                (builder, i, map) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(map.name()),
                 result -> result.append(format("commands.maps.current", Find.locale(player.locale), state.map.name())));
     }
 
     public static void saves(String[] args, Player player) {
         client(args, player, saveDirectory.seq().filter(SaveIO::isSaveValid), "saves",
-                (builder, i, save) -> builder.append("\n[lightgray] ").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()), null);
+                (builder, i, save) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()), null);
     }
 
     private static <T> void client(

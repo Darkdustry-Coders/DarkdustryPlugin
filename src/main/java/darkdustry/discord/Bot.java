@@ -6,6 +6,7 @@ import darkdustry.utils.Find;
 import mindustry.gen.*;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import java.awt.Color;

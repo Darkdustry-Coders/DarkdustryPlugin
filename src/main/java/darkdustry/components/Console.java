@@ -2,12 +2,12 @@ package darkdustry.components;
 
 import arc.func.Cons;
 import arc.util.OS;
-import mindustry.server.ServerControl;
 import org.jline.reader.LineReaderBuilder;
 
 import java.io.*;
 
 import static arc.Core.app;
+import static darkdustry.utils.Utils.getServerControl;
 import static org.jline.utils.AttributedString.fromAnsi;
 
 public class Console {
@@ -19,11 +19,11 @@ public class Console {
         var reader = LineReaderBuilder.builder().build();
         System.setOut(new BlockingPrintStream(string -> reader.printAbove(fromAnsi(string))));
 
-        var control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
+        var control = getServerControl();
         control.serverInput = () -> {
             while (true) {
                 try {
-                    String line = reader.readLine("> ");
+                    String line = reader.readLine(">_ ");
                     if (!line.isEmpty())
                         app.post(() -> control.handleCommandString(line));
                 } catch (Exception ignored) {}

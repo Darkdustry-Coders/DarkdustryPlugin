@@ -7,11 +7,13 @@ import mindustry.game.Team;
 import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.WorldReloader;
+import mindustry.server.ServerControl;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 
+import static arc.Core.app;
 import static arc.util.Strings.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
@@ -37,6 +39,10 @@ public class Utils {
 
     public static Fi getPluginResource(String name) {
         return getPlugin().root.child(name);
+    }
+
+    public static ServerControl getServerControl() {
+        return (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
     }
 
     public static String coloredTeam(Team team) {
