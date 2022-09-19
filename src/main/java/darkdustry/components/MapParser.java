@@ -181,24 +181,24 @@ public class MapParser {
                 byte packedCheck = stream.readByte();
                 boolean hadEntity = (packedCheck & 1) != 0,
                         hadData = (packedCheck & 2) != 0,
-                        isCenter = (!hadEntity || stream.readBoolean());
+                        isCenter = !hadEntity || stream.readBoolean();
 
                 if (isCenter || hadData) {
                     tile.setBlock(block);
                 }
 
                 if (hadEntity) {
-                    if (isCenter) {
-                        if (block.hasBuilding())
-                            readChunk(stream, true, input -> {
-                                input.skipBytes(6);
-                                tile.setTeam(Team.get(input.readByte()));
-                                input.skipBytes(lastRegionLength - 7);
-                            });
-                        else skipChunk(stream, true);
+                    if (!isCenter) continue;
 
-                        context.onReadBuilding();
-                    }
+                    if (block.hasBuilding())
+                        readChunk(stream, true, input -> {
+                            input.skipBytes(6);
+                            tile.setTeam(Team.get(input.readByte()));
+                            input.skipBytes(lastRegionLength - 7);
+                        });
+                    else skipChunk(stream, true);
+
+                    context.onReadBuilding();
                 } else {
                     int consecutive = stream.readUnsignedByte();
 
