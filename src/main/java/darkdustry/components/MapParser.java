@@ -15,6 +15,7 @@ import mindustry.world.*;
 import java.io.*;
 import java.util.zip.InflaterInputStream;
 
+import static arc.graphics.Color.blackRgba;
 import static arc.util.io.Streams.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -73,7 +74,15 @@ public class MapParser {
             var version = new FixedSave(stream.readInt());
 
             var pixmap = new Pixmap(map.width, map.height);
-            var tile = new ContainerTile(pixmap);
+            var tile = new ContainerTile() {
+                @Override
+                public void setBlock(Block block) {
+                    super.setBlock(block);
+
+                    int color = colorFor(block, Blocks.air, Blocks.air, notNullElse(team, Team.derelict));
+                    if (color != blackRgba) pixmap.set(x, y, color);
+                }
+            };
 
             version.region("meta", stream, counter, version::readStringMap);
             version.region("content", stream, counter, version::readContentHeader);
@@ -99,12 +108,9 @@ public class MapParser {
                     int size = tile.block().size;
                     int offset = -(size - 1) / 2;
 
-                    for (int x = 0; x < size; x++) {
-                        for (int y = 0; y < size; y++) {
-                            int drawx = tile.x + x + offset, drawy = tile.y + y + offset;
-                            pixmap.set(drawx, drawy, tile.team.color.rgba8888());
-                        }
-                    }
+                    for (int x = 0; x < size; x++)
+                        for (int y = 0; y < size; y++)
+                            pixmap.set(tile.x + x + offset, tile.y + y + offset, tile.team.color.rgba8888());
                 }
 
                 @Override
@@ -126,12 +132,7 @@ public class MapParser {
     }
 
     public static class ContainerTile extends CachedTile {
-        public final Pixmap pixmap;
         public Team team;
-
-        public ContainerTile(Pixmap pixmap) {
-            this.pixmap = pixmap;
-        }
 
         @Override
         public void setTeam(Team team) {
@@ -140,8 +141,7 @@ public class MapParser {
 
         @Override
         public void setBlock(Block block) {
-            int color = colorFor(block, Blocks.air, Blocks.air, team != null ? team : Team.derelict);
-            if (color != 255) pixmap.set(x, y, color);
+            this.block = block;
         }
 
         @Override
@@ -171,31 +171,26 @@ public class MapParser {
             for (int i = 0; i < width * height; i++) {
                 short floorID = stream.readShort();
                 short oreID = stream.readShort();
-                int consecutives = stream.readUnsignedByte();
 
-                context.create(i % width, i / width, floorID, oreID, 0);
+                int consecutive = stream.readUnsignedByte();
 
-                for (int j = i + 1; j < i + 1 + consecutives; j++) {
+                for (int j = i; j <= i + consecutive; j++) {
                     context.create(j % width, j / width, floorID, oreID, 0);
                 }
 
-                i += consecutives;
+                i += consecutive;
             }
 
             for (int i = 0; i < width * height; i++) {
                 var block = notNullElse(content.block(stream.readShort()), Blocks.air);
                 var tile = context.tile(i);
 
-                boolean isCenter = true;
                 byte packedCheck = stream.readByte();
-                boolean hadEntity = (packedCheck & 1) != 0;
-                boolean hadData = (packedCheck & 2) != 0;
+                boolean hadEntity = (packedCheck & 1) != 0,
+                        hadData = (packedCheck & 2) != 0,
+                        isCenter = !hadEntity || stream.readBoolean();
 
-                if (hadEntity) {
-                    isCenter = stream.readBoolean();
-                }
-
-                if (isCenter) {
+                if (isCenter || hadData) {
                     tile.setBlock(block);
                 }
 
@@ -203,12 +198,9 @@ public class MapParser {
                     if (isCenter) {
                         if (block.hasBuilding()) {
                             readChunk(stream, true, input -> {
-                                input.readByte(); // revision
-                                // ниже код взят с Building.readBase()
-                                input.readFloat(); // health
-                                input.readByte(); // rot
+                                input.skipBytes(6);
                                 tile.setTeam(Team.get(input.readByte()));
-                                input.skipBytes(lastRegionLength - 1 - 4 - 1 - 1);
+                                input.skipBytes(lastRegionLength - 7);
                             });
                         } else {
                             skipChunk(stream, true);
@@ -216,17 +208,14 @@ public class MapParser {
 
                         context.onReadBuilding();
                     }
-                } else if (hadData) {
-                    tile.setBlock(block);
-                    tile.data = stream.readByte();
                 } else {
-                    int consecutives = stream.readUnsignedByte();
+                    int consecutive = stream.readUnsignedByte();
 
-                    for (int j = i + 1; j < i + 1 + consecutives; j++) {
+                    for (int j = i + 1; j <= i + consecutive; j++) {
                         context.tile(j).setBlock(block);
                     }
 
-                    i += consecutives;
+                    i += consecutive;
                 }
             }
         }
