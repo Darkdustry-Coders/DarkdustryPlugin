@@ -43,21 +43,22 @@ public class MapParser {
 
     public static byte[] renderMap(Map map) {
         try {
-            return parseImage(generatePreview(map));
+            return parseImage(generatePreview(map), true);
         } catch (Exception e) {
             return emptyBytes;
         }
     }
 
     public static byte[] renderMinimap() {
-        return parseImage(MapIO.generatePreview(world.tiles));
+        return parseImage(MapIO.generatePreview(world.tiles), false);
     }
 
-    public static byte[] parseImage(Pixmap pixmap) {
+    public static byte[] parseImage(Pixmap pixmap, boolean flip) {
         var writer = new PngWriter(pixmap.width * pixmap.height);
         var stream = new OptimizedByteArrayOutputStream(pixmap.width * pixmap.height);
 
         try {
+            writer.setFlipY(flip);
             writer.write(stream, pixmap);
             return stream.toByteArray();
         } catch (Exception e) {

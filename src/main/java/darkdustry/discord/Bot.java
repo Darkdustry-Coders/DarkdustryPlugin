@@ -41,13 +41,14 @@ public class Bot {
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
             botGuild = jda.getGuildById(config.discordGuildId);
-            adminRole = botGuild.getRoleById(config.discordAdminRoleId);
-            botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
-            adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
+
+            if (botGuild != null) {
+                adminRole = botGuild.getRoleById(config.discordAdminRoleId);
+                botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
+                adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
+            }
 
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
-
-            botGuild.updateCommands().queue();
             DiscordCommands.load();
 
             updateBotStatus();
