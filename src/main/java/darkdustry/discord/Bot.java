@@ -77,6 +77,8 @@ public class Bot {
     }
 
     public static void sendAdminRequest(Player player) {
+        if (adminChannel == null || !adminChannel.canTalk()) return;
+
         adminChannel.sendMessageEmbeds(neutral("Запрос на получение прав администратора.")
                 .addField("Никнейм:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
@@ -94,11 +96,13 @@ public class Bot {
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... values) {
-        channel.sendMessage(format(text, values)).queue();
+        if (channel != null && channel.canTalk())
+            channel.sendMessage(format(text, values)).queue();
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String text, Object... values) {
-        channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, values)).build()).queue();
+        if (channel != null && channel.canTalk())
+            channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, values)).build()).queue();
     }
 
     public static EmbedBuilder success(String title) {
