@@ -3,7 +3,6 @@ package darkdustry.components;
 import arc.func.Prov;
 import arc.graphics.*;
 import arc.graphics.PixmapIO.PngWriter;
-import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
 import mindustry.content.Blocks;
@@ -46,7 +45,6 @@ public class MapParser {
         try {
             return parseImage(generatePreview(map));
         } catch (Exception e) {
-            Log.err(e);
             return emptyBytes;
         }
     }
@@ -63,7 +61,6 @@ public class MapParser {
             writer.write(stream, pixmap);
             return stream.toByteArray();
         } catch (Exception e) {
-            Log.err(e);
             return emptyBytes;
         } finally {
             writer.dispose();
@@ -169,9 +166,12 @@ public class MapParser {
                 short floorID = stream.readShort();
                 short oreID = stream.readShort();
 
-                int consecutive = i + stream.readUnsignedByte();
-                for (; i <= consecutive; i++)
-                    context.create(i % width, i / width, floorID, oreID, 0);
+                int consecutive = stream.readUnsignedByte();
+
+                for (int j = i; j <= i + consecutive; j++)
+                    context.create(j % width, j / width, floorID, oreID, 0);
+
+                i += consecutive;
             }
 
             for (int i = 0; i < width * height; i++) {
@@ -188,23 +188,25 @@ public class MapParser {
                 }
 
                 if (hadEntity) {
-                    if (!isCenter) continue;
+                    if (isCenter) {
+                        if (block.hasBuilding())
+                            readChunk(stream, true, input -> {
+                                input.skipBytes(6);
+                                tile.setTeam(Team.get(input.readByte()));
+                                input.skipBytes(lastRegionLength - 7);
+                            });
+                        else skipChunk(stream, true);
 
-                    if (block.hasBuilding())
-                        readChunk(stream, true, input -> {
-                            input.skipBytes(6);
-                            tile.setTeam(Team.get(input.readByte()));
-                            input.skipBytes(lastRegionLength - 7);
-                        });
-                    else skipChunk(stream, true);
+                        context.onReadBuilding();
+                    }
+                } else {
+                    int consecutive = stream.readUnsignedByte();
 
-                    context.onReadBuilding();
-                    continue;
+                    for (int j = i + 1; j <= i + consecutive; j++)
+                        context.tile(j).setBlock(block);
+
+                    i += consecutive;
                 }
-
-                int consecutive = i + stream.readUnsignedByte();
-                for (; i <= consecutive; i++)
-                    context.tile(i).setBlock(block);
             }
         }
     }
