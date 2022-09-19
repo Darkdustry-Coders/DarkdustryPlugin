@@ -96,9 +96,7 @@ public class DiscordCommands {
                     .setFooter(map.width + "x" + map.height)
                     .setImage("attachment://map.png");
 
-            event.replyEmbeds(embed.build())
-                    .addFiles(fromData(map.file.file()))
-                    .queue(hook -> hook.editOriginalAttachments(fromData(renderMap(map), "map.png")).queue());
+            event.replyEmbeds(embed.build()).queue(hook -> hook.editOriginalAttachments(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue());
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
         register("maps", "Список всех карт сервера.", PageIterator::maps)

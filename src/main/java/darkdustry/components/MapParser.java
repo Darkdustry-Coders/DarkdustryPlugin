@@ -3,6 +3,7 @@ package darkdustry.components;
 import arc.func.Prov;
 import arc.graphics.*;
 import arc.graphics.PixmapIO.PngWriter;
+import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
 import mindustry.content.Blocks;
@@ -45,6 +46,7 @@ public class MapParser {
         try {
             return parseImage(generatePreview(map));
         } catch (Exception e) {
+            Log.err(e);
             return emptyBytes;
         }
     }
@@ -61,6 +63,7 @@ public class MapParser {
             writer.write(stream, pixmap);
             return stream.toByteArray();
         } catch (Exception e) {
+            Log.err(e);
             return emptyBytes;
         } finally {
             writer.dispose();
@@ -149,12 +152,6 @@ public class MapParser {
 
         @Override
         protected void changed() {}
-
-        @Override
-        protected void fireChanged() {}
-
-        @Override
-        protected void firePreChanged() {}
     }
 
     public static class FixedSave extends SaveVersion {
@@ -172,13 +169,9 @@ public class MapParser {
                 short floorID = stream.readShort();
                 short oreID = stream.readShort();
 
-                int consecutive = stream.readUnsignedByte();
-
-                for (int j = i; j <= i + consecutive; j++) {
-                    context.create(j % width, j / width, floorID, oreID, 0);
-                }
-
-                i += consecutive;
+                int consecutive = i + stream.readUnsignedByte();
+                for (; i <= consecutive; i++)
+                    context.create(i % width, i / width, floorID, oreID, 0);
             }
 
             for (int i = 0; i < width * height; i++) {
@@ -188,35 +181,30 @@ public class MapParser {
                 byte packedCheck = stream.readByte();
                 boolean hadEntity = (packedCheck & 1) != 0,
                         hadData = (packedCheck & 2) != 0,
-                        isCenter = !hadEntity || stream.readBoolean();
+                        isCenter = (!hadEntity || stream.readBoolean());
 
                 if (isCenter || hadData) {
                     tile.setBlock(block);
                 }
 
                 if (hadEntity) {
-                    if (isCenter) {
-                        if (block.hasBuilding()) {
-                            readChunk(stream, true, input -> {
-                                input.skipBytes(6);
-                                tile.setTeam(Team.get(input.readByte()));
-                                input.skipBytes(lastRegionLength - 7);
-                            });
-                        } else {
-                            skipChunk(stream, true);
-                        }
+                    if (!isCenter) continue;
 
-                        context.onReadBuilding();
-                    }
-                } else {
-                    int consecutive = stream.readUnsignedByte();
+                    if (block.hasBuilding())
+                        readChunk(stream, true, input -> {
+                            input.skipBytes(6);
+                            tile.setTeam(Team.get(input.readByte()));
+                            input.skipBytes(lastRegionLength - 7);
+                        });
+                    else skipChunk(stream, true);
 
-                    for (int j = i + 1; j <= i + consecutive; j++) {
-                        context.tile(j).setBlock(block);
-                    }
-
-                    i += consecutive;
+                    context.onReadBuilding();
+                    continue;
                 }
+
+                int consecutive = i + stream.readUnsignedByte();
+                for (; i <= consecutive; i++)
+                    context.tile(i).setBlock(block);
             }
         }
     }
