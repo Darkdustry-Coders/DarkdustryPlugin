@@ -58,10 +58,8 @@ public class DiscordCommands {
                     .queue();
         });
 
-
         register("players", "Список всех игроков на сервере.", PageIterator::players)
                 .addOption(INTEGER, "page", "Страница списка игроков.");
-
 
         register("kick", "Выгнать игрока с сервера.", event -> {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
@@ -73,7 +71,6 @@ public class DiscordCommands {
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 
-
         register("ban", "Забанить игрока на сервере.", event -> {
             var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
             if (notFound(event, target)) return;
@@ -84,10 +81,8 @@ public class DiscordCommands {
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
 
-
         register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":gear: Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
                 .setDefaultPermissions(DISABLED);
-
 
         if (config.mode == Gamemode.hexed) return;
 
@@ -103,14 +98,11 @@ public class DiscordCommands {
 
             event.replyEmbeds(embed.build())
                     .addFiles(fromData(map.file.file()))
-                    .addFiles(fromData(renderMap(map), "map.png"))
-                    .queue();
+                    .queue(hook -> hook.editOriginalAttachments(fromData(renderMap(map), "map.png")).queue());
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
-
 
         register("maps", "Список всех карт сервера.", PageIterator::maps)
                 .addOption(INTEGER, "page", "Страница списка карт.");
-
 
         register("addmap", "Добавить карту на сервер.", event -> {
             if (notMap(event)) return;
@@ -126,7 +118,6 @@ public class DiscordCommands {
         }).setDefaultPermissions(DISABLED)
                 .addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true);
 
-
         register("removemap", "Удалить карту с сервера.", event -> {
             var map = Find.map(requireNonNull(event.getOption("map")).getAsString());
             if (notFound(event, map)) return;
@@ -138,14 +129,12 @@ public class DiscordCommands {
         }).setDefaultPermissions(DISABLED)
                 .addOption(STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
 
-
         register("gameover", "Принудительно завершить игру.", event -> {
             if (notHosting(event)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":map: Игра успешно завершена.").build()).queue();
         }).setDefaultPermissions(DISABLED);
-
 
         // Регистрируем все команды одним запросом
         jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
