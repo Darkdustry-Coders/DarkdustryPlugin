@@ -29,6 +29,10 @@ public class MongoDB {
         }
     }
 
+    public static void exit() {
+        client.close();
+    }
+
     public static Mono<PlayerData> getPlayerData(String uuid) {
         return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }

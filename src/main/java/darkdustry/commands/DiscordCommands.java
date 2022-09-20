@@ -53,9 +53,8 @@ public class DiscordCommands {
                     formatDuration(timeSinceMillis(serverLoadTime)), formatDuration(timeSinceMillis(mapLoadTime)))
                     .setImage("attachment://minimap.png");
 
-            event.replyEmbeds(embed.build())
-                    .addFiles(fromData(renderMinimap(), "minimap.png"))
-                    .queue();
+            event.replyEmbeds(embed.build()).queue(hook ->
+                    hook.editOriginalAttachments(fromData(renderMinimap(), "minimap.png")).queue());
         });
 
         register("players", "Список всех игроков на сервере.", PageIterator::players)
@@ -67,7 +66,7 @@ public class DiscordCommands {
 
             kick(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
 
-            event.replyEmbeds(info(":candle: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
+            event.replyEmbeds(info(":knife: Игрок успешно выгнан с сервера.", "@ не сможет зайти на сервер в течение @", target.plainName(), formatDuration(kickDuration)).build()).queue();
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 
@@ -77,11 +76,11 @@ public class DiscordCommands {
 
             ban(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
 
-            event.replyEmbeds(info(":wheelchair: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
+            event.replyEmbeds(info(":dagger: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
 
-        register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":gear: Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
+        register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":arrows_counterclockwise:  Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
                 .setDefaultPermissions(DISABLED);
 
         if (config.mode == Gamemode.hexed) return;
@@ -96,7 +95,8 @@ public class DiscordCommands {
                     .setFooter(map.width + "x" + map.height)
                     .setImage("attachment://map.png");
 
-            event.replyEmbeds(embed.build()).queue(hook -> hook.editOriginalAttachments(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue());
+            event.replyEmbeds(embed.build()).queue(hook ->
+                    hook.editOriginalAttachments(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue());
         }).addOption(STRING, "map", "Название карты, которую вы хотите получить.", true);
 
         register("maps", "Список всех карт сервера.", PageIterator::maps)
@@ -123,7 +123,7 @@ public class DiscordCommands {
             maps.removeMap(map);
             maps.reload();
 
-            event.replyEmbeds(success(":knife: Карта удалена с сервера.", "Название карты: @", map.name()).build()).queue();
+            event.replyEmbeds(success(":map: Карта удалена с сервера.", "Название карты: @", map.name()).build()).queue();
         }).setDefaultPermissions(DISABLED)
                 .addOption(STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
 
@@ -131,7 +131,7 @@ public class DiscordCommands {
             if (notHosting(event)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
-            event.replyEmbeds(success(":map: Игра успешно завершена.").build()).queue();
+            event.replyEmbeds(success(":arrows_counterclockwise:  Игра успешно завершена.").build()).queue();
         }).setDefaultPermissions(DISABLED);
 
         // Регистрируем все команды одним запросом

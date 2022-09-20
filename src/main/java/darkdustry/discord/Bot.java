@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
+import net.dv8tion.jda.internal.requests.RestActionImpl;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -48,6 +49,8 @@ public class Bot {
                 adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
             }
 
+            RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
+
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
             DiscordCommands.load();
 
@@ -57,6 +60,11 @@ public class Bot {
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect bot: @", e);
         }
+    }
+
+    public static void exit() {
+        if (jda != null)
+            jda.shutdown();
     }
 
     public static void sendMessageToGame(Member member, Message message) {
@@ -93,7 +101,8 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
+        if (jda != null)
+            jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... values) {

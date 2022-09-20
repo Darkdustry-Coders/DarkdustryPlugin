@@ -29,8 +29,8 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void exit() {
         netServer.kickAll(KickReason.serverRestarting);
-        app.post(client::close);
-        app.post(jda::shutdown);
+        app.post(MongoDB::exit);
+        app.post(Bot::exit);
         app.exit();
     }
 
