@@ -14,6 +14,9 @@ import static mindustry.Vars.tilesize;
 
 public class PluginVars {
 
+    /** Если переменная true, то после завершения игры, сервер отключится. */
+    public static Boolean requiredRestart = false;
+
     /** Необходимое количество игроков для успешного завершения голосования. */
     public static final float voteRatio = 0.5f;
 

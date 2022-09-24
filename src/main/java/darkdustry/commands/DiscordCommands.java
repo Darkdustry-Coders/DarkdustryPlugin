@@ -70,15 +70,29 @@ public class DiscordCommands {
         }).setDefaultPermissions(enabledFor(KICK_MEMBERS))
                 .addOption(STRING, "name", "Имя игрока, которого нужно выгнать.", true);
 
-        register("ban", "Забанить игрока на сервере.", event -> {
-            var target = Find.player(requireNonNull(event.getOption("name")).getAsString());
-            if (notFound(event, target)) return;
+        register("ban", "Забанить игрока на игровом сервере.", event -> {
+            var option = requireNonNull(event.getOption("name")).getAsString();
 
-            ban(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
+            var target = Find.player(option);
+            var info = Find.playerInfo(option);
 
-            event.replyEmbeds(info(":dagger: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
+            if (target != null) {
+                ban(target, "@" + requireNonNull(event.getMember()).getEffectiveName());
+                event.replyEmbeds(info(":dagger: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", target.plainName()).build()).queue();
+            }
+
+            if (info != null) {
+                netServer.admins.banPlayerID(info.id);
+                netServer.admins.banPlayerIP(info.lastIP);
+
+                event.replyEmbeds(info(":dagger: Игрок успешно заблокирован.", "@ больше не сможет зайти на сервер.", info.lastName).build()).queue();
+            }
+
+            if (target == null && info == null) {
+                notFound(event, target);
+            }
         }).setDefaultPermissions(enabledFor(BAN_MEMBERS))
-                .addOption(STRING, "name", "Имя игрока, которого нужно забанить.", true);
+                .addOption(STRING, "name", "Имя, uuid или ip игрока, которого нужно забанить.", true);
 
         register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":arrows_counterclockwise:  Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
                 .setDefaultPermissions(DISABLED);

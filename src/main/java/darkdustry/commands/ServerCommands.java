@@ -34,6 +34,11 @@ public class ServerCommands {
             Log.info("Stopped server.");
         });
 
+        serverCommands.register("reboot", "Schedules a server reboot.", args -> {
+            requiredRestart = true;
+            Log.info("A server reboot is scheduled.");
+        });
+
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (alreadyHosting()) return;
 

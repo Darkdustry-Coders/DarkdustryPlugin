@@ -2,10 +2,12 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.*;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.utils.Find;
+import mindustry.core.GameState;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 
@@ -17,6 +19,7 @@ import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.cache;
+import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {
@@ -52,6 +55,13 @@ public class PluginEvents {
             data.gamesPlayed++;
             setPlayerData(data).subscribe();
         })));
+
+        Events.on(GameOverEvent.class, event -> {
+            if (requiredRestart) {
+                Log.info("Rebooted server.");
+                DarkdustryPlugin.exit();
+            }
+        });
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
             Ranks.setRank(event.player, Ranks.getRank(data.rank));

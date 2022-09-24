@@ -20,14 +20,17 @@ import mindustry.net.Packets.*;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
-import static darkdustry.components.MongoDB.*;
-import static darkdustry.discord.Bot.jda;
+import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.discord.Bot.Palette.NEUTRAL;
+import static darkdustry.discord.Bot.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
 
     public static void exit() {
+        sendEmbed(botChannel, NEUTRAL, "Отключение сервера.");
+
         netServer.kickAll(KickReason.serverRestarting);
         app.post(MongoDB::exit);
         app.post(Bot::exit);
@@ -92,7 +95,7 @@ public class DarkdustryPlugin extends Plugin {
                 while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
                     Ranks.setRank(player, rank = rank.next);
                     data.rank = rank.id;
-                    showMenu(player, rankIncreaseMenu, "events.promotion.header", "events.promotion.content", new String[][] {{"ui.button.close"}},
+                    showMenu(player, rankIncreaseMenu, "events.promotion.header", "events.promotion.content", new String[][]{{"ui.button.close"}},
                             null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
