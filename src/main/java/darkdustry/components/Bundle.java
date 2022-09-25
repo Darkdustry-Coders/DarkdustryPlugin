@@ -58,7 +58,7 @@ public class Bundle {
     }
 
     public static String format(String key, Locale locale, Object... values) {
-        String pattern = get(key, locale);
+        var pattern = get(key, locale);
         if (values.length == 0) {
             return pattern;
         }

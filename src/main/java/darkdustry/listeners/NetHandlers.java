@@ -142,8 +142,7 @@ public class NetHandlers {
     }
 
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
-        var player = con.player;
-        var other = packet.other;
+        Player player = con.player, other = packet.other;
         var action = packet.action;
 
         if (notAdmin(player) || other == null || (other.admin && other != player)) return;

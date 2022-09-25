@@ -16,7 +16,7 @@ public class Administration {
 
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String stringLocale, Object... values) {
         var locale = Find.locale(stringLocale);
-        String reason = format(key, locale, values);
+        var reason = format(key, locale, values);
 
         if (duration > 0) reason += Bundle.format("kick.time", locale, Utils.formatDuration(duration, locale));
         if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);

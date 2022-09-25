@@ -16,7 +16,7 @@ public class Icons {
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/master/core/assets/icons/icons.properties", response -> {
-            for (String line : response.getResultAsString().split("\n")) {
+            for (var line : response.getResultAsString().split("\n")) {
                 var values = line.split("\\|")[0].split("=");
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }

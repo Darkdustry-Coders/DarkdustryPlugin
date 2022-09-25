@@ -1,11 +1,10 @@
 package darkdustry.features;
 
-import arc.func.*;
+import arc.func.Func2;
 import darkdustry.utils.Find;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
@@ -13,13 +12,14 @@ import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.discord.Bot.*;
 import static mindustry.Vars.netServer;
+import static net.dv8tion.jda.api.entities.emoji.Emoji.fromFormatted;
 
 public class Authme {
 
     public static final SelectMenu menu = SelectMenu.create("authme")
-            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.", Emoji.fromFormatted("✅"))
-            .addOption("Отклонить", "authme.deny", "Отклонить запрос.", Emoji.fromFormatted("❌"))
-            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке.", Emoji.fromFormatted("🔎"))
+            .addOption("Подтвердить", "authme.confirm", "Подтвердить запрос.", fromFormatted("✅"))
+            .addOption("Отклонить", "authme.deny", "Отклонить запрос.", fromFormatted("❌"))
+            .addOption("Информация", "authme.info", "Посмотреть всю информацию об игроке.", fromFormatted("🔎"))
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {
@@ -45,7 +45,7 @@ public class Authme {
     public static void information(GenericComponentInteractionCreateEvent event) {
         var info = loginWaiting.get(event.getMessage());
 
-        var embed = info("Информация об игроке")
+        var embed = info(":mag: Информация об игроке")
                 .addField("Никнейм:", info.plainLastName(), true)
                 .addField("UUID:", info.id, true)
                 .addField("IP адрес:", info.lastIP, true)

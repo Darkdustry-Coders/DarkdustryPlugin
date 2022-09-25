@@ -39,7 +39,7 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var block = content.block(blockID);
         var locale = Find.locale(player.locale);
-        String date = formatDate(time);
+        var date = formatDate(time);
 
         if (value == null) {
             return format("history.config.default", locale, name, get(block), date);

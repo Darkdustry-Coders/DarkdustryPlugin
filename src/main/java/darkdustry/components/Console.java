@@ -23,7 +23,7 @@ public class Console {
         control.serverInput = () -> {
             while (true) {
                 try {
-                    String line = reader.readLine(">_ ");
+                    var line = reader.readLine(">_ ");
                     if (!line.isEmpty())
                         app.post(() -> control.handleCommandString(line));
                 } catch (Exception ignored) {}
@@ -69,9 +69,9 @@ public class Console {
 
         @Override
         public void flush() {
-            String str = out().toString();
+            var string = out().toString();
             out().reset();
-            cons.get(str);
+            cons.get(string);
         }
     }
 }

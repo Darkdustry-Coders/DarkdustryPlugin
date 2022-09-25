@@ -63,7 +63,7 @@ public class Translator {
 
     public static void translate(Player author, String text) {
         var cache = new StringMap();
-        String message = netServer.chatFormatter.format(author, text);
+        var message = netServer.chatFormatter.format(author, text);
 
         getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
