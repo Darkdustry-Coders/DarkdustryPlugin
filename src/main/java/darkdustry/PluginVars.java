@@ -7,6 +7,7 @@ import darkdustry.components.Config;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
+import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.entities.Message;
 
 import static darkdustry.components.Config.Gamemode.*;
@@ -57,7 +58,7 @@ public class PluginVars {
     public static final Seq<String> activeHistory = new Seq<>();
 
     /** Список uuid игроков, ожидающих авторизацию. */
-    public static final OrderedMap<Message, String> loginWaiting = new OrderedMap<>();
+    public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";

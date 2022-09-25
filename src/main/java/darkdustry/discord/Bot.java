@@ -93,7 +93,7 @@ public class Bot {
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
                 .build()
-        ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.uuid()));
+        ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.getInfo()));
     }
 
     public static boolean isAdmin(Member member) {

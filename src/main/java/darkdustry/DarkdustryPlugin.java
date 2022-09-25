@@ -20,8 +20,7 @@ import mindustry.net.Packets.*;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
-import static darkdustry.components.MongoDB.*;
-import static darkdustry.discord.Bot.jda;
+import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -96,7 +95,7 @@ public class DarkdustryPlugin extends Plugin {
                             null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
-        }, 60f, 60f);
+        }, 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Structs.each(color -> Colors.put(color, Color.white), "accent", "unlaunched", "highlight", "stat");

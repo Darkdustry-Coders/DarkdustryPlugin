@@ -9,7 +9,6 @@ import darkdustry.components.Config.Gamemode;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
@@ -39,7 +38,7 @@ public class DiscordCommands {
         register("status", "Посмотреть статус сервера.", event -> {
             if (notHosting(event)) return;
 
-            EmbedBuilder embed = info(":satellite: " + stripAll(serverName.string()),
+            var embed = info(":satellite: " + stripAll(serverName.string()),
                     """
                             Игроков: @
                             Карта: @
@@ -89,7 +88,7 @@ public class DiscordCommands {
             var map = Find.map(requireNonNull(event.getOption("map")).getAsString());
             if (notFound(event, map)) return;
 
-            EmbedBuilder embed = info(":map: " + map.name())
+            var embed = info(":map: " + map.name())
                     .setAuthor(map.tags.get("author"))
                     .setDescription(map.tags.get("description"))
                     .setFooter(map.width + "x" + map.height)

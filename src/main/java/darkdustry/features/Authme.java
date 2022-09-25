@@ -1,7 +1,9 @@
 package darkdustry.features;
 
-import arc.func.Func;
-import mindustry.gen.*;
+import arc.func.*;
+import darkdustry.utils.Find;
+import mindustry.gen.Player;
+import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
@@ -21,25 +23,27 @@ public class Authme {
             .setPlaceholder("Выбери действие...").build();
 
     public static void confirm(GenericComponentInteractionCreateEvent event) {
-        remove(event, player -> {
-            netServer.admins.adminPlayer(player.uuid(), player.usid());
-            player.admin(true);
+        remove(event, (info, player) -> {
+            netServer.admins.adminPlayer(info.id, info.adminUsid);
 
-            bundled(player, "commands.login.confirm");
+            if (player != null) {
+                player.admin(true);
+                bundled(player, "commands.login.confirm");
+            }
+
             return success("Запрос подтвержден");
         });
     }
 
     public static void deny(GenericComponentInteractionCreateEvent event) {
-        remove(event, player -> {
-            bundled(player, "commands.login.deny");
+        remove(event, (info, player) -> {
+            if (player != null) bundled(player, "commands.login.deny");
             return error("Запрос отклонен");
         });
     }
 
     public static void information(GenericComponentInteractionCreateEvent event) {
-        String uuid = loginWaiting.get(event.getMessage());
-        var info = netServer.admins.getInfo(uuid);
+        var info = loginWaiting.get(event.getMessage());
 
         var embed = info("Информация об игроке")
                 .addField("Никнейм:", info.plainLastName(), true)
@@ -53,13 +57,13 @@ public class Authme {
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
     }
 
-    private static void remove(GenericComponentInteractionCreateEvent event, Func<Player, EmbedBuilder> func) {
-        String uuid = loginWaiting.remove(event.getMessage());
-        var player = Groups.player.find(p -> p.uuid().equals(uuid));
+    private static void remove(GenericComponentInteractionCreateEvent event, Func2<PlayerInfo, Player, EmbedBuilder> func) {
+        var info = loginWaiting.remove(event.getMessage());
+        var player = Find.playerByUuid(info.id);
 
-        if (player != null) event.getChannel().sendMessageEmbeds(func.get(player)
+        event.getChannel().sendMessageEmbeds(func.get(info, player)
                 .addField("Администратор:", event.getUser().getAsMention(), true)
-                .addField("Игрок:", player.plainName(), true).build()).queue();
+                .addField("Игрок:", info.plainLastName(), true).build()).queue();
 
         event.getMessage().delete().queue();
     }
