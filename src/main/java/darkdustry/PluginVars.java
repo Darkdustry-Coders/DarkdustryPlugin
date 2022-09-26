@@ -8,8 +8,10 @@ import darkdustry.components.Config.Gamemode;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import mindustry.net.Administration.PlayerInfo;
+import mindustry.server.ServerControl;
 import net.dv8tion.jda.api.entities.Message;
 
+import static arc.Core.app;
 import static darkdustry.components.Config.Gamemode.*;
 import static mindustry.Vars.tilesize;
 
@@ -80,6 +82,9 @@ public class PluginVars {
 
     /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
+
+    /** Модуль, который контролирует сервер. Используется для перенаправления ввода-вывода. */
+    public static final ServerControl control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
 
     /** Текущее голосование. */
     public static VoteSession vote;

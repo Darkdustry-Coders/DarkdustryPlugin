@@ -79,21 +79,21 @@ public class PageIterator {
 
     public static void players(SlashCommandInteractionEvent event) {
         discord(event, Groups.player.copy(new Seq<>()),
-                size -> format(":bar_chart: Игроков на сервере: @", size),
+                content -> format(":bar_chart: Игроков на сервере: @", content.size),
                 (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("` | ").append(p.plainName()).append("\n")
         );
     }
 
     public static void maps(SlashCommandInteractionEvent event) {
         discord(event, maps.customMaps(),
-                size -> format(":map: Карт в плейлисте сервера: @", size),
+                content -> format(":map: Карт в плейлисте сервера: @", content.size),
                 (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")\n")
         );
     }
 
     private static <T> void discord(
             SlashCommandInteractionEvent event, Seq<T> content,
-            Func<Integer, String> header, Cons3<StringBuilder, Integer, T> cons) {
+            Func<Seq<T>, String> header, Cons3<StringBuilder, Integer, T> cons) {
 
         int page = event.getOption("page") != null ? requireNonNull(event.getOption("page")).getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
@@ -106,7 +106,7 @@ public class PageIterator {
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
-        event.replyEmbeds(neutral(header.get(content.size))
+        event.replyEmbeds(neutral(header.get(content))
                 .setDescription(builder.toString())
                 .setFooter(format("Страница @ / @", page, pages)).build()).queue();
     }

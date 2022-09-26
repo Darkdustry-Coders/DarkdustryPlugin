@@ -43,8 +43,8 @@ public class MongoDB {
 
     public static Mono<InsertOneResult> setPlayerData(PlayerData data) {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
-                .filter(r -> r.getModifiedCount() < 1)
-                .flatMap(r -> Mono.from(collection.insertOne(data)));
+                .filter(result -> result.getModifiedCount() < 1)
+                .flatMap(result -> Mono.from(collection.insertOne(data)));
     }
 
     public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {

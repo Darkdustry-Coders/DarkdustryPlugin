@@ -23,8 +23,8 @@ public class PluginEvents {
 
     public static void load() {
         Events.on(BlockBuildEndEvent.class, event -> {
-            if (!event.unit.isPlayer()) return;
-            if (History.enabled() && event.tile.build != null) History.put(new BlockEntry(event), event.tile);
+            if (!event.unit.isPlayer() || event.tile.build == null) return;
+            if (History.enabled()) History.put(new BlockEntry(event), event.tile);
             if (event.breaking) return;
 
             getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
@@ -40,11 +40,13 @@ public class PluginEvents {
         });
 
         Events.on(ConfigEvent.class, event -> {
-            if (History.enabled() && event.player != null) History.put(new ConfigEntry(event), event.tile.tile);
+            if (History.enabled() && event.player != null)
+                History.put(new ConfigEntry(event), event.tile.tile);
         });
 
         Events.on(DepositEvent.class, event -> {
-            if (History.enabled() && event.player != null) History.put(new DepositEntry(event), event.tile.tile);
+            if (History.enabled() && event.player != null)
+                History.put(new DepositEntry(event), event.tile.tile);
             Alerts.depositAlert(event);
         });
 
@@ -100,7 +102,8 @@ public class PluginEvents {
         });
 
         Events.on(WithdrawEvent.class, event -> {
-            if (History.enabled() && event.player != null) History.put(new WithdrawEntry(event), event.tile.tile);
+            if (History.enabled() && event.player != null)
+                History.put(new WithdrawEntry(event), event.tile.tile);
         });
 
         Events.on(ServerLoadEvent.class, event -> {
