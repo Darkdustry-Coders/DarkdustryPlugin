@@ -24,7 +24,8 @@ public class PluginEvents {
     public static void load() {
         Events.on(BlockBuildEndEvent.class, event -> {
             if (!event.unit.isPlayer() || event.tile.build == null) return;
-            if (History.enabled()) History.put(new BlockEntry(event), event.tile);
+            if (History.enabled())
+                History.put(new BlockEntry(event), event.tile);
             if (event.breaking) return;
 
             getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {

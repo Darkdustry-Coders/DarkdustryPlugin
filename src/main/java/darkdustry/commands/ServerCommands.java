@@ -2,6 +2,7 @@ package darkdustry.commands;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
@@ -186,6 +187,7 @@ public class ServerCommands {
         });
 
         serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
+            var target = Find.player(args[0]);
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -193,9 +195,11 @@ public class ServerCommands {
             if (notFound(rank, args[1])) return;
 
             getPlayerData(info.id).subscribe(data -> {
+                if (target != null) Ranks.setRank(target, rank);
+
                 data.rank = rank.id;
                 setPlayerData(data).subscribe();
-                Log.info("Successfully set rank of @ to @.", info.id, rank.name);
+                Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name);
             });
         });
 

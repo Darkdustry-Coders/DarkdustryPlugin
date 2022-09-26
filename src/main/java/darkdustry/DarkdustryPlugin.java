@@ -78,10 +78,6 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addActionFilter(Filters::action);
         netServer.admins.addChatFilter(Filters::chat);
 
-        // TODO заменить фильтры анюка на свои, локализованные
-        // netServer.admins.actionFilters.remove(0);
-        // netServer.admins.actionFilters.insert(0, Filters::action);
-
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
         Timer.schedule(() -> {

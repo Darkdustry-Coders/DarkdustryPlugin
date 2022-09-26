@@ -97,11 +97,9 @@ public class NetHandlers {
         var info = netServer.admins.getInfo(uuid);
 
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
-            info.lastName = name;
-            info.lastIP = ip;
             info.adminUsid = usid;
-            info.names.addUnique(name);
-            info.ips.addUnique(ip);
+            info.names.addUnique(info.lastName = name);
+            info.ips.addUnique(info.lastIP = ip);
             kick(con, "kick.not-whitelisted", locale, discordServerUrl);
             return;
         }
