@@ -69,8 +69,8 @@ public class ServerCommands {
                     Log.info("Map loaded.");
 
                     netServer.openServer();
-                } catch (MapException exception) {
-                    Log.err("@: @", exception.map.name(), exception.getMessage());
+                } catch (MapException e) {
+                    Log.err("@: @", e.map.name(), e.getMessage());
                 }
             });
         });

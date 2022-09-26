@@ -12,6 +12,7 @@ import mindustry.net.Packets.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
