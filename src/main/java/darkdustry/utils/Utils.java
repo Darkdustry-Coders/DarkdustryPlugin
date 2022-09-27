@@ -62,7 +62,7 @@ public class Utils {
     }
 
     public static String formatDuration(long time) {
-        return formatDuration(time, discordLocale);
+        return formatDuration(time, defaultLocale);
     }
 
     public static String formatDuration(long time, Locale locale) {

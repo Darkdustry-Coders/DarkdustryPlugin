@@ -74,7 +74,7 @@ public class PluginVars {
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
 
     /** Язык по умолчанию. Язык Discord сервера. */
-    public static final String defaultLanguage = "en", discordLanguage = "ru";
+    public static final String defaultLanguage = "en";
 
     /** Название файла, в котором хранится конфигурация сервера. */
     public static final String configFileName = "config.json";

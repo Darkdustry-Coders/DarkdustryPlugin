@@ -89,7 +89,7 @@ public class ServerCommands {
             kick(target, kickDuration, true, "kick.kicked");
             sendToChat("events.server.kick", target.coloredName());
 
-            Log.info("Player @ has been kicked.", player.plainName());
+            Log.info("Player @ has been kicked.", target.plainName());
         });
 
         serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
@@ -111,7 +111,7 @@ public class ServerCommands {
                 kicks.each((ip, time) -> {
                     var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
-                    else Log.info("  @ / @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
+                    else Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
                 });
             }
         });

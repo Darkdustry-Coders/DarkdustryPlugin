@@ -13,7 +13,7 @@ import static darkdustry.utils.Utils.getPluginResource;
 
 public class Bundle {
 
-    public static final Locale defaultLocale = new Locale(defaultLanguage), discordLocale = new Locale(discordLanguage);
+    public static final Locale defaultLocale = new Locale(defaultLanguage);
     public static final Seq<Locale> supportedLocales = new Seq<>();
 
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();
