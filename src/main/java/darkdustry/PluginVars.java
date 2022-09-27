@@ -11,10 +11,12 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.server.ServerControl;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_DASHES;
 import static darkdustry.components.Config.Gamemode.*;
+import static java.time.ZoneId.of;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static mindustry.Vars.tilesize;
 
 public class PluginVars {
@@ -80,11 +82,11 @@ public class PluginVars {
     public static final String configFileName = "config.json";
 
     /** Используется для считывания и записи Json объектов. */
-    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
+    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используются для форматирования времени в дату. */
-    public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
-            kickFormat = DateTimeFormatter.ofPattern("MM.dd.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
+    public static final DateTimeFormatter historyFormat = ofPattern("HH:mm:ss").withZone(of("Europe/Moscow")),
+            kickFormat = ofPattern("MM.dd.yyyy HH:mm:ss").withZone(of("Europe/Moscow"));
 
     /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
