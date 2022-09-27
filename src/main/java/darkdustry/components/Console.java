@@ -20,7 +20,7 @@ public class Console {
         control.serverInput = () -> {
             while (true) {
                 try {
-                    var line = reader.readLine(">_ ");
+                    var line = reader.readLine("> ");
                     if (!line.isEmpty())
                         app.post(() -> control.handleCommandString(line));
                 } catch (Exception ignored) {}
