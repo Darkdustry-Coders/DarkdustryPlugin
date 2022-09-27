@@ -84,7 +84,7 @@ public class PluginVars {
 
     /** Используются для форматирования времени в дату. */
     public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
-            kickFormat = DateTimeFormatter.ofPattern("MM.dd.yy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
+            kickFormat = DateTimeFormatter.ofPattern("MM.dd.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
 
     /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
