@@ -1,7 +1,6 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import arc.util.Time;
 import darkdustry.features.Ranks;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
@@ -29,7 +28,6 @@ public class ClientCommands {
         register("sync", (args, player) -> {
             if (alreadySynced(player)) return;
 
-            player.getInfo().lastSyncTime = Time.millis();
             Call.worldDataBegin(player.con);
             netServer.sendWorldData(player);
             Cooldowns.run(player.uuid(), "sync");

@@ -137,7 +137,7 @@ public class Checks {
         return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
     }
 
-    public static boolean invalideSpawnAmount(Player player, int amount) {
+    public static boolean invalidSpawnAmount(Player player, int amount) {
         return check(amount < 1 || amount > maxSpawnAmount, player, "commands.spawn.limit", maxSpawnAmount);
     }
 

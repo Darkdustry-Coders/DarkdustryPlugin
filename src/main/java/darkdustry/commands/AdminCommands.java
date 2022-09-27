@@ -104,7 +104,7 @@ public class AdminCommands {
             if (notFound(player, type)) return;
 
             int amount = args.length > 1 ? parseInt(args[1]) : 1;
-            if (invalideSpawnAmount(player, amount)) return;
+            if (invalidSpawnAmount(player, amount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team)) return;

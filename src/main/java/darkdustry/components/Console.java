@@ -1,7 +1,6 @@
 package darkdustry.components;
 
 import arc.func.Cons;
-import arc.util.OS;
 import org.jline.reader.LineReaderBuilder;
 
 import java.io.*;
@@ -13,8 +12,6 @@ import static org.jline.utils.AttributedString.fromAnsi;
 public class Console {
 
     public static void load() {
-        // if (OS.isWindows) return; // Doesn't work on Windows
-
         var reader = LineReaderBuilder.builder().build();
         System.setOut(new BlockingPrintStream(string -> reader.printAbove(fromAnsi(string))));
 
