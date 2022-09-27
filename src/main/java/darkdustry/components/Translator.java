@@ -69,7 +69,7 @@ public class Translator {
             var player = Find.playerByUuid(data.uuid);
             if (player == null || player == author) return;
 
-            if (data.language.equals("off") || data.language.equals(author.locale)) {
+            if (data.language.equals("off")) {
                 player.sendMessage(message, author, text);
                 return;
             }
