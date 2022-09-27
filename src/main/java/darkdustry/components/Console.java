@@ -1,6 +1,7 @@
 package darkdustry.components;
 
 import arc.func.Cons;
+import mindustry.server.ServerControl;
 import org.jline.reader.LineReaderBuilder;
 
 import java.io.*;
@@ -15,6 +16,7 @@ public class Console {
         var reader = LineReaderBuilder.builder().build();
         System.setOut(new BlockingPrintStream(string -> reader.printAbove(fromAnsi(string))));
 
+        control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
         control.serverInput = () -> {
             while (true) {
                 try {
