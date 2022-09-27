@@ -8,11 +8,11 @@ import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.WorldReloader;
 
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.*;
+import java.time.*;
+import java.util.Locale;
 
 import static arc.util.Strings.*;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static mindustry.Vars.*;
@@ -53,10 +53,12 @@ public class Utils {
         return stripColors(stripGlyphs(str));
     }
 
-    public static String formatDate(long time) {
-        var format = new SimpleDateFormat("HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        return format.format(new Date(time));
+    public static String formatHistoryDate(long time) {
+        return historyFormat.format(Instant.ofEpochMilli(time));
+    }
+
+    public static String formatKickDate(long time) {
+        return kickFormat.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatDuration(long time) {

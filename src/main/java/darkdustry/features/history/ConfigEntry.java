@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Icons.get;
-import static darkdustry.utils.Utils.formatDate;
+import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
 public class ConfigEntry implements HistoryEntry {
@@ -39,7 +39,7 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var block = content.block(blockID);
         var locale = Find.locale(player.locale);
-        var date = formatDate(time);
+        var date = formatHistoryDate(time);
 
         if (value == null) {
             return format("history.config.default", locale, name, get(block), date);

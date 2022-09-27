@@ -7,7 +7,7 @@ import mindustry.game.EventType.DepositEvent;
 import mindustry.gen.Player;
 
 import static darkdustry.components.Bundle.format;
-import static darkdustry.utils.Utils.formatDate;
+import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
 public class DepositEntry implements HistoryEntry {
@@ -27,6 +27,6 @@ public class DepositEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return format("history.deposit", Find.locale(player.locale), name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatDate(time));
+        return format("history.deposit", Find.locale(player.locale), name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatHistoryDate(time));
     }
 }

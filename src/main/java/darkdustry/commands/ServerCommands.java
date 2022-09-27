@@ -16,7 +16,7 @@ import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.notNullElse;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class ServerCommands {
@@ -102,6 +102,20 @@ public class ServerCommands {
             Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
+        serverCommands.register("kicks", "List all kicked players.", args -> {
+            var kicks = netServer.admins.kickedIPs;
+            if (kicks.isEmpty())
+                Log.info("No kicked players have been found.");
+            else {
+                Log.info("Kicked players: (@)", kicks.size);
+                kicks.each((ip, time) -> {
+                    var info = netServer.admins.findByIP(ip);
+                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
+                    else Log.info("  @ / @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
+                });
+            }
+        });
+
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
             var info = Find.playerInfo(args[0]);
@@ -133,7 +147,7 @@ public class ServerCommands {
                 Log.info("No ID-banned players have been found.");
             else {
                 Log.info("ID-banned players: (@)", bannedIDs.size);
-                bannedIDs.each(info -> Log.info("  @ / Last known name: @", info.id, info.plainLastName()));
+                bannedIDs.each(info -> Log.info("  @ / Name: @", info.id, info.plainLastName()));
             }
 
             var bannedIPs = netServer.admins.getBannedIPs();
@@ -144,7 +158,7 @@ public class ServerCommands {
                 bannedIPs.each(ip -> {
                     var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / (No known name or info)", ip);
-                    else Log.info("  @ / Last known name: @ / ID: @", ip, info.plainLastName(), info.id);
+                    else Log.info("  @ / Name: @ / ID: @", ip, info.plainLastName(), info.id);
                 });
             }
         });
@@ -179,7 +193,8 @@ public class ServerCommands {
 
         serverCommands.register("admins", "List all admins.", args -> {
             var admins = netServer.admins.getAdmins();
-            if (admins.isEmpty()) Log.info("No admins have been found.");
+            if (admins.isEmpty())
+                Log.info("No admins have been found.");
             else {
                 Log.info("Admins: (@)", admins.size);
                 admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));

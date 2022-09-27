@@ -9,7 +9,7 @@ import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 
 import static darkdustry.components.Bundle.format;
 import static darkdustry.features.history.RotateEntry.sides;
-import static darkdustry.utils.Utils.formatDate;
+import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
 public class BlockEntry implements HistoryEntry {
@@ -31,6 +31,6 @@ public class BlockEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var block = content.block(blockID);
         var key = breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct";
-        return format(key, Find.locale(player.locale), name, Icons.get(block), formatDate(time), sides[rotation]);
+        return format(key, Find.locale(player.locale), name, Icons.get(block), formatHistoryDate(time), sides[rotation]);
     }
 }
