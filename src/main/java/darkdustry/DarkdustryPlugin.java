@@ -16,12 +16,14 @@ import mindustry.core.Version;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
+import mindustry.server.ServerControl;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.getPlayersData;
-import static mindustry.Vars.*;
+import static mindustry.Vars.net;
+import static mindustry.Vars.netServer;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
@@ -49,6 +51,8 @@ public class DarkdustryPlugin extends Plugin {
     public void init() {
         info("Loading Darkdustry plugin.");
         Time.mark();
+
+        control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
 
         PluginEvents.load();
 

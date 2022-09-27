@@ -19,7 +19,6 @@ public class MenuHandler {
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
-
             if (option == 1) {
                 Call.openURI(player.con, discordServerUrl);
             } else if (option == 2) {

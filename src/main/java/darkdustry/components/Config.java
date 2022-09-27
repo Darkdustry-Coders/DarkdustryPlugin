@@ -56,7 +56,7 @@ public class Config {
     }
 
     public enum Gamemode {
-        attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower, industry;
+        attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower;
 
         public boolean isDefault() {
             return defaultModes.contains(this);

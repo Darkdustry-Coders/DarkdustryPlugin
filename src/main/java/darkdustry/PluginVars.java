@@ -11,7 +11,6 @@ import mindustry.net.Administration.PlayerInfo;
 import mindustry.server.ServerControl;
 import net.dv8tion.jda.api.entities.Message;
 
-import static arc.Core.app;
 import static darkdustry.components.Config.Gamemode.*;
 import static mindustry.Vars.tilesize;
 
@@ -84,7 +83,7 @@ public class PluginVars {
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
 
     /** Модуль, который контролирует сервер. Используется для перенаправления ввода-вывода. */
-    public static final ServerControl control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
+    public static ServerControl control;
 
     /** Текущее голосование. */
     public static VoteSession vote;
