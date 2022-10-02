@@ -17,7 +17,6 @@ public class Bundle {
     public static final Seq<Locale> supportedLocales = new Seq<>();
 
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();
-    private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static void load() {
         var files = getPluginResource("bundles").seq().filter(fi -> fi.extEquals("properties"));
@@ -32,10 +31,7 @@ public class Bundle {
             }
         });
 
-        supportedLocales.each(locale -> {
-            bundles.put(locale, ResourceBundle.getBundle("bundles.bundle", locale));
-            formats.put(locale, new MessageFormat("", locale));
-        });
+        supportedLocales.each(locale -> bundles.put(locale, ResourceBundle.getBundle("bundles.bundle", locale)));
 
         DarkdustryPlugin.info("Loaded @ locales, default locale is @.", supportedLocales.size, defaultLocale.toLanguageTag());
     }
@@ -59,13 +55,9 @@ public class Bundle {
 
     public static String format(String key, Locale locale, Object... values) {
         var pattern = get(key, locale);
-        if (values.length == 0) {
-            return pattern;
-        }
+        if (values.length == 0) return pattern;
 
-        var format = formats.get(locale, formats.get(defaultLocale));
-        format.applyPattern(pattern);
-        return format.format(values);
+        return MessageFormat.format(pattern, values);
     }
 
     public static void bundled(Player player, String key, Object... values) {
