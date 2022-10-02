@@ -3,6 +3,8 @@
     <p>Основной плагин для серверов Darkdustry.</p>
 </div>
 
+<iframe src="https://discord.com/widget?id=810758118442663936&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 <br>
 
 ## Contributing
