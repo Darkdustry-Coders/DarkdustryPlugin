@@ -49,8 +49,7 @@ public class Console {
                 return;
             }
 
-            last = b;
-            if (b == 13 || b == 10) {
+            if ((last = b) == 13 || b == 10) {
                 flush();
             } else {
                 super.write(b);

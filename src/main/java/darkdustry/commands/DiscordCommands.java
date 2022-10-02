@@ -5,17 +5,17 @@ import arc.files.Fi;
 import arc.func.Cons;
 import arc.struct.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.components.Config.Gamemode;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.*;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import static arc.Core.*;
 import static arc.util.Time.timeSinceMillis;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.Gamemode.hexed;
 import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Administration.*;
@@ -82,7 +82,7 @@ public class DiscordCommands {
         register("restart", "Перезапустить сервер.", event -> event.replyEmbeds(info(":arrows_counterclockwise:  Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
                 .setDefaultPermissions(DISABLED);
 
-        if (config.mode == Gamemode.hexed) return;
+        if (config.mode == hexed) return;
 
         register("map", "Получить карту с сервера.", event -> {
             var map = Find.map(requireNonNull(event.getOption("map")).getAsString());
@@ -112,7 +112,7 @@ public class DiscordCommands {
 
                 event.replyEmbeds(success(":map: Карта добавлена на сервер.", "Файл карты: @", file.getName()).build()).queue();
             });
-        }).setDefaultPermissions(DISABLED)
+        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS))
                 .addOption(ATTACHMENT, "map", "Файл карты, которую необходимо загрузить на сервер.", true);
 
         register("removemap", "Удалить карту с сервера.", event -> {
@@ -123,7 +123,7 @@ public class DiscordCommands {
             maps.reload();
 
             event.replyEmbeds(success(":map: Карта удалена с сервера.", "Название карты: @", map.name()).build()).queue();
-        }).setDefaultPermissions(DISABLED)
+        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS))
                 .addOption(STRING, "map", "Название карты, которую необходимо удалить с сервера.", true);
 
         register("gameover", "Принудительно завершить игру.", event -> {
@@ -131,7 +131,7 @@ public class DiscordCommands {
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":arrows_counterclockwise:  Игра успешно завершена.").build()).queue();
-        }).setDefaultPermissions(DISABLED);
+        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS));
     }
 
     public static SlashCommandData register(String name, String description, Cons<SlashCommandInteractionEvent> cons) {

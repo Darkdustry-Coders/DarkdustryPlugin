@@ -4,6 +4,7 @@ import arc.files.Fi;
 import darkdustry.DarkdustryPlugin;
 
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.Gamemode.*;
 import static mindustry.Vars.dataDirectory;
 import static mindustry.net.Administration.Config.*;
 
@@ -15,11 +16,11 @@ public class Config {
     /** Порт Хаба. */
     public int hubPort = 6567;
 
-    /** Строка подключения к базе данных. */
+    /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
 
     /** Режим игры на сервере. */
-    public Gamemode mode = Gamemode.survival;
+    public Gamemode mode = survival;
 
     /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
@@ -53,6 +54,9 @@ public class Config {
         showConnectMessages.set(false);
         logging.set(true);
         strict.set(true);
+
+        enableVotekick.set(config.mode != hexed && config.mode != hub);
+        autoPause.set(config.mode.isDefault());
     }
 
     public enum Gamemode {
