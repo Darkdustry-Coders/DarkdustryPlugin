@@ -132,9 +132,6 @@ public class DiscordCommands {
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             event.replyEmbeds(success(":arrows_counterclockwise:  Игра успешно завершена.").build()).queue();
         }).setDefaultPermissions(DISABLED);
-
-        // Регистрируем все команды одним запросом
-        jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
     }
 
     public static SlashCommandData register(String name, String description, Cons<SlashCommandInteractionEvent> cons) {

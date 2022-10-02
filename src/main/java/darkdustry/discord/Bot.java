@@ -7,6 +7,7 @@ import mindustry.gen.*;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
 
@@ -16,6 +17,7 @@ import java.util.EnumSet;
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.commands.DiscordCommands.datas;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
@@ -53,6 +55,9 @@ public class Bot {
 
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
             DiscordCommands.load();
+
+            // Регистрируем все команды одним запросом
+            jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
 
             updateBotStatus();
 
