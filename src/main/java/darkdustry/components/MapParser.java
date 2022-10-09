@@ -129,6 +129,8 @@ public class MapParser {
             }));
 
             return pixmap;
+        } finally {
+            content.setTemporaryMapper(null);
         }
     }
 
