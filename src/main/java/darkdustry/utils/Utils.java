@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.struct.OrderedMap;
 import arc.util.Log;
+import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
 import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
@@ -32,7 +33,7 @@ public class Utils {
     }
 
     public static LoadedMod getPlugin() {
-        return mods.getMod("darkdustry-plugin");
+        return mods.getMod(DarkdustryPlugin.class);
     }
 
     public static Fi getPluginResource(String name) {
