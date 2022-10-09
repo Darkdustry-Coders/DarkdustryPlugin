@@ -9,8 +9,7 @@ import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.internal.interactions.CommandDataImpl;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 
 import static arc.Core.*;
 import static arc.util.Time.timeSinceMillis;
@@ -136,6 +135,6 @@ public class DiscordCommands {
 
     public static SlashCommandData register(String name, String description, Cons<SlashCommandInteractionEvent> cons) {
         commands.put(name, cons);
-        return datas.add(new CommandDataImpl(name, description)).peek();
+        return datas.add(Commands.slash(name, description)).peek();
     }
 }

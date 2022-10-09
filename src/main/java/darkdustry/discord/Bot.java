@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
+import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -67,8 +68,12 @@ public class Bot {
         }
     }
 
+    public static boolean connected() {
+        return jda != null && jda.getStatus() == CONNECTED;
+    }
+
     public static void exit() {
-        if (jda != null)
+        if (connected())
             jda.shutdown();
     }
 
@@ -106,7 +111,7 @@ public class Bot {
     }
 
     public static void updateBotStatus() {
-        if (jda != null)
+        if (connected())
             jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
     }
 
