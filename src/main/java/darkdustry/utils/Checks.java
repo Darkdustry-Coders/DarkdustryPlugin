@@ -110,7 +110,7 @@ public class Checks {
     }
 
     public static boolean invalidVoteTarget(Player player, Player target) {
-        return check(target == player, "commands.vote.player-is-you") || check(target.team() != player.team(), player, "commands.vote.player-is-enemy");
+        return check(target == player, player, "commands.vote.player-is-you") || check(target.team() != player.team(), player, "commands.vote.player-is-enemy");
     }
 
     public static boolean invalidVoteSign(Player player, int sign) {
