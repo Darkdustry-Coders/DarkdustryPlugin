@@ -33,6 +33,8 @@ public class Config {
 
     /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
     public long discordAdminChannelId = 0L;
+    /** ID канала в Discord, куда отправляются баны.*/
+    public long discordBansChannelId = 0L;
 
     /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
