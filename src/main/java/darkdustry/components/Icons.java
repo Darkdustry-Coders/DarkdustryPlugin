@@ -22,7 +22,7 @@ public class Icons {
             }
 
             content.items().each(Icons::contains, item -> items.append(get(item)).append(item.name).append(" "));
-            content.units().each(Icons::contains, unit -> items.append(get(unit)).append(unit.name).append(" "));
+            content.units().each(Icons::contains, unit -> units.append(get(unit)).append(unit.name).append(" "));
 
             for (var team : baseTeams) {
                 team.emoji = get(team.name, "");
