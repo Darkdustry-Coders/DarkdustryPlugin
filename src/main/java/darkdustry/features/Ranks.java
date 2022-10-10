@@ -11,7 +11,7 @@ import static darkdustry.features.Effects.cache;
 
 public class Ranks {
 
-    public static Rank player, active, hyperActive, veteran, master, contributor, developer, admin, console, owner;
+    public static Rank player, active, hyperActive, veteran, master, contentCreator, admin, console, owner;
 
     public static void load() {
         player = new Rank() {{
@@ -48,15 +48,9 @@ public class Ranks {
             }};
         }};
 
-        contributor = new Rank() {{
+        contentCreator = new Rank() {{
             tag = "[yellow]<\uE80F>[] ";
-            name = "contributor";
-            effects = Effects.pack6;
-        }};
-
-        developer = new Rank() {{
-            tag = "[lime]<\uE816>[] ";
-            name = "developer";
+            name = "contentCreator";
             effects = Effects.pack6;
         }};
 
