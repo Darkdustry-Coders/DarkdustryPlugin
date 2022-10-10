@@ -23,8 +23,8 @@ public class Effects {
         pack2 = new FxPack(p -> spikes(p, Color.lime),             p -> spikes(p, Color.scarlet),   p -> on(Fx.burning, p));
         pack3 = new FxPack(p -> on(Fx.titanExplosion, p),          p -> on(Fx.titanExplosion, p),   p -> on(Fx.melting, p));
         pack4 = new FxPack(p -> on(Fx.scatheExplosion, p),         p -> on(Fx.scatheExplosion, p),  p -> on(Fx.electrified, p));
-        pack5 = new FxPack(p -> {},                                p -> {},                         p -> on(Fx.overdriven, p, 0f, Tmp.c1.randHue().b(1f)));
-        pack6 = new FxPack(p -> on(Fx.instBomb, p),                p -> on(Fx.instHit, p),          p -> on(Fx.shootPayloadDriver, p, p.unit().rotation - 180f));
+        pack5 = new FxPack(p -> on(Fx.neoplasmSplat, p),           p -> on(Fx.neoplasmSplat, p),    p -> on(Fx.overclocked, p, 0f, Tmp.c1.randHue()));
+        pack6 = new FxPack(p -> on(Fx.instBomb, p),                p -> on(Fx.instHit, p),          p -> on(Fx.smeltsmoke, p, 0f, Color.orange));
         pack7 = new FxPack(p -> on(Fx.teleportActivate, p),        p -> on(Fx.teleport, p),         p -> on(Fx.smeltsmoke, p, 0f, Color.red));
         pack8 = new FxPack(Effects::particles,                     Effects::particles,              p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
     }
