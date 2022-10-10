@@ -104,7 +104,7 @@ public class PluginVars {
     public static VoteKick voteKick;
 
     /** Текстовый список всех предметов, юнитов и команд. */
-    public static String items = "", units = "", teams = "";
+    public static StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
 
     /** Точное время запуска сервера и загрузки последней карты. */
     public static long serverLoadTime, mapLoadTime;

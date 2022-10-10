@@ -11,7 +11,7 @@ import static darkdustry.features.Effects.cache;
 
 public class Ranks {
 
-    public static Rank player, active, activePlus, veteran, contributor, developer, admin, console, owner;
+    public static Rank player, active, hyperActive, veteran, master, contributor, developer, admin, console, owner;
 
     public static void load() {
         player = new Rank() {{
@@ -20,53 +20,60 @@ public class Ranks {
             effects = Effects.pack1;
 
             next = active = new Rank() {{
-                tag = "[accent]<[white]\uE800[]>[] ";
+                tag = "[sky]<[white]\uE800[]>[] ";
                 name = "active";
                 effects = Effects.pack2;
-                req = new Requirements(300, 25000, 20);
+                req = new Requirements(300, 25000, 25);
 
-                next = activePlus = new Rank() {{
-                    tag = "[accent]<[white]\uE813[]>[] ";
-                    name = "active+";
+                next = hyperActive = new Rank() {{
+                    tag = "[#738adb]<[white]\uE813[]>[] ";
+                    name = "hyperActive";
                     effects = Effects.pack3;
-                    req = new Requirements(750, 50000, 40);
+                    req = new Requirements(750, 50000, 50);
 
                     next = veteran = new Rank() {{
-                        tag = "[accent]<[gold]\uE809[]>[] ";
+                        tag = "[gold]<[white]\uE809[]>[] ";
                         name = "veteran";
                         effects = Effects.pack4;
                         req = new Requirements(1500, 100000, 100);
+
+                        next = master = new Rank() {{
+                            tag = "[scarlet]<[white]\uE809[]>[] "; // TODO другой тег
+                            name = "master";
+                            effects = Effects.pack4; // TODO крутые эффекты
+                            req = new Requirements(5000, 250000, 250);
+                        }};
                     }};
                 }};
             }};
         }};
 
         contributor = new Rank() {{
-            tag = "[accent]<[yellow]\uE80F[]>[] ";
+            tag = "[yellow]<\uE80F>[] ";
             name = "contributor";
             effects = Effects.pack5;
         }};
 
         developer = new Rank() {{
-            tag = "[accent]<[#86dca2]\uE816[]>[] ";
+            tag = "[lime]<\uE816>[] ";
             name = "developer";
             effects = Effects.pack5;
         }};
 
         admin = new Rank() {{
-            tag = "[accent]<[scarlet]\uE817[]>[] ";
+            tag = "[scarlet]<\uE817>[] ";
             name = "admin";
             effects = Effects.pack6;
         }};
 
         console = new Rank() {{
-            tag = "[accent]<[#8d56b1]\uE85D[]>[] ";
+            tag = "[#8d56b1]<\uE85D>[] ";
             name = "console";
             effects = Effects.pack6;
         }};
 
         owner = new Rank() {{
-            tag = "[accent]<[#0088ff]\uE810[]>[] ";
+            tag = "[#0088ff]<\uE810>[] ";
             name = "owner";
             effects = Effects.pack7;
         }};

@@ -21,12 +21,12 @@ public class Icons {
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            content.items().each(Icons::contains, item -> items += get(item) + item.name + " ");
-            content.units().each(Icons::contains, unit -> units += get(unit) + unit.name + " ");
+            content.items().each(Icons::contains, item -> items.append(get(item)).append(item.name).append(" "));
+            content.units().each(Icons::contains, unit -> units.append(get(unit)).append(unit.name).append(" "));
 
             for (var team : baseTeams) {
                 team.emoji = get(team.name, "");
-                teams += coloredTeam(team) + " ";
+                teams.append(coloredTeam(team)).append(" ");
             }
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
