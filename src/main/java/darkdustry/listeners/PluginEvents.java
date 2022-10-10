@@ -69,7 +69,7 @@ public class PluginEvents {
 
             if (data.welcomeMessage)
                 showMenu(event.player, welcomeMenu, "welcome.header", "welcome.content",
-                        new String[][] {{"ui.button.close"}, {"welcome.button.discord"}, {"welcome.button.disable"}}, null, serverName.string());
+                        new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}}, null, serverName.string());
 
             app.post(Bot::updateBotStatus);
         }));

@@ -15,14 +15,13 @@ import static mindustry.Vars.state;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu, discordLinkMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
-            if (option == 1) {
-                Call.openURI(player.con, discordServerUrl);
-            } else if (option == 2) {
-                getPlayerData(player.uuid()).subscribe(data -> {
+            switch (option) {
+                case 1 -> Call.openURI(player.con, discordServerUrl);
+                case 2 -> getPlayerData(player.uuid()).subscribe(data -> {
                     data.welcomeMessage = false;
                     setPlayerData(data).subscribe();
                     bundled(player, "welcome.disabled");

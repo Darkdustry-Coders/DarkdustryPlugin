@@ -63,7 +63,7 @@ public class PluginVars {
     /** Список uuid игроков, просматривающих историю в данный момент. */
     public static final Seq<String> activeHistory = new Seq<>();
 
-    /** Список uuid игроков, ожидающих авторизацию. */
+    /** Список игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
 
     /** Ссылка на наш Discord сервер */
@@ -94,14 +94,14 @@ public class PluginVars {
     /** Модуль, который контролирует сервер. Используется для перенаправления ввода-вывода. */
     public static ServerControl control;
 
+    /** Конфигурация сервера. */
+    public static Config config;
+
     /** Текущее голосование. */
     public static VoteSession vote;
 
     /** Текущее голосование за кик игрока. */
     public static VoteKick voteKick;
-
-    /** Конфигурация сервера. */
-    public static Config config;
 
     /** Текстовый список всех предметов, юнитов и команд. */
     public static String items = "", units = "", teams = "";

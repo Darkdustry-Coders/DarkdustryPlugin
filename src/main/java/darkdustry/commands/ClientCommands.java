@@ -100,7 +100,7 @@ public class ClientCommands {
 
         register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort,
                 host -> Call.connect(player.con, host.address, host.port),
-                e -> bundled(player, "commands.hub.failed", e.getMessage())));
+                exception -> bundled(player, "commands.hub.failed", exception.getMessage())));
 
         register("votekick", (args, player) -> {
             if (alreadyVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
