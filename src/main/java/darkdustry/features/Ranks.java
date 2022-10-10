@@ -11,7 +11,7 @@ import static darkdustry.features.Effects.cache;
 
 public class Ranks {
 
-    public static Rank player, active, activePlus, veteran, contributor, developer, admin, console, owner;
+    public static Rank player, active, hyperActive, veteran, contributor, developer, admin, console, owner;
 
     public static void load() {
         player = new Rank() {{
@@ -25,9 +25,9 @@ public class Ranks {
                 effects = Effects.pack2;
                 req = new Requirements(300, 25000, 20);
 
-                next = activePlus = new Rank() {{
+                next = hyperActive = new Rank() {{
                     tag = "[accent]<[white]\uE813[]>[] ";
-                    name = "active+";
+                    name = "hyperActive";
                     effects = Effects.pack3;
                     req = new Requirements(750, 50000, 40);
 
