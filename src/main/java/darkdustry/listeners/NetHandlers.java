@@ -1,7 +1,6 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.struct.ArrayMap;
 import arc.util.CommandHandler.*;
 import arc.util.*;
 import darkdustry.utils.Find;
@@ -10,22 +9,17 @@ import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.discord.Bot.bansChannel;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.notNullElse;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
-    public static ArrayMap<Long, EmbedBuilder> waitingEditBans = new ArrayMap<>();
 
     public static String invalidResponse(Player player, CommandResponse response) {
         var locale = Find.locale(player.locale);
@@ -156,15 +150,7 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> kick(other, player.coloredName());
-            case ban -> {
-                EmbedBuilder embed = new EmbedBuilder().setTitle("Бан")
-                        .addField("Нарушитель", other.name, false)
-                        .addField("Администратор", player.name, false)
-                        .addField("Сервер", config.mode.name(), false);
-                bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Редактировать бан"))
-                        .queue(message -> waitingEditBans.put(message.getIdLong(), embed));
-                ban(other, player.coloredName());
-            }
+            case ban -> ban(other, player.coloredName());
             case trace -> {
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, other.getInfo().timesJoined, other.getInfo().timesKicked));
                 Log.info("@ has requested trace info of @.", player.plainName(), other.plainName());
