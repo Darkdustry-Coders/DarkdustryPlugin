@@ -38,9 +38,9 @@ public class Ranks {
                         req = new Requirements(1500, 100000, 100);
 
                         next = master = new Rank() {{
-                            tag = "[scarlet]<[white]\uE809[]>[] "; // TODO другой тег
+                            tag = "[scarlet]<[white]\uE809[]>[] ";
                             name = "master";
-                            effects = Effects.pack4; // TODO крутые эффекты
+                            effects = Effects.pack5;
                             req = new Requirements(5000, 250000, 250);
                         }};
                     }};
@@ -51,31 +51,31 @@ public class Ranks {
         contributor = new Rank() {{
             tag = "[yellow]<\uE80F>[] ";
             name = "contributor";
-            effects = Effects.pack5;
+            effects = Effects.pack6;
         }};
 
         developer = new Rank() {{
             tag = "[lime]<\uE816>[] ";
             name = "developer";
-            effects = Effects.pack5;
+            effects = Effects.pack6;
         }};
 
         admin = new Rank() {{
             tag = "[scarlet]<\uE817>[] ";
             name = "admin";
-            effects = Effects.pack6;
+            effects = Effects.pack7;
         }};
 
         console = new Rank() {{
             tag = "[#8d56b1]<\uE85D>[] ";
             name = "console";
-            effects = Effects.pack6;
+            effects = Effects.pack7;
         }};
 
         owner = new Rank() {{
             tag = "[#0088ff]<\uE810>[] ";
             name = "owner";
-            effects = Effects.pack7;
+            effects = Effects.pack8;
         }};
     }
 
