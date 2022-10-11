@@ -152,7 +152,8 @@ public class NetHandlers {
             case kick -> kick(other, player.coloredName());
             case ban -> ban(other, player.coloredName());
             case trace -> {
-                Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, other.getInfo().timesJoined, other.getInfo().timesKicked));
+                var info = other.getInfo();
+                Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, info.timesJoined, info.timesKicked));
                 Log.info("@ has requested trace info of @.", player.plainName(), other.plainName());
             }
             case wave -> {

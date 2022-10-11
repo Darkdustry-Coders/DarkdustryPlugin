@@ -27,33 +27,29 @@ public class PageIterator {
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
                         .append("\n  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
-                        .append(get("commands." + command.text + ".params", command.paramText, locale)).append("[lightgray] - ")
-                        .append(get("commands." + command.text + ".description", command.description, locale)), null);
+                        .append(get("commands." + command.text + ".params", command.paramText, locale))
+                        .append("[lightgray] - ")
+                        .append(get("commands." + command.text + ".description", command.description, locale)));
     }
 
     public static void players(String[] args, Player player) {
+        var locale = Find.locale(player.locale);
         client(args, player, Groups.player.copy(new Seq<>()), "players",
-                (builder, i, p) -> builder
-                        .append("\n  [white]").append(p.admin ? "[\uE82C] " : "[\uE872] ").append(p.coloredName())
-                        .append(" [lightgray]|[accent] ID: #").append(p.id)
-                        .append(" [lightgray]|[accent] Locale: ").append(p.locale), null);
+                (builder, i, p) -> builder.append(format("commands.players.player", locale, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
     }
 
     public static void maps(String[] args, Player player) {
+        var locale = Find.locale(player.locale);
         client(args, player, maps.customMaps(), "maps",
-                (builder, i, map) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(map.name()),
-                result -> result.append(format("commands.maps.current", Find.locale(player.locale), state.map.name())));
+                (builder, i, map) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(map.name()).append(map == state.map ? get("commands.maps.current", locale) : ""));
     }
 
     public static void saves(String[] args, Player player) {
         client(args, player, saveDirectory.seq().filter(SaveIO::isSaveValid), "saves",
-                (builder, i, save) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()), null);
+                (builder, i, save) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()));
     }
 
-    private static <T> void client(
-            String[] args, Player player, Seq<T> content, String command,
-            Cons3<StringBuilder, Integer, T> cons, Cons<StringBuilder> result) {
-
+    private static <T> void client(String[] args, Player player, Seq<T> content, String command, Cons3<StringBuilder, Integer, T> cons) {
         if (args.length > 0 && !canParseInt(args[0])) {
             bundled(player, "commands.page-not-int");
             return;
@@ -70,7 +66,6 @@ public class PageIterator {
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder, i, content.get(i));
 
-        if (result != null) result.get(builder);
         player.sendMessage(builder.toString());
     }
 
@@ -91,10 +86,7 @@ public class PageIterator {
         );
     }
 
-    private static <T> void discord(
-            SlashCommandInteractionEvent event, Seq<T> content,
-            Func<Seq<T>, String> header, Cons3<StringBuilder, Integer, T> cons) {
-
+    private static <T> void discord(SlashCommandInteractionEvent event, Seq<T> content, Func<Seq<T>, String> header, Cons3<StringBuilder, Integer, T> cons) {
         int page = event.getOption("page") != null ? requireNonNull(event.getOption("page")).getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
