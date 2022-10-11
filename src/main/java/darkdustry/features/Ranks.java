@@ -38,7 +38,7 @@ public class Ranks {
                         req = new Requirements(1500, 100000, 100);
 
                         next = master = new Rank() {{
-                            tag = "[scarlet]<[white]\uE809[]>[] ";
+                            tag = "[orange]<[white]\uE810[]>[] ";
                             name = "master";
                             effects = Effects.pack5;
                             req = new Requirements(5000, 250000, 250);
@@ -67,7 +67,7 @@ public class Ranks {
         }};
 
         owner = new Rank() {{
-            tag = "[#0088ff]<\uE810>[] ";
+            tag = "[#0088ff]<[white]\uF7A9[]>[] ";
             name = "owner";
             effects = Effects.pack8;
         }};
