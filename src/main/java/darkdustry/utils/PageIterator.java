@@ -26,7 +26,7 @@ public class PageIterator {
         var locale = Find.locale(player.locale);
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
-                        .append("[orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
+                        .append("  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale))
                         .append("[lightgray] - ")
                         .append(get("commands." + command.text + ".description", command.description, locale)));
@@ -35,7 +35,7 @@ public class PageIterator {
     public static void players(String[] args, Player player) {
         var locale = Find.locale(player.locale);
         client(args, player, Groups.player.copy(new Seq<>()), "players",
-                (builder, i, p) -> builder.append(format("commands.players.player", locale, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
+                (builder, i, p) -> builder.append("  ").append(format("commands.players.player", locale, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
     }
 
     public static void maps(String[] args, Player player) {
