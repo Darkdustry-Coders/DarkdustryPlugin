@@ -21,7 +21,7 @@ public class Console {
             while (true) {
                 try {
                     var line = reader.readLine("> ");
-                    if (!line.isEmpty())
+                    if (!line.isBlank())
                         app.post(() -> control.handleCommandString(line));
                 } catch (Exception ignored) {}
             }
