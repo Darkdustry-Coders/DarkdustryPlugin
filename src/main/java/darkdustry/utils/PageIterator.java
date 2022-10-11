@@ -26,7 +26,7 @@ public class PageIterator {
         var locale = Find.locale(player.locale);
         client(args, player, clientCommands.getCommandList(), "help",
                 (builder, i, command) -> builder
-                        .append("\n  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
+                        .append("[orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale))
                         .append("[lightgray] - ")
                         .append(get("commands." + command.text + ".description", command.description, locale)));
@@ -41,12 +41,12 @@ public class PageIterator {
     public static void maps(String[] args, Player player) {
         var locale = Find.locale(player.locale);
         client(args, player, maps.customMaps(), "maps",
-                (builder, i, map) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(map.name()).append(map == state.map ? get("commands.maps.current", locale) : ""));
+                (builder, i, map) -> builder.append("[orange]").append(i + 1).append("[lightgray] - [accent]").append(map.name()).append(map == state.map ? get("commands.maps.current", locale) : ""));
     }
 
     public static void saves(String[] args, Player player) {
         client(args, player, saveDirectory.seq().filter(SaveIO::isSaveValid), "saves",
-                (builder, i, save) -> builder.append("\n  [lightgray]").append(i + 1).append(". [orange]").append(save.nameWithoutExtension()));
+                (builder, i, save) -> builder.append("[orange]").append(i + 1).append("[lightgray] - [accent]").append(save.nameWithoutExtension()));
     }
 
     private static <T> void client(String[] args, Player player, Seq<T> content, String command, Cons3<StringBuilder, Integer, T> cons) {
@@ -64,7 +64,7 @@ public class PageIterator {
 
         var builder = new StringBuilder(format("commands." + command + ".page", Find.locale(player.locale), page, pages));
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder, i, content.get(i));
+            cons.get(builder.append("\n"), i, content.get(i));
 
         player.sendMessage(builder.toString());
     }
@@ -75,14 +75,14 @@ public class PageIterator {
     public static void players(SlashCommandInteractionEvent event) {
         discord(event, Groups.player.copy(new Seq<>()),
                 content -> format(":bar_chart: Игроков на сервере: @", content.size),
-                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("` | ").append(p.plainName()).append("\n")
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("` | ").append(p.plainName())
         );
     }
 
     public static void maps(SlashCommandInteractionEvent event) {
         discord(event, maps.customMaps(),
                 content -> format(":map: Карт в плейлисте сервера: @", content.size),
-                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")\n")
+                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
         );
     }
 
@@ -96,7 +96,7 @@ public class PageIterator {
 
         var builder = new StringBuilder();
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder, i, content.get(i));
+            cons.get(builder.append("\n"), i, content.get(i));
 
         event.replyEmbeds(neutral(header.get(content))
                 .setDescription(builder.toString())
