@@ -25,16 +25,29 @@ public class Config {
     /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /** ID сервера в Discord. */
+    /**
+     * ID сервера в Discord.
+     */
     public long discordGuildId = 0L;
 
-    /** ID канала в Discord, куда отправляются все сообщения. */
+    /**
+     * ID канала в Discord, куда отправляются все сообщения.
+     */
     public long discordBotChannelId = 0L;
 
-    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
+    /**
+     * ID канала в Discord, куда отправляются подтверждения для администраторов.
+     */
     public long discordAdminChannelId = 0L;
 
-    /** ID роли администраторов в Discord. */
+    /**
+     * ID канала в Discord, куда отправляются баны.
+     */
+    public long discordBansChannelId = 0L;
+
+    /**
+     * ID роли администраторов в Discord.
+     */
     public long discordAdminRoleId = 0L;
 
     public static void load() {

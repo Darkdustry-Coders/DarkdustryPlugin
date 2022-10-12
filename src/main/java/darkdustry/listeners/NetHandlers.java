@@ -9,11 +9,16 @@ import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+import java.awt.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.discord.Bot.bansChannel;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.notNullElse;
@@ -150,7 +155,15 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> kick(other, player.coloredName());
-            case ban -> ban(other, player.coloredName());
+            case ban -> {
+                ban(other, player.coloredName());
+                EmbedBuilder embed = new EmbedBuilder().setTitle("Бан")
+                        .setColor(Color.red)
+                        .addField("Нарушитель", other.name, false)
+                        .addField("Администратор", player.name, false)
+                        .addField("Сервер", config.mode.name(), false);
+                bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Редактировать бан")).queue();
+            }
             case trace -> {
                 var info = other.getInfo();
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, info.timesJoined, info.timesKicked));
