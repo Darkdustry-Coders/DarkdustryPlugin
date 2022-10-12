@@ -8,7 +8,6 @@ import java.io.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.control;
-import static org.jline.utils.AttributedString.fromAnsi;
 
 public class Console {
 

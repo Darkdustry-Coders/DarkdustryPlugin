@@ -8,6 +8,7 @@ import mindustry.net.NetConnection;
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.utils.Utils.formatDuration;
 import static mindustry.Vars.netServer;
 
 public class Administration {
@@ -18,7 +19,7 @@ public class Administration {
         var locale = Find.locale(stringLocale);
         var reason = format(key, locale, values);
 
-        if (duration > 0) reason += Bundle.format("kick.time", locale, Utils.formatDuration(duration, locale));
+        if (duration > 0) reason += Bundle.format("kick.time", locale, formatDuration(duration, locale));
         if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);
         con.kick(reason, duration);
     }

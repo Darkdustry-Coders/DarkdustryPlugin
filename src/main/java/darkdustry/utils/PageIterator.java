@@ -28,7 +28,7 @@ public class PageIterator {
                 (builder, i, command) -> builder
                         .append("  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale))
-                        .append("[lightgray] - ")
+                        .append("[gray] - [lightgray]")
                         .append(get("commands." + command.text + ".description", command.description, locale)));
     }
 
