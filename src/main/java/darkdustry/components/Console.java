@@ -14,7 +14,7 @@ public class Console {
 
     public static void load() {
         var reader = LineReaderBuilder.builder().build();
-        System.setOut(new BlockingPrintStream(string -> reader.printAbove(fromAnsi(string))));
+        System.setOut(new BlockingPrintStream(reader::printAbove));
 
         control = (ServerControl) app.getListeners().find(ServerControl.class::isInstance);
         control.serverInput = () -> {
