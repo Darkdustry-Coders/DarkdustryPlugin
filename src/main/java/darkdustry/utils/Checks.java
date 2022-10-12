@@ -21,7 +21,8 @@ import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.bundled;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.utils.Utils.coloredTeam;
+import static darkdustry.utils.Cooldowns.defaults;
+import static darkdustry.utils.Utils.*;
 import static java.util.Objects.requireNonNull;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
@@ -166,11 +167,11 @@ public class Checks {
     }
 
     public static boolean alreadySynced(Player player) {
-        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", Cooldowns.defaults.get("sync"));
+        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", formatDuration(defaults.get("sync"), Find.locale(player.locale)));
     }
 
     public static boolean isCooldowned(Player player, String command) {
-        return check(!player.admin && !Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, Cooldowns.defaults.get(command) / 60L);
+        return check(!player.admin && !Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, formatDuration(defaults.get(command), Find.locale(player.locale)));
     }
 
     // endregion
