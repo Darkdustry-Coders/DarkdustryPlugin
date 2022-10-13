@@ -23,8 +23,6 @@ public class ClientCommands {
 
         register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
-        register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
-
         register("sync", (args, player) -> {
             if (alreadySynced(player)) return;
 
@@ -32,6 +30,8 @@ public class ClientCommands {
             netServer.sendWorldData(player);
             Cooldowns.run(player.uuid(), "sync");
         });
+
+        register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 
         register("tr", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
             switch (args[0].toLowerCase()) {
@@ -62,6 +62,12 @@ public class ClientCommands {
             }
         }));
 
+        register("players", PageIterator::players);
+
+        register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort,
+                host -> Call.connect(player.con, host.address, host.port),
+                exception -> bundled(player, "commands.hub.failed", exception.getMessage())));
+
         register("stats", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
@@ -83,24 +89,17 @@ public class ClientCommands {
                 var rank = Ranks.getRank(data.rank);
                 var locale = Find.locale(player.locale);
 
-                if (!rank.hasNext()) {
+                if (!rank.hasNext())
                     showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.content", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
-                } else {
+                else
                     showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.next", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
                             rank.next.localisedName(locale),
                             data.playTime, rank.next.req.playTime(),
                             data.buildingsBuilt, rank.next.req.buildingsBuilt(),
                             data.gamesPlayed, rank.next.req.gamesPlayed()
                     );
-                }
             });
         });
-
-        register("players", PageIterator::players);
-
-        register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort,
-                host -> Call.connect(player.con, host.address, host.port),
-                exception -> bundled(player, "commands.hub.failed", exception.getMessage())));
 
         register("votekick", (args, player) -> {
             if (alreadyVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
