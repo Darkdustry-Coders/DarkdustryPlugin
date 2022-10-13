@@ -60,11 +60,11 @@ public class PluginVars {
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;
 
-    /** Список uuid игроков, просматривающих историю в данный момент. */
-    public static final Seq<String> activeHistory = new Seq<>();
+    /** Язык по умолчанию. */
+    public static final String defaultLanguage = "en";
 
-    /** Список игроков, ожидающих авторизацию. */
-    public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
+    /** Название файла, в котором хранится конфигурация сервера. */
+    public static final String configFileName = "config.json";
 
     /** Ссылка на наш Discord сервер */
     public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
@@ -72,14 +72,17 @@ public class PluginVars {
     /** Ссылка на API переводчика. */
     public static final String translatorApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
+    /** Список uuid игроков, просматривающих историю в данный момент. */
+    public static final Seq<String> activeHistory = new Seq<>();
+
+    /** Список команд, доступных только администраторам игрового сервера. */
+    public static final Seq<String> adminOnlyCommands = new Seq<>();
+
+    /** Список игроков, ожидающих авторизацию. */
+    public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
+
     /** Список всех языков переводчика. */
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
-
-    /** Язык по умолчанию. Язык Discord сервера. */
-    public static final String defaultLanguage = "en";
-
-    /** Название файла, в котором хранится конфигурация сервера. */
-    public static final String configFileName = "config.json";
 
     /** Используется для считывания и записи Json объектов. */
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();

@@ -9,7 +9,7 @@ import mindustry.gen.*;
 import mindustry.world.Tile;
 
 import static arc.util.Strings.parseInt;
-import static darkdustry.PluginVars.clientCommands;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
@@ -158,9 +158,9 @@ public class AdminCommands {
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
-        clientCommands.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
+        adminOnlyCommands.add(clientCommands.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
             if (notAdmin(player)) return;
             runner.accept(args, player);
-        });
+        }).text);
     }
 }

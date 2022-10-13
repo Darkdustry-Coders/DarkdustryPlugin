@@ -37,10 +37,6 @@ public class Console {
             this.cons = cons;
         }
 
-        public ByteArrayOutputStream out() {
-            return (ByteArrayOutputStream) out;
-        }
-
         @Override
         public void write(int b) {
             if (last == 13 && b == 10) {
@@ -64,8 +60,8 @@ public class Console {
 
         @Override
         public void flush() {
-            var string = out().toString();
-            out().reset();
+            var string = out.toString();
+            ((ByteArrayOutputStream) out).reset();
             cons.get(string);
         }
     }

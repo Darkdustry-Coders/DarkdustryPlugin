@@ -24,7 +24,7 @@ public class PageIterator {
 
     public static void commands(String[] args, Player player) {
         var locale = Find.locale(player.locale);
-        client(args, player, clientCommands.getCommandList(), "help",
+        client(args, player, clientCommands.getCommandList().select(command -> player.admin || !adminOnlyCommands.contains(command.text)), "help",
                 (builder, i, command) -> builder
                         .append("  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale))
