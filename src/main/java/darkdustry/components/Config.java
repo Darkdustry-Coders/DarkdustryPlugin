@@ -1,6 +1,5 @@
 package darkdustry.components;
 
-import arc.files.Fi;
 import darkdustry.DarkdustryPlugin;
 
 import static darkdustry.PluginVars.*;
@@ -38,7 +37,7 @@ public class Config {
     public long discordAdminRoleId = 0L;
 
     public static void load() {
-        Fi file = dataDirectory.child(configFileName);
+        var file = dataDirectory.child(configFileName);
         if (file.exists()) {
             config = gson.fromJson(file.reader(), Config.class);
             DarkdustryPlugin.info("Config loaded. (@)", file.absolutePath());

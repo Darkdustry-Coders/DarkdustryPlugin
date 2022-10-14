@@ -170,7 +170,7 @@ public class Checks {
         return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", formatDuration(defaults.get("sync"), Find.locale(player.locale)));
     }
 
-    public static boolean isCooldowned(Player player, String command) {
+    public static boolean isOnCooldown(Player player, String command) {
         return check(!player.admin && !Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, formatDuration(defaults.get(command), Find.locale(player.locale)));
     }
 

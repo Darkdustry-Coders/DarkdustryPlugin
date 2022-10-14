@@ -50,20 +50,20 @@ public class Find {
         return notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
     }
 
-    public static UnitType unit(String name) {
-        return canParsePositiveInt(name) ? content.unit(parseInt(name)) : content.units().find(unit -> unit.name.equalsIgnoreCase(name));
+    public static Item item(String name) {
+        return canParsePositiveInt(name) ? content.item(parseInt(name)) : content.item(name);
     }
 
-    public static Item item(String name) {
-        return canParsePositiveInt(name) ? content.item(parseInt(name)) : content.items().find(item -> item.name.equalsIgnoreCase(name));
+    public static UnitType unit(String name) {
+        return canParsePositiveInt(name) ? content.unit(parseInt(name)) : content.unit(name);
+    }
+
+    public static Block block(String name) {
+        return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.block(name);
     }
 
     public static Team team(String name) {
         return canParsePositiveInt(name) ? Team.get(parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
-    }
-
-    public static Block block(String name) {
-        return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.blocks().find(block -> block.name.equalsIgnoreCase(name));
     }
 
     public static Rank rank(String name) {

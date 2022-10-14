@@ -102,7 +102,7 @@ public class ClientCommands {
         });
 
         register("votekick", (args, player) -> {
-            if (alreadyVoting(player, voteKick) || isCooldowned(player, "votekick") || votekickDisabled(player)) return;
+            if (alreadyVoting(player, voteKick) || isOnCooldown(player, "votekick") || votekickDisabled(player)) return;
 
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
@@ -123,7 +123,7 @@ public class ClientCommands {
         });
 
         register("login", (args, player) -> {
-            if (alreadyAdmin(player) || isCooldowned(player, "login")) return;
+            if (alreadyAdmin(player) || isOnCooldown(player, "login")) return;
 
             sendAdminRequest(player);
             bundled(player, "commands.login.sent");
@@ -133,7 +133,7 @@ public class ClientCommands {
         if (!config.mode.isDefault()) return;
 
         register("rtv", (args, player) -> {
-            if (alreadyVoting(player, vote) || isCooldowned(player, "rtv")) return;
+            if (alreadyVoting(player, vote) || isOnCooldown(player, "rtv")) return;
 
             var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
             if (notFound(player, map)) return;
@@ -144,7 +144,7 @@ public class ClientCommands {
         });
 
         register("vnw", (args, player) -> {
-            if (alreadyVoting(player, vote) || isCooldowned(player, "vnw")) return;
+            if (alreadyVoting(player, vote) || isOnCooldown(player, "vnw")) return;
 
             if (invalidAmount(player, args, 0)) return;
 
@@ -157,7 +157,7 @@ public class ClientCommands {
         });
 
         register("savemap", (args, player) -> {
-            if (alreadyVoting(player, vote) || isCooldowned(player, "savemap")) return;
+            if (alreadyVoting(player, vote) || isOnCooldown(player, "savemap")) return;
 
             vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
             vote.vote(player, 1);
@@ -165,7 +165,7 @@ public class ClientCommands {
         });
 
         register("loadsave", (args, player) -> {
-            if (alreadyVoting(player, vote) || isCooldowned(player, "loadsave")) return;
+            if (alreadyVoting(player, vote) || isOnCooldown(player, "loadsave")) return;
 
             var save = Find.save(args[0]);
             if (notFound(player, save)) return;
