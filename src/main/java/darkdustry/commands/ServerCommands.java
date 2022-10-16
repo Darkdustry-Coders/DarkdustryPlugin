@@ -1,6 +1,6 @@
 package darkdustry.commands;
 
-import arc.util.Log;
+import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
@@ -109,6 +109,8 @@ public class ServerCommands {
             else {
                 Log.info("Kicked players: (@)", kicks.size);
                 kicks.each((ip, time) -> {
+                    if (Time.millis() > time) return;
+
                     var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
                     else Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
