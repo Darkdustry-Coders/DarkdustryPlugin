@@ -67,9 +67,12 @@ public class PluginEvents {
 
             sendEmbed(botChannel, SUCCESS, "@ присоединился", event.player.plainName());
 
-            if (data.welcomeMessage)
+            if (data.welcomeMessage) {
+                var locale = Find.locale(event.player.locale);
                 showMenu(event.player, welcomeMenu, "welcome.header", "welcome.content",
-                        new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}}, null, serverName.string());
+                        new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}},
+                        null, serverName.string(), get("commands.help.description", locale), get("commands.tr.description", locale), get("commands.stats.description", locale));
+            }
 
             app.post(Bot::updateBotStatus);
         }));
