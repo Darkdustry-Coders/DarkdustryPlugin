@@ -71,7 +71,7 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, Item item) {
-        return check(item == null || item.isHidden(), player, "commands.item-not-found", items);
+        return check(item == null, player, "commands.item-not-found", items);
     }
 
     public static boolean notFound(Player player, UnitType type) {
