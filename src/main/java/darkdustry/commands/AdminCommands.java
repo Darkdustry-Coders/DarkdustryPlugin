@@ -1,6 +1,5 @@
 package darkdustry.commands;
 
-import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
@@ -8,6 +7,7 @@ import mindustry.content.Blocks;
 import mindustry.gen.*;
 import mindustry.world.Tile;
 
+import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
@@ -15,6 +15,7 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.*;
+import static mindustry.core.World.conv;
 import static mindustry.graphics.Pal.adminChat;
 
 public class AdminCommands {
@@ -63,12 +64,8 @@ public class AdminCommands {
             var team = args.length > 1 ? Find.team(args[1]) : player.team();
             if (notFound(player, team)) return;
 
-            if (player.tileOn().block() == core)
-                player.tileOn().removeNet();
-            else {
-                Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-                bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
-            }
+            Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
+            bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
         });
 
         register("give", (args, player) -> {
@@ -120,8 +117,8 @@ public class AdminCommands {
         register("tp", (args, player) -> {
             if (invalidTpCoords(player, args)) return;
             float
-                    x = Mathf.clamp(parseInt(args[0]), 0, world.width()) * tilesize,
-                    y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;
+                    x = clamp(parseInt(args[0]), 0, world.width()) * tilesize,
+                    y = clamp(parseInt(args[1]), 0, world.height()) * tilesize;
 
             boolean spawnedNyCore = player.unit().spawnedByCore();
             var unit = player.unit();
@@ -135,15 +132,15 @@ public class AdminCommands {
 
             player.unit(unit);
             unit.spawnedByCore(spawnedNyCore);
-            bundled(player, "commands.tp.success", x / tilesize, y / tilesize);
+            bundled(player, "commands.tp.success", conv(x), conv(y));
         });
 
         register("fill", (args, player) -> {
             if (invalidFillAmount(player, args)) return;
-            int width = parseInt(args[0]), height = parseInt(args[1]);
+            int width = parseInt(args[1]), height = parseInt(args[2]);
             if (invalidFillAmount(player, width, height)) return;
 
-            var block = Find.block(args[2]);
+            var block = Find.block(args[0]);
             if (notFound(player, block)) return;
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {
