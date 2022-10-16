@@ -63,8 +63,12 @@ public class AdminCommands {
             var team = args.length > 1 ? Find.team(args[1]) : player.team();
             if (notFound(player, team)) return;
 
-            Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
-            bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
+            if (player.tileOn().block() == core)
+                player.tileOn().setNet(Blocks.air);
+            else {
+                Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
+                bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
+            }
         });
 
         register("give", (args, player) -> {
