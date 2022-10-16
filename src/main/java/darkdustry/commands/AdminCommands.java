@@ -3,9 +3,7 @@ package darkdustry.commands;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.utils.Find;
-import mindustry.content.Blocks;
 import mindustry.gen.*;
-import mindustry.world.Tile;
 
 import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
@@ -15,6 +13,7 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.*;
+import static mindustry.content.Blocks.coreShard;
 import static mindustry.core.World.conv;
 import static mindustry.graphics.Pal.adminChat;
 
@@ -58,7 +57,7 @@ public class AdminCommands {
         });
 
         register("core", (args, player) -> {
-            var core = args.length > 0 ? Find.core(args[0]) : Blocks.coreShard;
+            var core = args.length > 0 ? Find.core(args[0]) : coreShard;
             if (notFoundCore(player, core)) return;
 
             var team = args.length > 1 ? Find.team(args[1]) : player.team();
@@ -145,10 +144,11 @@ public class AdminCommands {
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {
                 for (int y = player.tileY(); y < player.tileY() + height; y += block.size) {
-                    Tile tile = world.tile(x, y);
+                    var tile = world.tile(x, y);
                     if (tile == null) continue;
 
-                    if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
+                    if (block.isAir()) tile.removeNet();
+                    else if (block.isOverlay()) tile.setFloorNet(tile.floor(), block);
                     else if (block.isFloor()) tile.setFloorNet(block, tile.overlay());
                     else tile.setNet(block, player.team(), 0);
                 }
