@@ -75,8 +75,8 @@ public class PluginVars {
     /** Список uuid игроков, просматривающих историю в данный момент. */
     public static final Seq<String> activeHistory = new Seq<>();
 
-    /** Список команд, доступных только администраторам игрового сервера. */
-    public static final Seq<String> adminOnlyCommands = new Seq<>();
+    /** Список команд, доступных только администраторам игрового сервера. Команда /login там по умолчанию. */
+    public static final Seq<String> adminOnlyCommands = Seq.with("login");
 
     /** Список игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
