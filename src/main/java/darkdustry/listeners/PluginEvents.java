@@ -121,6 +121,6 @@ public class PluginEvents {
             app.post(Bot::updateBotStatus);
         });
 
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));
     }
 }
