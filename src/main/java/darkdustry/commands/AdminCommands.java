@@ -64,7 +64,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             if (player.tileOn().block() == core)
-                player.tileOn().setNet(Blocks.air);
+                player.tileOn().removeNet();
             else {
                 Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
                 bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
