@@ -19,9 +19,9 @@ public class Bundle {
     private static final ObjectMap<Locale, ResourceBundle> bundles = new ObjectMap<>();
 
     public static void load() {
-        var files = getPluginResource("bundles").seq().filter(fi -> fi.extEquals("properties"));
+        getPluginResource("bundles").walk(fi -> {
+            if (!fi.extEquals("properties")) return;
 
-        files.each(fi -> {
             var codes = fi.nameWithoutExtension().split("_");
 
             if (codes.length == 2) { // bundle_ru.properties

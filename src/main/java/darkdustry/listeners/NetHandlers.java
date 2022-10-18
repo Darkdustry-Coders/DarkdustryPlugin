@@ -76,6 +76,11 @@ public class NetHandlers {
             return;
         }
 
+        if (stripColors(name).trim().isEmpty()) {
+            kick(con, "kick.name-is-empty", locale);
+            return;
+        }
+
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
             kick(con, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
             return;
@@ -94,16 +99,6 @@ public class NetHandlers {
             return;
         }
 
-        var info = netServer.admins.getInfo(uuid);
-
-        if (!netServer.admins.isWhitelisted(uuid, usid)) {
-            info.adminUsid = usid;
-            info.names.addUnique(info.lastName = name);
-            info.ips.addUnique(info.lastIP = ip);
-            kick(con, "kick.not-whitelisted", locale, discordServerUrl);
-            return;
-        }
-
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
             kick(con, "kick.custom-client", locale);
             return;
@@ -114,14 +109,23 @@ public class NetHandlers {
             return;
         }
 
-        if (stripColors(name).trim().isEmpty()) {
-            kick(con, "kick.name-is-empty", locale);
+        if (packet.versionType.equals(("bleeding-edge"))) {
+            Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale)));
+        }
+
+        var info = netServer.admins.getInfo(uuid);
+        if (!netServer.admins.isWhitelisted(uuid, usid)) {
+            info.adminUsid = usid;
+            info.names.addUnique(info.lastName = name);
+            info.ips.addUnique(info.lastIP = ip);
+            kick(con, "kick.not-whitelisted", locale);
             return;
         }
 
         if (con.kicked) return;
 
         netServer.admins.updatePlayerJoined(uuid, ip, name);
+        if (!info.admin) info.adminUsid = usid;
 
         Player player = Player.create();
         player.con(con);
@@ -131,8 +135,6 @@ public class NetHandlers {
         player.color.set(packet.color).a(1f);
 
         con.player = player;
-
-        if (!player.admin && !info.admin) info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);

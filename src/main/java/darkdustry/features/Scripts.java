@@ -8,21 +8,16 @@ import static mindustry.Vars.*;
 public class Scripts {
 
     public static void load() {
-        var scripts = dataDirectory.child("scripts").seq().filter(fi -> fi.extEquals("js"));
+        dataDirectory.child("scripts").walk(fi -> {
+            if (!fi.extEquals("js")) return;
 
-        if (scripts.isEmpty()) return;
-
-        DarkdustryPlugin.info("Found @ startup scripts.", scripts.size);
-        Time.mark();
-
-        scripts.each(fi -> {
             try {
+                Time.mark();
                 mods.getScripts().runConsole(fi.readString());
+                DarkdustryPlugin.info("Loaded script @ in @ ms.", fi.name(), Time.elapsed());
             } catch (Exception e) {
-                DarkdustryPlugin.error("Error loading startup script @: @", fi.name(), e);
+                DarkdustryPlugin.error("Error loading script @: @", fi.name(), e);
             }
         });
-
-        DarkdustryPlugin.info("Loaded @ startup scripts in @ ms.", scripts.size, Time.elapsed());
     }
 }
