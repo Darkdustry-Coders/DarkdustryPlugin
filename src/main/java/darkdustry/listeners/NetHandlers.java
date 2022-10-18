@@ -4,6 +4,7 @@ import arc.Events;
 import arc.util.CommandHandler.*;
 import arc.util.*;
 import darkdustry.utils.Find;
+import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
@@ -118,8 +119,8 @@ public class NetHandlers {
             return;
         }
 
-        if (packet.versionType.equals(("bleeding-edge"))) {
-            Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale)));
+        if (packet.versionType.equals(("bleeding-edge")) && !Version.type.equals("bleeding-edge")) {
+            Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale), mindustryVersion));
         }
 
         if (con.kicked) return;
@@ -127,7 +128,7 @@ public class NetHandlers {
         netServer.admins.updatePlayerJoined(uuid, ip, name);
         if (!info.admin) info.adminUsid = usid;
 
-        Player player = Player.create();
+        var player = Player.create();
         player.con(con);
         player.name(name);
         player.locale(locale);
