@@ -99,6 +99,15 @@ public class NetHandlers {
             return;
         }
 
+        var info = netServer.admins.getInfo(uuid);
+        if (!netServer.admins.isWhitelisted(uuid, usid)) {
+            info.adminUsid = usid;
+            info.names.addUnique(info.lastName = name);
+            info.ips.addUnique(info.lastIP = ip);
+            kick(con, "kick.not-whitelisted", locale);
+            return;
+        }
+
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
             kick(con, "kick.custom-client", locale);
             return;
@@ -111,15 +120,6 @@ public class NetHandlers {
 
         if (packet.versionType.equals(("bleeding-edge"))) {
             Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale)));
-        }
-
-        var info = netServer.admins.getInfo(uuid);
-        if (!netServer.admins.isWhitelisted(uuid, usid)) {
-            info.adminUsid = usid;
-            info.names.addUnique(info.lastName = name);
-            info.ips.addUnique(info.lastIP = ip);
-            kick(con, "kick.not-whitelisted", locale);
-            return;
         }
 
         if (con.kicked) return;
