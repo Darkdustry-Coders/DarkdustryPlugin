@@ -34,7 +34,7 @@ public class SettingsMenu {
                 case 3 -> data.welcomeMessage = !data.welcomeMessage;
             }
 
-            setPlayerData(data).subscribe(result -> showSettingsMenu(player));
+            setPlayerData(data).subscribe(null, null, () -> showSettingsMenu(player));
         });
     }
 }
