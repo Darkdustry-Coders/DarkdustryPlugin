@@ -33,6 +33,10 @@ public class Alerts {
     }
 
     public static void load() {
+        if (!enabled()) return;
+
+        welcomeMessageCommands.add("alerts");
+
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
 
@@ -49,7 +53,7 @@ public class Alerts {
         var block = event.builder.buildPlan().block;
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
-            if (data.alertsEnabled) {
+            if (data.alerts) {
                 var player = Find.playerByUuid(data.uuid);
                 if (player != null)
                     bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
@@ -65,7 +69,7 @@ public class Alerts {
         var item = event.item;
 
         getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
-            if (data.alertsEnabled) {
+            if (data.alerts) {
                 var player = Find.playerByUuid(data.uuid);
                 if (player != null)
                     bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());

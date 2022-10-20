@@ -1,7 +1,7 @@
 package darkdustry.components;
 
 import arc.func.Prov;
-import arc.graphics.*;
+import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
@@ -25,7 +25,7 @@ public class MapParser {
 
     public static void load() {
         try {
-            var pixmap = PixmapIO.readPNG(getPluginResource("block_colors.png"));
+            var pixmap = new Pixmap(getPluginResource("block_colors.png"));
 
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);

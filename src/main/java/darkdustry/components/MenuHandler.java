@@ -2,6 +2,7 @@ package darkdustry.components;
 
 import arc.Events;
 import darkdustry.features.Ranks.Rank;
+import darkdustry.features.SettingsMenu;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
@@ -15,7 +16,7 @@ import static mindustry.Vars.state;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu;
+    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu, settingsMenu;
 
     public static void load() {
         welcomeMenu = Menus.registerMenu((player, option) -> {
@@ -76,6 +77,8 @@ public class MenuHandler {
         ranksRequirementsMenu = -1;
 
         rankIncreaseMenu = -1;
+
+        settingsMenu = Menus.registerMenu(SettingsMenu::changeSettings);
     }
 
     public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {

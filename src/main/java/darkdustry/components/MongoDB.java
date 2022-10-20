@@ -1,6 +1,6 @@
 package darkdustry.components;
 
-import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.*;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import reactor.core.publisher.*;
@@ -41,10 +41,9 @@ public class MongoDB {
         return Flux.fromIterable(uuids).flatMap(MongoDB::getPlayerData);
     }
 
-    public static Mono<InsertOneResult> setPlayerData(PlayerData data) {
+    public static Mono<UpdateResult> setPlayerData(PlayerData data) {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
-                .filter(result -> result.getModifiedCount() < 1)
-                .flatMap(result -> Mono.from(collection.insertOne(data)));
+                .switchIfEmpty(Mono.fromRunnable(() -> collection.insertOne(data)));
     }
 
     public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {
@@ -55,8 +54,10 @@ public class MongoDB {
         public String uuid;
         public String language = "off";
 
+        public boolean alerts = true;
+        public boolean effects = true;
+        public boolean doubleTapHistory = false;
         public boolean welcomeMessage = true;
-        public boolean alertsEnabled = true;
 
         public int playTime = 0;
         public int buildingsBuilt = 0;

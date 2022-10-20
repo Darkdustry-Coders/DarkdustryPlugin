@@ -19,12 +19,12 @@ dependencies {
     compileOnly("com.github.Anuken.Mindustry:server:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.9.1")
-    implementation("net.dv8tion:JDA:5.0.0-alpha.19")
+    implementation("net.dv8tion:JDA:5.0.0-alpha.21")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
     implementation("org.jline:jline-reader:3.21.0")
 
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.23"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
 }
 

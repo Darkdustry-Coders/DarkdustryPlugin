@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.features.Ranks;
+import darkdustry.features.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
@@ -188,10 +188,14 @@ public class ClientCommands {
         });
 
         register("alerts", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
-            data.alertsEnabled = !data.alertsEnabled;
+            data.alerts = !data.alerts;
             setPlayerData(data).subscribe();
-            bundled(player, data.alertsEnabled ? "commands.alerts.enabled" : "commands.alerts.disabled");
+            bundled(player, data.alerts ? "commands.alerts.enabled" : "commands.alerts.disabled");
         }));
+
+        register("settings", (args, player) -> {
+            SettingsMenu.showSettingsMenu(player);
+        });
     }
 
     public static void register(String name, CommandRunner<Player> runner) {

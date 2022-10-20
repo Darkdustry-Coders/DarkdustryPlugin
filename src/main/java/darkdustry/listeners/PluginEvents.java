@@ -69,9 +69,13 @@ public class PluginEvents {
 
             if (data.welcomeMessage) {
                 var locale = Find.locale(event.player.locale);
+                var builder = new StringBuilder();
+
+                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(get("commands." + command + ".description", locale)));
+
                 showMenu(event.player, welcomeMenu, "welcome.header", "welcome.content",
                         new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}},
-                        null, serverName.string(), get("commands.help.description", locale), get("commands.tr.description", locale), get("commands.stats.description", locale));
+                        null, serverName.string(), builder.toString());
             }
 
             app.post(Bot::updateBotStatus);

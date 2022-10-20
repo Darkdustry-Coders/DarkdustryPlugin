@@ -10,6 +10,7 @@ import darkdustry.commands.*;
 import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
+import darkdustry.features.history.History;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
@@ -60,6 +61,7 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         Translator.load();
 
+        History.load();
         Alerts.load();
         Effects.load();
         Ranks.load();

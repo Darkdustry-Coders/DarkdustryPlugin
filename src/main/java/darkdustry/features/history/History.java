@@ -14,6 +14,10 @@ public class History {
         return config.mode.isDefault();
     }
 
+    public static void load() {
+        if (enabled()) welcomeMessageCommands.add("history");
+    }
+
     public static void clear() {
         history = new HistoryStack[world.width() * world.height()];
     }
