@@ -16,6 +16,7 @@ import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
+import static darkdustry.features.DoubleTap.lastTaps;
 import static darkdustry.features.Effects.cache;
 import static darkdustry.features.Ranks.*;
 import static mindustry.net.Administration.Config.serverName;
@@ -89,6 +90,7 @@ public class PluginEvents {
             sendToChat("events.leave", event.player.coloredName());
             sendEmbed(botChannel, ERROR, "@ отключился", event.player.plainName());
 
+            lastTaps.remove(event.player.id);
             cache.remove(event.player.id);
             activeHistory.removeValue(event.player.id);
 
@@ -99,15 +101,17 @@ public class PluginEvents {
         });
 
         Events.on(TapEvent.class, event -> {
-            if (!History.enabled() || !activeHistory.contains(event.player.id) || event.tile == null) return;
+            if (!History.enabled() || event.tile == null) return;
 
-            var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
-            var stack = History.get(event.tile.array());
+            DoubleTap.check(event, () -> {
+                var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
+                var stack = History.get(event.tile.array());
 
-            if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
-            else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+                if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
+                else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-            event.player.sendMessage(builder.toString());
+                event.player.sendMessage(builder.toString());
+            });
         });
 
         Events.on(WithdrawEvent.class, event -> {
