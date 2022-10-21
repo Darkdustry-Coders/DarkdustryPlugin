@@ -8,6 +8,7 @@ import java.util.Locale;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
+import static darkdustry.features.Effects.updateEffects;
 
 public class SettingsMenu {
 
@@ -32,7 +33,10 @@ public class SettingsMenu {
         getPlayerData(player.uuid()).subscribe(data -> {
             switch (option) {
                 case 0 -> data.alerts = !data.alerts;
-                case 1 -> data.effects = !data.effects;
+                case 1 -> {
+                    data.effects = !data.effects;
+                    updateEffects(player, data);
+                }
                 case 2 -> data.doubleTapHistory = !data.doubleTapHistory;
                 case 3 -> data.welcomeMessage = !data.welcomeMessage;
             }

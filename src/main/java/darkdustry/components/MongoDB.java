@@ -1,8 +1,8 @@
 package darkdustry.components;
 
-import com.mongodb.client.result.*;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.features.Ranks.Rank;
 import reactor.core.publisher.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
@@ -65,6 +65,10 @@ public class MongoDB {
         public int gamesPlayed = 0;
 
         public int rank = 0;
+
+        public Rank rank() {
+            return Rank.ranks.get(rank);
+        }
 
         @SuppressWarnings("unused")
         public PlayerData() {}

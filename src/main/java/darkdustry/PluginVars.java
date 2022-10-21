@@ -3,8 +3,7 @@ package darkdustry;
 import arc.struct.*;
 import arc.util.CommandHandler;
 import com.google.gson.*;
-import darkdustry.components.*;
-import darkdustry.components.MongoDB.PlayerData;
+import darkdustry.components.Config;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
@@ -75,9 +74,6 @@ public class PluginVars {
 
     /** Ссылка на API переводчика. */
     public static final String translatorApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
-
-    /** Все данные игроков, находящихся на сервере. Используются там, где слишком много одновременных запросов в базу данных могут сильно понизить производительность. */
-    public static final IntMap<PlayerData> cache = new IntMap<>();
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
     public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "tr", "stats");

@@ -91,14 +91,15 @@ public class DarkdustryPlugin extends Plugin {
                 if (player == null) return;
 
                 data.playTime++;
-                var rank = getRank(data.rank);
+                var rank = data.rank();
 
                 while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                    setRank(player, rank = rank.next);
+                    rank = rank.next;
                     data.rank = rank.id;
+                    updateRank(player, data);
 
                     showMenu(player, rankIncreaseMenu, "events.promotion.header", "events.promotion.content", new String[][] {{"ui.button.close"}},
-                            null, rank.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                            null, rank.next.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
         }, 60, 60);

@@ -17,7 +17,7 @@ import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.DoubleTap.lastTaps;
-import static darkdustry.features.Effects.cache;
+import static darkdustry.features.Effects.*;
 import static darkdustry.features.Ranks.*;
 import static mindustry.net.Administration.Config.serverName;
 
@@ -26,11 +26,11 @@ public class PluginEvents {
     public static void load() {
         Events.on(BlockBuildEndEvent.class, event -> {
             if (!event.unit.isPlayer() || event.tile.build == null) return;
+
             if (History.enabled())
                 History.put(new BlockEntry(event), event.tile);
-            if (event.breaking) return;
 
-            getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
+            if (!event.breaking) getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
                 data.buildingsBuilt++;
                 setPlayerData(data).subscribe();
             });
@@ -59,7 +59,7 @@ public class PluginEvents {
         })));
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
-            setRank(event.player, getRank(data.rank));
+            updateRank(event.player, data);
 
             app.post(() -> Effects.onJoin(event.player));
 
@@ -91,7 +91,7 @@ public class PluginEvents {
             sendEmbed(botChannel, ERROR, "@ отключился", event.player.plainName());
 
             lastTaps.remove(event.player.id);
-            cache.remove(event.player.id);
+            effectsCache.remove(event.player.id);
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);

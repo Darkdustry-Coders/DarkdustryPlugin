@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
@@ -14,7 +13,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Ranks.setRank;
+import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -213,9 +212,9 @@ public class ServerCommands {
             if (notFound(rank, args[1])) return;
 
             getPlayerData(info.id).subscribe(data -> {
-                if (target != null) setRank(target, rank);
-
                 data.rank = rank.id;
+                if (target != null) updateRank(target, data);
+
                 setPlayerData(data).subscribe();
                 Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name);
             });

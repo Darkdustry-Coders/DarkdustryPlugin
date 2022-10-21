@@ -12,7 +12,6 @@ import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.sendAdminRequest;
-import static darkdustry.features.Ranks.getRank;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -73,13 +72,9 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target.uuid()).subscribe(data -> {
-                var rank = getRank(data.rank);
-
-                showMenu(player, statsMenu, "commands.stats.header", "commands.stats.content",
-                        new String[][] {{"ui.button.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
-                        data.playTime, data.buildingsBuilt, data.gamesPlayed);
-            });
+            getPlayerData(target.uuid()).subscribe(data -> showMenu(player, statsMenu, "commands.stats.header", "commands.stats.content",
+                    new String[][] {{"ui.button.close"}}, target.coloredName(), data.rank().localisedName(Find.locale(player.locale)),
+                    data.playTime, data.buildingsBuilt, data.gamesPlayed));
         });
 
         register("rank", (args, player) -> {
@@ -87,7 +82,7 @@ public class ClientCommands {
             if (notFound(player, target)) return;
 
             getPlayerData(target.uuid()).subscribe(data -> {
-                var rank = getRank(data.rank);
+                var rank = data.rank();
                 var locale = Find.locale(player.locale);
 
                 if (!rank.hasNext())

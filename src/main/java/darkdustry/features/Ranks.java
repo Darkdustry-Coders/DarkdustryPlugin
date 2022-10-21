@@ -1,13 +1,14 @@
 package darkdustry.features;
 
 import arc.struct.Seq;
+import darkdustry.components.MongoDB.PlayerData;
 import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
 
 import java.util.Locale;
 
 import static darkdustry.components.Bundle.*;
-import static darkdustry.features.Effects.cache;
+import static darkdustry.features.Effects.updateEffects;
 
 public class Ranks {
 
@@ -73,13 +74,9 @@ public class Ranks {
         }};
     }
 
-    public static Rank getRank(int id) {
-        return Rank.ranks.get(id);
-    }
-
-    public static void setRank(Player player, Rank rank) {
-        player.name(rank.tag + player.getInfo().lastName);
-        // Effects.updateEffects(player);
+    public static void updateRank(Player player, PlayerData data) {
+        player.name(data.rank().tag + player.getInfo().lastName);
+        updateEffects(player, data);
     }
 
     public static class Rank {

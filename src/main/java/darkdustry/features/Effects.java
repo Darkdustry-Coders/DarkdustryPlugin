@@ -4,16 +4,17 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.struct.IntMap;
 import arc.util.Tmp;
+import darkdustry.components.MongoDB.PlayerData;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;
 
-import static darkdustry.PluginVars.cache;
-import static darkdustry.features.Ranks.getRank;
-import static mindustry.Vars.state;
 
 public class Effects {
+
+    public static final IntMap<FxData> effectsCache = new IntMap<>();
 
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8;
 
@@ -57,23 +58,26 @@ public class Effects {
                 ), 0f, Color.white, Tmp.v2.set(player));
     }
 
-    public static void onMove(Player player) {
-        if (state.rules.fog || !cache.get(player.id).effects) return;
+    public static void updateEffects(Player player, PlayerData data) {
+        effectsCache.put(player.id, new FxData(data.rank().effects, data.effects));
+    }
 
-        getRank(cache.get(player.id).rank).effects.move.get(player);
+    public static void onMove(Player player) {
+        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
+        effectsCache.get(player.id).effects.move.get(player);
     }
 
     public static void onJoin(Player player) {
-        if (state.rules.fog || !cache.get(player.id).effects) return;
-
-        getRank(cache.get(player.id).rank).effects.join.get(player);
+        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
+        effectsCache.get(player.id).effects.join.get(player);
     }
 
     public static void onLeave(Player player) {
-        if (state.rules.fog || !cache.get(player.id).effects) return;
-
-        getRank(cache.get(player.id).rank).effects.leave.get(player);
+        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
+        effectsCache.get(player.id).effects.leave.get(player);
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}
+
+    public record FxData(FxPack effects, boolean enabled) {}
 }
