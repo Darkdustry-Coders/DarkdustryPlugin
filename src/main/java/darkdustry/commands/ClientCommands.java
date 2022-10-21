@@ -180,14 +180,6 @@ public class ClientCommands {
 
         register("saves", PageIterator::saves);
 
-        register("history", (args, player) -> {
-            if (activeHistory.removeValue(player.id)) bundled(player, "commands.history.disabled");
-            else {
-                activeHistory.add(player.id);
-                bundled(player, "commands.history.enabled");
-            }
-        });
-
         register("settings", (args, player) -> {
             SettingsMenu.showSettingsMenu(player);
         });

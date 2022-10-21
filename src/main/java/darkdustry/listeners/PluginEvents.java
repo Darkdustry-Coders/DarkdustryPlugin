@@ -92,7 +92,6 @@ public class PluginEvents {
 
             lastTaps.remove(event.player.id);
             cache.remove(event.player.id);
-            activeHistory.removeValue(event.player.id);
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
@@ -103,14 +102,18 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || event.tile == null) return;
 
-            DoubleTap.check(event, () -> {
-                var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
-                var stack = History.get(event.tile.array());
+            getPlayerData(event.player.uuid()).subscribe(data -> {
+                if (!data.doubleTapHistory) return;
 
-                if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
-                else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+                DoubleTap.check(event, () -> {
+                    var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
+                    var stack = History.get(event.tile.array());
 
-                event.player.sendMessage(builder.toString());
+                    if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
+                    else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+
+                    event.player.sendMessage(builder.toString());
+                });
             });
         });
 
@@ -127,7 +130,6 @@ public class PluginEvents {
         Events.on(WorldLoadEvent.class, event -> {
             mapLoadTime = Time.millis();
 
-            activeHistory.clear();
             History.clear();
 
             app.post(Bot::updateBotStatus);
