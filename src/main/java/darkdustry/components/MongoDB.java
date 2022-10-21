@@ -41,9 +41,10 @@ public class MongoDB {
         return Flux.fromIterable(uuids).flatMap(MongoDB::getPlayerData);
     }
 
-    public static Mono<UpdateResult> setPlayerData(PlayerData data) {
+    public static Mono<Void> setPlayerData(PlayerData data) {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
-                .switchIfEmpty(Mono.fromRunnable(() -> collection.insertOne(data)));
+                .switchIfEmpty(Mono.from(collection.insertOne(data)).then(Mono.empty()))
+                .then();
     }
 
     public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {
