@@ -72,8 +72,8 @@ public class PluginVars {
     /** Ссылка на API переводчика. */
     public static final String translatorApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
-    /** Список uuid игроков, просматривающих историю в данный момент. */
-    public static final Seq<String> activeHistory = new Seq<>();
+    /** Список id игроков, просматривающих историю в данный момент. */
+    public static final IntSeq activeHistory = new IntSeq();
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
     public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "tr", "stats");

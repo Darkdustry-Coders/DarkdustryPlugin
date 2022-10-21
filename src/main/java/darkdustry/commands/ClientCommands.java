@@ -12,6 +12,7 @@ import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.sendAdminRequest;
+import static darkdustry.features.Ranks.getRank;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -73,7 +74,7 @@ public class ClientCommands {
             if (notFound(player, target)) return;
 
             getPlayerData(target.uuid()).subscribe(data -> {
-                var rank = Ranks.getRank(data.rank);
+                var rank = getRank(data.rank);
 
                 showMenu(player, statsMenu, "commands.stats.header", "commands.stats.content",
                         new String[][] {{"ui.button.close"}}, target.coloredName(), rank.localisedName(Find.locale(player.locale)),
@@ -86,7 +87,7 @@ public class ClientCommands {
             if (notFound(player, target)) return;
 
             getPlayerData(target.uuid()).subscribe(data -> {
-                var rank = Ranks.getRank(data.rank);
+                var rank = getRank(data.rank);
                 var locale = Find.locale(player.locale);
 
                 if (!rank.hasNext())
@@ -180,18 +181,12 @@ public class ClientCommands {
         register("saves", PageIterator::saves);
 
         register("history", (args, player) -> {
-            if (activeHistory.remove(player.uuid())) bundled(player, "commands.history.disabled");
+            if (activeHistory.removeValue(player.id)) bundled(player, "commands.history.disabled");
             else {
-                activeHistory.add(player.uuid());
+                activeHistory.add(player.id);
                 bundled(player, "commands.history.enabled");
             }
         });
-
-        register("alerts", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
-            data.alerts = !data.alerts;
-            setPlayerData(data).subscribe();
-            bundled(player, data.alerts ? "commands.alerts.enabled" : "commands.alerts.disabled");
-        }));
 
         register("settings", (args, player) -> {
             SettingsMenu.showSettingsMenu(player);

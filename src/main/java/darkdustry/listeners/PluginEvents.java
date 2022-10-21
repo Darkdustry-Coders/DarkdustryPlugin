@@ -17,6 +17,7 @@ import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.cache;
+import static darkdustry.features.Ranks.*;
 import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {
@@ -57,7 +58,7 @@ public class PluginEvents {
         })));
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
-            Ranks.setRank(event.player, Ranks.getRank(data.rank));
+            setRank(event.player, getRank(data.rank));
 
             app.post(() -> Effects.onJoin(event.player));
 
@@ -88,8 +89,8 @@ public class PluginEvents {
             sendToChat("events.leave", event.player.coloredName());
             sendEmbed(botChannel, ERROR, "@ отключился", event.player.plainName());
 
-            cache.remove(event.player.uuid());
-            activeHistory.remove(event.player.uuid());
+            cache.remove(event.player.id);
+            activeHistory.removeValue(event.player.id);
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
@@ -98,7 +99,7 @@ public class PluginEvents {
         });
 
         Events.on(TapEvent.class, event -> {
-            if (!History.enabled() || !activeHistory.contains(event.player.uuid()) || event.tile == null) return;
+            if (!History.enabled() || !activeHistory.contains(event.player.id) || event.tile == null) return;
 
             var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
             var stack = History.get(event.tile.array());

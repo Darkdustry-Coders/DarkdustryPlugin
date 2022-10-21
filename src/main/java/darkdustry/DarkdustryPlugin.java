@@ -22,6 +22,7 @@ import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.features.Ranks.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -90,9 +91,10 @@ public class DarkdustryPlugin extends Plugin {
                 if (player == null) return;
 
                 data.playTime++;
-                var rank = Ranks.getRank(data.rank);
+                var rank = getRank(data.rank);
+
                 while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                    Ranks.setRank(player, rank = rank.next);
+                    setRank(player, rank = rank.next);
                     data.rank = rank.id;
 
                     showMenu(player, rankIncreaseMenu, "events.promotion.header", "events.promotion.content", new String[][] {{"ui.button.close"}},

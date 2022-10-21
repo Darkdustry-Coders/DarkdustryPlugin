@@ -9,13 +9,14 @@ import mindustry.maps.MapException;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.WorldReloader;
 
-import java.time.*;
 import java.util.Locale;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
+import static java.time.Duration.ofMillis;
+import static java.time.Instant.ofEpochMilli;
 import static mindustry.Vars.*;
 
 public class Utils {
@@ -55,11 +56,11 @@ public class Utils {
     }
 
     public static String formatHistoryDate(long time) {
-        return historyFormat.format(Instant.ofEpochMilli(time));
+        return historyFormat.format(ofEpochMilli(time));
     }
 
     public static String formatKickDate(long time) {
-        return kickFormat.format(Instant.ofEpochMilli(time));
+        return kickFormat.format(ofEpochMilli(time));
     }
 
     public static String formatDuration(long time) {
@@ -67,7 +68,7 @@ public class Utils {
     }
 
     public static String formatDuration(long time, Locale locale) {
-        var duration = Duration.ofMillis(time);
+        var duration = ofMillis(time);
         var builder = new StringBuilder();
         OrderedMap.<String, Number>of(
                 "time.days", duration.toDaysPart(),

@@ -4,17 +4,20 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
-import arc.struct.ObjectMap;
+import arc.struct.IntMap;
 import arc.util.Tmp;
+import darkdustry.components.MongoDB;
+import darkdustry.components.MongoDB.PlayerData;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;
 
+import static darkdustry.features.Ranks.getRank;
 import static mindustry.Vars.state;
 
 public class Effects {
 
-    public static final ObjectMap<String, FxPack> cache = new ObjectMap<>();
+    public static final IntMap<FxPack> cache = new IntMap<>();
 
     public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8;
 
@@ -51,27 +54,31 @@ public class Effects {
 
     public static void particles(Player player) {
         for (int deg = 0; deg < 180; deg += 5)
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
                 on(Fx.regenSuppressSeek, Tmp.v1.set(player).add(
                         Mathf.cosDeg(deg + 120f * i) * deg,
                         Mathf.sinDeg(deg + 120f * i) * deg
                 ), 0f, Color.white, Tmp.v2.set(player));
-            }
+    }
+
+    public static void updateEffects(Player player, PlayerData data) {
+        if (data.effects) cache.put(player.id, getRank(data.rank).effects);
+        else cache.remove(player.id);
     }
 
     public static void onMove(Player player) {
-        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
-        cache.get(player.uuid()).move.get(player);
+        if (state.rules.fog || !cache.containsKey(player.id)) return;
+        cache.get(player.id).move.get(player);
     }
 
     public static void onJoin(Player player) {
-        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
-        cache.get(player.uuid()).join.get(player);
+        if (state.rules.fog || !cache.containsKey(player.id)) return;
+        cache.get(player.id).join.get(player);
     }
 
     public static void onLeave(Player player) {
-        if (state.rules.fog || !cache.containsKey(player.uuid())) return;
-        cache.get(player.uuid()).leave.get(player);
+        if (state.rules.fog || !cache.containsKey(player.id)) return;
+        cache.get(player.id).leave.get(player);
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}

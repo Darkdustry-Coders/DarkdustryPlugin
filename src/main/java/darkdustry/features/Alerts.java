@@ -35,8 +35,6 @@ public class Alerts {
     public static void load() {
         if (!enabled()) return;
 
-        welcomeMessageCommands.add("alerts");
-
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
 
@@ -49,31 +47,25 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        var name = event.builder.getPlayer().coloredName();
         var block = event.builder.buildPlan().block;
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
-            if (data.alerts) {
-                var player = Find.playerByUuid(data.uuid);
-                if (player != null)
-                    bundled(player, "alerts.dangerous-building", name, Icons.get(block), event.tile.x, event.tile.y);
-            }
+            var player = Find.playerByUuid(data.uuid);
+            if (player != null && data.alerts)
+                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(block), event.tile.x, event.tile.y);
         }).subscribe();
     }
 
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        var name = event.player.coloredName();
         var block = event.tile.block;
         var item = event.item;
 
         getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
-            if (data.alerts) {
-                var player = Find.playerByUuid(data.uuid);
-                if (player != null)
-                    bundled(player, "alerts.dangerous-deposit", name, Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
-            }
+            var player = Find.playerByUuid(data.uuid);
+            if (player != null && data.alerts)
+                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());
         }).subscribe();
     }
 

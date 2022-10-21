@@ -2,29 +2,32 @@ package darkdustry.features;
 
 import darkdustry.utils.Find;
 import mindustry.gen.Player;
-import reactor.core.publisher.Mono;
 
-import static darkdustry.components.Bundle.format;
+import java.util.Locale;
+
+import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 
 public class SettingsMenu {
 
-    // TODO
     public static void showSettingsMenu(Player player) {
+        getPlayerData(player.uuid()).subscribe(data -> showSettingsMenu(player, data));
+    }
+
+    public static void showSettingsMenu(Player player, PlayerData data) {
         var locale = Find.locale(player.locale);
-        getPlayerData(player.uuid()).subscribe(data -> {
-            showMenu(player, settingsMenu, "commands.settings.header", "commands.settings.content", new String[][] {
-                    {format("settings.alerts", locale, data.alerts)},
-                    {format("settings.effects", locale, data.effects)},
-                    {format("settings.doubleTapHistory", locale, data.doubleTapHistory)},
-                    {format("settings.welcomeMessage", locale, data.welcomeMessage)},
-            });
+        showMenu(player, settingsMenu, "commands.settings.header", "commands.settings.content", new String[][] {
+                {format("settings.alerts", locale, coloredBool(data.alerts, locale))},
+                {format("settings.effects", locale, coloredBool(data.effects, locale))},
+                {format("settings.doubleTapHistory", locale, coloredBool(data.doubleTapHistory, locale))},
+                {format("settings.welcomeMessage", locale, coloredBool(data.welcomeMessage, locale))},
+                {"ui.button.close"}
         });
     }
 
     public static void changeSettings(Player player, int option) {
-        if (option == 4) return;
+        if (option == -1 || option == 4) return; // Меню закрыто
 
         getPlayerData(player.uuid()).subscribe(data -> {
             switch (option) {
@@ -34,7 +37,12 @@ public class SettingsMenu {
                 case 3 -> data.welcomeMessage = !data.welcomeMessage;
             }
 
-            setPlayerData(data).subscribe(result -> showSettingsMenu(player));
+            setPlayerData(data).subscribe();
+            showSettingsMenu(player, data);
         });
+    }
+
+    public static String coloredBool(boolean value, Locale locale) {
+        return get(value ? "settings.on" : "settings.off", locale);
     }
 }

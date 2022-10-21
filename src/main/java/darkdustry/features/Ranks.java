@@ -79,7 +79,7 @@ public class Ranks {
 
     public static void setRank(Player player, Rank rank) {
         player.name(rank.tag + player.getInfo().lastName);
-        cache.put(player.uuid(), rank.effects);
+        // Effects.updateEffects(player);
     }
 
     public static class Rank {

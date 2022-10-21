@@ -14,6 +14,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
+import static darkdustry.features.Ranks.setRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -212,7 +213,7 @@ public class ServerCommands {
             if (notFound(rank, args[1])) return;
 
             getPlayerData(info.id).subscribe(data -> {
-                if (target != null) Ranks.setRank(target, rank);
+                if (target != null) setRank(target, rank);
 
                 data.rank = rank.id;
                 setPlayerData(data).subscribe();
