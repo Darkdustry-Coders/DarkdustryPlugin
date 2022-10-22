@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks.Rank;
+import darkdustry.features.Ranks;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -221,8 +221,8 @@ public class ServerCommands {
         });
 
         serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Rank.ranks.size);
-            Rank.ranks.each(rank -> Log.info("  @ - @", rank.id, rank.name));
+            Log.info("Ranks: (@)", Ranks.all.size);
+            Ranks.all.each(rank -> Log.info("  @ - @", rank.id, rank.name));
         });
     }
 }

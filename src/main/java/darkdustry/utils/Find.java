@@ -17,7 +17,7 @@ import java.util.Locale;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.translatorLanguages;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.features.Ranks.Rank.ranks;
+import static darkdustry.features.Ranks.all;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -67,7 +67,7 @@ public class Find {
     }
 
     public static Rank rank(String name) {
-        return canParsePositiveInt(name) ? ranks.get(parseInt(name)) : ranks.find(rank -> rank.name.equalsIgnoreCase(name));
+        return canParsePositiveInt(name) ? all.get(parseInt(name)) : all.find(rank -> rank.name.equalsIgnoreCase(name));
     }
 
     public static Map map(String name) {

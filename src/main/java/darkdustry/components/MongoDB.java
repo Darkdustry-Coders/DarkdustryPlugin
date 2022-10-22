@@ -2,6 +2,7 @@ package darkdustry.components;
 
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import reactor.core.publisher.*;
 
@@ -67,7 +68,7 @@ public class MongoDB {
         public int rank = 0;
 
         public Rank rank() {
-            return Rank.ranks.get(rank);
+            return Ranks.all.get(rank);
         }
 
         @SuppressWarnings("unused")

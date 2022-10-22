@@ -19,10 +19,10 @@ public class SettingsMenu {
     public static void showSettingsMenu(Player player, PlayerData data) {
         var locale = Find.locale(player.locale);
         showMenu(player, settingsMenu, "commands.settings.header", "commands.settings.content", new String[][] {
-                {format("settings.alerts", locale, coloredBool(data.alerts, locale))},
-                {format("settings.effects", locale, coloredBool(data.effects, locale))},
-                {format("settings.doubleTapHistory", locale, coloredBool(data.doubleTapHistory, locale))},
-                {format("settings.welcomeMessage", locale, coloredBool(data.welcomeMessage, locale))},
+                {button("settings.alerts", locale, data.alerts)},
+                {button("settings.effects", locale, data.effects)},
+                {button("settings.doubleTapHistory", locale, data.doubleTapHistory)},
+                {button("settings.welcomeMessage", locale, data.welcomeMessage)},
                 {"ui.button.close"}
         });
     }
@@ -46,7 +46,7 @@ public class SettingsMenu {
         });
     }
 
-    public static String coloredBool(boolean value, Locale locale) {
-        return get(value ? "settings.on" : "settings.off", locale);
+    public static String button(String key, Locale locale, boolean value) {
+        return format(key, locale, get(value ? "settings.on" : "settings.off", locale));
     }
 }

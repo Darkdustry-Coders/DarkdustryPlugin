@@ -26,7 +26,7 @@ public class ConfigEntry implements HistoryEntry {
     public final long time;
 
     public ConfigEntry(ConfigEvent event) {
-        this.name = event.player.coloredName();
+        this.name = event.player.name;
         this.blockID = event.tile.block.id;
         this.value = getValue(event);
         this.connect = value instanceof Point2 point && getConnect(event, point);

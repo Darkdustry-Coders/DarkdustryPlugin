@@ -16,13 +16,13 @@ public class RotateEntry implements HistoryEntry {
 
     public final String name;
     public final short blockID;
-    public final int rotation;
+    public final byte rotation;
     public final long time;
 
     public RotateEntry(PlayerAction action) {
-        this.name = action.player.coloredName();
-        this.blockID = action.tile.build.block.id;
-        this.rotation = action.rotation;
+        this.name = action.player.name;
+        this.blockID = action.tile.blockID();
+        this.rotation = (byte) action.rotation;
         this.time = Time.millis();
     }
 

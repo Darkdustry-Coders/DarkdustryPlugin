@@ -1,8 +1,7 @@
 package darkdustry.components;
 
 import arc.Events;
-import darkdustry.features.Ranks.Rank;
-import darkdustry.features.SettingsMenu;
+import darkdustry.features.*;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
@@ -70,7 +69,7 @@ public class MenuHandler {
             if (option != 1) return;
 
             var builder = new StringBuilder();
-            Rank.ranks.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
+            Ranks.all.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
             showMenu(player, ranksRequirementsMenu, "commands.rank.requirements.header", builder.toString(), new String[][] {{"ui.button.close"}});
         });
 

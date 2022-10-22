@@ -201,7 +201,7 @@ public class Checks {
     }
 
     public static boolean notMap(SlashCommandInteractionEvent event, Fi file) {
-        return check(!SaveIO.isSaveValid(file), () -> {
+        return check(!SaveIO.isSaveValid(file) && file.delete(), () -> {
             event.replyEmbeds(error(":link: Неверное вложение.", "Файл поврежден или не является картой!").build()).queue();
             file.delete();
         });

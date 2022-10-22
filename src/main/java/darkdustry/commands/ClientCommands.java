@@ -62,6 +62,8 @@ public class ClientCommands {
             }
         }));
 
+        register("settings", (args, player) -> SettingsMenu.showSettingsMenu(player));
+
         register("players", PageIterator::players);
 
         register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort,
@@ -174,10 +176,6 @@ public class ClientCommands {
         register("maps", PageIterator::maps);
 
         register("saves", PageIterator::saves);
-
-        register("settings", (args, player) -> {
-            SettingsMenu.showSettingsMenu(player);
-        });
     }
 
     public static void register(String name, CommandRunner<Player> runner) {

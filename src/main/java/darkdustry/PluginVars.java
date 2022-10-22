@@ -58,7 +58,7 @@ public class PluginVars {
     public static final int maxHistoryCapacity = 6;
 
     /** Максимально допустимое количество игроков с одинаковыми IP адресами. */
-    public static final int maxIdenticalIPs = 3;
+    public static final int maxIdenticalIPs = 2;
 
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;
@@ -76,7 +76,7 @@ public class PluginVars {
     public static final String translatorApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
-    public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "tr", "stats");
+    public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "tr", "stats", "settings");
 
     /** Список игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
@@ -112,6 +112,6 @@ public class PluginVars {
     /** Точное время запуска сервера и загрузки последней карты. */
     public static long serverLoadTime, mapLoadTime;
 
-    /** Кэшированные хэндлеры, которые использовались для регистрации команд. */
+    /** Кэшированные хандлеры, которые использовались для регистрации команд. */
     public static CommandHandler clientCommands, serverCommands;
 }

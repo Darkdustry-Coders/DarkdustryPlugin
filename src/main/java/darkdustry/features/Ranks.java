@@ -12,6 +12,8 @@ import static darkdustry.features.Effects.updateEffects;
 
 public class Ranks {
 
+    public static final Seq<Rank> all = new Seq<>();
+
     public static Rank player, active, hyperActive, veteran, master, contentCreator, admin, console, owner;
 
     public static void load() {
@@ -80,8 +82,6 @@ public class Ranks {
     }
 
     public static class Rank {
-        public static final Seq<Rank> ranks = new Seq<>();
-
         public final int id;
         public String tag;
         public String name;
@@ -91,8 +91,8 @@ public class Ranks {
         public Rank next;
 
         public Rank() {
-            this.id = ranks.size;
-            ranks.add(this);
+            this.id = all.size;
+            all.add(this);
         }
 
         public boolean hasNext() {

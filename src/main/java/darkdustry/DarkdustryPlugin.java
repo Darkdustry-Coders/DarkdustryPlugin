@@ -4,7 +4,7 @@
 package darkdustry;
 
 import arc.graphics.*;
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -62,7 +62,6 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         Translator.load();
 
-        History.load();
         Alerts.load();
         Effects.load();
         Ranks.load();

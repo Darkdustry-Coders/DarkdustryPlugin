@@ -16,14 +16,14 @@ public class BlockEntry implements HistoryEntry {
 
     public final String name;
     public final short blockID;
-    public final int rotation;
+    public final byte rotation;
     public final boolean breaking;
     public final long time;
 
     public BlockEntry(BlockBuildEndEvent event) {
-        this.name = event.unit.getPlayer().coloredName();
+        this.name = event.unit.getPlayer().name;
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
-        this.rotation = event.tile.build.rotation;
+        this.rotation = (byte) event.tile.build.rotation;
         this.breaking = event.breaking;
         this.time = Time.millis();
     }
