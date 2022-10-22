@@ -4,13 +4,12 @@
 package darkdustry;
 
 import arc.graphics.*;
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
-import darkdustry.features.history.History;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
@@ -22,7 +21,7 @@ import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.getPlayersData;
-import static darkdustry.features.Ranks.*;
+import static darkdustry.features.Ranks.updateRank;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")

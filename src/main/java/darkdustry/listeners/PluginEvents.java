@@ -17,8 +17,8 @@ import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.DoubleTap.lastTaps;
-import static darkdustry.features.Effects.*;
-import static darkdustry.features.Ranks.*;
+import static darkdustry.features.Effects.effectsCache;
+import static darkdustry.features.Ranks.updateRank;
 import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {
