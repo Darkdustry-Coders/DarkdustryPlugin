@@ -8,7 +8,7 @@ import mindustry.gen.*;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.defaultLanguage;
 import static darkdustry.utils.Utils.getPluginResource;
 
 public class Bundle {

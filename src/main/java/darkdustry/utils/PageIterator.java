@@ -7,13 +7,15 @@ import mindustry.gen.*;
 import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.awt.Color;
+
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.discord.Bot.*;
-import static java.util.Objects.requireNonNull;
+import static darkdustry.discord.Bot.Palette.*;
+import static darkdustry.discord.Bot.embed;
 import static mindustry.Vars.*;
 
 // Страшно, но очень полезно.
@@ -87,10 +89,10 @@ public class PageIterator {
     }
 
     private static <T> void discord(SlashCommandInteractionEvent event, Seq<T> content, Func<Seq<T>, String> header, Cons3<StringBuilder, Integer, T> cons) {
-        int page = event.getOption("page") != null ? requireNonNull(event.getOption("page")).getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+        int page = event.getOption("page") != null ? event.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
-            event.replyEmbeds(error(":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages).build()).queue();
+            event.replyEmbeds(embed(error, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages).build()).queue();
             return;
         }
 
@@ -98,7 +100,7 @@ public class PageIterator {
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder.append("\n"), i, content.get(i));
 
-        event.replyEmbeds(neutral(header.get(content))
+        event.replyEmbeds(embed(Color.decode("#2c94ec"), header.get(content))
                 .setDescription(builder.toString())
                 .setFooter(format("Страница @ / @", page, pages)).build()).queue();
     }

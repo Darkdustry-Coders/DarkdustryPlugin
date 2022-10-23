@@ -3,40 +3,43 @@ package darkdustry.discord;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
 import darkdustry.utils.Find;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
-import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 
 import java.awt.Color;
 import java.util.EnumSet;
+import java.util.function.Consumer;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.config;
 import static darkdustry.commands.DiscordCommands.datas;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.*;
-import static darkdustry.features.Authme.menu;
 import static mindustry.Vars.state;
+import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static net.dv8tion.jda.api.entities.Activity.watching;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
-import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;
 
 public class Bot {
 
     public static JDA jda;
 
-    public static Guild botGuild;
     public static Role adminRole;
-    public static MessageChannel botChannel, adminChannel;
+    public static MessageChannel botChannel, adminChannel, bansChannel;
 
     public static void connect() {
         try {
@@ -44,13 +47,9 @@ public class Bot {
                     .enableIntents(GUILD_MEMBERS, MESSAGE_CONTENT)
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
-            botGuild = jda.getGuildById(config.discordGuildId);
-
-            if (botGuild != null) {
-                adminRole = botGuild.getRoleById(config.discordAdminRoleId);
-                botChannel = botGuild.getTextChannelById(config.discordBotChannelId);
-                adminChannel = botGuild.getTextChannelById(config.discordAdminChannelId);
-            }
+            adminRole = jda.getRoleById(config.discordAdminRoleId);
+            botChannel = jda.getTextChannelById(config.discordBotChannelId);
+            adminChannel = jda.getTextChannelById(config.discordAdminChannelId);
 
             RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
 
@@ -90,20 +89,9 @@ public class Bot {
                     Integer.toHexString(member.getColorRaw()),
                     roles.isEmpty() ? format("discord.chat.no-role", locale) : roles.get(0).getName(),
                     member.getEffectiveName(),
-                    reply != null ? format("discord.chat.reply", locale, botGuild.retrieveMember(reply.getAuthor()).complete().getEffectiveName()) : "",
+                    reply != null ? format("discord.chat.reply", locale, reply.getAuthor().getName()) : "",
                     message.getContentDisplay());
         });
-    }
-
-    public static void sendAdminRequest(Player player) {
-        if (adminChannel == null || !adminChannel.canTalk()) return;
-
-        adminChannel.sendMessageEmbeds(neutral("Запрос на получение прав администратора.")
-                .addField("Никнейм:", player.plainName(), true)
-                .addField("UUID:", player.uuid(), true)
-                .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
-                .build()
-        ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.getInfo()));
     }
 
     public static boolean isAdmin(Member member) {
@@ -120,44 +108,27 @@ public class Bot {
             channel.sendMessage(format(text, values)).queue();
     }
 
-    public static void sendEmbed(MessageChannel channel, Color color, String text, Object... values) {
+    public static void sendEmbed(MessageChannel channel, Color color, String title, Object... values) {
         if (channel != null && channel.canTalk())
-            channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(text, values)).build()).queue();
+            channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(title, values)).build()).queue();
     }
 
-    public static EmbedBuilder success(String title) {
-        return new EmbedBuilder().setColor(SUCCESS).setTitle(title);
+    public static EmbedBuilder embed(Color color, String title) {
+        return new EmbedBuilder().setColor(color).setTitle(title);
     }
 
-    public static EmbedBuilder success(String title, String description, Object... values) {
-        return success(title).setDescription(format(description, values));
+    public static EmbedBuilder embed(Color color, String title, Object... values) {
+        return embed(color, format(title, values));
     }
 
-    public static EmbedBuilder info(String title) {
-        return new EmbedBuilder().setColor(INFO).setTitle(title);
-    }
-
-    public static EmbedBuilder info(String title, String description, Object... values) {
-        return info(title).setDescription(format(description, values));
-    }
-
-    public static EmbedBuilder error(String title) {
-        return new EmbedBuilder().setColor(ERROR).setTitle(title);
-    }
-
-    public static EmbedBuilder error(String title, String description, Object... values) {
-        return error(title).setDescription(format(description, values));
-    }
-
-    public static EmbedBuilder neutral(String title) {
-        return new EmbedBuilder().setColor(NEUTRAL).setTitle(title);
+    public static EmbedBuilder embed(Color color, String title, String description, Object... values) {
+        return embed(color, title).setDescription(format(description, values));
     }
 
     public static class Palette {
         public static final Color
-                SUCCESS = Color.decode("#3cfb63"),
-                INFO = Color.decode("#fcf47c"),
-                ERROR = Color.decode("#f93c3c"),
-                NEUTRAL = Color.decode("#2c94ec");
+                success = Color.decode("#3cfb63"),
+                info = Color.decode("#fcf47c"),
+                error = Color.decode("#f93c3c");
     }
 }

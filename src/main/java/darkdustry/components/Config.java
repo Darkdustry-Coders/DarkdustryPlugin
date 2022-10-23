@@ -24,9 +24,6 @@ public class Config {
     /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /** ID сервера в Discord. */
-    public long discordGuildId = 0L;
-
     /** ID канала в Discord, куда отправляются все сообщения. */
     public long discordBotChannelId = 0L;
 

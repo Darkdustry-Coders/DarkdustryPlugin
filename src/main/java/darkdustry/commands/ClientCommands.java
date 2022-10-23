@@ -11,7 +11,6 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
-import static darkdustry.discord.Bot.sendAdminRequest;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -36,17 +35,17 @@ public class ClientCommands {
         register("tr", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
-                case "list", "all" -> {
+                case "list" -> {
                     var builder = new StringBuilder(format("commands.tr.list", Find.locale(player.locale)));
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
                     Call.infoMessage(player.con, builder.toString());
                 }
-                case "off", "disable" -> {
+                case "off" -> {
                     data.language = "off";
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.disabled");
                 }
-                case "auto", "detect" -> {
+                case "auto" -> {
                     data.language = notNullElse(Find.language(player.locale), defaultLanguage);
                     setPlayerData(data).subscribe();
                     bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
@@ -123,7 +122,7 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player) || isOnCooldown(player, "login")) return;
 
-            sendAdminRequest(player);
+            Authme.sendAdminRequest(player);
             bundled(player, "commands.login.sent");
             Cooldowns.run(player.uuid(), "login");
         });
