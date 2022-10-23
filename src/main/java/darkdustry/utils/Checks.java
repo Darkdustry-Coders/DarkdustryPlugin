@@ -163,7 +163,7 @@ public class Checks {
     }
 
     public static boolean alreadyVoted(Player player, VoteSession session) {
-        return check(session.voted.containsKey(player.uuid()), player, "commands.already-voted");
+        return check(session.voted.containsKey(player.id), player, "commands.already-voted");
     }
 
     public static boolean alreadySynced(Player player) {

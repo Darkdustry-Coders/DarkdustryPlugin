@@ -25,7 +25,7 @@ public class VoteKick extends VoteSession {
 
     @Override
     public void left(Player player) {
-        if (voted.remove(player.uuid()) != 0)
+        if (voted.remove(player.id) != 0)
             sendToChat("commands.votekick.left", player.coloredName(), votes(), votesRequired());
         if (target == player) success();
     }

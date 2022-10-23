@@ -91,8 +91,7 @@ public class Ranks {
         public Rank next;
 
         public Rank() {
-            this.id = all.size;
-            all.add(this);
+            this.id = all.add(this).size - 1;
         }
 
         public boolean hasNext() {
@@ -104,7 +103,7 @@ public class Ranks {
         }
 
         public String localisedName(Locale locale) {
-            return tag + get("ranks." + name + ".name", "", locale);
+            return tag + get("ranks." + name + ".name", name, locale);
         }
 
         public String localisedDesc(Locale locale) {
