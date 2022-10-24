@@ -12,7 +12,7 @@ import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
 import static arc.util.Strings.canParsePositiveInt;
@@ -177,28 +177,28 @@ public class Checks {
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
         return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(
-                embed(error, ":no_entry_sign: Это действие доступно только для админов.").build()
+                new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: Missing permissions.").build()
         ).setEphemeral(true).queue());
     }
 
-    public static boolean notHosting(SlashCommandInteractionEvent event) {
-        return check(state.isMenu(), event, ":gear: Сервер не запущен.", ":thinking: Почему?");
+    public static boolean notAdmin(Context context) {
+        return check(!isAdmin(context.event().getMember()), context, ":no_entry_sign: Missing permissions!");
     }
 
-    public static boolean notFound(SlashCommandInteractionEvent event, Map map) {
-        return check(map == null, event, ":mag: Карта не найдена.", "Проверь, правильно ли введено название.");
+    public static boolean notHosting(Context context) {
+        return check(state.isMenu(), context, ":gear: Server not running.");
     }
 
-    public static boolean notMap(SlashCommandInteractionEvent event) {
-        var attachment = event.getOption("map").getAsAttachment();
-        return check(!mapExtension.equals(attachment.getFileExtension()), event, ":link: Неверное вложение.", "Тебе нужно прикрепить один файл с расширением **.msav!**");
+    public static boolean notFound(Context context, Map map, String name) {
+        return check(map == null, context, ":mag: No map **@** found.", name);
     }
 
-    public static boolean notMap(SlashCommandInteractionEvent event, Fi file) {
-        return check(!SaveIO.isSaveValid(file), () -> {
-            event.replyEmbeds(embed(error, ":link: Неверное вложение.", "Файл поврежден или не является картой!").build()).queue();
-            file.delete();
-        });
+    public static boolean notMap(Context context) {
+        return check(context.message().getAttachments().size() != 1 || !mapExtension.equals(context.message().getAttachments().get(0).getFileExtension()), context, ":link: You need to attach a valid **.@** file!", mapExtension);
+    }
+
+    public static boolean notMap(Context context, Fi file) {
+        return check(!SaveIO.isSaveValid(file) && file.delete(), context, ":link: You need to attach a valid **.@** file!", mapExtension);
     }
 
     // endregion
@@ -217,8 +217,8 @@ public class Checks {
         return check(result, () -> bundled(player, key, values));
     }
 
-    private static boolean check(boolean result, SlashCommandInteractionEvent event, String title, String description, Object... values) {
-        return check(result, () -> event.replyEmbeds(embed(error, title, description, values).build()).queue());
+    private static boolean check(boolean result, Context context, String title, Object... values) {
+        return check(result, () -> context.error(title, values).queue());
     }
 
     // endregion

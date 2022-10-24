@@ -1,15 +1,13 @@
 package darkdustry.discord;
 
-import darkdustry.DarkdustryPlugin;
-import darkdustry.commands.DiscordCommands;
 import darkdustry.features.Authme;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static arc.Core.app;
-import static darkdustry.PluginVars.loginWaiting;
+import static arc.util.CommandHandler.ResponseType.valid;
+import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.notAdmin;
 
@@ -17,15 +15,13 @@ public class DiscordListeners extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.getMessage().getContentDisplay().isEmpty()) return;
-        if (event.isFromGuild() && event.getChannel() == botChannel) // можно кнч объединить в один if, но он будет просто огромным
-            app.post(() -> sendMessageToGame(event.getMember(), event.getMessage()));
-    }
+        if (event.getAuthor().isBot() || !event.isFromGuild() || event.getMessage().getContentRaw().isEmpty()) return;
 
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        DarkdustryPlugin.discord("@ used /@", event.getMember().getEffectiveName(), event.getName());
-        DiscordCommands.commands.get(event.getName()).get(event);
+        var response = discordCommands.handleMessage(event.getMessage().getContentRaw(), new Context(event));
+        if (response.type == valid) return;
+
+        if (event.isFromGuild() && event.getChannel() == botChannel)
+            app.post(() -> sendMessageToGame(event.getMember(), event.getMessage()));
     }
 
     @Override

@@ -67,7 +67,7 @@ public class PluginEvents {
             sendToChat("events.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
-            sendEmbed(botChannel, success, "@ присоединился", event.player.plainName());
+            sendEmbed(botChannel, success, "@ joined", event.player.plainName());
 
             if (data.welcomeMessage) {
                 var locale = Find.locale(event.player.locale);
@@ -88,7 +88,7 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.leave", event.player.coloredName());
-            sendEmbed(botChannel, error, "@ отключился", event.player.plainName());
+            sendEmbed(botChannel, error, "@ left", event.player.plainName());
 
             lastTaps.remove(event.player.id);
             effectsCache.remove(event.player.id);
@@ -122,7 +122,7 @@ public class PluginEvents {
                 History.put(new WithdrawEntry(event), event.tile.tile);
         });
 
-        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Сервер запущен"));
+        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();

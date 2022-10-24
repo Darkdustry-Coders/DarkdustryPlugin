@@ -2,113 +2,99 @@ package darkdustry.commands;
 
 import arc.Events;
 import arc.files.Fi;
-import arc.func.Cons;
-import arc.struct.*;
+import arc.util.CommandHandler;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import static arc.Core.*;
-import static darkdustry.PluginVars.config;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.hexed;
 import static darkdustry.components.MapParser.*;
-import static darkdustry.discord.Bot.*;
-import static darkdustry.discord.Bot.Palette.*;
+import static darkdustry.discord.Bot.Context;
+import static darkdustry.discord.Bot.Palette.info;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.stripAll;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.serverName;
-import static net.dv8tion.jda.api.Permission.VIEW_AUDIT_LOGS;
-import static net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions.*;
-import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 import static net.dv8tion.jda.api.utils.FileUpload.fromData;
 
 public class DiscordCommands {
 
-    public static final ObjectMap<String, Cons<SlashCommandInteractionEvent>> commands = new ObjectMap<>();
-    public static final Seq<SlashCommandData> datas = new Seq<>();
-
     public static void load() {
-        register("status", "Display server status.", event -> {
-            if (notHosting(event)) return;
+        discordCommands = new CommandHandler(config.discordBotPrefix);
 
-            var embed = embed(info, stripAll(serverName.string()),
-                    """
-                            Players: @
-                            Map: @
-                            Wave: @
-                            TPS: @
-                            RAM consumption: @ MB
-                            """, Groups.player.size(), state.map.name(), state.wave,
-                    graphics.getFramesPerSecond(), app.getJavaHeap() / 1024 / 1024)
-                    .setImage("attachment://minimap.png");
-
-            event.replyEmbeds(embed.build()).queue(hook ->
-                    hook.editOriginalAttachments(fromData(renderMinimap(), "minimap.png")).queue());
+        discordCommands.<Context>register("help", "List of all commands", (args, context) -> {
+            var builder = new StringBuilder();
+            discordCommands.getCommandList().each(command -> builder.append(discordCommands.getPrefix()).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " *" + command.paramText + "*" : "").append(" — ").append(command.description).append("\n"));
+            context.info(":newspaper: All available commands:", builder.toString()).queue();
         });
 
-        register("maps", "List of all maps.", PageIterator::maps)
-                .addOption(INTEGER, "page", "Maps list page.");
+        discordCommands.<Context>register("status", "Display server status.", (args, context) -> {
+            if (notHosting(context)) return;
 
-        register("players", "List of all players.", PageIterator::players)
-                .addOption(INTEGER, "page", "Players list page.");
+            context.info(stripAll(":satellite: " + serverName.string()), "Players: @\nUnits: @\nMap: @\nWave: @\nTPS: @\nRAM usage: @ MB", fromData(renderMinimap(), "minimap.png"), Groups.player.size(), Groups.unit.size(), state.map.name(), state.wave, graphics.getFramesPerSecond(), app.getJavaHeap() / 1024 / 1024).queue();
+        });
 
-        register("restart", "Restart the server.", event -> event.replyEmbeds(embed(info, ":arrows_counterclockwise:  Сервер перезапускается...").build()).queue(hook -> DarkdustryPlugin.exit()))
-                .setDefaultPermissions(DISABLED);
+        discordCommands.<Context>register("maps", "[page]", "List of all maps.", PageIterator::maps);
+
+        discordCommands.<Context>register("players", "[page]", "List of all players.", PageIterator::players);
+
+        discordCommands.<Context>register("restart", "Restart the server.", (args, context) -> {
+            if (notAdmin(context)) return;
+
+            context.info(":arrows_counterclockwise: Server is restarting...").queue(message -> DarkdustryPlugin.exit());
+        });
 
         if (config.mode == hexed) return;
 
-        register("map", "Get a map from the server.", event -> {
-            var map = Find.map(event.getOption("map").getAsString());
-            if (notFound(event, map)) return;
+        discordCommands.<Context>register("map", "<map...>", "Get a map from the server.", (args, context) -> {
+            var map = Find.map(args[0]);
+            if (notFound(context, map, args[0])) return;
 
-            var embed = embed(info, map.name(), map.description())
+            var embed = new EmbedBuilder()
+                    .setColor(info)
+                    .setTitle(map.name())
+                    .setDescription(map.description())
                     .setAuthor(map.author())
                     .setFooter(map.width + "x" + map.height)
                     .setImage("attachment://map.png");
 
-            event.replyEmbeds(embed.build()).queue(hook ->
-                    hook.editOriginalAttachments(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue());
-        }).addOption(STRING, "map", "Name of the map.", true);
+            context.message().replyEmbeds(embed.build()).addFiles(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue();
+        });
 
-        register("addmap", "Add a map to the server.", event -> {
-            if (notMap(event)) return;
+        discordCommands.<Context>register("uploadmap", "Upload a map to the server.", (args, context) -> {
+            if (notAdmin(context) || notMap(context)) return;
 
-            var attachment = event.getOption("map").getAsAttachment();
-            attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenAccept(file -> {
-                if (notMap(event, new Fi(file))) return;
+            var attachment = context.message().getAttachments().get(0);
+            attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenApply(Fi::new).thenAccept(fi -> {
+                if (notMap(context, fi)) return;
 
                 maps.reload();
 
-                event.replyEmbeds(embed(success, ":map: Map uploaded to the server.", "Map file: @", file.getName()).build()).queue();
+                context.success(":map: Map **@** uploaded to the server.", fi.name()).queue();
             });
-        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS))
-                .addOption(ATTACHMENT, "map", "Map file to be uploaded to the server.", true);
+        });
 
-        register("removemap", "Remove a map from the server.", event -> {
-            var map = Find.map(event.getOption("map").getAsString());
-            if (notFound(event, map)) return;
+        discordCommands.<Context>register("removemap", "<map...>", "Remove a map from the server.", (args, context) -> {
+            if (notAdmin(context)) return;
+
+            var map = Find.map(args[0]);
+            if (notFound(context, map, args[0])) return;
 
             maps.removeMap(map);
             maps.reload();
 
-            event.replyEmbeds(embed(success, ":map: Map removed from the server.", "Map name: @", map.name()).build()).queue();
-        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS))
-                .addOption(STRING, "map", "Name of the map to be removed from the server.", true);
+            context.success(":map: Map **@** removed from the server.", map.name()).queue();
+        });
 
-        register("gameover", "Force a gameover.", event -> {
-            if (notHosting(event)) return;
+        discordCommands.<Context>register("gameover", "Force a gameover.", (args, context) -> {
+            if (notAdmin(context) || notHosting(context)) return;
 
             Events.fire(new GameOverEvent(state.rules.waveTeam));
-            event.replyEmbeds(embed(success, ":arrows_counterclockwise: Game over.").build()).queue();
-        }).setDefaultPermissions(enabledFor(VIEW_AUDIT_LOGS));
-    }
-
-    private static SlashCommandData register(String name, String description, Cons<SlashCommandInteractionEvent> cons) {
-        commands.put(name, cons);
-        return datas.add(Commands.slash(name, description)).peek();
+            context.info(":arrows_counterclockwise: Game over.").queue();
+        });
     }
 }

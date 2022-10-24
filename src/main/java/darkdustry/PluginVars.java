@@ -110,5 +110,5 @@ public class PluginVars {
     public static StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
 
     /** Кэшированные хандлеры, которые использовались для регистрации команд. */
-    public static CommandHandler clientCommands, serverCommands;
+    public static CommandHandler clientCommands, serverCommands, discordCommands;
 }

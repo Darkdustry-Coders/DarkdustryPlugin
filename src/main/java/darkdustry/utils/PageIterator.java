@@ -3,19 +3,16 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import darkdustry.discord.Bot.Context;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.awt.Color;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.discord.Bot.Palette.*;
-import static darkdustry.discord.Bot.embed;
 import static mindustry.Vars.*;
 
 // Страшно, но очень полезно.
@@ -74,25 +71,25 @@ public class PageIterator {
     // endregion
     // region Discord
 
-    public static void players(SlashCommandInteractionEvent event) {
-        discord(event, Groups.player.copy(new Seq<>()),
-                content -> format(":bar_chart: Игроков на сервере: @", content.size),
-                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("` | ").append(p.plainName())
+    public static void players(String[] args, Context context) {
+        discord(args, context, Groups.player.copy(new Seq<>()),
+                content -> format(":bar_chart: Players online: @", content.size),
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("`   ").append(p.plainName())
         );
     }
 
-    public static void maps(SlashCommandInteractionEvent event) {
-        discord(event, maps.customMaps(),
-                content -> format(":map: Карт в плейлисте сервера: @", content.size),
+    public static void maps(String[] args, Context context) {
+        discord(args, context, maps.customMaps(),
+                content -> format(":map: Maps in playlist: @", content.size),
                 (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
         );
     }
 
-    private static <T> void discord(SlashCommandInteractionEvent event, Seq<T> content, Func<Seq<T>, String> header, Cons3<StringBuilder, Integer, T> cons) {
-        int page = event.getOption("page") != null ? event.getOption("page").getAsInt() : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+    private static <T> void discord(String[] args, Context context, Seq<T> content, Func<Seq<T>, String> title, Cons3<StringBuilder, Integer, T> cons) {
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
 
         if (page > pages || page <= 0) {
-            event.replyEmbeds(embed(error, ":interrobang: Неверная страница.", "Страница должна быть числом от 1 до @", pages).build()).queue();
+            context.error(":interrobang: Page must be a number between 1 and @.", pages).queue();
             return;
         }
 
@@ -100,9 +97,11 @@ public class PageIterator {
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             cons.get(builder.append("\n"), i, content.get(i));
 
-        event.replyEmbeds(embed(Color.decode("#2c94ec"), header.get(content))
+        context.message().replyEmbeds(new EmbedBuilder()
+                .setColor(-13855508)
+                .setTitle(title.get(content))
                 .setDescription(builder.toString())
-                .setFooter(format("Страница @ / @", page, pages)).build()).queue();
+                .setFooter(format("Page @ / @", page, pages)).build()).queue();
     }
 
     // endregion

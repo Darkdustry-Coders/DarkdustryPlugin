@@ -24,6 +24,9 @@ public class Config {
     /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
+    /** Префикс команд бота, привязанного к серверу. */
+    public String discordBotPrefix = "prefix";
+
     /** ID канала в Discord, куда отправляются все сообщения. */
     public long discordBotChannelId = 0L;
 
@@ -44,12 +47,13 @@ public class Config {
         }
 
         motd.set("off");
-        interactRateWindow.set(3);
-        interactRateLimit.set(50);
-        interactRateKick.set(1000);
         showConnectMessages.set(false);
         logging.set(true);
         strict.set(true);
+        antiSpam.set(true);
+        interactRateWindow.set(1);
+        interactRateLimit.set(25);
+        interactRateKick.set(60);
 
         enableVotekick.set(config.mode != hexed && config.mode != hub);
         autoPause.set(config.mode.isDefault());

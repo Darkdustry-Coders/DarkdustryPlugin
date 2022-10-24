@@ -7,26 +7,20 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
-import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
 
 import java.awt.Color;
 import java.util.EnumSet;
-import java.util.function.Consumer;
 
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
-import static darkdustry.PluginVars.config;
-import static darkdustry.commands.DiscordCommands.datas;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
-import static darkdustry.discord.Bot.Palette.*;
 import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
@@ -39,7 +33,7 @@ public class Bot {
     public static JDA jda;
 
     public static Role adminRole;
-    public static MessageChannel botChannel, adminChannel, bansChannel;
+    public static MessageChannel botChannel, adminChannel;
 
     public static void connect() {
         try {
@@ -56,10 +50,10 @@ public class Bot {
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
             DiscordCommands.load();
 
-            // Регистрируем все команды одним запросом
-            jda.updateCommands().addCommands(datas.toArray(CommandData.class)).queue();
-
             updateBotStatus();
+
+            // Изменяем никнейм на [prefix] Name
+            jda.getGuilds().forEach(guild -> guild.getSelfMember().modifyNickname(format("[@], @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
@@ -100,7 +94,7 @@ public class Bot {
 
     public static void updateBotStatus() {
         if (connected())
-            jda.getPresence().setActivity(watching("на " + Groups.player.size() + " игроков на карте " + stripColors(state.map.name())));
+            jda.getPresence().setActivity(watching("at " + Groups.player.size() + " players on " + stripColors(state.map.name())));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... values) {
@@ -117,18 +111,40 @@ public class Bot {
         return new EmbedBuilder().setColor(color).setTitle(title);
     }
 
-    public static EmbedBuilder embed(Color color, String title, Object... values) {
-        return embed(color, format(title, values));
-    }
-
-    public static EmbedBuilder embed(Color color, String title, String description, Object... values) {
-        return embed(color, title).setDescription(format(description, values));
-    }
-
     public static class Palette {
         public static final Color
                 success = Color.decode("#3cfb63"),
                 info = Color.decode("#fcf47c"),
                 error = Color.decode("#f93c3c");
+    }
+
+    public record Context(MessageReceivedEvent event, Message message) {
+        public Context(MessageReceivedEvent event) {
+            this(event, event.getMessage());
+        }
+
+        public MessageCreateAction success(String title, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.success).setTitle(format(title, values)).build());
+        }
+
+        public MessageCreateAction info(String title, String description, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(format(description, values)).build());
+        }
+
+        public MessageCreateAction info(String title, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(format(title, values)).build());
+        }
+
+        public MessageCreateAction info(String title, String description, FileUpload image, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(format(description, values)).setImage("attachment://" + image.getName()).build()).addFiles(image);
+        }
+
+        public MessageCreateAction error(String title, String description, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(title).setDescription(format(description, values)).build());
+        }
+
+        public MessageCreateAction error(String title, Object... values) {
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(format(title, values)).build());
+        }
     }
 }
