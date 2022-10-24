@@ -27,7 +27,9 @@ public class Authme {
     public static void sendAdminRequest(Player player) {
         if (adminChannel == null || !adminChannel.canTalk()) return;
 
-        adminChannel.sendMessageEmbeds(embed(info, "Запрос на получение прав администратора.")
+        adminChannel.sendMessageEmbeds(new EmbedBuilder()
+                .setColor(info)
+                .setTitle("Запрос на получение прав администратора.")
                 .addField("Nickname:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
                 .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
@@ -44,21 +46,22 @@ public class Authme {
                 bundled(player, "commands.login.confirm");
             }
 
-            return embed(success, "Request Confirmed");
+            return new EmbedBuilder().setColor(success).setTitle("Request Confirmed");
         });
     }
 
     public static void deny(SelectMenuInteractionEvent event) {
         remove(event, (info, player) -> {
             if (player != null) bundled(player, "commands.login.deny");
-            return embed(error, "Request Denied");
+            return new EmbedBuilder().setColor(error).setTitle("Request Denied");
         });
     }
 
     public static void information(SelectMenuInteractionEvent event) {
         var playerInfo = loginWaiting.get(event.getMessage());
 
-        var embed = embed(info, ":mag: Player Info")
+        var embed = new EmbedBuilder().setColor(info)
+                .setTitle(":mag: Player Info")
                 .addField("Nickname:", playerInfo.plainLastName(), true)
                 .addField("UUID:", playerInfo.id, true)
                 .addField("IP:", playerInfo.lastIP, true)

@@ -121,10 +121,6 @@ public class Bot {
             channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(title, values)).build()).queue();
     }
 
-    public static EmbedBuilder embed(Color color, String title) {
-        return new EmbedBuilder().setColor(color).setTitle(title);
-    }
-
     public static class Palette {
         public static final Color
                 success = Color.decode("#3cfb63"),

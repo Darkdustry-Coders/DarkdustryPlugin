@@ -176,9 +176,7 @@ public class Checks {
     // region Discord
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
-        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(
-                new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: Missing permissions.").build()
-        ).setEphemeral(true).queue());
+        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: Missing permissions.").build()).setEphemeral(true).queue());
     }
 
     public static boolean notAdmin(Context context) {
