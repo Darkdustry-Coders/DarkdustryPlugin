@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static arc.Core.app;
-import static arc.util.CommandHandler.ResponseType.valid;
+import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.notAdmin;
@@ -17,8 +17,7 @@ public class DiscordListeners extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || !event.isFromGuild() || event.getMessage().getContentRaw().isEmpty()) return;
 
-        var response = discordCommands.handleMessage(event.getMessage().getContentRaw(), new Context(event));
-        if (response.type == valid) return;
+        if (handleMessage(new Context(event))) return;
 
         if (event.isFromGuild() && event.getChannel() == botChannel)
             app.post(() -> sendMessageToGame(event.getMember(), event.getMessage()));

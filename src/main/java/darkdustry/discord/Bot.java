@@ -16,6 +16,7 @@ import net.dv8tion.jda.internal.requests.RestActionImpl;
 import java.awt.Color;
 import java.util.EnumSet;
 
+import static arc.util.CommandHandler.ResponseType.*;
 import static arc.util.Strings.format;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -52,8 +53,10 @@ public class Bot {
 
             updateBotStatus();
 
+            jda.updateCommands().queue();
+
             // Изменяем никнейм на [prefix] Name
-            jda.getGuilds().forEach(guild -> guild.getSelfMember().modifyNickname(format("[@], @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
+            jda.getGuilds().get(0).getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue();
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
@@ -68,6 +71,17 @@ public class Bot {
     public static void exit() {
         if (connected())
             jda.shutdown();
+    }
+
+    public static boolean handleMessage(Context context) {
+        var response = discordCommands.handleMessage(context.message.getContentRaw(), context);
+
+        if (response.type == fewArguments)
+            context.error(":interrobang: Too few arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
+        else if (response.type == manyArguments)
+            context.error(":interrobang: Too many arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
+
+        return response.type != noCommand;
     }
 
     public static void sendMessageToGame(Member member, Message message) {

@@ -57,8 +57,8 @@ public class DiscordCommands {
             var embed = new EmbedBuilder()
                     .setColor(info)
                     .setTitle(map.name())
-                    .setDescription(map.description())
-                    .setAuthor(map.author())
+                    .setDescription(map.tags.get("description", ""))
+                    .setAuthor(map.tags.get("author", ""))
                     .setFooter(map.width + "x" + map.height)
                     .setImage("attachment://map.png");
 
