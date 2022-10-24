@@ -3,7 +3,6 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.CommandHandler.*;
 import arc.util.*;
-import darkdustry.components.AntiVpn;
 import darkdustry.utils.Find;
 import mindustry.core.Version;
 import mindustry.game.EventType.*;
@@ -140,11 +139,6 @@ public class NetHandlers {
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
-
-        AntiVpn.checkIp(ip, value -> {
-            if (value)
-                con.kick("ИДИ НАХУЙ ДАУН");
-        });
 
         Events.fire(new PlayerConnect(player));
     }
