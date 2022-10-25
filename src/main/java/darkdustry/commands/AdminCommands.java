@@ -159,7 +159,7 @@ public class AdminCommands {
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
-        adminOnlyCommands.add(clientCommands.<Player>register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), (args, player) -> {
+        adminOnlyCommands.add(ClientCommands.register(name, (args, player) -> {
             if (notAdmin(player)) return;
             runner.accept(args, player);
         }).text);

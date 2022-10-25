@@ -30,8 +30,11 @@ public class PluginVars {
     /** Стандартная длительность кика игрока. В миллисекундах. */
     public static final long kickDuration = 2700000L;
 
-    /** Время, в течение которого отслежовается двойное нажатие на тайл. В миллисекундах. */
+    /** Время, в течение которого отслеживается двойное нажатие на тайл. В миллисекундах. */
     public static final long doubleTapDuration = 500L;
+
+    /** Кулдаун на все клиентские команды по умолчанию. В миллисекундах. */
+    public static final long defaultCooldown = 3000L;
 
     /** Время, после которого будет загружена карта. В секундах. */
     public static final int mapLoadDelay = 10;

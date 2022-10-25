@@ -164,12 +164,8 @@ public class Checks {
         return check(session.voted.containsKey(player.id), player, "commands.already-voted");
     }
 
-    public static boolean alreadySynced(Player player) {
-        return check(!Cooldowns.canRun(player.uuid(), "sync"), player, "commands.sync.cooldown", formatDuration(defaults.get("sync"), Find.locale(player.locale)));
-    }
-
-    public static boolean isOnCooldown(Player player, String command) {
-        return check(!player.admin && !Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, formatDuration(defaults.get(command), Find.locale(player.locale)));
+    public static boolean onCooldown(Player player, String command) {
+        return check(!Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), Find.locale(player.locale)));
     }
 
     // endregion

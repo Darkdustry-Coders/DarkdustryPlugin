@@ -49,10 +49,6 @@ public class Bundle {
         return get(key, key, locale);
     }
 
-    public static String get(String key, String defaultValue) {
-        return get(key, defaultValue, defaultLocale);
-    }
-
     public static String format(String key, Locale locale, Object... values) {
         var pattern = get(key, locale);
         if (values.length == 0) return pattern;

@@ -1,6 +1,6 @@
 package darkdustry.commands;
 
-import arc.util.CommandHandler.CommandRunner;
+import arc.util.CommandHandler.*;
 import darkdustry.features.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
@@ -23,11 +23,8 @@ public class ClientCommands {
         register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
         register("sync", (args, player) -> {
-            if (alreadySynced(player)) return;
-
             Call.worldDataBegin(player.con);
             netServer.sendWorldData(player);
-            Cooldowns.run(player.uuid(), "sync");
         });
 
         register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
@@ -99,14 +96,13 @@ public class ClientCommands {
         });
 
         register("votekick", (args, player) -> {
-            if (alreadyVoting(player, voteKick) || isOnCooldown(player, "votekick") || votekickDisabled(player)) return;
+            if (alreadyVoting(player, voteKick) || votekickDisabled(player)) return;
 
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
             voteKick = new VoteKick(player, target);
             voteKick.vote(player, 1);
-            Cooldowns.run(player.uuid(), "votekick");
         });
 
         register("vote", (args, player) -> {
@@ -120,28 +116,26 @@ public class ClientCommands {
         });
 
         register("login", (args, player) -> {
-            if (alreadyAdmin(player) || isOnCooldown(player, "login")) return;
+            if (alreadyAdmin(player)) return;
 
             Authme.sendAdminRequest(player);
             bundled(player, "commands.login.sent");
-            Cooldowns.run(player.uuid(), "login");
         });
 
         if (!config.mode.isDefault()) return;
 
         register("rtv", (args, player) -> {
-            if (alreadyVoting(player, vote) || isOnCooldown(player, "rtv")) return;
+            if (alreadyVoting(player, vote)) return;
 
             var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
             if (notFound(player, map)) return;
 
             vote = new VoteRtv(map);
             vote.vote(player, 1);
-            Cooldowns.run(player.uuid(), "rtv");
         });
 
         register("vnw", (args, player) -> {
-            if (alreadyVoting(player, vote) || isOnCooldown(player, "vnw")) return;
+            if (alreadyVoting(player, vote)) return;
 
             if (invalidAmount(player, args, 0)) return;
 
@@ -150,26 +144,23 @@ public class ClientCommands {
 
             vote = new VoteVnw(waves);
             vote.vote(player, 1);
-            Cooldowns.run(player.uuid(), "vnw");
         });
 
         register("savemap", (args, player) -> {
-            if (alreadyVoting(player, vote) || isOnCooldown(player, "savemap")) return;
+            if (alreadyVoting(player, vote)) return;
 
             vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
             vote.vote(player, 1);
-            Cooldowns.run(player.uuid(), "savemap");
         });
 
         register("loadsave", (args, player) -> {
-            if (alreadyVoting(player, vote) || isOnCooldown(player, "loadsave")) return;
+            if (alreadyVoting(player, vote)) return;
 
             var save = Find.save(args[0]);
             if (notFound(player, save)) return;
 
             vote = new VoteLoad(save);
             vote.vote(player, 1);
-            Cooldowns.run(player.uuid(), "loadsave");
         });
 
         register("maps", PageIterator::maps);
@@ -177,7 +168,11 @@ public class ClientCommands {
         register("saves", PageIterator::saves);
     }
 
-    public static void register(String name, CommandRunner<Player> runner) {
-        clientCommands.register(name, get("commands." + name + ".params", ""), get("commands." + name + ".description", ""), runner);
+    public static Command register(String name, CommandRunner<Player> runner) {
+        return clientCommands.<Player>register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", defaultLocale), (args, player) -> {
+            if (onCooldown(player, name)) return;
+            runner.accept(args, player);
+            Cooldowns.run(player.uuid(), name);
+        });
     }
 }

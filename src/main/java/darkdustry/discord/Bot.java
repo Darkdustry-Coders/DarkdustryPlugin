@@ -76,10 +76,10 @@ public class Bot {
     public static boolean handleMessage(Context context) {
         var response = discordCommands.handleMessage(context.message.getContentRaw(), context);
 
-        if (response.type == fewArguments)
-            context.error(":interrobang: Too few arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
-        else if (response.type == manyArguments)
+        if (response.type == manyArguments)
             context.error(":interrobang: Too many arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
+        else if (response.type == fewArguments)
+            context.error(":interrobang: Too few arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
 
         return response.type != noCommand;
     }

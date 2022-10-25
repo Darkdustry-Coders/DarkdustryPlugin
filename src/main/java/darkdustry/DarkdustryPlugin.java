@@ -82,7 +82,7 @@ public class DarkdustryPlugin extends Plugin {
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
         Timer.schedule(() -> {
-            if (Groups.player.size() == 0) return;
+            if (Groups.player.isEmpty()) return;
 
             getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
                 var player = Find.playerByUuid(data.uuid);
