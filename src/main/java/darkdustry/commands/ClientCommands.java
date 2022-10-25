@@ -172,7 +172,7 @@ public class ClientCommands {
         return clientCommands.<Player>register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", defaultLocale), (args, player) -> {
             if (onCooldown(player, name)) return;
             runner.accept(args, player);
-            Cooldowns.run(player.uuid(), name);
+            Cooldowns.run(player, name);
         });
     }
 }

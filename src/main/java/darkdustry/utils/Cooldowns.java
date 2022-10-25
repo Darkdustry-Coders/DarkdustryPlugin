@@ -2,6 +2,7 @@ package darkdustry.utils;
 
 import arc.struct.ObjectMap;
 import arc.util.Time;
+import mindustry.gen.Player;
 
 import static darkdustry.PluginVars.defaultCooldown;
 
@@ -18,12 +19,13 @@ public class Cooldowns {
             "loadsave", 90000L
     );
 
-    public static boolean canRun(String uuid, String command) {
-        if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(command)) return true;
-        return cooldowns.get(uuid).get(command) <= Time.millis();
+    public static boolean canRun(Player player, String command) {
+        if (player.admin || !cooldowns.containsKey(player.uuid()) || !cooldowns.get(player.uuid()).containsKey(command)) return true;
+        return cooldowns.get(player.uuid()).get(command) <= Time.millis();
     }
 
-    public static void run(String uuid, String command) {
-        cooldowns.get(uuid, ObjectMap::new).put(command, Time.millis() + defaults.get(command, defaultCooldown));
+    public static void run(Player player, String command) {
+        if (player.admin) return;
+        cooldowns.get(player.uuid(), ObjectMap::new).put(command, Time.millis() + defaults.get(command, defaultCooldown));
     }
 }

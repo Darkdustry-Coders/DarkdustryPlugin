@@ -165,7 +165,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player.uuid(), command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), Find.locale(player.locale)));
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), Find.locale(player.locale)));
     }
 
     // endregion
