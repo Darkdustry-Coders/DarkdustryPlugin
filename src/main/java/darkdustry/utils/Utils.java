@@ -14,7 +14,6 @@ import java.util.Locale;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
-import static darkdustry.components.Bundle.*;
 import static java.time.Duration.ofMillis;
 import static java.time.Instant.ofEpochMilli;
 import static mindustry.Vars.*;
@@ -61,10 +60,6 @@ public class Utils {
 
     public static String formatKickDate(long time) {
         return kickFormat.format(ofEpochMilli(time));
-    }
-
-    public static String formatDuration(long time) {
-        return formatDuration(time, defaultLocale);
     }
 
     public static String formatDuration(long time, Locale locale) {

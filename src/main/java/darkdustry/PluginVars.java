@@ -97,6 +97,9 @@ public class PluginVars {
     /** Режимы, в которых будут доступны стандартные команды. */
     public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
 
+    /** Текстовый список всех предметов, юнитов и команд. */
+    public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
+
     /** Модуль, который контролирует сервер. Используется для перенаправления ввода-вывода. */
     public static ServerControl control;
 
@@ -108,9 +111,6 @@ public class PluginVars {
 
     /** Текущее голосование за кик игрока. */
     public static VoteKick voteKick;
-
-    /** Текстовый список всех предметов, юнитов и команд. */
-    public static StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
 
     /** Кэшированные хандлеры, которые использовались для регистрации команд. */
     public static CommandHandler clientCommands, serverCommands, discordCommands;

@@ -37,10 +37,6 @@ public class Effects {
         Call.effect(effect, pos.getX(), pos.getY(), rotation, color);
     }
 
-    public static void on(Effect effect, Position pos, float rotation) {
-        Call.effect(effect, pos.getX(), pos.getY(), rotation, Tmp.c1.randHue());
-    }
-
     public static void on(Effect effect, Position pos) {
         Call.effect(effect, pos.getX(), pos.getY(), Mathf.random(360f), Tmp.c1.randHue());
     }

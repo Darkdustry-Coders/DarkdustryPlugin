@@ -6,8 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static arc.Core.app;
-import static arc.util.CommandHandler.ResponseType.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.notAdmin;
 

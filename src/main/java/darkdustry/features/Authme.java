@@ -65,8 +65,8 @@ public class Authme {
                 .addField("Nickname:", playerInfo.plainLastName(), true)
                 .addField("UUID:", playerInfo.id, true)
                 .addField("IP:", playerInfo.lastIP, true)
-                .addField("Times joined:", playerInfo.timesJoined + "", true)
-                .addField("Times kicked:", playerInfo.timesKicked + "", true)
+                .addField("Times joined:", String.valueOf(playerInfo.timesJoined), true)
+                .addField("Times kicked:", String.valueOf(playerInfo.timesKicked), true)
                 .addField("All nicknames:", playerInfo.names.toString(), true)
                 .addField("All IPs", playerInfo.ips.toString(), true);
 
