@@ -11,6 +11,7 @@ import mindustry.gen.Building;
 import mindustry.io.*;
 import mindustry.maps.Map;
 import mindustry.world.*;
+import mindustry.world.blocks.environment.OreBlock;
 
 import java.io.*;
 import java.util.zip.InflaterInputStream;
@@ -29,7 +30,7 @@ public class MapParser {
 
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);
-                if (block.itemDrop != null) block.mapColor.set(block.itemDrop.color);
+                if (block instanceof OreBlock) block.mapColor.set(block.itemDrop.color);
                 else block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
             }
 

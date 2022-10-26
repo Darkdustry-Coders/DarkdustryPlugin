@@ -1,17 +1,19 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.util.*;
+import arc.util.Log;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.utils.Find;
+import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
@@ -19,6 +21,7 @@ import static darkdustry.discord.Bot.*;
 import static darkdustry.features.DoubleTap.lastTaps;
 import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
+import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
 
 public class PluginEvents {
@@ -45,6 +48,11 @@ public class PluginEvents {
         Events.on(ConfigEvent.class, event -> {
             if (History.enabled() && event.player != null)
                 History.put(new ConfigEntry(event), event.tile.tile);
+        });
+
+        Events.on(WithdrawEvent.class, event -> {
+            if (History.enabled() && event.player != null)
+                History.put(new WithdrawEntry(event), event.tile.tile);
         });
 
         Events.on(DepositEvent.class, event -> {
@@ -117,16 +125,22 @@ public class PluginEvents {
             });
         });
 
-        Events.on(WithdrawEvent.class, event -> {
-            if (History.enabled() && event.player != null)
-                History.put(new WithdrawEntry(event), event.tile.tile);
-        });
-
         Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
+
             app.post(Bot::updateBotStatus);
+        });
+
+        Events.on(PlayEvent.class, event -> {
+            state.rules.unitPayloadUpdate = true;
+            state.rules.showSpawns = true;
+
+            state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
+
+            if (config.mode == sandbox)
+                state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));

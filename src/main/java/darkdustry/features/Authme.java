@@ -29,10 +29,10 @@ public class Authme {
 
         adminChannel.sendMessageEmbeds(new EmbedBuilder()
                 .setColor(info)
-                .setTitle("Запрос на получение прав администратора.")
+                .setTitle("Request for administrator rights.")
                 .addField("Nickname:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
-                .setFooter("Выберите нужную опцию, чтобы подтвердить или отклонить запрос. Подтверждайте только свои запросы!")
+                .setFooter("Select the desired option to confirm or deny the request. Confirm only your requests!")
                 .build()
         ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.getInfo()));
     }
