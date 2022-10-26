@@ -15,8 +15,8 @@ dependencies {
     project.version = json["version"]!!
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.Mindustry:server:v$mindustryVersion")
+    compileOnly("com.github.Anuken.MindustryJitpack:core:v$mindustryVersion")
+    compileOnly("com.github.Anuken.MindustryJitpack:server:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.9.1")
     implementation("net.dv8tion:JDA:5.0.0-alpha.21")
