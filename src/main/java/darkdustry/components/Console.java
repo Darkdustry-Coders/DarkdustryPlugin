@@ -44,18 +44,14 @@ public class Console {
                 return;
             }
 
-            if ((last = b) == 13 || b == 10) {
-                flush();
-            } else {
-                super.write(b);
-            }
+            if ((last = b) == 13 || b == 10) flush();
+            else super.write(b);
         }
 
         @Override
         public void write(byte[] buf, int off, int len) {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++)
                 write(buf[off + i]);
-            }
         }
 
         @Override

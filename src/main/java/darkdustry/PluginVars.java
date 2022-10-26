@@ -34,7 +34,7 @@ public class PluginVars {
     public static final long doubleTapDuration = 500L;
 
     /** Кулдаун на все клиентские команды по умолчанию. В миллисекундах. */
-    public static final long defaultCooldown = 3000L;
+    public static final long defaultCooldown = 1000L;
 
     /** Время, после которого будет загружена карта. В секундах. */
     public static final int mapLoadDelay = 10;
