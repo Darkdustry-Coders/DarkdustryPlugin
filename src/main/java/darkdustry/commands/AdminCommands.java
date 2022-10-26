@@ -91,7 +91,6 @@ public class AdminCommands {
             if (notFound(player, target)) return;
 
             target.unit(type.spawn(target.team(), target.x, target.y));
-            target.unit().spawnedByCore(true);
             bundled(target, "commands.unit.success", Icons.get(type));
             if (target != player)
                 bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
@@ -119,7 +118,7 @@ public class AdminCommands {
                     x = clamp(parseInt(args[0]), 0, world.width()) * tilesize,
                     y = clamp(parseInt(args[1]), 0, world.height()) * tilesize;
 
-            boolean spawnedNyCore = player.unit().spawnedByCore();
+            boolean spawnedByCore = player.unit().spawnedByCore();
             var unit = player.unit();
 
             unit.spawnedByCore(false);
@@ -130,7 +129,7 @@ public class AdminCommands {
             Call.setCameraPosition(player.con, x, y);
 
             player.unit(unit);
-            unit.spawnedByCore(spawnedNyCore);
+            unit.spawnedByCore(spawnedByCore);
             bundled(player, "commands.tp.success", conv(x), conv(y));
         });
 
@@ -142,7 +141,7 @@ public class AdminCommands {
             var block = Find.block(args[0]);
             if (notFound(player, block)) return;
 
-            for (int x = player.tileX(); x < player.tileX() + width; x += block.size) {
+            for (int x = player.tileX(); x < player.tileX() + width; x += block.size)
                 for (int y = player.tileY(); y < player.tileY() + height; y += block.size) {
                     var tile = world.tile(x, y);
                     if (tile == null) continue;
@@ -152,7 +151,6 @@ public class AdminCommands {
                     else if (block.isFloor()) tile.setFloorNet(block, tile.overlay());
                     else tile.setNet(block, player.team(), 0);
                 }
-            }
 
             bundled(player, "commands.fill.success", width, height, Icons.get(block));
         });

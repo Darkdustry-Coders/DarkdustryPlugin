@@ -47,12 +47,13 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
+        var builder = event.builder.getPlayer();
         var block = event.builder.buildPlan().block;
 
         getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
             if (player != null && data.alerts)
-                bundled(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.get(block), event.tile.x, event.tile.y);
+                bundled(player, "alerts.dangerous-building", builder.coloredName(), Icons.get(block), event.tile.x, event.tile.y);
         }).subscribe();
     }
 
