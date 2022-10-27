@@ -55,7 +55,6 @@ public class DarkdustryPlugin extends Plugin {
 
         Bundle.load();
         Config.load();
-        Console.load();
         Icons.load();
         MapParser.load();
         MenuHandler.load();

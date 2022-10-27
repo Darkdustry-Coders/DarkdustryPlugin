@@ -56,7 +56,7 @@ public class Bot {
             jda.updateCommands().queue();
 
             // Изменяем никнейм на [prefix] Name
-            jda.getGuilds().get(0).getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue();
+            jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
