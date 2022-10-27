@@ -21,7 +21,6 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.21")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
-    implementation("org.jline:jline-reader:3.21.0")
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
