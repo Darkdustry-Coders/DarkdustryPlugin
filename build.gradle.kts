@@ -16,9 +16,8 @@ dependencies {
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.MindustryJitpack:core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.MindustryJitpack:server:v$mindustryVersion")
 
-    implementation("com.google.code.gson:gson:2.9.1")
+    implementation("com.google.code.gson:gson:2.10")
     implementation("net.dv8tion:JDA:5.0.0-alpha.21")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
