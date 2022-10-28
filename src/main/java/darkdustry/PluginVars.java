@@ -8,6 +8,7 @@ import darkdustry.components.Config.Gamemode;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import mindustry.net.Administration.PlayerInfo;
+import mindustry.server.ServerControl;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.time.format.DateTimeFormatter;
@@ -98,6 +99,9 @@ public class PluginVars {
 
     /** Текстовый список всех предметов, юнитов и команд. */
     public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
+
+    /** Модуль, который контролирует сервер. Используется для перенаправления ввода-вывода. */
+    public static ServerControl control;
 
     /** Конфигурация сервера. */
     public static Config config;

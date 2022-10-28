@@ -16,6 +16,7 @@ dependencies {
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.MindustryJitpack:core:v$mindustryVersion")
+    compileOnly("com.github.Anuken.MindustryJitpack:server:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.10")
     implementation("net.dv8tion:JDA:5.0.0-alpha.21")

@@ -34,7 +34,7 @@ public class Bot {
     public static JDA jda;
 
     public static Role adminRole;
-    public static MessageChannel botChannel, adminChannel;
+    public static MessageChannel botChannel, adminChannel, bansChannel;;
 
     public static void connect() {
         try {
@@ -45,6 +45,7 @@ public class Bot {
             adminRole = jda.getRoleById(config.discordAdminRoleId);
             botChannel = jda.getTextChannelById(config.discordBotChannelId);
             adminChannel = jda.getTextChannelById(config.discordAdminChannelId);
+            bansChannel = jda.getTextChannelById(config.discordBansChannelId);
 
             RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
 
