@@ -34,7 +34,7 @@ public class Bot {
     public static JDA jda;
 
     public static Role adminRole;
-    public static MessageChannel botChannel, adminChannel;
+    public static MessageChannel botChannel, adminChannel, bansChannel;;
 
     public static void connect() {
         try {
@@ -45,6 +45,7 @@ public class Bot {
             adminRole = jda.getRoleById(config.discordAdminRoleId);
             botChannel = jda.getTextChannelById(config.discordBotChannelId);
             adminChannel = jda.getTextChannelById(config.discordAdminChannelId);
+            bansChannel = jda.getTextChannelById(config.discordBansChannelId);
 
             RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
 
@@ -57,7 +58,6 @@ public class Bot {
 
             // Изменяем никнейм на [prefix] Name
             jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
-
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect bot: @", e);
