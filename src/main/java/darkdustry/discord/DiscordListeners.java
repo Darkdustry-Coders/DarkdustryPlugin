@@ -15,6 +15,7 @@ import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
+import static net.dv8tion.jda.api.interactions.components.text.TextInputStyle.SHORT;
 
 public class DiscordListeners extends ListenerAdapter {
 
@@ -45,14 +46,14 @@ public class DiscordListeners extends ListenerAdapter {
         if (event.getComponentId().equals("editban")) {
             if (notAdmin(event)) return;
 
-            var reason = TextInput.create("reason", "Reason", TextInputStyle.SHORT)
+            var reason = TextInput.create("reason", "Reason", SHORT)
                     .setPlaceholder("...")
-                    .setRequiredRange(3, 200)
+                    .setRequiredRange(4, 128)
                     .build();
 
-            var date = TextInput.create("date", "Unban Date", TextInputStyle.SHORT)
+            var date = TextInput.create("date", "Unban Date", SHORT)
                     .setPlaceholder("...")
-                    .setRequiredRange(3, 200)
+                    .setRequiredRange(4, 128)
                     .build();
 
             var modal = Modal.create("editban", "Edit Ban")
