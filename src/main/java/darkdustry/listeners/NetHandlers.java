@@ -162,11 +162,11 @@ public class NetHandlers {
 
                 var embed = new EmbedBuilder().setTitle("Бан")
                         .setColor(error)
-                        .addField("Нарушитель", other.plainName(), false)
-                        .addField("Администратор", player.plainName(), false)
-                        .addField("Сервер", config.mode.name(), false);
+                        .addField("Violator", other.plainName(), false)
+                        .addField("Administrator", player.plainName(), false)
+                        .addField("Server", config.mode.name(), false);
 
-                bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Редактировать бан")).queue();
+                bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Edit Ban")).queue();
             }
             case trace -> {
                 var info = other.getInfo();
