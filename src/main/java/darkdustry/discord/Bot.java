@@ -34,7 +34,7 @@ public class Bot {
     public static JDA jda;
 
     public static Role adminRole;
-    public static MessageChannel botChannel, adminChannel, bansChannel;;
+    public static MessageChannel botChannel, adminChannel, bansChannel;
 
     public static void connect() {
         try {
@@ -58,6 +58,7 @@ public class Bot {
 
             // Изменяем никнейм на [prefix] Name
             jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
+
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect bot: @", e);

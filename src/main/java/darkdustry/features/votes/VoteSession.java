@@ -1,7 +1,7 @@
 package darkdustry.features.votes;
 
 import arc.math.Mathf;
-import arc.struct.*;
+import arc.struct.IntIntMap;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.*;

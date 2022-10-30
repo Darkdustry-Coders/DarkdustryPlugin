@@ -5,20 +5,20 @@ import darkdustry.utils.Find;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.component.*;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.selections.*;
 
 import static darkdustry.PluginVars.loginWaiting;
 import static darkdustry.components.Bundle.bundled;
-import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.*;
+import static darkdustry.discord.Bot.adminChannel;
 import static mindustry.Vars.netServer;
 import static net.dv8tion.jda.api.entities.emoji.Emoji.fromFormatted;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
 
 public class Authme {
 
-    public static final SelectMenu menu = SelectMenu.create("authme")
+    public static final SelectMenu menu = StringSelectMenu.create("authme")
             .addOption("Confirm", "authme.confirm", "Confirm request.", fromFormatted("✅"))
             .addOption("Deny", "authme.deny", "Deny request.", fromFormatted("❌"))
             .addOption("Information", "authme.info", "Look up all information about the player.", fromFormatted("🔎"))
@@ -37,7 +37,7 @@ public class Authme {
         ).setComponents(of(menu)).queue(message -> loginWaiting.put(message, player.getInfo()));
     }
 
-    public static void confirm(SelectMenuInteractionEvent event) {
+    public static void confirm(StringSelectInteractionEvent event) {
         remove(event, (info, player) -> {
             netServer.admins.adminPlayer(info.id, info.adminUsid);
 
@@ -50,14 +50,14 @@ public class Authme {
         });
     }
 
-    public static void deny(SelectMenuInteractionEvent event) {
+    public static void deny(StringSelectInteractionEvent event) {
         remove(event, (info, player) -> {
             if (player != null) bundled(player, "commands.login.deny");
             return new EmbedBuilder().setColor(error).setTitle("Request Denied");
         });
     }
 
-    public static void information(SelectMenuInteractionEvent event) {
+    public static void information(StringSelectInteractionEvent event) {
         var playerInfo = loginWaiting.get(event.getMessage());
 
         var embed = new EmbedBuilder().setColor(info)
@@ -73,7 +73,7 @@ public class Authme {
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
     }
 
-    private static void remove(SelectMenuInteractionEvent event, Func2<PlayerInfo, Player, EmbedBuilder> func) {
+    private static void remove(StringSelectInteractionEvent event, Func2<PlayerInfo, Player, EmbedBuilder> func) {
         var info = loginWaiting.remove(event.getMessage());
         var player = Find.playerByUuid(info.id);
 

@@ -13,6 +13,7 @@ import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.utils.Utils.getAvailableCommands;
 import static mindustry.Vars.*;
 
 // Страшно, но очень полезно.
@@ -23,7 +24,7 @@ public class PageIterator {
 
     public static void commands(String[] args, Player player) {
         var locale = Find.locale(player.locale);
-        client(args, player, clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text))), "help",
+        client(args, player, getAvailableCommands(player), "help",
                 (builder, i, command) -> builder
                         .append("  [orange]").append(clientCommands.getPrefix()).append(command.text).append("[white] ")
                         .append(get("commands." + command.text + ".params", command.paramText, locale))

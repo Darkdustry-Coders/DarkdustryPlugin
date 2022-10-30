@@ -1,12 +1,13 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.struct.OrderedMap;
+import arc.struct.*;
+import arc.util.CommandHandler.Command;
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
+import mindustry.gen.Player;
 import mindustry.maps.MapException;
-import mindustry.mod.Mods.LoadedMod;
 import mindustry.net.WorldReloader;
 
 import java.util.Locale;
@@ -32,26 +33,26 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
-    public static LoadedMod getPlugin() {
-        return mods.getMod(DarkdustryPlugin.class);
+    public static Fi getPluginResource(String name) {
+        return mods.getMod(DarkdustryPlugin.class).root.child(name);
     }
 
-    public static Fi getPluginResource(String name) {
-        return getPlugin().root.child(name);
+    public static Seq<Command> getAvailableCommands(Player player) {
+        return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
     }
 
     public static String coloredTeam(Team team) {
         return "[#" + team.color + "]" + team.emoji + team.name + "[]";
     }
 
+    public static String stripAll(String str) {
+        return stripColors(stripGlyphs(str));
+    }
+
     public static boolean deepEquals(String first, String second) {
         first = stripAll(first);
         second = stripAll(second);
         return first.equalsIgnoreCase(second) || first.toLowerCase().contains(second.toLowerCase());
-    }
-
-    public static String stripAll(String str) {
-        return stripColors(stripGlyphs(str));
     }
 
     public static String formatHistoryDate(long time) {

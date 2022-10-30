@@ -13,16 +13,15 @@ import mindustry.net.Packets.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.awt.*;
-
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Bundle.*;
+import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.discord.Bot.bansChannel;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
-import static darkdustry.utils.Utils.notNullElse;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
@@ -34,7 +33,7 @@ public class NetHandlers {
         if (response.type == ResponseType.fewArguments)
             return format("commands.unknown.few-arguments", locale, response.command.text, response.command.paramText);
 
-        var closest = clientCommands.getCommandList()
+        var closest = getAvailableCommands(player)
                 .map(command -> command.text)
                 .filter(command -> levenshtein(command, response.runCommand) < 3)
                 .min(command -> levenshtein(command, response.runCommand));
@@ -162,9 +161,9 @@ public class NetHandlers {
                 ban(other, player.coloredName());
 
                 var embed = new EmbedBuilder().setTitle("Бан")
-                        .setColor(Color.red)
-                        .addField("Нарушитель", other.name, false)
-                        .addField("Администратор", player.name, false)
+                        .setColor(error)
+                        .addField("Нарушитель", other.plainName(), false)
+                        .addField("Администратор", player.plainName(), false)
                         .addField("Сервер", config.mode.name(), false);
 
                 bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Редактировать бан")).queue();
