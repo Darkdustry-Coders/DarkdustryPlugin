@@ -1,5 +1,7 @@
 package darkdustry.components;
 
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks;
@@ -42,10 +44,8 @@ public class MongoDB {
         return Flux.fromIterable(uuids).flatMap(MongoDB::getPlayerData);
     }
 
-    public static Mono<Void> setPlayerData(PlayerData data) {
-        return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data))
-                .switchIfEmpty(Mono.from(collection.insertOne(data)).then(Mono.empty()))
-                .then();
+    public static Mono<UpdateResult> setPlayerData(PlayerData data) {
+        return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
 
     public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {

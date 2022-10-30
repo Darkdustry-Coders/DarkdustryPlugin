@@ -7,7 +7,7 @@ import mindustry.gen.*;
 
 import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.adminOnlyCommands;
 import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
