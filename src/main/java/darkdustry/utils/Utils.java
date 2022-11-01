@@ -1,18 +1,16 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Func;
 import arc.struct.*;
-import arc.util.*;
 import arc.util.CommandHandler.Command;
+import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Player;
 import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
 import useful.Bundle;
 
-//import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static java.time.Duration.ofMillis;
 import static java.time.Instant.ofEpochMilli;
@@ -30,10 +28,6 @@ public class Utils {
 
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
-    }
-
-    public static <T> Seq<T> mapPlayers(Func<Player, T> func) {
-        return Seq.with(Groups.player).map(func);
     }
 
     public static Fi getPluginResource(String name) {

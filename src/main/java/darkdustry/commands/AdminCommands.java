@@ -2,16 +2,16 @@ package darkdustry.commands;
 
 import arc.Events;
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.*;
+import darkdustry.components.Icons;
+import darkdustry.features.menus.DespawnMenu;
 import darkdustry.utils.Find;
-import mindustry.gen.*;
 import mindustry.game.EventType.GameOverEvent;
-import useful.Bundle;
+import mindustry.gen.*;
 
 import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.adminOnlyCommands;
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.features.menus.MenuHandler.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.*;
@@ -25,18 +25,14 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        register("artv", (args, player) -> showMenuConfirm(player, () -> {
+        register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.header", "commands.artv.content", () -> {
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             sendToChat("commands.artv.info", player.coloredName());
-        }, "commands.artv.header", "commands.artv.content"));
+        }));
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
-                showMenu(player, MenuHandler::despawnMenu, "commands.despawn.header", "commands.despawn.content", new String[][] {
-                        {"ui.button.yes", "ui.button.no"}, {"commands.despawn.button.players"},
-                        {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.defaultTeam))},
-                        {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.waveTeam))},
-                        {"commands.despawn.button.suicide"}}, Groups.unit.size());
+                DespawnMenu.showDespawnMenu(player);
                 return;
             }
 

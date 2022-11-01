@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
-import useful.Bundle;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -25,7 +24,7 @@ import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static net.dv8tion.jda.api.entities.Activity.watching;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;
-import static useful.Bundle.bundled;
+import static useful.Bundle.sendToChat;
 
 public class Bot {
 
@@ -85,17 +84,7 @@ public class Bot {
 
     public static void sendMessageToGame(Member member, Message message) {
         DarkdustryPlugin.discord("@: @", member.getEffectiveName(), message.getContentDisplay());
-
-        var roles = member.getRoles();
-        var reply = message.getReferencedMessage();
-
-        Groups.player.each(player -> bundled(player, "discord.chat",
-                Integer.toHexString(member.getColorRaw()),
-                roles.isEmpty() ? Bundle.format("discord.chat.no-role", player) : roles.get(0).getName(),
-                member.getEffectiveName(),
-                reply != null ? Bundle.format("discord.chat.reply", player, reply.getAuthor().getName()) : "",
-                message.getContentDisplay())
-        );
+        sendToChat("discord.chat", Integer.toHexString(member.getColorRaw()), !member.getRoles().isEmpty() ? member.getRoles().get(0).getName() : "No Role", member.getEffectiveName(), message.getContentDisplay());
     }
 
     public static boolean isAdmin(Member member) {

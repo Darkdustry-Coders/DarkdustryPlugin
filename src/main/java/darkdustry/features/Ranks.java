@@ -105,7 +105,7 @@ public class Ranks {
         }
 
         public String localisedDesc(Player player) {
-            return Bundle.get("ranks." + name + ".desc", "", player);
+            return Bundle.get("ranks." + name + ".description", "...", player);
         }
 
         public String localisedReq(Player player) {

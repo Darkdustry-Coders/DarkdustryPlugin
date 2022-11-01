@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import useful.Bundle;
 
+import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.discord.Bot.bansChannel;
@@ -24,9 +25,9 @@ import static useful.Bundle.sendToChat;
 public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
-        if (response.type == ResponseType.manyArguments)
+        if (response.type == manyArguments)
             return Bundle.format("commands.unknown.many-arguments", player, response.command.text, response.command.paramText);
-        if (response.type == ResponseType.fewArguments)
+        if (response.type == fewArguments)
             return Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
 
         var closest = getAvailableCommands(player)
@@ -118,11 +119,6 @@ public class NetHandlers {
             kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
-
-        // TODO вернуть
-        //if (packet.versionType.equals(("bleeding-edge")) && !Version.type.equals("bleeding-edge")) {
-        //    Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale), mindustryVersion));
-        //}
 
         if (con.kicked) return;
 

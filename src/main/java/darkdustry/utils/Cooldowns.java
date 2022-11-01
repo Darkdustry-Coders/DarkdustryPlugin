@@ -20,7 +20,8 @@ public class Cooldowns {
     );
 
     public static boolean canRun(Player player, String command) {
-        if (player.admin || !cooldowns.containsKey(player.uuid()) || !cooldowns.get(player.uuid()).containsKey(command)) return true;
+        if (player.admin || !cooldowns.containsKey(player.uuid()) || !cooldowns.get(player.uuid()).containsKey(command))
+            return true;
         return cooldowns.get(player.uuid()).get(command) <= Time.millis();
     }
 

@@ -38,23 +38,30 @@ public class ServerCommands {
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (alreadyHosting()) return;
 
-            Gamemode mode = args.length > 1 ? Find.mode(args[1]) : notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
-            if (notFound(mode, args[1])) return;
+            Gamemode mode;
+            if (args.length > 1) {
+                mode = Find.mode(args[1]);
+                if (notFound(mode, args[1])) return;
+            } else {
+                mode = notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
+                Log.info("Default mode selected to be @.", mode.name());
+            }
 
-            Map map = args.length > 0 ? Find.map(args[0]) : maps.getShuffleMode().next(mode, state.map);
-            if (notFound(map, args[0])) return;
+            Map map;
+            if (args.length > 0) {
+                map = Find.map(args[0]);
+                if (notFound(map, args[0])) return;
+            } else {
+                map = maps.getShuffleMode().next(mode, state.map);
+                Log.info("Randomized next map to be @.", map.name());
+            }
 
             settings.put("lastServerMode", mode.name());
 
             app.post(() -> {
                 try {
                     Log.info("Loading map...");
-
-                    logic.reset();
-                    world.loadMap(map, map.applyRules(mode));
-                    state.rules = map.applyRules(mode);
-                    logic.play();
-
+                    reloadWorld(() -> world.loadMap(map, map.applyRules(mode)));
                     Log.info("Map loaded.");
 
                     netServer.openServer();
@@ -101,7 +108,8 @@ public class ServerCommands {
 
                     var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
-                    else Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
+                    else
+                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
                 });
             }
         });

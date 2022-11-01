@@ -1,32 +1,32 @@
-package darkdustry.features;
+package darkdustry.features.menus;
 
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.features.menus.MenuHandler.showMenu;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.features.Effects.updateEffects;
 
 public class SettingsMenu {
 
     public static void showSettingsMenu(Player player) {
-        getPlayerData(player.uuid()).subscribe(data -> showSettingsMenu(player, data));
+        getPlayerData(player).subscribe(data -> showSettingsMenu(player, data));
     }
 
     public static void showSettingsMenu(Player player, PlayerData data) {
-        showMenu(player, SettingsMenu::changeSettings, "commands.settings.header", "commands.settings.content", new String[][] {
+        showMenu(player, "commands.settings.header", "commands.settings.content", new String[][] {
                 {button("settings.alerts", player, data.alerts)},
                 {button("settings.effects", player, data.effects)},
                 {button("settings.doubleTapHistory", player, data.doubleTapHistory)},
                 {button("settings.welcomeMessage", player, data.welcomeMessage)},
-                {"ui.button.close"}
-        });
+                {"ui.button.close"}}, SettingsMenu::changeSettings
+        );
     }
 
     public static void changeSettings(Player player, int option) {
         if (option == -1 || option == 4) return; // Меню закрыто
 
-        getPlayerData(player.uuid()).subscribe(data -> {
+        getPlayerData(player).subscribe(data -> {
             switch (option) {
                 case 0 -> data.alerts = !data.alerts;
                 case 1 -> {

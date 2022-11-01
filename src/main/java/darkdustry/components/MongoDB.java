@@ -6,6 +6,7 @@ import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
+import mindustry.gen.Player;
 import reactor.core.publisher.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
@@ -36,12 +37,16 @@ public class MongoDB {
         client.close();
     }
 
+    public static Mono<PlayerData> getPlayerData(Player player) {
+        return getPlayerData(player.uuid());
+    }
+
     public static Mono<PlayerData> getPlayerData(String uuid) {
         return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersData(Iterable<String> uuids) {
-        return Flux.fromIterable(uuids).flatMap(MongoDB::getPlayerData);
+    public static Flux<PlayerData> getPlayersData(Iterable<Player> players) {
+        return Flux.fromIterable(players).flatMap(MongoDB::getPlayerData);
     }
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
@@ -65,7 +70,14 @@ public class MongoDB {
         public int buildingsBuilt = 0;
         public int gamesPlayed = 0;
 
-        private int rank = 0;
+        public int rank = 0;
+
+        @SuppressWarnings("unused")
+        public PlayerData() {}
+
+        public PlayerData(String uuid) {
+            this.uuid = uuid;
+        }
 
         public Rank rank() {
             return Ranks.all.get(rank);
@@ -73,13 +85,6 @@ public class MongoDB {
 
         public void rank(Rank rank) {
             this.rank = rank.id;
-        }
-
-        @SuppressWarnings("unused")
-        public PlayerData() {}
-
-        public PlayerData(String uuid) {
-            this.uuid = uuid;
         }
     }
 }

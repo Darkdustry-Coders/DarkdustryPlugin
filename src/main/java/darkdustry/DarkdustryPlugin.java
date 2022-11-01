@@ -4,7 +4,6 @@
 package darkdustry;
 
 import arc.graphics.*;
-import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -20,10 +19,9 @@ import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.getPlayersData;
 import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.utils.Utils.mapPlayers;
+import static darkdustry.features.menus.MenuHandler.showMenuClose;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -87,7 +85,7 @@ public class DarkdustryPlugin extends Plugin {
         Timer.schedule(() -> {
             if (Groups.player.isEmpty()) return;
 
-            getPlayersData(mapPlayers(Player::uuid)).doOnNext(data -> {
+            getPlayersData(Groups.player).doOnNext(data -> {
                 var player = Find.playerByUuid(data.uuid);
                 if (player == null) return;
 

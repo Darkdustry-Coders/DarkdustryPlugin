@@ -9,7 +9,7 @@ import darkdustry.utils.Find;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Building;
 import mindustry.type.Item;
 import mindustry.world.*;
 
@@ -50,7 +50,7 @@ public class Alerts {
         var builder = event.builder.getPlayer();
         var block = event.builder.buildPlan().block;
 
-        getPlayersData(event.team.data().players.map(Player::uuid)).doOnNext(data -> {
+        getPlayersData(event.team.data().players).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
             if (player != null && data.alerts)
                 bundled(player, "alerts.dangerous-building", builder.coloredName(), Icons.get(block), event.tile.x, event.tile.y);
@@ -63,7 +63,7 @@ public class Alerts {
         var block = event.tile.block;
         var item = event.item;
 
-        getPlayersData(event.player.team().data().players.map(Player::uuid)).doOnNext(data -> {
+        getPlayersData(event.player.team().data().players).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
             if (player != null && data.alerts)
                 bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.get(item), Icons.get(block), event.tile.tileX(), event.tile.tileY());

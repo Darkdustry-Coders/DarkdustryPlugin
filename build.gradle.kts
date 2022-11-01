@@ -15,8 +15,8 @@ dependencies {
     project.version = json["version"]!!
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.MindustryJitpack:core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.MindustryJitpack:server:v$mindustryVersion")
+    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
+    compileOnly("com.github.Anuken.Mindustry:server:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.10")
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
@@ -27,8 +27,8 @@ dependencies {
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
 
-    implementation("com.github.xzxADIxzx.Useful-stuffs:server-bundle:main-SNAPSHOT")
-    implementation("com.github.xzxADIxzx.Useful-stuffs:server-menus:main-SNAPSHOT")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:main-SNAPSHOT")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:main-SNAPSHOT")
 }
 
 tasks.jar {

@@ -2,19 +2,20 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.MenuHandler;
+import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
+import darkdustry.features.menus.MenuHandler;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
-import useful.Bundle;
+import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.sandbox;
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.features.menus.MenuHandler.showMenu;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
@@ -34,7 +35,7 @@ public class PluginEvents {
             if (History.enabled() && event.tile.build != null)
                 History.put(new BlockEntry(event), event.tile);
 
-            if (!event.breaking) getPlayerData(event.unit.getPlayer().uuid()).subscribe(data -> {
+            if (!event.breaking) getPlayerData(event.unit.getPlayer()).subscribe(data -> {
                 data.buildingsBuilt++;
                 setPlayerData(data).subscribe();
             });
@@ -62,12 +63,9 @@ public class PluginEvents {
             Alerts.depositAlert(event);
         });
 
-        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> getPlayerData(player.uuid()).subscribe(data -> {
-            data.gamesPlayed++;
-            setPlayerData(data).subscribe();
-        })));
+        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).collectList().flatMap(MongoDB::setPlayersData).subscribe());
 
-        Events.on(PlayerJoin.class, event -> getPlayerData(event.player.uuid()).subscribe(data -> {
+        Events.on(PlayerJoin.class, event -> getPlayerData(event.player).subscribe(data -> {
             updateRank(event.player, data);
 
             app.post(() -> Effects.onJoin(event.player));
@@ -82,7 +80,7 @@ public class PluginEvents {
                 var builder = new StringBuilder();
                 welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(get("commands." + command + ".description", event.player)));
 
-                showMenu(event.player, MenuHandler::welcomeMenu, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}}, serverName.string(), builder.toString());
+                showMenu(event.player, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"ui.button.disable"}}, MenuHandler::welcome, serverName.string(), builder.toString());
             }
 
             app.post(Bot::updateBotStatus);
@@ -107,7 +105,7 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || event.tile == null) return;
 
-            getPlayerData(event.player.uuid()).subscribe(data -> {
+            getPlayerData(event.player).subscribe(data -> {
                 if (!data.doubleTapHistory) return;
 
                 DoubleTap.check(event, () -> {
@@ -126,6 +124,7 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
+            DynamicMenus.clear();
 
             app.post(Bot::updateBotStatus);
         });

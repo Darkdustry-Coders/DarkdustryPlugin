@@ -1,22 +1,23 @@
 package darkdustry.listeners;
 
-import arc.util.*;
+import arc.util.Log;
 import darkdustry.components.Translator;
 import darkdustry.features.history.*;
 import mindustry.gen.Player;
-import mindustry.net.Administration.*;
+import mindustry.net.Administration.PlayerAction;
 
-//import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.vote;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.alreadyVoted;
 import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.netServer;
+import static mindustry.net.Administration.ActionType.rotate;
 
 public class Filters {
 
     public static boolean action(PlayerAction action) {
-        if (History.enabled() && action.type == ActionType.rotate) History.put(new RotateEntry(action), action.tile);
+        if (History.enabled() && action.type == rotate)
+            History.put(new RotateEntry(action), action.tile);
         return true;
     }
 

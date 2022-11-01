@@ -1,8 +1,9 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.*;
-import darkdustry.components.MenuHandler;
+import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.*;
+import darkdustry.features.menus.SettingsMenu;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
@@ -10,7 +11,7 @@ import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.MenuHandler.*;
+import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -31,7 +32,7 @@ public class ClientCommands {
 
         register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 
-        register("tr", (args, player) -> getPlayerData(player.uuid()).subscribe(data -> {
+        register("tr", (args, player) -> getPlayerData(player).subscribe(data -> {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
                 case "list" -> {
@@ -73,23 +74,21 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target.uuid()).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank().localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
+            getPlayerData(target).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank().localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
         });
 
         register("rank", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target.uuid()).subscribe(data -> {
+            getPlayerData(target).subscribe(data -> {
                 var rank = data.rank();
 
-                showMenu(player, MenuHandler::rankInfo, "commands.rank.header", !rank.hasNext() ? "commands.rank.content" : "commands.rank.next", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}},
-                        target.coloredName(),
-                        rank.localisedName(player), rank.localisedDesc(player),
-                        rank.next.localisedName(player),
-                        data.playTime, rank.next.req.playTime(),
-                        data.buildingsBuilt, rank.next.req.buildingsBuilt(),
-                        data.gamesPlayed, rank.next.req.gamesPlayed());
+                var content = !rank.hasNext() ?
+                        Bundle.format("commands.rank.content", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player)) :
+                        Bundle.format("commands.rank.next", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player), rank.next.localisedName(player), data.playTime, rank.next.req.playTime(), data.buildingsBuilt, rank.next.req.buildingsBuilt(), data.gamesPlayed, rank.next.req.gamesPlayed());
+
+                showMenu(player, "commands.rank.header", content, new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, MenuHandler::rankInfo);
             });
         });
 

@@ -1,7 +1,7 @@
 package darkdustry.components;
 
 import arc.func.Cons;
-import arc.struct.*;
+import arc.struct.StringMap;
 import arc.util.*;
 import arc.util.serialization.Jval;
 import darkdustry.DarkdustryPlugin;
@@ -10,7 +10,6 @@ import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MongoDB.getPlayersData;
-import static darkdustry.utils.Utils.mapPlayers;
 import static mindustry.Vars.netServer;
 
 public class Translator {
@@ -64,7 +63,7 @@ public class Translator {
         var cache = new StringMap();
         var message = netServer.chatFormatter.format(author, text);
 
-        getPlayersData(mapPlayers(Player::uuid)).doOnNext(data -> {
+        getPlayersData(Groups.player).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
             if (player == null || player == author) return;
 
