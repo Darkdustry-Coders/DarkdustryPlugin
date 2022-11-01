@@ -34,15 +34,17 @@ public class MenuHandler {
     }
 
     public static void despawnMenu(Player player, int option) {
-        var units = Seq.with(Groups.unit);
+        Seq<Unit> units = switch (option) {
+            case 0 -> Groups.unit.copy(new Seq<>());
+            case 1 -> mapPlayers(Player::unit);
+            case 2 -> state.rules.defaultTeam.data().units;
+            case 3 -> state.rules.waveTeam.data().units;
+            case 4 -> Seq.with(player.unit());
+            default -> null;
+        };
 
-        // TODO
-        switch (option) {
-            case 0 -> {
-                units = Groups.unit;
-            }
-            case 1 -> units = mapPlayers(Player::unit);
-        }
+        // esc pressed
+        if (units == null) return;
 
         showMenuConfirm(player, () -> {
             units.each(Unit::kill);
