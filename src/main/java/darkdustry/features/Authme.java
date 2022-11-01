@@ -9,12 +9,12 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.components.selections.*;
 
 import static darkdustry.PluginVars.loginWaiting;
-import static darkdustry.components.Bundle.bundled;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.adminChannel;
 import static mindustry.Vars.netServer;
 import static net.dv8tion.jda.api.entities.emoji.Emoji.fromFormatted;
 import static net.dv8tion.jda.api.interactions.components.ActionRow.of;
+import static useful.Bundle.bundled;
 
 public class Authme {
 

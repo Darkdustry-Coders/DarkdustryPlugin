@@ -4,10 +4,8 @@ import arc.struct.Seq;
 import darkdustry.components.MongoDB.PlayerData;
 import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
+import useful.Bundle;
 
-import java.util.Locale;
-
-import static darkdustry.components.Bundle.*;
 import static darkdustry.features.Effects.updateEffects;
 
 public class Ranks {
@@ -102,16 +100,16 @@ public class Ranks {
             return hasNext() && next.req.check(playTime, buildingsBuilt, gamesPlayed);
         }
 
-        public String localisedName(Locale locale) {
-            return tag + get("ranks." + name + ".name", name, locale);
+        public String localisedName(Player player) {
+            return tag + Bundle.get("ranks." + name + ".name", name, player);
         }
 
-        public String localisedDesc(Locale locale) {
-            return get("ranks." + name + ".desc", "", locale);
+        public String localisedDesc(Player player) {
+            return Bundle.get("ranks." + name + ".desc", "", player);
         }
 
-        public String localisedReq(Locale locale) {
-            return format("ranks.req", locale, localisedName(locale), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
+        public String localisedReq(Player player) {
+            return Bundle.format("ranks.req", player, localisedName(player), req.playTime(), req.buildingsBuilt(), req.gamesPlayed());
         }
     }
 

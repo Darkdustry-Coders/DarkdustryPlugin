@@ -2,8 +2,8 @@ package darkdustry.features.votes;
 
 import mindustry.gen.Player;
 
-import static darkdustry.components.Bundle.sendToChat;
 import static mindustry.Vars.logic;
+import static useful.Bundle.sendToChat;
 
 public class VoteVnw extends VoteSession {
 
@@ -17,7 +17,6 @@ public class VoteVnw extends VoteSession {
     public void vote(Player player, int sign) {
         super.vote(player, sign);
         sendToChat("commands.vnw.vote", player.coloredName(), waves, votes(), votesRequired());
-        if (votes() >= votesRequired()) success();
     }
 
     @Override

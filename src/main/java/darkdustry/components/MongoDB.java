@@ -65,10 +65,14 @@ public class MongoDB {
         public int buildingsBuilt = 0;
         public int gamesPlayed = 0;
 
-        public int rank = 0;
+        private int rank = 0;
 
         public Rank rank() {
             return Ranks.all.get(rank);
+        }
+
+        public void rank(Rank rank) {
+            this.rank = rank.id;
         }
 
         @SuppressWarnings("unused")

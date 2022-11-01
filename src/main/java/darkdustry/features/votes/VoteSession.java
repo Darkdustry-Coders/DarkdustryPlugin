@@ -6,6 +6,7 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.*;
 
+import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
@@ -22,6 +23,7 @@ public abstract class VoteSession {
 
     public void vote(Player player, int sign) {
         voted.put(player.id, sign);
+        if (votes() >= votesRequired()) app.post(this::success);
     }
 
     public abstract void left(Player player);

@@ -16,12 +16,14 @@ import mindustry.core.Version;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
+import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.getPlayersData;
 import static darkdustry.features.Ranks.updateRank;
+import static darkdustry.utils.Utils.mapPlayers;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -53,12 +55,13 @@ public class DarkdustryPlugin extends Plugin {
 
         PluginEvents.load();
 
-        Bundle.load();
+        Bundle.load(DarkdustryPlugin.class);
+        DynamicMenus.load();
+
         Config.load();
         Console.load();
         Icons.load();
         MapParser.load();
-        MenuHandler.load();
         Translator.load();
 
         Alerts.load();
@@ -84,7 +87,7 @@ public class DarkdustryPlugin extends Plugin {
         Timer.schedule(() -> {
             if (Groups.player.isEmpty()) return;
 
-            getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+            getPlayersData(mapPlayers(Player::uuid)).doOnNext(data -> {
                 var player = Find.playerByUuid(data.uuid);
                 if (player == null) return;
 
@@ -92,12 +95,10 @@ public class DarkdustryPlugin extends Plugin {
                 var rank = data.rank();
 
                 while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                    rank = rank.next;
-                    data.rank = rank.id;
+                    data.rank(rank = rank.next);
                     updateRank(player, data);
 
-                    showMenu(player, rankIncreaseMenu, "events.promotion.header", "events.promotion.content", new String[][] {{"ui.button.close"}},
-                            null, rank.next.localisedName(Find.locale(player.locale)), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                    showMenuClose(player, "events.promotion.header", "events.promotion.content", rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
         }, 60, 60);

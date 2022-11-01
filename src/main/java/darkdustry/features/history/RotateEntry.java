@@ -2,11 +2,10 @@ package darkdustry.features.history;
 
 import arc.util.Time;
 import darkdustry.components.Icons;
-import darkdustry.utils.Find;
 import mindustry.gen.*;
 import mindustry.net.Administration.PlayerAction;
+import useful.Bundle;
 
-import static darkdustry.components.Bundle.format;
 import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
@@ -27,6 +26,6 @@ public class RotateEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return format("history.rotate", Find.locale(player.locale), name, Icons.get(content.block(blockID)), sides[rotation], formatHistoryDate(time));
+        return Bundle.format("history.rotate", player, name, Icons.get(content.block(blockID)), sides[rotation], formatHistoryDate(time));
     }
 }

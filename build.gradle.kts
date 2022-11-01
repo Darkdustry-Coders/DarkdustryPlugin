@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
-    val mindustryVersion = json["minGameVersion"]!!
+    val mindustryVersion = json["minGameVersion"]
     project.version = json["version"]!!
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
@@ -26,6 +26,9 @@ dependencies {
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
+
+    implementation("com.github.xzxADIxzx.Useful-stuffs:server-bundle:main-SNAPSHOT")
+    implementation("com.github.xzxADIxzx.Useful-stuffs:server-menus:main-SNAPSHOT")
 }
 
 tasks.jar {

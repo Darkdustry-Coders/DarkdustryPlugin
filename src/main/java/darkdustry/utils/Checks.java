@@ -17,13 +17,13 @@ import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteract
 
 import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.bundled;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.utils.Cooldowns.defaults;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
+import static useful.Bundle.bundled;
 
 public class Checks {
 
@@ -165,7 +165,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), Find.locale(player.locale)));
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), player.locale));
     }
 
     // endregion

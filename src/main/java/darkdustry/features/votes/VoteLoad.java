@@ -6,8 +6,8 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
 import static darkdustry.PluginVars.mapLoadDelay;
-import static darkdustry.components.Bundle.sendToChat;
 import static darkdustry.utils.Utils.reloadWorld;
+import static useful.Bundle.sendToChat;
 
 public class VoteLoad extends VoteSession {
 
@@ -21,7 +21,6 @@ public class VoteLoad extends VoteSession {
     public void vote(Player player, int sign) {
         super.vote(player, sign);
         sendToChat("commands.loadsave.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
-        if (votes() >= votesRequired()) success();
     }
 
     @Override

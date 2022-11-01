@@ -3,8 +3,6 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.CommandHandler.*;
 import arc.util.*;
-import darkdustry.utils.Find;
-import mindustry.core.Version;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
@@ -12,33 +10,31 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import useful.Bundle;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.format;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.discord.Bot.bansChannel;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static useful.Bundle.sendToChat;
 
 public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
-        var locale = Find.locale(player.locale);
         if (response.type == ResponseType.manyArguments)
-            return format("commands.unknown.many-arguments", locale, response.command.text, response.command.paramText);
+            return Bundle.format("commands.unknown.many-arguments", player, response.command.text, response.command.paramText);
         if (response.type == ResponseType.fewArguments)
-            return format("commands.unknown.few-arguments", locale, response.command.text, response.command.paramText);
+            return Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
 
         var closest = getAvailableCommands(player)
                 .map(command -> command.text)
-                .filter(command -> levenshtein(command, response.runCommand) < 3)
-                .min(command -> levenshtein(command, response.runCommand));
+                .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
+                .min(command -> Strings.levenshtein(command, response.runCommand));
 
-        return closest != null ? format("commands.unknown.closest", locale, closest) : format("commands.unknown", locale);
+        return closest != null ? Bundle.format("commands.unknown.closest", player, closest) : Bundle.format("commands.unknown", player);
     }
 
     public static void connect(NetConnection con, Connect packet) {
@@ -81,7 +77,7 @@ public class NetHandlers {
             return;
         }
 
-        if (stripColors(name).trim().isEmpty()) {
+        if (Strings.stripColors(name).trim().isEmpty()) {
             kick(con, "kick.name-is-empty", locale);
             return;
         }
@@ -123,9 +119,10 @@ public class NetHandlers {
             return;
         }
 
-        if (packet.versionType.equals(("bleeding-edge")) && !Version.type.equals("bleeding-edge")) {
-            Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale), mindustryVersion));
-        }
+        // TODO вернуть
+        //if (packet.versionType.equals(("bleeding-edge")) && !Version.type.equals("bleeding-edge")) {
+        //    Call.infoMessage(con, format("events.join.bleeding-edge", Find.locale(locale), mindustryVersion));
+        //}
 
         if (con.kicked) return;
 

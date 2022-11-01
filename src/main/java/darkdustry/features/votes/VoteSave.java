@@ -5,7 +5,7 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 
 import static arc.Core.app;
-import static darkdustry.components.Bundle.sendToChat;
+import static useful.Bundle.sendToChat;
 
 public class VoteSave extends VoteSession {
 
@@ -19,7 +19,6 @@ public class VoteSave extends VoteSession {
     public void vote(Player player, int sign) {
         super.vote(player, sign);
         sendToChat("commands.savemap.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
-        if (votes() >= votesRequired()) success();
     }
 
     @Override

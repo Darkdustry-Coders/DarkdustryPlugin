@@ -1,11 +1,8 @@
 package darkdustry.features;
 
-import darkdustry.utils.Find;
 import mindustry.gen.Player;
+import useful.Bundle;
 
-import java.util.Locale;
-
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.features.Effects.updateEffects;
@@ -17,12 +14,11 @@ public class SettingsMenu {
     }
 
     public static void showSettingsMenu(Player player, PlayerData data) {
-        var locale = Find.locale(player.locale);
-        showMenu(player, settingsMenu, "commands.settings.header", "commands.settings.content", new String[][] {
-                {button("settings.alerts", locale, data.alerts)},
-                {button("settings.effects", locale, data.effects)},
-                {button("settings.doubleTapHistory", locale, data.doubleTapHistory)},
-                {button("settings.welcomeMessage", locale, data.welcomeMessage)},
+        showMenu(player, SettingsMenu::changeSettings, "commands.settings.header", "commands.settings.content", new String[][] {
+                {button("settings.alerts", player, data.alerts)},
+                {button("settings.effects", player, data.effects)},
+                {button("settings.doubleTapHistory", player, data.doubleTapHistory)},
+                {button("settings.welcomeMessage", player, data.welcomeMessage)},
                 {"ui.button.close"}
         });
     }
@@ -46,7 +42,7 @@ public class SettingsMenu {
         });
     }
 
-    public static String button(String key, Locale locale, boolean value) {
-        return format(key, locale, get(value ? "settings.on" : "settings.off", locale));
+    public static String button(String key, Player player, boolean value) {
+        return Bundle.format(key, player, Bundle.get(value ? "settings.on" : "settings.off", player));
     }
 }

@@ -1,19 +1,21 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.*;
+import darkdustry.components.MenuHandler;
 import darkdustry.features.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
+import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static useful.Bundle.*;
 
 public class ClientCommands {
 
@@ -33,9 +35,10 @@ public class ClientCommands {
             switch (args[0].toLowerCase()) {
                 case "current" -> bundled(player, "commands.tr.current", data.language);
                 case "list" -> {
-                    var builder = new StringBuilder(format("commands.tr.list", Find.locale(player.locale)));
+                    var builder = new StringBuilder();
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
-                    Call.infoMessage(player.con, builder.toString());
+
+                    showMenuClose(player, "commands.tr.list", builder.toString());
                 }
                 case "off" -> {
                     data.language = "off";
@@ -70,9 +73,7 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target.uuid()).subscribe(data -> showMenu(player, statsMenu, "commands.stats.header", "commands.stats.content",
-                    new String[][] {{"ui.button.close"}}, target.coloredName(), data.rank().localisedName(Find.locale(player.locale)),
-                    data.playTime, data.buildingsBuilt, data.gamesPlayed));
+            getPlayerData(target.uuid()).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank().localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
         });
 
         register("rank", (args, player) -> {
@@ -81,17 +82,14 @@ public class ClientCommands {
 
             getPlayerData(target.uuid()).subscribe(data -> {
                 var rank = data.rank();
-                var locale = Find.locale(player.locale);
 
-                if (!rank.hasNext())
-                    showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.content", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale));
-                else
-                    showMenu(player, rankInfoMenu, "commands.rank.header", "commands.rank.next", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, target.coloredName(), rank.localisedName(locale), rank.localisedDesc(locale),
-                            rank.next.localisedName(locale),
-                            data.playTime, rank.next.req.playTime(),
-                            data.buildingsBuilt, rank.next.req.buildingsBuilt(),
-                            data.gamesPlayed, rank.next.req.gamesPlayed()
-                    );
+                showMenu(player, MenuHandler::rankInfo, "commands.rank.header", !rank.hasNext() ? "commands.rank.content" : "commands.rank.next", new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}},
+                        target.coloredName(),
+                        rank.localisedName(player), rank.localisedDesc(player),
+                        rank.next.localisedName(player),
+                        data.playTime, rank.next.req.playTime(),
+                        data.buildingsBuilt, rank.next.req.buildingsBuilt(),
+                        data.gamesPlayed, rank.next.req.gamesPlayed());
             });
         });
 
@@ -169,7 +167,7 @@ public class ClientCommands {
     }
 
     public static Command register(String name, CommandRunner<Player> runner) {
-        return clientCommands.<Player>register(name, get("commands." + name + ".params", "", defaultLocale), get("commands." + name + ".description", defaultLocale), (args, player) -> {
+        return clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
             if (onCooldown(player, name)) return;
             runner.accept(args, player);
             Cooldowns.run(player, name);

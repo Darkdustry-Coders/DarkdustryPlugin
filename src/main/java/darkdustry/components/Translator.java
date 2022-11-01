@@ -2,15 +2,15 @@ package darkdustry.components;
 
 import arc.func.Cons;
 import arc.struct.*;
-import arc.util.Http;
+import arc.util.*;
 import arc.util.serialization.Jval;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.utils.Utils.mapPlayers;
 import static mindustry.Vars.netServer;
 
 public class Translator {
@@ -55,8 +55,7 @@ public class Translator {
     }
 
     public static void translate(String text, String from, String to, Cons<String> result, Cons<Throwable> error) {
-        Http.post(translatorApiUrl)
-                .content("tl=" + to + "&sl=" + from + "&q=" + encode(text))
+        Http.post(translatorApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))
                 .error(error)
                 .submit(response -> result.get(Jval.read(response.getResultAsString()).asArray().get(0).asArray().get(0).asString()));
     }
@@ -65,7 +64,7 @@ public class Translator {
         var cache = new StringMap();
         var message = netServer.chatFormatter.format(author, text);
 
-        getPlayersData(Groups.player.copy(new Seq<>()).map(Player::uuid)).doOnNext(data -> {
+        getPlayersData(mapPlayers(Player::uuid)).doOnNext(data -> {
             var player = Find.playerByUuid(data.uuid);
             if (player == null || player == author) return;
 
@@ -76,10 +75,10 @@ public class Translator {
 
             if (cache.containsKey(data.language)) {
                 player.sendMessage(cache.get(data.language), author, text);
-            } else translate(stripColors(text), "auto", data.language, result -> {
+            } else translate(text, "auto", data.language, result -> {
                 cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(data.language), author, text);
-            }, e -> player.sendMessage(message, author, text));
+            }, throwable -> player.sendMessage(message, author, text));
         }).subscribe();
     }
 }

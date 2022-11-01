@@ -14,9 +14,9 @@ import mindustry.type.Item;
 import mindustry.world.*;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.bundled;
 import static darkdustry.components.MongoDB.getPlayersData;
 import static mindustry.Vars.state;
+import static useful.Bundle.bundled;
 
 public class Alerts {
 

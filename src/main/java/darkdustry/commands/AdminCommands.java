@@ -1,14 +1,16 @@
 package darkdustry.commands;
 
+import arc.Events;
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.Icons;
+import darkdustry.components.*;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
+import mindustry.game.EventType.GameOverEvent;
+import useful.Bundle;
 
 import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.adminOnlyCommands;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.coloredTeam;
@@ -16,22 +18,25 @@ import static mindustry.Vars.*;
 import static mindustry.content.Blocks.coreShard;
 import static mindustry.core.World.conv;
 import static mindustry.graphics.Pal.adminChat;
+import static useful.Bundle.*;
 
 public class AdminCommands {
 
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        register("artv", (args, player) -> showMenu(player, artvMenu, "commands.artv.header", "commands.artv.content",
-                new String[][] {{"ui.button.yes", "ui.button.no"}}));
+        register("artv", (args, player) -> showMenuConfirm(player, () -> {
+            Events.fire(new GameOverEvent(state.rules.waveTeam));
+            sendToChat("commands.artv.info", player.coloredName());
+        }, "commands.artv.header", "commands.artv.content"));
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
-                showMenu(player, despawnMenu, "commands.despawn.header", "commands.despawn.content", new String[][] {
+                showMenu(player, MenuHandler::despawnMenu, "commands.despawn.header", "commands.despawn.content", new String[][] {
                         {"ui.button.yes", "ui.button.no"}, {"commands.despawn.button.players"},
-                        {format("commands.despawn.button.team", Find.locale(player.locale), coloredTeam(state.rules.defaultTeam))},
-                        {format("commands.despawn.button.team", Find.locale(player.locale), coloredTeam(state.rules.waveTeam))},
-                        {"commands.despawn.button.suicide"}}, null, Groups.unit.size());
+                        {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.defaultTeam))},
+                        {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.waveTeam))},
+                        {"commands.despawn.button.suicide"}}, Groups.unit.size());
                 return;
             }
 

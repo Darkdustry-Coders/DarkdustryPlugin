@@ -1,94 +1,76 @@
 package darkdustry.components;
 
-import arc.Events;
-import darkdustry.features.*;
-import darkdustry.utils.Find;
-import mindustry.game.EventType.GameOverEvent;
+import arc.struct.Seq;
+import darkdustry.features.Ranks;
 import mindustry.gen.*;
-import mindustry.ui.Menus;
+import mindustry.ui.Menus.MenuListener;
+import useful.*;
 
 import static darkdustry.PluginVars.discordServerUrl;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MongoDB.*;
-import static darkdustry.utils.Utils.coloredTeam;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.state;
+import static useful.Bundle.bundled;
 
 public class MenuHandler {
 
-    public static int welcomeMenu, despawnMenu, artvMenu, statsMenu, rankInfoMenu, ranksRequirementsMenu, rankIncreaseMenu, settingsMenu;
+    public static MenuListener empty = (player, option) -> {};
 
-    public static void load() {
-        welcomeMenu = Menus.registerMenu((player, option) -> {
-            switch (option) {
-                case 1 -> Call.openURI(player.con, discordServerUrl);
-                case 2 -> getPlayerData(player.uuid()).subscribe(data -> {
-                    data.welcomeMessage = false;
-                    setPlayerData(data).subscribe();
-                    bundled(player, "welcome.disabled");
-                });
-            }
-        });
-
-        despawnMenu = Menus.registerMenu((player, option) -> {
-            if (!player.admin) return;
-
-            switch (option) {
-                case 0 -> {
-                    Groups.unit.each(Call::unitEnvDeath);
-                    bundled(player, "commands.despawn.success.all");
-                }
-                case 2 -> {
-                    Groups.unit.each(Unit::isPlayer, Call::unitEnvDeath);
-                    bundled(player, "commands.despawn.success.players");
-                }
-                case 3 -> {
-                    state.rules.defaultTeam.data().units.each(Call::unitEnvDeath);
-                    bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.defaultTeam));
-                }
-                case 4 -> {
-                    state.rules.waveTeam.data().units.each(Call::unitEnvDeath);
-                    bundled(player, "commands.despawn.success.team", coloredTeam(state.rules.waveTeam));
-                }
-                case 5 -> {
-                    Call.unitEnvDeath(player.unit());
-                    bundled(player, "commands.despawn.success.suicide");
-                }
-            }
-        });
-
-        artvMenu = Menus.registerMenu((player, option) -> {
-            if (!player.admin || option != 0) return;
-
-            Events.fire(new GameOverEvent(state.rules.waveTeam));
-            sendToChat("commands.artv.info", player.coloredName());
-        });
-
-        statsMenu = -1;
-
-        rankInfoMenu = Menus.registerMenu((player, option) -> {
-            if (option != 1) return;
-
-            var builder = new StringBuilder();
-            Ranks.all.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(Find.locale(player.locale))).append("\n"));
-            showMenu(player, ranksRequirementsMenu, "commands.rank.requirements.header", builder.toString(), new String[][] {{"ui.button.close"}});
-        });
-
-        ranksRequirementsMenu = -1;
-
-        rankIncreaseMenu = -1;
-
-        settingsMenu = Menus.registerMenu(SettingsMenu::changeSettings);
+    public static MenuListener confirmed(Runnable confirmed) {
+        return (player, option) -> {
+            if (option == 0) confirmed.run();
+        };
     }
 
-    public static void showMenu(Player player, int menu, String title, String content, String[][] buttons) {
-        showMenu(player, menu, title, content, buttons, null);
+    public static void welcomeMenu(Player player, int option) {
+        switch (option) {
+            case 1 -> Call.openURI(player.con, discordServerUrl);
+            case 2 -> getPlayerData(player.uuid()).subscribe(data -> {
+                data.welcomeMessage = false;
+                setPlayerData(data).subscribe();
+                bundled(player, "welcome.disabled");
+            });
+        }
     }
 
-    public static void showMenu(Player player, int menu, String title, String content, String[][] buttons, Object titleObject, Object... contentObjects) {
-        var locale = Find.locale(player.locale);
+    public static void despawnMenu(Player player, int option) {
+        var units = Seq.with(Groups.unit);
+
+        // TODO
+        switch (option) {
+            case 0 -> {
+                units = Groups.unit;
+            }
+            case 1 -> units = mapPlayers(Player::unit);
+        }
+
+        showMenuConfirm(player, () -> {
+            units.each(Unit::kill);
+        }, "", "", units.size);
+    }
+
+    public static void rankInfo(Player player, int option) {
+        if (option != 1) return;
+
+        var builder = new StringBuilder();
+        Ranks.all.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
+
+        showMenuClose(player, "commands.rank.requirements.header", builder.toString());
+    }
+
+    public static void showMenu(Player player, MenuListener listener, String title, String content, String[][] buttons, Object... values) {
         for (int i = 0; i < buttons.length; i++)
             for (int j = 0; j < buttons[i].length; j++)
-                buttons[i][j] = get(buttons[i][j], locale);
-        Call.menu(player.con, menu, format(title, locale, titleObject), format(content, locale, contentObjects), buttons);
+                buttons[i][j] = Bundle.get(buttons[i][j], player);
+
+        DynamicMenus.menu(player, Bundle.get(title, player), Bundle.format(content, player, values), buttons, listener);
+    }
+
+    public static void showMenuClose(Player player, String title, String content, Object... values) {
+        showMenu(player, empty, title, content, new String[][] {{"ui.button.close"}}, values);
+    }
+
+    public static void showMenuConfirm(Player player, Runnable confirmed, String title, String content, Object... values) {
+        showMenu(player, confirmed(confirmed), title, content, new String[][] {{"ui.button.yes", "ui.button.no"}}, values);
     }
 }

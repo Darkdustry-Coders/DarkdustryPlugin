@@ -1,26 +1,25 @@
 package darkdustry.utils;
 
 import arc.util.Log;
-import darkdustry.components.Bundle;
 import mindustry.gen.Player;
 import mindustry.net.NetConnection;
+import useful.Bundle;
 
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.utils.Utils.formatDuration;
 import static mindustry.Vars.netServer;
+import static useful.Bundle.sendToChat;
 
 public class Administration {
 
     // region Kick
 
-    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String stringLocale, Object... values) {
-        var locale = Find.locale(stringLocale);
-        var reason = format(key, locale, values);
+    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String locale, Object... values) {
+        var reason = Bundle.format(key, locale, values);
 
         if (duration > 0) reason += Bundle.format("kick.time", locale, formatDuration(duration, locale));
-        if (showDisclaimer) reason += format("kick.disclaimer", locale, discordServerUrl);
+        if (showDisclaimer) reason += Bundle.format("kick.disclaimer", locale, discordServerUrl);
         con.kick(reason, duration);
     }
 

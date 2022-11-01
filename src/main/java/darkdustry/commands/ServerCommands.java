@@ -10,7 +10,6 @@ import mindustry.maps.*;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.MongoDB.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Ranks.updateRank;
@@ -18,6 +17,7 @@ import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static useful.Bundle.*;
 
 public class ServerCommands {
 
@@ -38,23 +38,11 @@ public class ServerCommands {
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (alreadyHosting()) return;
 
-            Gamemode mode;
-            if (args.length > 1) {
-                mode = Find.mode(args[1]);
-                if (notFound(mode, args[1])) return;
-            } else {
-                mode = notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
-                Log.info("Default mode selected to be @.", mode.name());
-            }
+            Gamemode mode = args.length > 1 ? Find.mode(args[1]) : notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
+            if (notFound(mode, args[1])) return;
 
-            Map map;
-            if (args.length > 0) {
-                map = Find.map(args[0]);
-                if (notFound(map, args[0])) return;
-            } else {
-                map = maps.getShuffleMode().next(mode, state.map);
-                Log.info("Randomized next map to be @.", map.name());
-            }
+            Map map = args.length > 0 ? Find.map(args[0]) : maps.getShuffleMode().next(mode, state.map);
+            if (notFound(map, args[0])) return;
 
             settings.put("lastServerMode", mode.name());
 
@@ -212,7 +200,7 @@ public class ServerCommands {
             if (notFound(rank, args[1])) return;
 
             getPlayerData(playerInfo.id).subscribe(data -> {
-                data.rank = rank.id;
+                data.rank(rank);
                 if (target != null) updateRank(target, data);
 
                 setPlayerData(data).subscribe();

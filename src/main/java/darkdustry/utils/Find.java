@@ -12,20 +12,13 @@ import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import java.util.Locale;
-
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.translatorLanguages;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.features.Ranks.all;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class Find {
-
-    public static Locale locale(String name) {
-        return notNullElse(supportedLocales.find(locale -> name.startsWith(locale.toString())), defaultLocale);
-    }
 
     public static Player player(String nameOrId) {
         return notNullElse(playerById(nameOrId), playerByName(nameOrId));

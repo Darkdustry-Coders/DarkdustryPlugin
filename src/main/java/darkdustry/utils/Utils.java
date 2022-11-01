@@ -1,20 +1,19 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.func.Func;
 import arc.struct.*;
+import arc.util.*;
 import arc.util.CommandHandler.Command;
-import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.maps.MapException;
 import mindustry.net.WorldReloader;
+import useful.Bundle;
 
-import java.util.Locale;
-
-import static arc.util.Strings.*;
+//import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.format;
 import static java.time.Duration.ofMillis;
 import static java.time.Instant.ofEpochMilli;
 import static mindustry.Vars.*;
@@ -33,6 +32,10 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
+    public static <T> Seq<T> mapPlayers(Func<Player, T> func) {
+        return Seq.with(Groups.player).map(func);
+    }
+
     public static Fi getPluginResource(String name) {
         return mods.getMod(DarkdustryPlugin.class).root.child(name);
     }
@@ -46,7 +49,7 @@ public class Utils {
     }
 
     public static String stripAll(String str) {
-        return stripColors(stripGlyphs(str));
+        return Strings.stripColors(Strings.stripGlyphs(str));
     }
 
     public static boolean deepEquals(String first, String second) {
@@ -63,16 +66,17 @@ public class Utils {
         return kickFormat.format(ofEpochMilli(time));
     }
 
-    public static String formatDuration(long time, Locale locale) {
+    public static String formatDuration(long time, String locale) {
         var duration = ofMillis(time);
         var builder = new StringBuilder();
+
         OrderedMap.<String, Number>of(
                 "time.days", duration.toDaysPart(),
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
             if (value.intValue() > 0)
-                builder.append(format(key, locale, value)).append(" ");
+                builder.append(Bundle.format(key, locale, value)).append(" ");
         });
 
         return builder.toString().trim();

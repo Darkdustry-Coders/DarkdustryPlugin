@@ -2,17 +2,17 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
+import darkdustry.components.MenuHandler;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
-import darkdustry.utils.Find;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
 import mindustry.gen.Groups;
+import useful.Bundle;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.*;
 import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.components.MenuHandler.*;
 import static darkdustry.components.MongoDB.*;
@@ -23,6 +23,7 @@ import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
+import static useful.Bundle.*;
 
 public class PluginEvents {
 
@@ -78,14 +79,10 @@ public class PluginEvents {
             sendEmbed(botChannel, success, "@ joined", event.player.plainName());
 
             if (data.welcomeMessage) {
-                var locale = Find.locale(event.player.locale);
                 var builder = new StringBuilder();
+                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(get("commands." + command + ".description", event.player)));
 
-                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(get("commands." + command + ".description", locale)));
-
-                showMenu(event.player, welcomeMenu, "welcome.header", "welcome.content",
-                        new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}},
-                        null, serverName.string(), builder.toString());
+                showMenu(event.player, MenuHandler::welcomeMenu, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"welcome.button.disable"}}, serverName.string(), builder.toString());
             }
 
             app.post(Bot::updateBotStatus);
@@ -114,10 +111,10 @@ public class PluginEvents {
                 if (!data.doubleTapHistory) return;
 
                 DoubleTap.check(event, () -> {
-                    var builder = new StringBuilder(format("history.title", Find.locale(event.player.locale), event.tile.x, event.tile.y));
+                    var builder = new StringBuilder(Bundle.format("history.title", event.player, event.tile.x, event.tile.y));
                     var stack = History.get(event.tile.array());
 
-                    if (stack.isEmpty()) builder.append(format("history.empty", Find.locale(event.player.locale)));
+                    if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
                     else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
                     event.player.sendMessage(builder.toString());

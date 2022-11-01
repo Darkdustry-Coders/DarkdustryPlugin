@@ -2,11 +2,10 @@ package darkdustry.features.history;
 
 import arc.util.Time;
 import darkdustry.components.Icons;
-import darkdustry.utils.Find;
 import mindustry.game.EventType.DepositEvent;
 import mindustry.gen.Player;
+import useful.Bundle;
 
-import static darkdustry.components.Bundle.format;
 import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
@@ -27,6 +26,6 @@ public class DepositEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return format("history.deposit", Find.locale(player.locale), name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatHistoryDate(time));
+        return Bundle.format("history.deposit", player, name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatHistoryDate(time));
     }
 }

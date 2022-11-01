@@ -2,12 +2,11 @@ package darkdustry.features.history;
 
 import arc.util.Time;
 import darkdustry.components.Icons;
-import darkdustry.utils.Find;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
+import useful.Bundle;
 
-import static darkdustry.components.Bundle.format;
 import static darkdustry.features.history.RotateEntry.sides;
 import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
@@ -30,7 +29,6 @@ public class BlockEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        var key = breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct";
-        return format(key, Find.locale(player.locale), name, Icons.get(block), formatHistoryDate(time), sides[rotation]);
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.get(block), formatHistoryDate(time), sides[rotation]);
     }
 }

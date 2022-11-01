@@ -1,8 +1,8 @@
 package darkdustry.discord;
 
+import arc.util.Strings;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
-import darkdustry.utils.Find;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
@@ -12,22 +12,20 @@ import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
+import useful.Bundle;
 
 import java.awt.Color;
 import java.util.EnumSet;
 
 import static arc.util.CommandHandler.ResponseType.*;
-import static arc.util.Strings.format;
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Bundle.format;
-import static darkdustry.components.Bundle.*;
 import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static net.dv8tion.jda.api.entities.Activity.watching;
 import static net.dv8tion.jda.api.entities.Message.MentionType.*;
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;
+import static useful.Bundle.bundled;
 
 public class Bot {
 
@@ -57,7 +55,7 @@ public class Bot {
             jda.updateCommands().queue();
 
             // Изменяем никнейм на [prefix] Name
-            jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
+            jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(Strings.format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
@@ -91,16 +89,13 @@ public class Bot {
         var roles = member.getRoles();
         var reply = message.getReferencedMessage();
 
-        Groups.player.each(player -> {
-            var locale = Find.locale(player.locale);
-
-            bundled(player, "discord.chat",
-                    Integer.toHexString(member.getColorRaw()),
-                    roles.isEmpty() ? format("discord.chat.no-role", locale) : roles.get(0).getName(),
-                    member.getEffectiveName(),
-                    reply != null ? format("discord.chat.reply", locale, reply.getAuthor().getName()) : "",
-                    message.getContentDisplay());
-        });
+        Groups.player.each(player -> bundled(player, "discord.chat",
+                Integer.toHexString(member.getColorRaw()),
+                roles.isEmpty() ? Bundle.format("discord.chat.no-role", player) : roles.get(0).getName(),
+                member.getEffectiveName(),
+                reply != null ? Bundle.format("discord.chat.reply", player, reply.getAuthor().getName()) : "",
+                message.getContentDisplay())
+        );
     }
 
     public static boolean isAdmin(Member member) {
@@ -109,17 +104,17 @@ public class Bot {
 
     public static void updateBotStatus() {
         if (connected())
-            jda.getPresence().setActivity(watching("at " + Groups.player.size() + " players on " + stripColors(state.map.name())));
+            jda.getPresence().setActivity(watching("at " + Groups.player.size() + " players on " + Strings.stripColors(state.map.name())));
     }
 
     public static void sendMessage(MessageChannel channel, String text, Object... values) {
         if (channel != null && channel.canTalk())
-            channel.sendMessage(format(text, values)).queue();
+            channel.sendMessage(Strings.format(text, values)).queue();
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String title, Object... values) {
         if (channel != null && channel.canTalk())
-            channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(format(title, values)).build()).queue();
+            channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(title, values)).build()).queue();
     }
 
     public static class Palette {
@@ -135,27 +130,27 @@ public class Bot {
         }
 
         public MessageCreateAction success(String title, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.success).setTitle(format(title, values)).build());
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.success).setTitle(Strings.format(title, values)).build());
         }
 
         public MessageCreateAction info(String title, String description, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(format(description, values)).build());
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(Strings.format(description, values)).build());
         }
 
         public MessageCreateAction info(String title, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(format(title, values)).build());
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(Strings.format(title, values)).build());
         }
 
         public MessageCreateAction info(String title, String description, FileUpload image, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(format(description, values)).setImage("attachment://" + image.getName()).build()).addFiles(image);
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.info).setTitle(title).setDescription(Strings.format(description, values)).setImage("attachment://" + image.getName()).build()).addFiles(image);
         }
 
         public MessageCreateAction error(String title, String description, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(title).setDescription(format(description, values)).build());
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(title).setDescription(Strings.format(description, values)).build());
         }
 
         public MessageCreateAction error(String title, Object... values) {
-            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(format(title, values)).build());
+            return message.replyEmbeds(new EmbedBuilder().setColor(Palette.error).setTitle(Strings.format(title, values)).build());
         }
     }
 }

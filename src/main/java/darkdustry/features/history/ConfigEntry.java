@@ -2,17 +2,16 @@ package darkdustry.features.history;
 
 import arc.math.geom.Point2;
 import arc.util.*;
-import darkdustry.utils.Find;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.logic.*;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory;
+import useful.Bundle;
 
 import java.util.Arrays;
 
-import static darkdustry.components.Bundle.format;
 import static darkdustry.components.Icons.get;
 import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
@@ -38,50 +37,49 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        var locale = Find.locale(player.locale);
         var date = formatHistoryDate(time);
 
         if (value == null) {
-            return format("history.config.default", locale, name, get(block), date);
+            return Bundle.format("history.config.default", player, name, get(block), date);
         }
 
         if (value instanceof MappableContent content) {
-            return format("history.config", locale, name, get(block), get(content), date);
+            return Bundle.format("history.config", player, name, get(block), get(content), date);
         }
 
         if (value instanceof Boolean on) {
-            return on ? format("history.config.on", locale, name, get(block), date) : format("history.config.off", locale, name, get(block), date);
+            return on ? Bundle.format("history.config.on", player, name, get(block), date) : Bundle.format("history.config.off", player, name, get(block), date);
         }
 
         if (value instanceof String text) {
-            return !text.isEmpty() ? format("history.config.text", locale, name, get(block), text, date) : format("history.config.default", locale, name, get(block), date);
+            return !text.isEmpty() ? Bundle.format("history.config.text", player, name, get(block), text, date) : Bundle.format("history.config.default", player, name, get(block), date);
         }
 
         if (value instanceof Point2 point) {
-            return connect ? format("history.config.connect", locale, name, get(block), point.x, point.y, date) : format("history.config.disconnect", locale, name, get(block), date);
+            return connect ? Bundle.format("history.config.connect", player, name, get(block), point.x, point.y, date) : Bundle.format("history.config.disconnect", player, name, get(block), date);
         }
 
         if (value instanceof Point2[] points) {
             if (points.length == 0) {
-                return format("history.config.disconnect", locale, name, get(block), date);
+                return Bundle.format("history.config.disconnect", player, name, get(block), date);
             }
 
-            return format("history.config.connects", locale, name, get(block), Arrays.toString(points), date);
+            return Bundle.format("history.config.connects", player, name, get(block), Arrays.toString(points), date);
         }
 
         if (block instanceof LightBlock) {
-            return format("history.config.color", locale, name, get(block), Tmp.c1.set((int) value).toString(), date);
+            return Bundle.format("history.config.color", player, name, get(block), Tmp.c1.set((int) value).toString(), date);
         }
 
         if (block instanceof LogicBlock) {
-            return format("history.config.code", locale, name, get(block), date);
+            return Bundle.format("history.config.code", player, name, get(block), date);
         }
 
         if (block instanceof CanvasBlock) {
-            return format("history.config.image", locale, name, get(block), date);
+            return Bundle.format("history.config.image", player, name, get(block), date);
         }
 
-        return format("history.config.default", locale, name, get(block), date);
+        return Bundle.format("history.config.default", player, name, get(block), date);
     }
 
     public Object getValue(ConfigEvent event) {
