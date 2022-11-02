@@ -1,7 +1,7 @@
 package darkdustry.features;
 
 import arc.struct.Seq;
-import darkdustry.components.MongoDB.PlayerData;
+import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
 import useful.Bundle;

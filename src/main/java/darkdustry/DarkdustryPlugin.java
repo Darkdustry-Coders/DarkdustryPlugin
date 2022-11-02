@@ -19,7 +19,7 @@ import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.components.Database.getPlayersData;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showMenuClose;
 import static mindustry.Vars.*;
@@ -29,7 +29,7 @@ public class DarkdustryPlugin extends Plugin {
 
     public static void exit() {
         netServer.kickAll(KickReason.serverRestarting);
-        app.post(MongoDB::exit);
+        app.post(Database::exit);
         app.post(Bot::exit);
         app.exit();
     }
@@ -68,7 +68,7 @@ public class DarkdustryPlugin extends Plugin {
         SchemeSize.load();
         Scripts.load();
 
-        MongoDB.connect();
+        Database.connect();
         Bot.connect();
 
         Version.build = -1;
@@ -98,7 +98,7 @@ public class DarkdustryPlugin extends Plugin {
 
                     showMenuClose(player, "events.promotion.header", "events.promotion.content", rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
-            }).collectList().flatMap(MongoDB::setPlayersData).subscribe();
+            }).collectList().flatMap(Database::setPlayersData).subscribe();
         }, 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов

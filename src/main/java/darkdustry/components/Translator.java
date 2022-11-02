@@ -9,7 +9,7 @@ import darkdustry.utils.Find;
 import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.MongoDB.getPlayersData;
+import static darkdustry.components.Database.getPlayersData;
 import static mindustry.Vars.netServer;
 
 public class Translator {

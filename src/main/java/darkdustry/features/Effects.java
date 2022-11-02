@@ -6,7 +6,7 @@ import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.IntMap;
 import arc.util.Tmp;
-import darkdustry.components.MongoDB.PlayerData;
+import darkdustry.components.Database.PlayerData;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;

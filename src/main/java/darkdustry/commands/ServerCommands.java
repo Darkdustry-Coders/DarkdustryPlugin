@@ -10,7 +10,7 @@ import mindustry.maps.*;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;

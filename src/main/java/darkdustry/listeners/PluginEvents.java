@@ -16,7 +16,7 @@ import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.features.menus.MenuHandler.showMenu;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.DoubleTap.lastTaps;
@@ -63,7 +63,7 @@ public class PluginEvents {
             Alerts.depositAlert(event);
         });
 
-        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).collectList().flatMap(MongoDB::setPlayersData).subscribe());
+        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).collectList().flatMap(Database::setPlayersData).subscribe());
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player).subscribe(data -> {
             updateRank(event.player, data);

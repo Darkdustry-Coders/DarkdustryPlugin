@@ -4,7 +4,7 @@ import mindustry.gen.Player;
 import useful.Bundle;
 
 import static darkdustry.features.menus.MenuHandler.showMenu;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.*;
 import static darkdustry.features.Effects.updateEffects;
 
 public class SettingsMenu {

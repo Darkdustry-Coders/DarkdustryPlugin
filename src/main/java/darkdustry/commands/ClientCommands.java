@@ -12,7 +12,7 @@ import useful.Bundle;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.features.menus.MenuHandler.*;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;

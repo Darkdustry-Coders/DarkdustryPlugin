@@ -30,8 +30,8 @@ public class MapParser {
 
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);
-                if (block instanceof OreBlock) block.mapColor.set(block.itemDrop.color);
-                else block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
+                if (!(block instanceof OreBlock))
+                    block.mapColor.rgba8888(pixmap.get(i, 0)).a(1f);
             }
 
             pixmap.dispose();
@@ -149,7 +149,7 @@ public class MapParser {
         }
 
         @Override
-        protected void changeBuild(Team team, Prov<Building> entityprov, int rotation) {}
+        protected void changeBuild(Team team, Prov<Building> prov, int rotation) {}
 
         @Override
         protected void changed() {}
@@ -163,12 +163,10 @@ public class MapParser {
 
         @Override
         public void readMap(DataInput stream, WorldContext context) throws IOException {
-            int width = stream.readUnsignedShort();
-            int height = stream.readUnsignedShort();
+            int width = stream.readUnsignedShort(), height = stream.readUnsignedShort();
 
             for (int i = 0; i < width * height; i++) {
-                short floorID = stream.readShort();
-                short oreID = stream.readShort();
+                short floorID = stream.readShort(), oreID = stream.readShort();
 
                 int consecutive = stream.readUnsignedByte();
 
@@ -187,9 +185,7 @@ public class MapParser {
                         hadData = (packedCheck & 2) != 0,
                         isCenter = !hadEntity || stream.readBoolean();
 
-                if (isCenter || hadData) {
-                    tile.setBlock(block);
-                }
+                if (isCenter || hadData) tile.setBlock(block);
 
                 if (hadEntity) {
                     if (!isCenter) continue;

@@ -6,7 +6,7 @@ import mindustry.ui.Menus.MenuListener;
 import useful.*;
 
 import static darkdustry.PluginVars.discordServerUrl;
-import static darkdustry.components.MongoDB.*;
+import static darkdustry.components.Database.*;
 import static useful.Bundle.bundled;
 
 public class MenuHandler {

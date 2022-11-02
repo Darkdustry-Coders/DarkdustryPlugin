@@ -15,7 +15,7 @@ import static darkdustry.PluginVars.config;
 import static org.bson.codecs.configuration.CodecRegistries.*;
 import static org.bson.codecs.pojo.PojoCodecProvider.builder;
 
-public class MongoDB {
+public class Database {
 
     public static MongoClient client;
     public static MongoCollection<PlayerData> collection;
@@ -46,7 +46,7 @@ public class MongoDB {
     }
 
     public static Flux<PlayerData> getPlayersData(Iterable<Player> players) {
-        return Flux.fromIterable(players).flatMap(MongoDB::getPlayerData);
+        return Flux.fromIterable(players).flatMap(Database::getPlayerData);
     }
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
@@ -54,7 +54,7 @@ public class MongoDB {
     }
 
     public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {
-        return Flux.fromIterable(datas).flatMap(MongoDB::setPlayerData).then();
+        return Flux.fromIterable(datas).flatMap(Database::setPlayerData).then();
     }
 
     public static class PlayerData {

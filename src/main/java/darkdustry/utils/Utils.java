@@ -18,8 +18,8 @@ import static mindustry.Vars.*;
 
 public class Utils {
 
-    public static int voteChoice(String sign) {
-        return switch (sign.toLowerCase()) {
+    public static int voteChoice(String vote) {
+        return switch (vote.toLowerCase()) {
             case "y" -> 1;
             case "n" -> -1;
             default -> 0;
