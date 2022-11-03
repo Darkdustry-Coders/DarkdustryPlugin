@@ -22,6 +22,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.getPlayersData;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showMenuClose;
+import static darkdustry.utils.Utils.getAvailableMaps;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -81,6 +82,8 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addChatFilter(Filters::chat);
 
         netServer.invalidHandler = NetHandlers::invalidResponse;
+
+        maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
 
         Timer.schedule(() -> {
             if (Groups.player.isEmpty()) return;

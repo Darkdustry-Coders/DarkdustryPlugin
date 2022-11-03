@@ -6,13 +6,12 @@ import arc.struct.Seq;
 import arc.util.Strings;
 import darkdustry.discord.Bot.Context;
 import mindustry.gen.*;
-import mindustry.io.SaveIO;
 import net.dv8tion.jda.api.EmbedBuilder;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.getAvailableCommands;
-import static mindustry.Vars.*;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.state;
 import static useful.Bundle.bundled;
 
 // Страшно, но очень полезно.
@@ -36,12 +35,12 @@ public class PageIterator {
     }
 
     public static void maps(String[] args, Player player) {
-        client(args, player, maps.customMaps(), "maps",
+        client(args, player, getAvailableMaps(), "maps",
                 (builder, i, map) -> builder.append("[orange]").append(i + 1).append("[lightgray] - [accent]").append(map.name()).append(map == state.map ? Bundle.get("commands.maps.current", player) : ""));
     }
 
     public static void saves(String[] args, Player player) {
-        client(args, player, saveDirectory.seq().filter(SaveIO::isSaveValid), "saves",
+        client(args, player, getAvailableSaves(), "saves",
                 (builder, i, save) -> builder.append("[orange]").append(i + 1).append("[lightgray] - [accent]").append(save.nameWithoutExtension()));
     }
 
@@ -76,7 +75,7 @@ public class PageIterator {
     }
 
     public static void maps(String[] args, Context context) {
-        discord(args, context, maps.customMaps(),
+        discord(args, context, getAvailableMaps(),
                 content -> Strings.format(":map: Maps in playlist: @", content.size),
                 (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
         );

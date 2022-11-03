@@ -5,7 +5,6 @@ import arc.util.Structs;
 import darkdustry.features.Ranks.Rank;
 import mindustry.game.*;
 import mindustry.gen.*;
-import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
@@ -64,13 +63,13 @@ public class Find {
     }
 
     public static Map map(String name) {
-        var list = maps.customMaps();
+        var list = getAvailableMaps();
         int index = parseInt(name);
         return index > 0 && index <= list.size ? list.get(index - 1) : list.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        var list = saveDirectory.seq().filter(SaveIO::isSaveValid);
+        var list = getAvailableSaves();
         int index = parseInt(name);
         return index > 0 && index <= list.size ? list.get(index - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }

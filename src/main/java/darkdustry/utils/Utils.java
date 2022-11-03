@@ -7,7 +7,8 @@ import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import mindustry.maps.MapException;
+import mindustry.io.SaveIO;
+import mindustry.maps.*;
 import mindustry.net.WorldReloader;
 import useful.Bundle;
 
@@ -36,6 +37,14 @@ public class Utils {
 
     public static Seq<Command> getAvailableCommands(Player player) {
         return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
+    }
+
+    public static Seq<Map> getAvailableMaps() {
+        return maps.customMaps().isEmpty() ? maps.defaultMaps() : maps.customMaps();
+    }
+
+    public static Seq<Fi> getAvailableSaves() {
+        return saveDirectory.seq().filter(SaveIO::isSaveValid);
     }
 
     public static String coloredTeam(Team team) {

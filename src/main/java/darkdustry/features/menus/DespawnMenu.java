@@ -44,6 +44,6 @@ public class DespawnMenu {
     }
 
     public static Team getEnemyTeam(Team team) {
-        return team == state.rules.defaultTeam ? state.rules.waveTeam : state.rules.defaultTeam;
+        return team == state.rules.waveTeam ? state.rules.defaultTeam : state.rules.waveTeam;
     }
 }

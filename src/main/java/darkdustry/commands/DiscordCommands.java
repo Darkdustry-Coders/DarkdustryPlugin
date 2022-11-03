@@ -38,17 +38,17 @@ public class DiscordCommands {
             context.info(stripAll(":satellite: " + serverName.string()), "Players: @\nUnits: @\nMap: @\nWave: @\nTPS: @\nRAM usage: @ MB", fromData(renderMinimap(), "minimap.png"), Groups.player.size(), Groups.unit.size(), state.map.name(), state.wave, graphics.getFramesPerSecond(), app.getJavaHeap() / 1024 / 1024).queue();
         });
 
-        discordCommands.<Context>register("maps", "[page]", "List of all maps.", PageIterator::maps);
-
-        discordCommands.<Context>register("players", "[page]", "List of all players.", PageIterator::players);
-
         discordCommands.<Context>register("restart", "Restart the server.", (args, context) -> {
             if (notAdmin(context)) return;
 
             context.info(":arrows_counterclockwise: Server is restarting...").queue(message -> DarkdustryPlugin.exit());
         });
 
+        discordCommands.<Context>register("players", "[page]", "List of all players.", PageIterator::players);
+
         if (config.mode == hexed) return;
+
+        discordCommands.<Context>register("maps", "[page]", "List of all maps.", PageIterator::maps);
 
         discordCommands.<Context>register("map", "<map...>", "Get a map from the server.", (args, context) -> {
             var map = Find.map(args[0]);
@@ -62,7 +62,7 @@ public class DiscordCommands {
                     .setFooter(map.width + "x" + map.height)
                     .setImage("attachment://map.png");
 
-            context.message().replyEmbeds(embed.build()).addFiles(fromData(map.file.file()), fromData(renderMap(map), "map.png")).queue();
+            context.message().replyEmbeds(embed.build()).addFiles(fromData(map.file.readBytes(), map.file.name()), fromData(renderMap(map), "map.png")).queue();
         });
 
         discordCommands.<Context>register("uploadmap", "Upload a map to the server.", (args, context) -> {

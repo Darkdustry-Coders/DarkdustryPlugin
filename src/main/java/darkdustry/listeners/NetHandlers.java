@@ -1,21 +1,17 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.util.CommandHandler.*;
+import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import useful.Bundle;
 
 import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.Palette.error;
-import static darkdustry.discord.Bot.bansChannel;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
@@ -150,17 +146,7 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> kick(other, player.coloredName());
-            case ban -> {
-                ban(other, player.coloredName());
-
-                var embed = new EmbedBuilder().setTitle("Бан")
-                        .setColor(error)
-                        .addField("Violator", other.plainName(), false)
-                        .addField("Administrator", player.plainName(), false)
-                        .addField("Server", config.mode.name(), false);
-
-                bansChannel.sendMessageEmbeds(embed.build()).addActionRow(Button.danger("editban", "Edit Ban")).queue();
-            }
+            case ban -> ban(other, player.coloredName());
             case trace -> {
                 var info = other.getInfo();
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, info.timesJoined, info.timesKicked));
