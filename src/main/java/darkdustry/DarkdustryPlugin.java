@@ -83,7 +83,7 @@ public class DarkdustryPlugin extends Plugin {
 
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
+        maps.setMapProvider((mode, map) -> getAvailableMaps().select(mode::valid).random(map));
 
         Timer.schedule(() -> {
             if (Groups.player.isEmpty()) return;

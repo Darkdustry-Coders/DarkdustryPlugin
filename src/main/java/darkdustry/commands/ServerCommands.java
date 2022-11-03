@@ -74,7 +74,7 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
-            sendMessage(botChannel, "**Сервер:** @", args[0]);
+            sendMessage(botChannel, "**Server:** @", args[0]);
         });
 
         serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
@@ -185,7 +185,7 @@ public class ServerCommands {
 
                     Log.info("Player @ is no longer an admin.", playerInfo.plainLastName());
                 }
-                default -> Log.err("The first parameter must be either add/remove.");
+                default -> Log.err("The first parameter must be either add or remove.");
             }
         });
 
