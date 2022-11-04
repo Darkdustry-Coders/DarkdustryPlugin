@@ -37,7 +37,7 @@ public class DespawnMenu {
     }
 
     public static void showMenuConfirmDespawn(Player player, Seq<Unit> units) {
-        showMenuConfirm(player, "commands.despawn.header", "commands.despawn.confirm", () -> {
+        showMenuConfirm(player, "commands.despawn.confirm", () -> {
             units.each(Call::unitEnvDeath);
             bundled(player, "commands.despawn.success", units.size);
         }, () -> showDespawnMenu(player), units.size);

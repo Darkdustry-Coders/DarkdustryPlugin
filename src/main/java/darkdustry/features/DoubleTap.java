@@ -12,6 +12,10 @@ public class DoubleTap {
 
     public static final IntMap<Tap> lastTaps = new IntMap<>();
 
+    public static void clear() {
+        lastTaps.clear();
+    }
+
     public static void check(TapEvent event, Runnable runnable) {
         if (lastTaps.containsKey(event.player.id) && lastTaps.remove(event.player.id).check(event))
             runnable.run();

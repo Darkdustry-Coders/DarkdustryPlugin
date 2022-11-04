@@ -25,7 +25,7 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.header", "commands.artv.content", () -> {
+        register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.confirm", () -> {
             Events.fire(new GameOverEvent(state.rules.waveTeam));
             sendToChat("commands.artv.info", player.coloredName());
         }));

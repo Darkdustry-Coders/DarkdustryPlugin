@@ -16,7 +16,7 @@ public class Effects {
 
     public static final IntMap<FxData> effectsCache = new IntMap<>();
 
-    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8;
+    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8, pack9;
 
     public static void load() {
         pack1 = new FxPack(p -> on(Fx.greenBomb, p), p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
@@ -26,7 +26,8 @@ public class Effects {
         pack5 = new FxPack(p -> on(Fx.neoplasmSplat, p), p -> on(Fx.neoplasmSplat, p), p -> on(Fx.overclocked, p, 0f, Tmp.c1.randHue()));
         pack6 = new FxPack(p -> on(Fx.instBomb, p), p -> on(Fx.instHit, p), p -> on(Fx.smeltsmoke, p, 0f, Color.orange));
         pack7 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p), p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack8 = new FxPack(Effects::particles, Effects::particles, p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
+        pack8 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p), p -> on(Fx.smeltsmoke, p, 0f, Color.purple));
+        pack9 = new FxPack(Effects::particles, Effects::particles, p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {

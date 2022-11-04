@@ -64,13 +64,13 @@ public class Ranks {
         console = new Rank() {{
             tag = "[#8d56b1]<\uE85D>[] ";
             name = "console";
-            effects = Effects.pack7;
+            effects = Effects.pack8;
         }};
 
         owner = new Rank() {{
             tag = "[#0088ff]<[white]\uF7A9[]>[] ";
             name = "owner";
-            effects = Effects.pack8;
+            effects = Effects.pack9;
         }};
     }
 

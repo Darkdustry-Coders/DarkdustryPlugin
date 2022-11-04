@@ -50,11 +50,11 @@ public class MenuHandler {
         showMenu(player, title, content, new String[][] {{"ui.button.close"}}, null, values);
     }
 
-    public static void showMenuConfirm(Player player, String title, String content, Runnable confirmed, Object... values) {
-        showMenuConfirm(player, title, content, confirmed, null, values);
+    public static void showMenuConfirm(Player player, String content, Runnable confirmed, Object... values) {
+        showMenuConfirm(player, content, confirmed, null, values);
     }
 
-    public static void showMenuConfirm(Player player, String title, String content, Runnable confirmed, Runnable denied, Object... values) {
-        showMenu(player, title, content, new String[][] {{"ui.button.yes", "ui.button.no"}}, choose(confirmed, denied), values);
+    public static void showMenuConfirm(Player player, String content, Runnable confirmed, Runnable denied, Object... values) {
+        showMenu(player, "ui.header.confirm", content, new String[][] {{"ui.button.yes", "ui.button.no"}}, choose(confirmed, denied), values);
     }
 }

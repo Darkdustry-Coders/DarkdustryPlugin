@@ -98,8 +98,10 @@ public class ClientCommands {
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
-            voteKick = new VoteKick(player, target);
-            voteKick.vote(player, 1);
+            showMenuConfirm(player, "commands.votekick.confirm", () -> {
+                voteKick = new VoteKick(player, target);
+                voteKick.vote(player, 1);
+            }, target.coloredName());
         });
 
         register("vote", (args, player) -> {
@@ -115,8 +117,10 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player)) return;
 
-            Authme.sendAdminRequest(player);
-            bundled(player, "commands.login.sent");
+            showMenuConfirm(player, "commands.login.confirm", () -> {
+                Authme.sendAdminRequest(player);
+                bundled(player, "commands.login.sent");
+            });
         });
 
         if (!config.mode.isDefault()) return;

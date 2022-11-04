@@ -109,13 +109,13 @@ public class PluginEvents {
                 if (!data.doubleTapHistory) return;
 
                 DoubleTap.check(event, () -> {
-                    var builder = new StringBuilder(Bundle.format("history.title", event.player, event.tile.x, event.tile.y));
+                    var builder = new StringBuilder();
                     var stack = History.get(event.tile.array());
 
                     if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
                     else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-                    event.player.sendMessage(builder.toString());
+                    bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
                 });
             });
         });
@@ -124,6 +124,7 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
+            DoubleTap.clear();
             DynamicMenus.clear();
 
             app.post(Bot::updateBotStatus);

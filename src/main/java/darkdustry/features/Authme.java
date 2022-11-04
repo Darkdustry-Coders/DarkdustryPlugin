@@ -43,7 +43,7 @@ public class Authme {
 
             if (player != null) {
                 player.admin(true);
-                bundled(player, "commands.login.confirm");
+                bundled(player, "commands.login.success");
             }
 
             return new EmbedBuilder().setColor(success).setTitle("Request Confirmed");
@@ -52,7 +52,7 @@ public class Authme {
 
     public static void deny(StringSelectInteractionEvent event) {
         remove(event, (info, player) -> {
-            if (player != null) bundled(player, "commands.login.deny");
+            if (player != null) bundled(player, "commands.login.fail");
             return new EmbedBuilder().setColor(error).setTitle("Request Denied");
         });
     }
