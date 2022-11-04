@@ -2,6 +2,7 @@ package darkdustry.features.history;
 
 import arc.math.geom.Point2;
 import arc.util.*;
+import darkdustry.components.Icons;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
@@ -12,7 +13,6 @@ import useful.Bundle;
 
 import java.util.Arrays;
 
-import static darkdustry.components.Icons.get;
 import static darkdustry.utils.Utils.formatHistoryDate;
 import static mindustry.Vars.content;
 
@@ -40,60 +40,58 @@ public class ConfigEntry implements HistoryEntry {
         var date = formatHistoryDate(time);
 
         if (value == null) {
-            return Bundle.format("history.config.default", player, name, get(block), date);
+            return Bundle.format("history.config.default", player, name, Icons.get(block), date);
         }
 
         if (value instanceof MappableContent content) {
-            return Bundle.format("history.config", player, name, get(block), get(content), date);
+            return Bundle.format("history.config", player, name, Icons.get(block), Icons.get(content), date);
         }
 
         if (value instanceof Boolean on) {
-            return on ? Bundle.format("history.config.on", player, name, get(block), date) : Bundle.format("history.config.off", player, name, get(block), date);
+            return on ? Bundle.format("history.config.on", player, name, Icons.get(block), date) : Bundle.format("history.config.off", player, name, Icons.get(block), date);
         }
 
         if (value instanceof String text) {
-            return !text.isEmpty() ? Bundle.format("history.config.text", player, name, get(block), text, date) : Bundle.format("history.config.default", player, name, get(block), date);
+            return !text.isEmpty() ? Bundle.format("history.config.text", player, name, Icons.get(block), text, date) : Bundle.format("history.config.default", player, name, Icons.get(block), date);
         }
 
         if (value instanceof Point2 point) {
-            return connect ? Bundle.format("history.config.connect", player, name, get(block), point.x, point.y, date) : Bundle.format("history.config.disconnect", player, name, get(block), date);
+            return connect ? Bundle.format("history.config.connect", player, name, Icons.get(block), point.x, point.y, date) : Bundle.format("history.config.disconnect", player, name, Icons.get(block), date);
         }
 
         if (value instanceof Point2[] points) {
             if (points.length == 0) {
-                return Bundle.format("history.config.disconnect", player, name, get(block), date);
+                return Bundle.format("history.config.disconnect", player, name, Icons.get(block), date);
             }
 
-            return Bundle.format("history.config.connects", player, name, get(block), Arrays.toString(points), date);
+            return Bundle.format("history.config.connects", player, name, Icons.get(block), Arrays.toString(points), date);
         }
 
         if (block instanceof LightBlock) {
-            return Bundle.format("history.config.color", player, name, get(block), Tmp.c1.set((int) value).toString(), date);
+            return Bundle.format("history.config.color", player, name, Icons.get(block), Tmp.c1.set((int) value).toString(), date);
         }
 
         if (block instanceof LogicBlock) {
-            return Bundle.format("history.config.code", player, name, get(block), date);
+            return Bundle.format("history.config.code", player, name, Icons.get(block), date);
         }
 
         if (block instanceof CanvasBlock) {
-            return Bundle.format("history.config.image", player, name, get(block), date);
+            return Bundle.format("history.config.image", player, name, Icons.get(block), date);
         }
 
-        return Bundle.format("history.config.default", player, name, get(block), date);
+        return Bundle.format("history.config.default", player, name, Icons.get(block), date);
     }
 
     public Object getValue(ConfigEvent event) {
         if (event.value instanceof Integer number) {
             if (event.tile.block instanceof UnitFactory factory)
                 return number == -1 ? null : factory.plans.get(number).unit;
-            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class)) {
+            if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class))
                 return Point2.unpack(number);
-            }
         }
 
-        if (event.value instanceof Point2 point) {
+        if (event.value instanceof Point2 point)
             return point.add(event.tile.tileX(), event.tile.tileY());
-        }
 
         if (event.value instanceof Point2[] points) {
             Structs.each(point -> point.add(event.tile.tileX(), event.tile.tileY()), points);
@@ -104,13 +102,11 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     public boolean getConnect(ConfigEvent event, Point2 point) {
-        if (event.tile.block.configurations.containsKey(Point2.class)) {
+        if (event.tile.block.configurations.containsKey(Point2.class))
             return point.pack() != -1 && point.pack() != event.tile.pos();
-        }
 
-        if (event.tile.block.configurations.containsKey(Point2[].class)) {
+        if (event.tile.block.configurations.containsKey(Point2[].class))
             return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
-        }
 
         return false;
     }

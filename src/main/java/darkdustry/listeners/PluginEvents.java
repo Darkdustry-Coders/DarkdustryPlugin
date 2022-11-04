@@ -78,7 +78,7 @@ public class PluginEvents {
 
             if (data.welcomeMessage) {
                 var builder = new StringBuilder();
-                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(get("commands." + command + ".description", event.player)));
+                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", event.player)));
 
                 showMenu(event.player, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"ui.button.disable"}}, MenuHandler::welcome, serverName.string(), builder.toString());
             }
