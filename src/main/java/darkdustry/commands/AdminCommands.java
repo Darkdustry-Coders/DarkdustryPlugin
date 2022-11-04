@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.Events;
+import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.features.menus.DespawnMenu;
@@ -8,7 +9,6 @@ import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
 
-import static arc.math.Mathf.clamp;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.adminOnlyCommands;
 import static darkdustry.features.menus.MenuHandler.showMenuConfirm;
@@ -91,8 +91,10 @@ public class AdminCommands {
             var target = args.length > 1 ? Find.player(args[1]) : player;
             if (notFound(player, target)) return;
 
-            target.unit(type.spawn(target.team(), target.x, target.y));
-            target.unit().spawnedByCore(true);
+            var unit = type.spawn(target.team(), target.x, target.y);
+            unit.spawnedByCore(true);
+
+            Call.unitControl(target, unit);
             bundled(target, "commands.unit.success", Icons.get(type));
             if (target != player)
                 bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
@@ -117,21 +119,18 @@ public class AdminCommands {
         register("tp", (args, player) -> {
             if (invalidTpCoords(player, args)) return;
             float
-                    x = clamp(parseInt(args[0]), 0, world.width()) * tilesize,
-                    y = clamp(parseInt(args[1]), 0, world.height()) * tilesize;
+                    x = Mathf.clamp(parseInt(args[0]), 0, world.width()) * tilesize,
+                    y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;
 
-            boolean spawnedByCore = player.unit().spawnedByCore();
             var unit = player.unit();
-
-            unit.spawnedByCore(false);
-            player.clearUnit();
+            Call.unitControl(player, null);
 
             unit.set(x, y);
             Call.setPosition(player.con, x, y);
             Call.setCameraPosition(player.con, x, y);
 
-            player.unit(unit);
-            unit.spawnedByCore(spawnedByCore);
+            Call.unitControl(player, unit);
+
             bundled(player, "commands.tp.success", conv(x), conv(y));
         });
 
