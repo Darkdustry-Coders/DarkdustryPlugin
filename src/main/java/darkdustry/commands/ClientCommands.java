@@ -74,7 +74,7 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank().localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
+            getPlayerData(target).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
         });
 
         register("rank", (args, player) -> {
@@ -82,11 +82,11 @@ public class ClientCommands {
             if (notFound(player, target)) return;
 
             getPlayerData(target).subscribe(data -> {
-                var rank = data.rank();
+                var rank = data.rank;
 
                 var content = !rank.hasNext() ?
                         Bundle.format("commands.rank.content", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player)) :
-                        Bundle.format("commands.rank.next", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player), rank.next.localisedName(player), data.playTime, rank.next.req.playTime(), data.buildingsBuilt, rank.next.req.buildingsBuilt(), data.gamesPlayed, rank.next.req.gamesPlayed());
+                        Bundle.format("commands.rank.next", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player), rank.next.localisedName(player), data.playTime, rank.next.requirements.playTime(), data.buildingsBuilt, rank.next.requirements.buildingsBuilt(), data.gamesPlayed, rank.next.requirements.gamesPlayed());
 
                 showMenu(player, "commands.rank.header", content, new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, MenuHandler::rankInfo);
             });

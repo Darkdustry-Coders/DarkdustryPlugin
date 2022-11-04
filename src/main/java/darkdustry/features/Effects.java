@@ -56,7 +56,7 @@ public class Effects {
     }
 
     public static void updateEffects(Player player, PlayerData data) {
-        effectsCache.put(player.id, new FxData(data.rank().effects, data.effects));
+        effectsCache.put(player.id, new FxData(data.rank.effects, data.effects));
     }
 
     public static void onMove(Player player) {

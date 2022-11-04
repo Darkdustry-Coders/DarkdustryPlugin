@@ -65,7 +65,6 @@ public class DarkdustryPlugin extends Plugin {
 
         Alerts.load();
         Effects.load();
-        Ranks.load();
         SchemeSize.load();
         Scripts.load();
 
@@ -93,13 +92,12 @@ public class DarkdustryPlugin extends Plugin {
                 if (player == null) return;
 
                 data.playTime++;
-                var rank = data.rank();
 
-                while (rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
-                    data.rank(rank = rank.next);
+                while (data.rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                    data.rank = data.rank.next;
                     updateRank(player, data);
 
-                    showMenuClose(player, "events.promotion.header", "events.promotion.content", rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                    showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed);
                 }
             }).collectList().flatMap(Database::setPlayersData).subscribe();
         }, 60, 60);

@@ -1,6 +1,6 @@
 package darkdustry.features.menus;
 
-import darkdustry.features.Ranks;
+import darkdustry.features.Ranks.Rank;
 import mindustry.gen.*;
 import mindustry.ui.Menus.MenuListener;
 import useful.*;
@@ -33,7 +33,9 @@ public class MenuHandler {
         if (option != 1) return;
 
         var builder = new StringBuilder();
-        Ranks.all.each(rank -> rank.req != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
+        for (var rank : Rank.values())
+            if (rank.requirements != null)
+                builder.append(rank.localisedReq(player)).append("\n");
 
         showMenuClose(player, "commands.rank.requirements.header", builder.toString());
     }

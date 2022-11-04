@@ -4,7 +4,6 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import mindustry.gen.Player;
 import reactor.core.publisher.*;
@@ -70,21 +69,13 @@ public class Database {
         public int buildingsBuilt = 0;
         public int gamesPlayed = 0;
 
-        public int rank = 0;
+        public Rank rank = Rank.player;
 
         @SuppressWarnings("unused")
         public PlayerData() {}
 
         public PlayerData(String uuid) {
             this.uuid = uuid;
-        }
-
-        public Rank rank() {
-            return Ranks.all.get(rank);
-        }
-
-        public void rank(Rank rank) {
-            this.rank = rank.id;
         }
     }
 }

@@ -13,7 +13,6 @@ import mindustry.world.blocks.storage.CoreBlock;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.translatorLanguages;
-import static darkdustry.features.Ranks.all;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -58,10 +57,6 @@ public class Find {
         return canParsePositiveInt(name) ? Team.get(parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
     }
 
-    public static Rank rank(String name) {
-        return canParsePositiveInt(name) ? all.get(parseInt(name)) : all.find(rank -> rank.name.equalsIgnoreCase(name));
-    }
-
     public static Map map(String name) {
         var list = getAvailableMaps();
         int index = parseInt(name);
@@ -75,7 +70,11 @@ public class Find {
     }
 
     public static Gamemode mode(String name) {
-        return Structs.find(Gamemode.all, mode -> mode.name().equalsIgnoreCase(name));
+        return Structs.find(Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name));
+    }
+
+    public static Rank rank(String name) {
+        return Structs.find(Rank.values(), rank -> rank.name().equalsIgnoreCase(name));
     }
 
     public static Block core(String name) {

@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks;
+import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -208,17 +208,17 @@ public class ServerCommands {
             if (notFound(rank, args[1])) return;
 
             getPlayerData(playerInfo.id).subscribe(data -> {
-                data.rank(rank);
+                data.rank = rank;
                 if (target != null) updateRank(target, data);
 
                 setPlayerData(data).subscribe();
-                Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name);
+                Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
             });
         });
 
         serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Ranks.all.size);
-            Ranks.all.each(rank -> Log.info("  @ - @", rank.id, rank.name));
+            Log.info("Ranks: (@)", Rank.values().length);
+            for (var rank : Rank.values()) Log.info("  @ - @", rank.ordinal(), rank.name());
         });
     }
 }
