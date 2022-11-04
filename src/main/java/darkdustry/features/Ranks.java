@@ -1,5 +1,6 @@
 package darkdustry.features;
 
+import arc.struct.Seq;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
@@ -15,10 +16,7 @@ public class Ranks {
     }
 
     public enum Rank {
-        player {{
-            tag = "";
-            effects = Effects.pack1;
-        }},
+        player,
 
         active(player) {{
             tag = "[sky]<[white]\uE800[]>[] ";
@@ -68,18 +66,18 @@ public class Ranks {
             effects = Effects.pack9;
         }};
 
-        public String tag;
-        public FxPack effects;
+        public static final Seq<Rank> all = Seq.with(values());
+
+        public String tag = "";
+        public FxPack effects = Effects.pack1;
 
         public Rank next;
         public Requirements requirements;
 
-        Rank() {
-            this(null);
-        }
+        Rank() {}
 
-        Rank(Rank prev) {
-            if (prev != null) prev.next = this;
+        Rank(Rank previous) {
+            previous.next = this;
         }
 
         public boolean hasNext() {

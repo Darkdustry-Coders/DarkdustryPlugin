@@ -217,8 +217,8 @@ public class ServerCommands {
         });
 
         serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Rank.values().length);
-            for (var rank : Rank.values()) Log.info("  @ - @", rank.ordinal(), rank.name());
+            Log.info("Ranks: (@)", Rank.all.size);
+            Rank.all.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
         });
     }
 }

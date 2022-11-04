@@ -33,9 +33,7 @@ public class MenuHandler {
         if (option != 1) return;
 
         var builder = new StringBuilder();
-        for (var rank : Rank.values())
-            if (rank.requirements != null)
-                builder.append(rank.localisedReq(player)).append("\n");
+        Rank.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
 
         showMenuClose(player, "commands.rank.requirements.header", builder.toString());
     }
