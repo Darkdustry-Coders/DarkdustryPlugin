@@ -24,25 +24,25 @@ public class Ranks {
                 tag = "[sky]<[white]\uE800[]>[] ";
                 name = "active";
                 effects = Effects.pack2;
-                req = new Requirements(300, 25000, 25);
+                req = new Requirements(320, 12500, 25);
 
                 next = hyperActive = new Rank() {{
                     tag = "[#738adb]<[white]\uE813[]>[] ";
                     name = "hyperActive";
                     effects = Effects.pack3;
-                    req = new Requirements(750, 50000, 50);
+                    req = new Requirements(800, 25000, 50);
 
                     next = veteran = new Rank() {{
                         tag = "[gold]<[white]\uE809[]>[] ";
                         name = "veteran";
                         effects = Effects.pack4;
-                        req = new Requirements(1500, 100000, 100);
+                        req = new Requirements(2000, 50000, 100);
 
                         next = master = new Rank() {{
                             tag = "[orange]<[white]\uE810[]>[] ";
                             name = "master";
                             effects = Effects.pack5;
-                            req = new Requirements(5000, 250000, 250);
+                            req = new Requirements(5000, 100000, 200);
                         }};
                     }};
                 }};
