@@ -1,6 +1,5 @@
 package darkdustry.features.history;
 
-import arc.math.Mathf;
 import arc.struct.Queue;
 import mindustry.world.Tile;
 
@@ -24,7 +23,7 @@ public class History {
     }
 
     public static HistoryStack get(int index) {
-        index = Mathf.clamp(index, 0, history.length - 1);
+        if (index >= history.length) return new HistoryStack();
 
         var entries = history[index];
         if (entries == null) history[index] = entries = new HistoryStack();

@@ -20,7 +20,6 @@ import static arc.graphics.Color.blackRgba;
 import static arc.util.io.Streams.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static mindustry.io.MapIO.colorFor;
 
 public class MapParser {
 
@@ -81,7 +80,7 @@ public class MapParser {
                 public void setBlock(Block block) {
                     super.setBlock(block);
 
-                    int color = colorFor(block, Blocks.air, Blocks.air, notNullElse(team, Team.derelict));
+                    int color = MapIO.colorFor(block, Blocks.air, Blocks.air, notNullElse(team, Team.derelict));
                     if (color != blackRgba) pixmap.set(x, y, color);
                 }
             };
@@ -107,12 +106,11 @@ public class MapParser {
                 public void onReadBuilding() {
                     if (tile.team == null) return;
 
-                    int size = tile.block().size;
-                    int offset = -(size - 1) / 2;
+                    var block = tile.block();
 
-                    for (int x = 0; x < size; x++)
-                        for (int y = 0; y < size; y++)
-                            pixmap.set(tile.x + x + offset, tile.y + y + offset, tile.team.color.rgba8888());
+                    for (int x = 0; x < block.size; x++)
+                        for (int y = 0; y < block.size; y++)
+                            pixmap.set(tile.x + x + block.sizeOffset, tile.y + y + block.sizeOffset, tile.team.color.rgba8888());
                 }
 
                 @Override
@@ -124,7 +122,7 @@ public class MapParser {
 
                 @Override
                 public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
-                    pixmap.set(x, y, colorFor(Blocks.air, content.block(floorID), content.block(overlayID), Team.derelict));
+                    pixmap.set(x, y, MapIO.colorFor(Blocks.air, content.block(floorID), content.block(overlayID), Team.derelict));
                     return null;
                 }
             }));

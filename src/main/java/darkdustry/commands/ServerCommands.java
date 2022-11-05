@@ -269,9 +269,7 @@ public class ServerCommands {
                     deleted[0]++;
                     return collection.deleteOne(eq("uuid", document.getString("uuid")));
                 }
-            }).then().subscribe(v -> {
-                Log.info("[PlayerData] Found @, deleted @", amounts[0], deleted[0]);
-            });
+            }).then().subscribe(v -> Log.info("[PlayerData] Found @, deleted @", amounts[0], deleted[0]));
         });
     }
 }

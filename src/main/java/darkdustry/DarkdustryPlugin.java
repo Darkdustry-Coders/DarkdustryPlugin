@@ -58,7 +58,6 @@ public class DarkdustryPlugin extends Plugin {
         DynamicMenus.load();
 
         Config.load();
-        Console.load();
         Icons.load();
         MapParser.load();
         Translator.load();
@@ -82,7 +81,7 @@ public class DarkdustryPlugin extends Plugin {
 
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        maps.setMapProvider((mode, map) -> getAvailableMaps().select(mode::valid).random(map));
+        maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
 
         Timer.schedule(() -> {
             if (Groups.player.isEmpty()) return;
@@ -93,7 +92,7 @@ public class DarkdustryPlugin extends Plugin {
 
                 data.playTime++;
 
-                while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed)) {
+                while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
                     data.rank = data.rank.next;
                     updateRank(player, data);
 
