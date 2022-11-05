@@ -1,5 +1,6 @@
 package darkdustry.commands;
 
+import arc.struct.ObjectMap;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
@@ -7,8 +8,10 @@ import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.*;
+import reactor.core.publisher.Flux;
 
 import static arc.Core.*;
+import static com.mongodb.client.model.Filters.eq;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
@@ -219,6 +222,56 @@ public class ServerCommands {
         serverCommands.register("ranks", "List all ranks.", args -> {
             Log.info("Ranks: (@)", Rank.all.size);
             Rank.all.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
+        });
+
+        // Использовать только после релиза V7!
+        serverCommands.register("transfer-to-v7", "...", args -> {
+            netServer.admins.bannedIPs.clear();
+            netServer.admins.whitelist.clear();
+            netServer.admins.subnetBans.clear();
+            netServer.admins.dosBlacklist.clear();
+            netServer.admins.kickedIPs.clear();
+
+            ObjectMap<?, ?> data = Reflect.get(netServer.admins, "playerInfo");
+            int size = data.size;
+            data.clear();
+            netServer.admins.save();
+
+            System.gc();
+
+            Log.info("Deleted @ PlayerInfo records.", size);
+
+            int[] amounts = {0}, deleted = {0};
+
+            var collection = client.getDatabase("darkdustry").getCollection("players");
+            Flux.from(collection.find()).doOnNext(document -> {
+                try {
+                    var rank = document.get("rank");
+                    if (rank instanceof Integer id) {
+                        document.remove("rank");
+                        document.put("rank", Rank.all.get(id));
+                    }
+
+                    var built = document.remove("buildingsBuilt");
+                    if (built instanceof Integer amount) {
+                        document.put("blocksPlaced", amount);
+                        document.put("blocksBroken", 0);
+                    }
+
+                    amounts[0]++;
+                } catch (Exception e) {
+                    Log.err(e);
+                }
+            }).flatMap(document -> {
+                if (document.getInteger("playTime") > 10)
+                    return collection.replaceOne(eq("uuid", document.getString("uuid")), document);
+                else {
+                    deleted[0]++;
+                    return collection.deleteOne(eq("uuid", document.getString("uuid")));
+                }
+            }).then().subscribe(v -> {
+                Log.info("[PlayerData] Found @, deleted @", amounts[0], deleted[0]);
+            });
         });
     }
 }

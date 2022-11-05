@@ -8,6 +8,7 @@ import darkdustry.features.menus.DespawnMenu;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
+import mindustry.world.blocks.payloads.*;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.adminOnlyCommands;
@@ -93,6 +94,8 @@ public class AdminCommands {
 
             var unit = type.spawn(target.team(), target.x, target.y);
             unit.spawnedByCore(true);
+
+            ((BuildPayload) ((Payloadc) unit).payloads().get(0)).build = null;
 
             Call.unitControl(target, unit);
             bundled(target, "commands.unit.success", Icons.get(type));

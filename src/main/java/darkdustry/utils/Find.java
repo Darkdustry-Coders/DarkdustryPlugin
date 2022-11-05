@@ -58,15 +58,15 @@ public class Find {
     }
 
     public static Map map(String name) {
-        var list = getAvailableMaps();
+        var maps = getAvailableMaps();
         int index = parseInt(name);
-        return index > 0 && index <= list.size ? list.get(index - 1) : list.find(map -> deepEquals(map.name(), name));
+        return index > 0 && index <= maps.size ? maps.get(index - 1) : maps.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        var list = getAvailableSaves();
+        var saves = getAvailableSaves();
         int index = parseInt(name);
-        return index > 0 && index <= list.size ? list.get(index - 1) : list.find(save -> deepEquals(save.nameWithoutExtension(), name));
+        return index > 0 && index <= saves.size ? saves.get(index - 1) : saves.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {

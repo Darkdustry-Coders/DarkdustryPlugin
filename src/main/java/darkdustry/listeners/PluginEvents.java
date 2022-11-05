@@ -29,27 +29,28 @@ import static useful.Bundle.*;
 public class PluginEvents {
 
     public static void load() {
-        Events.on(BlockBuildEndEvent.class, event -> {
-            if (!event.unit.isPlayer()) return;
+        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
 
-            if (History.enabled() && event.tile.build != null)
-                History.put(new BlockEntry(event), event.tile);
+        Events.on(PlayEvent.class, event -> {
+            state.rules.unitPayloadUpdate = true;
+            state.rules.showSpawns = true;
 
-            if (!event.breaking) getPlayerData(event.unit.getPlayer()).subscribe(data -> {
-                data.buildingsBuilt++;
-                setPlayerData(data).subscribe();
-            });
+            state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
+
+            if (config.mode == sandbox)
+                state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(BuildSelectEvent.class, event -> {
-            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer())
-                return;
-            Alerts.buildAlert(event);
-        });
+        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).flatMap(Database::setPlayerData).subscribe());
 
-        Events.on(ConfigEvent.class, event -> {
-            if (History.enabled() && event.player != null)
-                History.put(new ConfigEntry(event), event.tile.tile);
+        Events.on(WaveEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.wavesSurvived++).flatMap(Database::setPlayerData).subscribe());
+
+        Events.on(WorldLoadEvent.class, event -> {
+            History.clear();
+            DoubleTap.clear();
+            DynamicMenus.clear();
+
+            app.post(Bot::updateBotStatus);
         });
 
         Events.on(WithdrawEvent.class, event -> {
@@ -63,7 +64,47 @@ public class PluginEvents {
             Alerts.depositAlert(event);
         });
 
-        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).collectList().flatMap(Database::setPlayersData).subscribe());
+        Events.on(ConfigEvent.class, event -> {
+            if (History.enabled() && event.player != null)
+                History.put(new ConfigEntry(event), event.tile.tile);
+        });
+
+        Events.on(TapEvent.class, event -> {
+            if (!History.enabled() || event.tile == null) return;
+
+            getPlayerData(event.player).subscribe(data -> {
+                if (!data.doubleTapHistory) return;
+
+                DoubleTap.check(event, () -> {
+                    var builder = new StringBuilder();
+                    var stack = History.get(event.tile.array());
+
+                    if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
+                    else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+
+                    bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
+                });
+            });
+        });
+
+        Events.on(BlockBuildEndEvent.class, event -> {
+            if (!event.unit.isPlayer()) return;
+
+            if (History.enabled() && event.tile.build != null)
+                History.put(new BlockEntry(event), event.tile);
+
+            getPlayerData(event.unit.getPlayer()).subscribe(data -> {
+                if (event.breaking) data.blocksBroken++;
+                else data.blocksPlaced++;
+                setPlayerData(data).subscribe();
+            });
+        });
+
+        Events.on(BuildSelectEvent.class, event -> {
+            if (event.breaking || event.builder == null || event.builder.buildPlan() == null || !event.builder.isPlayer())
+                return;
+            Alerts.buildAlert(event);
+        });
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player).subscribe(data -> {
             updateRank(event.player, data);
@@ -100,44 +141,6 @@ public class PluginEvents {
             if (voteKick != null) voteKick.left(event.player);
 
             app.post(Bot::updateBotStatus);
-        });
-
-        Events.on(TapEvent.class, event -> {
-            if (!History.enabled() || event.tile == null) return;
-
-            getPlayerData(event.player).subscribe(data -> {
-                if (!data.doubleTapHistory) return;
-
-                DoubleTap.check(event, () -> {
-                    var builder = new StringBuilder();
-                    var stack = History.get(event.tile.array());
-
-                    if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
-                    else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
-
-                    bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
-                });
-            });
-        });
-
-        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
-
-        Events.on(WorldLoadEvent.class, event -> {
-            History.clear();
-            DoubleTap.clear();
-            DynamicMenus.clear();
-
-            app.post(Bot::updateBotStatus);
-        });
-
-        Events.on(PlayEvent.class, event -> {
-            state.rules.unitPayloadUpdate = true;
-            state.rules.showSpawns = true;
-
-            state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
-
-            if (config.mode == sandbox)
-                state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));

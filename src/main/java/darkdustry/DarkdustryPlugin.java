@@ -93,13 +93,13 @@ public class DarkdustryPlugin extends Plugin {
 
                 data.playTime++;
 
-                while (data.rank.checkNext(data.playTime, data.buildingsBuilt, data.gamesPlayed)) {
+                while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed)) {
                     data.rank = data.rank.next;
                     updateRank(player, data);
 
-                    showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed);
+                    showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
                 }
-            }).collectList().flatMap(Database::setPlayersData).subscribe();
+            }).flatMap(Database::setPlayerData).subscribe();
         }, 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов

@@ -1,9 +1,8 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.*;
-import darkdustry.features.menus.MenuHandler;
-import darkdustry.features.*;
-import darkdustry.features.menus.SettingsMenu;
+import darkdustry.features.Authme;
+import darkdustry.features.menus.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
@@ -11,8 +10,8 @@ import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.components.Database.*;
+import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -39,7 +38,7 @@ public class ClientCommands {
                     var builder = new StringBuilder();
                     translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
 
-                    showMenuClose(player, "commands.tr.list", builder.toString());
+                    showMenuClose(player, "commands.tr.header", builder.toString());
                 }
                 case "off" -> {
                     data.language = "off";
@@ -74,22 +73,7 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> showMenuClose(player, "commands.stats.header", "commands.stats.content", target.coloredName(), data.rank.localisedName(player), data.playTime, data.buildingsBuilt, data.gamesPlayed));
-        });
-
-        register("rank", (args, player) -> {
-            var target = args.length > 0 ? Find.player(args[0]) : player;
-            if (notFound(player, target)) return;
-
-            getPlayerData(target).subscribe(data -> {
-                var rank = data.rank;
-
-                var content = !rank.hasNext() ?
-                        Bundle.format("commands.rank.content", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player)) :
-                        Bundle.format("commands.rank.next", player, target.coloredName(), rank.localisedName(player), rank.localisedDesc(player), rank.next.localisedName(player), data.playTime, rank.next.requirements.playTime(), data.buildingsBuilt, rank.next.requirements.buildingsBuilt(), data.gamesPlayed, rank.next.requirements.gamesPlayed());
-
-                showMenu(player, "commands.rank.header", content, new String[][] {{"ui.button.close"}, {"commands.rank.button.requirements"}}, MenuHandler::rankInfo);
-            });
+            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, MenuHandler::rankInfo, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.playTime));
         });
 
         register("votekick", (args, player) -> {

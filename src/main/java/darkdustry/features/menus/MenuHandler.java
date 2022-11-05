@@ -20,22 +20,21 @@ public class MenuHandler {
 
     public static void welcome(Player player, int option) {
         if (option == 1) Call.openURI(player.con, discordServerUrl);
-        else if (option == 2) {
+        else if (option == 2)
             getPlayerData(player).subscribe(data -> {
                 data.welcomeMessage = false;
                 setPlayerData(data).subscribe();
                 bundled(player, "welcome.disabled");
             });
-        }
     }
 
     public static void rankInfo(Player player, int option) {
-        if (option != 1) return;
+        if (option != 0) return;
 
         var builder = new StringBuilder();
         Rank.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
 
-        showMenuClose(player, "commands.rank.requirements.header", builder.toString());
+        showMenuClose(player, "commands.stats.requirements.header", builder.toString());
     }
 
     public static void showMenu(Player player, String title, String content, String[][] buttons, MenuListener listener, Object... values) {

@@ -52,10 +52,6 @@ public class Database {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
 
-    public static Mono<Void> setPlayersData(Iterable<PlayerData> datas) {
-        return Flux.fromIterable(datas).flatMap(Database::setPlayerData).then();
-    }
-
     public static class PlayerData {
         public String uuid;
         public String language = "off";
@@ -66,8 +62,10 @@ public class Database {
         public boolean welcomeMessage = true;
 
         public int playTime = 0;
-        public int buildingsBuilt = 0;
+        public int blocksPlaced = 0;
+        public int blocksBroken = 0;
         public int gamesPlayed = 0;
+        public int wavesSurvived = 0;
 
         public Rank rank = Rank.player;
 
