@@ -255,6 +255,8 @@ public class ServerCommands {
                         document.put("blocksPlaced", amount);
                         document.put("blocksBroken", 0);
                     }
+
+                    document.remove("_id");
                 } catch (Exception e) {
                     Log.err(e);
                 }
