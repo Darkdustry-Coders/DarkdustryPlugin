@@ -241,8 +241,6 @@ public class ServerCommands {
 
             Log.info("Deleted @ PlayerInfo records.", size);
 
-            int[] amounts = {0}, deleted = {0};
-
             var collection = client.getDatabase("darkdustry").getCollection("players");
             Flux.from(collection.find()).doOnNext(document -> {
                 try {
@@ -257,19 +255,10 @@ public class ServerCommands {
                         document.put("blocksPlaced", amount);
                         document.put("blocksBroken", 0);
                     }
-
-                    amounts[0]++;
                 } catch (Exception e) {
                     Log.err(e);
                 }
-            }).flatMap(document -> {
-                if (document.getInteger("playTime") > 10)
-                    return collection.replaceOne(eq("uuid", document.getString("uuid")), document);
-                else {
-                    deleted[0]++;
-                    return collection.deleteOne(eq("uuid", document.getString("uuid")));
-                }
-            }).then().subscribe(v -> Log.info("[PlayerData] Found @, deleted @", amounts[0], deleted[0]));
+            }).flatMap(document -> collection.replaceOne(eq("uuid", document.getString("uuid")), document)).subscribe();
         });
     }
 }
