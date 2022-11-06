@@ -51,7 +51,7 @@ public class ClientCommands {
                     bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
                 }
                 default -> {
-                    String language = Find.language(args[0]);
+                    var language = Find.language(args[0]);
                     if (notLanguage(player, language)) return;
 
                     data.language = language;

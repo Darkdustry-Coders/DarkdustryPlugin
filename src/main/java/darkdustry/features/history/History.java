@@ -4,7 +4,7 @@ import arc.struct.Queue;
 import mindustry.world.Tile;
 
 import static darkdustry.PluginVars.*;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class History {
 
@@ -19,6 +19,7 @@ public class History {
     }
 
     public static void put(HistoryEntry entry, Tile tile) {
+        if (tile == emptyTile) return;
         tile.getLinkedTiles(other -> get(other.array()).add(entry));
     }
 
