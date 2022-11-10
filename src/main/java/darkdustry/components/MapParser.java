@@ -178,9 +178,9 @@ public class MapParser {
                 var block = notNullElse(content.block(stream.readShort()), Blocks.air);
                 var tile = context.tile(i);
 
-                byte packedCheck = stream.readByte();
-                boolean hadEntity = (packedCheck & 1) != 0,
-                        hadData = (packedCheck & 2) != 0,
+                byte packed = stream.readByte();
+                boolean hadEntity = (packed & 1) != 0,
+                        hadData = (packed & 2) != 0,
                         isCenter = !hadEntity || stream.readBoolean();
 
                 if (isCenter || hadData) tile.setBlock(block);

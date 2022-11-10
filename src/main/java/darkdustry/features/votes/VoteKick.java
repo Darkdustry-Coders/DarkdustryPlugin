@@ -50,6 +50,6 @@ public class VoteKick extends VoteSession {
 
     @Override
     public int votesRequired() {
-        return Groups.player.size() > 4 ? 3 : 2;
+        return Groups.player.size() > 3 ? 3 : 2;
     }
 }
