@@ -53,7 +53,7 @@ public class Config {
         antiSpam.set(true);
         interactRateWindow.set(1);
         interactRateLimit.set(25);
-        interactRateKick.set(60);
+        interactRateKick.set(50);
 
         enableVotekick.set(config.mode != hexed && config.mode != hub);
         autoPause.set(config.mode.isDefault());
