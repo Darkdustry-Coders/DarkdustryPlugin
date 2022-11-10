@@ -1,6 +1,6 @@
 {
     "name": "darkdustry-plugin",
-    "minGameVersion": "140",
+    "minGameVersion": "140.2",
     "displayName": "Darkdustry Plugin",
     "author": "Darkness6030 & xzxADIxzx",
     "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
