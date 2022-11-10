@@ -4,7 +4,6 @@ import arc.struct.*;
 import arc.util.CommandHandler;
 import com.google.gson.*;
 import darkdustry.components.Config;
-import darkdustry.components.Config.Gamemode;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import mindustry.net.Administration.PlayerInfo;
@@ -13,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 import java.time.format.DateTimeFormatter;
 
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_DASHES;
-import static darkdustry.components.Config.Gamemode.*;
 import static java.time.ZoneId.of;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static mindustry.Vars.tilesize;
@@ -92,9 +90,6 @@ public class PluginVars {
     /** Используются для форматирования времени в дату. */
     public static final DateTimeFormatter historyFormat = ofPattern("HH:mm:ss").withZone(of("Europe/Moscow")),
             kickFormat = ofPattern("MM.dd.yyyy HH:mm:ss").withZone(of("Europe/Moscow"));
-
-    /** Режимы, в которых будут доступны стандартные команды. */
-    public static final Seq<Gamemode> defaultModes = Seq.with(attack, pvp, sandbox, survival, tower);
 
     /** Текстовый список всех предметов, юнитов и команд. */
     public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();

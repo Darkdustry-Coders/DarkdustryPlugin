@@ -106,29 +106,34 @@ public class ClientCommands {
             });
         });
 
+        if (config.mode.useRtv()) {
+            register("rtv", (args, player) -> {
+                if (alreadyVoting(player, vote)) return;
+
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                if (notFound(player, map)) return;
+
+                vote = new VoteRtv(map);
+                vote.vote(player, 1);
+            });
+
+            register("maps", PageIterator::maps);
+        }
+
+        if (config.mode.useVnw())
+            register("vnw", (args, player) -> {
+                if (alreadyVoting(player, vote)) return;
+
+                if (invalidAmount(player, args, 0)) return;
+
+                int waves = args.length > 0 ? parseInt(args[0]) : 1;
+                if (invalidVnwAmount(player, waves)) return;
+
+                vote = new VoteVnw(waves);
+                vote.vote(player, 1);
+            });
+
         if (!config.mode.isDefault()) return;
-
-        register("rtv", (args, player) -> {
-            if (alreadyVoting(player, vote)) return;
-
-            var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
-            if (notFound(player, map)) return;
-
-            vote = new VoteRtv(map);
-            vote.vote(player, 1);
-        });
-
-        register("vnw", (args, player) -> {
-            if (alreadyVoting(player, vote)) return;
-
-            if (invalidAmount(player, args, 0)) return;
-
-            int waves = args.length > 0 ? parseInt(args[0]) : 1;
-            if (invalidVnwAmount(player, waves)) return;
-
-            vote = new VoteVnw(waves);
-            vote.vote(player, 1);
-        });
 
         register("savemap", (args, player) -> {
             if (alreadyVoting(player, vote)) return;
@@ -146,8 +151,6 @@ public class ClientCommands {
             vote = new VoteLoad(save);
             vote.vote(player, 1);
         });
-
-        register("maps", PageIterator::maps);
 
         register("saves", PageIterator::saves);
     }

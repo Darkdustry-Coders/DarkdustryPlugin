@@ -63,7 +63,15 @@ public class Config {
         attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower;
 
         public boolean isDefault() {
-            return defaultModes.contains(this);
+            return this == attack || this == pvp || this == sandbox || this == survival || this == tower;
+        }
+
+        public boolean useRtv() {
+            return isDefault() || this == castle || this == crawler;
+        }
+
+        public boolean useVnw() {
+            return isDefault() && this != pvp;
         }
     }
 }

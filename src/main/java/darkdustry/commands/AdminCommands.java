@@ -10,7 +10,7 @@ import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
 
 import static arc.util.Strings.parseInt;
-import static darkdustry.PluginVars.adminOnlyCommands;
+import static darkdustry.PluginVars.*;
 import static darkdustry.features.menus.MenuHandler.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.coloredTeam;
@@ -25,10 +25,11 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.confirm", () -> {
-            Events.fire(new GameOverEvent(state.rules.waveTeam));
-            sendToChat("commands.artv.info", player.coloredName());
-        }));
+        if (config.mode.useRtv())
+            register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.confirm", () -> {
+                Events.fire(new GameOverEvent(state.rules.waveTeam));
+                sendToChat("commands.artv.info", player.coloredName());
+            }));
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
@@ -43,6 +44,8 @@ public class AdminCommands {
             bundled(target, "commands.despawn.success.suicide");
             if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
         });
+
+        if (!config.mode.isDefault()) return;
 
         register("team", (args, player) -> {
             var team = Find.team(args[0]);

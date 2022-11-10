@@ -2,7 +2,7 @@ package darkdustry.features.votes;
 
 import mindustry.gen.Player;
 
-import static mindustry.Vars.logic;
+import static mindustry.Vars.*;
 import static useful.Bundle.sendToChat;
 
 public class VoteVnw extends VoteSession {
@@ -29,7 +29,10 @@ public class VoteVnw extends VoteSession {
     public void success() {
         stop();
         sendToChat("commands.vnw.passed", waves);
-        for (int i = 0; i < waves; i++) logic.skipWave();
+
+        for (int i = 0; i < waves; i++) spawner.spawnEnemies();
+        state.wave += waves;
+        state.wavetime = state.rules.waveSpacing;
     }
 
     @Override
