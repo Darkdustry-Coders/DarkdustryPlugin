@@ -3,7 +3,6 @@ package darkdustry.components;
 import arc.func.Prov;
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
-import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
 import mindustry.content.Blocks;
@@ -46,7 +45,6 @@ public class MapParser {
         try {
             return parseImage(generatePreview(map), true);
         } catch (Exception e) {
-            Log.err(e);
             return emptyBytes;
         }
     }
@@ -187,31 +185,28 @@ public class MapParser {
                     tile.setBlock(block);
 
                 if (hadBuild) {
-                    if (!isCenter) continue;
+                    if (isCenter) {
+                        try {
+                            readChunk(stream, true, input -> {
+                                input.skipBytes(6);
+                                tile.setTeam(Team.get(input.readByte()));
+                                input.skipBytes(lastRegionLength - 7);
+                            });
+                        } catch (Exception e) {
+                            continue;
+                        }
 
-                    try {
-                        readChunk(stream, true, input -> {
-                            input.skipBytes(6);
-                            tile.setTeam(Team.get(input.readByte()));
-                            input.skipBytes(lastRegionLength - 7);
-                        });
-                    } catch (Exception e) {
-                        continue;
+                        context.onReadBuilding();
                     }
-
-                    context.onReadBuilding();
-                    continue;
-                }
-
-                if (hadData) {
+                } else if (hadData) {
                     tile.setBlock(block);
                     stream.skipBytes(1);
-                }
-
-                for (int consecutive = i + stream.readUnsignedByte(); i <= consecutive; i++)
+                } else {
+                    for (int consecutive = i + stream.readUnsignedByte(); i <= consecutive; i++)
                         context.tile(i + 1).setBlock(block);
 
-                i--;
+                    i--;
+                }
             }
         }
     }
