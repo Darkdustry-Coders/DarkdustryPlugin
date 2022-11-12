@@ -3,7 +3,6 @@ package darkdustry.components;
 import arc.func.Prov;
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO.PngWriter;
-import arc.util.Log;
 import arc.util.io.CounterInputStream;
 import darkdustry.DarkdustryPlugin;
 import mindustry.content.Blocks;
@@ -46,7 +45,6 @@ public class MapParser {
         try {
             return parseImage(generatePreview(map), true);
         } catch (Exception e) {
-            Log.err(e);
             return emptyBytes;
         }
     }
