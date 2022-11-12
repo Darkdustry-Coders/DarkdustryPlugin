@@ -32,7 +32,7 @@ public class PluginEvents {
         Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
 
         Events.on(PlayEvent.class, event -> {
-            state.rules.unitPayloadUpdate = true;
+            // TODO experimental state.rules.unitPayloadUpdate = true;
             state.rules.showSpawns = true;
 
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
