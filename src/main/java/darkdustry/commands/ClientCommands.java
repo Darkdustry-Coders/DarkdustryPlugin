@@ -120,7 +120,7 @@ public class ClientCommands {
             register("maps", PageIterator::maps);
         }
 
-        if (config.mode.useVnw())
+        if (config.mode.useVnw()) {
             register("vnw", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
@@ -132,6 +132,7 @@ public class ClientCommands {
                 vote = new VoteVnw(waves);
                 vote.vote(player, 1);
             });
+        }
 
         if (!config.mode.isDefault()) return;
 

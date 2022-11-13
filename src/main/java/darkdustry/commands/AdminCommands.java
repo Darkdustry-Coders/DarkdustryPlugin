@@ -25,11 +25,12 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
-        if (config.mode.useRtv())
+        if (config.mode.useRtv()) {
             register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.confirm", () -> {
                 Events.fire(new GameOverEvent(state.rules.waveTeam));
                 sendToChat("commands.artv.info", player.coloredName());
             }));
+        }
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {

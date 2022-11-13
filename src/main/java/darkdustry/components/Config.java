@@ -60,7 +60,7 @@ public class Config {
     }
 
     public enum Gamemode {
-        attack, castle, crawler, hexed, hub, pvp, sandbox, survival, tower;
+        attack, castle, crawler, hexed, hub, industry, pvp, sandbox, survival, tower;
 
         public boolean isDefault() {
             return this == attack || this == pvp || this == sandbox || this == survival || this == tower;
