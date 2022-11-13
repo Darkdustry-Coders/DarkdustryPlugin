@@ -146,5 +146,7 @@ public class PluginEvents {
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));
+
+        Events.run("Gameover", () -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).flatMap(Database::setPlayerData).subscribe());
     }
 }
