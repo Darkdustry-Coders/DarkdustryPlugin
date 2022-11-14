@@ -60,11 +60,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (value instanceof Point2[] points) {
-            if (points.length == 0) {
-                return Bundle.format("history.config.disconnect", player, name, Icons.get(block), date);
-            }
-
-            return Bundle.format("history.config.connects", player, name, Icons.get(block), Arrays.toString(points), date);
+            return points.length > 0 ? Bundle.format("history.config.connects", player, name, Icons.get(block), Arrays.toString(points), date) : Bundle.format("history.config.disconnect", player, name, Icons.get(block), date);
         }
 
         if (block instanceof LightBlock) {

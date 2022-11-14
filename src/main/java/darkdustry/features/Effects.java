@@ -43,7 +43,7 @@ public class Effects {
     }
 
     public static void spikes(Player player, Color color) {
-        on(Fx.dynamicSpikes, player, Mathf.random(40f, 100f), color);
+        on(Fx.dynamicSpikes, player, 80f, color);
     }
 
     public static void particles(Player player) {
