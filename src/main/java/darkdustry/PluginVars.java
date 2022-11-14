@@ -19,7 +19,7 @@ import static mindustry.Vars.tilesize;
 public class PluginVars {
 
     /** Необходимое количество игроков для успешного завершения голосования. */
-    public static final float voteRatio = 0.5f;
+    public static final float voteRatio = 0.55f;
 
     /** Время, после которого голосование автоматически завершится. В секундах. */
     public static final int voteDuration = 50;

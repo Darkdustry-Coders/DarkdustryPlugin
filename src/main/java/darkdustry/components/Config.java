@@ -55,7 +55,7 @@ public class Config {
         interactRateLimit.set(25);
         interactRateKick.set(50);
 
-        enableVotekick.set(config.mode != hexed && config.mode != hub);
+        enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
         autoPause.set(config.mode.isDefault());
     }
 

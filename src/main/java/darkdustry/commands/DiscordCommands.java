@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.Gamemode.hexed;
+import static darkdustry.components.Config.Gamemode.*;
 import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.Context;
 import static darkdustry.discord.Bot.Palette.info;
@@ -46,7 +46,7 @@ public class DiscordCommands {
 
         discordCommands.<Context>register("players", "[page]", "List of all players.", PageIterator::players);
 
-        if (config.mode == hexed) return;
+        if (config.mode == hexed || config.mode == industry) return;
 
         discordCommands.<Context>register("maps", "[page]", "List of all maps.", PageIterator::maps);
 
