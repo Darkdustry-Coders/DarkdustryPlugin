@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
@@ -10,10 +10,8 @@ import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.*;
 import mindustry.net.WorldReloader;
-import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static java.time.Duration.ofMillis;
 import static java.time.Instant.ofEpochMilli;
 import static mindustry.Vars.*;
 
@@ -67,22 +65,6 @@ public class Utils {
 
     public static String formatKickDate(long time) {
         return kickFormat.format(ofEpochMilli(time));
-    }
-
-    public static String formatDuration(long time, String locale) {
-        var duration = ofMillis(time);
-        var builder = new StringBuilder();
-
-        OrderedMap.<String, Number>of(
-                "time.days", duration.toDaysPart(),
-                "time.hours", duration.toHoursPart(),
-                "time.minutes", duration.toMinutesPart(),
-                "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-            if (value.intValue() > 0)
-                builder.append(Bundle.format(key, locale, value)).append(" ");
-        });
-
-        return builder.toString().trim();
     }
 
     public static void reloadWorld(Runnable load) {

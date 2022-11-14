@@ -5,6 +5,7 @@ import darkdustry.features.Authme;
 import darkdustry.features.menus.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
+import mindustry.core.UI;
 import mindustry.gen.*;
 import useful.Bundle;
 
@@ -72,7 +73,7 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, MenuHandler::rankInfo, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.playTime));
+            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, MenuHandler::rankInfo, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, UI.formatTime(data.playTime * 3600f)));
         });
 
         register("votekick", (args, player) -> {
