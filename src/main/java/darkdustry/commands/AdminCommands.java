@@ -84,7 +84,7 @@ public class AdminCommands {
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team) || noCores(player, team)) return;
 
-            team.core().items.add(item, amount);
+            team.items().add(item, amount);
             bundled(player, "commands.give.success", amount, Icons.get(item), coloredTeam(team));
         });
 

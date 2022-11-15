@@ -25,7 +25,7 @@ public class MapParser {
 
     public static void load() {
         try {
-            var pixmap = new Pixmap(getPluginResource("block_colors.png"));
+            var pixmap = new Pixmap(mods.getMod(DarkdustryPlugin.class).root.child("block_colors.png"));
 
             for (int i = 0; i < pixmap.width; i++) {
                 var block = content.block(i);

@@ -4,12 +4,13 @@ import arc.files.Fi;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
-import darkdustry.DarkdustryPlugin;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
 import mindustry.maps.*;
 import mindustry.net.WorldReloader;
+import mindustry.type.UnitType;
+import mindustry.world.Block;
 
 import static darkdustry.PluginVars.*;
 import static java.time.Instant.ofEpochMilli;
@@ -29,10 +30,6 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
-    public static Fi getPluginResource(String name) {
-        return mods.getMod(DarkdustryPlugin.class).root.child(name);
-    }
-
     public static Seq<Command> getAvailableCommands(Player player) {
         return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
     }
@@ -43,6 +40,14 @@ public class Utils {
 
     public static Seq<Fi> getAvailableSaves() {
         return saveDirectory.seq().filter(SaveIO::isSaveValid);
+    }
+
+    public static boolean isSupported(UnitType type) {
+        return type != null && !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
+    }
+
+    public static boolean isSupported(Block block) {
+        return block != null && block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
     }
 
     public static String coloredTeam(Team team) {

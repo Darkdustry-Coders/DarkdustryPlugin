@@ -3,9 +3,11 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.math.Mathf;
 import arc.util.Log;
+import darkdustry.components.Icons;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.core.UI;
+import mindustry.ctype.ContentType;
 import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
@@ -13,6 +15,7 @@ import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.type.*;
 import mindustry.world.Block;
+import mindustry.world.blocks.storage.CoreBlock;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
@@ -66,23 +69,23 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, Team team) {
-        return check(team == null, player, "commands.team-not-found", teams);
+        return check(team == null, player, "commands.team-not-found", Icons.teamsList());
     }
 
     public static boolean notFound(Player player, Item item) {
-        return check(item == null, player, "commands.item-not-found", items);
+        return check(item == null, player, "commands.item-not-found", Icons.contentList(content.items()));
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(type == null || type.internal, player, "commands.unit-not-found", units);
+        return check(!isSupported(type), player, "commands.unit-not-found", Icons.contentList(content.units()));
     }
 
     public static boolean notFound(Player player, Block block) {
-        return check(block == null || !block.inEditor, player, "commands.block-not-found");
+        return check(!isSupported(block), player, "commands.block-not-found", Icons.contentList(content.blocks()));
     }
 
     public static boolean notFoundCore(Player player, Block block) {
-        return check(block == null || !block.inEditor, player, "commands.core-not-found");
+        return check(!isSupported(block), player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
     }
 
     public static boolean notFound(Player player, Map map) {

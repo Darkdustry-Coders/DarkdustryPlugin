@@ -78,7 +78,7 @@ public class Find {
     }
 
     public static Block core(String name) {
-        return content.blocks().select(CoreBlock.class::isInstance).find(block -> block.name.split("-")[1].equalsIgnoreCase(name));
+        return content.blocks().select(CoreBlock.class::isInstance).find(block -> block.name.equalsIgnoreCase(name));
     }
 
     public static String language(String name) {

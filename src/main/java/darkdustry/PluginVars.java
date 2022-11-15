@@ -9,11 +9,10 @@ import mindustry.core.Version;
 import mindustry.net.Administration.PlayerInfo;
 import net.dv8tion.jda.api.entities.Message;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_DASHES;
-import static java.time.ZoneId.of;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static mindustry.Vars.tilesize;
 
 public class PluginVars {
@@ -88,11 +87,11 @@ public class PluginVars {
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используются для форматирования времени в дату. */
-    public static final DateTimeFormatter historyFormat = ofPattern("HH:mm:ss").withZone(of("Europe/Moscow")),
-            kickFormat = ofPattern("MM.dd.yyyy HH:mm:ss").withZone(of("Europe/Moscow"));
+    public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
+            kickFormat = DateTimeFormatter.ofPattern("MM.dd.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
 
     /** Текстовый список всех предметов, юнитов и команд. */
-    public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
+    //public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
 
     /** Конфигурация сервера. */
     public static Config config;
