@@ -90,9 +90,6 @@ public class PluginVars {
     public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
             kickFormat = DateTimeFormatter.ofPattern("MM.dd.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
 
-    /** Текстовый список всех предметов, юнитов и команд. */
-    //public static final StringBuilder items = new StringBuilder(), units = new StringBuilder(), teams = new StringBuilder();
-
     /** Конфигурация сервера. */
     public static Config config;
 
