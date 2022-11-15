@@ -3,6 +3,7 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
+import darkdustry.components.AntiVpn;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
@@ -115,6 +116,8 @@ public class NetHandlers {
             kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
+
+        AntiVpn.checkIp(ip, () -> kick(con, "kick.vpn", locale));
 
         if (con.kicked) return;
 

@@ -1,4 +1,4 @@
-package darkdustry.features;
+package darkdustry.components;
 
 import arc.struct.IntMap;
 import arc.util.Time;

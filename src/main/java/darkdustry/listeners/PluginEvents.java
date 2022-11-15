@@ -2,7 +2,7 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.Database;
+import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
@@ -18,7 +18,7 @@ import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.DoubleTap.lastTaps;
+import static darkdustry.components.DoubleTap.lastTaps;
 import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showMenu;
