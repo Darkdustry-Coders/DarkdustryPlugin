@@ -53,9 +53,9 @@ public class Translator {
         DarkdustryPlugin.info("Loaded @ translator languages.", translatorLanguages.size);
     }
 
-    public static void translate(String text, String from, String to, Cons<String> result, Cons<Throwable> error) {
+    public static void translate(String text, String from, String to, Cons<String> result, Runnable error) {
         Http.post(translatorApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))
-                .error(error)
+                .error(throwable -> error.run())
                 .submit(response -> result.get(Jval.read(response.getResultAsString()).asArray().get(0).asArray().get(0).asString()));
     }
 
@@ -77,7 +77,7 @@ public class Translator {
             } else translate(text, "auto", data.language, result -> {
                 cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
                 player.sendMessage(cache.get(data.language), author, text);
-            }, throwable -> player.sendMessage(message, author, text));
+            }, () -> player.sendMessage(message, author, text));
         }).subscribe();
     }
 }

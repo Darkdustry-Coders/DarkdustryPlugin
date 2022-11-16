@@ -71,7 +71,7 @@ public class NetHandlers {
         }
 
         if (netServer.admins.getKickTime(uuid, ip) > Time.millis()) {
-            kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.recent-kick", locale);
+            kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.recently-kicked", locale);
             return;
         }
 
