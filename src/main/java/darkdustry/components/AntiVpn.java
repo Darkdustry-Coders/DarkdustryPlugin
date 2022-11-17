@@ -12,7 +12,7 @@ public class AntiVpn {
                     var result = Jval.read(response.getResultAsString()).get(ip);
                     if (result == null) return;
 
-                    if (result.getString("proxy").equals("yes") && result.getString("type").equals("VPN"))
+                    if (result.getString("proxy").equals("yes") || result.getString("type").equals("VPN"))
                         runnable.run();
                 });
     }
