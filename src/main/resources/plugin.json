@@ -6,5 +6,6 @@
     "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
     "version": "2.6.2",
     "main": "darkdustry.DarkdustryPlugin",
-    "repo": "Darkdustry-Coders/DarkdustryPlugin"
+    "repo": "Darkdustry-Coders/DarkdustryPlugin",
+    "dependencies": []
 }
