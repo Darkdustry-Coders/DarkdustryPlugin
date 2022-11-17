@@ -11,9 +11,7 @@ import static darkdustry.features.Effects.updateEffects;
 public class Ranks {
 
     public static void updateRank(Player player, PlayerData data) {
-        player.name(data.rank.tag + player.getInfo().lastName);
-        data.name = player.coloredName();
-
+        player.name = data.name = data.rank.tag + player.getInfo().lastName;
         updateEffects(player, data);
     }
 
