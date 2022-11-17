@@ -2,6 +2,7 @@ import groovy.json.JsonSlurper
 
 plugins {
     java
+    id("maven-publish")
 }
 
 repositories {
@@ -36,4 +37,18 @@ tasks.jar {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "darkdustry"
+            artifactId = "DarkdustryPLugin"
+            version = project.version.toString()
+
+            afterEvaluate {
+                from(components["java"])
+            }
+        }
+    }
 }
