@@ -37,10 +37,8 @@ public class PluginEvents {
 
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
 
-            if (config.mode == sandbox) {
-                state.rules.bannedBlocks.addAll(Blocks.microProcessor, Blocks.logicProcessor, Blocks.hyperProcessor);
+            if (config.mode == sandbox)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
-            }
         });
 
         Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).flatMap(Database::setPlayerData).subscribe());
