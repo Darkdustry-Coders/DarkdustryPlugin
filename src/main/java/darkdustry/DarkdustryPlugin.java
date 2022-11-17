@@ -11,7 +11,7 @@ import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.listeners.*;
 import darkdustry.utils.Find;
-import mindustry.core.Version;
+import mindustry.core.*;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
@@ -71,6 +71,13 @@ public class DarkdustryPlugin extends Plugin {
         Bot.connect();
 
         Version.build = -1;
+
+        netServer = new NetServer() {
+            @Override
+            public boolean isWaitingForPlayers() {
+                return false;
+            }
+        };
 
         net.handleServer(Connect.class, NetHandlers::connect);
         net.handleServer(ConnectPacket.class, NetHandlers::connect);

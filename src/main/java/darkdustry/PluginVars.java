@@ -24,7 +24,7 @@ public class PluginVars {
     public static final int voteDuration = 50;
 
     /** Стандартная длительность кика игрока. В миллисекундах. */
-    public static final long kickDuration = 2700000L;
+    public static final long kickDuration = 30 * 60 * 1000L;
 
     /** Время, в течение которого отслеживается двойное нажатие на тайл. В миллисекундах. */
     public static final long doubleTapDuration = 500L;

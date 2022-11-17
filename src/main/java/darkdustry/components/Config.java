@@ -54,6 +54,7 @@ public class Config {
         interactRateWindow.set(1);
         interactRateLimit.set(25);
         interactRateKick.set(50);
+        snapshotInterval.set(500);
 
         enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
         autoPause.set(config.mode.isDefault());

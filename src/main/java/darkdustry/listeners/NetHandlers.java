@@ -71,7 +71,7 @@ public class NetHandlers {
         }
 
         if (netServer.admins.getKickTime(uuid, ip) > Time.millis()) {
-            kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.recently-kicked", locale);
+            kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.temp-banned", locale);
             return;
         }
 
@@ -148,8 +148,8 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(player, other, action));
 
         switch (action) {
-            case kick -> kick(other, player.coloredName());
-            case ban -> ban(other, player.coloredName());
+            case kick -> kick(player, other);
+            case ban -> ban(player, other);
             case trace -> {
                 var info = other.getInfo();
                 Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, info.timesJoined, info.timesKicked));

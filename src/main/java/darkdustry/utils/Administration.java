@@ -6,7 +6,6 @@ import mindustry.gen.Player;
 import mindustry.net.NetConnection;
 import useful.Bundle;
 
-import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.*;
 import static mindustry.Vars.netServer;
 import static useful.Bundle.sendToChat;
@@ -34,19 +33,19 @@ public class Administration {
     // endregion
     // region Administration
 
-    public static void ban(Player player, String admin) {
-        netServer.admins.banPlayerID(player.uuid());
-        netServer.admins.banPlayerIP(player.ip());
+    public static void ban(Player admin, Player other) {
+        netServer.admins.banPlayerID(other.uuid());
+        netServer.admins.banPlayerIP(other.ip());
 
-        kick(player, 0, true, "kick.banned-by-admin", admin);
-        Log.info("Player @ has been banned by @.", player.plainName(), stripColors(admin));
-        sendToChat("events.admin.ban", admin, player.coloredName());
+        kick(other, 0, true, "kick.banned-by-admin", admin.coloredName());
+        Log.info("Player @ has been banned by @.", other.plainName(), admin.plainName());
+        sendToChat("events.admin.ban", admin.coloredName(), other.coloredName());
     }
 
-    public static void kick(Player player, String admin) {
-        kick(player, kickDuration, true, "kick.kicked-by-admin", admin);
-        Log.info("Player @ has been kicked by @.", player.plainName(), stripColors(admin));
-        sendToChat("events.admin.kick", admin, player.coloredName());
+    public static void kick(Player admin, Player player) {
+        kick(player, kickDuration, true, "kick.kicked-by-admin", admin.coloredName());
+        Log.info("Player @ has been kicked by @.", player.plainName(), admin.plainName());
+        sendToChat("events.admin.kick", admin.coloredName(), player.coloredName());
     }
 
     // endregion
