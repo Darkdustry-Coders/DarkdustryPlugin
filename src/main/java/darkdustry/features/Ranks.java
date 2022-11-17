@@ -12,6 +12,8 @@ public class Ranks {
 
     public static void updateRank(Player player, PlayerData data) {
         player.name(data.rank.tag + player.getInfo().lastName);
+        data.name = player.coloredName();
+
         updateEffects(player, data);
     }
 

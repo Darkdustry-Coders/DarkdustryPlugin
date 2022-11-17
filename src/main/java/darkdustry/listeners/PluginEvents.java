@@ -22,7 +22,7 @@ import static darkdustry.components.DoubleTap.lastTaps;
 import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showMenu;
-import static mindustry.Vars.state;
+import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.*;
 
@@ -108,6 +108,7 @@ public class PluginEvents {
 
         Events.on(PlayerJoin.class, event -> getPlayerData(event.player).subscribe(data -> {
             updateRank(event.player, data);
+            setPlayerData(data).subscribe(); // Update last name in database
 
             app.post(() -> Effects.onJoin(event.player));
 

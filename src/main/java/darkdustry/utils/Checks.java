@@ -7,7 +7,6 @@ import darkdustry.components.Icons;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import mindustry.core.UI;
-import mindustry.ctype.ContentType;
 import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;

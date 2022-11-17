@@ -56,6 +56,8 @@ public class Database {
         public String uuid;
         public String language = "off";
 
+        public String name = "<unknown>";
+
         public boolean alerts = true;
         public boolean effects = true;
         public boolean doubleTapHistory = false;
