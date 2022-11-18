@@ -102,7 +102,7 @@ public class DarkdustryPlugin extends Plugin {
         }, 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов
-        Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white);
+        Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
     }

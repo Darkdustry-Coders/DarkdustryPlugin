@@ -113,7 +113,7 @@ public class PluginEvents {
             app.post(() -> Effects.onJoin(event.player));
 
             Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat("events.join", event.player.coloredName());
+            sendToChat(player -> player.con.isConnected(), "events.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             sendEmbed(botChannel, success, "@ joined", event.player.plainName());
@@ -132,7 +132,7 @@ public class PluginEvents {
             Effects.onLeave(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat("events.leave", event.player.coloredName());
+            sendToChat(player -> player.con.isConnected(), "events.leave", event.player.coloredName());
             sendEmbed(botChannel, error, "@ left", event.player.plainName());
 
             lastTaps.remove(event.player.id);

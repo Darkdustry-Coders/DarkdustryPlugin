@@ -52,6 +52,7 @@ public class Database {
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
+
     public static Flux<PlayerData> rankPlayers(String query, int limit) {
         return Flux.from(collection.find(gt(query, 0)).sort(descending(query)).limit(limit));
     }
