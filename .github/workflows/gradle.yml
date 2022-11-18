@@ -24,19 +24,23 @@ jobs:
           name: ${{ github.event.repository.name }}
           path: build/libs/
 
-      - name: Получение предыдущего тега
-        id: previoustag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-
       - name: Получение нового тега
         id: newtag
         run: |
           tag=$(cat src/main/resources/plugin.json | grep "version*" | cut -d ":" -f 2,3 | tr -d \"," ")
           echo '::set-output name=tag::'$tag
 
+      - name: Проверка существования тега
+        uses: mukunku/tag-exists-action@v1.1.0
+        id: checkTag
+        with: 
+          tag: ${{ steps.newtag.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Создание релиза
         id: release
-        if: ${{ steps.newtag.outputs.tag != steps.previoustag.outputs.tag }}
+        if: ${{ ! steps.checkTag.outputs.exists }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +52,7 @@ jobs:
 
       - name: Выгрузка релиза
         id: upload-release-asset
-        if: ${{ steps.newtag.outputs.tag != steps.previoustag.outputs.tag }}
+        if: ${{ ! steps.checkTag.outputs.exists }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
