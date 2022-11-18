@@ -1,7 +1,6 @@
 package darkdustry.components;
 
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
@@ -11,6 +10,7 @@ import reactor.core.publisher.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Sorts.descending;
 import static darkdustry.PluginVars.config;
 import static org.bson.codecs.configuration.CodecRegistries.*;
 import static org.bson.codecs.pojo.PojoCodecProvider.builder;
@@ -52,8 +52,8 @@ public class Database {
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
         return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
-    public Flux<PlayerData> getHexedLeaders(short limit) {
-        return Flux.from(collection.find(gt("hexedWins", 0)).sort(Sorts.descending("hexedWins")).limit(limit));
+    public Flux<PlayerData> rankPlayers(String query, int limit) {
+        return Flux.from(collection.find(gt(query, 0)).sort(descending(query)).limit(limit));
     }
 
     public static class PlayerData {
