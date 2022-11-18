@@ -35,6 +35,8 @@ jobs:
         id: checkTag
         with: 
           tag: ${{ steps.newtag.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Создание релиза
         id: release
