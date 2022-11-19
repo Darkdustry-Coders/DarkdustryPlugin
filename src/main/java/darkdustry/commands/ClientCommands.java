@@ -33,14 +33,15 @@ public class ClientCommands {
         register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 
         register("tr", (args, player) -> getPlayerData(player).subscribe(data -> {
-            switch (args[0].toLowerCase()) {
-                case "current" -> bundled(player, "commands.tr.current", data.language);
-                case "list" -> {
-                    var builder = new StringBuilder();
-                    translatorLanguages.each((language, name) -> builder.append("\n[cyan]").append(language).append("[lightgray] - [accent]").append(name));
+            if (args.length == 0) {
+                var builder = new StringBuilder();
+                translatorLanguages.each((language, name) -> builder.append("\n[accent]").append(language).append("[gray] - [lightgray]").append(name));
 
-                    showMenuClose(player, "commands.tr.header", builder.toString());
-                }
+                showMenuClose(player, "commands.tr.header", "commands.tr.content", data.language, builder.toString());
+                return;
+            }
+
+            switch (args[0].toLowerCase()) {
                 case "off" -> {
                     data.language = "off";
                     setPlayerData(data).subscribe();

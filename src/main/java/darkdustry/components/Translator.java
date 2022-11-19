@@ -17,7 +17,7 @@ public class Translator {
     public static void load() {
         translatorLanguages.putAll(
                 "ca", "Català",
-                "id", "Bahasa Indonesia",
+                "id", "Indonesian",
                 "da", "Dansk",
                 "de", "Deutsch",
                 "et", "Eesti",
