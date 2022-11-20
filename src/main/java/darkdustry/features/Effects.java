@@ -10,6 +10,7 @@ import darkdustry.components.Database.PlayerData;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.*;
+import mindustry.graphics.Pal;
 
 
 public class Effects {
@@ -31,7 +32,7 @@ public class Effects {
 
         pack6 = new FxPack(player -> on(Fx.instBomb, player), player -> on(Fx.instHit, player), player -> on(Fx.smeltsmoke, player, 0f, Color.orange));
 
-        pack7 = new FxPack(player -> on(Fx.unitSpawn, player, player.unit().rotation, Color.white, player.unit().type), player -> on(Fx.unitSpawn, player, player.unit().rotation, Color.white, player.unit().type), player -> on(Fx.unitAssemble, player, player.unit().rotation - 90, Color.white, player.unit().type));
+        pack7 = new FxPack(player -> on(Fx.titanSmoke, player, 0f, Pal.accent), player -> on(Fx.unitSpawn, player, player.unit().rotation, Color.white, player.unit().type), player -> on(Fx.unitAssemble, player, player.unit().rotation - 90, Color.white, player.unit().type));
 
         pack8 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player), player -> on(Fx.smeltsmoke, player, 0f, Color.red));
 
