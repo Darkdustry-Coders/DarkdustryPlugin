@@ -17,7 +17,8 @@ public class DoubleTap {
     }
 
     public static void check(TapEvent event, Runnable runnable) {
-        if (lastTaps.containsKey(event.player.id) && lastTaps.remove(event.player.id).check(event))
+        var tap = lastTaps.remove(event.player.id);
+        if (tap != null && tap.check(event))
             runnable.run();
         else lastTaps.put(event.player.id, new Tap(event.tile, Time.millis()));
     }
