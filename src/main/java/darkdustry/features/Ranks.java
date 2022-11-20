@@ -51,19 +51,24 @@ public class Ranks {
             effects = Effects.pack6;
         }},
 
+        sage {{
+            tag = "[accent]<[white]\uF6AA[]>[] ";
+            effects = Effects.pack7;
+        }},
+
         admin {{
             tag = "[scarlet]<\uE817>[] ";
-            effects = Effects.pack7;
+            effects = Effects.pack8;
         }},
 
         console {{
             tag = "[#8d56b1]<\uE85D>[] ";
-            effects = Effects.pack8;
+            effects = Effects.pack9;
         }},
 
         owner {{
             tag = "[#0088ff]<[white]\uF7A9[]>[] ";
-            effects = Effects.pack9;
+            effects = Effects.pack10;
         }};
 
         public static final Seq<Rank> all = Seq.with(values());

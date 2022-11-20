@@ -16,18 +16,28 @@ public class Effects {
 
     public static final IntMap<FxData> effectsCache = new IntMap<>();
 
-    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8, pack9;
+    public static FxPack pack1, pack2, pack3, pack4, pack5, pack6, pack7, pack8, pack9, pack10;
 
     public static void load() {
-        pack1 = new FxPack(p -> on(Fx.greenBomb, p), p -> on(Fx.greenLaserCharge, p), p -> on(Fx.freezing, p));
-        pack2 = new FxPack(p -> spikes(p, Color.lime), p -> spikes(p, Color.scarlet), p -> on(Fx.burning, p));
-        pack3 = new FxPack(p -> on(Fx.titanExplosion, p), p -> on(Fx.titanExplosion, p), p -> on(Fx.melting, p));
-        pack4 = new FxPack(p -> on(Fx.scatheExplosion, p), p -> on(Fx.scatheExplosion, p), p -> on(Fx.electrified, p));
-        pack5 = new FxPack(p -> on(Fx.neoplasmSplat, p), p -> on(Fx.neoplasmSplat, p), p -> on(Fx.overclocked, p, 0f, Tmp.c1.randHue()));
-        pack6 = new FxPack(p -> on(Fx.instBomb, p), p -> on(Fx.instHit, p), p -> on(Fx.smeltsmoke, p, 0f, Color.orange));
-        pack7 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p), p -> on(Fx.smeltsmoke, p, 0f, Color.red));
-        pack8 = new FxPack(p -> on(Fx.teleportActivate, p), p -> on(Fx.teleport, p), p -> on(Fx.smeltsmoke, p, 0f, Color.purple));
-        pack9 = new FxPack(Effects::particles, Effects::particles, p -> on(Fx.regenSuppressSeek, p, 0f, Color.white, p.unit()));
+        pack1 = new FxPack(player -> on(Fx.greenBomb, player), player -> on(Fx.greenLaserCharge, player), player -> on(Fx.freezing, player));
+
+        pack2 = new FxPack(player -> spikes(player, Color.lime), player -> spikes(player, Color.scarlet), player -> on(Fx.burning, player));
+
+        pack3 = new FxPack(player -> on(Fx.titanExplosion, player), player -> on(Fx.titanExplosion, player), player -> on(Fx.melting, player));
+
+        pack4 = new FxPack(player -> on(Fx.scatheExplosion, player), player -> on(Fx.scatheExplosion, player), player -> on(Fx.electrified, player));
+
+        pack5 = new FxPack(player -> on(Fx.neoplasmSplat, player), player -> on(Fx.neoplasmSplat, player), player -> on(Fx.overclocked, player, 0f, Tmp.c1.randHue()));
+
+        pack6 = new FxPack(player -> on(Fx.instBomb, player), player -> on(Fx.instHit, player), player -> on(Fx.smeltsmoke, player, 0f, Color.orange));
+
+        pack7 = new FxPack(player -> on(Fx.unitSpawn, player, player.unit().rotation, Color.white, player.unit().type), player -> on(Fx.unitSpawn, player, player.unit().rotation, Color.white, player.unit().type), player -> on(Fx.unitAssemble, player, player.unit().rotation - 90, Color.white, player.unit().type));
+
+        pack8 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player), player -> on(Fx.smeltsmoke, player, 0f, Color.red));
+
+        pack9 = new FxPack(player -> on(Fx.teleportActivate, player), player -> on(Fx.teleport, player), player -> on(Fx.smeltsmoke, player, 0f, Color.purple));
+
+        pack10 = new FxPack(Effects::particles, Effects::particles, player -> on(Fx.regenSuppressSeek, player, 0f, Color.white, player.unit()));
     }
 
     public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
