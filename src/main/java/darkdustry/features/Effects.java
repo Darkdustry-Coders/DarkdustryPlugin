@@ -12,7 +12,6 @@ import mindustry.entities.Effect;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 
-
 public class Effects {
 
     public static final IntMap<FxData> effectsCache = new IntMap<>();
