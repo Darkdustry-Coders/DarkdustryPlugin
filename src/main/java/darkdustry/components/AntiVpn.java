@@ -1,19 +1,27 @@
 package darkdustry.components;
 
+import arc.struct.ObjectMap;
 import arc.util.*;
 import arc.util.serialization.Jval;
 
 public class AntiVpn {
 
+    private static final ObjectMap<String, Boolean> cache = new ObjectMap<>();
+
     public static void checkIp(String ip, Runnable runnable) {
-        Http.get("https://proxycheck.io/v2/" + ip + "?vpn=1&asn=1")
+        if (cache.containsKey(ip)) {
+            if (cache.get(ip)) runnable.run();
+            return;
+        }
+
+        Http.get("https://funkemunky.cc/vpn?ip=" + ip)
                 .error(Log::debug)
                 .submit(response -> {
-                    var result = Jval.read(response.getResultAsString()).get(ip);
-                    if (result == null) return;
+                    var json = Jval.read(response.getResultAsString());
+                    boolean vpn = json.getBool("proxy", false);
 
-                    if (result.getString("type").equals("VPN"))
-                        runnable.run();
+                    cache.put(ip, vpn);
+                    if (vpn) runnable.run();
                 });
     }
 }
