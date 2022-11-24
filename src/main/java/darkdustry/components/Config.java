@@ -36,6 +36,9 @@ public class Config {
     /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
 
+    /** Ключ для взаимодействия с RapidAPI. */
+    public String antiVpnApiKey = "key";
+
     public static void load() {
         var file = dataDirectory.child(configFileName);
         if (file.exists()) {

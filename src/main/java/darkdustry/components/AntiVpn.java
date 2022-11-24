@@ -1,27 +1,29 @@
 package darkdustry.components;
 
-import arc.struct.ObjectMap;
 import arc.util.*;
-import arc.util.serialization.Jval;
+
+import static darkdustry.PluginVars.*;
 
 public class AntiVpn {
 
-    private static final ObjectMap<String, Boolean> cache = new ObjectMap<>();
-
     public static void checkIp(String ip, Runnable runnable) {
-        if (cache.containsKey(ip)) {
-            if (cache.get(ip)) runnable.run();
-            return;
-        }
-
-        Http.get("https://funkemunky.cc/vpn?ip=" + ip)
+        Http.get(antiVpnApiUrl + ip)
+                .header("X-RapidAPI-Key", config.antiVpnApiKey)
+                .header("X-RapidAPI-Host", antiVpnApiHost)
                 .error(Log::debug)
                 .submit(response -> {
-                    var json = Jval.read(response.getResultAsString());
-                    boolean vpn = json.getBool("proxy", false);
+                    var json = reader.parse(response.getResultAsString());
+                    var detection = json.get("detection");
 
-                    cache.put(ip, vpn);
-                    if (vpn) runnable.run();
+                    boolean isVpn = detection.getBoolean("bogon") ||
+                            detection.getBoolean("cloud") ||
+                            detection.getBoolean("hosting") ||
+                            detection.getBoolean("proxy") ||
+                            detection.getBoolean("spamhaus") ||
+                            detection.getBoolean("tor");
+
+                    if (isVpn)
+                        runnable.run();
                 });
     }
 }
