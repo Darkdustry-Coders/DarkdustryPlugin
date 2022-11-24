@@ -1,19 +1,17 @@
 package darkdustry.commands;
 
-import arc.Events;
 import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.features.menus.DespawnMenu;
 import darkdustry.utils.Find;
-import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.*;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.features.menus.MenuHandler.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.coloredTeam;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.content.Blocks.coreShard;
 import static mindustry.core.World.conv;
@@ -26,10 +24,15 @@ public class AdminCommands {
         register("a", (args, player) -> Groups.player.each(Player::admin, p -> bundled(p, player, args[0], "commands.a.chat", adminChat, player.coloredName(), args[0])));
 
         if (config.mode.useRtv()) {
-            register("artv", (args, player) -> showMenuConfirm(player, "commands.artv.confirm", () -> {
-                Events.fire(new GameOverEvent(state.rules.waveTeam));
-                sendToChat("commands.artv.info", player.coloredName());
-            }));
+            register("artv", (args, player) -> {
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                if (notFound(player, map)) return;
+
+                showMenuConfirm(player, "commands.artv.confirm", () -> {
+                    sendToChat("commands.artv.info", player.coloredName(), mapLoadDelay);
+                    reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode())));
+                }, map.name());
+            });
         }
 
         register("despawn", (args, player) -> {
