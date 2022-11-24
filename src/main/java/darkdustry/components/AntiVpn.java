@@ -8,7 +8,7 @@ public class AntiVpn {
 
     public static void checkIp(String ip, Runnable runnable) {
         Http.get(antiVpnApiUrl + ip)
-                .header("X-RapidAPI-Key", config.antiVpnApiKey)
+                .header("X-RapidAPI-Key", config.rapidApiKey)
                 .header("X-RapidAPI-Host", antiVpnApiHost)
                 .error(Log::debug)
                 .submit(response -> {
