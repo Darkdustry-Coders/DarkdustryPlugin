@@ -113,6 +113,14 @@ public class ServerCommands {
                 });
             }
         });
+        serverCommands.register("dbinfo", "<uuid>", "Find player info from db.", args -> getPlayerData(args[0]).subscribe(data -> {
+            Log.info("Player '@' UUID @", data.name, data.uuid);
+            Log.info("  rank: @", data.rank.name());
+            Log.info("  games played: @", data.gamesPlayed);
+            Log.info("  blocks placed: @", data.blocksPlaced);
+            Log.info("  blocks broken: @", data.blocksBroken);
+            Log.info("  play time: @ minutes", data.playTime);
+        }));
 
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);

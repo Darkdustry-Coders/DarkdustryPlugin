@@ -73,7 +73,6 @@ public class Database {
         public int blocksBroken = 0;
         public int gamesPlayed = 0;
         public int wavesSurvived = 0;
-        public int hexedWins = 0;
 
         public Rank rank = Rank.player;
 
