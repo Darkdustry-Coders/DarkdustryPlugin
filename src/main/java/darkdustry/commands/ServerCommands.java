@@ -113,14 +113,6 @@ public class ServerCommands {
                 });
             }
         });
-        serverCommands.register("dbinfo", "<uuid>", "Find player info from db.", args -> getPlayerData(args[0]).subscribe(data -> {
-            Log.info("Player '@' UUID @", data.name, data.uuid);
-            Log.info("  rank: @", data.rank.name());
-            Log.info("  games played: @", data.gamesPlayed);
-            Log.info("  blocks placed: @", data.blocksPlaced);
-            Log.info("  blocks broken: @", data.blocksBroken);
-            Log.info("  play time: @ minutes", data.playTime);
-        }));
 
         serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
@@ -205,6 +197,21 @@ public class ServerCommands {
                 Log.info("Admins: (@)", admins.size);
                 admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
             }
+        });
+
+        serverCommands.register("stats", "<player>", "Look up a player stats.", args -> {
+            var playerInfo = Find.playerInfo(args[0]);
+            if (notFound(playerInfo, args[0])) return;
+
+            getPlayerData(playerInfo.id).subscribe(data -> {
+                Log.info("Player '@' UUID @", data.name, data.uuid);
+                Log.info("  Rank: @", data.rank.name());
+                Log.info("  Games played: @", data.gamesPlayed);
+                Log.info("  Waves survived: @", data.wavesSurvived);
+                Log.info("  Blocks placed: @", data.blocksPlaced);
+                Log.info("  Blocks broken: @", data.blocksBroken);
+                Log.info("  Playtime: @ minutes", data.playTime);
+            });
         });
 
         serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
