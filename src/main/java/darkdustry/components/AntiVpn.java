@@ -12,11 +12,9 @@ public class AntiVpn {
                 .header("X-RapidAPI-Host", antiVpnApiHost)
                 .error(Log::debug)
                 .submit(response -> {
-                    var json = reader.parse(response.getResultAsString());
-                    var detection = json.get("detection");
+                    var detection = reader.parse(response.getResultAsString()).get("detection");
 
-                    boolean isVpn = detection.getBoolean("bogon") ||
-                            detection.getBoolean("cloud") ||
+                    boolean isVpn = detection.getBoolean("cloud") ||
                             detection.getBoolean("hosting") ||
                             detection.getBoolean("proxy") ||
                             detection.getBoolean("spamhaus") ||
