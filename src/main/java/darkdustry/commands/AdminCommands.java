@@ -29,7 +29,7 @@ public class AdminCommands {
                 if (notFound(player, map)) return;
 
                 showMenuConfirm(player, "commands.artv.confirm", () -> {
-                    sendToChat("commands.artv.info", player.coloredName(), mapLoadDelay);
+                    sendToChat("commands.artv.info", player.coloredName(), map.name());
                     reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode())));
                 }, map.name());
             });
