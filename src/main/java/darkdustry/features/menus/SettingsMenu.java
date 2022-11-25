@@ -9,11 +9,11 @@ import static darkdustry.features.Effects.updateEffects;
 
 public class SettingsMenu {
 
-    public static void showSettingsMenu(Player player) {
-        getPlayerData(player).subscribe(data -> showSettingsMenu(player, data));
+    public static void show(Player player) {
+        getPlayerData(player).subscribe(data -> show(player, data));
     }
 
-    public static void showSettingsMenu(Player player, PlayerData data) {
+    public static void show(Player player, PlayerData data) {
         showMenu(player, "commands.settings.header", "commands.settings.content", new String[][] {
                 {button("settings.alerts", player, data.alerts)},
                 {button("settings.effects", player, data.effects)},
@@ -38,7 +38,7 @@ public class SettingsMenu {
             }
 
             setPlayerData(data).subscribe();
-            showSettingsMenu(player, data);
+            show(player, data);
         });
     }
 

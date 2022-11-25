@@ -3,7 +3,6 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
-import darkdustry.components.AntiVpn;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
@@ -13,6 +12,7 @@ import useful.Bundle;
 
 import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Database.getVpnData;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
@@ -117,7 +117,7 @@ public class NetHandlers {
             return;
         }
 
-        AntiVpn.checkIp(ip, () -> kick(con, "kick.vpn", locale));
+        getVpnData(ip).filter(data -> data.isVpn).subscribe(data -> kick(con, "kick.vpn", locale));
 
         if (con.kicked) return;
 
@@ -140,25 +140,25 @@ public class NetHandlers {
     }
 
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
-        Player player = con.player, other = packet.other;
+        Player admin = con.player, target = packet.other;
         var action = packet.action;
 
-        if (notAdmin(player) || other == null || (other.admin && other != player)) return;
+        if (notAdmin(admin) || target == null || (target.admin && target != admin)) return;
 
-        Events.fire(new AdminRequestEvent(player, other, action));
+        Events.fire(new AdminRequestEvent(admin, target, action));
 
         switch (action) {
-            case kick -> kick(player, other);
-            case ban -> ban(player, other);
+            case kick -> kick(admin, target, kickDuration);
+            case ban -> ban(admin, target, 0L);
             case trace -> {
-                var info = other.getInfo();
-                Call.traceInfo(con, other, new TraceInfo(other.ip(), other.uuid(), other.con.modclient, other.con.mobile, info.timesJoined, info.timesKicked));
-                Log.info("@ has requested trace info of @.", player.plainName(), other.plainName());
+                var info = target.getInfo();
+                Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));
+                Log.info("@ has requested trace info of @.", admin.plainName(), target.plainName());
             }
             case wave -> {
                 logic.skipWave();
-                Log.info("@ has skipped the wave.", player.plainName());
-                sendToChat("events.admin.wave", player.coloredName());
+                Log.info("@ has skipped the wave.", admin.plainName());
+                sendToChat("events.admin.wave", admin.coloredName());
             }
         }
     }

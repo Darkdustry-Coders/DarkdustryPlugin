@@ -1,16 +1,18 @@
 package darkdustry.components;
 
 import arc.util.*;
+import darkdustry.components.Database.VpnData;
+import reactor.core.publisher.Mono;
 
 import static darkdustry.PluginVars.*;
 
 public class AntiVpn {
 
-    public static void checkIp(String ip, Runnable runnable) {
-        Http.get(antiVpnApiUrl + ip)
+    public static Mono<VpnData> checkIp(String ip) {
+        return Mono.create(sink -> Http.get(antiVpnApiUrl + ip)
                 .header("X-RapidAPI-Key", config.rapidApiKey)
                 .header("X-RapidAPI-Host", antiVpnApiHost)
-                .error(Log::debug)
+                .error(sink::error)
                 .submit(response -> {
                     var detection = reader.parse(response.getResultAsString()).get("detection");
 
@@ -20,8 +22,7 @@ public class AntiVpn {
                             detection.getBoolean("spamhaus") ||
                             detection.getBoolean("tor");
 
-                    if (isVpn)
-                        runnable.run();
-                });
+                    sink.success(new VpnData(ip, isVpn));
+                }));
     }
 }

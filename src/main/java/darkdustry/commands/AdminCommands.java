@@ -37,7 +37,7 @@ public class AdminCommands {
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
-                DespawnMenu.showDespawnMenu(player);
+                DespawnMenu.show(player);
                 return;
             }
 

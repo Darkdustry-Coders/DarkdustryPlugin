@@ -33,17 +33,19 @@ public class Administration {
     // endregion
     // region Administration
 
-    public static void ban(Player admin, Player other) {
-        netServer.admins.banPlayerID(other.uuid());
-        netServer.admins.banPlayerIP(other.ip());
+    public static void ban(Player admin, Player target, long duration) {
+        if (duration == 0) {
+            netServer.admins.banPlayerID(target.uuid());
+            netServer.admins.banPlayerIP(target.ip());
+        }
 
-        kick(other, 0, true, "kick.banned-by-admin", admin.coloredName());
-        Log.info("Player @ has been banned by @.", other.plainName(), admin.plainName());
-        sendToChat("events.admin.ban", admin.coloredName(), other.coloredName());
+        kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
+        Log.info("Player @ has been banned by @.", target.plainName(), admin.plainName());
+        sendToChat("events.admin.ban", admin.coloredName(), target.coloredName());
     }
 
-    public static void kick(Player admin, Player player) {
-        kick(player, kickDuration, true, "kick.kicked-by-admin", admin.coloredName());
+    public static void kick(Player admin, Player player, long duration) {
+        kick(player, duration, true, "kick.kicked-by-admin", admin.coloredName());
         Log.info("Player @ has been kicked by @.", player.plainName(), admin.plainName());
         sendToChat("events.admin.kick", admin.coloredName(), player.coloredName());
     }

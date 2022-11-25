@@ -63,7 +63,7 @@ public class ClientCommands {
             }
         }));
 
-        register("settings", (args, player) -> SettingsMenu.showSettingsMenu(player));
+        register("settings", (args, player) -> SettingsMenu.show(player));
 
         register("players", PageIterator::players);
 

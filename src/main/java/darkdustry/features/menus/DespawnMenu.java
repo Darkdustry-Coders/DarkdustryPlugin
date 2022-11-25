@@ -12,7 +12,7 @@ import static useful.Bundle.bundled;
 
 public class DespawnMenu {
 
-    public static void showDespawnMenu(Player player) {
+    public static void show(Player player) {
         showMenu(player, "commands.despawn.header", "commands.despawn.content", new String[][] {
                 {"commands.despawn.button.all"},
                 {"commands.despawn.button.players"},
@@ -40,7 +40,7 @@ public class DespawnMenu {
         showMenuConfirm(player, "commands.despawn.confirm", () -> {
             units.each(Call::unitEnvDeath);
             bundled(player, "commands.despawn.success", units.size);
-        }, () -> showDespawnMenu(player), units.size);
+        }, () -> show(player), units.size);
     }
 
     public static Team getEnemyTeam(Team team) {

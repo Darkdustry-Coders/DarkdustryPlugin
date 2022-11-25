@@ -1,7 +1,7 @@
 package darkdustry.components;
 
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.result.UpdateResult;
+import com.mongodb.client.result.*;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
@@ -18,14 +18,18 @@ import static org.bson.codecs.pojo.PojoCodecProvider.builder;
 public class Database {
 
     public static MongoClient client;
-    public static MongoCollection<PlayerData> collection;
+    public static MongoDatabase database;
+    public static MongoCollection<PlayerData> playersCollection;
+    public static MongoCollection<VpnData> vpnCollection;
 
     public static void connect() {
         try {
             client = MongoClients.create(config.mongoUrl);
-            collection = client.getDatabase("darkdustry")
-                    .withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(builder().automatic(true).build())))
-                    .getCollection("players", PlayerData.class);
+            database = client.getDatabase("darkdustry")
+                    .withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(builder().automatic(true).build())));
+
+            playersCollection = database.getCollection("players", PlayerData.class);
+            vpnCollection = database.getCollection("vpns", VpnData.class);
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
@@ -42,7 +46,7 @@ public class Database {
     }
 
     public static Mono<PlayerData> getPlayerData(String uuid) {
-        return Mono.from(collection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
+        return Mono.from(playersCollection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
     public static Flux<PlayerData> getPlayersData(Iterable<Player> players) {
@@ -50,11 +54,11 @@ public class Database {
     }
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
-        return Mono.from(collection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
+        return Mono.from(playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
 
-    public static Flux<PlayerData> rankPlayers(String query, int limit) {
-        return Flux.from(collection.find().sort(descending(query)).limit(limit));
+    public static Mono<VpnData> getVpnData(String ip) {
+        return Mono.from(vpnCollection.find(eq("ip", ip))).switchIfEmpty(AntiVpn.checkIp(ip).flatMap(data -> Mono.from(vpnCollection.insertOne(data)).thenReturn(data)));
     }
 
     public static class PlayerData {
@@ -81,6 +85,19 @@ public class Database {
 
         public PlayerData(String uuid) {
             this.uuid = uuid;
+        }
+    }
+
+    public static class VpnData {
+        public String ip;
+        public boolean isVpn;
+
+        @SuppressWarnings("unused")
+        public VpnData() {}
+
+        public VpnData(String ip, boolean isVpn) {
+            this.ip = ip;
+            this.isVpn = isVpn;
         }
     }
 }
