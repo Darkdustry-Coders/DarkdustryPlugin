@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.utils.messages.MessageRequest;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
 
 import java.awt.Color;
+import java.net.URI;
+import java.net.http.*;
 import java.util.EnumSet;
 
 import static arc.util.CommandHandler.ResponseType.*;
@@ -44,9 +46,18 @@ public class Bot {
             adminChannel = jda.getTextChannelById(config.discordAdminChannelId);
 
             RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
-
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));
+
             DiscordCommands.load();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://blackbox.p.rapidapi.com/v2/1.1.1.1,8.8.8.8"))
+                    .header("X-RapidAPI-Key", "4806eaec32mshfb4299cba6503c0p19bda2jsndc531e46c517")
+                    .header("X-RapidAPI-Host", "blackbox.p.rapidapi.com")
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
 
             updateBotStatus();
 
