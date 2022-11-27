@@ -80,7 +80,7 @@ public class ConfigEntry implements HistoryEntry {
 
         if (event.value instanceof Integer number) {
             if (event.tile.block instanceof UnitFactory factory)
-                return number == -1 ? null : factory.plans.get(number).unit;
+                return number < 0 || number >= factory.plans.size ? null : factory.plans.get(number).unit;
             if (event.tile.block.configurations.containsKey(Point2.class) || event.tile.block.configurations.containsKey(Point2[].class))
                 return Point2.unpack(number);
         }
