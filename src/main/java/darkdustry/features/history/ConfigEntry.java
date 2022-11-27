@@ -39,10 +39,6 @@ public class ConfigEntry implements HistoryEntry {
         var block = content.block(blockID);
         var date = formatHistoryDate(time);
 
-        if (value == null) {
-            return Bundle.format("history.config.default", player, name, Icons.get(block), date);
-        }
-
         if (value instanceof MappableContent content) {
             return Bundle.format("history.config", player, name, Icons.get(block), Icons.get(content), date);
         }
@@ -79,6 +75,9 @@ public class ConfigEntry implements HistoryEntry {
     }
 
     public Object getValue(ConfigEvent event) {
+        if (event.tile.block instanceof LogicBlock || event.tile.block instanceof CanvasBlock)
+            return null;
+
         if (event.value instanceof Integer number) {
             if (event.tile.block instanceof UnitFactory factory)
                 return number == -1 ? null : factory.plans.get(number).unit;
