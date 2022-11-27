@@ -18,9 +18,7 @@ public class AntiVpn {
                     var detection = new JsonReader().parse(response.getResultAsString()).get("detection");
 
                     boolean isVpn = detection.getBoolean("cloud") ||
-                            detection.getBoolean("hosting") ||
                             detection.getBoolean("proxy") ||
-                            detection.getBoolean("spamhaus") ||
                             detection.getBoolean("tor");
 
                     sink.success(new VpnData(ip, isVpn));
