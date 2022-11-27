@@ -2,7 +2,6 @@ package darkdustry;
 
 import arc.struct.*;
 import arc.util.CommandHandler;
-import arc.util.serialization.JsonReader;
 import com.google.gson.*;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
@@ -89,9 +88,6 @@ public class PluginVars {
 
     /** Используется для считывания и записи Json объектов. */
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
-    /** Используется для считывания и записи Json объектов. */
-    public static final JsonReader reader = new JsonReader();
 
     /** Используются для форматирования времени в дату. */
     public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),

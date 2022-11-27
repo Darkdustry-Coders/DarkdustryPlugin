@@ -1,6 +1,7 @@
 package darkdustry.components;
 
 import arc.util.*;
+import arc.util.serialization.JsonReader;
 import darkdustry.components.Database.VpnData;
 import reactor.core.publisher.Mono;
 
@@ -12,9 +13,9 @@ public class AntiVpn {
         return Mono.create(sink -> Http.get(antiVpnApiUrl + ip)
                 .header("X-RapidAPI-Key", config.rapidApiKey)
                 .header("X-RapidAPI-Host", antiVpnApiHost)
-                .error(sink::error)
+                .error(Log::debug)
                 .submit(response -> {
-                    var detection = reader.parse(response.getResultAsString()).get("detection");
+                    var detection = new JsonReader().parse(response.getResultAsString()).get("detection");
 
                     boolean isVpn = detection.getBoolean("cloud") ||
                             detection.getBoolean("hosting") ||

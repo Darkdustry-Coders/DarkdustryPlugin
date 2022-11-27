@@ -3,6 +3,7 @@ package darkdustry.components;
 import arc.func.Cons;
 import arc.struct.StringMap;
 import arc.util.*;
+import arc.util.serialization.JsonReader;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
@@ -55,7 +56,7 @@ public class Translator {
     public static void translate(String text, String from, String to, Cons<String> result, Runnable error) {
         Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))
                 .error(throwable -> error.run())
-                .submit(response -> result.get(reader.parse(response.getResultAsString()).get(0).get(0).asString()));
+                .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).get(0).get(0).asString()));
     }
 
     public static void translate(Player author, String text) {
