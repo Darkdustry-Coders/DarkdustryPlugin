@@ -93,11 +93,8 @@ public class PluginEvents {
             if (History.enabled() && event.tile.build != null)
                 History.put(new BlockEntry(event), event.tile);
 
-            getPlayerData(event.unit.getPlayer()).subscribe(data -> {
-                if (event.breaking) data.blocksBroken++;
-                else data.blocksPlaced++;
-                setPlayerData(data).subscribe();
-            });
+            if (event.breaking) brokenBlocksCache.increment(event.unit.getPlayer().id);
+            else placedBlocksCache.increment(event.unit.getPlayer().id);
         });
 
         Events.on(BuildSelectEvent.class, event -> {

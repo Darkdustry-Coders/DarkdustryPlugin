@@ -86,6 +86,9 @@ public class PluginVars {
     /** Список всех языков переводчика. */
     public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
 
+    /** Кэш количества построенных и разрушенных блоков. */
+    public static final IntIntMap placedBlocksCache = new IntIntMap(), brokenBlocksCache = new IntIntMap();
+
     /** Используется для считывания и записи Json объектов. */
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
