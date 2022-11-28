@@ -153,11 +153,11 @@ public class NetHandlers {
             case trace -> {
                 var info = target.getInfo();
                 Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));
-                Log.info("@ has requested trace info of @.", admin.plainName(), target.plainName());
+                Log.info("&lc@ has requested trace info of @.", admin.plainName(), target.plainName());
             }
             case wave -> {
                 logic.skipWave();
-                Log.info("@ has skipped the wave.", admin.plainName());
+                Log.info("&lc@ has skipped the wave.", admin.plainName());
                 sendToChat("events.admin.wave", admin.coloredName());
             }
         }

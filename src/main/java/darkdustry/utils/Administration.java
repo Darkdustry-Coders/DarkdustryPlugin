@@ -40,14 +40,14 @@ public class Administration {
         }
 
         kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
-        Log.info("Player @ has been banned by @.", target.plainName(), admin.plainName());
+        Log.info("&lc@Player @ has banned @.", admin.plainName(), target.plainName());
         sendToChat("events.admin.ban", admin.coloredName(), target.coloredName());
     }
 
-    public static void kick(Player admin, Player player, long duration) {
-        kick(player, duration, true, "kick.kicked-by-admin", admin.coloredName());
-        Log.info("Player @ has been kicked by @.", player.plainName(), admin.plainName());
-        sendToChat("events.admin.kick", admin.coloredName(), player.coloredName());
+    public static void kick(Player admin, Player target, long duration) {
+        kick(target, duration, true, "kick.kicked-by-admin", admin.coloredName());
+        Log.info("&lc@Player @ has kicked @.", admin.plainName(), target.plainName());
+        sendToChat("events.admin.kick", admin.coloredName(), target.coloredName());
     }
 
     // endregion

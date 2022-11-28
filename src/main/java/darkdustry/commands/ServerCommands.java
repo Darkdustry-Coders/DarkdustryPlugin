@@ -99,13 +99,16 @@ public class ServerCommands {
 
         serverCommands.register("kicks", "List all kicked players.", args -> {
             var kicks = netServer.admins.kickedIPs;
+            kicks.each((ip, time) -> {
+                if (Time.timeSinceMillis(time) > 0)
+                    kicks.remove(ip);
+            });
+
             if (kicks.isEmpty())
                 Log.info("No kicked players have been found.");
             else {
                 Log.info("Kicked players: (@)", kicks.size);
                 kicks.each((ip, time) -> {
-                    if (Time.millis() > time) return;
-
                     var info = netServer.admins.findByIP(ip);
                     if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
                     else

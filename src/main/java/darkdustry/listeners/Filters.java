@@ -28,7 +28,7 @@ public class Filters {
             return null;
         }
 
-        Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
+        Log.info("&y@: &lb@", author.plainName(), text);
 
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Translator.translate(author, text);
