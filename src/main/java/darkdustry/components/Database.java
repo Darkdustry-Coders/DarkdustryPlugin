@@ -1,7 +1,7 @@
 package darkdustry.components;
 
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.result.*;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
@@ -10,7 +10,6 @@ import reactor.core.publisher.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Sorts.descending;
 import static darkdustry.PluginVars.config;
 import static org.bson.codecs.configuration.CodecRegistries.*;
 import static org.bson.codecs.pojo.PojoCodecProvider.builder;
@@ -69,7 +68,7 @@ public class Database {
 
         public boolean alerts = true;
         public boolean effects = true;
-        public boolean doubleTapHistory = false;
+        public boolean history = false;
         public boolean welcomeMessage = true;
 
         public int gamesPlayed = 0;

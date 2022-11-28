@@ -17,7 +17,7 @@ public class SettingsMenu {
         showMenu(player, "commands.settings.header", "commands.settings.content", new String[][] {
                 {button("settings.alerts", player, data.alerts)},
                 {button("settings.effects", player, data.effects)},
-                {button("settings.doubleTapHistory", player, data.doubleTapHistory)},
+                {button("settings.history", player, data.history)},
                 {button("settings.welcomeMessage", player, data.welcomeMessage)},
                 {"ui.button.close"}}, SettingsMenu::changeSettings
         );
@@ -33,7 +33,7 @@ public class SettingsMenu {
                     data.effects = !data.effects;
                     updateEffects(player, data);
                 }
-                case 2 -> data.doubleTapHistory = !data.doubleTapHistory;
+                case 2 -> data.history = !data.history;
                 case 3 -> data.welcomeMessage = !data.welcomeMessage;
             }
 

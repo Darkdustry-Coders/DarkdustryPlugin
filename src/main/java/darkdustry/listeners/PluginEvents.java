@@ -2,14 +2,14 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.*;
+import darkdustry.components.Database;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
 import useful.*;
 
 import static arc.Core.app;
@@ -18,11 +18,10 @@ import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.components.DoubleTap.lastTaps;
 import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showMenu;
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.*;
 
@@ -47,7 +46,6 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
-            DoubleTap.clear();
             DynamicMenus.clear();
 
             app.post(Bot::updateBotStatus);
@@ -73,17 +71,15 @@ public class PluginEvents {
             if (!History.enabled() || event.tile == null) return;
 
             getPlayerData(event.player).subscribe(data -> {
-                if (!data.doubleTapHistory) return;
+                if (!data.history) return;
 
-                DoubleTap.check(event, () -> {
-                    var builder = new StringBuilder();
-                    var stack = History.get(event.tile.array());
+                var builder = new StringBuilder();
+                var stack = History.get(event.tile.array());
 
-                    if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
-                    else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+                if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
+                else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-                    bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
-                });
+                bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
             });
         });
 
@@ -132,7 +128,6 @@ public class PluginEvents {
             sendToChat(player -> player.con.isConnected(), "events.leave", event.player.coloredName());
             sendEmbed(botChannel, error, "@ left", event.player.plainName());
 
-            lastTaps.remove(event.player.id);
             effectsCache.remove(event.player.id);
 
             if (vote != null) vote.left(event.player);
