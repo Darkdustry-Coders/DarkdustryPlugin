@@ -99,9 +99,8 @@ public class AdminCommands {
             if (notFound(player, target)) return;
 
             var unit = type.spawn(target.team(), target.x, target.y);
-            unit.spawnedByCore(true);
-
             Call.unitControl(target, unit);
+
             bundled(target, "commands.unit.success", Icons.get(type));
             if (target != player)
                 bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
