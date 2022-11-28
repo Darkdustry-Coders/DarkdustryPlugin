@@ -74,7 +74,7 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             sendToChat("commands.say.chat", args[0]);
-            sendMessage(botChannel, "**Server:** @", args[0]);
+            sendMessage(botChannel, "Server", args[0]);
         });
 
         serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {

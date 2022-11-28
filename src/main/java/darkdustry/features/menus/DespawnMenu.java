@@ -6,7 +6,7 @@ import mindustry.gen.*;
 import useful.Bundle;
 
 import static darkdustry.features.menus.MenuHandler.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.coloredTeam;
 import static mindustry.Vars.state;
 import static useful.Bundle.bundled;
 

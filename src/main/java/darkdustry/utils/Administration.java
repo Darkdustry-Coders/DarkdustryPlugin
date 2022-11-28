@@ -6,7 +6,7 @@ import mindustry.gen.Player;
 import mindustry.net.NetConnection;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.discordServerUrl;
 import static mindustry.Vars.netServer;
 import static useful.Bundle.sendToChat;
 

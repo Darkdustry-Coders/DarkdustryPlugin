@@ -33,7 +33,7 @@ public class Filters {
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Translator.translate(author, text);
 
-        sendMessage(botChannel, "**@:** @", author.plainName(), text);
+        sendMessage(botChannel, author.plainName(), text);
         return null;
     }
 }

@@ -18,6 +18,7 @@ import java.util.EnumSet;
 
 import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Utils.stripDiscord;
 import static mindustry.Vars.state;
 import static net.dv8tion.jda.api.JDA.Status.CONNECTED;
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
@@ -92,9 +93,9 @@ public class Bot {
             jda.getPresence().setActivity(watching("at " + Groups.player.size() + " players on " + Strings.stripColors(state.map.name())));
     }
 
-    public static void sendMessage(MessageChannel channel, String text, Object... values) {
+    public static void sendMessage(MessageChannel channel, String name, String message) {
         if (channel != null && channel.canTalk())
-            channel.sendMessage(Strings.format(text, values)).queue();
+            channel.sendMessage(Strings.format("`@: @`", stripDiscord(name), stripDiscord(message))).queue();
     }
 
     public static void sendEmbed(MessageChannel channel, Color color, String title, Object... values) {

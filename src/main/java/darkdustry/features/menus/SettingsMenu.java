@@ -3,9 +3,9 @@ package darkdustry.features.menus;
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.features.menus.MenuHandler.showMenu;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Effects.updateEffects;
+import static darkdustry.features.menus.MenuHandler.showMenu;
 
 public class SettingsMenu {
 

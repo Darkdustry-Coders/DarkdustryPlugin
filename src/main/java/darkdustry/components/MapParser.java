@@ -18,7 +18,7 @@ import java.util.zip.InflaterInputStream;
 
 import static arc.graphics.Color.blackRgba;
 import static arc.util.io.Streams.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.notNullElse;
 import static mindustry.Vars.*;
 
 public class MapParser {

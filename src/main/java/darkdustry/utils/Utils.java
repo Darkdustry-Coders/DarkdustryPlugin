@@ -19,7 +19,7 @@ import static mindustry.Vars.*;
 public class Utils {
 
     public static int voteChoice(String vote) {
-        return switch (stripAll(vote.toLowerCase())) {
+        return switch (stripFooCharacters(vote.toLowerCase())) {
             case "y" -> 1;
             case "n" -> -1;
             default -> 0;
@@ -54,8 +54,21 @@ public class Utils {
         return "[#" + team.color + "]" + team.emoji + team.name + "[]";
     }
 
-    public static String stripAll(String str) {
-        return Strings.stripColors(Strings.stripGlyphs(str));
+    public static String stripAll(String text) {
+        return Strings.stripColors(Strings.stripGlyphs(text));
+    }
+
+    public static String stripDiscord(String text) {
+        return stripFooCharacters(text).replace("`", "");
+    }
+
+    public static String stripFooCharacters(String text) {
+        var builder = new StringBuilder(text);
+        for (int i = text.length() - 1; i >= 0; i--)
+            if (builder.charAt(i) >= 0xF80 && builder.charAt(i) <= 0x107F)
+                builder.deleteCharAt(i);
+
+        return builder.toString();
     }
 
     public static boolean deepEquals(String first, String second) {
