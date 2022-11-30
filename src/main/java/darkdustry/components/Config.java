@@ -10,7 +10,7 @@ import static mindustry.net.Administration.Config.*;
 public class Config {
 
     /** IP адрес Хаба. */
-    public String hubIp = "darkdustry.tk";
+    public String hubIp = "darkdustry.net";
 
     /** Порт Хаба. */
     public int hubPort = 6567;
