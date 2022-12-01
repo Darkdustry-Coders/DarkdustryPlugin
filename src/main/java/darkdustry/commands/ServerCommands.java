@@ -87,16 +87,6 @@ public class ServerCommands {
             Log.info("Player @ has been kicked.", target.plainName());
         });
 
-        serverCommands.register("pardon", "<uuid/ip>", "Pardon a kicked player.", args -> {
-            var playerInfo = Find.playerInfo(args[0]);
-            if (notFound(playerInfo, args[0])) return;
-
-            playerInfo.lastKicked = 0L;
-            playerInfo.ips.each(netServer.admins.kickedIPs::remove);
-
-            Log.info("Player @ has been pardoned.", playerInfo.plainLastName());
-        });
-
         serverCommands.register("kicks", "List all kicked players.", args -> {
             var kicks = netServer.admins.kickedIPs;
             kicks.each((ip, time) -> {
@@ -138,6 +128,9 @@ public class ServerCommands {
 
             netServer.admins.unbanPlayerID(playerInfo.id);
             playerInfo.ips.each(netServer.admins::unbanPlayerIP);
+
+            playerInfo.lastKicked = 0L;
+            playerInfo.ips.each(netServer.admins.kickedIPs::remove);
 
             Log.info("Player @ has been unbanned.", playerInfo.plainLastName());
         });

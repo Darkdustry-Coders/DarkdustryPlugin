@@ -24,6 +24,8 @@ public class DespawnMenu {
     }
 
     public static void despawnUnits(Player player, int option) {
+        if (!player.admin) return;
+
         switch (option) {
             case 0 -> showMenuConfirmDespawn(player, Seq.with(Groups.unit));
             case 1 -> showMenuConfirmDespawn(player, Seq.with(Groups.unit).filter(Unit::isPlayer));
@@ -38,6 +40,8 @@ public class DespawnMenu {
 
     public static void showMenuConfirmDespawn(Player player, Seq<Unit> units) {
         showMenuConfirm(player, "commands.despawn.confirm", () -> {
+            if (!player.admin) return;
+
             units.each(Call::unitEnvDeath);
             bundled(player, "commands.despawn.success", units.size);
         }, () -> show(player), units.size);

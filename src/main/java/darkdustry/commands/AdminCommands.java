@@ -29,6 +29,8 @@ public class AdminCommands {
                 if (notFound(player, map)) return;
 
                 showMenuConfirm(player, "commands.artv.confirm", () -> {
+                    if (!player.admin) return;
+
                     sendToChat("commands.artv.info", player.coloredName(), map.name());
                     reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode())));
                 }, map.name());

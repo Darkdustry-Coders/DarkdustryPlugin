@@ -4,6 +4,7 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
+import darkdustry.features.menus.TempBanMenu;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
@@ -152,7 +153,7 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> kick(admin, target, kickDuration);
-            case ban -> ban(admin, target, 0L);
+            case ban -> TempBanMenu.show(admin, target);
             case trace -> {
                 var info = target.getInfo();
                 Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));
