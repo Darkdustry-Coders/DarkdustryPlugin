@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
 import mindustry.game.Team;
@@ -11,12 +11,16 @@ import mindustry.maps.*;
 import mindustry.net.WorldReloader;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
+import useful.Bundle;
+
+import java.time.*;
 
 import static darkdustry.PluginVars.*;
-import static java.time.Instant.ofEpochMilli;
 import static mindustry.Vars.*;
 
 public class Utils {
+
+    // region Utils
 
     public static int voteChoice(String vote) {
         return switch (stripFooCharacters(vote.toLowerCase())) {
@@ -30,6 +34,9 @@ public class Utils {
         return value != null ? value : defaultValue;
     }
 
+    // endregion
+    // region getAvailable
+
     public static Seq<Command> getAvailableCommands(Player player) {
         return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
     }
@@ -42,6 +49,9 @@ public class Utils {
         return saveDirectory.seq().filter(SaveIO::isSaveValid);
     }
 
+    // endregion
+    // region isSupported
+
     public static boolean isSupported(UnitType type) {
         return type != null && !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
     }
@@ -49,6 +59,8 @@ public class Utils {
     public static boolean isSupported(Block block) {
         return block != null && block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
     }
+
+    // region Strings
 
     public static String coloredTeam(Team team) {
         return "[#" + team.color + "]" + team.emoji + team.name + "[]";
@@ -78,12 +90,31 @@ public class Utils {
     }
 
     public static String formatHistoryDate(long time) {
-        return historyFormat.format(ofEpochMilli(time));
+        return historyFormat.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatKickDate(long time) {
-        return kickFormat.format(ofEpochMilli(time));
+        return kickFormat.format(Instant.ofEpochMilli(time));
     }
+
+    public static String formatDuration(long time, String locale) {
+        var duration = Duration.ofMillis(time);
+        var builder = new StringBuilder();
+
+        OrderedMap.<String, Number>of(
+                "time.days", duration.toDaysPart(),
+                "time.hours", duration.toHoursPart(),
+                "time.minutes", duration.toMinutesPart(),
+                "time.seconds", duration.toSecondsPart()).each((key, value) -> {
+            if (value.intValue() > 0)
+                builder.append(Bundle.format(key, locale, value)).append(" ");
+        });
+
+        return builder.toString().trim();
+    }
+
+    // endregion
+    // region Other
 
     public static void reloadWorld(Runnable load) {
         try {
@@ -100,4 +131,6 @@ public class Utils {
             net.closeServer();
         }
     }
+
+    // endregion
 }

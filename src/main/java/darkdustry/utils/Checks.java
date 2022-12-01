@@ -6,7 +6,6 @@ import arc.util.Log;
 import darkdustry.components.Icons;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
-import mindustry.core.UI;
 import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
@@ -168,7 +167,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, UI.formatTime(defaults.get(command, defaultCooldown) * 0.06f), player.locale);
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), player.locale));
     }
 
     // endregion
