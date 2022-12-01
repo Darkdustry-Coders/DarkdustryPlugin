@@ -62,7 +62,7 @@ public class NetHandlers {
         con.hasBegunConnecting = true;
 
         var connections = Seq.with(net.getConnections());
-        if (connections.count(connection -> connection != con && connection.address.equals(ip)) >= maxIdenticalIPs) {
+        if (connections.filter(connection -> connection.address.equals(ip)).size >= maxIdenticalIPs) {
             connections.each(connection -> kick(connection, "kick.too-many-connections", locale));
             return;
         }
