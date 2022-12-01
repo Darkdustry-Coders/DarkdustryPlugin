@@ -57,6 +57,8 @@ public class Config {
         interactRateWindow.set(1);
         interactRateLimit.set(25);
         interactRateKick.set(50);
+        messageRateLimit.set(1);
+        messageSpamKick.set(5);
         packetSpamLimit.set(500);
         snapshotInterval.set(250);
 

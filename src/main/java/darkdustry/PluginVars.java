@@ -54,7 +54,7 @@ public class PluginVars {
     public static final int maxHistoryCapacity = 6;
 
     /** Максимально допустимое количество игроков с одинаковыми IP адресами. */
-    public static final int maxIdenticalIPs = 2;
+    public static final int maxIdenticalIPs = 3;
 
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;

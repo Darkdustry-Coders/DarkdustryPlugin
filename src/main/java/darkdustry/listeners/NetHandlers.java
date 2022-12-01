@@ -1,6 +1,7 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import mindustry.game.EventType.*;
@@ -60,8 +61,9 @@ public class NetHandlers {
 
         con.hasBegunConnecting = true;
 
-        if (Groups.player.count(player -> player.ip().equals(ip)) >= maxIdenticalIPs) {
-            kick(con, "kick.too-many-connections", locale);
+        var connections = Seq.with(net.getConnections());
+        if (connections.count(connection -> connection.address.equals(ip)) >= maxIdenticalIPs) {
+            connections.each(connection -> kick(connection, "kick.too-many-connections", locale));
             return;
         }
 
