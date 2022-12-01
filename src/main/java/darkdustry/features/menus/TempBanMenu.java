@@ -19,6 +19,8 @@ public class TempBanMenu {
     }
 
     public static void tempBan(Player admin, Player target, int option) {
+        if (!admin.admin) return;
+
         if (option < 0 || option >= durations.size)
             ban(admin, target, 0L);
         else
