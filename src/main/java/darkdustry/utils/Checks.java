@@ -28,7 +28,7 @@ import static useful.Bundle.bundled;
 
 public class Checks {
 
-    // region Console
+    // region console
 
     public static boolean alreadyHosting() {
         return check(!state.isMenu(), "Already hosting.");
@@ -55,7 +55,7 @@ public class Checks {
     }
 
     // endregion
-    // region Client
+    // region client
 
     public static boolean notAdmin(Player player) {
         return check(!player.admin, player, "commands.permission-denied");
@@ -74,15 +74,15 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(!isSupported(type), player, "commands.unit-not-found", Icons.contentList(content.units()));
+        return check(!isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units()));
     }
 
     public static boolean notFound(Player player, Block block) {
-        return check(!isSupported(block), player, "commands.block-not-found", Icons.contentList(content.blocks()));
+        return check(!isAvailable(block), player, "commands.block-not-found", Icons.contentList(content.blocks()));
     }
 
     public static boolean notFoundCore(Player player, Block block) {
-        return check(!isSupported(block), player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
+        return check(!isAvailable(block), player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
     }
 
     public static boolean notFound(Player player, Map map) {
@@ -170,7 +170,7 @@ public class Checks {
     }
 
     // endregion
-    // region Discord
+    // region discord
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
         return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: Missing permissions.").build()).setEphemeral(true).queue());
@@ -197,7 +197,7 @@ public class Checks {
     }
 
     // endregion
-    // region Checks
+    // region checks
 
     private static boolean check(boolean result, Runnable todo) {
         if (result) todo.run();

@@ -12,7 +12,7 @@ import static useful.Bundle.sendToChat;
 
 public class Administration {
 
-    // region Kick
+    // region kick
 
     public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String locale, Object... values) {
         var reason = Bundle.format(key, locale, values);
@@ -31,7 +31,7 @@ public class Administration {
     }
 
     // endregion
-    // region Administration
+    // region administration
 
     public static void ban(Player admin, Player target, long duration) {
         if (duration == 0) {

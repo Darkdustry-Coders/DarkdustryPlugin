@@ -20,7 +20,7 @@ import static mindustry.Vars.*;
 
 public class Utils {
 
-    // region Utils
+    // region common
 
     public static int voteChoice(String vote) {
         return switch (stripFooCharacters(vote.toLowerCase())) {
@@ -35,7 +35,7 @@ public class Utils {
     }
 
     // endregion
-    // region getAvailable
+    // region available
 
     public static Seq<Command> getAvailableCommands(Player player) {
         return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
@@ -49,18 +49,15 @@ public class Utils {
         return saveDirectory.seq().filter(SaveIO::isSaveValid);
     }
 
-    // endregion
-    // region isSupported
-
-    public static boolean isSupported(UnitType type) {
+    public static boolean isAvailable(UnitType type) {
         return type != null && !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
     }
 
-    public static boolean isSupported(Block block) {
+    public static boolean isAvailable(Block block) {
         return block != null && block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
     }
 
-    // region Strings
+    // region strings
 
     public static String coloredTeam(Team team) {
         return "[#" + team.color + "]" + team.emoji + team.name + "[]";
@@ -114,7 +111,7 @@ public class Utils {
     }
 
     // endregion
-    // region Other
+    // region world
 
     public static void reloadWorld(Runnable load) {
         try {

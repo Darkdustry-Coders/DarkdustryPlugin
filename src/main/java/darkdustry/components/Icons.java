@@ -36,8 +36,8 @@ public class Icons {
     public static String contentList(Seq<? extends MappableContent> contents) {
         var builder = new StringBuilder();
         contents.each(content -> {
-            if (content instanceof UnitType type && !isSupported(type)) return;
-            if (content instanceof Block block && !isSupported(block)) return;
+            if (content instanceof UnitType type && !isAvailable(type)) return;
+            if (content instanceof Block block && !isAvailable(block)) return;
 
             builder.append(get(content.name, "")).append(content.name).append(" ");
         });

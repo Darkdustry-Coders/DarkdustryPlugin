@@ -18,7 +18,7 @@ import static useful.Bundle.bundled;
 // (C) xzxADIxzx, 2023 год
 public class PageIterator {
 
-    // region Client
+    // region client
 
     public static void commands(String[] args, Player player) {
         client(args, player, getAvailableCommands(player), "help",
@@ -65,7 +65,7 @@ public class PageIterator {
     }
 
     // endregion
-    // region Discord
+    // region discord
 
     public static void players(String[] args, Context context) {
         discord(args, context, Seq.with(Groups.player),
