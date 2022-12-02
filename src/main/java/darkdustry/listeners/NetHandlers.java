@@ -74,8 +74,8 @@ public class NetHandlers {
             return;
         }
 
-        if (netServer.admins.getKickTime(uuid, ip) > Time.millis()) {
-            kick(con, netServer.admins.getKickTime(uuid, ip) - Time.millis(), true, "kick.temp-banned", locale);
+        if (isTempBanned(uuid, ip)) {
+            kick(con, getTempBanTime(uuid, ip), true, "kick.temp-banned", locale);
             return;
         }
 

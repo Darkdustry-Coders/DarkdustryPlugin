@@ -1,6 +1,6 @@
 package darkdustry.utils;
 
-import arc.util.Log;
+import arc.util.*;
 import mindustry.gen.Player;
 import mindustry.net.NetConnection;
 import useful.Bundle;
@@ -37,7 +37,7 @@ public class Administration {
         if (duration == 0) {
             netServer.admins.banPlayerID(target.uuid());
             netServer.admins.banPlayerIP(target.ip());
-        }
+        } else tempBan(target.uuid(), target.ip(), duration);
 
         kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
         Log.info("Player @ has banned @.", admin.plainName(), target.plainName());
@@ -51,4 +51,17 @@ public class Administration {
     }
 
     // endregion
+    // region tempBans
+
+    public static void tempBan(String uuid, String ip, long duration) {
+        netServer.admins.handleKicked(uuid, ip, duration);
+    }
+
+    public static long getTempBanTime(String uuid, String ip) {
+        return netServer.admins.getKickTime(uuid, ip) - Time.millis();
+    }
+
+    public static boolean isTempBanned(String uuid, String ip) {
+        return getTempBanTime(uuid, ip) > 0;
+    }
 }
