@@ -19,6 +19,10 @@ public class Cooldowns {
             "loadsave", 90000L
     );
 
+    public static long getCooldown(String command) {
+        return defaults.get(command, defaultCooldown);
+    }
+
     public static boolean canRun(Player player, String command) {
         if (player.admin || !cooldowns.containsKey(player.uuid()) || !cooldowns.get(player.uuid()).containsKey(command))
             return true;
@@ -27,6 +31,6 @@ public class Cooldowns {
 
     public static void run(Player player, String command) {
         if (player.admin) return;
-        cooldowns.get(player.uuid(), ObjectMap::new).put(command, Time.millis() + defaults.get(command, defaultCooldown));
+        cooldowns.get(player.uuid(), ObjectMap::new).put(command, Time.millis() + getCooldown(command));
     }
 }

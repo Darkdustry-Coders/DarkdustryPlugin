@@ -21,7 +21,6 @@ import static arc.util.Strings.canParsePositiveInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.error;
-import static darkdustry.utils.Cooldowns.defaults;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
@@ -167,7 +166,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(defaults.get(command, defaultCooldown), player.locale));
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(Cooldowns.getCooldown(command), player.locale));
     }
 
     // endregion
