@@ -6,7 +6,6 @@ import arc.util.CommandHandler.Command;
 import arc.util.*;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import mindustry.io.SaveIO;
 import mindustry.maps.*;
 import mindustry.net.WorldReloader;
 import mindustry.type.UnitType;
@@ -46,7 +45,7 @@ public class Utils {
     }
 
     public static Seq<Fi> getAvailableSaves() {
-        return saveDirectory.seq().filter(SaveIO::isSaveValid);
+        return saveDirectory.seq().filter(fi -> fi.extEquals(saveExtension));
     }
 
     public static boolean isAvailable(UnitType type) {

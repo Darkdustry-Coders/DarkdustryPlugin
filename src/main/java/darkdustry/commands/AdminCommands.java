@@ -4,8 +4,9 @@ import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.features.menus.DespawnMenu;
-import darkdustry.utils.Find;
+import darkdustry.utils.*;
 import mindustry.gen.*;
+import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
@@ -166,7 +167,7 @@ public class AdminCommands {
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
-        adminOnlyCommands.add(ClientCommands.register(name, (args, player) -> {
+        adminOnlyCommands.add(clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
             if (notAdmin(player)) return;
             runner.accept(args, player);
         }).text);

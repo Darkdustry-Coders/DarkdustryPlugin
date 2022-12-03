@@ -157,8 +157,8 @@ public class ClientCommands {
         register("saves", PageIterator::saves);
     }
 
-    public static Command register(String name, CommandRunner<Player> runner) {
-        return clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
+    public static void register(String name, CommandRunner<Player> runner) {
+        clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
             if (onCooldown(player, name)) return;
             runner.accept(args, player);
             Cooldowns.run(player, name);
