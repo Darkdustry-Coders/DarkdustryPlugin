@@ -14,7 +14,6 @@ import useful.Bundle;
 
 import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.getVpnData;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
@@ -120,8 +119,6 @@ public class NetHandlers {
             kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
-
-        getVpnData(ip).filter(data -> data.isVpn).subscribe(data -> kick(con, "kick.vpn", locale));
 
         if (con.kicked) return;
 

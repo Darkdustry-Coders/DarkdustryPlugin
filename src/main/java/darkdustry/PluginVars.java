@@ -71,9 +71,6 @@ public class PluginVars {
     /** Ссылка на translation API. */
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
-    /** Ссылка на AntiVpn API. */
-    public static final String antiVpnApiUrl = "https://blackbox.p.rapidapi.com/v2/obj/", antiVpnApiHost = "blackbox.p.rapidapi.com";
-
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
     public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "tr", "stats", "settings");
 

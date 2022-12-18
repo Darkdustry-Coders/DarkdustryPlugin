@@ -19,7 +19,6 @@ public class Database {
     public static MongoClient client;
     public static MongoDatabase database;
     public static MongoCollection<PlayerData> playersCollection;
-    public static MongoCollection<VpnData> vpnCollection;
 
     public static void connect() {
         try {
@@ -28,7 +27,6 @@ public class Database {
                     .withCodecRegistry(fromRegistries(getDefaultCodecRegistry(), fromProviders(builder().automatic(true).build())));
 
             playersCollection = database.getCollection("players", PlayerData.class);
-            vpnCollection = database.getCollection("vpns", VpnData.class);
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
@@ -56,10 +54,6 @@ public class Database {
         return Mono.from(playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
     }
 
-    public static Mono<VpnData> getVpnData(String ip) {
-        return Mono.from(vpnCollection.find(eq("ip", ip))).switchIfEmpty(AntiVpn.checkIp(ip).flatMap(data -> Mono.from(vpnCollection.insertOne(data)).thenReturn(data)));
-    }
-
     public static class PlayerData {
         public String uuid;
         public String language = "off";
@@ -84,19 +78,6 @@ public class Database {
 
         public PlayerData(String uuid) {
             this.uuid = uuid;
-        }
-    }
-
-    public static class VpnData {
-        public String ip;
-        public boolean isVpn;
-
-        @SuppressWarnings("unused")
-        public VpnData() {}
-
-        public VpnData(String ip, boolean isVpn) {
-            this.ip = ip;
-            this.isVpn = isVpn;
         }
     }
 }
