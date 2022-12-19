@@ -40,9 +40,13 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).flatMap(Database::setPlayerData).subscribe());
+        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player, (player, data) -> {
+            data.gamesPlayed++;
 
-        Events.on(WaveEvent.class, event -> getPlayersData(Groups.player).doOnNext(data -> data.wavesSurvived++).flatMap(Database::setPlayerData).subscribe());
+
+        }).flatMap(Database::setPlayerData).subscribe());
+
+        Events.on(WaveEvent.class, event -> getPlayersData(Groups.player, (player, data) -> data.wavesSurvived++).flatMap(Database::setPlayerData).subscribe());
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
@@ -137,7 +141,5 @@ public class PluginEvents {
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));
-
-        Events.run("Gameover", () -> getPlayersData(Groups.player).doOnNext(data -> data.gamesPlayed++).flatMap(Database::setPlayerData).subscribe());
     }
 }

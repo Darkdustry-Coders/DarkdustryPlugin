@@ -1,10 +1,12 @@
 package darkdustry.components;
 
+import arc.func.Cons2;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
+import darkdustry.utils.Find;
 import mindustry.gen.Player;
 import reactor.core.publisher.*;
 
@@ -46,8 +48,13 @@ public class Database {
         return Mono.from(playersCollection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersData(Iterable<Player> players) {
-        return Flux.fromIterable(players).flatMap(Database::getPlayerData);
+    public static Flux<PlayerData> getPlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
+        return Flux.fromIterable(players).flatMap(Database::getPlayerData).doOnNext(data -> {
+            var player = Find.playerByUuid(data.uuid);
+            if (player == null) return;
+
+            cons.get(player, data);
+        });
     }
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {

@@ -5,7 +5,6 @@ import arc.struct.StringMap;
 import arc.util.*;
 import arc.util.serialization.JsonReader;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.utils.Find;
 import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
@@ -63,9 +62,8 @@ public class Translator {
         var cache = new StringMap();
         var message = netServer.chatFormatter.format(author, text);
 
-        getPlayersData(Groups.player).doOnNext(data -> {
-            var player = Find.playerByUuid(data.uuid);
-            if (player == null || player == author) return;
+        getPlayersData(Groups.player, (player, data) -> {
+            if (player == author) return;
 
             if (data.language.equals("off")) {
                 player.sendMessage(message, author, text);

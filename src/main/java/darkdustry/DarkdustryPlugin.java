@@ -10,7 +10,6 @@ import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.listeners.*;
-import darkdustry.utils.Find;
 import mindustry.core.Version;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
@@ -83,25 +82,18 @@ public class DarkdustryPlugin extends Plugin {
 
         maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
 
-        Timer.schedule(() -> {
-            if (Groups.player.isEmpty()) return;
+        Timer.schedule(() -> getPlayersData(Groups.player, (player, data) -> {
+            data.playTime++;
+            data.blocksPlaced += placedBlocksCache.remove(player.id);
+            data.blocksBroken += brokenBlocksCache.remove(player.id);
 
-            getPlayersData(Groups.player).doOnNext(data -> {
-                var player = Find.playerByUuid(data.uuid);
-                if (player == null) return;
+            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
+                data.rank = data.rank.next;
+                updateRank(player, data);
 
-                data.playTime++;
-                data.blocksPlaced += placedBlocksCache.remove(player.id);
-                data.blocksBroken += brokenBlocksCache.remove(player.id);
-
-                while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
-                    data.rank = data.rank.next;
-                    updateRank(player, data);
-
-                    showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
-                }
-            }).flatMap(Database::setPlayerData).subscribe();
-        }, 60, 60);
+                showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
+            }
+        }).flatMap(Database::setPlayerData).subscribe(), 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
