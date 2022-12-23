@@ -19,11 +19,11 @@ public class SettingsMenu {
                 {button("settings.effects", player, data.effects)},
                 {button("settings.history", player, data.history)},
                 {button("settings.welcomeMessage", player, data.welcomeMessage)},
-                {"ui.button.close"}}, SettingsMenu::changeSettings
+                {"ui.button.close"}}, option -> selection(player, option)
         );
     }
 
-    public static void changeSettings(Player player, int option) {
+    public static void selection(Player player, int option) {
         if (option == -1 || option == 4) return; // Меню закрыто
 
         getPlayerData(player).subscribe(data -> {

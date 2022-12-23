@@ -5,6 +5,7 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Strings;
 import darkdustry.discord.Bot.Context;
+import darkdustry.features.menus.ListMenu;
 import mindustry.gen.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import useful.Bundle;
@@ -45,23 +46,13 @@ public class PageIterator {
     }
 
     private static <T> void client(String[] args, Player player, Seq<T> content, String command, Cons3<StringBuilder, Integer, T> cons) {
-        if (args.length > 0 && !Strings.canParseInt(args[0])) {
-            bundled(player, "commands.page-not-int");
-            return;
-        }
-
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
-
-        if (page > pages || page <= 0) {
+        if (page > pages || page < 1) {
             bundled(player, "commands.under-page", pages);
             return;
         }
 
-        var builder = new StringBuilder(Bundle.format("commands." + command + ".page", player, page, pages));
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder.append("\n"), i, content.get(i));
-
-        player.sendMessage(builder.toString());
+        ListMenu.show(player, "commands." + command + ".page", (newPage) -> formatList(content, newPage, cons), page, pages);
     }
 
     // endregion
@@ -83,20 +74,15 @@ public class PageIterator {
 
     private static <T> void discord(String[] args, Context context, Seq<T> content, Func<Seq<T>, String> title, Cons3<StringBuilder, Integer, T> cons) {
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
-
-        if (page > pages || page <= 0) {
+        if (page > pages || page < 1) {
             context.error(":interrobang: Page must be a number between 1 and @.", pages).queue();
             return;
         }
 
-        var builder = new StringBuilder();
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder.append("\n"), i, content.get(i));
-
         context.message().replyEmbeds(new EmbedBuilder()
                 .setColor(-13855508)
                 .setTitle(title.get(content))
-                .setDescription(builder.toString())
+                .setDescription(formatList(content, page, cons))
                 .setFooter(Strings.format("Page @ / @", page, pages)).build()).queue();
     }
 

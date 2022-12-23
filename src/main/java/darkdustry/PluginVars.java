@@ -48,7 +48,7 @@ public class PluginVars {
     public static final int maxFillAmount = 512;
 
     /** Количество команд/игроков/карт/сохранений на одной странице списка. */
-    public static final int maxPerPage = 8;
+    public static final int maxPerPage = 6;
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;

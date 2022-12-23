@@ -1,10 +1,11 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.*;
-import darkdustry.features.Authme;
+import darkdustry.features.*;
 import darkdustry.features.menus.*;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
+import darkdustry.features.Ranks.Rank;
 import mindustry.gen.*;
 import useful.Bundle;
 
@@ -73,7 +74,14 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, MenuHandler::rankInfo, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player.locale)));
+            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, option -> {
+                if (option != 0) return;
+
+                var builder = new StringBuilder();
+                Rank.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
+
+                showMenuClose(player, "commands.stats.requirements.header", builder.toString());
+            }, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player.locale)));
         });
 
         register("votekick", (args, player) -> {

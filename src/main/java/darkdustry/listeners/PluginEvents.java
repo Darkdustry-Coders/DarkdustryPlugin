@@ -6,10 +6,9 @@ import darkdustry.components.Database;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
-import darkdustry.features.menus.MenuHandler;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import useful.*;
 
 import static arc.Core.app;
@@ -42,8 +41,10 @@ public class PluginEvents {
 
         Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player, (player, data) -> {
             data.gamesPlayed++;
+            if (!state.rules.pvp) return;
 
-
+            if (player.team() == event.winner) data.pvpWins++;
+            else data.pvpDefeats++;
         }).flatMap(Database::setPlayerData).subscribe());
 
         Events.on(WaveEvent.class, event -> getPlayersData(Groups.player, (player, data) -> data.wavesSurvived++).flatMap(Database::setPlayerData).subscribe());
@@ -119,7 +120,14 @@ public class PluginEvents {
                 var builder = new StringBuilder();
                 welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", event.player)));
 
-                showMenu(event.player, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"ui.button.disable"}}, MenuHandler::welcome, serverName.string(), builder.toString());
+                showMenu(event.player, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"ui.button.disable"}}, option -> {
+                    if (option == 1) Call.openURI(event.player.con, discordServerUrl);
+                    else if (option == 2) {
+                        data.welcomeMessage = false;
+                        setPlayerData(data).subscribe();
+                        bundled(event.player, "welcome.disabled");
+                    }
+                }, serverName.string(), builder.toString());
             }
 
             app.post(Bot::updateBotStatus);

@@ -15,10 +15,10 @@ public class TempBanMenu {
                 {"tempban.1", "tempban.3", "tempban.5"},
                 {"tempban.7", "tempban.14", "tempban.30"},
                 {"tempban.permanent"},
-        }, (player, option) -> tempBan(admin, target, option), target.coloredName());
+        }, option -> selection(admin, target, option), target.coloredName());
     }
 
-    public static void tempBan(Player admin, Player target, int option) {
+    public static void selection(Player admin, Player target, int option) {
         if (!admin.admin) return;
 
         ban(admin, target, option < 0 || option >= durations.size ? 0L : durations.get(option) * 24 * 60 * 60 * 1000L);

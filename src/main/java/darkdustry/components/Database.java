@@ -73,6 +73,9 @@ public class Database {
         public boolean welcomeMessage = true;
 
         public int gamesPlayed = 0;
+        public int pvpWins = 0;
+        public int pvpDefeats = 0;
+
         public int wavesSurvived = 0;
         public int blocksPlaced = 0;
         public int blocksBroken = 0;

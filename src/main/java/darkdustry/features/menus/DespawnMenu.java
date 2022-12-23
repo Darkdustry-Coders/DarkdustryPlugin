@@ -19,11 +19,11 @@ public class DespawnMenu {
                 {Bundle.format("commands.despawn.button.team", player, coloredTeam(player.team()))},
                 {Bundle.format("commands.despawn.button.team", player, coloredTeam(getEnemyTeam(player.team())))},
                 {"commands.despawn.button.suicide"},
-                {"ui.button.close"}}, DespawnMenu::despawnUnits
+                {"ui.button.close"}}, option -> selection(player, option)
         );
     }
 
-    public static void despawnUnits(Player player, int option) {
+    public static void selection(Player player, int option) {
         if (!player.admin) return;
 
         switch (option) {

@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.func.Cons3;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
@@ -103,10 +104,18 @@ public class Utils {
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
             if (value.intValue() > 0)
-                builder.append(Bundle.format(key, locale, value)).append(" ");
+                builder.append(" ").append(Bundle.format(key, locale, value));
         });
 
-        return builder.toString().trim();
+        return builder.deleteCharAt(0).toString();
+    }
+
+    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> formatter) {
+        var builder = new StringBuilder();
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
+            formatter.get(builder.append("\n"), i, content.get(i));
+
+        return builder.deleteCharAt(0).toString();
     }
 
     // endregion
