@@ -1,7 +1,6 @@
 package darkdustry.features.menus;
 
 import arc.struct.Seq;
-import mindustry.game.Team;
 import mindustry.gen.*;
 import useful.Bundle;
 
@@ -15,9 +14,9 @@ public class DespawnMenu {
     public static void show(Player player) {
         showMenu(player, "commands.despawn.header", "commands.despawn.content", new String[][] {
                 {"commands.despawn.button.all"},
-                {"commands.despawn.button.players"},
-                {Bundle.format("commands.despawn.button.team", player, coloredTeam(player.team()))},
-                {Bundle.format("commands.despawn.button.team", player, coloredTeam(getEnemyTeam(player.team())))},
+                {"commands.despawn.button.not-players"},
+                {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.defaultTeam))},
+                {Bundle.format("commands.despawn.button.team", player, coloredTeam(state.rules.waveTeam))},
                 {"commands.despawn.button.suicide"},
                 {"ui.button.close"}}, option -> selection(player, option)
         );
@@ -27,10 +26,10 @@ public class DespawnMenu {
         if (!player.admin) return;
 
         switch (option) {
-            case 0 -> showMenuConfirmDespawn(player, Seq.with(Groups.unit));
-            case 1 -> showMenuConfirmDespawn(player, Seq.with(Groups.unit).filter(Unit::isPlayer));
-            case 2 -> showMenuConfirmDespawn(player, player.team().data().units);
-            case 3 -> showMenuConfirmDespawn(player, getEnemyTeam(player.team()).data().units);
+            case 0 -> showMenuConfirmDespawn(player, Groups.unit.copy(new Seq<>()));
+            case 1 -> showMenuConfirmDespawn(player, Groups.unit.copy(new Seq<>()).removeAll(Unit::isPlayer));
+            case 2 -> showMenuConfirmDespawn(player, state.rules.defaultTeam.data().units);
+            case 3 -> showMenuConfirmDespawn(player, state.rules.waveTeam.data().units);
             case 4 -> {
                 Call.unitEnvDeath(player.unit());
                 bundled(player, "commands.despawn.success.suicide");
@@ -40,14 +39,8 @@ public class DespawnMenu {
 
     public static void showMenuConfirmDespawn(Player player, Seq<Unit> units) {
         showMenuConfirm(player, "commands.despawn.confirm", () -> {
-            if (!player.admin) return;
-
             units.each(Call::unitEnvDeath);
             bundled(player, "commands.despawn.success", units.size);
         }, () -> show(player), units.size);
-    }
-
-    public static Team getEnemyTeam(Team team) {
-        return team == state.rules.waveTeam ? state.rules.defaultTeam : state.rules.waveTeam;
     }
 }

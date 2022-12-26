@@ -21,13 +21,13 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10")
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
-    implementation("org.mongodb:mongodb-driver-reactivestreams:4.7.1")
+    implementation("org.mongodb:mongodb-driver-reactivestreams:4.8.1")
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
 
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:main-SNAPSHOT")
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:main-SNAPSHOT")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:118801423a")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:118801423a")
 }
 
 tasks.jar {

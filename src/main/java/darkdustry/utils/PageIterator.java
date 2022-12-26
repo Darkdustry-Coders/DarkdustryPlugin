@@ -31,7 +31,7 @@ public class PageIterator {
     }
 
     public static void players(String[] args, Player player) {
-        client(args, player, Seq.with(Groups.player), "players",
+        client(args, player, Groups.player.copy(new Seq<>()), "players",
                 (builder, i, p) -> builder.append("  ").append(Bundle.format("commands.players.player", player, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
     }
 
@@ -59,7 +59,7 @@ public class PageIterator {
     // region discord
 
     public static void players(String[] args, Context context) {
-        discord(args, context, Seq.with(Groups.player),
+        discord(args, context, Groups.player.copy(new Seq<>()),
                 content -> Strings.format(":bar_chart: Players online: @", content.size),
                 (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("`   ").append(p.plainName())
         );

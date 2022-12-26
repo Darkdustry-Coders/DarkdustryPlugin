@@ -13,7 +13,6 @@ import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.Gamemode.sandbox;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
@@ -35,7 +34,7 @@ public class PluginEvents {
 
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
 
-            if (config.mode == sandbox)
+            if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 

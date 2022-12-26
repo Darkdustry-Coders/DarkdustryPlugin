@@ -1,11 +1,11 @@
 package darkdustry.commands;
 
-import arc.util.CommandHandler.*;
-import darkdustry.features.*;
-import darkdustry.features.menus.*;
+import arc.util.CommandHandler.CommandRunner;
+import darkdustry.features.Authme;
+import darkdustry.features.Ranks.Rank;
+import darkdustry.features.menus.SettingsMenu;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
-import darkdustry.features.Ranks.Rank;
 import mindustry.gen.*;
 import useful.Bundle;
 

@@ -110,7 +110,7 @@ public class Utils {
         return builder.deleteCharAt(0).toString();
     }
 
-    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> formatter) {
+    public static <T> String formatList(Seq<? extends T> content, int page, Cons3<StringBuilder, Integer, T> formatter) {
         var builder = new StringBuilder();
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
             formatter.get(builder.append("\n"), i, content.get(i));
