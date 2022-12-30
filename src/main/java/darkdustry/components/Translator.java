@@ -4,53 +4,13 @@ import arc.func.Cons;
 import arc.struct.StringMap;
 import arc.util.*;
 import arc.util.serialization.JsonReader;
-import darkdustry.DarkdustryPlugin;
 import mindustry.gen.*;
 
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.translationApiUrl;
 import static darkdustry.components.Database.getPlayersData;
 import static mindustry.Vars.netServer;
 
 public class Translator {
-
-    public static void load() {
-        translatorLanguages.putAll(
-                "ca", "Català",
-                "id", "Indonesian",
-                "da", "Dansk",
-                "de", "Deutsch",
-                "et", "Eesti",
-                "en", "English",
-                "es", "Español",
-                "eu", "Euskara",
-                "fil", "Filipino",
-                "fr", "Français",
-                "it", "Italiano",
-                "lt", "Lietuvių",
-                "hu", "Magyar",
-                "nl", "Nederlands",
-                "pl", "Polski",
-                "pt", "Português",
-                "ro", "Română",
-                "fi", "Suomi",
-                "sv", "Svenska",
-                "vi", "Tiếng Việt",
-                "tk", "Türkmen dili",
-                "tr", "Türkçe",
-                "cs", "Čeština",
-                "be", "Беларуская",
-                "bg", "Български",
-                "ru", "Русский",
-                "sr", "Српски",
-                "uk_UA", "Українська",
-                "th", "ไทย",
-                "zh", "简体中文",
-                "ja", "日本語",
-                "ko", "한국어"
-        );
-
-        DarkdustryPlugin.info("Loaded @ translator languages.", translatorLanguages.size);
-    }
 
     public static void translate(String text, String from, String to, Cons<String> result, Runnable error) {
         Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))

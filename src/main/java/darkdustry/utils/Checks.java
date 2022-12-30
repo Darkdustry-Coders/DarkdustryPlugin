@@ -93,10 +93,6 @@ public class Checks {
         return check(save == null, player, "commands.save-not-found");
     }
 
-    public static boolean notLanguage(Player player, String language) {
-        return check(language == null, player, "commands.language-not-found");
-    }
-
     public static boolean noCores(Player player, Team team) {
         return check(team.core() == null, player, "commands.give.no-core", coloredTeam(team));
     }

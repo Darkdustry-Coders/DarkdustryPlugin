@@ -9,18 +9,20 @@ import darkdustry.commands.*;
 import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
+import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.*;
 import mindustry.core.Version;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
-import useful.*;
+import useful.Bundle;
+import useful.menu.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.getPlayersData;
+import static darkdustry.components.Database.updatePlayersData;
 import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.features.menus.MenuHandler.showMenuClose;
+import static darkdustry.features.menus.MenuUtils.showMenuClose;
 import static darkdustry.utils.Utils.getAvailableMaps;
 import static mindustry.Vars.*;
 
@@ -52,15 +54,16 @@ public class DarkdustryPlugin extends Plugin {
         Time.mark();
 
         PluginEvents.load();
+        Bundle.load(DarkdustryPlugin.class, defaultLanguage);
 
-        Bundle.load(DarkdustryPlugin.class);
         DynamicMenus.load();
+        MenuFormatter.setFormatter(Bundle::format);
 
         Config.load();
         Icons.load();
         MapParser.load();
-        Translator.load();
 
+        MenuHandler.load();
         Alerts.load();
         Effects.load();
         SchemeSize.load();
@@ -82,7 +85,7 @@ public class DarkdustryPlugin extends Plugin {
 
         maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
 
-        Timer.schedule(() -> getPlayersData(Groups.player, (player, data) -> {
+        Timer.schedule(() -> updatePlayersData(Groups.player, (player, data) -> {
             data.playTime++;
             data.blocksPlaced += placedBlocksCache.remove(player.id);
             data.blocksBroken += brokenBlocksCache.remove(player.id);
@@ -93,7 +96,7 @@ public class DarkdustryPlugin extends Plugin {
 
                 showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
             }
-        }).flatMap(Database::setPlayerData).subscribe(), 60, 60);
+        }), 60, 60);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);

@@ -6,7 +6,7 @@ import mindustry.gen.*;
 import mindustry.net.Administration.PlayerAction;
 import useful.Bundle;
 
-import static darkdustry.utils.Utils.formatHistoryDate;
+import static darkdustry.utils.Utils.formatShortDate;
 import static mindustry.Vars.content;
 
 public class RotateEntry implements HistoryEntry {
@@ -26,6 +26,6 @@ public class RotateEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", player, name, Icons.get(content.block(blockID)), sides[rotation], formatHistoryDate(time));
+        return Bundle.format("history.rotate", player, name, Icons.get(content.block(blockID)), sides[rotation], formatShortDate(time));
     }
 }

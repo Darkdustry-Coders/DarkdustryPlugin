@@ -51,7 +51,7 @@ public class Bot {
             updateBotStatus();
 
             // Изменяем никнейм на [prefix] Name
-            jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(Strings.format("[@] @", discordCommands.getPrefix(), jda.getSelfUser().getName())).queue());
+            jda.getGuildCache().stream().findFirst().ifPresent(guild -> guild.getSelfMember().modifyNickname(Strings.format("[@] @", discordCommands.prefix, jda.getSelfUser().getName())).queue());
 
             DarkdustryPlugin.info("Bot connected. (@)", jda.getSelfUser().getAsTag());
         } catch (Exception e) {
@@ -72,9 +72,9 @@ public class Bot {
         var response = discordCommands.handleMessage(context.message.getContentRaw(), context);
 
         if (response.type == manyArguments)
-            context.error(":interrobang: Too many arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
+            context.error(":interrobang: Too many arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).queue();
         else if (response.type == fewArguments)
-            context.error(":interrobang: Too few arguments", "Usage: @**@** @", discordCommands.getPrefix(), response.runCommand, response.command.paramText).queue();
+            context.error(":interrobang: Too few arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).queue();
 
         return response.type != noCommand;
     }

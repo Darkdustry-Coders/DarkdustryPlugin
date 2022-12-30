@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks.Rank;
+import darkdustry.features.Ranks;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -100,9 +100,9 @@ public class ServerCommands {
                 Log.info("Kicked players: (@)", kicks.size);
                 kicks.each((ip, time) -> {
                     var info = netServer.admins.findByIP(ip);
-                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatKickDate(time));
+                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatLongDate(time));
                     else
-                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatKickDate(time), info.plainLastName(), info.id);
+                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatLongDate(time), info.plainLastName(), info.id);
                 });
             }
         });
@@ -218,18 +218,17 @@ public class ServerCommands {
             var rank = Find.rank(args[1]);
             if (notFound(rank, args[1])) return;
 
-            getPlayerData(playerInfo.id).subscribe(data -> {
+            updatePlayerData(playerInfo.id, data -> {
                 data.rank = rank;
                 if (target != null) updateRank(target, data);
 
-                setPlayerData(data).subscribe();
                 Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
             });
         });
 
         serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Rank.all.size);
-            Rank.all.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
+            Log.info("Ranks: (@)", Ranks.all.size);
+            Ranks.all.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
         });
     }
 }

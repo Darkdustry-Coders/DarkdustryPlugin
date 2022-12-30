@@ -86,12 +86,12 @@ public class Utils {
         return first.equalsIgnoreCase(second) || first.toLowerCase().contains(second.toLowerCase());
     }
 
-    public static String formatHistoryDate(long time) {
-        return historyFormat.format(Instant.ofEpochMilli(time));
+    public static String formatShortDate(long time) {
+        return shortDateFormat.format(Instant.ofEpochMilli(time));
     }
 
-    public static String formatKickDate(long time) {
-        return kickFormat.format(Instant.ofEpochMilli(time));
+    public static String formatLongDate(long time) {
+        return longDateFormat.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatDuration(long time, String locale) {
@@ -107,15 +107,15 @@ public class Utils {
                 builder.append(" ").append(Bundle.format(key, locale, value));
         });
 
-        return builder.deleteCharAt(0).toString();
+        return builder.substring(1);
     }
 
-    public static <T> String formatList(Seq<? extends T> content, int page, Cons3<StringBuilder, Integer, T> formatter) {
+    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> cons) {
         var builder = new StringBuilder();
         for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            formatter.get(builder.append("\n"), i, content.get(i));
+            cons.get(builder.append("\n\n"), i, content.get(i));
 
-        return builder.deleteCharAt(0).toString();
+        return builder.substring(2);
     }
 
     // endregion

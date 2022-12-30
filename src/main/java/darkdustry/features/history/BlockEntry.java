@@ -8,7 +8,7 @@ import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import useful.Bundle;
 
 import static darkdustry.features.history.RotateEntry.sides;
-import static darkdustry.utils.Utils.formatHistoryDate;
+import static darkdustry.utils.Utils.formatShortDate;
 import static mindustry.Vars.content;
 
 public class BlockEntry implements HistoryEntry {
@@ -29,6 +29,6 @@ public class BlockEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.get(block), formatHistoryDate(time), sides[rotation]);
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.get(block), formatShortDate(time), sides[rotation]);
     }
 }

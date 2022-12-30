@@ -13,7 +13,7 @@ import useful.Bundle;
 
 import java.util.Arrays;
 
-import static darkdustry.utils.Utils.formatHistoryDate;
+import static darkdustry.utils.Utils.formatShortDate;
 import static mindustry.Vars.content;
 
 public class ConfigEntry implements HistoryEntry {
@@ -37,7 +37,7 @@ public class ConfigEntry implements HistoryEntry {
     @Override
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        var date = formatHistoryDate(time);
+        var date = formatShortDate(time);
 
         if (value instanceof MappableContent content) {
             return Bundle.format("history.config", player, name, Icons.get(block), Icons.get(content), date);

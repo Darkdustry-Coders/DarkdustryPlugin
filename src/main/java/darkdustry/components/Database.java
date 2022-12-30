@@ -1,6 +1,6 @@
 package darkdustry.components;
 
-import arc.func.Cons2;
+import arc.func.*;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
@@ -59,6 +59,21 @@ public class Database {
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
         return Mono.from(playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
+    }
+
+    public static void updatePlayerData(Player player, Cons<PlayerData> cons) {
+        updatePlayerData(player.uuid(), cons);
+    }
+
+    public static void updatePlayerData(String uuid, Cons<PlayerData> cons) {
+        getPlayerData(uuid).flatMap(data -> {
+            cons.get(data);
+            return setPlayerData(data);
+        }).subscribe();
+    }
+
+    public static void updatePlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
+        getPlayersData(players, cons).flatMap(Database::setPlayerData).subscribe();
     }
 
     public static class PlayerData {

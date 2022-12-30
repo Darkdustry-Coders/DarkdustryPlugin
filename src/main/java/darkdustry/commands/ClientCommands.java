@@ -2,8 +2,7 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.features.Authme;
-import darkdustry.features.Ranks.Rank;
-import darkdustry.features.menus.SettingsMenu;
+import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
@@ -11,10 +10,10 @@ import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.features.menus.MenuHandler.*;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.features.menus.MenuUtils.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.*;
 import static useful.Bundle.*;
 
@@ -32,38 +31,7 @@ public class ClientCommands {
 
         register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
 
-        register("tr", (args, player) -> getPlayerData(player).subscribe(data -> {
-            if (args.length == 0) {
-                var builder = new StringBuilder();
-                translatorLanguages.each((language, name) -> builder.append("\n[accent]").append(language).append("[gray] - [lightgray]").append(name));
-
-                showMenuClose(player, "commands.tr.header", "commands.tr.content", data.language, builder.toString());
-                return;
-            }
-
-            switch (args[0].toLowerCase()) {
-                case "off" -> {
-                    data.language = "off";
-                    setPlayerData(data).subscribe();
-                    bundled(player, "commands.tr.disabled");
-                }
-                case "auto" -> {
-                    data.language = notNullElse(Find.language(player.locale), defaultLanguage);
-                    setPlayerData(data).subscribe();
-                    bundled(player, "commands.tr.auto", translatorLanguages.get(data.language), data.language);
-                }
-                default -> {
-                    var language = Find.language(args[0]);
-                    if (notLanguage(player, language)) return;
-
-                    data.language = language;
-                    setPlayerData(data).subscribe();
-                    bundled(player, "commands.tr.changed", translatorLanguages.get(data.language), data.language);
-                }
-            }
-        }));
-
-        register("settings", (args, player) -> SettingsMenu.show(player));
+        register("settings", (args, player) -> getPlayerData(player).subscribe(data -> MenuHandler.showSettingsMenu(player, data)));
 
         register("players", PageIterator::players);
 
@@ -74,14 +42,7 @@ public class ClientCommands {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> showMenu(player, "commands.stats.header", "commands.stats.content", new String[][] {{"commands.stats.requirements.button"}, {"ui.button.close"}}, option -> {
-                if (option != 0) return;
-
-                var builder = new StringBuilder();
-                Rank.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
-
-                showMenuClose(player, "commands.stats.requirements.header", builder.toString());
-            }, target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player.locale)));
+            getPlayerData(target).subscribe(data -> MenuHandler.showStatsMenu(player, target, data));
         });
 
         register("votekick", (args, player) -> {
@@ -143,26 +104,26 @@ public class ClientCommands {
             });
         }
 
-        if (!config.mode.isDefault()) return;
+        if (config.mode.isDefault()) {
+            register("savemap", (args, player) -> {
+                if (alreadyVoting(player, vote)) return;
 
-        register("savemap", (args, player) -> {
-            if (alreadyVoting(player, vote)) return;
+                vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
+                vote.vote(player, 1);
+            });
 
-            vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
-            vote.vote(player, 1);
-        });
+            register("loadsave", (args, player) -> {
+                if (alreadyVoting(player, vote)) return;
 
-        register("loadsave", (args, player) -> {
-            if (alreadyVoting(player, vote)) return;
+                var save = Find.save(args[0]);
+                if (notFound(player, save)) return;
 
-            var save = Find.save(args[0]);
-            if (notFound(player, save)) return;
+                vote = new VoteLoad(save);
+                vote.vote(player, 1);
+            });
 
-            vote = new VoteLoad(save);
-            vote.vote(player, 1);
-        });
-
-        register("saves", PageIterator::saves);
+            register("saves", PageIterator::saves);
+        }
     }
 
     public static void register(String name, CommandRunner<Player> runner) {

@@ -28,7 +28,7 @@ public class DiscordCommands {
 
         discordCommands.<Context>register("help", "List of all commands", (args, context) -> {
             var builder = new StringBuilder();
-            discordCommands.getCommandList().each(command -> builder.append(discordCommands.getPrefix()).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " *" + command.paramText + "*" : "").append(" — ").append(command.description).append("\n"));
+            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " *" + command.paramText + "*" : "").append(" — ").append(command.description).append("\n"));
             context.info(":newspaper: All available commands:", builder.toString()).queue();
         });
 

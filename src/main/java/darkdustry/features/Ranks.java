@@ -10,6 +10,8 @@ import static darkdustry.features.Effects.updateEffects;
 
 public class Ranks {
 
+    public static final Seq<Rank> all = Seq.with(Rank.values());
+
     public static void updateRank(Player player, PlayerData data) {
         player.name = data.name = data.rank.tag + player.getInfo().lastName;
         updateEffects(player, data);
@@ -70,8 +72,6 @@ public class Ranks {
             tag = "[#0088ff]<[white]\uF7A9[]>[] ";
             effects = Effects.pack10;
         }};
-
-        public static final Seq<Rank> all = Seq.with(values());
 
         public String tag = "";
         public FxPack effects = Effects.pack1;

@@ -6,10 +6,12 @@ import darkdustry.components.Database;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
+import darkdustry.features.menus.MenuHandler;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
-import mindustry.gen.*;
-import useful.*;
+import mindustry.gen.Groups;
+import useful.Bundle;
+import useful.menu.DynamicMenus;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
@@ -18,7 +20,6 @@ import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.effectsCache;
 import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.features.menus.MenuHandler.showMenu;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.*;
@@ -38,15 +39,15 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(GameOverEvent.class, event -> getPlayersData(Groups.player, (player, data) -> {
+        Events.on(GameOverEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> {
             data.gamesPlayed++;
             if (!state.rules.pvp) return;
 
             if (player.team() == event.winner) data.pvpWins++;
             else data.pvpDefeats++;
-        }).flatMap(Database::setPlayerData).subscribe());
+        }));
 
-        Events.on(WaveEvent.class, event -> getPlayersData(Groups.player, (player, data) -> data.wavesSurvived++).flatMap(Database::setPlayerData).subscribe());
+        Events.on(WaveEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> data.wavesSurvived++));
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
@@ -103,9 +104,8 @@ public class PluginEvents {
             Alerts.buildAlert(event);
         });
 
-        Events.on(PlayerJoin.class, event -> getPlayerData(event.player).subscribe(data -> {
+        Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
             updateRank(event.player, data);
-            setPlayerData(data).subscribe(); // Update last name in database
 
             app.post(() -> Effects.onJoin(event.player));
 
@@ -115,19 +115,8 @@ public class PluginEvents {
 
             sendEmbed(botChannel, success, "@ joined", event.player.plainName());
 
-            if (data.welcomeMessage) {
-                var builder = new StringBuilder();
-                welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.getPrefix()).append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", event.player)));
-
-                showMenu(event.player, "welcome.header", "welcome.content", new String[][] {{"ui.button.close"}, {"ui.button.discord"}, {"ui.button.disable"}}, option -> {
-                    if (option == 1) Call.openURI(event.player.con, discordServerUrl);
-                    else if (option == 2) {
-                        data.welcomeMessage = false;
-                        setPlayerData(data).subscribe();
-                        bundled(event.player, "welcome.disabled");
-                    }
-                }, serverName.string(), builder.toString());
-            }
+            if (data.welcomeMessage)
+                MenuHandler.showWelcomeMenu(event.player);
 
             app.post(Bot::updateBotStatus);
         }));

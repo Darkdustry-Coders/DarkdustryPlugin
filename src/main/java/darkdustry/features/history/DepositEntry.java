@@ -6,7 +6,7 @@ import mindustry.game.EventType.DepositEvent;
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.utils.Utils.formatHistoryDate;
+import static darkdustry.utils.Utils.formatShortDate;
 import static mindustry.Vars.content;
 
 public class DepositEntry implements HistoryEntry {
@@ -26,6 +26,6 @@ public class DepositEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.deposit", player, name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatHistoryDate(time));
+        return Bundle.format("history.deposit", player, name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatShortDate(time));
     }
 }

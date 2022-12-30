@@ -3,14 +3,14 @@ package darkdustry.commands;
 import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
-import darkdustry.features.menus.DespawnMenu;
+import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
 import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.showMenuConfirm;
+import static darkdustry.features.menus.MenuUtils.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -40,7 +40,7 @@ public class AdminCommands {
 
         register("despawn", (args, player) -> {
             if (args.length == 0) {
-                DespawnMenu.show(player);
+                MenuHandler.showDespawnMenu(player);
                 return;
             }
 
@@ -48,8 +48,8 @@ public class AdminCommands {
             if (notFound(player, target)) return;
 
             Call.unitEnvDeath(target.unit());
-            bundled(target, "commands.despawn.success.suicide");
-            if (target != player) bundled(player, "commands.despawn.success.player", target.coloredName());
+            bundled(target, "despawn.success.suicide");
+            if (target != player) bundled(player, "despawn.success.player", target.coloredName());
         });
 
         if (!config.mode.isDefault()) return;

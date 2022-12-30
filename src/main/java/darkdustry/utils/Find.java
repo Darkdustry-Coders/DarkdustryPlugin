@@ -12,7 +12,6 @@ import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static arc.util.Strings.*;
-import static darkdustry.PluginVars.translatorLanguages;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -79,9 +78,5 @@ public class Find {
 
     public static Block core(String name) {
         return content.blocks().select(CoreBlock.class::isInstance).find(block -> block.name.equalsIgnoreCase(name));
-    }
-
-    public static String language(String name) {
-        return translatorLanguages.orderedKeys().find(name::startsWith);
     }
 }

@@ -26,8 +26,8 @@ dependencies {
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
 
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:118801423a")
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:118801423a")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:3261ff23ac")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:3261ff23ac")
 }
 
 tasks.jar {

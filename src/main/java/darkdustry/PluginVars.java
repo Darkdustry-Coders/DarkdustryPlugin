@@ -77,9 +77,6 @@ public class PluginVars {
     /** Список игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
 
-    /** Список всех языков переводчика. */
-    public static final OrderedMap<String, String> translatorLanguages = new OrderedMap<>();
-
     /** Кэш количества построенных и разрушенных блоков. */
     public static final IntIntMap placedBlocksCache = new IntIntMap(), brokenBlocksCache = new IntIntMap();
 
@@ -87,8 +84,8 @@ public class PluginVars {
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используются для форматирования времени в дату. */
-    public static final DateTimeFormatter historyFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
-            kickFormat = DateTimeFormatter.ofPattern("MM.dd.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
+    public static final DateTimeFormatter shortDateFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
+            longDateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
 
     /** Конфигурация сервера. */
     public static Config config;
