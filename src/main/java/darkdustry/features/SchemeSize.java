@@ -24,9 +24,6 @@ public class SchemeSize {
         netServer.addPacketHandler("ThisIsMyPlayerData", (target, args) -> SSUsers.put(target.id, args.replace("|", "").replace("=", "")));
         netServer.addPacketHandler("GivePlayerDataPlease", (target, args) -> Call.clientPacketReliable(target.con, "ThisIsYourPlayerData", "S" + SSUsers.toString("|")));
 
-        // всё то, что дальше, не нужно для интеграции сервера с модом
-        // оно просто перенесено сюда, чтобы не захламлять AdminCommands
-
         netServer.addPacketHandler("fill", (player, args) -> {
             try {
                 if (player.admin) fill(player, args.split(" "));

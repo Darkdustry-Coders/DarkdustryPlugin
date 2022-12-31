@@ -1,6 +1,7 @@
 package darkdustry.features.menus;
 
 import arc.func.*;
+import arc.struct.Seq;
 import darkdustry.features.Ranks;
 import mindustry.gen.*;
 import useful.Bundle;
@@ -11,7 +12,8 @@ import useful.menu.view.State.StateKey;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.menus.MenuUtils.showMenuClose;
-import static darkdustry.utils.Utils.formatDuration;
+import static darkdustry.utils.Administration.ban;
+import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.bundled;
 
@@ -24,6 +26,7 @@ public class MenuHandler {
             statsMenu = new Menu(),
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
+            tempbanMenu = new Menu(),
             settingsMenu = new Menu(),
             languageMenu = new Menu();
 
@@ -34,6 +37,7 @@ public class MenuHandler {
             PAGE = new StateKey<>("page", Integer.class),
             PAGES = new StateKey<>("pages", Integer.class);
 
+    public static StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
 
     // endregion
@@ -51,11 +55,11 @@ public class MenuHandler {
         statsMenu.transform(menu -> {
             menu.title("stats.title");
 
-            menu.addOptionPlayer("requirements.button", player -> {
+            menu.addOptionPlayer("stats.requirements.button", player -> {
                 var builder = new StringBuilder();
                 Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
 
-                showMenuClose(player, "requirements.title", builder.toString());
+                showMenuClose(player, "stats.requirements.title", builder.toString());
             }).row();
 
             menu.addOptionNone("ui.button.close");
@@ -89,11 +93,20 @@ public class MenuHandler {
             menu.addOptionNone("ui.button.close");
         });
 
+        tempbanMenu.transform(menu -> {
+            menu.title("tempban.title");
+            menu.content("tempban.content", menu.state.get(TARGET).coloredName());
+
+            menu.addOptionsRow(3, BanDuration.values()).row();
+
+            menu.addOptionNone("ui.button.close");
+        });
+
         settingsMenu.transform(menu -> {
             menu.title("settings.title");
             menu.content("settings.content");
 
-            menu.addOptionsRow(1, Settings.values()).row();
+            menu.addOptionsRow(1, Setting.values()).row();
             menu.addOptionRow("settings.translator", view -> showLanguageMenu(view.player, view.state.get(DATA)), menu.state.get(DATA).language);
 
             menu.addOptionNone("ui.button.close");
@@ -113,15 +126,15 @@ public class MenuHandler {
     // endregion
     // region show
 
-    public static void showListMenu(Player player, String title, Func<Integer, String> content, int page, int pages) {
+    public static <T> void showListMenu(Player player, String title, Seq<T> content, int page, int pages, Cons3<StringBuilder, Integer, T> cons) {
         listMenu.showWith(player, PAGE, page, PAGES, pages, menu -> {
             menu.title(title);
-            menu.content(content.get(menu.state.get(PAGE)));
+            menu.content(formatList(content, menu.state.get(PAGE), cons));
         });
     }
 
     public static void showStatsMenu(Player player, Player target, PlayerData data) {
-        statsMenu.show(player, menu -> menu.content("stats.content", target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player.locale)));
+        statsMenu.show(player, menu -> menu.content("stats.content", target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player)));
     }
 
     public static void showWelcomeMenu(Player player) {
@@ -130,6 +143,10 @@ public class MenuHandler {
 
     public static void showDespawnMenu(Player player) {
         despawnMenu.show(player);
+    }
+
+    public static void showTempbanMenu(Player player, Player target) {
+        tempbanMenu.showWith(player, TARGET, target);
     }
 
     public static void showSettingsMenu(Player player, PlayerData data) {
@@ -142,6 +159,28 @@ public class MenuHandler {
 
     // endregion
     // region enums
+
+    public enum BanDuration implements OptionData {
+        one_day(1),
+        three_days(3),
+        five_days(5),
+        one_week(7),
+        two_weeks(14),
+        one_month(30),
+
+        permanent(0); // Special case: permanent ban is 0 days
+
+        public final long duration;
+
+        BanDuration(int days) {
+            this.duration = days * 24 * 60 * 60 * 1000L;
+        }
+
+        @Override
+        public MenuOption option(MenuView menu) {
+            return menu.option("tempban." + name(), view -> ban(view.player, view.state.get(TARGET), duration));
+        }
+    }
 
     public enum DespawnType implements OptionData {
         all(unit -> true),
@@ -169,7 +208,7 @@ public class MenuHandler {
         }
     }
 
-    public enum Settings implements OptionData {
+    public enum Setting implements OptionData {
         alerts(data -> data.alerts = !data.alerts, data -> data.alerts),
         effects(data -> data.effects = !data.effects, data -> data.effects),
         history(data -> data.history = !data.history, data -> data.history),
@@ -178,7 +217,7 @@ public class MenuHandler {
         public final Cons<PlayerData> cons;
         public final Func<PlayerData, Boolean> func;
 
-        Settings(Cons<PlayerData> cons, Func<PlayerData, Boolean> func) {
+        Setting(Cons<PlayerData> cons, Func<PlayerData, Boolean> func) {
             this.cons = cons;
             this.func = func;
         }

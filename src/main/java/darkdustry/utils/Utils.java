@@ -94,6 +94,10 @@ public class Utils {
         return longDateFormat.format(Instant.ofEpochMilli(time));
     }
 
+    public static String formatDuration(long time, Player player) {
+        return formatDuration(time, player.locale);
+    }
+
     public static String formatDuration(long time, String locale) {
         var duration = Duration.ofMillis(time);
         var builder = new StringBuilder();

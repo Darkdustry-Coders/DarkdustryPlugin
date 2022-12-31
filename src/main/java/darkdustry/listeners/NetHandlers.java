@@ -13,6 +13,7 @@ import useful.Bundle;
 
 import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.features.menus.MenuHandler.showTempbanMenu;
 import static darkdustry.utils.Administration.*;
 import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
@@ -149,7 +150,7 @@ public class NetHandlers {
 
         switch (action) {
             case kick -> kick(admin, target, kickDuration);
-            case ban -> ban(admin, target, 0L);
+            case ban -> showTempbanMenu(admin, target);
             case trace -> {
                 var info = target.getInfo();
                 Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));

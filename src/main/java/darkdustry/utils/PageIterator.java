@@ -51,7 +51,7 @@ public class PageIterator {
             return;
         }
 
-        MenuHandler.showListMenu(player, "commands." + command + ".title", (newPage) -> formatList(content, newPage, cons), page, pages);
+        MenuHandler.showListMenu(player, "commands." + command + ".title", content, page, pages, cons);
     }
 
     // endregion
@@ -60,14 +60,14 @@ public class PageIterator {
     public static void players(String[] args, Context context) {
         discord(args, context, Groups.player.copy(new Seq<>()),
                 size -> Strings.format(":bar_chart: Players online: @", size),
-                (builder, i, p) -> builder.append("\n").append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("`   ").append(p.plainName())
+                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("`   ").append(p.plainName())
         );
     }
 
     public static void maps(String[] args, Context context) {
         discord(args, context, getAvailableMaps(),
                 size -> Strings.format(":map: Maps in playlist: @", size),
-                (builder, i, map) -> builder.append("\n").append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
+                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
         );
     }
 
