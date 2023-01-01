@@ -107,19 +107,23 @@ public class Utils {
                 "time.hours", duration.toHoursPart(),
                 "time.minutes", duration.toMinutesPart(),
                 "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-            if (value.intValue() > 0)
-                builder.append(" ").append(Bundle.format(key, locale, value));
+            if (value.intValue() > 0) {
+                if (!builder.isEmpty()) builder.append(" ");
+                builder.append(Bundle.format(key, locale, value));
+            }
         });
 
-        return builder.substring(1);
+        return builder.toString();
     }
 
     public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> cons) {
         var builder = new StringBuilder();
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++)
-            cons.get(builder.append("\n\n"), i, content.get(i));
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++) {
+            if (!builder.isEmpty()) builder.append("\n\n");
+            cons.get(builder, i, content.get(i));
+        }
 
-        return builder.substring(2);
+        return builder.toString();
     }
 
     // endregion

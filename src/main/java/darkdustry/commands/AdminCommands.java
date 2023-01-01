@@ -102,7 +102,7 @@ public class AdminCommands {
             if (notFound(player, target)) return;
 
             var unit = type.spawn(target.team(), target.x, target.y);
-            Call.unitControl(target, unit);
+            target.unit(unit);
 
             bundled(target, "commands.unit.success", Icons.get(type));
             if (target != player)
@@ -132,13 +132,13 @@ public class AdminCommands {
                     y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;
 
             var unit = player.unit();
-            Call.unitControl(player, null);
+            player.clearUnit();
 
             unit.set(x, y);
             Call.setPosition(player.con, x, y);
             Call.setCameraPosition(player.con, x, y);
 
-            Call.unitControl(player, unit);
+            player.unit(unit);
 
             bundled(player, "commands.tp.success", conv(x), conv(y));
         });
