@@ -11,6 +11,7 @@ jobs:
       - name: Подключение Java 17
         uses: actions/setup-java@v3
         with:
+          distribution: zulu
           java-version: 17
 
       - name: Настройка доступа
