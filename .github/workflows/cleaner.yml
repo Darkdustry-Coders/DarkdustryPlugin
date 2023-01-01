@@ -1,5 +1,6 @@
-name: 'Delete old artifacts'
-on: [ push ]
+name: Удаление старых артефактов
+
+on: [ push, workflow_dispatch ]
 
 jobs:
   delete-artifacts:
@@ -8,4 +9,4 @@ jobs:
       - uses: kolpav/purge-artifacts-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          expire-in: 10 minutes
+          expire-in: 1 day

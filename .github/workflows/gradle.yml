@@ -3,7 +3,7 @@ name: Компиляция плагина
 on: [ push, workflow_dispatch ]
 
 jobs:
-  buildJar:
+  compile-plugin:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -12,13 +12,13 @@ jobs:
         with:
           java-version: 17
 
-      - name: Настройка доступа к gradlew
+      - name: Настройка доступа
         run: chmod +x ./gradlew
 
-      - name: Сборка плагина в jar
+      - name: Сборка плагина
         run: ./gradlew jar
 
-      - name: Выгрузка jar
+      - name: Выгрузка артефакта
         uses: actions/upload-artifact@v2
         with:
           name: ${{ github.event.repository.name }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Создание релиза
         id: release
-        if: ${{ steps.checkTag.outputs.exists == false }}
+        if: ${{ !steps.checkTag.outputs.exists }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Выгрузка релиза
         id: upload-release-asset
-        if: ${{ steps.checkTag.outputs.exists == false }}
+        if: ${{ !steps.checkTag.outputs.exists }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
