@@ -29,6 +29,6 @@ public class BlockEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var block = content.block(blockID);
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.get(block), formatShortDate(time), sides[rotation]);
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.getIcon(block), formatShortDate(time), sides[rotation]);
     }
 }

@@ -26,6 +26,6 @@ public class RotateEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.rotate", player, name, Icons.get(content.block(blockID)), sides[rotation], formatShortDate(time));
+        return Bundle.format("history.rotate", player, name, Icons.getIcon(content.block(blockID)), sides[rotation], formatShortDate(time));
     }
 }

@@ -21,7 +21,7 @@ public class Icons {
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            Structs.each(team -> team.emoji = get(team.name, ""), Team.baseTeams);
+            Structs.each(team -> team.emoji = icons.get(team.name, ""), Team.baseTeams);
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
         }, e -> DarkdustryPlugin.error("Unable to fetch content icons from GitHub. Check your internet connection."));
@@ -39,17 +39,17 @@ public class Icons {
             if (content instanceof UnitType type && !isAvailable(type)) return;
             if (content instanceof Block block && !isAvailable(block)) return;
 
-            builder.append(get(content.name, "")).append(content.name).append(" ");
+            builder.append(getIcon(content)).append(content.name).append(" ");
         });
 
         return builder.toString();
     }
 
-    public static String get(MappableContent content) {
-        return get(content.name, content.name);
+    public static String getIcon(MappableContent content) {
+        return icons.get(content.name, "");
     }
 
-    public static String get(String key, String defaultValue) {
-        return icons.get(key, defaultValue);
+    public static String getName(MappableContent content) {
+        return getIcon(content) + content.name;
     }
 }

@@ -26,6 +26,6 @@ public class WithdrawEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.withdraw", player, name, amount, Icons.get(content.item(itemID)), Icons.get(content.block(blockID)), formatShortDate(time));
+        return Bundle.format("history.withdraw", player, name, amount, Icons.getIcon(content.item(itemID)), Icons.getIcon(content.block(blockID)), formatShortDate(time));
     }
 }
