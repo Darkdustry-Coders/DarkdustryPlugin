@@ -3,7 +3,6 @@ package darkdustry.features;
 import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.Mathf;
-import arc.math.geom.Position;
 import arc.struct.IntMap;
 import arc.util.Tmp;
 import darkdustry.components.Database.PlayerData;
@@ -40,16 +39,16 @@ public class Effects {
         pack10 = new FxPack(Effects::particles, Effects::particles, player -> on(Fx.regenSuppressSeek, player, 0f, Color.white, player.unit()));
     }
 
-    public static void on(Effect effect, Position pos, float rotation, Color color, Object data) {
-        Call.effect(effect, pos.getX(), pos.getY(), rotation, color, data);
+    public static void on(Effect effect, Player player, float rotation, Color color, Object data) {
+        Call.effect(effect, player.x, player.y, rotation, color, data);
     }
 
-    public static void on(Effect effect, Position pos, float rotation, Color color) {
-        Call.effect(effect, pos.getX(), pos.getY(), rotation, color);
+    public static void on(Effect effect, Player player, float rotation, Color color) {
+        Call.effect(effect, player.x, player.y, rotation, color);
     }
 
-    public static void on(Effect effect, Position pos) {
-        Call.effect(effect, pos.getX(), pos.getY(), Mathf.random(360f), Tmp.c1.randHue());
+    public static void on(Effect effect, Player player) {
+        Call.effect(effect, player.x, player.y, Mathf.random(360f), Tmp.c1.randHue());
     }
 
     public static void spikes(Player player, Color color) {
@@ -59,10 +58,10 @@ public class Effects {
     public static void particles(Player player) {
         for (int deg = 0; deg < 180; deg += 5)
             for (int i = 0; i < 3; i++)
-                on(Fx.regenSuppressSeek, Tmp.v1.set(player).add(
-                        Mathf.cosDeg(deg + 120f * i) * deg,
-                        Mathf.sinDeg(deg + 120f * i) * deg
-                ), 0f, Color.white, Tmp.v2.set(player));
+                Call.effect(Fx.regenSuppressSeek,
+                        player.x + Mathf.cosDeg(deg + 120f * i) * deg,
+                        player.y + Mathf.sinDeg(deg + 120f * i) * deg,
+                        0f, Color.white, Tmp.v1.set(player));
     }
 
     public static void updateEffects(Player player, PlayerData data) {

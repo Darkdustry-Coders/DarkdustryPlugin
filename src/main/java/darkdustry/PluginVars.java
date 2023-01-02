@@ -35,6 +35,9 @@ public class PluginVars {
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
+    /** Максимальная длительность применяемого эффекта статуса. В секундах. */
+    public static final int maxEffectDuration = 300;
+
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;
 

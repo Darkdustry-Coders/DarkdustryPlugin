@@ -14,6 +14,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import static arc.util.Strings.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.ctype.ContentType.status;
 
 public class Find {
 
@@ -40,8 +41,8 @@ public class Find {
         return notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
     }
 
-    public static Item item(String name) {
-        return canParsePositiveInt(name) ? content.item(parseInt(name)) : content.item(name);
+    public static Team team(String name) {
+        return canParsePositiveInt(name) ? Team.get(parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
     }
 
     public static UnitType unit(String name) {
@@ -52,8 +53,12 @@ public class Find {
         return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.block(name);
     }
 
-    public static Team team(String name) {
-        return canParsePositiveInt(name) ? Team.get(parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
+    public static Item item(String name) {
+        return canParsePositiveInt(name) ? content.item(parseInt(name)) : content.item(name);
+    }
+
+    public static StatusEffect effect(String name) {
+        return canParsePositiveInt(name) ? content.getByID(status, parseInt(name)) : content.statusEffect(name);
     }
 
     public static Map map(String name) {

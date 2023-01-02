@@ -54,19 +54,6 @@ public class AdminCommands {
 
         if (!config.mode.isDefault()) return;
 
-        register("team", (args, player) -> {
-            var team = Find.team(args[0]);
-            if (notFound(player, team)) return;
-
-            var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target)) return;
-
-            target.team(team);
-            bundled(target, "commands.team.success", coloredTeam(team));
-            if (target != player)
-                bundled(player, "commands.team.success.player", target.coloredName(), coloredTeam(team));
-        });
-
         register("core", (args, player) -> {
             var core = args.length > 0 ? Find.core(args[0]) : coreShard;
             if (notFoundCore(player, core)) return;
@@ -76,6 +63,55 @@ public class AdminCommands {
 
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
             bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.get(core), coloredTeam(team));
+        });
+
+        register("team", (args, player) -> {
+            var team = Find.team(args[0]);
+            if (notFound(player, team)) return;
+
+            var target = args.length > 1 ? Find.player(args[1]) : player;
+            if (notFound(player, target)) return;
+
+            target.team(team);
+
+            bundled(target, "commands.team.success", coloredTeam(team));
+            if (target != player)
+                bundled(player, "commands.team.success.player", target.coloredName(), coloredTeam(team));
+        });
+
+        register("unit", (args, player) -> {
+            var type = Find.unit(args[0]);
+            if (notFound(player, type)) return;
+
+            var target = args.length > 1 ? Find.player(args[1]) : player;
+            if (notFound(player, target)) return;
+
+            var unit = type.spawn(target.team(), target.x, target.y);
+            target.unit(unit);
+
+            bundled(target, "commands.unit.success", Icons.get(type));
+            if (target != player)
+                bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
+        });
+
+        register("effect", (args, player) -> {
+            if (invalidDuration(player, args, 1)) return;
+
+            var effect = Find.effect(args[0]);
+            if (notFound(player, effect)) return;
+
+            int duration = args.length > 1 ? parseInt(args[1]) : 0;
+            if (invalidEffectDuration(player, duration)) return;
+
+            var target = args.length > 2 ? Find.player(args[2]) : player;
+            if (notFound(player, target)) return;
+
+            if (duration > 0) target.unit().apply(effect, duration * 60f);
+            else target.unit().unapply(effect);
+
+            bundled(target, duration > 0 ? "commands.effect.apply.success" : "commands.effect.remove.success", Icons.get(effect), duration);
+            if (target != player)
+                bundled(player, duration > 0 ? "commands.effect.apply.success.player" : "commands.effect.remove.success.player", target.coloredName(), Icons.get(effect), duration);
         });
 
         register("give", (args, player) -> {
@@ -92,21 +128,6 @@ public class AdminCommands {
 
             team.items().add(item, amount);
             bundled(player, "commands.give.success", amount, Icons.get(item), coloredTeam(team));
-        });
-
-        register("unit", (args, player) -> {
-            var type = Find.unit(args[0]);
-            if (notFound(player, type)) return;
-
-            var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target)) return;
-
-            var unit = type.spawn(target.team(), target.x, target.y);
-            target.unit(unit);
-
-            bundled(target, "commands.unit.success", Icons.get(type));
-            if (target != player)
-                bundled(player, "commands.unit.success.player", target.coloredName(), Icons.get(type));
         });
 
         register("spawn", (args, player) -> {
@@ -126,7 +147,7 @@ public class AdminCommands {
         });
 
         register("tp", (args, player) -> {
-            if (invalidTpCoords(player, args)) return;
+            if (invalidCoordinates(player, args)) return;
             float
                     x = Mathf.clamp(parseInt(args[0]), 0, world.width()) * tilesize,
                     y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;

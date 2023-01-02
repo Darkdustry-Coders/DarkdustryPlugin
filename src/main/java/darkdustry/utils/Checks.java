@@ -69,16 +69,20 @@ public class Checks {
         return check(team == null, player, "commands.team-not-found", Icons.teamsList());
     }
 
-    public static boolean notFound(Player player, Item item) {
-        return check(item == null, player, "commands.item-not-found", Icons.contentList(content.items()));
-    }
-
     public static boolean notFound(Player player, UnitType type) {
         return check(!isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units()));
     }
 
     public static boolean notFound(Player player, Block block) {
         return check(!isAvailable(block), player, "commands.block-not-found", Icons.contentList(content.blocks()));
+    }
+
+    public static boolean notFound(Player player, Item item) {
+        return check(item == null, player, "commands.item-not-found", Icons.contentList(content.items()));
+    }
+
+    public static boolean notFound(Player player, StatusEffect effect) {
+        return check(effect == null, player, "commands.effect-not-found", Icons.contentList(content.statusEffects()));
     }
 
     public static boolean notFoundCore(Player player, Block block) {
@@ -114,10 +118,14 @@ public class Checks {
     }
 
     public static boolean invalidAmount(Player player, String[] args, int index) {
-        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int");
+        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int-amount");
     }
 
-    public static boolean invalidTpCoords(Player player, String[] args) {
+    public static boolean invalidDuration(Player player, String[] args, int index) {
+        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int-duration");
+    }
+
+    public static boolean invalidCoordinates(Player player, String[] args) {
         return check(!canParsePositiveInt(args[0]) || !canParsePositiveInt(args[1]), player, "commands.tp.incorrect-number-format");
     }
 
@@ -143,6 +151,10 @@ public class Checks {
 
     public static boolean invalidFillAmount(Player player, int radius) {
         return check(Math.PI * Mathf.sqr(radius) > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
+    }
+
+    public static boolean invalidEffectDuration(Player player, int duration) {
+        return check(duration < 0 || duration > maxEffectDuration, player, "commands.effect.limit", maxEffectDuration);
     }
 
     public static boolean alreadyVoting(Player player, VoteSession session) {
