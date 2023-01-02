@@ -44,18 +44,14 @@ jobs:
 
       - name: Check Release Tag
         id: check-release-tag
-        uses: mukunku/tag-exists-action@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: mukunku/tag-exists-action@v1.2.0
         with:
           tag: ${{ steps.new-release-tag.outputs.tag }}
 
       - name: Create Release
         id: create-release
-
-        if: ${{ !steps.check-release-tag.outputs.exists }}
+        if: ${{ steps.check-release-tag.outputs.exists == 'false' }}
         uses: actions/create-release@v1
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -65,11 +61,9 @@ jobs:
           prerelease: false
 
       - name: Upload Release Assets
-        id: upload-release-asset
-
-        if: ${{ !steps.check-release-tag.outputs.exists }}
+        id: upload-release-assets
+        if: ${{ !steps.check-release-tag.outputs.exists == 'false' }}
         uses: actions/upload-release-asset@v1
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
