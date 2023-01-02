@@ -1,3 +1,6 @@
+# Phinner - легенда.
+# (C) Дарк, 2023 год до н. э.
+
 name: Build
 
 on: [push, pull_request, workflow_dispatch]
@@ -50,6 +53,7 @@ jobs:
 
       - name: Create Release
         id: create-release
+
         if: ${{ steps.check-release-tag.outputs.exists == 'false' }}
         uses: actions/create-release@v1
         env:
@@ -57,12 +61,11 @@ jobs:
         with:
           tag_name: ${{ steps.new-release-tag.outputs.tag }}
           release_name: Release ${{ steps.new-release-tag.outputs.tag }}
-          draft: false
-          prerelease: false
 
       - name: Upload Release Assets
         id: upload-release-assets
-        if: ${{ !steps.check-release-tag.outputs.exists == 'false' }}
+
+        if: ${{ steps.check-release-tag.outputs.exists == 'false' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
