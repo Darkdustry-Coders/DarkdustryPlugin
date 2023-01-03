@@ -1,7 +1,6 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.math.Mathf;
 import arc.util.Log;
 import darkdustry.components.Icons;
 import darkdustry.features.Ranks.Rank;
@@ -17,8 +16,6 @@ import mindustry.world.blocks.storage.CoreBlock;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
-import static arc.util.Strings.canParsePositiveInt;
-import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.utils.Utils.*;
@@ -70,11 +67,11 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(!isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units()));
+        return check(!isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units().select(Utils::isAvailable)));
     }
 
     public static boolean notFound(Player player, Block block) {
-        return check(!isAvailable(block), player, "commands.block-not-found", Icons.contentList(content.blocks()));
+        return check(!isAvailable(block), player, "commands.block-not-found", Icons.contentList(content.blocks().select(Utils::isAvailable)));
     }
 
     public static boolean notFound(Player player, Item item) {
@@ -85,8 +82,8 @@ public class Checks {
         return check(effect == null, player, "commands.effect-not-found", Icons.contentList(content.statusEffects()));
     }
 
-    public static boolean notFoundCore(Player player, Block block) {
-        return check(!isAvailable(block), player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
+    public static boolean notFoundCore(Player player, Block core) {
+        return check(core == null, player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
     }
 
     public static boolean notFound(Player player, Map map) {
@@ -98,7 +95,7 @@ public class Checks {
     }
 
     public static boolean noCores(Player player, Team team) {
-        return check(team.core() == null, player, "commands.give.no-core", coloredTeam(team));
+        return check(team.cores().isEmpty(), player, "commands.give.no-core", coloredTeam(team));
     }
 
     public static boolean votekickDisabled(Player player) {
@@ -117,44 +114,20 @@ public class Checks {
         return check(sign == 0, player, "commands.vote.incorrect-sign");
     }
 
-    public static boolean invalidAmount(Player player, String[] args, int index) {
-        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int-amount");
+    public static boolean invalidAmount(Player player, int amount, int minAmount, int maxAmount) {
+        return check(amount < minAmount || amount > maxAmount, player, "commands.invalid-amount", minAmount, maxAmount);
     }
 
-    public static boolean invalidDuration(Player player, String[] args, int index) {
-        return check(args.length > index && !canParsePositiveInt(args[index]), player, "commands.not-int-duration");
+    public static boolean invalidDuration(Player player, int duration, int minDuration, int maxDuration) {
+        return check(duration < minDuration || duration > maxDuration, player, "commands.invalid-duration", minDuration, maxDuration);
     }
 
-    public static boolean invalidCoordinates(Player player, String[] args) {
-        return check(!canParsePositiveInt(args[0]) || !canParsePositiveInt(args[1]), player, "commands.tp.incorrect-number-format");
+    public static boolean invalidCoordinates(Player player, int x, int y) {
+        return check(x < 0 || x > world.width() || y < 0 || y > world.height(), player, "commands.invalid-coordinates");
     }
 
-    public static boolean invalidFillAmount(Player player, String[] args) {
-        return check(!canParsePositiveInt(args[1]) || !canParsePositiveInt(args[2]), player, "commands.fill.incorrect-number-format");
-    }
-
-    public static boolean invalidVnwAmount(Player player, int amount) {
-        return check(amount < 1 || amount > maxVnwAmount, player, "commands.vnw.limit", maxVnwAmount);
-    }
-
-    public static boolean invalidGiveAmount(Player player, int amount) {
-        return check(amount < 1 || amount > maxGiveAmount, player, "commands.give.limit", maxGiveAmount);
-    }
-
-    public static boolean invalidSpawnAmount(Player player, int amount) {
-        return check(amount < 1 || amount > maxSpawnAmount, player, "commands.spawn.limit", maxSpawnAmount);
-    }
-
-    public static boolean invalidFillAmount(Player player, int width, int height) {
-        return check(width * height > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
-    }
-
-    public static boolean invalidFillAmount(Player player, int radius) {
-        return check(Math.PI * Mathf.sqr(radius) > maxFillAmount, player, "commands.fill.too-big-area", maxFillAmount);
-    }
-
-    public static boolean invalidEffectDuration(Player player, int duration) {
-        return check(duration < 0 || duration > maxEffectDuration, player, "commands.effect.limit", maxEffectDuration);
+    public static boolean invalidArea(Player player, int width, int height, int maxArea) {
+        return check(width < 0 || height < 0 || width * height > maxArea, player, "commands.invalid-area", maxArea);
     }
 
     public static boolean alreadyVoting(Player player, VoteSession session) {

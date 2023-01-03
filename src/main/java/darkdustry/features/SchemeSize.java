@@ -9,7 +9,6 @@ import mindustry.gen.*;
 import mindustry.world.Block;
 
 import static arc.util.Strings.parseInt;
-import static darkdustry.utils.Checks.invalidFillAmount;
 import static mindustry.Vars.*;
 
 public class SchemeSize {
@@ -26,33 +25,31 @@ public class SchemeSize {
 
         netServer.addPacketHandler("fill", (player, args) -> {
             try {
-                if (player.admin) fill(player, args.split(" "));
+                if (player.admin) fill(args.split(" "));
             } catch (Exception ignored) {}
         });
 
         netServer.addPacketHandler("brush", (player, args) -> {
             try {
-                if (player.admin) brush(player, args.split(" "));
+                if (player.admin) brush(args.split(" "));
             } catch (Exception ignored) {}
         });
     }
 
-    private static void fill(Player player, String[] args) {
-        int sx = parseInt(args[3]), sy = parseInt(args[4]), width = parseInt(args[5]), height = parseInt(args[6]);
-        if (invalidFillAmount(player, width, height)) return;
-
+    private static void fill(String[] args) {
         Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
-        for (int x = sx; x < sx + width; x++)
-            for (int y = sy; y < sy + height; y++)
+        int cx = parseInt(args[3]), cy = parseInt(args[4]), width = parseInt(args[5]), height = parseInt(args[6]);
+
+        for (int x = cx; x < cx + width; x++)
+            for (int y = cy; y < cy + height; y++)
                 edit(floor, block, overlay, x, y);
     }
 
-    private static void brush(Player player, String[] args) {
-        int sx = parseInt(args[3]), sy = parseInt(args[4]), radius = parseInt(args[5]);
-        if (invalidFillAmount(player, radius)) return;
-
+    private static void brush(String[] args) {
         Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
-        Geometry.circle(sx, sy, radius, (x, y) -> edit(floor, block, overlay, x, y));
+        int cx = parseInt(args[3]), cy = parseInt(args[4]), radius = parseInt(args[5]);
+
+        Geometry.circle(cx, cy, radius, (x, y) -> edit(floor, block, overlay, x, y));
     }
 
     private static void edit(Block floor, Block block, Block overlay, int x, int y) {

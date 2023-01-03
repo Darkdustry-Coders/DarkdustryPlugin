@@ -35,8 +35,8 @@ public class PluginVars {
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
-    /** Максимальная длительность применяемого эффекта статуса. В секундах. */
-    public static final int maxEffectDuration = 300;
+    /** Максимальное количество пропущенных волн. */
+    public static final int maxVnwAmount = 10;
 
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;
@@ -44,11 +44,11 @@ public class PluginVars {
     /** Максимальное количество создаваемых юнитов. */
     public static final int maxSpawnAmount = 25;
 
-    /** Максимальное количество пропущенных волн. */
-    public static final int maxVnwAmount = 10;
+    /** Максимальная длительность применяемого эффекта статуса. В секундах. */
+    public static final int maxEffectDuration = 300;
 
     /** Максимальная площадь для заливки. */
-    public static final int maxFillAmount = 512;
+    public static final int maxFillArea = 512;
 
     /** Количество команд/игроков/карт/сохранений на одной странице списка. */
     public static final int maxPerPage = 6;

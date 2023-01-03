@@ -1,6 +1,5 @@
 package darkdustry.commands;
 
-import arc.math.Mathf;
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.features.menus.MenuHandler;
@@ -15,7 +14,6 @@ import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.content.Blocks.coreShard;
-import static mindustry.core.World.conv;
 import static mindustry.graphics.Pal.adminChat;
 import static useful.Bundle.*;
 
@@ -95,13 +93,11 @@ public class AdminCommands {
         });
 
         register("effect", (args, player) -> {
-            if (invalidDuration(player, args, 1)) return;
-
             var effect = Find.effect(args[0]);
             if (notFound(player, effect)) return;
 
             int duration = args.length > 1 ? parseInt(args[1]) : 0;
-            if (invalidEffectDuration(player, duration)) return;
+            if (invalidDuration(player, duration, 0, maxEffectDuration)) return;
 
             var target = args.length > 2 ? Find.player(args[2]) : player;
             if (notFound(player, target)) return;
@@ -115,13 +111,11 @@ public class AdminCommands {
         });
 
         register("give", (args, player) -> {
-            if (invalidAmount(player, args, 1)) return;
-
             var item = Find.item(args[0]);
             if (notFound(player, item)) return;
 
             int amount = args.length > 1 ? parseInt(args[1]) : 1;
-            if (invalidGiveAmount(player, amount)) return;
+            if (invalidAmount(player, amount, 1, maxGiveAmount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team) || noCores(player, team)) return;
@@ -131,13 +125,11 @@ public class AdminCommands {
         });
 
         register("spawn", (args, player) -> {
-            if (invalidAmount(player, args, 1)) return;
-
             var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
 
             int amount = args.length > 1 ? parseInt(args[1]) : 1;
-            if (invalidSpawnAmount(player, amount)) return;
+            if (invalidAmount(player, amount, 1, maxSpawnAmount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
             if (notFound(player, team)) return;
@@ -147,30 +139,27 @@ public class AdminCommands {
         });
 
         register("tp", (args, player) -> {
-            if (invalidCoordinates(player, args)) return;
-            float
-                    x = Mathf.clamp(parseInt(args[0]), 0, world.width()) * tilesize,
-                    y = Mathf.clamp(parseInt(args[1]), 0, world.height()) * tilesize;
+            int x = parseInt(args[0]), y = parseInt(args[1]);
+            if (invalidCoordinates(player, x, y)) return;
 
             var unit = player.unit();
             player.clearUnit();
 
-            unit.set(x, y);
-            Call.setPosition(player.con, x, y);
-            Call.setCameraPosition(player.con, x, y);
+            unit.set(x * tilesize, y * tilesize);
+            Call.setPosition(player.con, x * tilesize, y * tilesize);
+            Call.setCameraPosition(player.con, x * tilesize, y * tilesize);
 
             player.unit(unit);
 
-            bundled(player, "commands.tp.success", conv(x), conv(y));
+            bundled(player, "commands.tp.success", x, y);
         });
 
         register("fill", (args, player) -> {
-            if (invalidFillAmount(player, args)) return;
-            int width = parseInt(args[1]), height = parseInt(args[2]);
-            if (invalidFillAmount(player, width, height)) return;
-
             var block = Find.block(args[0]);
             if (notFound(player, block)) return;
+
+            int width = parseInt(args[1]), height = parseInt(args[2]);
+            if (invalidArea(player, width, height, maxFillArea)) return;
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size)
                 for (int y = player.tileY(); y < player.tileY() + height; y += block.size) {

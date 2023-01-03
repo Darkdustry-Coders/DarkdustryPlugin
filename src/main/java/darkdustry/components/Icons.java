@@ -5,10 +5,8 @@ import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.ctype.MappableContent;
 import mindustry.game.Team;
-import mindustry.type.UnitType;
-import mindustry.world.Block;
 
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.coloredTeam;
 
 public class Icons {
 
@@ -30,17 +28,13 @@ public class Icons {
     public static String teamsList() {
         var builder = new StringBuilder();
         Structs.each(team -> builder.append(coloredTeam(team)).append(" "), Team.baseTeams);
+
         return builder.toString();
     }
 
     public static String contentList(Seq<? extends MappableContent> contents) {
         var builder = new StringBuilder();
-        contents.each(content -> {
-            if (content instanceof UnitType type && !isAvailable(type)) return;
-            if (content instanceof Block block && !isAvailable(block)) return;
-
-            builder.append(getIcon(content)).append(content.name).append(" ");
-        });
+        contents.each(content -> builder.append(getName(content)).append(" "));
 
         return builder.toString();
     }

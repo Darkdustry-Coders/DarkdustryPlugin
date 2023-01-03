@@ -47,7 +47,7 @@ public class PageIterator {
     private static <T> void client(String command, String[] args, Player player, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
         if (page > pages || page < 1) {
-            bundled(player, "commands.under-page", pages);
+            bundled(player, "commands.invalid-page", pages);
             return;
         }
 

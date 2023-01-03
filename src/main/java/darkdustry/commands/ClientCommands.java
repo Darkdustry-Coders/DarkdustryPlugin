@@ -94,12 +94,10 @@ public class ClientCommands {
             register("vnw", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
-                if (invalidAmount(player, args, 0)) return;
+                int amount = args.length > 0 ? parseInt(args[0]) : 1;
+                if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
 
-                int waves = args.length > 0 ? parseInt(args[0]) : 1;
-                if (invalidVnwAmount(player, waves)) return;
-
-                vote = new VoteVnw(waves);
+                vote = new VoteVnw(amount);
                 vote.vote(player, 1);
             });
         }
