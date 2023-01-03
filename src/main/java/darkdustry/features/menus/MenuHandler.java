@@ -67,7 +67,7 @@ public class MenuHandler {
 
         welcomeMenu.transform(menu -> {
             var builder = new StringBuilder();
-            welcomeMessageCommands.each(command -> builder.append("\n[cyan]").append(clientCommands.prefix).append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", menu.player)));
+            welcomeMessageCommands.each(command -> builder.append("\n[cyan]/").append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", menu.player)));
 
             menu.title("welcome.title");
             menu.content("welcome.content", serverName.string(), builder.toString());

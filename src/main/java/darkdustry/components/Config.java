@@ -61,6 +61,9 @@ public class Config {
 
         enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
         autoPause.set(config.mode.isDefault());
+
+        if (config.mode.useRtv()) welcomeMessageCommands.add("rtv");
+        if (config.mode.useVnw()) welcomeMessageCommands.add("vnw");
     }
 
     public enum Gamemode {

@@ -10,7 +10,7 @@ import mindustry.gen.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.maxPerPage;
 import static darkdustry.utils.Utils.*;
 import static useful.Bundle.bundled;
 
@@ -25,7 +25,7 @@ public class PageIterator {
             var params = Bundle.get("commands." + command.text + ".params", command.paramText, player);
             var description = Bundle.get("commands." + command.text + ".description", command.description, player);
 
-            builder.append(Bundle.format("commands.help.command", player, clientCommands.prefix, command.text, params, description));
+            builder.append(Bundle.format("commands.help.command", player, command.text, params, description));
         });
     }
 

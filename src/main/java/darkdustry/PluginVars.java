@@ -75,7 +75,7 @@ public class PluginVars {
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
-    public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "stats", "settings");
+    public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "settings", "stats");
 
     /** Список игроков, ожидающих авторизацию. */
     public static final OrderedMap<Message, PlayerInfo> loginWaiting = new OrderedMap<>();
