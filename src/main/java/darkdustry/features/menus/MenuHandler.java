@@ -21,7 +21,7 @@ public class MenuHandler {
 
     // region menus
 
-    public static Menu
+    public static final Menu
             listMenu = new Menu(),
             statsMenu = new Menu(),
             welcomeMenu = new Menu(),
@@ -33,12 +33,12 @@ public class MenuHandler {
     // endregion
     // region keys
 
-    public static StateKey<Integer>
+    public static final StateKey<Integer>
             PAGE = new StateKey<>("page", Integer.class),
             PAGES = new StateKey<>("pages", Integer.class);
 
-    public static StateKey<Player> TARGET = new StateKey<>("target", Player.class);
-    public static StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
+    public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
+    public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
 
     // endregion
     // region transforms

@@ -16,6 +16,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
+import static arc.math.Mathf.PI;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.utils.Utils.*;
@@ -127,7 +128,11 @@ public class Checks {
     }
 
     public static boolean invalidArea(Player player, int width, int height, int maxArea) {
-        return check(width < 0 || height < 0 || width * height > maxArea, player, "commands.invalid-area", maxArea);
+        return check(width < 0 || height < 0 || width * height > maxArea, player, "commands.invalid-area-rect", maxArea);
+    }
+
+    public static boolean invalidArea(Player player, int radius, int maxArea) {
+        return check(radius < 0 || PI * radius * radius > maxArea, player, "commands.invalid-area-circle", maxArea);
     }
 
     public static boolean alreadyVoting(Player player, VoteSession session) {

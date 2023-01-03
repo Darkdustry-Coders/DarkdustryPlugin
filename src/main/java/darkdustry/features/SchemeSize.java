@@ -9,6 +9,8 @@ import mindustry.gen.*;
 import mindustry.world.Block;
 
 import static arc.util.Strings.parseInt;
+import static darkdustry.PluginVars.maxFillArea;
+import static darkdustry.utils.Checks.invalidArea;
 import static mindustry.Vars.*;
 
 public class SchemeSize {
@@ -25,30 +27,32 @@ public class SchemeSize {
 
         netServer.addPacketHandler("fill", (player, args) -> {
             try {
-                if (player.admin) fill(args.split(" "));
+                if (player.admin) fill(player, args.split(" "));
             } catch (Exception ignored) {}
         });
 
         netServer.addPacketHandler("brush", (player, args) -> {
             try {
-                if (player.admin) brush(args.split(" "));
+                if (player.admin) brush(player, args.split(" "));
             } catch (Exception ignored) {}
         });
     }
 
-    private static void fill(String[] args) {
-        Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
+    private static void fill(Player player, String[] args) {
         int cx = parseInt(args[3]), cy = parseInt(args[4]), width = parseInt(args[5]), height = parseInt(args[6]);
+        if (invalidArea(player, width, height, maxFillArea)) return;
 
+        Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
         for (int x = cx; x < cx + width; x++)
             for (int y = cy; y < cy + height; y++)
                 edit(floor, block, overlay, x, y);
     }
 
-    private static void brush(String[] args) {
-        Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
+    private static void brush(Player player, String[] args) {
         int cx = parseInt(args[3]), cy = parseInt(args[4]), radius = parseInt(args[5]);
+        if (invalidArea(player, radius, maxFillArea)) return;
 
+        Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
         Geometry.circle(cx, cy, radius, (x, y) -> edit(floor, block, overlay, x, y));
     }
 

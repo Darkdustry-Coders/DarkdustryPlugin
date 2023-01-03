@@ -2,7 +2,6 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.Database;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
