@@ -2,6 +2,7 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
+import darkdustry.features.SchemeSize;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
@@ -69,6 +70,9 @@ public class AdminCommands {
 
             var target = args.length > 1 ? Find.player(args[1]) : player;
             if (notFound(player, target)) return;
+
+            var task = SchemeSize.rainbows.get(target.id);
+            if (task != null) task.cancel();
 
             target.team(team);
 
