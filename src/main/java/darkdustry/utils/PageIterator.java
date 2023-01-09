@@ -10,6 +10,7 @@ import mindustry.gen.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import useful.Bundle;
 
+import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.maxPerPage;
 import static darkdustry.utils.Utils.*;
 import static useful.Bundle.bundled;
@@ -45,7 +46,7 @@ public class PageIterator {
     }
 
     private static <T> void client(String command, String[] args, Player player, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {
-        int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
         if (page > pages || page < 1) {
             bundled(player, "commands.invalid-page", pages);
             return;
@@ -72,7 +73,7 @@ public class PageIterator {
     }
 
     private static <T> void discord(String[] args, Context context, Seq<T> content, Func<Integer, String> title, Cons3<StringBuilder, Integer, T> cons) {
-        int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
         if (page > pages || page < 1) {
             context.error(":interrobang: Page must be a number between 1 and @.", pages).queue();
             return;

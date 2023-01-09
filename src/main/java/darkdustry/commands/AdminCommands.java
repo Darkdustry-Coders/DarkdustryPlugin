@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
-import darkdustry.features.SchemeSize;
+import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
@@ -65,15 +65,18 @@ public class AdminCommands {
         });
 
         register("team", (args, player) -> {
-            var team = Find.team(args[0]);
-            if (notFound(player, team)) return;
-
             var target = args.length > 1 ? Find.player(args[1]) : player;
             if (notFound(player, target)) return;
 
-            var task = SchemeSize.rainbows.get(target.id);
-            if (task != null) task.cancel();
+            if (args[0].equals("rainbow")) { // TODO решить чо с этим делать
+                RainbowTeam.add(target);
+                return;
+            }
 
+            var team = Find.team(args[0]);
+            if (notFound(player, team)) return;
+
+            RainbowTeam.remove(target); // Cancel rainbow task
             target.team(team);
 
             bundled(target, "commands.team.success", coloredTeam(team));
@@ -82,11 +85,11 @@ public class AdminCommands {
         });
 
         register("unit", (args, player) -> {
-            var type = Find.unit(args[0]);
-            if (notFound(player, type)) return;
-
             var target = args.length > 1 ? Find.player(args[1]) : player;
             if (notFound(player, target)) return;
+
+            var type = Find.unit(args[0]);
+            if (notFound(player, type)) return;
 
             var unit = type.spawn(target.team(), target.x, target.y);
             target.unit(unit);

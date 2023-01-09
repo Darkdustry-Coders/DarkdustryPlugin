@@ -66,6 +66,7 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         Alerts.load();
         Effects.load();
+        RainbowTeam.load();
         SchemeSize.load();
         Scripts.load();
 
