@@ -96,7 +96,7 @@ public class DarkdustryPlugin extends Plugin {
 
                 showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
             }
-        }), 60, 60);
+        }), 60f, 60f);
 
         // эта строчка исправляет обнаружение некоторых цветов
         Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
