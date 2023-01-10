@@ -69,18 +69,24 @@ public class Effects {
     }
 
     public static void onMove(Player player) {
-        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
-        effectsCache.get(player.id).effects.move.get(player);
+        var data = effectsCache.get(player.id);
+        if (data == null || !data.enabled) return;
+
+        data.effects.move.get(player);
     }
 
     public static void onJoin(Player player) {
-        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
-        effectsCache.get(player.id).effects.join.get(player);
+        var data = effectsCache.get(player.id);
+        if (data == null || !data.enabled) return;
+
+        data.effects.join.get(player);
     }
 
     public static void onLeave(Player player) {
-        if (!effectsCache.containsKey(player.id) || !effectsCache.get(player.id).enabled) return;
-        effectsCache.get(player.id).effects.leave.get(player);
+        var data = effectsCache.remove(player.id);
+        if (data == null || !data.enabled) return;
+
+        data.effects.leave.get(player);
     }
 
     public record FxPack(Cons<Player> join, Cons<Player> leave, Cons<Player> move) {}

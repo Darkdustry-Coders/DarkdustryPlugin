@@ -12,6 +12,7 @@ import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
+import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
@@ -220,7 +221,11 @@ public class ServerCommands {
 
             updatePlayerData(playerInfo.id, data -> {
                 data.rank = rank;
-                if (target != null) updateRank(target, data);
+
+                if (target != null) {
+                    updateRank(target, data);
+                    updateEffects(player, data);
+                }
 
                 Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
             });

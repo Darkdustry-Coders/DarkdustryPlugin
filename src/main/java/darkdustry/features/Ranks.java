@@ -6,15 +6,12 @@ import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.features.Effects.updateEffects;
-
 public class Ranks {
 
     public static final Seq<Rank> all = Seq.with(Rank.values());
 
     public static void updateRank(Player player, PlayerData data) {
         player.name = data.name = data.rank.tag + player.getInfo().lastName;
-        updateEffects(player, data);
     }
 
     public enum Rank {

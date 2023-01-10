@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
-import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
@@ -60,7 +59,7 @@ public class AdminCommands {
             var team = args.length > 1 ? Find.team(args[1]) : player.team();
             if (notFound(player, team)) return;
 
-            Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, false);
+            Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, null);
             bundled(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.getName(core), coloredTeam(team));
         });
 
@@ -68,15 +67,9 @@ public class AdminCommands {
             var target = args.length > 1 ? Find.player(args[1]) : player;
             if (notFound(player, target)) return;
 
-            if (args[0].equals("rainbow")) { // TODO решить чо с этим делать
-                RainbowTeam.add(target);
-                return;
-            }
-
             var team = Find.team(args[0]);
             if (notFound(player, team)) return;
 
-            RainbowTeam.remove(target); // Cancel rainbow task
             target.team(team);
 
             bundled(target, "commands.team.success", coloredTeam(team));
@@ -103,7 +96,7 @@ public class AdminCommands {
             var effect = Find.effect(args[0]);
             if (notFound(player, effect)) return;
 
-            int duration = args.length > 1 ? parseInt(args[1]) : 0;
+            int duration = args.length > 1 ? parseInt(args[1]) : 60;
             if (invalidDuration(player, duration, 0, maxEffectDuration)) return;
 
             var target = args.length > 2 ? Find.player(args[2]) : player;

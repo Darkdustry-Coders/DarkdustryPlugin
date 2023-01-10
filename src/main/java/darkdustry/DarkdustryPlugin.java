@@ -21,6 +21,7 @@ import useful.menu.*;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.updatePlayersData;
+import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuUtils.showMenuClose;
 import static darkdustry.utils.Utils.getAvailableMaps;
@@ -66,7 +67,6 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         Alerts.load();
         Effects.load();
-        RainbowTeam.load();
         SchemeSize.load();
         Scripts.load();
 
@@ -93,7 +93,9 @@ public class DarkdustryPlugin extends Plugin {
 
             while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
                 data.rank = data.rank.next;
+
                 updateRank(player, data);
+                updateEffects(player, data);
 
                 showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
             }

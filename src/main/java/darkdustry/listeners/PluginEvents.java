@@ -17,7 +17,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Effects.effectsCache;
+import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
@@ -105,6 +105,7 @@ public class PluginEvents {
 
         Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
             updateRank(event.player, data);
+            updateEffects(event.player, data);
 
             app.post(() -> Effects.onJoin(event.player));
 
@@ -127,14 +128,12 @@ public class PluginEvents {
             sendToChat(player -> player.con.isConnected(), "events.leave", event.player.coloredName());
             sendEmbed(botChannel, error, "@ left", event.player.plainName());
 
-            effectsCache.remove(event.player.id);
-
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
 
             app.post(Bot::updateBotStatus);
         });
 
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player != null && player.unit().moving(), Effects::onMove));
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
     }
 }
