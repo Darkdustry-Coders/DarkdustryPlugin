@@ -23,8 +23,8 @@ public class Filters {
 
     public static String chat(Player author, String text) {
         int sign = voteChoice(text);
-        if (sign != 0 && vote != null && !alreadyVoted(author, vote)) {
-            vote.vote(author, sign);
+        if (sign != 0 && vote != null) {
+            if (!alreadyVoted(author, vote)) vote.vote(author, sign);
             return null;
         }
 

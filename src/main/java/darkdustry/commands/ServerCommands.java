@@ -224,7 +224,7 @@ public class ServerCommands {
 
                 if (target != null) {
                     updateRank(target, data);
-                    updateEffects(player, data);
+                    updateEffects(target, data);
                 }
 
                 Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
