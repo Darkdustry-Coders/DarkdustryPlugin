@@ -64,11 +64,11 @@ public class AdminCommands {
         });
 
         register("team", (args, player) -> {
-            var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target)) return;
-
             var team = Find.team(args[0]);
             if (notFound(player, team)) return;
+
+            var target = args.length > 1 ? Find.player(args[1]) : player;
+            if (notFound(player, target)) return;
 
             target.team(team);
 
@@ -78,11 +78,11 @@ public class AdminCommands {
         });
 
         register("unit", (args, player) -> {
-            var target = args.length > 1 ? Find.player(args[1]) : player;
-            if (notFound(player, target)) return;
-
             var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
+
+            var target = args.length > 1 ? Find.player(args[1]) : player;
+            if (notFound(player, target)) return;
 
             var unit = type.spawn(target.team(), target.x, target.y);
             target.unit(unit);
