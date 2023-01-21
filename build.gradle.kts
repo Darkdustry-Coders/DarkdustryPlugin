@@ -12,8 +12,10 @@ repositories {
 
 dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
-    val mindustryVersion = json["minGameVersion"]!!
     project.version = json["version"]!!
+
+    val mindustryVersion = json["minGameVersion"]
+    val usefulHash = "2a68f24553";
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
@@ -26,8 +28,9 @@ dependencies {
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
 
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:3261ff23ac")
-    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:3261ff23ac")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-antiddos:$usefulHash")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:$usefulHash")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:$usefulHash")
 }
 
 tasks.jar {

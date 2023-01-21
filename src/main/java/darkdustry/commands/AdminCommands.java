@@ -4,6 +4,7 @@ import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Icons;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
+import mindustry.content.Blocks;
 import mindustry.gen.*;
 import useful.Bundle;
 
@@ -13,7 +14,6 @@ import static darkdustry.features.menus.MenuUtils.showMenuConfirm;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static mindustry.content.Blocks.coreShard;
 import static mindustry.graphics.Pal.adminChat;
 import static useful.Bundle.*;
 
@@ -53,7 +53,7 @@ public class AdminCommands {
         if (!config.mode.isDefault()) return;
 
         register("core", (args, player) -> {
-            var core = args.length > 0 ? Find.core(args[0]) : coreShard;
+            var core = args.length > 0 ? Find.core(args[0]) : Blocks.coreShard;
             if (notFoundCore(player, core)) return;
 
             var team = args.length > 1 ? Find.team(args[1]) : player.team();

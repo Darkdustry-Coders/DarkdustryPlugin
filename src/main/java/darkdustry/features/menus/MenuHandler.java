@@ -11,7 +11,6 @@ import useful.menu.view.State.StateKey;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
-import static darkdustry.features.menus.MenuUtils.showMenuClose;
 import static darkdustry.utils.Administration.ban;
 import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.serverName;
@@ -27,8 +26,7 @@ public class MenuHandler {
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
             tempbanMenu = new Menu(),
-            settingsMenu = new Menu(),
-            languageMenu = new Menu();
+            settingsMenu = new Menu();
 
     // endregion
     // region keys
@@ -36,6 +34,10 @@ public class MenuHandler {
     public static final StateKey<Integer>
             PAGE = new StateKey<>("page", Integer.class),
             PAGES = new StateKey<>("pages", Integer.class);
+
+    public static final StateKey<Boolean>
+            REQUIREMENTS = new StateKey<>("requirements", Boolean.class),
+            LANGUAGES = new StateKey<>("languages", Boolean.class);
 
     public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
@@ -49,20 +51,21 @@ public class MenuHandler {
             menu.addOption("ui.button.page", Action.show(), menu.state.get(PAGE), menu.state.get(PAGES));
             menu.addOption("ui.button.right", Action.showGet(PAGE, page -> Math.min(page + 1, menu.state.get(PAGES)))).row();
 
-            menu.addOptionNone("ui.button.close");
+            menu.addOption("ui.button.close");
         });
 
-        statsMenu.transform(menu -> {
-            menu.title("stats.title");
+        statsMenu.transformIf(REQUIREMENTS, menu -> {
+            var builder = new StringBuilder();
+            Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(menu.player)).append("\n"));
 
-            menu.addOptionPlayer("stats.requirements.button", player -> {
-                var builder = new StringBuilder();
-                Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(player)).append("\n"));
+            menu.title("stats.requirements.title");
+            menu.content(builder.toString());
 
-                showMenuClose(player, "stats.requirements.title", builder.toString());
-            }).row();
-
-            menu.addOptionNone("ui.button.close");
+            menu.addOption("ui.button.back", Action.showWith(REQUIREMENTS, false));
+            menu.addOption("ui.button.close");
+        }, menu -> {
+            menu.addOption("stats.requirements.show", Action.showWith(REQUIREMENTS, true)).row();
+            menu.addOption("ui.button.close");
         });
 
         welcomeMenu.transform(menu -> {
@@ -72,8 +75,8 @@ public class MenuHandler {
             menu.title("welcome.title");
             menu.content("welcome.content", serverName.string(), builder.toString());
 
-            menu.addOptionNone("ui.button.close").row();
-            menu.addOptionRow("ui.button.discord", Action.uri(discordServerUrl));
+            menu.addOption("ui.button.close").row();
+            menu.addOption("ui.button.discord", Action.uri(discordServerUrl)).row();
             menu.addOptionPlayer("ui.button.disable", player -> {
                 updatePlayerData(player, data -> data.welcomeMessage = false);
                 bundled(player, "welcome.disabled");
@@ -90,7 +93,7 @@ public class MenuHandler {
                 bundled(player, "despawn.success.suicide");
             }).row();
 
-            menu.addOptionNone("ui.button.close");
+            menu.addOption("ui.button.close");
         });
 
         tempbanMenu.transform(menu -> {
@@ -99,27 +102,25 @@ public class MenuHandler {
 
             menu.addOptionsRow(3, BanDuration.values()).row();
 
-            menu.addOptionNone("ui.button.close");
+            menu.addOption("ui.button.close");
         });
 
-        settingsMenu.transform(menu -> {
-            menu.title("settings.title");
-            menu.content("settings.content");
-
-            menu.addOptionsRow(1, Setting.values()).row();
-            menu.addOptionRow("settings.translator", view -> showLanguageMenu(view.player, view.state.get(DATA)), menu.state.get(DATA).language);
-
-            menu.addOptionNone("ui.button.close");
-        });
-
-        languageMenu.transform(menu -> {
+        settingsMenu.transformIf(LANGUAGES, menu -> {
             menu.title("language.title");
             menu.content("language.content", menu.state.get(DATA).language);
 
             menu.addOptionsRow(3, Language.values()).row();
 
-            menu.addOption("ui.button.back", view -> showSettingsMenu(view.player, view.state.get(DATA)));
-            menu.addOptionNone("ui.button.close");
+            menu.addOption("ui.button.back", Action.showWith(LANGUAGES, false));
+            menu.addOption("ui.button.close");
+        }, menu -> {
+            menu.title("settings.title");
+            menu.content("settings.content");
+
+            menu.addOptionsRow(1, Setting.values()).row();
+            menu.addOption("settings.translator", Action.showWith(LANGUAGES, true), menu.state.get(DATA).language).row();
+
+            menu.addOption("ui.button.close");
         });
     }
 
@@ -134,7 +135,17 @@ public class MenuHandler {
     }
 
     public static void showStatsMenu(Player player, Player target, PlayerData data) {
-        statsMenu.show(player, menu -> menu.content("stats.content", target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, formatDuration(data.playTime * 60 * 1000L, player)));
+        statsMenu.showWithIfNot(player, REQUIREMENTS, false, menu -> {
+            menu.title("stats.title");
+            menu.content("stats.content", target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, player));
+        });
+    }
+
+    public static void showPromotionMenu(Player player, PlayerData data) {
+        statsMenu.showWithIfNot(player, REQUIREMENTS, false, menu -> {
+            menu.title("stats.promotion.title");
+            menu.content("stats.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
+        });
     }
 
     public static void showWelcomeMenu(Player player) {
@@ -150,11 +161,7 @@ public class MenuHandler {
     }
 
     public static void showSettingsMenu(Player player, PlayerData data) {
-        settingsMenu.showWith(player, DATA, data);
-    }
-
-    public static void showLanguageMenu(Player player, PlayerData data) {
-        languageMenu.showWith(player, DATA, data);
+        settingsMenu.showWith(player, LANGUAGES, false, DATA, data);
     }
 
     // endregion

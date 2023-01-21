@@ -19,6 +19,7 @@ import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
+import static darkdustry.features.menus.MenuHandler.showPromotionMenu;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.*;
@@ -43,7 +44,7 @@ public class PluginEvents {
             if (!state.rules.pvp) return;
 
             if (player.team() == event.winner) data.pvpWins++;
-            else data.pvpDefeats++;
+            else data.pvpLosses++;
         }));
 
         Events.on(WaveEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> data.wavesSurvived++));
@@ -106,6 +107,8 @@ public class PluginEvents {
         Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
             updateRank(event.player, data);
             updateEffects(event.player, data);
+
+            showPromotionMenu(event.player, data);
 
             app.post(() -> Effects.onJoin(event.player));
 

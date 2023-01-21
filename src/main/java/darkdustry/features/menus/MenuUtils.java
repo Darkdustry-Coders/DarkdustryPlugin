@@ -15,10 +15,6 @@ public class MenuUtils {
         DynamicMenus.menu(player, Bundle.get(title, player), Bundle.format(content, player, values), buttons, listener);
     }
 
-    public static void showMenuClose(Player player, String title, String content, Object... values) {
-        showMenu(player, title, content, new String[][] {{"ui.button.close"}}, option -> {}, values);
-    }
-
     public static void showMenuConfirm(Player player, String content, Runnable confirmed, Object... values) {
         showMenuConfirm(player, content, confirmed, () -> {}, values);
     }

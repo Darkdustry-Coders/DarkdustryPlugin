@@ -204,6 +204,8 @@ public class ServerCommands {
                 Log.info("Player '@' UUID @", data.name, data.uuid);
                 Log.info("  Rank: @", data.rank.name());
                 Log.info("  Games played: @", data.gamesPlayed);
+                Log.info("  PvP wins: @", data.pvpWins);
+                Log.info("  PvP defeats: @", data.pvpLosses);
                 Log.info("  Waves survived: @", data.wavesSurvived);
                 Log.info("  Blocks placed: @", data.blocksPlaced);
                 Log.info("  Blocks broken: @", data.blocksBroken);

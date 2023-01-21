@@ -15,7 +15,7 @@ import mindustry.core.Version;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
-import useful.Bundle;
+import useful.*;
 import useful.menu.*;
 
 import static arc.Core.app;
@@ -23,7 +23,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.updatePlayersData;
 import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.features.menus.MenuUtils.showMenuClose;
+import static darkdustry.features.menus.MenuHandler.showPromotionMenu;
 import static darkdustry.utils.Utils.getAvailableMaps;
 import static mindustry.Vars.*;
 
@@ -55,6 +55,8 @@ public class DarkdustryPlugin extends Plugin {
         Time.mark();
 
         PluginEvents.load();
+
+        AntiDdos.load();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
 
         DynamicMenus.load();
@@ -97,7 +99,7 @@ public class DarkdustryPlugin extends Plugin {
                 updateRank(player, data);
                 updateEffects(player, data);
 
-                showMenuClose(player, "events.promotion.header", "events.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
+                showPromotionMenu(player, data);
             }
         }), 60f, 60f);
 
