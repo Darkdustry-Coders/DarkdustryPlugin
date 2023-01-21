@@ -57,7 +57,7 @@ public class Config {
         messageRateLimit.set(1);
         messageSpamKick.set(5);
         packetSpamLimit.set(500);
-        snapshotInterval.set(250);
+        snapshotInterval.set(200);
 
         enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
         autoPause.set(config.mode.isDefault());
