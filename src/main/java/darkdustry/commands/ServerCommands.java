@@ -78,7 +78,7 @@ public class ServerCommands {
             sendMessage(botChannel, "Server", args[0]);
         });
 
-        serverCommands.register("kick", "<username/id...>", "Kick a player.", args -> {
+        serverCommands.register("kick", "<ID/username...>", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
@@ -158,7 +158,7 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("admin", "<add/remove> <username/id...>", "Make a player admin.", args -> {
+        serverCommands.register("admin", "<add/remove> <ID/username...>", "Make a player admin.", args -> {
             var target = Find.player(args[1]);
             var playerInfo = Find.playerInfo(args[1]);
             if (notFound(playerInfo, args[1])) return;
@@ -196,7 +196,7 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("stats", "<player>", "Look up a player stats.", args -> {
+        serverCommands.register("stats", "<ID/username...>", "Look up a player stats.", args -> {
             var playerInfo = Find.playerInfo(args[0]);
             if (notFound(playerInfo, args[0])) return;
 
@@ -213,13 +213,13 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
-            var target = Find.player(args[0]);
-            var playerInfo = Find.playerInfo(args[0]);
-            if (notFound(playerInfo, args[0])) return;
+        serverCommands.register("setrank", "<rank> <ID/username...>", "Set a player's rank.", args -> {
+            var rank = Find.rank(args[0]);
+            if (notFound(rank, args[0])) return;
 
-            var rank = Find.rank(args[1]);
-            if (notFound(rank, args[1])) return;
+            var target = Find.player(args[1]);
+            var playerInfo = Find.playerInfo(args[1]);
+            if (notFound(playerInfo, args[1])) return;
 
             updatePlayerData(playerInfo.id, data -> {
                 data.rank = rank;
