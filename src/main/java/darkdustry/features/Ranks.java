@@ -98,8 +98,8 @@ public class Ranks {
             return Bundle.get("ranks." + name() + ".description", "...", player);
         }
 
-        public String localisedReq(Player player) {
-            return Bundle.format("ranks.req", player, localisedName(player), requirements.playTime, requirements.blocksPlaced, requirements.gamesPlayed, requirements.wavesSurvived);
+        public String localisedRequirements(Player player) {
+            return Bundle.format("ranks.requirements", player, localisedName(player), requirements.playTime, requirements.blocksPlaced, requirements.gamesPlayed, requirements.wavesSurvived);
         }
     }
 

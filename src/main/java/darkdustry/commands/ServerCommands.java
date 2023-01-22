@@ -108,7 +108,7 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("ban", "<username/uuid/ip...>", "Ban a player.", args -> {
+        serverCommands.register("ban", "<ID/username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
             var playerInfo = Find.playerInfo(args[0]);
             if (notFound(playerInfo, args[0])) return;
@@ -123,7 +123,7 @@ public class ServerCommands {
             Log.info("Player @ has been banned.", playerInfo.plainLastName());
         });
 
-        serverCommands.register("unban", "<uuid/ip>", "Unban a player.", args -> {
+        serverCommands.register("unban", "<uuid/ip...>", "Unban a player.", args -> {
             var playerInfo = Find.playerInfo(args[0]);
             if (notFound(playerInfo, args[0])) return;
 
@@ -158,7 +158,7 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("admin", "<add/remove> <ID/username...>", "Make a player admin.", args -> {
+        serverCommands.register("admin", "<add/remove> <ID/username/uuid/ip...>", "Make a player admin.", args -> {
             var target = Find.player(args[1]);
             var playerInfo = Find.playerInfo(args[1]);
             if (notFound(playerInfo, args[1])) return;
@@ -196,7 +196,7 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("stats", "<ID/username...>", "Look up a player stats.", args -> {
+        serverCommands.register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", args -> {
             var playerInfo = Find.playerInfo(args[0]);
             if (notFound(playerInfo, args[0])) return;
 
@@ -213,7 +213,7 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("setrank", "<rank> <ID/username...>", "Set a player's rank.", args -> {
+        serverCommands.register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", args -> {
             var rank = Find.rank(args[0]);
             if (notFound(rank, args[0])) return;
 

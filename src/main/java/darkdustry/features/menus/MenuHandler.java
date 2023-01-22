@@ -56,7 +56,7 @@ public class MenuHandler {
 
         statsMenu.transformIf(REQUIREMENTS, menu -> {
             var builder = new StringBuilder();
-            Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedReq(menu.player)).append("\n"));
+            Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedRequirements(menu.player)).append("\n"));
 
             menu.title("stats.requirements.title");
             menu.content(builder.toString());

@@ -15,15 +15,18 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "2a68f24553";
+    val usefulHash = "2a68f24553"
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
 
-    implementation("com.google.code.gson:gson:2.10")
-    implementation("net.dv8tion:JDA:5.0.0-alpha.22")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("net.dv8tion:JDA:5.0.0-beta.3") {
+        exclude(module = "opus-java")
+    }
+
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
-    implementation("org.mongodb:mongodb-driver-reactivestreams:4.8.1")
+    implementation("org.mongodb:mongodb-driver-reactivestreams:4.8.2")
 
     implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
     implementation(("io.projectreactor:reactor-core"))
