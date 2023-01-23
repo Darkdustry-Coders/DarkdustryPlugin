@@ -185,8 +185,8 @@ public class Checks {
     // endregion
     // region utils
 
-    private static boolean check(boolean result, Runnable todo) {
-        if (result) todo.run();
+    private static boolean check(boolean result, Runnable runnable) {
+        if (result) runnable.run();
         return result;
     }
 

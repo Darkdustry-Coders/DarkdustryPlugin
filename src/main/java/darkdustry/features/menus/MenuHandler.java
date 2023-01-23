@@ -2,7 +2,6 @@ package darkdustry.features.menus;
 
 import arc.func.*;
 import arc.struct.Seq;
-import darkdustry.features.Ranks;
 import mindustry.gen.*;
 import useful.Bundle;
 import useful.menu.view.*;

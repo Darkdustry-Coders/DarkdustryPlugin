@@ -5,7 +5,7 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
-import mindustry.maps.*;
+import mindustry.maps.Map;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
@@ -52,22 +52,18 @@ public class ServerCommands {
                 map = Find.map(args[0]);
                 if (notFound(map, args[0])) return;
             } else {
-                map = maps.getShuffleMode().next(mode, state.map);
+                map = maps.getNextMap(mode, state.map);
                 Log.info("Randomized next map to be @.", map.name());
             }
 
             settings.put("lastServerMode", mode.name());
 
             app.post(() -> {
-                try {
-                    Log.info("Loading map...");
-                    reloadWorld(() -> world.loadMap(map, map.applyRules(mode)));
-                    Log.info("Map loaded.");
+                Log.info("Loading map...");
+                reloadWorld(() -> world.loadMap(map, map.applyRules(mode)));
+                Log.info("Map loaded.");
 
-                    netServer.openServer();
-                } catch (MapException e) {
-                    Log.err("@: @", e.map.name(), e.getMessage());
-                }
+                netServer.openServer();
             });
         });
 

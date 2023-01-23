@@ -73,6 +73,7 @@ public class Utils {
 
     public static String stripFooCharacters(String text) {
         var builder = new StringBuilder(text);
+
         for (int i = text.length() - 1; i >= 0; i--)
             if (builder.charAt(i) >= 0xF80 && builder.charAt(i) <= 0x107F)
                 builder.deleteCharAt(i);
@@ -116,11 +117,12 @@ public class Utils {
         return builder.toString();
     }
 
-    public static <T> String formatList(Seq<T> list, int page, Cons3<StringBuilder, Integer, T> cons) {
+    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> cons) {
         var builder = new StringBuilder();
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, list.size); i++) {
+
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++) {
             if (!builder.isEmpty()) builder.append("\n\n");
-            cons.get(builder, i, list.get(i));
+            cons.get(builder, i, content.get(i));
         }
 
         return builder.toString();
@@ -129,12 +131,12 @@ public class Utils {
     // endregion
     // region world
 
-    public static void reloadWorld(Runnable load) {
+    public static void reloadWorld(Runnable runnable) {
         try {
             var reloader = new WorldReloader();
             reloader.begin();
 
-            load.run();
+            runnable.run();
             state.rules = state.map.applyRules(state.rules.mode());
             logic.play();
 
