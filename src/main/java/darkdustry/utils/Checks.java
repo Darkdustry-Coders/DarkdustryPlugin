@@ -183,7 +183,7 @@ public class Checks {
     }
 
     // endregion
-    // region checks
+    // region utils
 
     private static boolean check(boolean result, Runnable todo) {
         if (result) todo.run();

@@ -1,8 +1,11 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.func.Boolf;
+import arc.struct.Seq;
 import arc.util.Structs;
 import darkdustry.features.Ranks.Rank;
+import mindustry.ctype.*;
 import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.maps.Map;
@@ -14,7 +17,6 @@ import mindustry.world.blocks.storage.CoreBlock;
 import static arc.util.Strings.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static mindustry.ctype.ContentType.status;
 
 public class Find {
 
@@ -46,44 +48,57 @@ public class Find {
     }
 
     public static UnitType unit(String name) {
-        return canParsePositiveInt(name) ? content.unit(parseInt(name)) : content.unit(name);
+        return findContent(name, ContentType.unit);
     }
 
     public static Block block(String name) {
-        return canParsePositiveInt(name) ? content.block(parseInt(name)) : content.block(name);
+        return findContent(name, ContentType.block);
     }
 
     public static Item item(String name) {
-        return canParsePositiveInt(name) ? content.item(parseInt(name)) : content.item(name);
+        return findContent(name, ContentType.item);
     }
 
     public static StatusEffect effect(String name) {
-        return canParsePositiveInt(name) ? content.getByID(status, parseInt(name)) : content.statusEffect(name);
-    }
-
-    public static Map map(String name) {
-        var maps = getAvailableMaps();
-        int index = parseInt(name);
-
-        return index > 0 && index <= maps.size ? maps.get(index - 1) : maps.find(map -> deepEquals(map.name(), name));
-    }
-
-    public static Fi save(String name) {
-        var saves = getAvailableSaves();
-        int index = parseInt(name);
-
-        return index > 0 && index <= saves.size ? saves.get(index - 1) : saves.find(save -> deepEquals(save.nameWithoutExtension(), name));
-    }
-
-    public static Gamemode mode(String name) {
-        return Structs.find(Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name) || mode.ordinal() == parseInt(name));
-    }
-
-    public static Rank rank(String name) {
-        return Structs.find(Rank.values(), rank -> rank.name().equalsIgnoreCase(name) || rank.ordinal() == parseInt(name));
+        return findContent(name, ContentType.status);
     }
 
     public static Block core(String name) {
-        return content.blocks().select(CoreBlock.class::isInstance).find(block -> block.name.equalsIgnoreCase(name));
+        var block = block(name);
+        return block instanceof CoreBlock ? block : null;
     }
+
+    public static Map map(String name) {
+        return findInSeq(name, getAvailableMaps(), map -> deepEquals(map.name(), name));
+    }
+
+    public static Fi save(String name) {
+        return findInSeq(name, getAvailableSaves(), save -> deepEquals(save.nameWithoutExtension(), name));
+    }
+
+    public static Gamemode mode(String name) {
+        return findInEnum(name, Gamemode.values());
+    }
+
+    public static Rank rank(String name) {
+        return findInEnum(name, Rank.values());
+    }
+
+    // region utils
+
+    public static <T extends UnlockableContent> T findContent(String name, ContentType type) {
+        return canParsePositiveInt(name) ? content.getByID(type, parseInt(name)) : content.getByName(type, name);
+    }
+
+    public static <T> T findInSeq(String name, Seq<T> values, Boolf<T> filter) {
+        int index = parseInt(name) - 1;
+        return values.find(value -> values.indexOf(value) == index || filter.get(value));
+    }
+
+    public static <T extends Enum<T>> T findInEnum(String name, T[] values) {
+        int index = parseInt(name) - 1;
+        return Structs.find(values, value -> value.ordinal() == index || value.name().equalsIgnoreCase(name));
+    }
+
+    // endregion
 }

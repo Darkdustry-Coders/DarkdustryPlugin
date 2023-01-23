@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.features.Ranks;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -13,7 +12,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.updateEffects;
-import static darkdustry.features.Ranks.*;
+import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -231,11 +230,6 @@ public class ServerCommands {
 
                 Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
             });
-        });
-
-        serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", ranks.size);
-            ranks.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
         });
     }
 }

@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Cons3;
+import arc.func.*;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
@@ -116,11 +116,11 @@ public class Utils {
         return builder.toString();
     }
 
-    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> cons) {
+    public static <T> String formatList(Seq<T> list, int page, Cons3<StringBuilder, Integer, T> cons) {
         var builder = new StringBuilder();
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++) {
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, list.size); i++) {
             if (!builder.isEmpty()) builder.append("\n\n");
-            cons.get(builder, i, content.get(i));
+            cons.get(builder, i, list.get(i));
         }
 
         return builder.toString();
@@ -141,7 +141,6 @@ public class Utils {
             reloader.end();
         } catch (MapException e) {
             Log.err("@: @", e.map.name(), e.getMessage());
-            net.closeServer();
         }
     }
 

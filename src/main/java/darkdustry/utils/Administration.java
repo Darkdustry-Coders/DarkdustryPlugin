@@ -51,7 +51,7 @@ public class Administration {
     }
 
     // endregion
-    // region tempBans
+    // region temp-bans
 
     public static void tempBan(String uuid, String ip, long duration) {
         netServer.admins.handleKicked(uuid, ip, duration);
@@ -64,4 +64,6 @@ public class Administration {
     public static boolean isTempBanned(String uuid, String ip) {
         return getTempBanTime(uuid, ip) > 0;
     }
+
+    // endregion
 }
