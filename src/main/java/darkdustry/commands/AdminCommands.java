@@ -10,7 +10,7 @@ import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuUtils.showMenuConfirm;
+import static darkdustry.features.menus.MenuHandler.showConfirmMenu;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -27,7 +27,7 @@ public class AdminCommands {
                 var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
                 if (notFound(player, map)) return;
 
-                showMenuConfirm(player, "commands.artv.confirm", () -> {
+                showConfirmMenu(player, "commands.artv.confirm", () -> {
                     if (!player.admin) return;
 
                     sendToChat("commands.artv.info", player.coloredName(), map.name());

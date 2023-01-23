@@ -64,21 +64,23 @@ public class Find {
     public static Map map(String name) {
         var maps = getAvailableMaps();
         int index = parseInt(name);
+
         return index > 0 && index <= maps.size ? maps.get(index - 1) : maps.find(map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
         var saves = getAvailableSaves();
         int index = parseInt(name);
+
         return index > 0 && index <= saves.size ? saves.get(index - 1) : saves.find(save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {
-        return Structs.find(Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name));
+        return Structs.find(Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name) || mode.ordinal() == parseInt(name));
     }
 
     public static Rank rank(String name) {
-        return Structs.find(Rank.values(), rank -> rank.name().equalsIgnoreCase(name));
+        return Structs.find(Rank.values(), rank -> rank.name().equalsIgnoreCase(name) || rank.ordinal() == parseInt(name));
     }
 
     public static Block core(String name) {

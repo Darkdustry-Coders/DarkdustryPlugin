@@ -11,6 +11,7 @@ import useful.menu.view.State.StateKey;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
+import static darkdustry.features.Ranks.ranks;
 import static darkdustry.utils.Administration.ban;
 import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.serverName;
@@ -22,6 +23,7 @@ public class MenuHandler {
 
     public static final Menu
             listMenu = new Menu(),
+            confirmMenu = new Menu(),
             statsMenu = new Menu(),
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
@@ -54,9 +56,11 @@ public class MenuHandler {
             menu.addOption("ui.button.close");
         });
 
+        confirmMenu.transform(menu -> menu.title("ui.title.confirm"));
+
         statsMenu.transformIf(REQUIREMENTS, menu -> {
             var builder = new StringBuilder();
-            Ranks.all.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedRequirements(menu.player)).append("\n"));
+            ranks.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedRequirements(menu.player)).append("\n"));
 
             menu.title("stats.requirements.title");
             menu.content(builder.toString());
@@ -131,6 +135,15 @@ public class MenuHandler {
         listMenu.showWith(player, PAGE, page, PAGES, pages, menu -> {
             menu.title(title);
             menu.content(formatList(content, menu.state.get(PAGE), cons));
+        });
+    }
+
+    public static void showConfirmMenu(Player player, String content, Runnable confirmed, Object... values) {
+        confirmMenu.show(player, menu -> {
+            menu.content(content, values);
+
+            menu.addOption("ui.button.yes", Action.run(confirmed));
+            menu.addOption("ui.button.no");
         });
     }
 

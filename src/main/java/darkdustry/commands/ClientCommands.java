@@ -11,7 +11,7 @@ import useful.Bundle;
 import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.features.menus.MenuUtils.showMenuConfirm;
+import static darkdustry.features.menus.MenuHandler.showConfirmMenu;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.voteChoice;
 import static mindustry.Vars.*;
@@ -51,7 +51,7 @@ public class ClientCommands {
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
-            showMenuConfirm(player, "commands.votekick.confirm", () -> {
+            showConfirmMenu(player, "commands.votekick.confirm", () -> {
                 voteKick = new VoteKick(player, target);
                 voteKick.vote(player, 1);
             }, target.coloredName());
@@ -70,7 +70,7 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player)) return;
 
-            showMenuConfirm(player, "commands.login.confirm", () -> {
+            showConfirmMenu(player, "commands.login.confirm", () -> {
                 Authme.sendAdminRequest(player);
                 bundled(player, "commands.login.sent");
             });

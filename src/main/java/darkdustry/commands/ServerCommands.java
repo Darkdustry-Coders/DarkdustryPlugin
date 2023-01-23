@@ -13,7 +13,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.updateEffects;
-import static darkdustry.features.Ranks.updateRank;
+import static darkdustry.features.Ranks.*;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
@@ -234,8 +234,8 @@ public class ServerCommands {
         });
 
         serverCommands.register("ranks", "List all ranks.", args -> {
-            Log.info("Ranks: (@)", Ranks.all.size);
-            Ranks.all.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
+            Log.info("Ranks: (@)", ranks.size);
+            ranks.each(rank -> Log.info("  @ - @", rank.ordinal(), rank.name()));
         });
     }
 }
