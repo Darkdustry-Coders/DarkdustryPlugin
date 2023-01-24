@@ -125,20 +125,6 @@ public class ServerCommands {
                 if (info == null) Log.info("  @ / (No known name or info)", ip);
                 else Log.info("  @ / Name: @ / ID: @", ip, info.plainLastName(), info.id);
             });
-
-            // TODO
-            //            var kickedIPs = netServer.admins.kickedIPs;
-            //            if (kickedIPs.isEmpty())
-            //                Log.info("No temp-banned banned players have been found.");
-            //            else {
-            //                Log.info("Temp-banned players: (@)", kickedIPs.size);
-            //                kickedIPs.each((ip, time) -> {
-            //                    var info = netServer.admins.findByIP(ip);
-            //                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatLongDate(time));
-            //                    else
-            //                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatLongDate(time), info.plainLastName(), info.id);
-            //                });
-            //            }
         });
 
         serverCommands.register("admin", "<add/remove> <ID/username/uuid/ip...>", "Make a player admin.", args -> {
