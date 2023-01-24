@@ -60,7 +60,7 @@ public class Config {
         snapshotInterval.set(200);
 
         enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
-        autoPause.set(config.mode.isDefault());
+        autoPause.set(false);
 
         if (config.mode.useRtv()) welcomeMessageCommands.add("rtv");
         if (config.mode.useVnw()) welcomeMessageCommands.add("vnw");

@@ -38,6 +38,12 @@ public class NetHandlers {
 
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
+
+        var connections = Seq.with(net.getConnections()).filter(connection -> connection.address.equals(con.address));
+        if (connections.size >= maxIdenticalIPs) {
+            netServer.admins.blacklistDos(con.address);
+            connections.each(NetConnection::close);
+        }
     }
 
     public static void connect(NetConnection con, ConnectPacket packet) {
@@ -60,13 +66,6 @@ public class NetHandlers {
         }
 
         con.hasBegunConnecting = true;
-
-        var connections = Seq.with(net.getConnections());
-        if (connections.filter(connection -> connection.address.equals(ip)).size >= maxIdenticalIPs) {
-            netServer.admins.blacklistDos(ip);
-            connections.each(connection -> kick(connection, "kick.too-many-connections", locale));
-            return;
-        }
 
         if (netServer.admins.isIDBanned(uuid) || netServer.admins.isIPBanned(ip) || netServer.admins.isSubnetBanned(ip)) {
             kick(con, 0, true, "kick.banned", locale);

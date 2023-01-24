@@ -83,26 +83,6 @@ public class ServerCommands {
             Log.info("Player @ has been kicked.", target.plainName());
         });
 
-        serverCommands.register("kicks", "List all kicked players.", args -> {
-            var kicks = netServer.admins.kickedIPs;
-            kicks.each((ip, time) -> {
-                if (Time.timeSinceMillis(time) > 0)
-                    kicks.remove(ip);
-            });
-
-            if (kicks.isEmpty())
-                Log.info("No kicked players have been found.");
-            else {
-                Log.info("Kicked players: (@)", kicks.size);
-                kicks.each((ip, time) -> {
-                    var info = netServer.admins.findByIP(ip);
-                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatLongDate(time));
-                    else
-                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatLongDate(time), info.plainLastName(), info.id);
-                });
-            }
-        });
-
         serverCommands.register("ban", "<ID/username/uuid/ip...>", "Ban a player.", args -> {
             var target = Find.player(args[0]);
             var playerInfo = Find.playerInfo(args[0]);
@@ -133,24 +113,32 @@ public class ServerCommands {
 
         serverCommands.register("bans", "List all banned IPs and IDs.", args -> {
             var bannedIDs = netServer.admins.getBanned();
-            if (bannedIDs.isEmpty())
-                Log.info("No ID-banned players have been found.");
-            else {
-                Log.info("ID-banned players: (@)", bannedIDs.size);
-                bannedIDs.each(info -> Log.info("  @ / Name: @", info.id, info.plainLastName()));
-            }
+
+            Log.info("ID-banned players: (@)", bannedIDs.size);
+            bannedIDs.each(info -> Log.info("  @ / Name: @", info.id, info.plainLastName()));
 
             var bannedIPs = netServer.admins.getBannedIPs();
-            if (bannedIPs.isEmpty())
-                Log.info("No IP-banned players have been found.");
-            else {
-                Log.info("IP-banned players: (@)", bannedIPs.size);
-                bannedIPs.each(ip -> {
-                    var info = netServer.admins.findByIP(ip);
-                    if (info == null) Log.info("  @ / (No known name or info)", ip);
-                    else Log.info("  @ / Name: @ / ID: @", ip, info.plainLastName(), info.id);
-                });
-            }
+
+            Log.info("IP-banned players: (@)", bannedIPs.size);
+            bannedIPs.each(ip -> {
+                var info = netServer.admins.findByIP(ip);
+                if (info == null) Log.info("  @ / (No known name or info)", ip);
+                else Log.info("  @ / Name: @ / ID: @", ip, info.plainLastName(), info.id);
+            });
+
+            // TODO
+            //            var kickedIPs = netServer.admins.kickedIPs;
+            //            if (kickedIPs.isEmpty())
+            //                Log.info("No temp-banned banned players have been found.");
+            //            else {
+            //                Log.info("Temp-banned players: (@)", kickedIPs.size);
+            //                kickedIPs.each((ip, time) -> {
+            //                    var info = netServer.admins.findByIP(ip);
+            //                    if (info == null) Log.info("  @ / @ / (No known name or info)", ip, formatLongDate(time));
+            //                    else
+            //                        Log.info("  @ / End: @ / Name: @ / ID: @", ip, formatLongDate(time), info.plainLastName(), info.id);
+            //                });
+            //            }
         });
 
         serverCommands.register("admin", "<add/remove> <ID/username/uuid/ip...>", "Make a player admin.", args -> {
@@ -183,12 +171,9 @@ public class ServerCommands {
 
         serverCommands.register("admins", "List all admins.", args -> {
             var admins = netServer.admins.getAdmins();
-            if (admins.isEmpty())
-                Log.info("No admins have been found.");
-            else {
-                Log.info("Admins: (@)", admins.size);
-                admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
-            }
+
+            Log.info("Admins: (@)", admins.size);
+            admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
         });
 
         serverCommands.register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", args -> {
