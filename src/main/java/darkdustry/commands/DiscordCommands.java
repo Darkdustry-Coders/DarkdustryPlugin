@@ -66,7 +66,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<Context>register("uploadmap", "Upload a map to the server.", (args, context) -> {
-            if (notAdmin(context) || notMap(context)) return;
+            if (notMapReviewer(context) || notMap(context)) return;
 
             var attachment = context.message().getAttachments().get(0);
             attachment.getProxy().downloadToFile(customMapDirectory.child(attachment.getFileName()).file()).thenApply(Fi::new).thenAccept(fi -> {
@@ -79,7 +79,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<Context>register("removemap", "<map...>", "Remove a map from the server.", (args, context) -> {
-            if (notAdmin(context)) return;
+            if (notMapReviewer(context)) return;
 
             var map = Find.map(args[0]);
             if (notFound(context, map, args[0])) return;

@@ -1,14 +1,15 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.util.Log;
+import arc.util.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
-import mindustry.content.Blocks;
+import mindustry.content.*;
+import mindustry.entities.Units;
 import mindustry.game.EventType.*;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import useful.Bundle;
 import useful.menu.DynamicMenus;
 
@@ -102,6 +103,13 @@ public class PluginEvents {
                 return;
             Alerts.buildAlert(event);
         });
+
+        Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
+            if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
+
+            Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.latum);
+            UnitTypes.latum.spawn(event.build.team, event.build);
+        }));
 
         Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
             updateRank(event.player, data);

@@ -159,11 +159,15 @@ public class Checks {
     // region discord
 
     public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
-        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: Missing permissions.").build()).setEphemeral(true).queue());
+        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: You must be an admin to use this feature.").build()).setEphemeral(true).queue());
     }
 
     public static boolean notAdmin(Context context) {
-        return check(!isAdmin(context.event().getMember()), context, ":no_entry_sign: Missing permissions!");
+        return check(!isAdmin(context.event().getMember()), context, ":no_entry_sign: You must be an admin to use this command.");
+    }
+
+    public static boolean notMapReviewer(Context context) {
+        return check(!isMapReviewer(context.event().getMember()), context, ":no_entry_sign: You must be a map reviewer to use this command.");
     }
 
     public static boolean notHosting(Context context) {

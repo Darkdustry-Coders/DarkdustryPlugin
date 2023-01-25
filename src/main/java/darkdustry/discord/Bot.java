@@ -31,7 +31,7 @@ public class Bot {
 
     public static JDA jda;
 
-    public static Role adminRole;
+    public static Role adminRole, mapReviewerRole;
     public static MessageChannel botChannel, adminChannel;
 
     public static void connect() {
@@ -88,7 +88,11 @@ public class Bot {
     }
 
     public static boolean isAdmin(Member member) {
-        return member != null && (member.getRoles().contains(adminRole) || member.hasPermission(ADMINISTRATOR));
+        return member.getRoles().contains(adminRole) || member.hasPermission(ADMINISTRATOR);
+    }
+
+    public static boolean isMapReviewer(Member member) {
+        return isAdmin(member) || member.getRoles().contains(mapReviewerRole);
     }
 
     public static void updateBotStatus() {
