@@ -6,6 +6,7 @@ import darkdustry.commands.DiscordCommands;
 import mindustry.gen.Groups;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
@@ -31,8 +32,8 @@ public class Bot {
 
     public static JDA jda;
 
+    public static TextChannel botChannel, adminChannel;
     public static Role adminRole, mapReviewerRole;
-    public static MessageChannel botChannel, adminChannel;
 
     public static void connect() {
         try {
@@ -40,9 +41,11 @@ public class Bot {
                     .enableIntents(GUILD_MEMBERS, MESSAGE_CONTENT)
                     .addEventListeners(new DiscordListeners()).build().awaitReady();
 
-            adminRole = jda.getRoleById(config.discordAdminRoleId);
             botChannel = jda.getTextChannelById(config.discordBotChannelId);
             adminChannel = jda.getTextChannelById(config.discordAdminChannelId);
+
+            adminRole = jda.getRoleById(config.discordAdminRoleId);
+            mapReviewerRole = jda.getRoleById(config.discordMapReviewerRoleId);
 
             RestActionImpl.setDefaultFailure(null); // Ignore all errors in RestActions
             MessageRequest.setDefaultMentions(EnumSet.of(CHANNEL, EMOJI));

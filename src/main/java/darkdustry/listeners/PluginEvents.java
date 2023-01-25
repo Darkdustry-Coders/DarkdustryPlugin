@@ -105,10 +105,10 @@ public class PluginEvents {
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
-            if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
+            if (!Units.canCreate(event.build.team, UnitTypes.renale)) return;
 
-            Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.latum);
-            UnitTypes.latum.spawn(event.build.team, event.build);
+            Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.renale);
+            UnitTypes.renale.spawn(event.build.team, event.build);
         }));
 
         Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
