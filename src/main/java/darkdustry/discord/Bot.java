@@ -94,7 +94,7 @@ public class Bot {
     }
 
     public static boolean isMapReviewer(Member member) {
-        return isAdmin(member) || member.getRoles().contains(mapReviewerRole);
+        return member.getRoles().contains(mapReviewerRole) || member.hasPermission(ADMINISTRATOR);
     }
 
     public static void updateBotStatus() {
