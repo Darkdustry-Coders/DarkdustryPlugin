@@ -7,7 +7,6 @@ import mindustry.gen.Groups;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -95,7 +94,7 @@ public class Bot {
     }
 
     public static boolean isMapReviewer(Member member) {
-        return isAdmin(member) || member.getRoles().contains(mapReviewerRole);
+        return member.getRoles().contains(mapReviewerRole) || member.hasPermission(ADMINISTRATOR);
     }
 
     public static void updateBotStatus() {
@@ -103,12 +102,12 @@ public class Bot {
             jda.getPresence().setActivity(watching("at " + Groups.player.size() + " players on " + Strings.stripColors(state.map.name())));
     }
 
-    public static void sendMessage(MessageChannel channel, String name, String message) {
+    public static void sendMessage(TextChannel channel, String name, String message) {
         if (channel != null && channel.canTalk())
             channel.sendMessage(Strings.format("`@: @`", stripDiscord(name), stripDiscord(message))).queue();
     }
 
-    public static void sendEmbed(MessageChannel channel, Color color, String title, Object... values) {
+    public static void sendEmbed(TextChannel channel, Color color, String title, Object... values) {
         if (channel != null && channel.canTalk())
             channel.sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(Strings.format(title, values)).build()).queue();
     }
