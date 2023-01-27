@@ -56,7 +56,7 @@ public class DarkdustryPlugin extends Plugin {
 
         PluginEvents.load();
 
-        AntiDdos.load();
+        AntiDdos.loadBlacklist();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
 
         DynamicMenus.load();

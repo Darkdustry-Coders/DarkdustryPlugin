@@ -43,7 +43,7 @@ public class ServerCommands {
                 mode = Find.mode(args[1]);
                 if (notFound(mode, args[1])) return;
             } else {
-                mode = notNullElse(Find.mode(settings.getString("lastServerMode")), Gamemode.survival);
+                mode = notNullElse(Find.mode(settings.getString("lastServerMode", "")), Gamemode.survival);
                 Log.info("Default mode selected to be @.", mode.name());
             }
 
