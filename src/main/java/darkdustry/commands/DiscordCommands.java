@@ -4,6 +4,7 @@ import arc.Events;
 import arc.files.Fi;
 import arc.util.CommandHandler;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.discord.Bot.Palette;
 import darkdustry.utils.*;
 import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
@@ -14,7 +15,6 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.*;
 import static darkdustry.components.MapParser.*;
 import static darkdustry.discord.Bot.Context;
-import static darkdustry.discord.Bot.Palette.info;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.stripAll;
 import static mindustry.Vars.*;
@@ -55,7 +55,7 @@ public class DiscordCommands {
             if (notFound(context, map, args[0])) return;
 
             var embed = new EmbedBuilder()
-                    .setColor(info)
+                    .setColor(Palette.info)
                     .setTitle(map.name())
                     .setDescription(map.tags.get("description", ""))
                     .setAuthor(map.tags.get("author", ""))

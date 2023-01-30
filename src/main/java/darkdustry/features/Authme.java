@@ -1,6 +1,7 @@
 package darkdustry.features;
 
 import arc.func.Func2;
+import darkdustry.discord.Bot.Palette;
 import darkdustry.utils.Find;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
@@ -9,7 +10,6 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.components.selections.*;
 
 import static darkdustry.PluginVars.loginWaiting;
-import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.adminChannel;
 import static mindustry.Vars.netServer;
 import static net.dv8tion.jda.api.entities.emoji.Emoji.fromFormatted;
@@ -28,7 +28,7 @@ public class Authme {
         if (adminChannel == null || !adminChannel.canTalk()) return;
 
         adminChannel.sendMessageEmbeds(new EmbedBuilder()
-                .setColor(info)
+                .setColor(Palette.info)
                 .setTitle("Request for administrator rights.")
                 .addField("Nickname:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
@@ -46,21 +46,21 @@ public class Authme {
                 bundled(player, "commands.login.success");
             }
 
-            return new EmbedBuilder().setColor(success).setTitle("Request Confirmed");
+            return new EmbedBuilder().setColor(Palette.success).setTitle("Request Confirmed");
         });
     }
 
     public static void deny(StringSelectInteractionEvent event) {
         remove(event, (info, player) -> {
             if (player != null) bundled(player, "commands.login.fail");
-            return new EmbedBuilder().setColor(error).setTitle("Request Denied");
+            return new EmbedBuilder().setColor(Palette.error).setTitle("Request Denied");
         });
     }
 
     public static void information(StringSelectInteractionEvent event) {
         var playerInfo = loginWaiting.get(event.getMessage());
 
-        var embed = new EmbedBuilder().setColor(info)
+        var embed = new EmbedBuilder().setColor(Palette.info)
                 .setTitle(":mag: Player Info")
                 .addField("Nickname:", playerInfo.plainLastName(), true)
                 .addField("UUID:", playerInfo.id, true)

@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.*;
+import arc.func.Cons3;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
 import arc.util.*;

@@ -1,7 +1,7 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.util.*;
+import arc.util.Log;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
@@ -16,7 +16,6 @@ import useful.menu.DynamicMenus;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
-import static darkdustry.discord.Bot.Palette.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.features.Effects.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
@@ -27,7 +26,7 @@ import static useful.Bundle.*;
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, info, "Server launched"));
+        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, Palette.info, "Server launched"));
 
         Events.on(PlayEvent.class, event -> {
             state.rules.unitPayloadUpdate = true;
@@ -121,7 +120,7 @@ public class PluginEvents {
             sendToChat(player -> player.con.isConnected(), "events.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
-            sendEmbed(botChannel, success, "@ joined", event.player.plainName());
+            sendEmbed(botChannel, Palette.success, "@ joined", event.player.plainName());
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
@@ -134,7 +133,7 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat(player -> player.con.isConnected(), "events.leave", event.player.coloredName());
-            sendEmbed(botChannel, error, "@ left", event.player.plainName());
+            sendEmbed(botChannel, Palette.error, "@ left", event.player.plainName());
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
