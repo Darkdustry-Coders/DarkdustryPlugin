@@ -12,9 +12,9 @@ import static mindustry.Vars.netServer;
 
 public class Translator {
 
-    public static void translate(String text, String from, String to, Cons<String> result, Runnable error) {
+    public static void translate(String text, String from, String to, Cons<String> result) {
         Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))
-                .error(throwable -> error.run())
+                .error(throwable -> result.get(""))
                 .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).get(0).get(0).asString()));
     }
 
@@ -25,17 +25,22 @@ public class Translator {
         getPlayersData(Groups.player, (player, data) -> {
             if (player == author) return;
 
-            if (data.language.equals("off")) {
+            if (data.language.code.equals("off")) {
                 player.sendMessage(message, author, text);
                 return;
             }
 
-            if (cache.containsKey(data.language)) {
-                player.sendMessage(cache.get(data.language), author, text);
-            } else translate(text, "auto", data.language, result -> {
-                cache.put(data.language, message + " [white]([lightgray]" + result + "[])");
-                player.sendMessage(cache.get(data.language), author, text);
-            }, () -> player.sendMessage(message, author, text));
+            if (cache.containsKey(data.language.code)) {
+                player.sendMessage(cache.get(data.language.code), author, text);
+                return;
+            }
+
+            translate(text, "auto", data.language.code, translated -> {
+                var result = translated.isEmpty() ? message : message + " [white]([lightgray]" + translated + "[])";
+
+                cache.put(data.language.code, result);
+                player.sendMessage(result, author, text);
+            });
         }).subscribe();
     }
 }

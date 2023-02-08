@@ -29,7 +29,7 @@ public class ClientCommands {
             netServer.sendWorldData(player);
         });
 
-        register("t", (args, player) -> player.team().data().players.each(p -> bundled(p, player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0])));
+        register("t", (args, player) -> sendToChat(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0]));
 
         register("settings", (args, player) -> getPlayerData(player).subscribe(data -> MenuHandler.showSettingsMenu(player, data)));
 

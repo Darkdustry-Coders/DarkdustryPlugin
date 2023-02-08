@@ -8,6 +8,7 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.Find;
 import mindustry.gen.Player;
+import darkdustry.features.menus.MenuHandler.*;
 import reactor.core.publisher.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
@@ -78,14 +79,14 @@ public class Database {
 
     public static class PlayerData {
         public String uuid;
-        public String language = "off";
-
         public String name = "<unknown>";
 
         public boolean alerts = true;
         public boolean effects = true;
         public boolean history = false;
         public boolean welcomeMessage = true;
+
+        public Language language = Language.off;
 
         public int gamesPlayed = 0;
         public int pvpWins = 0;

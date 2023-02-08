@@ -16,7 +16,6 @@ import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
-import useful.menu.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
@@ -58,8 +57,6 @@ public class DarkdustryPlugin extends Plugin {
 
         AntiDdos.loadBlacklist();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
-
-        DynamicMenus.load();
         MenuFormatter.setFormatter(Bundle::format);
 
         Config.load();

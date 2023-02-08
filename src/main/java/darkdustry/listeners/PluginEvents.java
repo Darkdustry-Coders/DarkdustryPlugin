@@ -11,7 +11,6 @@ import mindustry.entities.Units;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import useful.Bundle;
-import useful.menu.DynamicMenus;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
@@ -50,8 +49,6 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
-            DynamicMenus.clear();
-
             app.post(Bot::updateBotStatus);
         });
 
@@ -117,7 +114,7 @@ public class PluginEvents {
             app.post(() -> Effects.onJoin(event.player));
 
             Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat(player -> player.con.isConnected(), "events.join", event.player.coloredName());
+            sendToChat("events.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             sendEmbed(botChannel, Palette.success, "@ joined", event.player.plainName());
@@ -132,7 +129,7 @@ public class PluginEvents {
             Effects.onLeave(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat(player -> player.con.isConnected(), "events.leave", event.player.coloredName());
+            sendToChat("events.leave", event.player.coloredName());
             sendEmbed(botChannel, Palette.error, "@ left", event.player.plainName());
 
             if (vote != null) vote.left(event.player);

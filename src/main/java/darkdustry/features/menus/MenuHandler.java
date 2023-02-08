@@ -4,9 +4,11 @@ import arc.func.*;
 import arc.struct.Seq;
 import mindustry.gen.*;
 import useful.Bundle;
-import useful.menu.view.*;
-import useful.menu.view.Menu.*;
-import useful.menu.view.State.StateKey;
+import useful.menu.*;
+import useful.*;
+import useful.Menu.*;
+import useful.Menu.MenuView.OptionData;
+import useful.State.StateKey;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
@@ -20,25 +22,21 @@ public class MenuHandler {
 
     // region menus
 
+    public static final ListMenu listMenu = new ListMenu();
+    public static final ConfirmMenu confirmMenu = new ConfirmMenu();
+
     public static final Menu
-            listMenu = new Menu(),
-            confirmMenu = new Menu(),
             statsMenu = new Menu(),
+            promotionMenu = new Menu(),
+            requirementsMenu = new Menu(),
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
             tempbanMenu = new Menu(),
-            settingsMenu = new Menu();
+            settingsMenu = new Menu(),
+            languagesMenu = new Menu();
 
     // endregion
     // region keys
-
-    public static final StateKey<Integer>
-            PAGE = new StateKey<>("page", Integer.class),
-            PAGES = new StateKey<>("pages", Integer.class);
-
-    public static final StateKey<Boolean>
-            REQUIREMENTS = new StateKey<>("requirements", Boolean.class),
-            LANGUAGES = new StateKey<>("languages", Boolean.class);
 
     public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
@@ -47,28 +45,39 @@ public class MenuHandler {
     // region transforms
 
     public static void load() {
-        listMenu.transform(menu -> {
-            menu.addOption("ui.button.left", Action.showGet(PAGE, page -> Math.max(1, page - 1)));
-            menu.addOption("ui.button.page", Action.show(), menu.state.get(PAGE), menu.state.get(PAGES));
-            menu.addOption("ui.button.right", Action.showGet(PAGE, page -> Math.min(page + 1, menu.state.get(PAGES)))).row();
+        listMenu.left("ui.button.left");
+        listMenu.right("ui.button.right");
+        listMenu.page("ui.button.page");
+        listMenu.close("ui.button.close");
 
-            menu.addOption("ui.button.close");
+        confirmMenu.confirm("ui.button.yes");
+        confirmMenu.deny("ui.button.no");
+
+        statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
+            menu.title("stats.title");
+            menu.content("stats.content", target.coloredName(), data.rank.localisedName(menu.player), data.rank.localisedDesc(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, menu.player));
+
+            menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
+            menu.option("ui.button.close");
         });
 
-        confirmMenu.transform(menu -> menu.title("ui.title.confirm"));
+        promotionMenu.transform(DATA, (menu, data) -> {
+            menu.title("stats.promotion.title");
+            menu.content("stats.promotion.content", data.rank.localisedName(menu.player), data.rank.localisedDesc(menu.player));
 
-        statsMenu.transformIf(REQUIREMENTS, menu -> {
+            menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
+            menu.option("ui.button.close");
+        });
+
+        requirementsMenu.transform(menu -> {
             var builder = new StringBuilder();
             ranks.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedRequirements(menu.player)).append("\n"));
 
             menu.title("stats.requirements.title");
             menu.content(builder.toString());
 
-            menu.addOption("ui.button.back", Action.showWith(REQUIREMENTS, false));
-            menu.addOption("ui.button.close");
-        }, menu -> {
-            menu.addOption("stats.requirements.show", Action.showWith(REQUIREMENTS, true)).row();
-            menu.addOption("ui.button.close");
+            menu.option("ui.button.back", Action.back());
+            menu.option("ui.button.close");
         });
 
         welcomeMenu.transform(menu -> {
@@ -78,11 +87,11 @@ public class MenuHandler {
             menu.title("welcome.title");
             menu.content("welcome.content", serverName.string(), builder.toString());
 
-            menu.addOption("ui.button.close").row();
-            menu.addOption("ui.button.discord", Action.uri(discordServerUrl)).row();
-            menu.addOptionPlayer("ui.button.disable", player -> {
-                updatePlayerData(player, data -> data.welcomeMessage = false);
-                bundled(player, "welcome.disabled");
+            menu.option("ui.button.close").row();
+            menu.option("welcome.discord", Action.uri(discordServerUrl)).row();
+            menu.option("welcome.disable", view -> {
+                updatePlayerData(view.player, data -> data.welcomeMessage = false);
+                bundled(view.player, "welcome.disabled");
             });
         });
 
@@ -90,40 +99,42 @@ public class MenuHandler {
             menu.title("despawn.title");
             menu.content("despawn.content");
 
-            menu.addOptionsRow(1, DespawnType.values()).row();
-            menu.addOptionPlayer("despawn.suicide", player -> {
-                Call.unitEnvDeath(player.unit());
-                bundled(player, "despawn.success.suicide");
+            menu.options(1, DespawnType.values()).row();
+            menu.option("despawn.suicide", view -> {
+                Call.unitEnvDeath(view.player.unit());
+                bundled(view.player, "despawn.success.suicide");
             }).row();
 
-            menu.addOption("ui.button.close");
+            menu.option("ui.button.close");
         });
 
-        tempbanMenu.transform(menu -> {
+        tempbanMenu.transform(TARGET, (menu, target) -> {
             menu.title("tempban.title");
-            menu.content("tempban.content", menu.state.get(TARGET).coloredName());
+            menu.content("tempban.content", target.coloredName());
 
-            menu.addOptionsRow(3, BanDuration.values()).row();
+            menu.options(3, BanDuration.values()).row();
 
-            menu.addOption("ui.button.close");
+            menu.option("ui.button.close");
         });
 
-        settingsMenu.transformIf(LANGUAGES, menu -> {
-            menu.title("language.title");
-            menu.content("language.content", menu.state.get(DATA).language);
-
-            menu.addOptionsRow(3, Language.values()).row();
-
-            menu.addOption("ui.button.back", Action.showWith(LANGUAGES, false));
-            menu.addOption("ui.button.close");
-        }, menu -> {
+        settingsMenu.transform(DATA, (menu, data) -> {
             menu.title("settings.title");
             menu.content("settings.content");
 
-            menu.addOptionsRow(1, Setting.values()).row();
-            menu.addOption("settings.translator", Action.showWith(LANGUAGES, true), menu.state.get(DATA).language).row();
+            menu.options(1, Setting.values()).row();
+            menu.option("setting.translator", Action.open(languagesMenu), data.language.name(menu)).row();
 
-            menu.addOption("ui.button.close");
+            menu.option("ui.button.close");
+        });
+
+        languagesMenu.transform(DATA, (menu, data) -> {
+            menu.title("language.title");
+            menu.content("language.content", data.language.name(menu));
+
+            menu.options(3, Language.values()).row();
+
+            menu.option("ui.button.back", Action.back());
+            menu.option("ui.button.close");
         });
     }
 
@@ -131,33 +142,19 @@ public class MenuHandler {
     // region show
 
     public static <T> void showListMenu(Player player, String title, Seq<T> content, int page, int pages, Cons3<StringBuilder, Integer, T> cons) {
-        listMenu.showWith(player, PAGE, page, PAGES, pages, menu -> {
-            menu.title(title);
-            menu.content(formatList(content, menu.state.get(PAGE), cons));
-        });
+        listMenu.show(player, page, pages, title, newPage -> formatList(content, newPage, cons));
     }
 
     public static void showConfirmMenu(Player player, String content, Runnable confirmed, Object... values) {
-        confirmMenu.show(player, menu -> {
-            menu.content(content, values);
-
-            menu.addOption("ui.button.yes", Action.run(confirmed));
-            menu.addOption("ui.button.no");
-        });
+        confirmMenu.show(player, "ui.title.confirm", content, confirmed, values);
     }
 
     public static void showStatsMenu(Player player, Player target, PlayerData data) {
-        statsMenu.showWithIfNot(player, REQUIREMENTS, false, menu -> {
-            menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.rank.localisedName(player), data.rank.localisedDesc(player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, player));
-        });
+        statsMenu.show(player, TARGET, target, DATA, data);
     }
 
     public static void showPromotionMenu(Player player, PlayerData data) {
-        statsMenu.showWithIfNot(player, REQUIREMENTS, false, menu -> {
-            menu.title("stats.promotion.title");
-            menu.content("stats.promotion.content", data.rank.localisedName(player), data.rank.localisedDesc(player));
-        });
+        statsMenu.show(player, DATA, data);
     }
 
     public static void showWelcomeMenu(Player player) {
@@ -169,11 +166,11 @@ public class MenuHandler {
     }
 
     public static void showTempbanMenu(Player player, Player target) {
-        tempbanMenu.showWith(player, TARGET, target);
+        tempbanMenu.show(player, TARGET, target);
     }
 
     public static void showSettingsMenu(Player player, PlayerData data) {
-        settingsMenu.showWith(player, LANGUAGES, false, DATA, data);
+        settingsMenu.show(player, DATA, data);
     }
 
     // endregion
@@ -196,8 +193,8 @@ public class MenuHandler {
         }
 
         @Override
-        public MenuOption option(MenuView menu) {
-            return menu.option("tempban." + name(), view -> ban(view.player, view.state.get(TARGET), duration));
+        public void option(MenuView menu) {
+            menu.option("tempban." + name(), view -> ban(view.player, view.state.get(TARGET), duration));
         }
     }
 
@@ -219,11 +216,11 @@ public class MenuHandler {
         }
 
         @Override
-        public MenuOption option(MenuView menu) {
-            return menu.optionPlayer("despawn." + name(), player -> {
-                Groups.unit.each(unit -> filter.get(player, unit), Call::unitEnvDeath);
-                bundled(player, "despawn.success");
-            }, Groups.unit.count(unit -> filter.get(menu.player, unit)));
+        public void option(MenuView menu) {
+            menu.option("despawn." + name(), view -> {
+                Groups.unit.each(unit -> filter.get(view.player, unit), Call::unitEnvDeath);
+                bundled(view.player, "despawn.success");
+            });
         }
     }
 
@@ -242,8 +239,8 @@ public class MenuHandler {
         }
 
         @Override
-        public MenuOption option(MenuView menu) {
-            return menu.option("settings." + name(), Action.player(player -> updatePlayerData(player, cons)).then(Action.showConsume(DATA, cons)), Bundle.get(func.get(menu.state.get(DATA)) ? "settings.on" : "settings.off", menu.player));
+        public void option(MenuView menu) {
+            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, cons), Action.showUse(DATA, cons)), Bundle.get(func.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -264,18 +261,27 @@ public class MenuHandler {
         korean("ko", "한국어"),
         japanese("ja", "日本語"),
 
-        off("off", "language.off");
+        off("off", "language.disabled", "language.disable");
 
-        public final String code, name;
+        public final String code, name, button;
 
         Language(String code, String name) {
+            this(code, name, name);
+        }
+
+        Language(String code, String name, String button) {
             this.code = code;
             this.name = name;
+            this.button = button;
+        }
+
+        public String name(MenuView menu) {
+            return Bundle.get(name, menu.player);
         }
 
         @Override
-        public MenuOption option(MenuView menu) {
-            return menu.option(name, Action.player(player -> updatePlayerData(player, data -> data.language = code)).then(Action.showConsume(DATA, data -> data.language = code)));
+        public void option(MenuView menu) {
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), Action.showUse(DATA, data -> data.language = this)));
         }
     }
 
