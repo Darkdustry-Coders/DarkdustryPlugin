@@ -4,6 +4,7 @@ import arc.func.Cons;
 import arc.struct.StringMap;
 import arc.util.*;
 import arc.util.serialization.JsonReader;
+import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.*;
 
 import static darkdustry.PluginVars.translationApiUrl;
@@ -25,7 +26,7 @@ public class Translator {
         getPlayersData(Groups.player, (player, data) -> {
             if (player == author) return;
 
-            if (data.language.code.equals("off")) {
+            if (data.language == Language.off) {
                 player.sendMessage(message, author, text);
                 return;
             }

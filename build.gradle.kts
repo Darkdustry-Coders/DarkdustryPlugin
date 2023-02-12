@@ -33,6 +33,7 @@ dependencies {
 
     implementation("com.github.xzxADIxzx.useful-stuffs:server-antiddos:$usefulHash")
     implementation("com.github.xzxADIxzx.useful-stuffs:server-bundle:$usefulHash")
+    implementation("com.github.xzxADIxzx.useful-stuffs:server-effects:$usefulHash")
     implementation("com.github.xzxADIxzx.useful-stuffs:server-menus:$usefulHash")
 }
 
