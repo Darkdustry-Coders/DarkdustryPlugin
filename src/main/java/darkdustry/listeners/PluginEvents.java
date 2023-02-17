@@ -2,6 +2,7 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
+import darkdustry.components.EffectsCache;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
@@ -16,7 +17,7 @@ import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Effects.updateEffects;
+import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
@@ -111,7 +112,7 @@ public class PluginEvents {
             updateRank(event.player, data);
             updateEffects(event.player, data);
 
-            app.post(() -> Effects.onJoin(event.player));
+            app.post(() -> EffectsCache.join(event.player));
 
             Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.join", event.player.coloredName());
@@ -126,7 +127,7 @@ public class PluginEvents {
         }));
 
         Events.on(PlayerLeave.class, event -> {
-            Effects.onLeave(event.player);
+            EffectsCache.leave(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.leave", event.player.coloredName());
@@ -138,6 +139,6 @@ public class PluginEvents {
             app.post(Bot::updateBotStatus);
         });
 
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), Effects::onMove));
+        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), EffectsCache::move));
     }
 }

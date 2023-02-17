@@ -1,15 +1,18 @@
 package darkdustry.components;
 
-import arc.func.*;
+import arc.func.Cons;
+import arc.func.Cons2;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
+import darkdustry.features.menus.MenuHandler.EffectsPack;
+import darkdustry.features.menus.MenuHandler.Language;
 import darkdustry.utils.Find;
 import mindustry.gen.Player;
-import darkdustry.features.menus.MenuHandler.*;
-import reactor.core.publisher.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
@@ -82,11 +85,11 @@ public class Database {
         public String name = "<unknown>";
 
         public boolean alerts = true;
-        public boolean effects = true;
         public boolean history = false;
         public boolean welcomeMessage = true;
 
         public Language language = Language.off;
+        public EffectsPack effects = EffectsPack.none;
 
         public int gamesPlayed = 0;
         public int pvpWins = 0;

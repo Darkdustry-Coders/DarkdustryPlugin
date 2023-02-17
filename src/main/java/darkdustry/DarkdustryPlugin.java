@@ -3,7 +3,8 @@
 
 package darkdustry;
 
-import arc.graphics.*;
+import arc.graphics.Color;
+import arc.graphics.Colors;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -12,7 +13,8 @@ import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.*;
 import mindustry.core.Version;
-import mindustry.gen.*;
+import mindustry.gen.AdminRequestCallPacket;
+import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
@@ -20,7 +22,7 @@ import useful.*;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.updatePlayersData;
-import static darkdustry.features.Effects.updateEffects;
+import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showPromotionMenu;
 import static darkdustry.utils.Utils.getAvailableMaps;
@@ -65,7 +67,6 @@ public class DarkdustryPlugin extends Plugin {
 
         MenuHandler.load();
         Alerts.load();
-        Effects.load();
         SchemeSize.load();
         Scripts.load();
 

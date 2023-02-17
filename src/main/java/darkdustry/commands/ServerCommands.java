@@ -11,7 +11,7 @@ import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Effects.updateEffects;
+import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;

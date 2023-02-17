@@ -14,8 +14,8 @@ dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
 
-    val mindustryVersion = json["minGameVersion"]!!
-    val usefulHash = "79bee64dbb"
+    val mindustryVersion = json["minGameVersion"]
+    val usefulHash = "18f88ab887"
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
@@ -44,18 +44,4 @@ tasks.jar {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-}
-
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "darkdustry"
-            artifactId = "DarkdustryPLugin"
-            version = project.version.toString()
-
-            afterEvaluate {
-                from(components["java"])
-            }
-        }
-    }
 }

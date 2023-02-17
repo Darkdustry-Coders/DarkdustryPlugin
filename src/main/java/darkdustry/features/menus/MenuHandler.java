@@ -1,16 +1,21 @@
 package darkdustry.features.menus;
 
 import arc.func.*;
+import arc.graphics.Color;
 import arc.struct.Seq;
+import mindustry.content.Fx;
 import mindustry.gen.*;
+import mindustry.graphics.Pal;
 import useful.*;
 import useful.Menu.MenuView;
 import useful.Menu.MenuView.OptionData;
 import useful.State.StateKey;
-import useful.menu.*;
+import useful.menu.ConfirmMenu;
+import useful.menu.ListMenu;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
+import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.ranks;
 import static darkdustry.utils.Administration.ban;
 import static darkdustry.utils.Utils.*;
@@ -32,7 +37,8 @@ public class MenuHandler {
             despawnMenu = new Menu(),
             tempbanMenu = new Menu(),
             settingsMenu = new Menu(),
-            languagesMenu = new Menu();
+            languagesMenu = new Menu(),
+            effectsMenu = new Menu();
 
     // endregion
     // region keys
@@ -54,7 +60,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.rank.localisedName(menu.player), data.rank.localisedDesc(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, menu.player));
+            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, menu.player));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -62,7 +68,7 @@ public class MenuHandler {
 
         promotionMenu.transform(DATA, (menu, data) -> {
             menu.title("stats.promotion.title");
-            menu.content("stats.promotion.content", data.rank.localisedName(menu.player), data.rank.localisedDesc(menu.player));
+            menu.content("stats.promotion.content", data.rank.name(menu.player), data.rank.description(menu.player));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -70,7 +76,7 @@ public class MenuHandler {
 
         requirementsMenu.transform(menu -> {
             var builder = new StringBuilder();
-            ranks.each(rank -> rank.requirements != null, rank -> builder.append(rank.localisedRequirements(menu.player)).append("\n"));
+            ranks.each(rank -> rank.requirements != null, rank -> builder.append(rank.requirements(menu.player)).append("\n"));
 
             menu.title("stats.requirements.title");
             menu.content(builder.toString());
@@ -122,6 +128,7 @@ public class MenuHandler {
 
             menu.options(1, Setting.values()).row();
             menu.option("setting.translator", Action.open(languagesMenu), data.language.name(menu)).row();
+            menu.option("setting.effects", Action.open(effectsMenu), data.effects.name(menu)).row();
 
             menu.option("ui.button.close");
         });
@@ -131,6 +138,16 @@ public class MenuHandler {
             menu.content("language.content", data.language.name(menu));
 
             menu.options(3, Language.values()).row();
+
+            menu.option("ui.button.back", Action.back());
+            menu.option("ui.button.close");
+        });
+
+        effectsMenu.transform(DATA, (menu, data) -> {
+            menu.title("effects.title");
+            menu.content("effects.content", data.effects.name(menu));
+
+            menu.options(2, EffectsPack.values()).row();
 
             menu.option("ui.button.back", Action.back());
             menu.option("ui.button.close");
@@ -225,7 +242,6 @@ public class MenuHandler {
 
     public enum Setting implements OptionData {
         alerts(data -> data.alerts = !data.alerts, data -> data.alerts),
-        effects(data -> data.effects = !data.effects, data -> data.effects),
         history(data -> data.history = !data.history, data -> data.history),
         welcomeMessage(data -> data.welcomeMessage = !data.welcomeMessage, data -> data.welcomeMessage);
 
@@ -281,6 +297,87 @@ public class MenuHandler {
         @Override
         public void option(MenuView menu) {
             menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), Action.showUse(DATA, data -> data.language = this)));
+        }
+    }
+
+    public enum EffectsPack implements OptionData {
+        scathe("Scathe",
+                player -> Effects.stack(player, Fx.scatheExplosion, Fx.scatheLight),
+                player -> Effects.stack(player, Fx.scatheExplosion, Fx.scatheLight),
+                player -> Effects.at(Fx.neoplasiaSmoke, player)
+        ),
+
+        titan("Titan",
+                player -> Effects.stack(player, Fx.titanExplosion, Fx.titanSmoke),
+                player -> Effects.stack(player, Fx.titanExplosion, Fx.titanSmoke),
+                player -> Effects.at(Fx.incendTrail, player, 3f)
+        ),
+
+        lancer("Lancer",
+                player -> Effects.stack(player, Fx.railShoot, Fx.railShoot, Fx.railShoot),
+                player -> Effects.stack(player, Fx.railShoot, Fx.railShoot, Fx.railShoot),
+                player -> Effects.at(Fx.lightningCharge, player)
+        ),
+
+        foreshadow("Foreshadow",
+                player -> Effects.stack(player, Fx.instHit, Fx.instHit, Fx.instHit),
+                player -> Effects.stack(player, Fx.instHit, Fx.instHit, Fx.instHit),
+                player -> Effects.at(Fx.mineWallSmall, player, Color.yellow)
+        ),
+
+        neoplasm("Neoplasm",
+                player -> Effects.stack(player, Pal.neoplasm1, Fx.neoplasmSplat, Fx.titanSmoke),
+                player -> Effects.stack(player, Pal.neoplasm1, Fx.neoplasmSplat, Fx.titanSmoke),
+                player -> Effects.at(Fx.neoplasmHeal, player)
+        ),
+
+        teleport("Teleport",
+                player -> Effects.stack(player, Fx.teleport, Fx.teleportActivate, Fx.teleportOut),
+                player -> Effects.stack(player, Fx.teleport, Fx.teleportActivate, Fx.teleportOut),
+                player -> Effects.at(Fx.smeltsmoke, player, Color.purple)
+        ),
+
+        impactDrill("Impact Drill",
+                player -> Effects.stack(player, 120f, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpact),
+                player -> Effects.stack(player, 120f, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpact),
+                player -> Effects.at(Fx.mineSmall, player, Color.cyan)
+        ),
+
+        greenLaser("Green Laser",
+                player -> Effects.at(Fx.greenBomb, player),
+                player -> Effects.at(Fx.greenLaserCharge, player),
+                player -> Effects.at(Fx.electrified, player)
+        ),
+
+        none("effects.disabled", "effects.disable");
+
+        public final String name, button;
+        public final Cons<Player> join, leave, move;
+
+        EffectsPack(String name, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
+            this(name, name, join, leave, move);
+        }
+
+        EffectsPack(String name, String button) {
+            this(name, button, player -> {}, player -> {}, player -> {});
+        }
+
+        EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
+            this.name = name;
+            this.button = button;
+
+            this.join = join;
+            this.leave = leave;
+            this.move = move;
+        }
+
+        public String name(MenuView menu) {
+            return Bundle.get(name, menu.player);
+        }
+
+        @Override
+        public void option(MenuView menu) {
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> updateEffects(view.player, this), Action.showUse(DATA, data -> data.effects = this)));
         }
     }
 

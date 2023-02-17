@@ -2,7 +2,6 @@ package darkdustry.features;
 
 import arc.struct.Seq;
 import darkdustry.components.Database.PlayerData;
-import darkdustry.features.Effects.FxPack;
 import mindustry.gen.Player;
 import useful.Bundle;
 
@@ -19,59 +18,45 @@ public class Ranks {
 
         active(player) {{
             tag = "[sky]<[white]\uE800[]>[] ";
-            effects = Effects.pack2;
-
             requirements = new Requirements(320, 12500, 25, 50);
         }},
 
         hyperActive(active) {{
             tag = "[#738adb]<[white]\uE813[]>[] ";
-            effects = Effects.pack3;
-
             requirements = new Requirements(800, 25000, 50, 100);
         }},
 
         veteran(hyperActive) {{
             tag = "[gold]<[white]\uE809[]>[] ";
-            effects = Effects.pack4;
-
             requirements = new Requirements(2000, 50000, 100, 200);
         }},
 
         master(veteran) {{
             tag = "[orange]<[white]\uE810[]>[] ";
-            effects = Effects.pack5;
-
             requirements = new Requirements(5000, 100000, 200, 400);
         }},
 
         contentCreator {{
             tag = "[yellow]<\uE80F>[] ";
-            effects = Effects.pack6;
         }},
 
         sage {{
             tag = "[accent]<[white]\uF6AA[]>[] ";
-            effects = Effects.pack7;
         }},
 
         admin {{
             tag = "[scarlet]<\uE817>[] ";
-            effects = Effects.pack8;
         }},
 
         console {{
             tag = "[#8d56b1]<\uE85D>[] ";
-            effects = Effects.pack9;
         }},
 
         owner {{
             tag = "[#0088ff]<[white]\uF7A9[]>[] ";
-            effects = Effects.pack10;
         }};
 
         public String tag = "";
-        public FxPack effects = Effects.pack1;
 
         public Rank next;
         public Requirements requirements;
@@ -90,16 +75,16 @@ public class Ranks {
             return hasNext() && next.requirements.check(playTime, blocksPlaced, gamesPlayed, wavesSurvived);
         }
 
-        public String localisedName(Player player) {
+        public String name(Player player) {
             return tag + Bundle.get("ranks." + name() + ".name", name(), player);
         }
 
-        public String localisedDesc(Player player) {
+        public String description(Player player) {
             return Bundle.get("ranks." + name() + ".description", "...", player);
         }
 
-        public String localisedRequirements(Player player) {
-            return Bundle.format("ranks.requirements", player, localisedName(player), requirements.playTime, requirements.blocksPlaced, requirements.gamesPlayed, requirements.wavesSurvived);
+        public String requirements(Player player) {
+            return Bundle.format("ranks.requirements", player, name(player), requirements.playTime, requirements.blocksPlaced, requirements.gamesPlayed, requirements.wavesSurvived);
         }
     }
 
