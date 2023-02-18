@@ -75,8 +75,10 @@ public class PluginEvents {
             getPlayerData(event.player).subscribe(data -> {
                 if (!data.history) return;
 
-                var builder = new StringBuilder();
                 var stack = History.get(event.tile.array());
+                if (stack == null) return;
+
+                var builder = new StringBuilder();
 
                 if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
                 else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));

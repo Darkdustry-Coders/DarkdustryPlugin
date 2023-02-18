@@ -20,7 +20,13 @@ public class History {
 
     public static void put(HistoryEntry entry, Tile tile) {
         if (tile == emptyTile) return;
-        tile.getLinkedTiles(other -> get(other.array()).add(entry));
+
+        tile.getLinkedTiles(other -> {
+            var stack = get(other.array());
+            if (stack == null) return;
+
+            stack.add(entry);
+        });
     }
 
     public static HistoryStack get(int index) {
