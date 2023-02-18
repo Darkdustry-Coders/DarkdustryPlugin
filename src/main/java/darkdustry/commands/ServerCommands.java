@@ -192,7 +192,7 @@ public class ServerCommands {
 
                 if (target != null) {
                     updateRank(target, data);
-                    updateEffects(player, data.effects);
+                    updateEffects(target, data.effects);
                 }
 
                 Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
