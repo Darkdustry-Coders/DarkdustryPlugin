@@ -24,7 +24,7 @@ public class History {
     }
 
     public static HistoryStack get(int index) {
-        if (index < 0 || index >= history.length) return new HistoryStack();
+        if (index < 0 || index >= history.length) return null;
 
         var entries = history[index];
         if (entries == null) history[index] = entries = new HistoryStack();

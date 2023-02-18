@@ -18,6 +18,7 @@ public class Filters {
     public static boolean action(PlayerAction action) {
         if (History.enabled() && action.type == rotate)
             History.put(new RotateEntry(action), action.tile);
+
         return true;
     }
 

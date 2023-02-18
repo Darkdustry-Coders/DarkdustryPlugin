@@ -95,7 +95,7 @@ public class DarkdustryPlugin extends Plugin {
                 data.rank = data.rank.next;
 
                 updateRank(player, data);
-                updateEffects(player, data);
+                updateEffects(player, data.effects);
 
                 showPromotionMenu(player, data);
             }
