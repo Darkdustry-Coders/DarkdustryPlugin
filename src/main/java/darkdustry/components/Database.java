@@ -2,6 +2,7 @@ package darkdustry.components;
 
 import arc.func.Cons;
 import arc.func.Cons2;
+import arc.util.Log;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
@@ -40,11 +41,11 @@ public class Database {
             var collection = format.getCollection("players");
 
             Flux.from(collection.find()).doOnNext(document -> {
-                document.remove("effects");
-            }).flatMap(document -> {
-                return collection.replaceOne(eq("uuid", document.getString("uuid")), document, new ReplaceOptions().upsert(true));
-            }).subscribe();
+                document.put("effects", "none");
+                Log.info("Processed document @ (@)", document.getString("uuid"), document.getString("name"));
 
+                Mono.from(collection.replaceOne(eq("uuid", document.getString("uuid")), document, new ReplaceOptions().upsert(true))).subscribe();
+            }).subscribe();
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
