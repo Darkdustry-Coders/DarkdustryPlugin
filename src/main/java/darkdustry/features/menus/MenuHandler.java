@@ -170,7 +170,7 @@ public class MenuHandler {
     }
 
     public static void showPromotionMenu(Player player, PlayerData data) {
-        statsMenu.show(player, DATA, data);
+        promotionMenu.show(player, DATA, data);
     }
 
     public static void showWelcomeMenu(Player player) {
