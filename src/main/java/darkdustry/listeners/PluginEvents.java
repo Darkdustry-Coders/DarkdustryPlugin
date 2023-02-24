@@ -38,8 +38,6 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(ResetEvent.class, event -> History.clear());
-
         Events.on(GameOverEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> {
             data.gamesPlayed++;
             if (!state.rules.pvp) return;
@@ -50,7 +48,10 @@ public class PluginEvents {
 
         Events.on(WaveEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> data.wavesSurvived++));
 
-        Events.on(WorldLoadEvent.class, event -> app.post(Bot::updateBotStatus));
+        Events.on(WorldLoadEvent.class, event -> {
+            History.clear();
+            app.post(Bot::updateBotStatus);
+        });
 
         Events.on(WithdrawEvent.class, event -> {
             if (History.enabled() && event.player != null)
@@ -72,19 +73,11 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || event.tile == null) return;
 
-            Log.info("tap");
-
             getPlayerData(event.player).subscribe(data -> {
-                Log.info("subscribed");
-
                 if (!data.history) return;
-
-                Log.info("data.history = true");
 
                 var stack = History.get(event.tile.array());
                 if (stack == null) return;
-
-                Log.info("stack != null");
 
                 var builder = new StringBuilder();
 
