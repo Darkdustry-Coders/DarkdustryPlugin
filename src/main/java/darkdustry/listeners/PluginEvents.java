@@ -72,11 +72,19 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || event.tile == null) return;
 
+            Log.info("tap");
+
             getPlayerData(event.player).subscribe(data -> {
+                Log.info("subscribed");
+
                 if (!data.history) return;
+
+                Log.info("data.history = true");
 
                 var stack = History.get(event.tile.array());
                 if (stack == null) return;
+
+                Log.info("stack != null");
 
                 var builder = new StringBuilder();
 
