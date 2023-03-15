@@ -5,20 +5,22 @@ import arc.util.Log;
 import darkdustry.components.Icons;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
-import mindustry.game.*;
+import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
+import discord4j.core.object.entity.Role;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
+import mindustry.game.Gamemode;
+import mindustry.game.Team;
 import mindustry.gen.Player;
-import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
-import mindustry.type.*;
+import mindustry.type.Item;
+import mindustry.type.StatusEffect;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 
 import static arc.math.Mathf.PI;
-import static darkdustry.discord.Bot.*;
-import static darkdustry.discord.Bot.Palette.error;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
@@ -158,32 +160,13 @@ public class Checks {
     // endregion
     // region discord
 
-    public static boolean notAdmin(GenericComponentInteractionCreateEvent event) {
-        return check(!isAdmin(event.getMember()), () -> event.replyEmbeds(new EmbedBuilder().setColor(error).setTitle(":no_entry_sign: You must be an admin to use this feature.").build()).setEphemeral(true).queue());
-    }
-
-    public static boolean notAdmin(Context context) {
-        return check(!isAdmin(context.event().getMember()), context, ":no_entry_sign: You must be an admin to use this command.");
-    }
-
-    public static boolean notMapReviewer(Context context) {
-        return check(!isMapReviewer(context.event().getMember()), context, ":no_entry_sign: You must be a map reviewer to use this command.");
-    }
-
-    public static boolean notHosting(Context context) {
-        return check(state.isMenu(), context, ":gear: Server not running.");
-    }
-
-    public static boolean notFound(Context context, Map map, String name) {
-        return check(map == null, context, ":mag: No map **@** found.", name);
-    }
-
-    public static boolean notMap(Context context) {
-        return check(context.message().getAttachments().size() != 1 || !mapExtension.equals(context.message().getAttachments().get(0).getFileExtension()), context, ":link: You need to attach a valid **.@** file!", mapExtension);
-    }
-
-    public static boolean notMap(Context context, Fi file) {
-        return check(!SaveIO.isSaveValid(file) && file.delete(), context, ":link: You need to attach a valid **.@** file!", mapExtension);
+    public static boolean noRole(ComponentInteractionEvent event, Role role) {
+        return check(event.getInteraction().getMember().map(member -> !member.getRoleIds().contains(role.getId())).orElse(true), () ->
+                event.reply().withEmbeds(EmbedCreateSpec.builder()
+                        .color(Color.CINNABAR)
+                        .title("Missing Permissions")
+                        .description("You must be at least " + role.getMention() + " to use this feature.")
+                        .build()).withEphemeral(true).subscribe());
     }
 
     // endregion
@@ -200,10 +183,6 @@ public class Checks {
 
     private static boolean check(boolean result, Player player, String key, Object... values) {
         return check(result, () -> bundled(player, key, values));
-    }
-
-    private static boolean check(boolean result, Context context, String title, Object... values) {
-        return check(result, () -> context.error(title, values).queue());
     }
 
     // endregion

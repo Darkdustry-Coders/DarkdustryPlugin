@@ -21,10 +21,14 @@ public class Alerts {
 
     public static final Interval alertsInterval = new Interval();
 
-    /** Блоки, которые опасно строить рядом с ядром. */
+    /**
+     * Блоки, которые опасно строить рядом с ядром.
+     */
     public static final ObjectMap<Block, Boolp> dangerousBuildBlocks = new ObjectMap<>();
 
-    /** Блоки, в которые опасно переносить конкретные ресурсы. */
+    /**
+     * Блоки, в которые опасно переносить конкретные ресурсы.
+     */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
     public static boolean enabled() {

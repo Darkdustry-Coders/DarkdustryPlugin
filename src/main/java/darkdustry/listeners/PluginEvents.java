@@ -4,29 +4,38 @@ import arc.Events;
 import arc.util.Log;
 import darkdustry.components.EffectsCache;
 import darkdustry.discord.Bot;
-import darkdustry.features.*;
+import darkdustry.features.Alerts;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
-import mindustry.content.*;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
+import mindustry.content.Blocks;
+import mindustry.content.UnitTypes;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import useful.Bundle;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
-import static darkdustry.discord.Bot.*;
 import static darkdustry.components.EffectsCache.updateEffects;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.features.Ranks.updateRank;
 import static mindustry.Vars.state;
 import static mindustry.net.Administration.Config.serverName;
-import static useful.Bundle.*;
+import static useful.Bundle.bundled;
+import static useful.Bundle.sendToChat;
 
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> sendEmbed(botChannel, Palette.info, "Server launched"));
+        Events.on(ServerLoadEvent.class, event -> sendMessage(botChannel, EmbedCreateSpec.builder()
+                .color(Color.SUMMER_SKY)
+                .title("Server launched")
+                .build()));
 
         Events.on(PlayEvent.class, event -> {
             state.rules.unitPayloadUpdate = true;
@@ -50,7 +59,7 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
-            app.post(Bot::updateBotStatus);
+            app.post(Bot::updateActivity);
         });
 
         Events.on(WithdrawEvent.class, event -> {
@@ -122,12 +131,15 @@ public class PluginEvents {
             sendToChat("events.join", event.player.coloredName());
             bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
-            sendEmbed(botChannel, Palette.success, "@ joined", event.player.plainName());
+            sendMessage(botChannel, EmbedCreateSpec.builder()
+                    .color(Color.MEDIUM_SEA_GREEN)
+                    .title(event.player.plainName() + " joined")
+                    .build());
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
 
-            app.post(Bot::updateBotStatus);
+            app.post(Bot::updateActivity);
         }));
 
         Events.on(PlayerLeave.class, event -> {
@@ -135,12 +147,16 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.leave", event.player.coloredName());
-            sendEmbed(botChannel, Palette.error, "@ left", event.player.plainName());
+
+            sendMessage(botChannel, EmbedCreateSpec.builder()
+                    .color(Color.CINNABAR)
+                    .title(event.player.plainName() + " left")
+                    .build());
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
 
-            app.post(Bot::updateBotStatus);
+            app.post(Bot::updateActivity);
         });
 
         Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), EffectsCache::move));

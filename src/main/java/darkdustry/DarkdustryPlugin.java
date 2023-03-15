@@ -3,8 +3,7 @@
 
 package darkdustry;
 
-import arc.graphics.Color;
-import arc.graphics.Colors;
+import arc.graphics.*;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -13,8 +12,7 @@ import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.*;
 import mindustry.core.Version;
-import mindustry.gen.AdminRequestCallPacket;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
@@ -42,10 +40,6 @@ public class DarkdustryPlugin extends Plugin {
         Log.infoTag("Darkdustry", Strings.format(text, values));
     }
 
-    public static void discord(String text, Object... values) {
-        Log.infoTag("Discord", Strings.format(text, values));
-    }
-
     public static void error(String text, Object... values) {
         Log.errTag("Darkdustry", Strings.format(text, values));
     }
@@ -59,16 +53,13 @@ public class DarkdustryPlugin extends Plugin {
 
         AntiDdos.loadBlacklist();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
-        MenuFormatter.setFormatter(Bundle::format);
 
         Config.load();
         Icons.load();
-        MapParser.load();
 
         MenuHandler.load();
         Alerts.load();
         SchemeSize.load();
-        Scripts.load();
 
         Database.connect();
         Bot.connect();
@@ -101,7 +92,7 @@ public class DarkdustryPlugin extends Plugin {
             }
         }), 60f, 60f);
 
-        // эта строчка исправляет обнаружение некоторых цветов
+        // Исправляем обнаружение некоторых цветов
         Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());

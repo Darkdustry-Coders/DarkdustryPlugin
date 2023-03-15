@@ -4,14 +4,15 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
 import mindustry.content.Fx;
+import mindustry.content.UnitTypes;
+import mindustry.entities.Effect;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import useful.*;
 import useful.Menu.MenuView;
 import useful.Menu.MenuView.OptionData;
 import useful.State.StateKey;
-import useful.menu.ConfirmMenu;
-import useful.menu.ListMenu;
+import useful.menu.*;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
@@ -50,6 +51,8 @@ public class MenuHandler {
     // region transforms
 
     public static void load() {
+        MenuFormatter.setFormatter(Bundle::format);
+
         listMenu.left("ui.button.left");
         listMenu.right("ui.button.right");
         listMenu.page("ui.button.page");
@@ -334,7 +337,25 @@ public class MenuHandler {
         teleport("Teleport",
                 player -> Effects.stack(player, Fx.teleport, Fx.teleportActivate, Fx.teleportOut),
                 player -> Effects.stack(player, Fx.teleport, Fx.teleportActivate, Fx.teleportOut),
-                player -> Effects.at(Fx.smeltsmoke, player, Color.purple)
+                player -> Effects.at(Fx.smeltsmoke, player, Color.red)
+        ),
+
+        thoriumReactor("Thorium reactor",
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> {}
+        ),
+
+        impactReactor("Impact reactor",
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> {}
+        ),
+
+        coreDust("Core dust",
+                player -> Effects.rotatedPoly(Fx.coreLandDust, player,  6, 12f, -180f, 90f, Color.royal),
+                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 4f, -90f, 30f, Color.royal),
+                player -> Effects.at(Fx.shootLiquid, player, Color.royal)
         ),
 
         impactDrill("Impact Drill",

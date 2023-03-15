@@ -1,13 +1,11 @@
 package darkdustry.utils;
 
-import arc.func.*;
+import arc.func.Cons3;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Strings;
-import darkdustry.discord.Bot.Context;
 import darkdustry.features.menus.MenuHandler;
-import mindustry.gen.*;
-import net.dv8tion.jda.api.EmbedBuilder;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import useful.Bundle;
 
 import static arc.util.Strings.parseInt;
@@ -53,37 +51,6 @@ public class PageIterator {
         }
 
         MenuHandler.showListMenu(player, "commands." + command + ".title", content, page, pages, cons);
-    }
-
-    // endregion
-    // region discord
-
-    public static void players(String[] args, Context context) {
-        discord(args, context, Groups.player.copy(new Seq<>()),
-                size -> Strings.format(":bar_chart: Players online: @", size),
-                (builder, i, p) -> builder.append("`").append(p.admin ? "\uD83D\uDFE5" : "\uD83D\uDFE7").append(" #").append(p.id).append("`   ").append(p.plainName())
-        );
-    }
-
-    public static void maps(String[] args, Context context) {
-        discord(args, context, getAvailableMaps(),
-                size -> Strings.format(":map: Maps in playlist: @", size),
-                (builder, i, map) -> builder.append("**").append(i + 1).append(".** ").append(Strings.stripColors(map.name())).append(" (").append(map.width).append("x").append(map.height).append(")")
-        );
-    }
-
-    private static <T> void discord(String[] args, Context context, Seq<T> content, Func<Integer, String> title, Cons3<StringBuilder, Integer, T> cons) {
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
-        if (page > pages || page < 1) {
-            context.error(":interrobang: Page must be a number between 1 and @.", pages).queue();
-            return;
-        }
-
-        context.message().replyEmbeds(new EmbedBuilder()
-                .setColor(-13855508)
-                .setTitle(title.get(content.size))
-                .setDescription(formatList(content, page, cons))
-                .setFooter(Strings.format("Page @ / @", page, pages)).build()).queue();
     }
 
     // endregion

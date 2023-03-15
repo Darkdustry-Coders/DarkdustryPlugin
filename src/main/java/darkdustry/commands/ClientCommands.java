@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.features.Authme;
+import darkdustry.features.AuthMe;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
 import darkdustry.utils.*;
@@ -71,7 +71,7 @@ public class ClientCommands {
             if (alreadyAdmin(player)) return;
 
             showConfirmMenu(player, "commands.login.confirm", () -> {
-                Authme.sendAdminRequest(player);
+                AuthMe.sendAdminRequest(player);
                 bundled(player, "commands.login.sent");
             });
         });

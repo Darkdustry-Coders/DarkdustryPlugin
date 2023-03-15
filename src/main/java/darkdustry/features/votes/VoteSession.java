@@ -11,10 +11,14 @@ import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
 
-    /** Список id проголосовавших игроков и их голоса. */
+    /**
+     * Список id проголосовавших игроков и их голоса.
+     */
     public final IntIntMap voted = new IntIntMap();
 
-    /** Задача на завершение голосования. */
+    /**
+     * Задача на завершение голосования.
+     */
     public final Task end;
 
     public VoteSession() {

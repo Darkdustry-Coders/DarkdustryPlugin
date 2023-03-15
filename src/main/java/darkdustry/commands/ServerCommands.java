@@ -7,17 +7,24 @@ import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 
-import static arc.Core.*;
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.discord.Bot.*;
+import static arc.Core.app;
+import static arc.Core.settings;
+import static darkdustry.PluginVars.kickDuration;
+import static darkdustry.PluginVars.serverCommands;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.updatePlayerData;
 import static darkdustry.components.EffectsCache.updateEffects;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
-import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Checks.alreadyHosting;
+import static darkdustry.utils.Checks.notFound;
+import static darkdustry.utils.Utils.notNullElse;
+import static darkdustry.utils.Utils.reloadWorld;
 import static mindustry.Vars.*;
-import static useful.Bundle.*;
+import static useful.Bundle.bundled;
+import static useful.Bundle.sendToChat;
 
 public class ServerCommands {
 
