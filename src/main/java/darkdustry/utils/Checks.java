@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.util.Log;
 import darkdustry.components.Icons;
+import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
 import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
@@ -21,6 +22,7 @@ import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static arc.math.Mathf.PI;
+import static darkdustry.PluginVars.discordCommands;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
@@ -169,6 +171,18 @@ public class Checks {
                         .build()).withEphemeral(true).subscribe());
     }
 
+    public static boolean noRole(MessageContext context, Role role) {
+        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be at least @ to use this feature.", role.getMention());
+    }
+
+    public static boolean notMap(MessageContext context) {
+        return check(context.message().getAttachments().stream().noneMatch(attachment -> attachment.getFilename().endsWith(mapExtension)), context, "Invalid Attachments", "You need to attach at least one **.@** file.", mapExtension);
+    }
+
+    public static boolean notFound(MessageContext context, Map map) {
+        return check(map == null, context, "Unknown Map", "To see a list of all available maps, use @**maps**", discordCommands.prefix);
+    }
+
     // endregion
     // region utils
 
@@ -183,6 +197,10 @@ public class Checks {
 
     private static boolean check(boolean result, Player player, String key, Object... values) {
         return check(result, () -> bundled(player, key, values));
+    }
+
+    private static boolean check(boolean result, MessageContext context, String title, String content, Object... values) {
+        return check(result, () -> context.error(title, content, values).subscribe());
     }
 
     // endregion

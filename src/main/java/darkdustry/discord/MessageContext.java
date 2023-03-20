@@ -17,10 +17,10 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public MessageCreateMono success(Cons<Builder> cons) {
-        var embed = EmbedCreateSpec.builder().color(Color.MEDIUM_SEA_GREEN);
-        cons.get(embed);
-
-        return reply(embed.build());
+        return reply(embed -> {
+            embed.color(Color.MEDIUM_SEA_GREEN);
+            cons.get(embed);
+        });
     }
 
     public MessageCreateMono error(String title, String content, Object... values) {
@@ -28,10 +28,10 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public MessageCreateMono error(Cons<Builder> cons) {
-        var embed = EmbedCreateSpec.builder().color(Color.CINNABAR);
-        cons.get(embed);
-
-        return reply(embed.build());
+        return reply(embed -> {
+            embed.color(Color.CINNABAR);
+            cons.get(embed);
+        });
     }
 
     public MessageCreateMono info(String title, String content, Object... values) {
@@ -39,14 +39,17 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public MessageCreateMono info(Cons<Builder> cons) {
-        var embed = EmbedCreateSpec.builder().color(Color.SUMMER_SKY);
+        return reply(embed -> {
+            embed.color(Color.SUMMER_SKY);
+            cons.get(embed);
+        });
+    }
+
+    public MessageCreateMono reply(Cons<Builder> cons) {
+        var embed = EmbedCreateSpec.builder();
         cons.get(embed);
 
         return reply(embed.build());
-    }
-
-    public MessageCreateMono reply(String text) {
-        return channel.createMessage(text).withMessageReference(message.getId());
     }
 
     public MessageCreateMono reply(EmbedCreateSpec embed) {

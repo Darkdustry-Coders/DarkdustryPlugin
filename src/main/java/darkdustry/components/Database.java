@@ -89,7 +89,7 @@ public class Database {
 
         public int gamesPlayed = 0;
         public int pvpWins = 0;
-        public int pvpLosses = 0;
+        public int hexedWins = 0;
 
         public int wavesSurvived = 0;
         public int blocksPlaced = 0;

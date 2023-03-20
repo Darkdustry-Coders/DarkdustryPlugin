@@ -1,11 +1,15 @@
 package darkdustry.commands;
 
 import arc.util.Log;
+import arc.util.Time;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.utils.Find;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
+
+import java.time.Duration;
+import java.time.Instant;
 
 import static arc.Core.app;
 import static arc.Core.settings;
@@ -20,8 +24,7 @@ import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.alreadyHosting;
 import static darkdustry.utils.Checks.notFound;
-import static darkdustry.utils.Utils.notNullElse;
-import static darkdustry.utils.Utils.reloadWorld;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static useful.Bundle.bundled;
 import static useful.Bundle.sendToChat;
@@ -91,94 +94,99 @@ public class ServerCommands {
         });
 
         serverCommands.register("ban", "<ID/username/uuid/ip...>", "Ban a player.", args -> {
-            var target = Find.player(args[0]);
-            var playerInfo = Find.playerInfo(args[0]);
-            if (notFound(playerInfo, args[0])) return;
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
 
-            netServer.admins.banPlayerID(playerInfo.id);
-            netServer.admins.banPlayerIP(playerInfo.lastIP);
+            netServer.admins.banPlayerID(info.id);
+            netServer.admins.banPlayerIP(info.lastIP);
+
+            var target = Find.playerByUuid(info.id);
             if (target != null) {
                 kick(target, 0, true, "kick.banned");
                 sendToChat("events.server.ban", target.coloredName());
             }
 
-            Log.info("Player @ has been banned.", playerInfo.plainLastName());
+            Log.info("Player @ has been banned.", info.plainLastName());
         });
 
         serverCommands.register("unban", "<uuid/ip...>", "Unban a player.", args -> {
-            var playerInfo = Find.playerInfo(args[0]);
-            if (notFound(playerInfo, args[0])) return;
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
 
-            netServer.admins.unbanPlayerID(playerInfo.id);
-            playerInfo.ips.each(netServer.admins::unbanPlayerIP);
+            netServer.admins.unbanPlayerID(info.id);
+            info.ips.each(netServer.admins::unbanPlayerIP);
 
-            playerInfo.lastKicked = 0L;
-            playerInfo.ips.each(netServer.admins.kickedIPs::remove);
+            info.lastKicked = 0L;
+            info.ips.each(netServer.admins.kickedIPs::remove);
 
-            Log.info("Player @ has been unbanned.", playerInfo.plainLastName());
+            Log.info("Player @ has been unbanned.", info.plainLastName());
         });
 
         serverCommands.register("bans", "List all banned IPs and IDs.", args -> {
-            var bannedIDs = netServer.admins.getBanned();
+            Log.info("ID-banned players:");
+            netServer.admins.getBanned().each(info -> Log.info("  Name: @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
 
-            Log.info("ID-banned players: (@)", bannedIDs.size);
-            bannedIDs.each(info -> Log.info("  @ / Name: @", info.id, info.plainLastName()));
-
-            var bannedIPs = netServer.admins.getBannedIPs();
-
-            Log.info("IP-banned players: (@)", bannedIPs.size);
-            bannedIPs.each(ip -> {
+            Log.info("IP-banned players:");
+            netServer.admins.getBannedIPs().each(ip -> {
                 var info = netServer.admins.findByIP(ip);
-                if (info == null) Log.info("  @ / (No known name or info)", ip);
-                else Log.info("  @ / Name: @ / ID: @", ip, info.plainLastName(), info.id);
+                Log.info("  Name: @ / ID: @ / IP: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip);
+            });
+
+            Log.info("Temp-banned players:");
+            netServer.admins.kickedIPs.each((ip, time) -> {
+                if (Time.timeSinceMillis(time) > 0) return;
+
+                var info = netServer.admins.findByIP(ip);
+                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip, formatLongDate(time));
             });
         });
 
         serverCommands.register("admin", "<add/remove> <ID/username/uuid/ip...>", "Make a player admin.", args -> {
-            var target = Find.player(args[1]);
-            var playerInfo = Find.playerInfo(args[1]);
-            if (notFound(playerInfo, args[1])) return;
+            var info = Find.playerInfo(args[1]);
+            if (notFound(info, args[1])) return;
 
             switch (args[0].toLowerCase()) {
                 case "add" -> {
-                    netServer.admins.adminPlayer(playerInfo.id, playerInfo.adminUsid);
+                    netServer.admins.adminPlayer(info.id, info.adminUsid);
+
+                    var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(true);
                         bundled(target, "events.server.admin");
                     }
 
-                    Log.info("Player @ is now admin.", playerInfo.plainLastName());
+                    Log.info("Player @ is now admin.", info.plainLastName());
                 }
                 case "remove" -> {
-                    netServer.admins.unAdminPlayer(playerInfo.id);
+                    netServer.admins.unAdminPlayer(info.id);
+
+                    var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
                     }
 
-                    Log.info("Player @ is no longer an admin.", playerInfo.plainLastName());
+                    Log.info("Player @ is no longer an admin.", info.plainLastName());
                 }
                 default -> Log.err("The first parameter must be either add or remove.");
             }
         });
 
         serverCommands.register("admins", "List all admins.", args -> {
-            var admins = netServer.admins.getAdmins();
-
-            Log.info("Admins: (@)", admins.size);
-            admins.each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
+            Log.info("Admins:");
+            netServer.admins.getAdmins().each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
         });
 
         serverCommands.register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", args -> {
-            var playerInfo = Find.playerInfo(args[0]);
-            if (notFound(playerInfo, args[0])) return;
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
 
-            getPlayerData(playerInfo.id).subscribe(data -> {
+            getPlayerData(info.id).subscribe(data -> {
                 Log.info("Player '@' UUID @", data.name, data.uuid);
                 Log.info("  Rank: @", data.rank.name());
                 Log.info("  Games played: @", data.gamesPlayed);
                 Log.info("  PvP wins: @", data.pvpWins);
-                Log.info("  PvP losses: @", data.pvpLosses);
+                Log.info("  Hexed wins: @", data.hexedWins);
                 Log.info("  Waves survived: @", data.wavesSurvived);
                 Log.info("  Blocks placed: @", data.blocksPlaced);
                 Log.info("  Blocks broken: @", data.blocksBroken);
@@ -190,19 +198,19 @@ public class ServerCommands {
             var rank = Find.rank(args[0]);
             if (notFound(rank, args[0])) return;
 
-            var target = Find.player(args[1]);
-            var playerInfo = Find.playerInfo(args[1]);
-            if (notFound(playerInfo, args[1])) return;
+            var info = Find.playerInfo(args[1]);
+            if (notFound(info, args[1])) return;
 
-            updatePlayerData(playerInfo.id, data -> {
+            updatePlayerData(info.id, data -> {
                 data.rank = rank;
 
+                var target = Find.playerByUuid(info.id);
                 if (target != null) {
                     updateRank(target, data);
                     updateEffects(target, data.effects);
                 }
 
-                Log.info("Successfully set rank of @ to @.", playerInfo.plainLastName(), rank.name());
+                Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name());
             });
         });
     }

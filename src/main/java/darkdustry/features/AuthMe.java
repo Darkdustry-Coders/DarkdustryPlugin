@@ -22,7 +22,7 @@ public class AuthMe {
         if (adminChannel == null) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
-                .color(Color.ENDEAVOUR)
+                .color(Color.VIVID_VIOLET)
                 .title("Request for administrator rights.")
                 .addField("Nickname:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
@@ -79,12 +79,12 @@ public class AuthMe {
         event.reply().withEmbeds(EmbedCreateSpec.builder()
                 .color(Color.SUMMER_SKY)
                 .title("Player Info")
-                .addField("UUID:", info.id, true)
-                .addField("IP:", info.lastIP, true)
-                .addField("Times joined:", String.valueOf(info.timesJoined), true)
-                .addField("Times kicked:", String.valueOf(info.timesKicked), true)
-                .addField("All nicknames:", info.names.toString(), true)
-                .addField("All IPs", info.ips.toString(), true)
-                .build()).withEphemeral(true).subscribe();
+                .addField("UUID:", info.id, false)
+                .addField("IP:", info.lastIP, false)
+                .addField("Times joined:", String.valueOf(info.timesJoined), false)
+                .addField("Times kicked:", String.valueOf(info.timesKicked), false)
+                .addField("All nicknames:", info.names.toString(), false)
+                .addField("All IPs", info.ips.toString(), false)
+                .build()).withEphemeral(false).subscribe();
     }
 }

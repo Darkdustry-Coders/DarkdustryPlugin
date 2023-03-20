@@ -4,22 +4,27 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
 import mindustry.content.Fx;
-import mindustry.content.UnitTypes;
-import mindustry.entities.Effect;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
 import useful.*;
 import useful.Menu.MenuView;
 import useful.Menu.MenuView.OptionData;
 import useful.State.StateKey;
-import useful.menu.*;
+import useful.menu.ConfirmMenu;
+import useful.menu.ListMenu;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
+import static darkdustry.PluginVars.discordServerUrl;
+import static darkdustry.PluginVars.welcomeMessageCommands;
+import static darkdustry.components.Database.PlayerData;
+import static darkdustry.components.Database.updatePlayerData;
 import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.ranks;
 import static darkdustry.utils.Administration.ban;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.formatDuration;
+import static darkdustry.utils.Utils.formatList;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.bundled;
 
@@ -63,7 +68,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.pvpLosses, formatDuration(data.playTime * 60 * 1000L, menu.player));
+            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.hexedWins, formatDuration(data.playTime * 60 * 1000L, menu.player));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -340,22 +345,10 @@ public class MenuHandler {
                 player -> Effects.at(Fx.smeltsmoke, player, Color.red)
         ),
 
-        thoriumReactor("Thorium reactor",
-                player -> Effects.at(Fx.reactorExplosion, player),
-                player -> Effects.at(Fx.reactorExplosion, player),
-                player -> {}
-        ),
-
-        impactReactor("Impact reactor",
-                player -> Effects.at(Fx.impactReactorExplosion, player),
-                player -> Effects.at(Fx.impactReactorExplosion, player),
-                player -> {}
-        ),
-
-        coreDust("Core dust",
+        coreDust("Core Dust",
                 player -> Effects.rotatedPoly(Fx.coreLandDust, player,  6, 12f, -180f, 90f, Color.royal),
                 player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 4f, -90f, 30f, Color.royal),
-                player -> Effects.at(Fx.shootLiquid, player, Color.royal)
+                player -> Effects.at(Fx.shootLiquid, player, player.unit().rotation - 180f, Color.royal)
         ),
 
         impactDrill("Impact Drill",
@@ -364,10 +357,28 @@ public class MenuHandler {
                 player -> Effects.at(Fx.mineSmall, player, Color.cyan)
         ),
 
+        thoriumReactor("Thorium reactor",
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> Effects.at(Fx.shootSmokeSquareSparse, player, player.unit().rotation - 180f, Color.purple)
+        ),
+
+        impactReactor("Impact reactor",
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> Effects.at(Fx.shootSmokeSquareSparse, player, player.unit().rotation - 180f, Color.gold)
+        ),
+
         greenLaser("Green Laser",
                 player -> Effects.at(Fx.greenBomb, player),
                 player -> Effects.at(Fx.greenLaserCharge, player),
                 player -> Effects.at(Fx.electrified, player)
+        ),
+
+        suppressParticle("Suppress Particle",
+                player -> Effects.at(Fx.dynamicSpikes, player, 60f, Pal.sapBullet),
+                player -> Effects.at(Fx.dynamicSpikes, player, 60f, Pal.sapBullet),
+                player -> Effects.at(Fx.regenSuppressSeek, player, player.unit())
         ),
 
         none("effects.disabled", "effects.disable");

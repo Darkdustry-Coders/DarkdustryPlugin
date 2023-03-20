@@ -2,7 +2,8 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.EffectsCache;
+import darkdustry.components.*;
+import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
 import darkdustry.features.history.*;
@@ -49,10 +50,13 @@ public class PluginEvents {
 
         Events.on(GameOverEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> {
             data.gamesPlayed++;
-            if (!state.rules.pvp) return;
+            if (player.team() != event.winner) return;
 
-            if (player.team() == event.winner) data.pvpWins++;
-            else data.pvpLosses++;
+            if (config.mode == Gamemode.pvp || config.mode == Gamemode.castle)
+                data.pvpWins++;
+
+            if (config.mode == Gamemode.hexed)
+                data.hexedWins++;
         }));
 
         Events.on(WaveEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> data.wavesSurvived++));
