@@ -22,7 +22,6 @@ import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static arc.math.Mathf.PI;
-import static darkdustry.PluginVars.discordCommands;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.enableVotekick;
@@ -54,6 +53,10 @@ public class Checks {
 
     public static boolean notFound(Rank rank, String name) {
         return check(rank == null, "No rank @ found.", name);
+    }
+
+    public static boolean invalidDuration(int duration, int min, int max) {
+        return check(duration < min || duration > max, "Duration should be an integer between @ and @.", min, max);
     }
 
     // endregion
@@ -119,12 +122,12 @@ public class Checks {
         return check(sign == 0, player, "commands.vote.incorrect-sign");
     }
 
-    public static boolean invalidAmount(Player player, int amount, int minAmount, int maxAmount) {
-        return check(amount < minAmount || amount > maxAmount, player, "commands.invalid-amount", minAmount, maxAmount);
+    public static boolean invalidAmount(Player player, int amount, int min, int max) {
+        return check(amount < min || amount > max, player, "commands.invalid-amount", min, max);
     }
 
-    public static boolean invalidDuration(Player player, int duration, int minDuration, int maxDuration) {
-        return check(duration < minDuration || duration > maxDuration, player, "commands.invalid-duration", minDuration, maxDuration);
+    public static boolean invalidDuration(Player player, int duration, int min, int max) {
+        return check(duration < min || duration > max, player, "commands.invalid-duration", min, max);
     }
 
     public static boolean invalidCoordinates(Player player, int x, int y) {
@@ -172,7 +175,7 @@ public class Checks {
     }
 
     public static boolean noRole(MessageContext context, Role role) {
-        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be at least @ to use this feature.", role.getMention());
+        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be at least @ to use this command.", role.getMention());
     }
 
     public static boolean notMap(MessageContext context) {
@@ -180,7 +183,19 @@ public class Checks {
     }
 
     public static boolean notFound(MessageContext context, Map map) {
-        return check(map == null, context, "Unknown Map", "To see a list of all available maps, use @**maps**", discordCommands.prefix);
+        return check(map == null, context, "Map Not Found", "Check if the name is spelled correctly.");
+    }
+
+    public static boolean notFound(MessageContext context, PlayerInfo info) {
+        return check(info == null, context, "Player Not Found", "Check if the name is spelled correctly.");
+    }
+
+    public static boolean notFound(MessageContext context, Rank rank) {
+        return check(rank == null, context, "Rank Not Found", "Check if the name is spelled correctly.");
+    }
+
+    public static boolean invalidDuration(MessageContext context, int duration, int min, int max) {
+        return check(duration < min || duration > max, context, "Invalid Duration", "Duration should be an integer between @ and @.", min, max);
     }
 
     // endregion

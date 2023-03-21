@@ -72,8 +72,8 @@ public class NetHandlers {
             return;
         }
 
-        if (isTempBanned(uuid, ip)) {
-            kick(con, getTempBanTime(uuid, ip), true, "kick.temp-banned", locale);
+        if (isBanned(uuid, ip)) {
+            kick(con, getBanTime(uuid, ip), true, "kick.temp-banned", locale);
             return;
         }
 

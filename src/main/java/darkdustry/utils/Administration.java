@@ -34,10 +34,7 @@ public class Administration {
     // region administration
 
     public static void ban(Player admin, Player target, long duration) {
-        if (duration == 0) {
-            netServer.admins.banPlayerID(target.uuid());
-            netServer.admins.banPlayerIP(target.ip());
-        } else tempBan(target.uuid(), target.ip(), duration);
+        ban(target.uuid(), target.ip(), duration);
 
         kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
         Log.info("Player @ has banned @.", admin.plainName(), target.plainName());
@@ -51,18 +48,21 @@ public class Administration {
     }
 
     // endregion
-    // region temp-bans
+    // region bans
 
-    public static void tempBan(String uuid, String ip, long duration) {
-        netServer.admins.handleKicked(uuid, ip, duration);
+    public static void ban(String uuid, String ip, long duration) {
+        if (duration == 0) {
+            netServer.admins.banPlayerID(uuid);
+            netServer.admins.banPlayerIP(ip);
+        } else netServer.admins.handleKicked(uuid, ip, duration);
     }
 
-    public static long getTempBanTime(String uuid, String ip) {
+    public static long getBanTime(String uuid, String ip) {
         return netServer.admins.getKickTime(uuid, ip) - Time.millis();
     }
 
-    public static boolean isTempBanned(String uuid, String ip) {
-        return getTempBanTime(uuid, ip) > 0;
+    public static boolean isBanned(String uuid, String ip) {
+        return getBanTime(uuid, ip) > 0;
     }
 
     // endregion

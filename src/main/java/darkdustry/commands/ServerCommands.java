@@ -8,11 +8,9 @@ import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 
-import java.time.Duration;
-import java.time.Instant;
-
 import static arc.Core.app;
 import static arc.Core.settings;
+import static arc.util.Strings.parseInt;
 import static darkdustry.PluginVars.kickDuration;
 import static darkdustry.PluginVars.serverCommands;
 import static darkdustry.components.Database.getPlayerData;
@@ -22,8 +20,8 @@ import static darkdustry.discord.Bot.botChannel;
 import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.kick;
-import static darkdustry.utils.Checks.alreadyHosting;
-import static darkdustry.utils.Checks.notFound;
+import static darkdustry.utils.Administration.ban;
+import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static useful.Bundle.bundled;
@@ -93,16 +91,18 @@ public class ServerCommands {
             Log.info("Player @ has been kicked.", target.plainName());
         });
 
-        serverCommands.register("ban", "<ID/username/uuid/ip...>", "Ban a player.", args -> {
-            var info = Find.playerInfo(args[0]);
-            if (notFound(info, args[0])) return;
+        serverCommands.register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", args -> {
+            int duration = parseInt(args[0]);
+            if (invalidDuration(duration, 0, 365)) return;
 
-            netServer.admins.banPlayerID(info.id);
-            netServer.admins.banPlayerIP(info.lastIP);
+            var info = Find.playerInfo(args[1]);
+            if (notFound(info, args[1])) return;
+
+            ban(info.id, info.lastIP, duration * 24 * 60 * 60 * 1000L);
 
             var target = Find.playerByUuid(info.id);
             if (target != null) {
-                kick(target, 0, true, "kick.banned");
+                kick(target, duration * 24 * 60 * 60 * 1000L, true, "kick.banned");
                 sendToChat("events.server.ban", target.coloredName());
             }
 
@@ -122,7 +122,7 @@ public class ServerCommands {
             Log.info("Player @ has been unbanned.", info.plainLastName());
         });
 
-        serverCommands.register("bans", "List all banned IPs and IDs.", args -> {
+        serverCommands.register("bans", "List of all banned players.", args -> {
             Log.info("ID-banned players:");
             netServer.admins.getBanned().each(info -> Log.info("  Name: @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
 
@@ -174,7 +174,7 @@ public class ServerCommands {
 
         serverCommands.register("admins", "List all admins.", args -> {
             Log.info("Admins:");
-            netServer.admins.getAdmins().each(info -> Log.info("  @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
+            netServer.admins.getAdmins().each(info -> Log.info("  Name: @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
         });
 
         serverCommands.register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", args -> {

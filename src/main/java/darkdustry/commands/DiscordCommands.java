@@ -3,7 +3,6 @@ package darkdustry.commands;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Http;
-import arc.util.Strings;
 import darkdustry.discord.MessageContext;
 import darkdustry.utils.Find;
 import darkdustry.utils.PageIterator;
@@ -15,12 +14,21 @@ import mindustry.io.MapIO;
 
 import static arc.Core.app;
 import static arc.Core.graphics;
+import static arc.util.Strings.parseInt;
 import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.config;
 import static darkdustry.PluginVars.discordCommands;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.components.Database.updatePlayerData;
+import static darkdustry.components.EffectsCache.updateEffects;
+import static darkdustry.discord.Bot.adminRole;
 import static darkdustry.discord.Bot.mapReviewerRole;
+import static darkdustry.features.Ranks.updateRank;
+import static darkdustry.utils.Administration.ban;
+import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
+import static useful.Bundle.sendToChat;
 
 public class DiscordCommands {
 
@@ -36,12 +44,15 @@ public class DiscordCommands {
         register("maps", "[page]", "List of all maps.", PageIterator::maps);
         register("players", "[page]", "List of all maps.", PageIterator::players);
 
-        register("status", "Display server status.", (args, context) -> {
-            context.reply(embed -> embed
-                    .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
-                    .title(state.isPlaying() ? "Server Running" : "Server Offline")
-                    .description(Strings.format("Players: @\nUnits: @\nMap: @\nWave: @\nTPS: @\nRAM usage: @ MB", Groups.player.size(), Groups.unit.size(), stripColors(state.map.name()), state.wave, graphics.getFramesPerSecond(), app.getJavaHeap() / 1024 / 1024))).subscribe();
-        });
+        register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
+                .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
+                .title(state.isPlaying() ? "Server Running" : "Server Offline")
+                .addField("Players:", Groups.player.size() + "", false)
+                .addField("Units:", Groups.unit.size() + "", false)
+                .addField("Map:", stripColors(state.map.name()), false)
+                .addField("Wave:", state.wave + "", false)
+                .addField("TPS:", graphics.getFramesPerSecond() + "", false)
+                .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
         register("map", "<map>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
@@ -89,6 +100,86 @@ public class DiscordCommands {
                     .title("Map Removed")
                     .addField("Name:", map.name(), false)
                     .addField("File:", map.file.name(), false)).subscribe();
+        });
+
+        register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", adminRole, (args, context) -> {
+            int duration = parseInt(args[0]);
+            if (invalidDuration(context, duration, 0, 365)) return;
+
+            var info = Find.playerInfo(args[1]);
+            if (notFound(context, info)) return;
+
+            ban(info.id, info.lastIP, duration * 24 * 60 * 60 * 1000L);
+
+            var target = Find.playerByUuid(info.id);
+            if (target != null) {
+                kick(target, duration * 24 * 60 * 60 * 1000L, true, "kick.banned");
+                sendToChat("events.server.ban", target.coloredName());
+            }
+
+            context.success(embed -> embed
+                    .title("Player Banned")
+                    .addField("Name:", info.plainLastName(), false)
+                    .addField("UUID:", info.id, false)
+                    .addField("IP:", info.lastIP, false)
+                    .addField("Duration:", duration + " days", false)).subscribe();
+        });
+
+        register("unban", "<uuid/ip...>", "Unban a player.", adminRole, (args, context) -> {
+            var info = Find.playerInfo(args[0]);
+            if (notFound(context, info)) return;
+
+            netServer.admins.unbanPlayerID(info.id);
+            info.ips.each(netServer.admins::unbanPlayerIP);
+
+            info.lastKicked = 0L;
+            info.ips.each(netServer.admins.kickedIPs::remove);
+
+            context.success(embed -> embed.title("Player Unbanned")
+                    .addField("Name:", info.plainLastName(), false)
+                    .addField("UUID:", info.id, false)
+                    .addField("IP:", info.lastIP, false)).subscribe();
+        });
+
+        register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", (args, context) -> {
+            var info = Find.playerInfo(args[0]);
+            if (notFound(context, info)) return;
+
+            getPlayerData(info.id).flatMap(data -> context.info(embed -> embed
+                    .title("Player Stats")
+                    .addField("Name:", data.name, false)
+                    .addField("Rank:", data.rank.name(), false)
+                    .addField("Games played:", data.gamesPlayed + "", false)
+                    .addField("PvP wins:", data.pvpWins + "", false)
+                    .addField("Hexed wins:", data.hexedWins + "", false)
+                    .addField("Waves survived:", data.wavesSurvived + "", false)
+                    .addField("Blocks placed:", data.blocksPlaced + "", false)
+                    .addField("Blocks broken:", data.blocksBroken + "", false)
+                    .addField("Playtime:", data.playTime + " minutes", false))).subscribe();
+        });
+
+        register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
+            var rank = Find.rank(args[0]);
+            if (notFound(context, rank)) return;
+
+            var info = Find.playerInfo(args[1]);
+            if (notFound(context, info)) return;
+
+            updatePlayerData(info.id, data -> {
+                data.rank = rank;
+
+                var target = Find.playerByUuid(info.id);
+                if (target != null) {
+                    updateRank(target, data);
+                    updateEffects(target, data.effects);
+                }
+
+                context.success(embed -> embed
+                        .title("Rank Changed")
+                        .addField("Name:", info.plainLastName(), false)
+                        .addField("UUID:", info.id, false)
+                        .addField("Rank:", rank.name(), false)).subscribe();
+            });
         });
     }
 
