@@ -16,6 +16,7 @@ import useful.Bundle;
 import java.time.*;
 
 import static darkdustry.PluginVars.*;
+import static discord4j.common.util.TimestampFormat.LONG_DATE;
 import static mindustry.Vars.*;
 
 public class Utils {
@@ -93,6 +94,10 @@ public class Utils {
 
     public static String formatLongDate(long time) {
         return longDateFormat.format(Instant.ofEpochMilli(time));
+    }
+
+    public static String formatDiscordDate(long time) {
+        return LONG_DATE.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatDuration(long time, Player player) {

@@ -92,17 +92,18 @@ public class ServerCommands {
         });
 
         serverCommands.register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", args -> {
-            int duration = parseInt(args[0]);
-            if (invalidDuration(duration, 0, 365)) return;
+            int days = parseInt(args[0]);
+            if (invalidDuration(days, 0, 365)) return;
 
             var info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
 
-            ban(info.id, info.lastIP, duration * 24 * 60 * 60 * 1000L);
+            long duration = days * 24 * 60 * 60 * 1000L;
+            ban(info.id, info.lastIP, duration);
 
             var target = Find.playerByUuid(info.id);
             if (target != null) {
-                kick(target, duration * 24 * 60 * 60 * 1000L, true, "kick.banned");
+                kick(target, duration, true, "kick.banned");
                 sendToChat("events.server.ban", target.coloredName());
             }
 

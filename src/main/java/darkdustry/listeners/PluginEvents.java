@@ -163,6 +163,6 @@ public class PluginEvents {
             app.post(Bot::updateActivity);
         });
 
-        Events.run(Trigger.update, () -> Groups.player.each(player -> player.unit().moving(), EffectsCache::move));
+        Events.run(Trigger.update, () -> Groups.player.each(EffectsCache::move));
     }
 }

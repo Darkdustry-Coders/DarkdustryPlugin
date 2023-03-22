@@ -27,6 +27,8 @@ public class EffectsCache {
     }
 
     public static void move(Player player) {
+        if (!player.unit().moving()) return; // It's called here to prevent NPE
+
         var effects = cache.get(player.id);
         if (effects == null) return;
 

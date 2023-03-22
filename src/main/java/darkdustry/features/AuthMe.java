@@ -13,13 +13,14 @@ import mindustry.gen.Player;
 import java.util.Collections;
 
 import static darkdustry.discord.Bot.adminChannel;
+import static darkdustry.discord.Bot.connected;
 import static mindustry.Vars.netServer;
 import static useful.Bundle.bundled;
 
 public class AuthMe {
 
     public static void sendAdminRequest(Player player) {
-        if (adminChannel == null) return;
+        if (!connected) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.VIVID_VIOLET)
@@ -85,6 +86,6 @@ public class AuthMe {
                 .addField("Times kicked:", String.valueOf(info.timesKicked), false)
                 .addField("All nicknames:", info.names.toString(), false)
                 .addField("All IPs", info.ips.toString(), false)
-                .build()).withEphemeral(false).subscribe();
+                .build()).withEphemeral(true).subscribe();
     }
 }

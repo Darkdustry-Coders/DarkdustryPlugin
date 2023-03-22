@@ -3,6 +3,7 @@ package darkdustry.commands;
 import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Http;
+import arc.util.Time;
 import darkdustry.discord.MessageContext;
 import darkdustry.utils.Find;
 import darkdustry.utils.PageIterator;
@@ -27,6 +28,7 @@ import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.utils.Administration.ban;
 import static darkdustry.utils.Administration.kick;
 import static darkdustry.utils.Checks.*;
+import static darkdustry.utils.Utils.formatDiscordDate;
 import static mindustry.Vars.*;
 import static useful.Bundle.sendToChat;
 
@@ -103,17 +105,18 @@ public class DiscordCommands {
         });
 
         register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", adminRole, (args, context) -> {
-            int duration = parseInt(args[0]);
-            if (invalidDuration(context, duration, 0, 365)) return;
+            int days = parseInt(args[0]);
+            if (invalidDuration(context, days, 0, 365)) return;
 
             var info = Find.playerInfo(args[1]);
             if (notFound(context, info)) return;
 
-            ban(info.id, info.lastIP, duration * 24 * 60 * 60 * 1000L);
+            long duration = days * 24 * 60 * 60 * 1000L;
+            ban(info.id, info.lastIP, duration);
 
             var target = Find.playerByUuid(info.id);
             if (target != null) {
-                kick(target, duration * 24 * 60 * 60 * 1000L, true, "kick.banned");
+                kick(target, duration, true, "kick.banned");
                 sendToChat("events.server.ban", target.coloredName());
             }
 
@@ -122,7 +125,7 @@ public class DiscordCommands {
                     .addField("Name:", info.plainLastName(), false)
                     .addField("UUID:", info.id, false)
                     .addField("IP:", info.lastIP, false)
-                    .addField("Duration:", duration + " days", false)).subscribe();
+                    .addField("Unban date:", duration > 0 ? formatDiscordDate(Time.millis() + duration) : "permanent", false)).subscribe();
         });
 
         register("unban", "<uuid/ip...>", "Unban a player.", adminRole, (args, context) -> {
