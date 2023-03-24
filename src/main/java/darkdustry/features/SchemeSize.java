@@ -60,7 +60,9 @@ public class SchemeSize {
         var tile = world.tile(x, y);
         if (tile == null) return;
 
-        tile.setFloorNet(floor == null ? tile.floor() : floor, overlay == null ? tile.overlay() : overlay);
-        if (block != null) tile.setNet(block);
+        if ((floor != null && tile.floor() != floor) || (overlay != null && tile.overlay() != overlay))
+            tile.setFloorNet(floor == null ? tile.floor() : floor, overlay == null ? tile.overlay() : overlay);
+
+        if (block != null && tile.block() != block) tile.setNet(block);
     }
 }
