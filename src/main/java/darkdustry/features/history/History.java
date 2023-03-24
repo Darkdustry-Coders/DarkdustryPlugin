@@ -44,8 +44,10 @@ public class History {
 
         @Override
         public void add(HistoryEntry entry) {
+            if (size >= maxHistoryCapacity)
+                removeFirst();
+
             super.add(entry);
-            if (size > maxHistoryCapacity) removeFirst();
         }
     }
 }
