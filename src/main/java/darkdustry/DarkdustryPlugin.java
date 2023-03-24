@@ -32,7 +32,6 @@ import useful.Bundle;
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.updatePlayersData;
-import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.features.Ranks.updateRank;
 import static darkdustry.features.menus.MenuHandler.showPromotionMenu;
 import static darkdustry.utils.Utils.getAvailableMaps;
@@ -98,8 +97,6 @@ public class DarkdustryPlugin extends Plugin {
                 data.rank = data.rank.next;
 
                 updateRank(player, data);
-                updateEffects(player, data.effects);
-
                 showPromotionMenu(player, data);
             }
         }), 60f, 60f);

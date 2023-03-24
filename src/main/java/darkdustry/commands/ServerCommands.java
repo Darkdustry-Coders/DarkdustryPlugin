@@ -15,7 +15,6 @@ import static darkdustry.PluginVars.kickDuration;
 import static darkdustry.PluginVars.serverCommands;
 import static darkdustry.components.Database.getPlayerData;
 import static darkdustry.components.Database.updatePlayerData;
-import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.discord.Bot.botChannel;
 import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.features.Ranks.updateRank;
@@ -185,13 +184,14 @@ public class ServerCommands {
             getPlayerData(info.id).subscribe(data -> {
                 Log.info("Player '@' UUID @", data.name, data.uuid);
                 Log.info("  Rank: @", data.rank.name());
-                Log.info("  Games played: @", data.gamesPlayed);
-                Log.info("  PvP wins: @", data.pvpWins);
-                Log.info("  Hexed wins: @", data.hexedWins);
-                Log.info("  Waves survived: @", data.wavesSurvived);
+                Log.info("  Playtime: @ minutes", data.playTime);
                 Log.info("  Blocks placed: @", data.blocksPlaced);
                 Log.info("  Blocks broken: @", data.blocksBroken);
-                Log.info("  Playtime: @ minutes", data.playTime);
+                Log.info("  Waves survived: @", data.wavesSurvived);
+                Log.info("  Games played: @", data.gamesPlayed);
+                Log.info("  Attack wins: @", data.attackWins);
+                Log.info("  PvP wins: @", data.pvpWins);
+                Log.info("  Hexed wins: @", data.hexedWins);
             });
         });
 
@@ -206,10 +206,8 @@ public class ServerCommands {
                 data.rank = rank;
 
                 var target = Find.playerByUuid(info.id);
-                if (target != null) {
+                if (target != null)
                     updateRank(target, data);
-                    updateEffects(target, data.effects);
-                }
 
                 Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name());
             });

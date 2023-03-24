@@ -21,7 +21,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.discord4j:discord4j-core:3.2.3")
-    implementation("org.mongodb:mongodb-driver-reactivestreams:4.8.2")
+    implementation("org.mongodb:mongodb-driver-reactivestreams:4.9.0")
 
     implementation("com.github.xzxADIxzx.useful-stuffs:antiddos:$usefulHash")
     implementation("com.github.xzxADIxzx.useful-stuffs:bundle:$usefulHash")

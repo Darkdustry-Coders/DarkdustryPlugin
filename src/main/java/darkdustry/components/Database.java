@@ -1,18 +1,24 @@
 package darkdustry.components;
 
-import arc.func.*;
+import arc.func.Cons;
+import arc.func.Cons2;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.*;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
-import darkdustry.features.menus.MenuHandler.*;
-import darkdustry.utils.Find;
+import darkdustry.features.menus.MenuHandler.EffectsPack;
+import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.Player;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import reactor.core.publisher.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import static com.mongodb.client.model.Filters.eq;
 import static darkdustry.PluginVars.config;
@@ -48,13 +54,10 @@ public class Database {
         return Mono.from(playersCollection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
     }
 
-    public static Flux<PlayerData> getPlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
-        return Flux.fromIterable(players).flatMap(Database::getPlayerData).doOnNext(data -> {
-            var player = Find.playerByUuid(data.uuid);
-            if (player == null) return;
-
-            cons.get(player, data);
-        });
+    public static Flux<Tuple2<Player, PlayerData>> getPlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
+        return Flux.fromIterable(players)
+                .flatMap(player -> Mono.zip(Mono.just(player), getPlayerData(player)))
+                .doOnNext(tuple -> cons.get(tuple.getT1(), tuple.getT2()));
     }
 
     public static Mono<UpdateResult> setPlayerData(PlayerData data) {
@@ -73,7 +76,7 @@ public class Database {
     }
 
     public static void updatePlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
-        getPlayersData(players, cons).flatMap(Database::setPlayerData).subscribe();
+        getPlayersData(players, cons).flatMap(tuple -> setPlayerData(tuple.getT2())).subscribe();
     }
 
     public static class PlayerData {
@@ -87,14 +90,15 @@ public class Database {
         public Language language = Language.off;
         public EffectsPack effects = EffectsPack.none;
 
-        public int gamesPlayed = 0;
-        public int pvpWins = 0;
-        public int hexedWins = 0;
-
-        public int wavesSurvived = 0;
+        public int playTime = 0;
         public int blocksPlaced = 0;
         public int blocksBroken = 0;
-        public int playTime = 0;
+        public int wavesSurvived = 0;
+
+        public int gamesPlayed = 0;
+        public int attackWins = 0;
+        public int pvpWins = 0;
+        public int hexedWins = 0;
 
         public Rank rank = Rank.player;
 

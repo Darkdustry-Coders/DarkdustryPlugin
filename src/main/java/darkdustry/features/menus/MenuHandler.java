@@ -3,6 +3,7 @@ package darkdustry.features.menus;
 import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
+import darkdustry.components.Cache;
 import mindustry.content.Fx;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
@@ -18,9 +19,7 @@ import useful.menu.ListMenu;
 
 import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.PluginVars.welcomeMessageCommands;
-import static darkdustry.components.Database.PlayerData;
-import static darkdustry.components.Database.updatePlayerData;
-import static darkdustry.components.EffectsCache.updateEffects;
+import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.ranks;
 import static darkdustry.utils.Administration.ban;
 import static darkdustry.utils.Utils.formatDuration;
@@ -68,7 +67,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.pvpWins, data.hexedWins, formatDuration(data.playTime * 60 * 1000L, menu.player));
+            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, formatDuration(data.playTime * 60 * 1000L, menu.player));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -126,7 +125,6 @@ public class MenuHandler {
             menu.content("tempban.content", target.coloredName());
 
             menu.options(3, BanDuration.values()).row();
-
             menu.option("ui.button.close");
         });
 
@@ -253,17 +251,17 @@ public class MenuHandler {
         history(data -> data.history = !data.history, data -> data.history),
         welcomeMessage(data -> data.welcomeMessage = !data.welcomeMessage, data -> data.welcomeMessage);
 
-        public final Cons<PlayerData> cons;
-        public final Func<PlayerData, Boolean> func;
+        public final Cons<PlayerData> setter;
+        public final Func<PlayerData, Boolean> getter;
 
-        Setting(Cons<PlayerData> cons, Func<PlayerData, Boolean> func) {
-            this.cons = cons;
-            this.func = func;
+        Setting(Cons<PlayerData> setter, Func<PlayerData, Boolean> getter) {
+            this.setter = setter;
+            this.getter = getter;
         }
 
         @Override
         public void option(MenuView menu) {
-            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, cons), Action.showUse(DATA, cons)), Bundle.get(func.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
+            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), Action.showUse(DATA, setter)), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -346,7 +344,7 @@ public class MenuHandler {
         ),
 
         coreDust("Core Dust",
-                player -> Effects.rotatedPoly(Fx.coreLandDust, player,  6, 12f, -180f, 90f, Color.royal),
+                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 12f, -180f, 90f, Color.royal),
                 player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 4f, -90f, 30f, Color.royal),
                 player -> Effects.at(Fx.shootLiquid, player, player.unit().rotation - 180f, Color.royal)
         ),
@@ -391,7 +389,10 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {}, player -> {}, player -> {});
+            this(name, button, player -> {
+            }, player -> {
+            }, player -> {
+            });
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
@@ -409,7 +410,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> updateEffects(view.player, this), Action.showUse(DATA, data -> data.effects = this)));
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), Action.showUse(DATA, data -> data.effects = this)));
         }
     }
 

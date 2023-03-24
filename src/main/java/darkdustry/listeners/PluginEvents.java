@@ -2,7 +2,8 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.Log;
-import darkdustry.components.*;
+import arc.util.Timer;
+import darkdustry.components.Cache;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
 import darkdustry.features.Alerts;
@@ -20,8 +21,8 @@ import useful.Bundle;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.components.EffectsCache.updateEffects;
+import static darkdustry.components.Database.updatePlayerData;
+import static darkdustry.components.Database.updatePlayersData;
 import static darkdustry.discord.Bot.botChannel;
 import static darkdustry.discord.Bot.sendMessage;
 import static darkdustry.features.Ranks.updateRank;
@@ -51,6 +52,9 @@ public class PluginEvents {
         Events.on(GameOverEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> {
             data.gamesPlayed++;
             if (player.team() != event.winner) return;
+
+            if (config.mode == Gamemode.attack)
+                data.attackWins++;
 
             if (config.mode == Gamemode.pvp || config.mode == Gamemode.castle)
                 data.pvpWins++;
@@ -84,21 +88,20 @@ public class PluginEvents {
         });
 
         Events.on(TapEvent.class, event -> {
-            if (!History.enabled() || event.tile == null) return;
+            if (!History.enabled()) return;
 
-            getPlayerData(event.player).subscribe(data -> {
-                if (!data.history) return;
+            var data = Cache.get(event.player);
+            if (data == null || !data.history) return;
 
-                var stack = History.get(event.tile.array());
-                if (stack == null) return;
+            var stack = History.get(event.tile.array());
+            if (stack == null) return;
 
-                var builder = new StringBuilder();
+            var builder = new StringBuilder();
 
-                if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
-                else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+            if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
+            else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-                bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
-            });
+            bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
         });
 
         Events.on(BlockBuildEndEvent.class, event -> {
@@ -127,9 +130,11 @@ public class PluginEvents {
 
         Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
             updateRank(event.player, data);
-            updateEffects(event.player, data.effects);
 
-            app.post(() -> EffectsCache.join(event.player));
+            app.post(() -> {
+                Cache.put(event.player, data);
+                Cache.join(event.player);
+            });
 
             Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.join", event.player.coloredName());
@@ -147,7 +152,8 @@ public class PluginEvents {
         }));
 
         Events.on(PlayerLeave.class, event -> {
-            EffectsCache.leave(event.player);
+            Cache.leave(event.player);
+            Cache.remove(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             sendToChat("events.leave", event.player.coloredName());
@@ -163,6 +169,6 @@ public class PluginEvents {
             app.post(Bot::updateActivity);
         });
 
-        Events.run(Trigger.update, () -> Groups.player.each(EffectsCache::move));
+        Timer.schedule(() -> Groups.player.each(Cache::move), 0f, 0.1f);
     }
 }

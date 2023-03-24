@@ -21,7 +21,6 @@ import static darkdustry.PluginVars.config;
 import static darkdustry.PluginVars.discordCommands;
 import static darkdustry.components.Database.getPlayerData;
 import static darkdustry.components.Database.updatePlayerData;
-import static darkdustry.components.EffectsCache.updateEffects;
 import static darkdustry.discord.Bot.adminRole;
 import static darkdustry.discord.Bot.mapReviewerRole;
 import static darkdustry.features.Ranks.updateRank;
@@ -152,13 +151,15 @@ public class DiscordCommands {
                     .title("Player Stats")
                     .addField("Name:", data.name, false)
                     .addField("Rank:", data.rank.name(), false)
-                    .addField("Games played:", data.gamesPlayed + "", false)
-                    .addField("PvP wins:", data.pvpWins + "", false)
-                    .addField("Hexed wins:", data.hexedWins + "", false)
-                    .addField("Waves survived:", data.wavesSurvived + "", false)
+                    .addField("Playtime:", data.playTime + " minutes", false)
                     .addField("Blocks placed:", data.blocksPlaced + "", false)
                     .addField("Blocks broken:", data.blocksBroken + "", false)
-                    .addField("Playtime:", data.playTime + " minutes", false))).subscribe();
+                    .addField("Waves survived:", data.wavesSurvived + "", false)
+                    .addField("Games played:", data.gamesPlayed + "", false)
+                    .addField("Attack wins:", data.attackWins + "", false)
+                    .addField("PvP wins:", data.pvpWins + "", false)
+                    .addField("Hexed wins:", data.hexedWins + "", false)
+            )).subscribe();
         });
 
         register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
@@ -172,10 +173,8 @@ public class DiscordCommands {
                 data.rank = rank;
 
                 var target = Find.playerByUuid(info.id);
-                if (target != null) {
+                if (target != null)
                     updateRank(target, data);
-                    updateEffects(target, data.effects);
-                }
 
                 context.success(embed -> embed
                         .title("Rank Changed")
