@@ -20,6 +20,7 @@ import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
+import useful.Cooldowns;
 
 import static arc.math.Mathf.PI;
 import static darkdustry.utils.Utils.*;
@@ -159,7 +160,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(Cooldowns.getCooldown(command), player));
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(Cooldowns.cooldown(command), player));
     }
 
     // endregion

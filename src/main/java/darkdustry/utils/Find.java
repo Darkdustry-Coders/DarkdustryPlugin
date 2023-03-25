@@ -77,11 +77,11 @@ public class Find {
     }
 
     public static Gamemode mode(String name) {
-        return findInEnum(name, Gamemode.values());
+        return findInEnum(name, Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name));
     }
 
     public static Rank rank(String name) {
-        return findInEnum(name, Rank.values());
+        return findInEnum(name, Rank.values(), rank -> rank.name().equalsIgnoreCase(name));
     }
 
     // region utils
@@ -92,12 +92,18 @@ public class Find {
 
     public static <T> T findInSeq(String name, Seq<T> values, Boolf<T> filter) {
         int index = parseInt(name) - 1;
-        return values.find(value -> values.indexOf(value) == index || filter.get(value));
+        if (index > 0 && index < values.size)
+            return values.get(index);
+
+        return values.find(filter);
     }
 
-    public static <T extends Enum<T>> T findInEnum(String name, T[] values) {
+    public static <T extends Enum<T>> T findInEnum(String name, T[] values, Boolf<T> filter) {
         int index = parseInt(name) - 1;
-        return Structs.find(values, value -> value.ordinal() == index || value.name().equalsIgnoreCase(name));
+        if (index > 0 && index < values.length)
+            return values[index];
+
+        return Structs.find(values, filter);
     }
 
     // endregion

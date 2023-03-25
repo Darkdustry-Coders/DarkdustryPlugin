@@ -28,6 +28,7 @@ import mindustry.net.Packets.ConnectPacket;
 import mindustry.net.Packets.KickReason;
 import useful.AntiDdos;
 import useful.Bundle;
+import useful.Cooldowns;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
@@ -60,16 +61,25 @@ public class DarkdustryPlugin extends Plugin {
         info("Loading Darkdustry plugin.");
         Time.mark();
 
+        Config.load();
         PluginEvents.load();
 
         AntiDdos.loadBlacklist();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
+        Cooldowns.defaultCooldown(defaultCooldown);
+        Cooldowns.defaults(
+                "sync", 15000L,
+                "votekick", 300000L,
+                "login", 900000L,
+                "rtv", 30000L,
+                "vnw", 30000L,
+                "savemap", 90000L,
+                "loadsave", 90000L
+        );
 
-        Config.load();
-        Icons.load();
-
-        MenuHandler.load();
         Alerts.load();
+        Icons.load();
+        MenuHandler.load();
         SchemeSize.load();
 
         Database.connect();
