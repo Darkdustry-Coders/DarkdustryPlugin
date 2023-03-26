@@ -5,25 +5,20 @@ import arc.graphics.Color;
 import arc.struct.Seq;
 import darkdustry.components.Cache;
 import mindustry.content.Fx;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import useful.*;
-import useful.Menu.MenuView;
-import useful.Menu.MenuView.OptionData;
 import useful.State.StateKey;
-import useful.menu.ConfirmMenu;
-import useful.menu.ListMenu;
+import useful.menu.Menu;
+import useful.menu.Menu.MenuView;
+import useful.menu.Menu.MenuView.OptionData;
+import useful.menu.impl.*;
 
-import static darkdustry.PluginVars.discordServerUrl;
-import static darkdustry.PluginVars.welcomeMessageCommands;
+import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.ranks;
 import static darkdustry.utils.Administration.ban;
-import static darkdustry.utils.Utils.formatDuration;
-import static darkdustry.utils.Utils.formatList;
+import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.bundled;
 
@@ -55,7 +50,7 @@ public class MenuHandler {
     // region transforms
 
     public static void load() {
-        MenuFormatter.setFormatter(Bundle::format);
+        Formatter.setFormatter(Bundle::format);
 
         listMenu.left("ui.button.left");
         listMenu.right("ui.button.right");
@@ -261,7 +256,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), Action.showUse(DATA, setter)), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
+            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), Action.showConsume(DATA, setter)), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -302,7 +297,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), Action.showUse(DATA, data -> data.language = this)));
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), Action.showConsume(DATA, data -> data.language = this)));
         }
     }
 
@@ -389,7 +384,10 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {}, player -> {}, player -> {});
+            this(name, button, player -> {
+            }, player -> {
+            }, player -> {
+            });
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
@@ -407,7 +405,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), Action.showUse(DATA, data -> data.effects = this)));
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), Action.showConsume(DATA, data -> data.effects = this)));
         }
     }
 
