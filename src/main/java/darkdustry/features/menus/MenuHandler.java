@@ -22,6 +22,7 @@ import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.serverName;
 import static useful.Bundle.bundled;
 
+@SuppressWarnings("unchecked")
 public class MenuHandler {
 
     // region menus
@@ -256,7 +257,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), Action.showConsume(DATA, setter)), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
+            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), view -> {
+                var data = view.state.get(DATA);
+                setter.get(data);
+
+                view.getInterface().show(view.player, view.state, view.parent);
+            }), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -297,7 +303,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), Action.showConsume(DATA, data -> data.language = this)));
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), view -> {
+                var data = view.state.get(DATA);
+                data.language = this;
+
+                view.getInterface().show(view.player, view.state, view.parent);
+            }));
         }
     }
 
@@ -384,10 +395,7 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {
-            }, player -> {
-            }, player -> {
-            });
+            this(name, button, player -> {}, player -> {}, player -> {});
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
@@ -405,7 +413,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), Action.showConsume(DATA, data -> data.effects = this)));
+            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), view -> {
+                var data = view.state.get(DATA);
+                data.effects = this;
+
+                view.getInterface().show(view.player, view.state, view.parent);
+            }));
         }
     }
 

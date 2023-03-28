@@ -14,7 +14,7 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "d5f7c07d34"
+    val usefulHash = "7e9c709be7"
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.MindustryJitpack:core:v$mindustryVersion")
