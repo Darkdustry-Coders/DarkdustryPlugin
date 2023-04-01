@@ -239,7 +239,7 @@ public class MenuHandler {
             menu.option("despawn." + name(), view -> {
                 Groups.unit.each(unit -> filter.get(view.player, unit), Call::unitEnvDeath);
                 bundled(view.player, "despawn.success");
-            });
+            }, Groups.unit.count(unit -> filter.get(menu.player, unit)));
         }
     }
 
