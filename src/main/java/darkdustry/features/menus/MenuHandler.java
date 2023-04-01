@@ -13,6 +13,7 @@ import useful.menu.Menu;
 import useful.menu.Menu.MenuView;
 import useful.menu.Menu.MenuView.OptionData;
 import useful.menu.impl.*;
+import useful.text.TextInput;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
@@ -129,11 +130,11 @@ public class MenuHandler {
             menu.content("settings.content");
 
             menu.options(1, Setting.values()).row();
-            menu.option("setting.translator", Action.open(languagesMenu), data.language.name(menu)).row();
-            menu.option("setting.effects", Action.open(effectsMenu), data.effects.name(menu)).row();
+            menu.option("setting.translator", Action.hide(), Action.open(languagesMenu), data.language.name(menu)).row();
+            menu.option("setting.effects", Action.hide(), Action.open(effectsMenu), data.effects.name(menu)).row();
 
-            menu.option("ui.button.close");
-        });
+            menu.option("ui.button.close", Action.hide());
+        }).followUp(true);
 
         languagesMenu.transform(DATA, (menu, data) -> {
             menu.title("language.title");
@@ -141,9 +142,9 @@ public class MenuHandler {
 
             menu.options(3, Language.values()).row();
 
-            menu.option("ui.button.back", Action.back());
-            menu.option("ui.button.close");
-        });
+            menu.option("ui.button.back", Action.hide(), Action.back());
+            menu.option("ui.button.close", Action.hide());
+        }).followUp(true);
 
         effectsMenu.transform(DATA, (menu, data) -> {
             menu.title("effects.title");
@@ -151,9 +152,9 @@ public class MenuHandler {
 
             menu.options(2, EffectsPack.values()).row();
 
-            menu.option("ui.button.back", Action.back());
-            menu.option("ui.button.close");
-        });
+            menu.option("ui.button.back", Action.hide(), Action.back());
+            menu.option("ui.button.close", Action.hide());
+        }).followUp(true);
     }
 
     // endregion
@@ -395,7 +396,10 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {}, player -> {}, player -> {});
+            this(name, button, player -> {
+            }, player -> {
+            }, player -> {
+            });
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
