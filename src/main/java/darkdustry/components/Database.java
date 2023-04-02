@@ -97,8 +97,7 @@ public class Database {
         public Rank rank = Rank.player;
 
         @SuppressWarnings("unused")
-        public PlayerData() {
-        }
+        public PlayerData() {}
 
         public PlayerData(String uuid) {
             this.uuid = uuid;

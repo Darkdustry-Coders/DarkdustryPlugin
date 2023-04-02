@@ -55,7 +55,7 @@ public class Alerts {
 
         getPlayersData(event.team.data().players, (player, data) -> {
             if (data.alerts)
-                bundled(player, "alerts.dangerous-building", builder.coloredName(), Icons.getIcon(block), event.tile.x, event.tile.y);
+                bundled(player, "alerts.dangerous-building", builder.coloredName(), Icons.icon(block), event.tile.x, event.tile.y);
         }).subscribe();
     }
 
@@ -67,7 +67,7 @@ public class Alerts {
 
         getPlayersData(event.player.team().data().players, (player, data) -> {
             if (data.alerts)
-                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.getIcon(item), Icons.getIcon(block), event.tile.tileX(), event.tile.tileY());
+                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.icon(item), Icons.icon(block), event.tile.tileX(), event.tile.tileY());
         }).subscribe();
     }
 

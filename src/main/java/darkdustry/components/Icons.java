@@ -34,16 +34,16 @@ public class Icons {
 
     public static String contentList(Seq<? extends MappableContent> contents) {
         var builder = new StringBuilder();
-        contents.each(content -> builder.append(getName(content)).append(" "));
+        contents.each(content -> builder.append(name(content)).append(" "));
 
         return builder.toString();
     }
 
-    public static String getIcon(MappableContent content) {
+    public static String icon(MappableContent content) {
         return icons.get(content.name, "");
     }
 
-    public static String getName(MappableContent content) {
-        return getIcon(content) + content.name;
+    public static String name(MappableContent content) {
+        return icon(content) + content.name;
     }
 }

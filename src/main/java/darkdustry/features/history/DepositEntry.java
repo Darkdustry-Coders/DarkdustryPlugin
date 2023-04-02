@@ -26,6 +26,6 @@ public class DepositEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.deposit", player, name, amount, Icons.getIcon(content.item(itemID)), Icons.getIcon(content.block(blockID)), formatShortDate(time));
+        return Bundle.format("history.deposit", player, name, amount, Icons.icon(content.item(itemID)), Icons.icon(content.block(blockID)), formatShortDate(time));
     }
 }
