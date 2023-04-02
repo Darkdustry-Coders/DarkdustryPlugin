@@ -4,6 +4,7 @@ import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Http;
 import arc.util.Time;
+import darkdustry.DarkdustryPlugin;
 import darkdustry.discord.MessageContext;
 import darkdustry.utils.Find;
 import darkdustry.utils.PageIterator;
@@ -54,6 +55,8 @@ public class DiscordCommands {
                 .addField("Wave:", state.wave + "", false)
                 .addField("TPS:", graphics.getFramesPerSecond() + "", false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
+
+        register("exit", "Exit the server application.", adminRole, (args, context) -> context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> DarkdustryPlugin.exit()));
 
         register("map", "<map>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
@@ -137,7 +140,8 @@ public class DiscordCommands {
             info.lastKicked = 0L;
             info.ips.each(netServer.admins.kickedIPs::remove);
 
-            context.success(embed -> embed.title("Player Unbanned")
+            context.success(embed -> embed
+                    .title("Player Unbanned")
                     .addField("Name:", info.plainLastName(), false)
                     .addField("UUID:", info.id, false)
                     .addField("IP:", info.lastIP, false)).subscribe();
