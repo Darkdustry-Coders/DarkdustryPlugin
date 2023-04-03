@@ -29,7 +29,7 @@ public class PluginVars {
      * Стандартная длительность кика игрока. В миллисекундах.
      */
     public static final long kickDuration = 30 * 60 * 1000L;
-hhhjnnbjj
+    
     /**
      * Время, после которого будет загружена карта. В секундах.
      */
