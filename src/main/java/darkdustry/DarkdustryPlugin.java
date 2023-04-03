@@ -23,12 +23,8 @@ import mindustry.core.Version;
 import mindustry.gen.AdminRequestCallPacket;
 import mindustry.gen.Groups;
 import mindustry.mod.Plugin;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
-import mindustry.net.Packets.KickReason;
-import useful.AntiDdos;
-import useful.Bundle;
-import useful.Cooldowns;
+import mindustry.net.Packets.*;
+import useful.*;
 
 import static arc.Core.app;
 import static darkdustry.PluginVars.*;
@@ -66,8 +62,8 @@ public class DarkdustryPlugin extends Plugin {
 
         AntiDdos.loadBlacklist();
         Bundle.load(DarkdustryPlugin.class, defaultLanguage);
-        Cooldowns.defaultCooldown(defaultCooldown);
         Cooldowns.defaults(
+                "default", 1000L,
                 "sync", 15000L,
                 "votekick", 300000L,
                 "login", 900000L,
