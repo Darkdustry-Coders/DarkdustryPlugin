@@ -29,12 +29,7 @@ public class PluginVars {
      * Стандартная длительность кика игрока. В миллисекундах.
      */
     public static final long kickDuration = 30 * 60 * 1000L;
-
-    /**
-     * Кулдаун на все клиентские команды по умолчанию. В миллисекундах.
-     */
-    public static final long defaultCooldown = 1000L;
-
+hhhjnnbjj
     /**
      * Время, после которого будет загружена карта. В секундах.
      */
