@@ -3,10 +3,7 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
-import arc.util.Log;
-import arc.util.Reflect;
-import arc.util.Strings;
-import arc.util.Time;
+import arc.util.*;
 import mindustry.game.EventType.AdminRequestEvent;
 import mindustry.game.EventType.ConnectPacketEvent;
 import mindustry.game.EventType.ConnectionEvent;
@@ -66,7 +63,7 @@ public class NetHandlers {
                 usid = con.usid = packet.usid,
                 ip = con.address,
                 locale = packet.locale,
-                name = Reflect.invoke(netServer, "fixName", new String[]{packet.name}, String.class);
+                name = netServer.fixName(packet.name);
 
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
