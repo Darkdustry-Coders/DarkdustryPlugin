@@ -43,12 +43,11 @@ public class AuthMe {
 
         var player = Find.playerByUuid(info.id);
         if (player != null) {
-            netServer.admins.adminPlayer(player.uuid(), player.usid());
-            
             player.admin(true);
             bundled(player, "commands.login.success");
-        } else netServer.admins.adminPlayer(info.id, info.adminUsid);
-
+        }
+        
+        netServer.admins.adminPlayer(info.id, player == null ? info.adminUsid : player.usid());
         event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .color(Color.MEDIUM_SEA_GREEN)
                 .title("Request Confirmed")
@@ -62,9 +61,12 @@ public class AuthMe {
         if (info == null) return;
 
         var player = Find.playerByUuid(info.id);
-        if (player != null)
+        if (player != null) {
+            player.admin(false);
             bundled(player, "commands.login.fail");
+        }
 
+        netServer.admins.unAdminPlayer(info.id);
         event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)
                 .title("Request Denied")
