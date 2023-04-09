@@ -41,13 +41,13 @@ public class AuthMe {
         var info = netServer.admins.getInfoOptional(event.getCustomId());
         if (info == null) return;
 
-        netServer.admins.adminPlayer(info.id, info.adminUsid);
-
         var player = Find.playerByUuid(info.id);
         if (player != null) {
+            netServer.admins.adminPlayer(player.uuid(), player.usid());
+            
             player.admin(true);
             bundled(player, "commands.login.success");
-        }
+        } else netServer.admins.adminPlayer(info.id, info.adminUsid);
 
         event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .color(Color.MEDIUM_SEA_GREEN)
