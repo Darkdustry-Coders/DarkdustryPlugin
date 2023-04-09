@@ -132,7 +132,7 @@ public class NetHandlers {
         con.player = player;
         
         netServer.admins.updatePlayerJoined(uuid, ip, name);
-        if (!info.admin && !player.admin) info.adminUsid = usid;
+        if (!info.admin) info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
