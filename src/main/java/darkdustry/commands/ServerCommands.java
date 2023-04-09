@@ -158,7 +158,7 @@ public class ServerCommands {
                 }
                 case "remove" -> {
                     var target = Find.playerByUuid(info.id);
-                    if (target != null) {                        
+                    if (target != null) {
                         target.admin(false);
                         bundled(target, "events.server.unadmin");
                     }
