@@ -4,22 +4,15 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
-import mindustry.game.EventType.AdminRequestEvent;
-import mindustry.game.EventType.ConnectPacketEvent;
-import mindustry.game.EventType.ConnectionEvent;
-import mindustry.game.EventType.PlayerConnect;
+import mindustry.game.EventType.*;
 import mindustry.gen.AdminRequestCallPacket;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
+import mindustry.net.Packets.*;
 import useful.Bundle;
 
-import static arc.util.CommandHandler.ResponseType.fewArguments;
-import static arc.util.CommandHandler.ResponseType.manyArguments;
+import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.features.menus.MenuHandler.showTempbanMenu;
 import static darkdustry.utils.Administration.*;
@@ -129,9 +122,6 @@ public class NetHandlers {
 
         if (con.kicked) return;
 
-        netServer.admins.updatePlayerJoined(uuid, ip, name);
-        if (!info.admin) info.adminUsid = usid;
-
         var player = Player.create();
         player.con(con);
         player.name(name);
@@ -140,6 +130,9 @@ public class NetHandlers {
         player.color.set(packet.color).a(1f);
 
         con.player = player;
+        
+        netServer.admins.updatePlayerJoined(uuid, ip, name);
+        if (!info.admin && !player.admin) info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
