@@ -140,25 +140,23 @@ public class ServerCommands {
 
             switch (args[0].toLowerCase()) {
                 case "add" -> {
-                    netServer.admins.adminPlayer(info.id, info.adminUsid);
-
                     var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(true);
                         Bundle.send(target, "events.server.admin");
                     }
 
+                    netServer.admins.adminPlayer(info.id, target == null ? info.adminUsid : target.usid());
                     Log.info("Player @ is now admin.", info.plainLastName());
                 }
                 case "remove" -> {
-                    netServer.admins.unAdminPlayer(info.id);
-
                     var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(false);
                         Bundle.send(target, "events.server.unadmin");
                     }
 
+                    netServer.admins.unAdminPlayer(info.id);
                     Log.info("Player @ is no longer an admin.", info.plainLastName());
                 }
                 default -> Log.err("The first parameter must be either add or remove.");

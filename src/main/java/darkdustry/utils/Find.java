@@ -92,7 +92,7 @@ public class Find {
 
     public static <T> T findInSeq(String name, Seq<T> values, Boolf<T> filter) {
         int index = parseInt(name) - 1;
-        if (index > 0 && index < values.size)
+        if (index >= 0 && index < values.size)
             return values.get(index);
 
         return values.find(filter);
@@ -100,7 +100,7 @@ public class Find {
 
     public static <T extends Enum<T>> T findInEnum(String name, T[] values, Boolf<T> filter) {
         int index = parseInt(name) - 1;
-        if (index > 0 && index < values.length)
+        if (index >= 0 && index < values.length)
             return values[index];
 
         return Structs.find(values, filter);

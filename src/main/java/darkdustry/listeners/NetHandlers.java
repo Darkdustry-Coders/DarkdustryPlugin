@@ -120,9 +120,6 @@ public class NetHandlers {
 
         if (con.kicked) return;
 
-        netServer.admins.updatePlayerJoined(uuid, ip, name);
-        if (!info.admin) info.adminUsid = usid;
-
         var player = Player.create();
         player.con(con);
         player.name(name);
@@ -131,6 +128,9 @@ public class NetHandlers {
         player.color.set(packet.color).a(1f);
 
         con.player = player;
+
+        netServer.admins.updatePlayerJoined(uuid, ip, name);
+        if (!info.admin) info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
