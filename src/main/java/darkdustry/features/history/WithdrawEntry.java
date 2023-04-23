@@ -7,18 +7,18 @@ import mindustry.gen.Player;
 import useful.Bundle;
 
 import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.content;
+import static mindustry.Vars.*;
 
 public class WithdrawEntry implements HistoryEntry {
 
-    public final String name;
+    public final String uuid;
     public final short blockID;
     public final short itemID;
     public final int amount;
     public final long time;
 
     public WithdrawEntry(WithdrawEvent event) {
-        this.name = event.player.coloredName();
+        this.uuid = event.player.uuid();
         this.blockID = event.tile.block.id;
         this.itemID = event.item.id;
         this.amount = event.amount;
@@ -26,6 +26,7 @@ public class WithdrawEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
-        return Bundle.format("history.withdraw", player, name, amount, Icons.icon(content.item(itemID)), Icons.icon(content.block(blockID)), formatShortDate(time));
+        var info = netServer.admins.getInfo(uuid);
+        return Bundle.format("history.withdraw", player, info.lastName, amount, Icons.icon(content.item(itemID)), Icons.icon(content.block(blockID)), formatShortDate(time));
     }
 }

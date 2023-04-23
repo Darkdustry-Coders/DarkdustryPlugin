@@ -3,35 +3,23 @@
 
 package darkdustry;
 
-import arc.graphics.Color;
-import arc.graphics.Colors;
+import arc.graphics.*;
 import arc.util.*;
-import darkdustry.commands.AdminCommands;
-import darkdustry.commands.ClientCommands;
-import darkdustry.commands.ServerCommands;
-import darkdustry.components.Config;
-import darkdustry.components.Database;
-import darkdustry.components.Icons;
+import darkdustry.commands.*;
+import darkdustry.components.*;
 import darkdustry.discord.Bot;
-import darkdustry.features.Alerts;
-import darkdustry.features.SchemeSize;
+import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
-import darkdustry.listeners.Filters;
-import darkdustry.listeners.NetHandlers;
-import darkdustry.listeners.PluginEvents;
+import darkdustry.listeners.*;
 import mindustry.core.Version;
-import mindustry.gen.AdminRequestCallPacket;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.updatePlayersData;
-import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.features.menus.MenuHandler.showPromotionMenu;
-import static darkdustry.utils.Utils.getAvailableMaps;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
@@ -94,16 +82,18 @@ public class DarkdustryPlugin extends Plugin {
 
         maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
 
-        Timer.schedule(() -> updatePlayersData(Groups.player, (player, data) -> {
+        Timer.schedule(() -> Groups.player.each(player -> {
+            var data = Cache.get(player);
             data.playTime++;
+
             data.blocksPlaced += placedBlocksCache.remove(player.id);
             data.blocksBroken += brokenBlocksCache.remove(player.id);
 
             while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
                 data.rank = data.rank.next;
 
-                updateRank(player, data);
-                showPromotionMenu(player, data);
+                Ranks.name(player, data);
+                MenuHandler.showPromotionMenu(player, data);
             }
         }), 60f, 60f);
 

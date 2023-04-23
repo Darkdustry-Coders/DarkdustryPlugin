@@ -4,18 +4,17 @@ import arc.func.Boolp;
 import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
-import darkdustry.components.Icons;
+import darkdustry.components.*;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.type.Item;
 import mindustry.world.*;
+import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.getPlayersData;
-import static mindustry.Vars.state;
-import static useful.Bundle.bundled;
+import static mindustry.Vars.*;
 
 public class Alerts {
 
@@ -50,25 +49,19 @@ public class Alerts {
         if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
-        var builder = event.builder.getPlayer();
-        var block = event.builder.buildPlan().block;
-
-        getPlayersData(event.team.data().players, (player, data) -> {
-            if (data.alerts)
-                bundled(player, "alerts.dangerous-building", builder.coloredName(), Icons.icon(block), event.tile.x, event.tile.y);
-        }).subscribe();
+        event.team.data().players.each(player -> {
+            if (Cache.get(player).alerts)
+                Bundle.send(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.icon(event.builder.buildPlan().block), event.tile.x, event.tile.y);
+        });
     }
 
     public static void depositAlert(DepositEvent event) {
         if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
-        var block = event.tile.block;
-        var item = event.item;
-
-        getPlayersData(event.player.team().data().players, (player, data) -> {
-            if (data.alerts)
-                bundled(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.icon(item), Icons.icon(block), event.tile.tileX(), event.tile.tileY());
-        }).subscribe();
+        event.player.team().data().players.each(player -> {
+            if (Cache.get(player).alerts)
+                Bundle.send(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.icon(event.item), Icons.icon(event.tile.block), event.tile.tileX(), event.tile.tileY());
+        });
     }
 
     private static boolean isDangerous(Block block, Team team, Tile tile) {

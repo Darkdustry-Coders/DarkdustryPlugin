@@ -5,7 +5,7 @@ import arc.util.*;
 import darkdustry.components.Cache;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
-import darkdustry.features.Alerts;
+import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -16,14 +16,12 @@ import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.features.Ranks.updateRank;
-import static mindustry.Vars.state;
-import static mindustry.net.Administration.Config.serverName;
-import static useful.Bundle.*;
+import static mindustry.Vars.*;
+import static mindustry.net.Administration.Config.*;
 
 public class PluginEvents {
 
@@ -43,9 +41,11 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(GameOverEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> {
+        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
+            var data = Cache.get(player);
             data.gamesPlayed++;
-            if (player.team() != event.winner) return;
+
+            if (player.team().isEnemy(event.winner)) return;
 
             if (config.mode == Gamemode.attack)
                 data.attackWins++;
@@ -57,7 +57,7 @@ public class PluginEvents {
                 data.hexedWins++;
         }));
 
-        Events.on(WaveEvent.class, event -> updatePlayersData(Groups.player, (player, data) -> data.wavesSurvived++));
+        Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
         Events.on(WorldLoadEvent.class, event -> {
             History.clear();
@@ -82,10 +82,7 @@ public class PluginEvents {
         });
 
         Events.on(TapEvent.class, event -> {
-            if (!History.enabled()) return;
-
-            var data = Cache.get(event.player);
-            if (data == null || !data.history) return;
+            if (!History.enabled() || !Cache.get(event.player).history) return;
 
             var stack = History.get(event.tile.array());
             if (stack == null) return;
@@ -95,7 +92,7 @@ public class PluginEvents {
             if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
             else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-            bundled(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
+            Bundle.send(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
         });
 
         Events.on(BlockBuildEndEvent.class, event -> {
@@ -122,17 +119,17 @@ public class PluginEvents {
             UnitTypes.renale.spawn(event.build.team, event.build);
         }));
 
-        Events.on(PlayerJoin.class, event -> updatePlayerData(event.player, data -> {
-            updateRank(event.player, data);
+        Events.on(PlayerJoin.class, event -> {
+            var data = getPlayerData(event.player);
+            Cache.put(event.player, data);
+            Ranks.name(event.player, data);
 
-            app.post(() -> {
-                Cache.put(event.player, data);
-                Cache.join(event.player);
-            });
+            // Вызываем с задержкой, чтобы игрок успел появиться
+            app.post(() -> data.effects.join.get(event.player));
 
             Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat("events.join", event.player.coloredName());
-            bundled(event.player, "welcome.message", serverName.string(), discordServerUrl);
+            Bundle.send("events.join", event.player.coloredName());
+            Bundle.send(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             sendMessage(botChannel, EmbedCreateSpec.builder()
                     .color(Color.MEDIUM_SEA_GREEN)
@@ -143,14 +140,16 @@ public class PluginEvents {
                 MenuHandler.showWelcomeMenu(event.player);
 
             app.post(Bot::updateActivity);
-        }));
+        });
 
         Events.on(PlayerLeave.class, event -> {
-            Cache.leave(event.player);
-            Cache.remove(event.player);
+            var data = Cache.remove(event.player);
+            savePlayerData(data);
+
+            data.effects.leave.get(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
-            sendToChat("events.leave", event.player.coloredName());
+            Bundle.send("events.leave", event.player.coloredName());
 
             sendMessage(botChannel, EmbedCreateSpec.builder()
                     .color(Color.CINNABAR)
@@ -163,6 +162,9 @@ public class PluginEvents {
             app.post(Bot::updateActivity);
         });
 
-        Timer.schedule(() -> Groups.player.each(Cache::move), 0f, 0.1f);
+        Timer.schedule(() -> Groups.player.each(player -> {
+            if (player.unit().moving())
+                Cache.get(player).effects.move.get(player);
+        }), 0f, 0.1f);
     }
 }

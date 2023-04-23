@@ -1,30 +1,23 @@
 package darkdustry.commands;
 
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.utils.Find;
+import darkdustry.components.*;
+import darkdustry.discord.Bot;
+import darkdustry.features.Ranks;
+import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
+import useful.Bundle;
 
-import static arc.Core.app;
-import static arc.Core.settings;
-import static arc.util.Strings.parseInt;
-import static darkdustry.PluginVars.kickDuration;
-import static darkdustry.PluginVars.serverCommands;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.updatePlayerData;
-import static darkdustry.discord.Bot.botChannel;
-import static darkdustry.discord.Bot.sendMessage;
-import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.utils.Administration.kick;
-import static darkdustry.utils.Administration.ban;
+import static arc.Core.*;
+import static arc.util.Strings.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.bundled;
-import static useful.Bundle.sendToChat;
 
 public class ServerCommands {
 
@@ -76,16 +69,16 @@ public class ServerCommands {
 
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
-            sendToChat("commands.say.chat", args[0]);
-            sendMessage(botChannel, "Server", args[0]);
+            Bundle.send("commands.say.chat", args[0]);
+            Bot.sendMessage(botChannel, "Server", args[0]);
         });
 
         serverCommands.register("kick", "<ID/username...>", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
-            kick(target, kickDuration, true, "kick.kicked");
-            sendToChat("events.server.kick", target.coloredName());
+            Admins.kick(target, kickDuration, true, "kick.kick");
+            Bundle.send("events.server.kick", target.coloredName());
 
             Log.info("Player @ has been kicked.", target.plainName());
         });
@@ -98,12 +91,12 @@ public class ServerCommands {
             if (notFound(info, args[1])) return;
 
             long duration = days * 24 * 60 * 60 * 1000L;
-            ban(info.id, info.lastIP, duration);
+            Admins.ban(info.id, info.lastIP, duration);
 
             var target = Find.playerByUuid(info.id);
             if (target != null) {
-                kick(target, duration, true, "kick.banned");
-                sendToChat("events.server.ban", target.coloredName());
+                Admins.kick(target, duration, true, "kick.ban");
+                Bundle.send("events.server.ban", target.coloredName());
             }
 
             Log.info("Player @ has been banned.", info.plainLastName());
@@ -152,7 +145,7 @@ public class ServerCommands {
                     var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(true);
-                        bundled(target, "events.server.admin");
+                        Bundle.send(target, "events.server.admin");
                     }
 
                     Log.info("Player @ is now admin.", info.plainLastName());
@@ -163,7 +156,7 @@ public class ServerCommands {
                     var target = Find.playerByUuid(info.id);
                     if (target != null) {
                         target.admin(false);
-                        bundled(target, "events.server.unadmin");
+                        Bundle.send(target, "events.server.unadmin");
                     }
 
                     Log.info("Player @ is no longer an admin.", info.plainLastName());
@@ -181,18 +174,17 @@ public class ServerCommands {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
-            getPlayerData(info.id).subscribe(data -> {
-                Log.info("Player '@' UUID @", data.name, data.uuid);
-                Log.info("  Rank: @", data.rank.name());
-                Log.info("  Playtime: @ minutes", data.playTime);
-                Log.info("  Blocks placed: @", data.blocksPlaced);
-                Log.info("  Blocks broken: @", data.blocksBroken);
-                Log.info("  Waves survived: @", data.wavesSurvived);
-                Log.info("  Games played: @", data.gamesPlayed);
-                Log.info("  Attack wins: @", data.attackWins);
-                Log.info("  PvP wins: @", data.pvpWins);
-                Log.info("  Hexed wins: @", data.hexedWins);
-            });
+            var data = Database.getPlayerData(info.id);
+            Log.info("Player '@' UUID @", data.name, data.uuid);
+            Log.info("  Rank: @", data.rank.name());
+            Log.info("  Playtime: @ minutes", data.playTime);
+            Log.info("  Blocks placed: @", data.blocksPlaced);
+            Log.info("  Blocks broken: @", data.blocksBroken);
+            Log.info("  Waves survived: @", data.wavesSurvived);
+            Log.info("  Games played: @", data.gamesPlayed);
+            Log.info("  Attack wins: @", data.attackWins);
+            Log.info("  PvP wins: @", data.pvpWins);
+            Log.info("  Hexed wins: @", data.hexedWins);
         });
 
         serverCommands.register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", args -> {
@@ -202,15 +194,17 @@ public class ServerCommands {
             var info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
 
-            updatePlayerData(info.id, data -> {
-                data.rank = rank;
+            var data = Database.getPlayerData(info.id);
+            data.rank = rank;
 
-                var target = Find.playerByUuid(info.id);
-                if (target != null)
-                    updateRank(target, data);
+            var target = Find.playerByUuid(info.id);
+            if (target != null) {
+                Cache.put(target, data);
+                Ranks.name(target, data);
+            }
 
-                Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name());
-            });
+            Database.savePlayerData(data);
+            Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name());
         });
     }
 }

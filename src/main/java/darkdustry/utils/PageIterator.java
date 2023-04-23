@@ -5,15 +5,12 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.menus.MenuHandler;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.parseInt;
-import static arc.util.Strings.stripColors;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.maxPerPage;
 import static darkdustry.utils.Utils.*;
-import static useful.Bundle.bundled;
 
 // Страшно, но очень полезно.
 // (C) xzxADIxzx, 2023 год
@@ -48,7 +45,7 @@ public class PageIterator {
     private static <T> void client(String command, String[] args, Player player, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {
         int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
         if (page > pages || page < 1) {
-            bundled(player, "commands.invalid-page", pages);
+            Bundle.send(player, "commands.invalid-page", pages);
             return;
         }
 

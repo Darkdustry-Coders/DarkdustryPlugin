@@ -4,10 +4,10 @@ import arc.files.Fi;
 import arc.util.Timer;
 import mindustry.gen.Player;
 import mindustry.io.SaveIO;
+import useful.Bundle;
 
-import static darkdustry.PluginVars.mapLoadDelay;
-import static darkdustry.utils.Utils.reloadWorld;
-import static useful.Bundle.sendToChat;
+import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Utils.*;
 
 public class VoteLoad extends VoteSession {
 
@@ -20,25 +20,25 @@ public class VoteLoad extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        sendToChat("commands.loadsave.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
+        Bundle.send("commands.loadsave.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
     }
 
     @Override
     public void left(Player player) {
         if (voted.remove(player.id) != 0)
-            sendToChat("commands.loadsave.left", player.coloredName(), votes(), votesRequired());
+            Bundle.send("commands.loadsave.left", player.coloredName(), votes(), votesRequired());
     }
 
     @Override
     public void success() {
         stop();
-        sendToChat("commands.loadsave.passed", target.nameWithoutExtension(), mapLoadDelay);
+        Bundle.send("commands.loadsave.passed", target.nameWithoutExtension(), mapLoadDelay);
         Timer.schedule(() -> reloadWorld(() -> SaveIO.load(target)), mapLoadDelay);
     }
 
     @Override
     public void fail() {
         stop();
-        sendToChat("commands.loadsave.failed", target.nameWithoutExtension());
+        Bundle.send("commands.loadsave.failed", target.nameWithoutExtension());
     }
 }

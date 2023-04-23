@@ -4,29 +4,20 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
-import mindustry.game.EventType.AdminRequestEvent;
-import mindustry.game.EventType.ConnectPacketEvent;
-import mindustry.game.EventType.ConnectionEvent;
-import mindustry.game.EventType.PlayerConnect;
-import mindustry.gen.AdminRequestCallPacket;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import darkdustry.utils.Admins;
+import mindustry.game.EventType.*;
+import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
+import mindustry.net.Packets.*;
 import useful.Bundle;
 
-import static arc.util.CommandHandler.ResponseType.fewArguments;
-import static arc.util.CommandHandler.ResponseType.manyArguments;
+import static arc.util.CommandHandler.ResponseType.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.showTempbanMenu;
-import static darkdustry.utils.Administration.*;
-import static darkdustry.utils.Checks.notAdmin;
-import static darkdustry.utils.Utils.getAvailableCommands;
+import static darkdustry.features.menus.MenuHandler.*;
+import static darkdustry.utils.Checks.*;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.sendToChat;
 
 public class NetHandlers {
 
@@ -69,29 +60,29 @@ public class NetHandlers {
         con.modclient = packet.version == -1;
 
         if (con.hasBegunConnecting || Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            kick(con, "kick.already-connected", locale);
+            Admins.kick(con, "kick.already-connected", locale);
             return;
         }
 
         con.hasBegunConnecting = true;
 
         if (netServer.admins.isIDBanned(uuid) || netServer.admins.isIPBanned(ip) || netServer.admins.isSubnetBanned(ip)) {
-            kick(con, 0, true, "kick.banned", locale);
+            Admins.kick(con, 0, true, "kick.ban", locale);
             return;
         }
 
-        if (isBanned(uuid, ip)) {
-            kick(con, getBanTime(uuid, ip), true, "kick.temp-banned", locale);
+        if (Admins.isBanned(uuid, ip)) {
+            Admins.kick(con, Admins.getBanTime(uuid, ip), true, "kick.tempban", locale);
             return;
         }
 
         if (Strings.stripColors(name).trim().isEmpty()) {
-            kick(con, "kick.name-is-empty", locale);
+            Admins.kick(con, "kick.name-is-empty", locale);
             return;
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            kick(con, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
+            Admins.kick(con, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
             return;
         }
 
@@ -99,12 +90,12 @@ public class NetHandlers {
         var missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any()) {
-            kick(con, "kick.extra-mods", locale, extraMods.toString("\n> "));
+            Admins.kick(con, "kick.extra-mods", locale, extraMods.toString("\n> "));
             return;
         }
 
         if (missingMods.any()) {
-            kick(con, "kick.missing-mods", locale, missingMods.toString("\n> "));
+            Admins.kick(con, "kick.missing-mods", locale, missingMods.toString("\n> "));
             return;
         }
 
@@ -113,17 +104,17 @@ public class NetHandlers {
             info.adminUsid = usid;
             info.names.addUnique(info.lastName = name);
             info.ips.addUnique(info.lastIP = ip);
-            kick(con, "kick.not-whitelisted", locale);
+            Admins.kick(con, "kick.not-whitelisted", locale);
             return;
         }
 
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
-            kick(con, "kick.custom-client", locale);
+            Admins.kick(con, "kick.custom-client", locale);
             return;
         }
 
         if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
-            kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
+            Admins.kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
             return;
         }
 
@@ -156,7 +147,7 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(admin, target, action));
 
         switch (action) {
-            case kick -> kick(admin, target, kickDuration);
+            case kick -> Admins.kick(admin, target, kickDuration);
             case ban -> showTempbanMenu(admin, target);
             case trace -> {
                 var info = target.getInfo();
@@ -166,7 +157,7 @@ public class NetHandlers {
             case wave -> {
                 logic.skipWave();
                 Log.info("@ has skipped the wave.", admin.plainName());
-                sendToChat("events.admin.wave", admin.coloredName());
+                Bundle.send("events.admin.wave", admin.coloredName());
             }
         }
     }

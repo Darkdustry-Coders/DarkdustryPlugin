@@ -8,9 +8,8 @@ import useful.Bundle;
 import static darkdustry.PluginVars.discordServerUrl;
 import static darkdustry.utils.Utils.formatDuration;
 import static mindustry.Vars.netServer;
-import static useful.Bundle.sendToChat;
 
-public class Administration {
+public class Admins {
 
     // region kick
 
@@ -38,13 +37,13 @@ public class Administration {
 
         kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
         Log.info("Player @ has banned @.", admin.plainName(), target.plainName());
-        sendToChat("events.admin.ban", admin.coloredName(), target.coloredName());
+        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName());
     }
 
     public static void kick(Player admin, Player target, long duration) {
         kick(target, duration, true, "kick.kicked-by-admin", admin.coloredName());
         Log.info("Player @ has kicked @.", admin.plainName(), target.plainName());
-        sendToChat("events.admin.kick", admin.coloredName(), target.coloredName());
+        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName());
     }
 
     // endregion

@@ -1,23 +1,23 @@
 package darkdustry.components;
 
-import arc.func.*;
+import arc.util.Threads;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.*;
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.*;
+import com.mongodb.client.model.changestream.FullDocument;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import mindustry.gen.Player;
-import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.*;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import reactor.core.publisher.*;
-import reactor.util.function.Tuple2;
 
-import static com.mongodb.client.model.Filters.eq;
-import static darkdustry.PluginVars.config;
+import static com.mongodb.client.model.Filters.*;
+import static darkdustry.PluginVars.*;
 
 public class Database {
+
+    public static final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
     public static MongoClient client;
     public static MongoDatabase database;
@@ -26,9 +26,17 @@ public class Database {
     public static void connect() {
         try {
             client = MongoClients.create(config.mongoUrl);
-            database = client.getDatabase("darkdustry").withCodecRegistry(CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())));
-
+            database = client.getDatabase("darkdustry").withCodecRegistry(registry);
             playersCollection = database.getCollection("players", PlayerData.class);
+
+            Threads.daemon(() -> playersCollection.watch(PlayerData.class)
+                    .fullDocument(FullDocument.UPDATE_LOOKUP)
+                    .forEach(stream -> {
+                        var data = stream.getFullDocument();
+                        if (data == null) return;
+
+                        Cache.update(data);
+                    }));
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
@@ -40,37 +48,17 @@ public class Database {
         client.close();
     }
 
-    public static Mono<PlayerData> getPlayerData(Player player) {
+    public static PlayerData getPlayerData(Player player) {
         return getPlayerData(player.uuid());
     }
 
-    public static Mono<PlayerData> getPlayerData(String uuid) {
-        return Mono.from(playersCollection.find(eq("uuid", uuid))).defaultIfEmpty(new PlayerData(uuid));
+    public static PlayerData getPlayerData(String uuid) {
+        var data = playersCollection.find(eq("uuid", uuid)).first();
+        return data == null ? new PlayerData(uuid) : data;
     }
 
-    public static Flux<Tuple2<Player, PlayerData>> getPlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
-        return Flux.fromIterable(players)
-                .flatMap(player -> Mono.zip(Mono.just(player), getPlayerData(player)))
-                .doOnNext(tuple -> cons.get(tuple.getT1(), tuple.getT2()));
-    }
-
-    public static Mono<UpdateResult> setPlayerData(PlayerData data) {
-        return Mono.from(playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true)));
-    }
-
-    public static void updatePlayerData(Player player, Cons<PlayerData> cons) {
-        updatePlayerData(player.uuid(), cons);
-    }
-
-    public static void updatePlayerData(String uuid, Cons<PlayerData> cons) {
-        getPlayerData(uuid).flatMap(data -> {
-            cons.get(data);
-            return setPlayerData(data);
-        }).subscribe();
-    }
-
-    public static void updatePlayersData(Iterable<Player> players, Cons2<Player, PlayerData> cons) {
-        getPlayersData(players, cons).flatMap(tuple -> setPlayerData(tuple.getT2())).subscribe();
+    public static void savePlayerData(PlayerData data) {
+        playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true));
     }
 
     public static class PlayerData {
@@ -97,7 +85,8 @@ public class Database {
         public Rank rank = Rank.player;
 
         @SuppressWarnings("unused")
-        public PlayerData() {}
+        public PlayerData() {
+        }
 
         public PlayerData(String uuid) {
             this.uuid = uuid;

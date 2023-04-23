@@ -1,36 +1,26 @@
 package darkdustry.commands;
 
-import arc.util.CommandHandler;
+import arc.util.*;
 import arc.util.CommandHandler.CommandRunner;
-import arc.util.Http;
-import arc.util.Time;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
+import darkdustry.features.Ranks;
+import darkdustry.utils.*;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
+import useful.Bundle;
 
-import static arc.Core.app;
-import static arc.Core.graphics;
-import static arc.util.Strings.parseInt;
-import static arc.util.Strings.stripColors;
-import static darkdustry.PluginVars.config;
-import static darkdustry.PluginVars.discordCommands;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.components.Database.updatePlayerData;
-import static darkdustry.discord.Bot.adminRole;
-import static darkdustry.discord.Bot.mapReviewerRole;
-import static darkdustry.features.Ranks.updateRank;
-import static darkdustry.utils.Administration.ban;
-import static darkdustry.utils.Administration.kick;
+import static arc.Core.*;
+import static arc.util.Strings.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.formatDiscordDate;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.sendToChat;
 
 public class DiscordCommands {
 
@@ -49,16 +39,16 @@ public class DiscordCommands {
         register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
                 .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
                 .title(state.isPlaying() ? "Server Running" : "Server Offline")
-                .addField("Players:", Groups.player.size() + "", false)
-                .addField("Units:", Groups.unit.size() + "", false)
+                .addField("Players:", String.valueOf(Groups.player.size()), false)
+                .addField("Units:", String.valueOf(Groups.unit.size()), false)
                 .addField("Map:", stripColors(state.map.name()), false)
-                .addField("Wave:", state.wave + "", false)
-                .addField("TPS:", graphics.getFramesPerSecond() + "", false)
+                .addField("Wave:", String.valueOf(state.wave), false)
+                .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
         register("exit", "Exit the server application.", adminRole, (args, context) -> context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> DarkdustryPlugin.exit()));
 
-        register("map", "<map>", "Map", (args, context) -> {
+        register("map", "<map...>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
             if (notFound(context, map)) return;
 
@@ -93,7 +83,7 @@ public class DiscordCommands {
                     }));
         });
 
-        register("removemap", "<map>", "Remove a map from the server.", mapReviewerRole, (args, context) -> {
+        register("removemap", "<map...>", "Remove a map from the server.", mapReviewerRole, (args, context) -> {
             var map = Find.map(args[0]);
             if (notFound(context, map)) return;
 
@@ -114,12 +104,12 @@ public class DiscordCommands {
             if (notFound(context, info)) return;
 
             long duration = days * 24 * 60 * 60 * 1000L;
-            ban(info.id, info.lastIP, duration);
+            Admins.ban(info.id, info.lastIP, duration);
 
             var target = Find.playerByUuid(info.id);
             if (target != null) {
-                kick(target, duration, true, "kick.banned");
-                sendToChat("events.server.ban", target.coloredName());
+                Admins.kick(target, duration, true, "kick.ban");
+                Bundle.send("events.server.ban", target.coloredName());
             }
 
             context.success(embed -> embed
@@ -151,19 +141,20 @@ public class DiscordCommands {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
-            getPlayerData(info.id).flatMap(data -> context.info(embed -> embed
+            var data = Database.getPlayerData(info.id);
+            context.info(embed -> embed
                     .title("Player Stats")
                     .addField("Name:", data.name, false)
                     .addField("Rank:", data.rank.name(), false)
                     .addField("Playtime:", data.playTime + " minutes", false)
-                    .addField("Blocks placed:", data.blocksPlaced + "", false)
-                    .addField("Blocks broken:", data.blocksBroken + "", false)
-                    .addField("Waves survived:", data.wavesSurvived + "", false)
-                    .addField("Games played:", data.gamesPlayed + "", false)
-                    .addField("Attack wins:", data.attackWins + "", false)
-                    .addField("PvP wins:", data.pvpWins + "", false)
-                    .addField("Hexed wins:", data.hexedWins + "", false)
-            )).subscribe();
+                    .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
+                    .addField("Blocks broken:", String.valueOf(data.blocksBroken), false)
+                    .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
+                    .addField("Games played:", String.valueOf(data.gamesPlayed), false)
+                    .addField("Attack wins:", String.valueOf(data.attackWins), false)
+                    .addField("PvP wins:", String.valueOf(data.pvpWins), false)
+                    .addField("Hexed wins:", String.valueOf(data.hexedWins), false)
+            ).subscribe();
         });
 
         register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
@@ -173,19 +164,21 @@ public class DiscordCommands {
             var info = Find.playerInfo(args[1]);
             if (notFound(context, info)) return;
 
-            updatePlayerData(info.id, data -> {
-                data.rank = rank;
+            var data = Database.getPlayerData(info.id);
+            data.rank = rank;
 
-                var target = Find.playerByUuid(info.id);
-                if (target != null)
-                    updateRank(target, data);
+            var target = Find.playerByUuid(info.id);
+            if (target != null) {
+                Cache.put(target, data);
+                Ranks.name(target, data);
+            }
 
-                context.success(embed -> embed
-                        .title("Rank Changed")
-                        .addField("Name:", info.plainLastName(), false)
-                        .addField("UUID:", info.id, false)
-                        .addField("Rank:", rank.name(), false)).subscribe();
-            });
+            Database.savePlayerData(data);
+            context.success(embed -> embed
+                    .title("Rank Changed")
+                    .addField("Name:", info.plainLastName(), false)
+                    .addField("UUID:", info.id, false)
+                    .addField("Rank:", rank.name(), false)).subscribe();
         });
     }
 

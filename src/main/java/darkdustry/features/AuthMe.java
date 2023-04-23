@@ -2,20 +2,18 @@ package darkdustry.features;
 
 import darkdustry.utils.Find;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.SelectMenu;
+import discord4j.core.object.component.*;
 import discord4j.core.object.component.SelectMenu.Option;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import mindustry.gen.Player;
+import useful.Bundle;
 
 import java.util.Collections;
 
-import static darkdustry.discord.Bot.adminChannel;
-import static darkdustry.discord.Bot.connected;
-import static mindustry.Vars.netServer;
-import static useful.Bundle.bundled;
+import static darkdustry.discord.Bot.*;
+import static mindustry.Vars.*;
 
 public class AuthMe {
 
@@ -46,7 +44,7 @@ public class AuthMe {
         var player = Find.playerByUuid(info.id);
         if (player != null) {
             player.admin(true);
-            bundled(player, "commands.login.success");
+            Bundle.send(player, "commands.login.success");
         }
 
         event.edit().withEmbeds(EmbedCreateSpec.builder()
@@ -63,7 +61,7 @@ public class AuthMe {
 
         var player = Find.playerByUuid(info.id);
         if (player != null)
-            bundled(player, "commands.login.fail");
+            Bundle.send(player, "commands.login.fail");
 
         event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)

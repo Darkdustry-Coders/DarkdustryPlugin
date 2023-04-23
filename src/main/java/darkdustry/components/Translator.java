@@ -7,9 +7,8 @@ import arc.util.serialization.JsonReader;
 import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.*;
 
-import static darkdustry.PluginVars.translationApiUrl;
-import static darkdustry.components.Database.getPlayersData;
-import static mindustry.Vars.netServer;
+import static darkdustry.PluginVars.*;
+import static mindustry.Vars.*;
 
 public class Translator {
 
@@ -23,8 +22,8 @@ public class Translator {
         var cache = new StringMap();
         var message = netServer.chatFormatter.format(author, text);
 
-        getPlayersData(Groups.player, (player, data) -> {
-            if (player == author) return;
+        Groups.player.each(player -> player != author, player -> {
+            var data = Cache.get(player);
 
             if (data.language == Language.off) {
                 player.sendMessage(message, author, text);
@@ -42,6 +41,6 @@ public class Translator {
                 cache.put(data.language.code, result);
                 player.sendMessage(result, author, text);
             });
-        }).subscribe();
+        });
     }
 }

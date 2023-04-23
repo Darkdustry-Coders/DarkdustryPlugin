@@ -1,45 +1,27 @@
 package darkdustry.components;
 
-import arc.struct.IntMap;
-import mindustry.gen.Player;
+import arc.struct.ObjectMap;
 import darkdustry.components.Database.PlayerData;
+import mindustry.gen.Player;
 
 public class Cache {
 
-    public static final IntMap<PlayerData> cache = new IntMap<>();
+    public static final ObjectMap<String, PlayerData> cache = new ObjectMap<>();
 
-    public static void put(Player player, PlayerData data) {
-        cache.put(player.id, data);
+    public static PlayerData put(Player player, PlayerData data) {
+        return cache.put(player.uuid(), data);
     }
 
     public static PlayerData get(Player player) {
-        return cache.get(player.id);
+        return cache.get(player.uuid());
     }
 
     public static PlayerData remove(Player player) {
-        return cache.remove(player.id);
+        return cache.remove(player.uuid());
     }
 
-    public static void join(Player player) {
-        var data = cache.get(player.id);
-        if (data == null) return;
-
-        data.effects.join.get(player);
-    }
-
-    public static void leave(Player player) {
-        var data = cache.get(player.id);
-        if (data == null) return;
-
-        data.effects.leave.get(player);
-    }
-
-    public static void move(Player player) {
-        if (!player.unit().moving()) return; // It's called here to prevent NPE
-
-        var data = cache.get(player.id);
-        if (data == null) return;
-
-        data.effects.move.get(player);
+    public static void update(PlayerData data) {
+        if (cache.containsKey(data.uuid))
+            cache.put(data.uuid, data);
     }
 }

@@ -7,20 +7,20 @@ import mindustry.gen.Player;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import useful.Bundle;
 
-import static darkdustry.features.history.RotateEntry.sides;
+import static darkdustry.components.Icons.sides;
 import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.content;
+import static mindustry.Vars.*;
 
 public class BlockEntry implements HistoryEntry {
 
-    public final String name;
+    public final String uuid;
     public final short blockID;
     public final byte rotation;
     public final boolean breaking;
     public final long time;
 
     public BlockEntry(BlockBuildEndEvent event) {
-        this.name = event.unit.getPlayer().coloredName();
+        this.uuid = event.unit.getPlayer().uuid();
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
         this.rotation = (byte) event.tile.build.rotation;
         this.breaking = event.breaking;
@@ -28,7 +28,9 @@ public class BlockEntry implements HistoryEntry {
     }
 
     public String getMessage(Player player) {
+        var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, name, Icons.icon(block), formatShortDate(time), sides[rotation]);
+
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatShortDate(time), sides.get(rotation));
     }
 }

@@ -1,22 +1,19 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
+import darkdustry.components.Cache;
 import darkdustry.features.AuthMe;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
-import useful.Bundle;
-import useful.Cooldowns;
+import darkdustry.utils.*;
+import mindustry.gen.*;
+import useful.*;
 
-import static arc.util.Strings.parseInt;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.getPlayerData;
-import static darkdustry.features.menus.MenuHandler.showConfirmMenu;
+import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.voteChoice;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static useful.Bundle.*;
 
@@ -32,20 +29,20 @@ public class ClientCommands {
             netServer.sendWorldData(player);
         });
 
-        register("t", (args, player) -> sendToChat(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0]));
+        register("t", (args, player) -> Bundle.sendFrom(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0]));
 
-        register("settings", (args, player) -> getPlayerData(player).subscribe(data -> MenuHandler.showSettingsMenu(player, data)));
+        register("settings", (args, player) -> MenuHandler.showSettingsMenu(player, Cache.get(player)));
 
         register("players", PageIterator::players);
 
         if (!config.hubIp.isEmpty())
-            register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, host.address, host.port), e -> bundled(player, "commands.hub.failed", e.getMessage())));
+            register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, host.address, host.port), error -> Bundle.send(player, "commands.hub.failed", error.getMessage())));
 
         register("stats", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;
             if (notFound(player, target)) return;
 
-            getPlayerData(target).subscribe(data -> MenuHandler.showStatsMenu(player, target, data));
+            MenuHandler.showStatsMenu(player, target, Cache.get(target));
         });
 
         register("votekick", (args, player) -> {
@@ -75,7 +72,7 @@ public class ClientCommands {
 
             showConfirmMenu(player, "commands.login.confirm", () -> {
                 AuthMe.sendAdminRequest(player);
-                bundled(player, "commands.login.sent");
+                Bundle.send(player, "commands.login.sent");
             });
         });
 

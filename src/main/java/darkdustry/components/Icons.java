@@ -5,12 +5,14 @@ import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.ctype.MappableContent;
 import mindustry.game.Team;
+import mindustry.gen.Iconc;
 
 import static darkdustry.utils.Utils.coloredTeam;
 
 public class Icons {
 
-    private static final StringMap icons = new StringMap();
+    public static final StringMap icons = new StringMap();
+    public static final Seq<Character> sides = Seq.with(Iconc.right, Iconc.up, Iconc.left, Iconc.down);
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/master/core/assets/icons/icons.properties", response -> {

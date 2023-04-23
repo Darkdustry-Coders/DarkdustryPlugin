@@ -3,7 +3,7 @@ package darkdustry.features.menus;
 import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
-import darkdustry.components.Cache;
+import darkdustry.utils.Admins;
 import mindustry.content.Fx;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
@@ -13,15 +13,12 @@ import useful.menu.Menu;
 import useful.menu.Menu.MenuView;
 import useful.menu.Menu.MenuView.OptionData;
 import useful.menu.impl.*;
-import useful.text.TextInput;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
-import static darkdustry.features.Ranks.ranks;
-import static darkdustry.utils.Administration.ban;
+import static darkdustry.features.Ranks.*;
 import static darkdustry.utils.Utils.*;
-import static mindustry.net.Administration.Config.serverName;
-import static useful.Bundle.bundled;
+import static mindustry.net.Administration.Config.*;
 
 @SuppressWarnings("unchecked")
 public class MenuHandler {
@@ -99,8 +96,8 @@ public class MenuHandler {
             menu.option("ui.button.close").row();
             menu.option("welcome.discord", Action.uri(discordServerUrl)).row();
             menu.option("welcome.disable", view -> {
-                updatePlayerData(view.player, data -> data.welcomeMessage = false);
-                bundled(view.player, "welcome.disabled");
+                getPlayerData(view.player).welcomeMessage = false;
+                Bundle.send(view.player, "welcome.disabled");
             });
         });
 
@@ -111,7 +108,7 @@ public class MenuHandler {
             menu.options(1, DespawnType.values()).row();
             menu.option("despawn.suicide", view -> {
                 Call.unitEnvDeath(view.player.unit());
-                bundled(view.player, "despawn.success.suicide");
+                Bundle.send(view.player, "despawn.success.suicide");
             }).row();
 
             menu.option("ui.button.close");
@@ -203,7 +200,7 @@ public class MenuHandler {
         two_weeks(14),
         one_month(30),
 
-        permanent(0); // Special case: permanent ban is 0 days
+        permanent(0); // Special case: a permanent ban is 0 days
 
         public final long duration;
 
@@ -213,7 +210,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option("tempban." + name(), view -> ban(view.player, view.state.get(TARGET), duration));
+            menu.option("tempban." + name(), view -> Admins.ban(view.player, view.state.get(TARGET), duration));
         }
     }
 
@@ -238,7 +235,7 @@ public class MenuHandler {
         public void option(MenuView menu) {
             menu.option("despawn." + name(), view -> {
                 Groups.unit.each(unit -> filter.get(view.player, unit), Call::unitEnvDeath);
-                bundled(view.player, "despawn.success");
+                Bundle.send(view.player, "despawn.success");
             }, Groups.unit.count(unit -> filter.get(menu.player, unit)));
         }
     }
@@ -258,12 +255,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option("setting." + name(), Action.then(view -> updatePlayerData(view.player, setter), view -> Cache.put(view.player, view.state.get(DATA)), view -> {
+            menu.option("setting." + name(), view -> {
                 var data = view.state.get(DATA);
                 setter.get(data);
 
                 view.getInterface().show(view.player, view.state, view.parent);
-            }), Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
+            }, Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -304,12 +301,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.language = this), view -> {
+            menu.option(button, view -> {
                 var data = view.state.get(DATA);
                 data.language = this;
 
                 view.getInterface().show(view.player, view.state, view.parent);
-            }));
+            });
         }
     }
 
@@ -396,10 +393,7 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {
-            }, player -> {
-            }, player -> {
-            });
+            this(name, button, player -> {}, player -> {}, player -> {});
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
@@ -417,12 +411,12 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option(button, Action.then(view -> updatePlayerData(view.player, data -> data.effects = this), view -> Cache.put(view.player, view.state.get(DATA)), view -> {
+            menu.option(button, view -> {
                 var data = view.state.get(DATA);
                 data.effects = this;
 
                 view.getInterface().show(view.player, view.state, view.parent);
-            }));
+            });
         }
     }
 

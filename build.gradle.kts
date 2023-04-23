@@ -14,14 +14,15 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "88c1c4c62f"
+    val usefulHash = "1d2e528f9a"
 
     compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.discord4j:discord4j-core:3.2.3")
-    implementation("org.mongodb:mongodb-driver-reactivestreams:4.9.0")
+
+    implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
     implementation("com.github.xzxADIxzx.useful-stuffs:antiddos:$usefulHash")
     implementation("com.github.xzxADIxzx.useful-stuffs:bundle:$usefulHash")

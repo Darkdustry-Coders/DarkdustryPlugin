@@ -6,12 +6,12 @@ import darkdustry.features.history.*;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 
-import static darkdustry.PluginVars.vote;
+import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
-import static darkdustry.utils.Checks.alreadyVoted;
-import static darkdustry.utils.Utils.voteChoice;
-import static mindustry.Vars.netServer;
-import static mindustry.net.Administration.ActionType.rotate;
+import static darkdustry.utils.Checks.*;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
+import static mindustry.net.Administration.ActionType.*;
 
 public class Filters {
 
@@ -31,7 +31,7 @@ public class Filters {
 
         Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
 
-        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+        author.sendMessage(text, author, netServer.chatFormatter.format(author, text));
         Translator.translate(author, text);
 
         sendMessage(botChannel, author.plainName(), text);
