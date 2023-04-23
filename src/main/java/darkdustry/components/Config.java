@@ -4,7 +4,7 @@ import darkdustry.DarkdustryPlugin;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.*;
-import static mindustry.Vars.dataDirectory;
+import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 
 public class Config {

@@ -2,15 +2,13 @@ package darkdustry.components;
 
 import arc.func.Cons;
 import arc.struct.StringMap;
-import arc.util.Http;
-import arc.util.Strings;
+import arc.util.*;
 import arc.util.serialization.JsonReader;
 import darkdustry.features.menus.MenuHandler.Language;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 
-import static darkdustry.PluginVars.translationApiUrl;
-import static mindustry.Vars.netServer;
+import static darkdustry.PluginVars.*;
+import static mindustry.Vars.*;
 
 public class Translator {
 

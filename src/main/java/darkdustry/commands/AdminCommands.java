@@ -5,18 +5,16 @@ import darkdustry.components.Icons;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.content.Blocks;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.parseInt;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.showConfirmMenu;
+import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.coloredTeam;
-import static darkdustry.utils.Utils.reloadWorld;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.defaultLocale;
+import static useful.Bundle.*;
 
 public class AdminCommands {
 

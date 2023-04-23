@@ -1,25 +1,20 @@
 package darkdustry.commands;
 
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.components.Cache;
-import darkdustry.components.Database;
+import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
-import darkdustry.utils.Admins;
-import darkdustry.utils.Find;
+import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
 import useful.Bundle;
 
-import static arc.Core.app;
-import static arc.Core.settings;
-import static arc.util.Strings.parseInt;
-import static darkdustry.PluginVars.kickDuration;
-import static darkdustry.PluginVars.serverCommands;
-import static darkdustry.discord.Bot.botChannel;
+import static arc.Core.*;
+import static arc.util.Strings.*;
+import static darkdustry.PluginVars.*;
+import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;

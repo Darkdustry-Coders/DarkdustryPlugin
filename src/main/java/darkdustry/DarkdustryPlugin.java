@@ -3,38 +3,23 @@
 
 package darkdustry;
 
-import arc.graphics.Color;
-import arc.graphics.Colors;
+import arc.graphics.*;
 import arc.util.*;
-import darkdustry.commands.AdminCommands;
-import darkdustry.commands.ClientCommands;
-import darkdustry.commands.ServerCommands;
-import darkdustry.components.Cache;
-import darkdustry.components.Config;
-import darkdustry.components.Database;
-import darkdustry.components.Icons;
+import darkdustry.commands.*;
+import darkdustry.components.*;
 import darkdustry.discord.Bot;
-import darkdustry.features.Alerts;
-import darkdustry.features.Ranks;
-import darkdustry.features.SchemeSize;
+import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
-import darkdustry.listeners.Filters;
-import darkdustry.listeners.NetHandlers;
-import darkdustry.listeners.PluginEvents;
+import darkdustry.listeners.*;
 import mindustry.core.Version;
-import mindustry.gen.AdminRequestCallPacket;
-import mindustry.gen.Groups;
+import mindustry.gen.*;
 import mindustry.mod.Plugin;
-import mindustry.net.Packets.Connect;
-import mindustry.net.Packets.ConnectPacket;
-import mindustry.net.Packets.KickReason;
-import useful.AntiDdos;
-import useful.Bundle;
-import useful.Cooldowns;
+import mindustry.net.Packets.*;
+import useful.*;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.getAvailableMaps;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")

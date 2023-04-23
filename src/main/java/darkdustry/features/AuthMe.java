@@ -2,8 +2,7 @@ package darkdustry.features;
 
 import darkdustry.utils.Find;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.SelectMenu;
+import discord4j.core.object.component.*;
 import discord4j.core.object.component.SelectMenu.Option;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -13,9 +12,8 @@ import useful.Bundle;
 
 import java.util.Collections;
 
-import static darkdustry.discord.Bot.adminChannel;
-import static darkdustry.discord.Bot.connected;
-import static mindustry.Vars.netServer;
+import static darkdustry.discord.Bot.*;
+import static mindustry.Vars.*;
 
 public class AuthMe {
 

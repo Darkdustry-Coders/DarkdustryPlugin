@@ -1,14 +1,13 @@
 package darkdustry.utils;
 
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import mindustry.gen.Player;
 import mindustry.net.NetConnection;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.discordServerUrl;
-import static darkdustry.utils.Utils.formatDuration;
-import static mindustry.Vars.netServer;
+import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
 
 public class Admins {
 

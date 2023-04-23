@@ -6,10 +6,9 @@ import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 import useful.Bundle;
 
-import static darkdustry.components.Icons.sides;
-import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.content;
-import static mindustry.Vars.netServer;
+import static darkdustry.components.Icons.*;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
 
 public class RotateEntry implements HistoryEntry {
 

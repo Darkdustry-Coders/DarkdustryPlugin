@@ -5,20 +5,17 @@ import darkdustry.components.Cache;
 import darkdustry.features.AuthMe;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
-import darkdustry.utils.Find;
-import darkdustry.utils.PageIterator;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
-import useful.Bundle;
-import useful.Cooldowns;
+import darkdustry.utils.*;
+import mindustry.gen.*;
+import useful.*;
 
-import static arc.util.Strings.parseInt;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.showConfirmMenu;
+import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.voteChoice;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.defaultLocale;
+import static useful.Bundle.*;
 
 public class ClientCommands {
 

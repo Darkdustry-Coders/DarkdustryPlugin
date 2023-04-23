@@ -4,10 +4,9 @@ import arc.math.Mathf;
 import arc.struct.IntIntMap;
 import arc.util.Timer;
 import arc.util.Timer.Task;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 
-import static arc.Core.app;
+import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {

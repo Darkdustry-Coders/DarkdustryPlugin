@@ -1,20 +1,17 @@
 package darkdustry;
 
-import arc.struct.IntIntMap;
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.CommandHandler;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import darkdustry.components.Config;
-import darkdustry.features.votes.VoteKick;
-import darkdustry.features.votes.VoteSession;
+import darkdustry.features.votes.*;
 import mindustry.core.Version;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_DASHES;
-import static mindustry.Vars.tilesize;
+import static com.google.gson.FieldNamingPolicy.*;
+import static mindustry.Vars.*;
 
 public class PluginVars {
 

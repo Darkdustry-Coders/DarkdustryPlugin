@@ -6,9 +6,8 @@ import mindustry.game.EventType.WithdrawEvent;
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.content;
-import static mindustry.Vars.netServer;
+import static darkdustry.utils.Utils.*;
+import static mindustry.Vars.*;
 
 public class WithdrawEntry implements HistoryEntry {
 

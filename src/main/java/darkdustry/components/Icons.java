@@ -1,15 +1,13 @@
 package darkdustry.components;
 
-import arc.struct.Seq;
-import arc.struct.StringMap;
-import arc.util.Http;
-import arc.util.Structs;
+import arc.struct.*;
+import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import mindustry.ctype.MappableContent;
 import mindustry.game.Team;
 import mindustry.gen.Iconc;
 
-import static darkdustry.utils.Utils.coloredTeam;
+import static darkdustry.utils.Utils.*;
 
 public class Icons {
 
