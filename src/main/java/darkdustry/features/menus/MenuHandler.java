@@ -14,6 +14,7 @@ import useful.menu.Menu;
 import useful.menu.Menu.MenuView;
 import useful.menu.Menu.MenuView.OptionData;
 import useful.menu.impl.*;
+import useful.text.TextInput;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
@@ -24,7 +25,7 @@ import static mindustry.net.Administration.Config.*;
 @SuppressWarnings("unchecked")
 public class MenuHandler {
 
-    // region menus
+    // region menu
 
     public static final ListMenu listMenu = new ListMenu();
     public static final ConfirmMenu confirmMenu = new ConfirmMenu();
@@ -35,22 +36,33 @@ public class MenuHandler {
             requirementsMenu = new Menu(),
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
-            tempbanMenu = new Menu(),
+            kickDurationMenu = new Menu(),
+            banDurationMenu = new Menu(),
             settingsMenu = new Menu(),
             languagesMenu = new Menu(),
             effectsMenu = new Menu();
+
+    // endregion
+    // region input
+
+    public static final TextInput
+            kickReasonInput = new TextInput(),
+            banReasonInput = new TextInput();
 
     // endregion
     // region keys
 
     public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
+    public static final StateKey<Long> DURATION = new StateKey<>("duration", Long.class);
 
     // endregion
     // region transforms
 
     public static void load() {
         Formatter.setFormatter(Bundle::format);
+
+        // region menu
 
         listMenu.left("ui.button.left");
         listMenu.right("ui.button.right");
@@ -97,7 +109,7 @@ public class MenuHandler {
             menu.option("ui.button.close").row();
             menu.option("welcome.discord", Action.uri(discordServerUrl)).row();
             menu.option("welcome.disable", view -> {
-                getPlayerData(view.player).welcomeMessage = false;
+                Cache.get(view.player).welcomeMessage = false;
                 Bundle.send(view.player, "welcome.disabled");
             });
         });
@@ -115,9 +127,17 @@ public class MenuHandler {
             menu.option("ui.button.close");
         });
 
-        tempbanMenu.transform(TARGET, (menu, target) -> {
-            menu.title("tempban.title");
-            menu.content("tempban.content", target.coloredName());
+        kickDurationMenu.transform(TARGET, (menu, target) -> {
+            menu.title("kick.duration.title");
+            menu.content("kick.duration.content", target.coloredName());
+
+            menu.options(3, KickDuration.values()).row();
+            menu.option("ui.button.close");
+        });
+
+        banDurationMenu.transform(TARGET, (menu, target) -> {
+            menu.title("ban.duration.title");
+            menu.content("ban.duration.content", target.coloredName());
 
             menu.options(3, BanDuration.values()).row();
             menu.option("ui.button.close");
@@ -159,6 +179,33 @@ public class MenuHandler {
             menu.option("ui.button.back", Action.hide(), Action.back());
             menu.option("ui.button.close", Action.hide());
         }).followUp(true);
+
+        // endregion
+        // region input
+
+        kickReasonInput.transform(TARGET, (input, target) -> {
+            input.title("kick.reason.title");
+            input.content("kick.reason.content", target.coloredName());
+
+            input.defaultText("kick.reason.default");
+            input.textLength(32);
+
+            input.closed(Action.back());
+            input.result((view, reason) -> Admins.kick(view.player, view.state.get(TARGET), view.state.get(DURATION), reason));
+        });
+
+        banReasonInput.transform(TARGET, (input, target) -> {
+            input.title("ban.reason.title");
+            input.content("ban.reason.content", target.coloredName());
+
+            input.defaultText("ban.reason.default");
+            input.textLength(32);
+
+            input.closed(Action.back());
+            input.result((view, reason) -> Admins.ban(view.player, view.state.get(TARGET), view.state.get(DURATION), reason));
+        });
+
+        // endregion
     }
 
     // endregion
@@ -188,8 +235,12 @@ public class MenuHandler {
         despawnMenu.show(player);
     }
 
-    public static void showTempbanMenu(Player player, Player target) {
-        tempbanMenu.show(player, TARGET, target);
+    public static void showKickMenu(Player player, Player target) {
+        kickDurationMenu.show(player, TARGET, target);
+    }
+
+    public static void showBanMenu(Player player, Player target) {
+        banDurationMenu.show(player, TARGET, target);
     }
 
     public static void showSettingsMenu(Player player) {
@@ -198,6 +249,26 @@ public class MenuHandler {
 
     // endregion
     // region enums
+
+    public enum KickDuration implements OptionData {
+        five_minutes(5),
+        fifteen_minutes(15),
+        thirty_minutes(30),
+        one_hour(60),
+        two_hours(120),
+        six_hours(720);
+
+        public final long duration;
+
+        KickDuration(int minutes) {
+            this.duration = minutes * 60 * 1000L;
+        }
+
+        @Override
+        public void option(MenuView menu) {
+            menu.option("kick." + name(), Action.openWith(kickReasonInput, DURATION, duration));
+        }
+    }
 
     public enum BanDuration implements OptionData {
         one_day(1),
@@ -217,7 +288,7 @@ public class MenuHandler {
 
         @Override
         public void option(MenuView menu) {
-            menu.option("tempban." + name(), view -> Admins.ban(view.player, view.state.get(TARGET), duration));
+            menu.option("ban." + name(), Action.openWith(banReasonInput, DURATION, duration));
         }
     }
 

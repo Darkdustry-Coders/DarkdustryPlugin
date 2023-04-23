@@ -31,7 +31,7 @@ public class Filters {
 
         Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
 
-        author.sendMessage(text, author, netServer.chatFormatter.format(author, text));
+        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Translator.translate(author, text);
 
         sendMessage(botChannel, author.plainName(), text);

@@ -32,18 +32,19 @@ public class Admins {
     // endregion
     // region administration
 
-    public static void ban(Player admin, Player target, long duration) {
+    public static void ban(Player admin, Player target, long duration, String reason) {
         ban(target.uuid(), target.ip(), duration);
+        kick(target, duration, true, "kick.banned-by-admin", admin.coloredName(), reason);
 
-        kick(target, duration, true, "kick.banned-by-admin", admin.coloredName());
-        Log.info("Player @ has banned @.", admin.plainName(), target.plainName());
-        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName());
+        Log.info("Admin @ has banned @ for @.", admin.plainName(), target.plainName(), reason);
+        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
     }
 
-    public static void kick(Player admin, Player target, long duration) {
-        kick(target, duration, true, "kick.kicked-by-admin", admin.coloredName());
-        Log.info("Player @ has kicked @.", admin.plainName(), target.plainName());
-        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName());
+    public static void kick(Player admin, Player target, long duration, String reason) {
+        kick(target, duration, true, "kick.kicked-by-admin", admin.coloredName(), reason);
+
+        Log.info("Admin @ has kicked @ for @.", admin.plainName(), target.plainName(), reason);
+        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
     }
 
     // endregion

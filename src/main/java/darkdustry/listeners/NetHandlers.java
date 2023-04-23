@@ -4,6 +4,7 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
+import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -147,16 +148,16 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(admin, target, action));
 
         switch (action) {
-            case kick -> Admins.kick(admin, target, kickDuration);
-            case ban -> showTempbanMenu(admin, target);
+            case kick -> MenuHandler.showKickMenu(admin, target);
+            case ban -> MenuHandler.showBanMenu(admin, target);
             case trace -> {
                 var info = target.getInfo();
                 Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));
-                Log.info("@ has requested trace info of @.", admin.plainName(), target.plainName());
+                Log.info("Admin @ has requested trace info of @.", admin.plainName(), target.plainName());
             }
             case wave -> {
                 logic.skipWave();
-                Log.info("@ has skipped the wave.", admin.plainName());
+                Log.info("Admin @ has skipped the wave.", admin.plainName());
                 Bundle.send("events.admin.wave", admin.coloredName());
             }
         }
