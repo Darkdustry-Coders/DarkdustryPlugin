@@ -1,7 +1,9 @@
 package darkdustry.components;
 
-import arc.struct.*;
-import arc.util.*;
+import arc.struct.Seq;
+import arc.struct.StringMap;
+import arc.util.Http;
+import arc.util.Structs;
 import darkdustry.DarkdustryPlugin;
 import mindustry.ctype.MappableContent;
 import mindustry.game.Team;

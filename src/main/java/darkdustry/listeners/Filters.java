@@ -2,16 +2,18 @@ package darkdustry.listeners;
 
 import arc.util.Log;
 import darkdustry.components.Translator;
-import darkdustry.features.history.*;
+import darkdustry.features.history.History;
+import darkdustry.features.history.RotateEntry;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.*;
-import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.Vars.*;
-import static mindustry.net.Administration.ActionType.*;
+import static darkdustry.PluginVars.vote;
+import static darkdustry.discord.Bot.botChannel;
+import static darkdustry.discord.Bot.sendMessage;
+import static darkdustry.utils.Checks.alreadyVoted;
+import static darkdustry.utils.Utils.voteChoice;
+import static mindustry.Vars.netServer;
+import static mindustry.net.Administration.ActionType.rotate;
 
 public class Filters {
 

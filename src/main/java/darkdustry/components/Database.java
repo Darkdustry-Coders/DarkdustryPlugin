@@ -2,18 +2,23 @@ package darkdustry.components;
 
 import arc.util.Threads;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.changestream.FullDocument;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
-import darkdustry.features.menus.MenuHandler.*;
+import darkdustry.features.menus.MenuHandler.EffectsPack;
+import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.Player;
-import org.bson.codecs.configuration.*;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import static com.mongodb.client.model.Filters.*;
-import static darkdustry.PluginVars.*;
+import static com.mongodb.client.model.Filters.eq;
+import static darkdustry.PluginVars.config;
 
 public class Database {
 

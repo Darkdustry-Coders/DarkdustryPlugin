@@ -8,7 +8,8 @@ import useful.Bundle;
 
 import static darkdustry.components.Icons.sides;
 import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.*;
+import static mindustry.Vars.content;
+import static mindustry.Vars.netServer;
 
 public class RotateEntry implements HistoryEntry {
 

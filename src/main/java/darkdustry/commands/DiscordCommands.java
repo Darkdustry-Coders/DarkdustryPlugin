@@ -1,12 +1,17 @@
 package darkdustry.commands;
 
-import arc.util.*;
+import arc.util.CommandHandler;
 import arc.util.CommandHandler.CommandRunner;
+import arc.util.Http;
+import arc.util.Time;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.components.*;
+import darkdustry.components.Cache;
+import darkdustry.components.Database;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks;
-import darkdustry.utils.*;
+import darkdustry.utils.Admins;
+import darkdustry.utils.Find;
+import darkdustry.utils.PageIterator;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
@@ -14,12 +19,16 @@ import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import useful.Bundle;
 
-import static arc.Core.*;
-import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.*;
+import static arc.Core.app;
+import static arc.Core.graphics;
+import static arc.util.Strings.parseInt;
+import static arc.util.Strings.stripColors;
+import static darkdustry.PluginVars.config;
+import static darkdustry.PluginVars.discordCommands;
+import static darkdustry.discord.Bot.adminRole;
+import static darkdustry.discord.Bot.mapReviewerRole;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static darkdustry.utils.Utils.formatDiscordDate;
 import static mindustry.Vars.*;
 
 public class DiscordCommands {

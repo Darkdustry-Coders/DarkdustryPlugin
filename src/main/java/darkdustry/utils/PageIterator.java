@@ -5,10 +5,12 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.menus.MenuHandler;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
+import static arc.util.Strings.parseInt;
+import static arc.util.Strings.stripColors;
 import static darkdustry.PluginVars.maxPerPage;
 import static darkdustry.utils.Utils.*;
 

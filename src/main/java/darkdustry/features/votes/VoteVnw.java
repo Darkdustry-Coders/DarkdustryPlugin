@@ -3,7 +3,7 @@ package darkdustry.features.votes;
 import mindustry.gen.Player;
 import useful.Bundle;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.logic;
 
 public class VoteVnw extends VoteSession {
 

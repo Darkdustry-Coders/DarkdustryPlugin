@@ -7,7 +7,8 @@ import mindustry.gen.Player;
 import useful.Bundle;
 
 import static darkdustry.utils.Utils.formatShortDate;
-import static mindustry.Vars.*;
+import static mindustry.Vars.content;
+import static mindustry.Vars.netServer;
 
 public class WithdrawEntry implements HistoryEntry {
 

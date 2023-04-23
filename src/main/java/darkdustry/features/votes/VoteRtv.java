@@ -5,9 +5,10 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.Vars.*;
+import static darkdustry.PluginVars.mapLoadDelay;
+import static darkdustry.utils.Utils.reloadWorld;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
 
 public class VoteRtv extends VoteSession {
 

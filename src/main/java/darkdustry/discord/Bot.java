@@ -5,24 +5,29 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
 import darkdustry.features.AuthMe;
 import discord4j.common.util.Snowflake;
-import discord4j.core.*;
+import discord4j.core.DiscordClientBuilder;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.object.presence.*;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
+import discord4j.core.object.presence.Status;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.gateway.intent.*;
+import discord4j.gateway.intent.Intent;
+import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.util.AllowedMentions;
 import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
-import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.Vars.*;
+import static arc.util.Strings.stripColors;
+import static darkdustry.PluginVars.config;
+import static darkdustry.PluginVars.discordCommands;
+import static darkdustry.utils.Checks.noRole;
+import static darkdustry.utils.Utils.stripDiscord;
+import static mindustry.Vars.state;
 
 public class Bot {
 

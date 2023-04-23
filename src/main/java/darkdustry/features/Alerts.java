@@ -4,17 +4,21 @@ import arc.func.Boolp;
 import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
-import darkdustry.components.*;
-import mindustry.content.*;
-import mindustry.game.EventType.*;
+import darkdustry.components.Cache;
+import darkdustry.components.Icons;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
+import mindustry.game.EventType.BuildSelectEvent;
+import mindustry.game.EventType.DepositEvent;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.type.Item;
-import mindustry.world.*;
+import mindustry.world.Block;
+import mindustry.world.Tile;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
 
 public class Alerts {
 

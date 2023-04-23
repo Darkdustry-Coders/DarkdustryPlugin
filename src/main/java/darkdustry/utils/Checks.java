@@ -10,19 +10,23 @@ import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import mindustry.game.*;
+import mindustry.game.Gamemode;
+import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.net.Administration.PlayerInfo;
-import mindustry.type.*;
+import mindustry.type.Item;
+import mindustry.type.StatusEffect;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
-import useful.*;
+import useful.Bundle;
+import useful.Cooldowns;
 
-import static arc.math.Mathf.*;
+import static arc.math.Mathf.PI;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static mindustry.net.Administration.Config.*;
+import static mindustry.net.Administration.Config.enableVotekick;
 
 public class Checks {
 

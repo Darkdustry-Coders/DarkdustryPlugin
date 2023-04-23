@@ -5,20 +5,30 @@ import arc.graphics.Color;
 import arc.struct.Seq;
 import darkdustry.utils.Admins;
 import mindustry.content.Fx;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
-import useful.*;
+import useful.Action;
+import useful.Bundle;
+import useful.Effects;
+import useful.Formatter;
 import useful.State.StateKey;
 import useful.menu.Menu;
 import useful.menu.Menu.MenuView;
 import useful.menu.Menu.MenuView.OptionData;
-import useful.menu.impl.*;
+import useful.menu.impl.ConfirmMenu;
+import useful.menu.impl.ListMenu;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.features.Ranks.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.net.Administration.Config.*;
+import static darkdustry.PluginVars.discordServerUrl;
+import static darkdustry.PluginVars.welcomeMessageCommands;
+import static darkdustry.components.Database.PlayerData;
+import static darkdustry.components.Database.getPlayerData;
+import static darkdustry.features.Ranks.ranks;
+import static darkdustry.utils.Utils.formatDuration;
+import static darkdustry.utils.Utils.formatList;
+import static mindustry.net.Administration.Config.serverName;
 
 @SuppressWarnings("unchecked")
 public class MenuHandler {

@@ -1,10 +1,12 @@
 package darkdustry.features.votes;
 
 import darkdustry.utils.Admins;
-import mindustry.gen.*;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.*;
+import static darkdustry.PluginVars.kickDuration;
+import static darkdustry.PluginVars.voteKick;
 
 public class VoteKick extends VoteSession {
 
