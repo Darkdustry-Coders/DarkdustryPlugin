@@ -3,6 +3,7 @@ package darkdustry.features.menus;
 import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
+import darkdustry.components.Cache;
 import darkdustry.utils.Admins;
 import mindustry.content.Fx;
 import mindustry.gen.*;
@@ -88,7 +89,7 @@ public class MenuHandler {
 
         welcomeMenu.transform(menu -> {
             var builder = new StringBuilder();
-            welcomeMessageCommands.each(command -> builder.append("\n[cyan]/").append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", menu.player)));
+            welcomeMessageCommands.each(command -> builder.append("[cyan]/").append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", menu.player)).append("\n"));
 
             menu.title("welcome.title");
             menu.content("welcome.content", serverName.string(), builder.toString());
@@ -122,7 +123,9 @@ public class MenuHandler {
             menu.option("ui.button.close");
         });
 
-        settingsMenu.transform(DATA, (menu, data) -> {
+        settingsMenu.transform(menu -> {
+            var data = Cache.get(menu.player);
+
             menu.title("settings.title");
             menu.content("settings.content");
 
@@ -133,7 +136,9 @@ public class MenuHandler {
             menu.option("ui.button.close", Action.hide());
         }).followUp(true);
 
-        languagesMenu.transform(DATA, (menu, data) -> {
+        languagesMenu.transform(menu -> {
+            var data = Cache.get(menu.player);
+
             menu.title("language.title");
             menu.content("language.content", data.language.name(menu));
 
@@ -143,7 +148,9 @@ public class MenuHandler {
             menu.option("ui.button.close", Action.hide());
         }).followUp(true);
 
-        effectsMenu.transform(DATA, (menu, data) -> {
+        effectsMenu.transform(menu -> {
+            var data = Cache.get(menu.player);
+
             menu.title("effects.title");
             menu.content("effects.content", data.effects.name(menu));
 
@@ -185,8 +192,8 @@ public class MenuHandler {
         tempbanMenu.show(player, TARGET, target);
     }
 
-    public static void showSettingsMenu(Player player, PlayerData data) {
-        settingsMenu.show(player, DATA, data);
+    public static void showSettingsMenu(Player player) {
+        settingsMenu.show(player);
     }
 
     // endregion
@@ -256,11 +263,11 @@ public class MenuHandler {
         @Override
         public void option(MenuView menu) {
             menu.option("setting." + name(), view -> {
-                var data = view.state.get(DATA);
+                var data = Cache.get(view.player);
                 setter.get(data);
 
                 view.getInterface().show(view.player, view.state, view.parent);
-            }, Bundle.get(getter.get(menu.state.get(DATA)) ? "setting.on" : "setting.off", menu.player));
+            }, Bundle.get(getter.get(Cache.get(menu.player)) ? "setting.on" : "setting.off", menu.player));
         }
     }
 
@@ -302,7 +309,7 @@ public class MenuHandler {
         @Override
         public void option(MenuView menu) {
             menu.option(button, view -> {
-                var data = view.state.get(DATA);
+                var data = Cache.get(view.player);
                 data.language = this;
 
                 view.getInterface().show(view.player, view.state, view.parent);
@@ -412,7 +419,7 @@ public class MenuHandler {
         @Override
         public void option(MenuView menu) {
             menu.option(button, view -> {
-                var data = view.state.get(DATA);
+                var data = Cache.get(view.player);
                 data.effects = this;
 
                 view.getInterface().show(view.player, view.state, view.parent);

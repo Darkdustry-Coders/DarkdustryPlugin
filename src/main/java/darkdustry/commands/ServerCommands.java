@@ -3,7 +3,6 @@ package darkdustry.commands;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
@@ -70,7 +69,7 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             Bundle.send("commands.say.chat", args[0]);
-            Bot.sendMessage(botChannel, "Server", args[0]);
+            sendMessage(botChannel, "Server", args[0]);
         });
 
         serverCommands.register("kick", "<ID/username...>", "Kick a player.", args -> {

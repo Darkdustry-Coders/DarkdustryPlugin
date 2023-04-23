@@ -12,8 +12,10 @@ import mindustry.gen.Player;
 import org.bson.codecs.configuration.*;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import static arc.Core.*;
 import static com.mongodb.client.model.Filters.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Utils.*;
 
 public class Database {
 
@@ -35,7 +37,7 @@ public class Database {
                         var data = stream.getFullDocument();
                         if (data == null) return;
 
-                        Cache.update(data);
+                        app.post(() -> Cache.update(data));
                     }));
 
             DarkdustryPlugin.info("Database connected.");
@@ -53,8 +55,7 @@ public class Database {
     }
 
     public static PlayerData getPlayerData(String uuid) {
-        var data = playersCollection.find(eq("uuid", uuid)).first();
-        return data == null ? new PlayerData(uuid) : data;
+        return notNullElse(playersCollection.find(eq("uuid", uuid)).first(), new PlayerData(uuid));
     }
 
     public static void savePlayerData(PlayerData data) {
@@ -85,8 +86,7 @@ public class Database {
         public Rank rank = Rank.player;
 
         @SuppressWarnings("unused")
-        public PlayerData() {
-        }
+        public PlayerData() {}
 
         public PlayerData(String uuid) {
             this.uuid = uuid;

@@ -31,7 +31,7 @@ public class ClientCommands {
 
         register("t", (args, player) -> Bundle.sendFrom(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0]));
 
-        register("settings", (args, player) -> MenuHandler.showSettingsMenu(player, Cache.get(player)));
+        register("settings", (args, player) -> MenuHandler.showSettingsMenu(player));
 
         register("players", PageIterator::players);
 
