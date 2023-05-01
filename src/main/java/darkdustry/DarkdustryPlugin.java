@@ -96,6 +96,10 @@ public class DarkdustryPlugin extends Plugin {
                 MenuHandler.showPromotionMenu(player, data);
             }
         }), 60f, 60f);
+        
+        Timer.schedule(() -> {
+            System.gc();
+        }, 300f, 300f);
 
         // Исправляем обнаружение некоторых цветов
         Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
