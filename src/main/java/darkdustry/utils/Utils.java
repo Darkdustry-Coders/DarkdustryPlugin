@@ -98,7 +98,7 @@ public class Utils {
     }
 
     public static String formatDiscordDate(long time) {
-        return RELATIVE_TIME.format(Instant.ofEpochMilli(time));
+        return LONG_DATE.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatDuration(long time, Player player) {
