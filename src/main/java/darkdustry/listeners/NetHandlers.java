@@ -14,8 +14,8 @@ import mindustry.net.Packets.*;
 import useful.Bundle;
 
 import static arc.util.CommandHandler.ResponseType.*;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -61,29 +61,27 @@ public class NetHandlers {
         con.modclient = packet.version == -1;
 
         if (con.hasBegunConnecting || Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
-            Admins.kick(con, "kick.already-connected", locale);
+            Bundle.kick(con, locale, 0L, "kick.already-connected");
             return;
         }
+
+        if (netServer.admins.isSubnetBanned(ip)) {
+            Admins.kick(con, locale, "kick.subnet-ban").kick();
+            return;
+        }
+
+        Admins.checkKicked(con, locale);
+        Admins.checkBanned(con, locale);
 
         con.hasBegunConnecting = true;
 
-        if (netServer.admins.isIDBanned(uuid) || netServer.admins.isIPBanned(ip) || netServer.admins.isSubnetBanned(ip)) {
-            Admins.kick(con, 0, true, "kick.ban", locale);
-            return;
-        }
-
-        if (Admins.isBanned(uuid, ip)) {
-            Admins.kick(con, Admins.getBanTime(uuid, ip), true, "kick.tempban", locale);
-            return;
-        }
-
-        if (Strings.stripColors(name).trim().isEmpty()) {
-            Admins.kick(con, "kick.name-is-empty", locale);
+        if (stripColors(name).trim().isEmpty()) {
+            Bundle.kick(con, locale, 0L, "kick.name-is-empty");
             return;
         }
 
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
-            Admins.kick(con, "kick.player-limit", locale, netServer.admins.getPlayerLimit());
+            Bundle.kick(con, locale, 0L, "kick.player-limit", netServer.admins.getPlayerLimit());
             return;
         }
 
@@ -91,12 +89,12 @@ public class NetHandlers {
         var missingMods = mods.getIncompatibility(extraMods);
 
         if (extraMods.any()) {
-            Admins.kick(con, "kick.extra-mods", locale, extraMods.toString("\n> "));
+            Bundle.kick(con, locale, 0L, "kick.extra-mods", extraMods.toString("\n> "));
             return;
         }
 
         if (missingMods.any()) {
-            Admins.kick(con, "kick.missing-mods", locale, missingMods.toString("\n> "));
+            Bundle.kick(con, locale, 0L, "kick.missing-mods", missingMods.toString("\n> "));
             return;
         }
 
@@ -105,17 +103,17 @@ public class NetHandlers {
             info.adminUsid = usid;
             info.names.addUnique(info.lastName = name);
             info.ips.addUnique(info.lastIP = ip);
-            Admins.kick(con, "kick.not-whitelisted", locale);
+            Bundle.kick(con, locale, 0L, "kick.not-whitelisted");
             return;
         }
 
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
-            Admins.kick(con, "kick.custom-client", locale);
+            Bundle.kick(con, locale, 0L, "kick.custom-client");
             return;
         }
 
         if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
-            Admins.kick(con, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", locale, packet.version, mindustryVersion);
+            Bundle.kick(con, locale, 0L, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", packet.version, mindustryVersion);
             return;
         }
 
@@ -151,8 +149,7 @@ public class NetHandlers {
             case kick -> MenuHandler.showKickMenu(admin, target);
             case ban -> MenuHandler.showBanMenu(admin, target);
             case trace -> {
-                var info = target.getInfo();
-                Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, info.timesJoined, info.timesKicked));
+                Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, target.getInfo().timesJoined, target.getInfo().timesKicked));
                 Log.info("Admin @ has requested trace info of @.", admin.plainName(), target.plainName());
             }
             case wave -> {

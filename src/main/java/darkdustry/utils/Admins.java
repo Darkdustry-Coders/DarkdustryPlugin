@@ -1,9 +1,15 @@
 package darkdustry.utils;
 
 import arc.util.*;
+import darkdustry.components.Database;
+import darkdustry.components.Database.Ban;
+import darkdustry.features.Authme;
 import mindustry.gen.Player;
+import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
-import useful.Bundle;
+import useful.*;
+
+import java.util.Date;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
@@ -13,56 +19,102 @@ public class Admins {
 
     // region kick
 
-    public static void kick(NetConnection con, long duration, boolean showDisclaimer, String key, String locale, Object... values) {
-        var reason = Bundle.format(key, locale, values);
-
-        if (duration > 0) reason += Bundle.format("kick.time", locale, formatDuration(duration, locale));
-        if (showDisclaimer) reason += Bundle.format("kick.disclaimer", locale, discordServerUrl);
-        con.kick(reason, duration);
+    public static KickBuilder kick(NetConnection con, String locale, String key, Object... values) {
+        return Bundle.kick(con, locale, key, values).add("kick.disclaimer", discordServerUrl);
     }
 
-    public static void kick(NetConnection con, String key, String locale, Object... values) {
-        kick(con, 0, false, key, locale, values);
+    public static KickBuilder kick(NetConnection con, String locale, long duration, String key, Object... values) {
+        return Bundle.kick(con, locale, key, values)
+                .add("kick.duration", formatDuration(duration, locale))
+                .add("kick.disclaimer", discordServerUrl);
     }
 
-    public static void kick(Player player, long duration, boolean showDisclaimer, String key, Object... values) {
-        kick(player.con, duration, showDisclaimer, key, player.locale, values);
+    public static KickBuilder kickReason(NetConnection con, String locale, long duration, String reason, String key, Object... values) {
+        return Bundle.kick(con, locale, key, values)
+                .add("kick.duration", formatDuration(duration, locale))
+                .add("kick.reason", reason)
+                .add("kick.disclaimer", discordServerUrl);
+    }
+
+    public static KickBuilder kick(Player player, long duration, String key, Object... values) {
+        return kick(player.con, player.locale, duration, key, values);
+    }
+
+    public static KickBuilder kickReason(Player player, long duration, String reason, String key, Object... values) {
+        return kickReason(player.con, player.locale, duration, reason, key, values);
     }
 
     // endregion
-    // region administration
+    // region admin
 
-    public static void ban(Player admin, Player target, long duration, String reason) {
-        ban(target.uuid(), target.ip(), duration);
-        kick(target, duration, true, "kick.banned-by-admin", admin.coloredName(), reason);
-
-        Log.info("Admin @ has banned @ for @.", admin.plainName(), target.plainName(), reason);
-        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
-    }
-
-    public static void kick(Player admin, Player target, long duration, String reason) {
-        kick(target, duration, true, "kick.kicked-by-admin", admin.coloredName(), reason);
+    public static void kick(Player target, Player admin, long duration, String reason) {
+        kickReason(target, duration, reason, "kick.kicked-by-admin", admin.coloredName()).kick(duration);
+        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
 
         Log.info("Admin @ has kicked @ for @.", admin.plainName(), target.plainName(), reason);
-        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
+    }
+
+    public static void ban(Player target, Player admin, long duration, String reason) {
+        ban(Ban.builder()
+                .uuid(target.uuid())
+                .ip(target.ip())
+                .player(target.plainName())
+                .admin(admin.plainName())
+                .reason(reason)
+                .unbanDate(new Date(Time.millis() + duration))
+                .build());
+
+        kickReason(target, duration, reason, "kick.banned-by-admin", admin.coloredName()).kick();
+        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
+
+        Log.info("Admin @ has banned @ for @.", admin.plainName(), target.plainName(), reason);
+    }
+
+    // endregion
+    // region console
+
+    public static void kick(Player target, String admin, long duration, String reason) {
+        kickReason(target, duration, reason, "kick.kicked-by-admin", admin).kick(duration);
+        Bundle.send("events.admin.kick", admin, target.coloredName(), reason);
+    }
+
+    public static void ban(PlayerInfo info, String admin, long duration, String reason) {
+        ban(Ban.builder()
+                .uuid(info.id)
+                .ip(info.lastIP)
+                .player(info.plainLastName())
+                .admin(admin)
+                .reason(reason)
+                .unbanDate(new Date(Time.millis() + duration))
+                .build());
+
+        var target = Find.playerByUuid(info.id);
+        if (target == null) return;
+
+        kickReason(target, duration, reason, "kick.banned-by-admin", admin).kick();
+        Bundle.send("events.admin.ban", admin, target.coloredName(), reason);
     }
 
     // endregion
     // region bans
 
-    public static void ban(String uuid, String ip, long duration) {
-        if (duration == 0) {
-            netServer.admins.banPlayerID(uuid);
-            netServer.admins.banPlayerIP(ip);
-        } else netServer.admins.handleKicked(uuid, ip, duration);
+    public static void ban(Ban ban) {
+        Authme.sendBan(ban);
+        Database.addBan(ban);
     }
 
-    public static long getBanTime(String uuid, String ip) {
-        return netServer.admins.getKickTime(uuid, ip) - Time.millis();
+    public static void checkKicked(NetConnection con, String locale) {
+        long kickTime = netServer.admins.getKickTime(con.uuid, con.address);
+        if (kickTime < Time.millis()) return;
+
+        kick(con, locale, kickTime - Time.millis(), "kick.recently-kicked").kick();
     }
 
-    public static boolean isBanned(String uuid, String ip) {
-        return getBanTime(uuid, ip) > 0;
+    public static void checkBanned(NetConnection con, String locale) {
+        var ban = Database.getBan(con.uuid, con.address);
+        if (ban == null || ban.expired()) return;
+
+        kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban").kick();
     }
 
     // endregion

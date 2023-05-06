@@ -16,7 +16,7 @@ public class VoteVnw extends VoteSession {
     @Override
     public void vote(Player player, int sign) {
         super.vote(player, sign);
-        Bundle.send("commands.vnw.vote", player.coloredName(), waves, votes(), votesRequired());
+        Bundle.send("commands.vnw.vote", player.coloredName(), waves, votes() + sign, votesRequired());
     }
 
     @Override
@@ -29,9 +29,7 @@ public class VoteVnw extends VoteSession {
     public void success() {
         stop();
         Bundle.send("commands.vnw.passed", waves);
-
-        for (int i = 0; i < waves; i++)
-            logic.runWave();
+        for (int i = 0; i < waves; i++) logic.runWave();
     }
 
     @Override

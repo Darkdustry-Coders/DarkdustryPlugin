@@ -6,19 +6,11 @@ import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.*;
 
-import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
 
-    /**
-     * Список id проголосовавших игроков и их голоса.
-     */
     public final IntIntMap voted = new IntIntMap();
-
-    /**
-     * Задача на завершение голосования.
-     */
     public final Task end;
 
     public VoteSession() {
@@ -27,7 +19,9 @@ public abstract class VoteSession {
 
     public void vote(Player player, int sign) {
         voted.put(player.id, sign);
-        if (votes() >= votesRequired()) app.post(this::success);
+
+        if (votes() >= votesRequired())
+            success();
     }
 
     public abstract void left(Player player);

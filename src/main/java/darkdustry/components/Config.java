@@ -9,59 +9,40 @@ import static mindustry.net.Administration.Config.*;
 
 public class Config {
 
-    /**
-     * IP адрес Хаба.
-     */
+    /** IP адрес Хаба. */
     public String hubIp = "darkdustry.net";
 
-    /**
-     * Порт Хаба.
-     */
+    /** Порт Хаба. */
     public int hubPort = 6567;
 
-    /**
-     * Url для подключения к базе данных.
-     */
+    /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
 
-    /**
-     * Режим игры на сервере.
-     */
+    /** Режим игры на сервере. */
     public Gamemode mode = survival;
 
-    /**
-     * Токен бота, привязанного к серверу.
-     */
+    /** Токен бота, привязанного к серверу. */
     public String discordBotToken = "token";
 
-    /**
-     * Токен бота, привязанного к серверу.
-     */
+    /** Токен бота, привязанного к серверу. */
     public String discordBotPrefix = "prefix";
 
-    /**
-     * ID сервера в Discord, к которому привязан бот.
-     */
+    /** ID сервера в Discord, к которому привязан бот. */
     public long discordBotGuildId = 0L;
 
-    /**
-     * ID канала в Discord, куда отправляются все сообщения.
-     */
+    /** ID канала в Discord, куда отправляются все сообщения. */
     public long discordBotChannelId = 0L;
 
-    /**
-     * ID канала в Discord, куда отправляются подтверждения для администраторов.
-     */
+    /** ID канала в Discord, куда отправляются баны. */
+    public long discordBanChannelId = 0L;
+
+    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
     public long discordAdminChannelId = 0L;
 
-    /**
-     * ID роли администраторов в Discord.
-     */
+    /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
 
-    /**
-     * ID роли администраторов в Discord.
-     */
+    /** ID роли администраторов в Discord. */
     public long discordMapReviewerRoleId = 0L;
 
     public static void load() {

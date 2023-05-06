@@ -5,6 +5,7 @@ import mindustry.gen.*;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
+import static java.util.concurrent.TimeUnit.*;
 
 public class VoteKick extends VoteSession {
 
@@ -18,8 +19,8 @@ public class VoteKick extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
+        Bundle.send("commands.votekick.vote", player.coloredName(), target.coloredName(), votes() + sign, votesRequired());
         super.vote(player, sign);
-        Bundle.send("commands.votekick.vote", player.coloredName(), target.coloredName(), votes(), votesRequired());
     }
 
     @Override
@@ -34,8 +35,8 @@ public class VoteKick extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.votekick.passed", target.coloredName(), kickDuration / 60000);
-        Admins.kick(target, kickDuration, true, "kick.votekick", started.coloredName());
+        Bundle.send("commands.votekick.passed", target.coloredName(), MINUTES.toMillis(kickDuration));
+        Admins.kick(target, kickDuration, "kick.vote-kicked", started.coloredName()).kick(kickDuration);
     }
 
     @Override

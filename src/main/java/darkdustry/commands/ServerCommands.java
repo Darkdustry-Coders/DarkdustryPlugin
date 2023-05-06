@@ -3,6 +3,7 @@ package darkdustry.commands;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.components.*;
+import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
@@ -13,9 +14,9 @@ import useful.Bundle;
 import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
+import static java.util.concurrent.TimeUnit.*;
 import static mindustry.Vars.*;
 
 public class ServerCommands {
@@ -69,71 +70,74 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             Bundle.send("commands.say.chat", args[0]);
-            sendMessage(botChannel, "Server", args[0]);
+            Bot.sendMessage("Server", args[0]);
         });
 
-        serverCommands.register("kick", "<ID/username...>", "Kick a player.", args -> {
+        serverCommands.register("kick", "<ID/name> <minutes> [reason...]", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
-            Admins.kick(target, kickDuration, true, "kick.kick");
-            Bundle.send("events.server.kick", target.coloredName());
+            int minutes = parseInt(args[1]);
+            if (invalidDuration(minutes, 1, 1440)) return;
 
-            Log.info("Player @ has been kicked.", target.plainName());
+            var reason = args.length > 2 ? args[2] : "Not Specified";
+            Admins.kick(target, "Console", MINUTES.toMillis(minutes), reason);
+
+            Log.info("Player @ has been kicked for @ minutes.", target.plainName(), minutes);
         });
 
-        serverCommands.register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", args -> {
-            int days = parseInt(args[0]);
-            if (invalidDuration(days, 0, 365)) return;
-
-            var info = Find.playerInfo(args[1]);
-            if (notFound(info, args[1])) return;
-
-            long duration = days * 24 * 60 * 60 * 1000L;
-            Admins.ban(info.id, info.lastIP, duration);
-
-            var target = Find.playerByUuid(info.id);
-            if (target != null) {
-                Admins.kick(target, duration, true, "kick.ban");
-                Bundle.send("events.server.ban", target.coloredName());
-            }
-
-            Log.info("Player @ has been banned.", info.plainLastName());
-        });
-
-        serverCommands.register("unban", "<uuid/ip...>", "Unban a player.", args -> {
+        serverCommands.register("pardon", "<uuid/ip>", "Pardon a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
-
-            netServer.admins.unbanPlayerID(info.id);
-            info.ips.each(netServer.admins::unbanPlayerIP);
 
             info.lastKicked = 0L;
             info.ips.each(netServer.admins.kickedIPs::remove);
 
-            Log.info("Player @ has been unbanned.", info.plainLastName());
+            Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
-        serverCommands.register("bans", "List of all banned players.", args -> {
-            Log.info("ID-banned players:");
-            netServer.admins.getBanned().each(info -> Log.info("  Name: @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
-
-            Log.info("IP-banned players:");
-            netServer.admins.getBannedIPs().each(ip -> {
-                var info = netServer.admins.findByIP(ip);
-                Log.info("  Name: @ / ID: @ / IP: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip);
+        serverCommands.register("kicks", "List of all kicked players", args -> {
+            var kicks = netServer.admins.kickedIPs;
+            kicks.each((ip, time) -> {
+                if (time <= Time.millis())
+                    kicks.remove(ip);
             });
 
-            Log.info("Temp-banned players:");
-            netServer.admins.kickedIPs.each((ip, time) -> {
-                if (Time.timeSinceMillis(time) > 0) return;
-
+            Log.info("Kicked players: (@)", kicks.size);
+            kicks.each((ip, time) -> {
                 var info = netServer.admins.findByIP(ip);
                 Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip, formatLongDate(time));
             });
         });
 
-        serverCommands.register("admin", "<add/remove> <ID/username/uuid/ip...>", "Make a player admin.", args -> {
+        serverCommands.register("ban", "<ID/name/uuid/ip> <days> [reason...]", "Ban a player.", args -> {
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
+
+            int days = parseInt(args[1]);
+            if (invalidDuration(days, 1, 365)) return;
+
+            var reason = args.length > 2 ? args[2] : "Not Specified";
+            Admins.ban(info, "Console", DAYS.toMillis(days), reason);
+
+            Log.info("Player @ has been banned for @ days.", info.plainLastName(), days);
+        });
+
+        serverCommands.register("unban", "<name/uuid/ip...>", "Unban a player.", args -> {
+            var ban = Database.removeBan(args[0]);
+            if (notUnbanned(ban)) return;
+
+            Log.info("Player @ has been unbanned.", ban.player);
+        });
+
+        serverCommands.register("bans", "List of all banned players.", args -> {
+            var bans = Database.getBans();
+
+            Log.info("Banned players: (@)", bans.size);
+            bans.each(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.uuid, ban.ip, formatLongDate(ban.unbanDate.getTime())));
+        });
+
+        serverCommands.register("admin", "<add/remove> <ID/name/uuid/ip>", "Make a player admin.", args -> {
             var info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
 
@@ -163,11 +167,13 @@ public class ServerCommands {
         });
 
         serverCommands.register("admins", "List all admins.", args -> {
-            Log.info("Admins:");
-            netServer.admins.getAdmins().each(info -> Log.info("  Name: @ / ID: @ / IP: @", info.plainLastName(), info.id, info.lastIP));
+            var admins = netServer.admins.getAdmins();
+
+            Log.info("Admins: (@)", admins.size);
+            admins.each(admin -> Log.info("  Name: @ / ID: @ / IP: @", admin.plainLastName(), admin.id, admin.lastIP));
         });
 
-        serverCommands.register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", args -> {
+        serverCommands.register("stats", "<ID/name/uuid/ip>", "Look up a player stats.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -184,7 +190,7 @@ public class ServerCommands {
             Log.info("  Hexed wins: @", data.hexedWins);
         });
 
-        serverCommands.register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", args -> {
+        serverCommands.register("setrank", "<rank> <ID/name/uuid/ip...> ", "Set a player's rank.", args -> {
             var rank = Find.rank(args[0]);
             if (notFound(rank, args[0])) return;
 

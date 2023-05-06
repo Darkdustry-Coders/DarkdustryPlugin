@@ -12,14 +12,13 @@ import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
-import useful.Bundle;
 
 import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
+import static java.util.concurrent.TimeUnit.*;
 import static mindustry.Vars.*;
 
 public class DiscordCommands {
@@ -96,48 +95,56 @@ public class DiscordCommands {
                     .addField("File:", map.file.name(), false)).subscribe();
         });
 
-        register("ban", "<duration> <ID/username/uuid/ip...>", "Ban a player.", adminRole, (args, context) -> {
-            int days = parseInt(args[0]);
-            if (invalidDuration(context, days, 0, 365)) return;
+        register("kick", "<ID/name> <minutes> [reason...]", "Kick a player.", adminRole, (args, context) -> {
+            var target = Find.player(args[0]);
+            if (notFound(context, target)) return;
 
-            var info = Find.playerInfo(args[1]);
-            if (notFound(context, info)) return;
+            int minutes = parseInt(args[1]);
+            if (invalidDuration(context, minutes, 1, 1440)) return;
 
-            long duration = days * 24 * 60 * 60 * 1000L;
-            Admins.ban(info.id, info.lastIP, duration);
+            var reason = args.length > 2 ? args[2] : "Not Specified";
+            Admins.kick(target, context.member().getDisplayName(), MINUTES.toMillis(minutes), reason);
 
-            var target = Find.playerByUuid(info.id);
-            if (target != null) {
-                Admins.kick(target, duration, true, "kick.ban");
-                Bundle.send("events.server.ban", target.coloredName());
-            }
-
-            context.success(embed -> embed
-                    .title("Player Banned")
-                    .addField("Name:", info.plainLastName(), false)
-                    .addField("UUID:", info.id, false)
-                    .addField("IP:", info.lastIP, false)
-                    .addField("Unban date:", duration > 0 ? formatDiscordDate(Time.millis() + duration) : "permanent", false)).subscribe();
+            context.success(embed -> embed.title("Player Kicked")
+                    .addField("Name:", target.plainName(), false)
+                    .addField("Duration:", minutes + " minutes", false)
+                    .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("unban", "<uuid/ip...>", "Unban a player.", adminRole, (args, context) -> {
+        register("pardon", "<uuid/ip>", "Pardon a player.", adminRole, (args, context) -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
-
-            netServer.admins.unbanPlayerID(info.id);
-            info.ips.each(netServer.admins::unbanPlayerIP);
 
             info.lastKicked = 0L;
             info.ips.each(netServer.admins.kickedIPs::remove);
 
-            context.success(embed -> embed
-                    .title("Player Unbanned")
-                    .addField("Name:", info.plainLastName(), false)
-                    .addField("UUID:", info.id, false)
-                    .addField("IP:", info.lastIP, false)).subscribe();
+            context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
 
-        register("stats", "<ID/username/uuid/ip...>", "Look up a player stats.", (args, context) -> {
+        register("ban", "<ID/name/uuid/ip> <days> [reason...]", "Ban a player.", adminRole, (args, context) -> {
+            var info = Find.playerInfo(args[0]);
+            if (notFound(context, info)) return;
+
+            int days = parseInt(args[1]);
+            if (invalidDuration(context, days, 1, 365)) return;
+
+            var reason = args.length > 2 ? args[2] : "Not Specified";
+            Admins.ban(info, context.member().getDisplayName(), DAYS.toMillis(days), reason);
+
+            context.success(embed -> embed.title("Player Banned")
+                    .addField("Name:", info.plainLastName(), false)
+                    .addField("Duration:", days + " days", false)
+                    .addField("Reason:", reason, false)).subscribe();
+        });
+
+        register("unban", "<name/uuid/ip...>", "Unban a player.", adminRole, (args, context) -> {
+            var ban = Database.removeBan(args[0]);
+            if (notUnbanned(context, ban)) return;
+
+            context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
+        });
+
+        register("stats", "<ID/name/uuid/ip...>", "Look up a player stats.", (args, context) -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
@@ -157,7 +164,7 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        register("setrank", "<rank> <ID/username/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
+        register("setrank", "<rank> <ID/name/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
             var rank = Find.rank(args[0]);
             if (notFound(context, rank)) return;
 
@@ -177,7 +184,6 @@ public class DiscordCommands {
             context.success(embed -> embed
                     .title("Rank Changed")
                     .addField("Name:", info.plainLastName(), false)
-                    .addField("UUID:", info.id, false)
                     .addField("Rank:", rank.name(), false)).subscribe();
         });
     }

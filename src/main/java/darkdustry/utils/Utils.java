@@ -4,7 +4,7 @@ import arc.files.Fi;
 import arc.func.Cons3;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
-import arc.util.*;
+import arc.util.Log;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.*;
@@ -15,6 +15,7 @@ import useful.Bundle;
 
 import java.time.*;
 
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static discord4j.common.util.TimestampFormat.*;
 import static mindustry.Vars.*;
@@ -65,7 +66,7 @@ public class Utils {
     }
 
     public static String stripAll(String text) {
-        return Strings.stripColors(Strings.stripGlyphs(text));
+        return stripColors(stripGlyphs(text));
     }
 
     public static String stripDiscord(String text) {
@@ -97,7 +98,7 @@ public class Utils {
     }
 
     public static String formatDiscordDate(long time) {
-        return LONG_DATE.format(Instant.ofEpochMilli(time));
+        return RELATIVE_TIME.format(Instant.ofEpochMilli(time));
     }
 
     public static String formatDuration(long time, Player player) {
@@ -143,8 +144,8 @@ public class Utils {
 
             runnable.run();
             state.rules = state.map.applyRules(state.rules.mode());
-            logic.play();
 
+            logic.play();
             reloader.end();
         } catch (MapException e) {
             Log.err("@: @", e.map.name(), e.getMessage());

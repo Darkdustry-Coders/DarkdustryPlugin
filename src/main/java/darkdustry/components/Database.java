@@ -1,44 +1,38 @@
 package darkdustry.components;
 
-import arc.util.Threads;
-import com.mongodb.MongoClientSettings;
+import arc.struct.Seq;
+import arc.util.Time;
 import com.mongodb.client.*;
-import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.changestream.FullDocument;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
+import lombok.*;
 import mindustry.gen.Player;
-import org.bson.codecs.configuration.*;
-import org.bson.codecs.pojo.PojoCodecProvider;
+import useful.MongoRepository;
 
-import static arc.Core.*;
-import static com.mongodb.client.model.Filters.*;
+import java.util.Date;
+
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.*;
 
 public class Database {
 
-    public static final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-
     public static MongoClient client;
     public static MongoDatabase database;
-    public static MongoCollection<PlayerData> playersCollection;
+
+    public static MongoRepository<PlayerData> players;
+    public static MongoRepository<Ban> bans;
 
     public static void connect() {
         try {
             client = MongoClients.create(config.mongoUrl);
-            database = client.getDatabase("darkdustry").withCodecRegistry(registry);
-            playersCollection = database.getCollection("players", PlayerData.class);
+            database = client.getDatabase("darkdustry");
 
-            Threads.daemon(() -> playersCollection.watch(PlayerData.class)
-                    .fullDocument(FullDocument.UPDATE_LOOKUP)
-                    .forEach(stream -> {
-                        var data = stream.getFullDocument();
-                        if (data == null) return;
+            players = new MongoRepository<>(database, "players", PlayerData.class);
+            players.ascendingIndex("uuid");
+            players.watchAfterChange(Cache::update);
 
-                        app.post(() -> Cache.update(data));
-                    }));
+            bans = new MongoRepository<>(database, "bans", Ban.class);
+            bans.ascendingIndex("unbanDate", 0L);
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
@@ -50,18 +44,21 @@ public class Database {
         client.close();
     }
 
+    // region player data
+
     public static PlayerData getPlayerData(Player player) {
         return getPlayerData(player.uuid());
     }
 
     public static PlayerData getPlayerData(String uuid) {
-        return notNullElse(playersCollection.find(eq("uuid", uuid)).first(), new PlayerData(uuid));
+        return players.get("uuid", uuid, new PlayerData(uuid));
     }
 
     public static void savePlayerData(PlayerData data) {
-        playersCollection.replaceOne(eq("uuid", data.uuid), data, new ReplaceOptions().upsert(true));
+        players.replace("uuid", data.uuid, data);
     }
 
+    @NoArgsConstructor
     public static class PlayerData {
         public String uuid;
         public String name = "<unknown>";
@@ -85,11 +82,48 @@ public class Database {
 
         public Rank rank = Rank.player;
 
-        @SuppressWarnings("unused")
-        public PlayerData() {}
-
         public PlayerData(String uuid) {
             this.uuid = uuid;
         }
     }
+
+    // endregion
+    // region ban
+
+    public static Ban getBan(String uuid, String ip) {
+        return bans.getOr("uuid", uuid, "ip", ip);
+    }
+
+    public static Seq<Ban> getBans() {
+        return bans.all();
+    }
+
+    public static void addBan(Ban ban) {
+        bans.insert(ban);
+    }
+
+    public static Ban removeBan(String value) {
+        return bans.deleteOr("uuid", value, "ip", value, "player", value);
+    }
+
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Ban {
+        public String uuid, ip;
+        public String player, admin;
+
+        public String reason;
+        public Date unbanDate;
+
+        public boolean expired() {
+            return unbanDate.getTime() < Time.millis();
+        }
+
+        public long remaining() {
+            return unbanDate.getTime() - Time.millis();
+        }
+    }
+
+    // endregion
 }

@@ -11,16 +11,16 @@ import static mindustry.Vars.*;
 
 public class VoteRtv extends VoteSession {
 
-    public final Map target;
+    public final Map map;
 
-    public VoteRtv(Map target) {
-        this.target = target;
+    public VoteRtv(Map map) {
+        this.map = map;
     }
 
     @Override
     public void vote(Player player, int sign) {
+        Bundle.send("commands.rtv.vote", player.coloredName(), map.name(), votes() + sign, votesRequired());
         super.vote(player, sign);
-        Bundle.send("commands.rtv.vote", player.coloredName(), target.name(), votes(), votesRequired());
     }
 
     @Override
@@ -32,13 +32,13 @@ public class VoteRtv extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.rtv.passed", target.name(), mapLoadDelay);
-        Timer.schedule(() -> reloadWorld(() -> world.loadMap(target, target.applyRules(state.rules.mode()))), mapLoadDelay);
+        Bundle.send("commands.rtv.passed", map.name(), mapLoadDelay);
+        Timer.schedule(() -> reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode()))), mapLoadDelay);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.rtv.failed", target.name());
+        Bundle.send("commands.rtv.failed", map.name());
     }
 }

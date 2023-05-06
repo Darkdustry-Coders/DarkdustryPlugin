@@ -2,7 +2,7 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.*;
-import darkdustry.components.Cache;
+import darkdustry.components.*;
 import darkdustry.components.Config.Gamemode;
 import darkdustry.discord.Bot;
 import darkdustry.features.*;
@@ -18,15 +18,13 @@ import useful.Bundle;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
-import static darkdustry.discord.Bot.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> sendMessage(botChannel, EmbedCreateSpec.builder()
+        Events.on(ServerLoadEvent.class, event -> Bot.sendMessage(EmbedCreateSpec.builder()
                 .color(Color.SUMMER_SKY)
                 .title("Server launched")
                 .build()));
@@ -120,7 +118,7 @@ public class PluginEvents {
         }));
 
         Events.on(PlayerJoin.class, event -> {
-            var data = getPlayerData(event.player);
+            var data = Database.getPlayerData(event.player);
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
 
@@ -131,7 +129,7 @@ public class PluginEvents {
             Bundle.send("events.join", event.player.coloredName());
             Bundle.send(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
-            sendMessage(botChannel, EmbedCreateSpec.builder()
+            Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.MEDIUM_SEA_GREEN)
                     .title(event.player.plainName() + " joined")
                     .build());
@@ -139,19 +137,23 @@ public class PluginEvents {
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
 
+            // TODO
+            // if (data.discordUrl)
+            //     Call.openURI(discordServerUrl);
+
             app.post(Bot::updateActivity);
         });
 
         Events.on(PlayerLeave.class, event -> {
             var data = Cache.remove(event.player);
-            savePlayerData(data);
+            Database.savePlayerData(data);
 
             data.effects.leave.get(event.player);
 
             Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
             Bundle.send("events.leave", event.player.coloredName());
 
-            sendMessage(botChannel, EmbedCreateSpec.builder()
+            Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.CINNABAR)
                     .title(event.player.plainName() + " left")
                     .build());

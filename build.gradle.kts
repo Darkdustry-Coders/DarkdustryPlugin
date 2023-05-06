@@ -14,21 +14,24 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "1d2e528f9a"
+    val usefulHash = "9df3797ee7"
 
-    compileOnly("com.github.Anuken.Arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
+    compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
+    compileOnly("com.github.anuken.mindustry:core:v$mindustryVersion")
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.discord4j:discord4j-core:3.2.3")
-
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
-    implementation("com.github.xzxADIxzx.useful-stuffs:antiddos:$usefulHash")
-    implementation("com.github.xzxADIxzx.useful-stuffs:bundle:$usefulHash")
-    implementation("com.github.xzxADIxzx.useful-stuffs:cooldowns:$usefulHash")
-    implementation("com.github.xzxADIxzx.useful-stuffs:effect:$usefulHash")
-    implementation("com.github.xzxADIxzx.useful-stuffs:menu:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:antiddos:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
+
+    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
 }
 
 tasks.jar {

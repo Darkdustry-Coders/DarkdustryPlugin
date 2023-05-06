@@ -16,9 +16,7 @@ import static mindustry.Vars.*;
 
 public class SchemeSize {
 
-    /**
-     * Список игроков, использующих Scheme Size и их подписи.
-     */
+    /** Список игроков, использующих Scheme Size и их подписи. */
     public static final IntMap<String> signatures = new IntMap<>();
 
     public static void load() {

@@ -7,16 +7,16 @@ import useful.Bundle;
 
 public class VoteSave extends VoteSession {
 
-    public final Fi target;
+    public final Fi file;
 
-    public VoteSave(Fi target) {
-        this.target = target;
+    public VoteSave(Fi file) {
+        this.file = file;
     }
 
     @Override
     public void vote(Player player, int sign) {
+        Bundle.send("commands.savemap.vote", player.coloredName(), file.nameWithoutExtension(), votes() + sign, votesRequired());
         super.vote(player, sign);
-        Bundle.send("commands.savemap.vote", player.coloredName(), target.nameWithoutExtension(), votes(), votesRequired());
     }
 
     @Override
@@ -28,13 +28,13 @@ public class VoteSave extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.savemap.passed", target.nameWithoutExtension());
-        SaveIO.save(target);
+        Bundle.send("commands.savemap.passed", file.nameWithoutExtension());
+        SaveIO.save(file);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.savemap.failed", target.nameWithoutExtension());
+        Bundle.send("commands.savemap.failed", file.nameWithoutExtension());
     }
 }

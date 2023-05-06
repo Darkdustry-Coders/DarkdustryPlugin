@@ -2,7 +2,8 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.util.Log;
-import darkdustry.components.Icons;
+import darkdustry.components.*;
+import darkdustry.components.Database.Ban;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
@@ -54,6 +55,10 @@ public class Checks {
 
     public static boolean invalidDuration(int duration, int min, int max) {
         return check(duration < min || duration > max, "Duration should be an integer between @ and @.", min, max);
+    }
+
+    public static boolean notUnbanned(Ban ban) {
+        return check(ban == null, "No banned player found for provided data.");
     }
 
     // endregion
@@ -183,6 +188,10 @@ public class Checks {
         return check(map == null, context, "Map Not Found", "Check if the name is spelled correctly.");
     }
 
+    public static boolean notFound(MessageContext context, Player player) {
+        return check(player == null, context, "Player Not Found", "Check if the name is spelled correctly.");
+    }
+
     public static boolean notFound(MessageContext context, PlayerInfo info) {
         return check(info == null, context, "Player Not Found", "Check if the name is spelled correctly.");
     }
@@ -193,6 +202,10 @@ public class Checks {
 
     public static boolean invalidDuration(MessageContext context, int duration, int min, int max) {
         return check(duration < min || duration > max, context, "Invalid Duration", "Duration should be an integer between @ and @.", min, max);
+    }
+
+    public static boolean notUnbanned(MessageContext context, Ban ban) {
+        return check(ban == null, context, "Player Not Unbanned", "No banned player found for provided data.");
     }
 
     // endregion

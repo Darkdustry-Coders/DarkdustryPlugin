@@ -2,12 +2,12 @@ package darkdustry.listeners;
 
 import arc.util.Log;
 import darkdustry.components.Translator;
+import darkdustry.discord.Bot;
 import darkdustry.features.history.*;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerAction;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -34,7 +34,7 @@ public class Filters {
         author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
         Translator.translate(author, text);
 
-        sendMessage(botChannel, author.plainName(), text);
+        Bot.sendMessage(author.plainName(), text);
         return null;
     }
 }

@@ -52,9 +52,9 @@ public class MenuHandler {
     // endregion
     // region keys
 
+    public static final StateKey<Long> DURATION = new StateKey<>("duration", Long.class);
     public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
-    public static final StateKey<Long> DURATION = new StateKey<>("duration", Long.class);
 
     // endregion
     // region transforms
@@ -150,10 +150,10 @@ public class MenuHandler {
             menu.content("settings.content");
 
             menu.options(1, Setting.values()).row();
-            menu.option("setting.translator", Action.hide(), Action.open(languagesMenu), data.language.name(menu)).row();
-            menu.option("setting.effects", Action.hide(), Action.open(effectsMenu), data.effects.name(menu)).row();
+            menu.option("setting.translator", Action.open(languagesMenu), data.language.name(menu)).row();
+            menu.option("setting.effects", Action.open(effectsMenu), data.effects.name(menu)).row();
 
-            menu.option("ui.button.close", Action.hide());
+            menu.option("ui.button.close");
         }).followUp(true);
 
         languagesMenu.transform(menu -> {
@@ -164,8 +164,8 @@ public class MenuHandler {
 
             menu.options(3, Language.values()).row();
 
-            menu.option("ui.button.back", Action.hide(), Action.back());
-            menu.option("ui.button.close", Action.hide());
+            menu.option("ui.button.back", Action.back());
+            menu.option("ui.button.close");
         }).followUp(true);
 
         effectsMenu.transform(menu -> {
@@ -176,8 +176,8 @@ public class MenuHandler {
 
             menu.options(2, EffectsPack.values()).row();
 
-            menu.option("ui.button.back", Action.hide(), Action.back());
-            menu.option("ui.button.close", Action.hide());
+            menu.option("ui.button.back", Action.back());
+            menu.option("ui.button.close");
         }).followUp(true);
 
         // endregion
@@ -191,7 +191,7 @@ public class MenuHandler {
             input.textLength(32);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.kick(view.player, view.state.get(TARGET), view.state.get(DURATION), reason));
+            input.result((view, reason) -> Admins.kick(view.state.get(TARGET), view.player, view.state.get(DURATION), reason));
         });
 
         banReasonInput.transform(TARGET, (input, target) -> {
@@ -202,7 +202,7 @@ public class MenuHandler {
             input.textLength(32);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.ban(view.player, view.state.get(TARGET), view.state.get(DURATION), reason));
+            input.result((view, reason) -> Admins.ban(view.state.get(TARGET), view.player, view.state.get(DURATION), reason));
         });
 
         // endregion
@@ -276,9 +276,7 @@ public class MenuHandler {
         five_days(5),
         one_week(7),
         two_weeks(14),
-        one_month(30),
-
-        permanent(0); // Special case: a permanent ban is 0 days
+        one_month(30);
 
         public final long duration;
 

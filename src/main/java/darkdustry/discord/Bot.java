@@ -3,7 +3,7 @@ package darkdustry.discord;
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
-import darkdustry.features.AuthMe;
+import darkdustry.features.Authme;
 import discord4j.common.util.Snowflake;
 import discord4j.core.*;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
@@ -28,7 +28,7 @@ public class Bot {
 
     public static GatewayDiscordClient gateway;
 
-    public static GuildMessageChannel botChannel, adminChannel;
+    public static GuildMessageChannel botChannel, banChannel, adminChannel;
     public static Role adminRole, mapReviewerRole;
 
     public static boolean connected;
@@ -41,9 +41,11 @@ public class Bot {
                     .gateway()
                     .setEnabledIntents(IntentSet.of(Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES))
                     .login()
-                    .block();
+                    .blockOptional()
+                    .orElseThrow();
 
             botChannel = gateway.getChannelById(Snowflake.of(config.discordBotChannelId)).ofType(GuildMessageChannel.class).block();
+            banChannel = gateway.getChannelById(Snowflake.of(config.discordBanChannelId)).ofType(GuildMessageChannel.class).block();
             adminChannel = gateway.getChannelById(Snowflake.of(config.discordAdminChannelId)).ofType(GuildMessageChannel.class).block();
 
             adminRole = gateway.getRoleById(Snowflake.of(config.discordBotGuildId), Snowflake.of(config.discordAdminRoleId)).block();
@@ -86,16 +88,17 @@ public class Bot {
                 if (noRole(event, adminRole)) return;
 
                 switch (event.getValues().get(0)) {
-                    case "confirm" -> AuthMe.confirm(event);
-                    case "deny" -> AuthMe.deny(event);
-                    case "info" -> AuthMe.info(event);
+                    case "confirm" -> Authme.confirm(event);
+                    case "deny" -> Authme.deny(event);
+                    case "info" -> Authme.info(event);
                 }
             });
 
             gateway.getSelf()
                     .flatMap(user -> gateway.getGuilds()
                             .flatMap(guild -> guild.changeSelfNickname("[" + config.discordBotPrefix + "] " + user.getUsername()))
-                            .then()).subscribe();
+                            .then()
+                    ).subscribe();
 
             connected = true;
 
@@ -121,18 +124,13 @@ public class Bot {
             gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
     }
 
-    public static void sendMessage(GuildMessageChannel channel, String text) {
+    public static void sendMessage(String name, String message) {
         if (connected)
-            channel.createMessage(text).subscribe();
+            botChannel.createMessage("`" + stripDiscord(name) + ": " + stripDiscord(message) + "`").subscribe();
     }
 
-    public static void sendMessage(GuildMessageChannel channel, String name, String message) {
+    public static void sendMessage(EmbedCreateSpec embed) {
         if (connected)
-            sendMessage(channel, "`" + stripDiscord(name) + ": " + stripDiscord(message) + "`");
-    }
-
-    public static void sendMessage(GuildMessageChannel channel, EmbedCreateSpec embed) {
-        if (connected)
-            channel.createMessage(embed).subscribe();
+            botChannel.createMessage(embed).subscribe();
     }
 }
