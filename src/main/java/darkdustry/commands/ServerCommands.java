@@ -86,7 +86,7 @@ public class ServerCommands {
             Log.info("Player @ has been kicked for @ minutes.", target.plainName(), minutes);
         });
 
-        serverCommands.register("pardon", "<uuid/ip>", "Pardon a player.", args -> {
+        serverCommands.register("pardon", "<uuid/ip...>", "Pardon a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
