@@ -111,7 +111,7 @@ public class DiscordCommands {
                     .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("pardon", "<uuid/ip>", "Pardon a player.", adminRole, (args, context) -> {
+        register("pardon", "<uuid/ip...>", "Pardon a player.", adminRole, (args, context) -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
