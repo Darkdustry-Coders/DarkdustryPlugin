@@ -4,7 +4,7 @@
     "displayName": "Darkdustry Plugin",
     "author": "Darkness6030 & xzxADIxzx",
     "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
-    "version": "3.8",
+    "version": "3.9",
     "main": "darkdustry.DarkdustryPlugin",
     "repo": "Darkdustry-Coders/DarkdustryPlugin",
     "dependencies": []
