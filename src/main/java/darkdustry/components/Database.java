@@ -66,6 +66,7 @@ public class Database {
         public boolean alerts = true;
         public boolean history = false;
         public boolean welcomeMessage = true;
+        public boolean discordLink = true;
 
         public Language language = Language.off;
         public EffectsPack effects = EffectsPack.none;

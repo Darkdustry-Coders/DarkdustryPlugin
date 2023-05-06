@@ -20,6 +20,7 @@ import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.*;
 import static darkdustry.utils.Utils.*;
+import static java.util.concurrent.TimeUnit.*;
 import static mindustry.net.Administration.Config.*;
 
 @SuppressWarnings("unchecked")
@@ -261,7 +262,7 @@ public class MenuHandler {
         public final long duration;
 
         KickDuration(int minutes) {
-            this.duration = minutes * 60 * 1000L;
+            this.duration = MINUTES.toMillis(minutes);
         }
 
         @Override
@@ -281,7 +282,7 @@ public class MenuHandler {
         public final long duration;
 
         BanDuration(int days) {
-            this.duration = days * 24 * 60 * 60 * 1000L;
+            this.duration = DAYS.toMillis(days);
         }
 
         @Override
@@ -319,7 +320,8 @@ public class MenuHandler {
     public enum Setting implements OptionData {
         alerts(data -> data.alerts = !data.alerts, data -> data.alerts),
         history(data -> data.history = !data.history, data -> data.history),
-        welcomeMessage(data -> data.welcomeMessage = !data.welcomeMessage, data -> data.welcomeMessage);
+        welcomeMessage(data -> data.welcomeMessage = !data.welcomeMessage, data -> data.welcomeMessage),
+        discordLink(data -> data.discordLink = !data.discordLink, data -> data.discordLink);
 
         public final Cons<PlayerData> setter;
         public final Func<PlayerData, Boolean> getter;

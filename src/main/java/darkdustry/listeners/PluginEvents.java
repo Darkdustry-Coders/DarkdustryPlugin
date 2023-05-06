@@ -136,10 +136,8 @@ public class PluginEvents {
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
-
-            // TODO
-            // if (data.discordUrl)
-            //     Call.openURI(discordServerUrl);
+             else if (data.discordLink)
+                 Call.openURI(event.player.con, discordServerUrl);
 
             app.post(Bot::updateActivity);
         });
