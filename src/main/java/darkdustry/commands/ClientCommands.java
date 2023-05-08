@@ -46,7 +46,7 @@ public class ClientCommands {
         });
 
         register("votekick", (args, player) -> {
-            if (alreadyVoting(player, voteKick) || votekickDisabled(player)) return;
+            if (votekickDisabled(player) || alreadyVoting(player, voteKick)) return;
 
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
@@ -64,6 +64,7 @@ public class ClientCommands {
 
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
+
             voteKick.vote(player, sign);
         });
 

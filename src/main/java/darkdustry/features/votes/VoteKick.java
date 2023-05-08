@@ -35,7 +35,7 @@ public class VoteKick extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.votekick.passed", target.coloredName(), MINUTES.toMillis(kickDuration));
+        Bundle.send("commands.votekick.passed", target.coloredName(), MILLISECONDS.toMinutes(kickDuration));
         Admins.kick(target, kickDuration, "kick.vote-kicked", started.coloredName()).kick(kickDuration);
     }
 

@@ -123,7 +123,8 @@ public class PluginVars {
     /**
      * Используются для форматирования времени в дату.
      */
-    public static final DateTimeFormatter shortDateFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
+    public static final DateTimeFormatter
+            shortDateFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
             longDateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
 
     /**

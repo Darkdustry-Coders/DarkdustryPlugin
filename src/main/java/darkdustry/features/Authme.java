@@ -38,7 +38,7 @@ public class Authme {
         adminChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.MOON_YELLOW)
                 .title("Admin Request")
-                .addField("Nickname:", player.plainName(), true)
+                .addField("Name:", player.plainName(), true)
                 .addField("UUID:", player.uuid(), true)
                 .footer("Select the desired option to confirm or deny the request. Confirm only your requests!", null)
                 .build()

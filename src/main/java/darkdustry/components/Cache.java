@@ -20,10 +20,6 @@ public class Cache {
         return cache.remove(player.uuid());
     }
 
-    public static boolean contains(Player player) {
-        return cache.containsKey(player.uuid());
-    }
-
     public static void update(PlayerData data) {
         if (cache.containsKey(data.uuid))
             cache.put(data.uuid, data);

@@ -102,7 +102,7 @@ public class ConfigEntry implements HistoryEntry {
             return point.pack() != -1 && point.pack() != event.tile.pos();
 
         if (event.tile.block.configurations.containsKey(Point2[].class))
-            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY())::equals);
+            return Structs.contains((Point2[]) event.tile.config(), point.cpy().sub(event.tile.tileX(), event.tile.tileY()));
 
         return false;
     }
