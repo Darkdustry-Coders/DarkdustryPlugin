@@ -18,6 +18,7 @@ import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
 import useful.Bundle;
 
+import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
@@ -116,7 +117,7 @@ public class Bot {
 
     public static void updateActivity() {
         if (connected)
-            updateActivity("at " + Groups.player.size() + " players on " + stripColors(state.map.name()));
+            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + stripColors(state.map.name()));
     }
 
     public static void updateActivity(String activity) {

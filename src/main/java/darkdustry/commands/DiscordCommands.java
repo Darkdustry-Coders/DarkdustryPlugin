@@ -38,7 +38,7 @@ public class DiscordCommands {
         register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
                 .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
                 .title(state.isPlaying() ? "Server Running" : "Server Offline")
-                .addField("Players:", String.valueOf(Groups.player.size()), false)
+                .addField("Players:", String.valueOf(settings.getInt("totalPlayers", Groups.player.size())), false)
                 .addField("Units:", String.valueOf(Groups.unit.size()), false)
                 .addField("Map:", stripColors(state.map.name()), false)
                 .addField("Wave:", String.valueOf(state.wave), false)
