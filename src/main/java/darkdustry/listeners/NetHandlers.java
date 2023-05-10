@@ -39,7 +39,7 @@ public class NetHandlers {
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
 
-        var connections = Seq.with(net.getConnections()).filter(connection -> connection.address.equals(con.address));
+        var connections = Seq.with(net.getConnections()).filter(other -> other.address.equals(con.address));
         if (connections.size >= maxIdenticalIPs) {
             netServer.admins.blacklistDos(con.address);
             connections.each(NetConnection::close);
@@ -60,7 +60,7 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || Seq.with(net.getConnections()).contains(other -> other.uuid.equals(uuid) || other.usid.equals(usid))) {
+        if (con.hasBegunConnecting || Seq.with(net.getConnections()).count(other -> other.uuid.equals(uuid) || other.usid.equals(usid)) > 1) {
             Bundle.kick(con, locale, 0L, "kick.already-connected");
             return;
         }
