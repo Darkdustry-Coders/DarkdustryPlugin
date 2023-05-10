@@ -60,7 +60,7 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || Groups.player.contains(player -> player.uuid().equals(uuid) || player.usid().equals(usid))) {
+        if (con.hasBegunConnecting || Seq.with(net.getConnections()).contains(other -> other.uuid.equals(uuid) || other.usid.equals(usid))) {
             Bundle.kick(con, locale, 0L, "kick.already-connected");
             return;
         }
