@@ -20,26 +20,25 @@ public class Translator {
 
     public static void translate(Player author, String text) {
         var cache = new StringMap();
-        var message = netServer.chatFormatter.format(author, text);
 
         Groups.player.each(player -> player != author, player -> {
             var data = Cache.get(player);
 
             if (data.language == Language.off) {
-                player.sendMessage(message, author, text);
+                player.sendUnformatted(author, text);
                 return;
             }
 
             if (cache.containsKey(data.language.code)) {
-                player.sendMessage(cache.get(data.language.code), author, text);
+                player.sendUnformatted(author, cache.get(data.language.code));
                 return;
             }
 
             translate(text, "auto", data.language.code, translated -> {
-                var result = translated.isEmpty() ? message : message + " [white]([lightgray]" + translated + "[])";
+                var result = translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])";
 
                 cache.put(data.language.code, result);
-                player.sendMessage(result, author, text);
+                player.sendUnformatted(author, result);
             });
         });
     }

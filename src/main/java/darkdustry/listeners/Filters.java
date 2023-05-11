@@ -15,26 +15,18 @@ import static mindustry.net.Administration.ActionType.*;
 
 public class Filters {
 
-    public static boolean action(PlayerAction action) {
-        if (History.enabled() && action.type == rotate)
-            History.put(new RotateEntry(action), action.tile);
-
-        return true;
-    }
-
     public static String chat(Player author, String text) {
         int sign = voteChoice(text);
-        if (sign != 0 && vote != null) {
-            if (!alreadyVoted(author, vote)) vote.vote(author, sign);
-            return null;
-        }
+        if (sign == 0 || vote == null) {
+            Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
 
-        Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
+            author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
+            Translator.translate(author, text);
 
-        author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-        Translator.translate(author, text);
+            Bot.sendMessage(author.plainName(), text);
+        } else if (!alreadyVoted(author, vote))
+            vote.vote(author, sign);
 
-        Bot.sendMessage(author.plainName(), text);
         return null;
     }
 }

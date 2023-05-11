@@ -2,8 +2,8 @@ package darkdustry.features.history;
 
 import arc.util.Time;
 import darkdustry.components.Icons;
+import mindustry.game.EventType.BuildRotateEvent;
 import mindustry.gen.Player;
-import mindustry.net.Administration.PlayerAction;
 import useful.Bundle;
 
 import static darkdustry.components.Icons.*;
@@ -14,13 +14,13 @@ public class RotateEntry implements HistoryEntry {
 
     public final String uuid;
     public final short blockID;
-    public final byte rotation;
+    public final int rotation;
     public final long time;
 
-    public RotateEntry(PlayerAction action) {
-        this.uuid = action.player.uuid();
-        this.blockID = action.tile.blockID();
-        this.rotation = (byte) action.rotation;
+    public RotateEntry(BuildRotateEvent event) {
+        this.uuid = event.unit.getPlayer().uuid();
+        this.blockID = event.build.block.id;
+        this.rotation = event.build.rotation;
         this.time = Time.millis();
     }
 

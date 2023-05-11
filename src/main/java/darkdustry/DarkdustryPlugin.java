@@ -3,7 +3,6 @@
 
 package darkdustry;
 
-import arc.graphics.*;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
@@ -17,20 +16,12 @@ import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
 
-import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
-
-    public static void exit() {
-        netServer.kickAll(KickReason.serverRestarting);
-        app.post(Database::exit);
-        app.post(Bot::exit);
-        app.exit();
-    }
 
     public static void info(String text, Object... values) {
         Log.infoTag("Darkdustry", Strings.format(text, values));
@@ -49,7 +40,7 @@ public class DarkdustryPlugin extends Plugin {
         PluginEvents.load();
 
         AntiDdos.loadBlacklist();
-        Bundle.load(DarkdustryPlugin.class, defaultLanguage);
+        Bundle.load(getClass());
         Cooldowns.defaults(
                 "default", 1000L,
                 "sync", 15000L,
@@ -75,9 +66,7 @@ public class DarkdustryPlugin extends Plugin {
         net.handleServer(ConnectPacket.class, NetHandlers::connect);
         net.handleServer(AdminRequestCallPacket.class, NetHandlers::adminRequest);
 
-        netServer.admins.addActionFilter(Filters::action);
         netServer.admins.addChatFilter(Filters::chat);
-
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
         maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
@@ -96,9 +85,6 @@ public class DarkdustryPlugin extends Plugin {
                 MenuHandler.showPromotionMenu(player, data);
             }
         }), 60f, 60f);
-
-        // Исправляем обнаружение некоторых цветов
-        Colors.getColors().putAll("accent", Color.white, "unlaunched", Color.white, "highlight", Color.white, "stat", Color.white, "negstat", Color.white);
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
     }

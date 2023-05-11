@@ -2,7 +2,6 @@ package darkdustry.commands;
 
 import arc.util.*;
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.DarkdustryPlugin;
 import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks;
@@ -12,6 +11,7 @@ import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
+import mindustry.net.Packets.KickReason;
 
 import static arc.Core.*;
 import static arc.util.Strings.*;
@@ -45,7 +45,10 @@ public class DiscordCommands {
                 .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
-        register("exit", "Exit the server application.", adminRole, (args, context) -> context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> DarkdustryPlugin.exit()));
+        register("exit", "Exit the server application.", adminRole, (args, context) -> context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> {
+            netServer.kickAll(KickReason.serverRestarting);
+            app.exit();
+        }));
 
         register("map", "<map...>", "Map", (args, context) -> {
             var map = Find.map(args[0]);

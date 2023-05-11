@@ -77,11 +77,11 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(!isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units().select(Utils::isAvailable)));
+        return check(type == null || !isAvailable(type), player, "commands.unit-not-found", Icons.contentList(content.units().select(Utils::isAvailable)));
     }
 
     public static boolean notFound(Player player, Block block) {
-        return check(!isAvailable(block), player, "commands.block-not-found", Icons.contentList(content.blocks().select(Utils::isAvailable)));
+        return check(block == null || !isAvailable(block), player, "commands.block-not-found");
     }
 
     public static boolean notFound(Player player, Item item) {

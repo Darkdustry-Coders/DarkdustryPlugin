@@ -40,10 +40,6 @@ public class Database {
         }
     }
 
-    public static void exit() {
-        client.close();
-    }
-
     // region player data
 
     public static PlayerData getPlayerData(Player player) {

@@ -64,19 +64,19 @@ public class PluginEvents {
 
         Events.on(WithdrawEvent.class, event -> {
             if (History.enabled() && event.player != null)
-                History.put(new WithdrawEntry(event), event.tile.tile);
+                History.put(event.tile.tile, new WithdrawEntry(event));
         });
 
         Events.on(DepositEvent.class, event -> {
             if (History.enabled() && event.player != null)
-                History.put(new DepositEntry(event), event.tile.tile);
+                History.put(event.tile.tile, new DepositEntry(event));
 
             Alerts.depositAlert(event);
         });
 
         Events.on(ConfigEvent.class, event -> {
             if (History.enabled() && event.player != null)
-                History.put(new ConfigEntry(event), event.tile.tile);
+                History.put(event.tile.tile, new ConfigEntry(event));
         });
 
         Events.on(TapEvent.class, event -> {
@@ -94,13 +94,20 @@ public class PluginEvents {
         });
 
         Events.on(BlockBuildEndEvent.class, event -> {
-            if (!event.unit.isPlayer()) return;
+            if (event.unit == null || !event.unit.isPlayer()) return;
 
             if (History.enabled() && event.tile.build != null)
-                History.put(new BlockEntry(event), event.tile);
+                History.put(event.tile, new BlockEntry(event));
 
             if (event.breaking) brokenBlocksCache.increment(event.unit.getPlayer().id);
             else placedBlocksCache.increment(event.unit.getPlayer().id);
+        });
+
+        Events.on(BuildRotateEvent.class, event -> {
+            if (event.unit == null || !event.unit.isPlayer()) return;
+
+            if (History.enabled())
+                History.put(event.build.tile, new RotateEntry(event));
         });
 
         Events.on(BuildSelectEvent.class, event -> {

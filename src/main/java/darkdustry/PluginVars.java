@@ -57,9 +57,6 @@ public class PluginVars {
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;
 
-    /** Язык по умолчанию. */
-    public static final String defaultLanguage = "en";
-
     /** Название файла, в котором хранится конфигурация сервера. */
     public static final String configFileName = "config.json";
 

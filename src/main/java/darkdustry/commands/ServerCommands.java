@@ -1,7 +1,6 @@
 package darkdustry.commands;
 
 import arc.util.*;
-import darkdustry.DarkdustryPlugin;
 import darkdustry.components.*;
 import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
@@ -9,6 +8,8 @@ import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
+import mindustry.net.Packets;
+import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -26,13 +27,14 @@ public class ServerCommands {
     public static void load() {
         serverCommands.register("exit", "Exit the server application.", args -> {
             Log.info("Shutting down server.");
-            DarkdustryPlugin.exit();
+            netServer.kickAll(KickReason.serverRestarting);
+            app.exit();
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
+            Log.info("Stopping server.");
             net.closeServer();
             state.set(State.menu);
-            Log.info("Stopped server.");
         });
 
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {

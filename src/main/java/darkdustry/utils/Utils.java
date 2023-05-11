@@ -52,11 +52,11 @@ public class Utils {
     }
 
     public static boolean isAvailable(UnitType type) {
-        return type != null && !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
+        return !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
     }
 
     public static boolean isAvailable(Block block) {
-        return block != null && block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
+        return block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
     }
 
     // region strings

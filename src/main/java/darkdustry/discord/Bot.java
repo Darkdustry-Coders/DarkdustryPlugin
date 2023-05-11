@@ -110,11 +110,6 @@ public class Bot {
         }
     }
 
-    public static void exit() {
-        if (connected)
-            gateway.logout().subscribe();
-    }
-
     public static void updateActivity() {
         if (connected)
             updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + stripColors(state.map.name()));

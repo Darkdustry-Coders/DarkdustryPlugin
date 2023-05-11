@@ -15,8 +15,8 @@ public class VoteVnw extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        super.vote(player, sign);
         Bundle.send("commands.vnw.vote", player.coloredName(), waves, votes() + sign, votesRequired());
+        super.vote(player, sign);
     }
 
     @Override

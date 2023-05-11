@@ -18,7 +18,7 @@ public class History {
         history = new HistoryStack[world.width() * world.height()];
     }
 
-    public static void put(HistoryEntry entry, Tile tile) {
+    public static void put(Tile tile, HistoryEntry entry) {
         if (tile == emptyTile) return;
 
         tile.getLinkedTiles(other -> {
