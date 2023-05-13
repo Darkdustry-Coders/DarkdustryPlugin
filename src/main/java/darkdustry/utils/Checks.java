@@ -30,7 +30,7 @@ public class Checks {
     // region console
 
     public static boolean alreadyHosting() {
-        return check(!state.isMenu(), "Already hosting.");
+        return check(state.isGame(), "Already hosting.");
     }
 
     public static boolean notFound(Gamemode mode, String name) {

@@ -8,7 +8,6 @@ import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
-import mindustry.net.Packets;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
@@ -26,15 +25,17 @@ public class ServerCommands {
     // (C) xzxADIxzx, 2023 год вне н.э.
     public static void load() {
         serverCommands.register("exit", "Exit the server application.", args -> {
-            Log.info("Shutting down server.");
             netServer.kickAll(KickReason.serverRestarting);
             app.exit();
+
+            Log.info("Server exited.");
         });
 
         serverCommands.register("stop", "Stop hosting the server.", args -> {
-            Log.info("Stopping server.");
             net.closeServer();
             state.set(State.menu);
+
+            Log.info("Server stopped.");
         });
 
         serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {

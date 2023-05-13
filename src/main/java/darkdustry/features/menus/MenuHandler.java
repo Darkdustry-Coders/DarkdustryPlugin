@@ -53,9 +53,10 @@ public class MenuHandler {
     // endregion
     // region keys
 
-    public static final StateKey<Long> DURATION = new StateKey<>("duration", Long.class);
     public static final StateKey<Player> TARGET = new StateKey<>("target", Player.class);
     public static final StateKey<PlayerData> DATA = new StateKey<>("data", PlayerData.class);
+
+    public static final StateKey<Long> DURATION = new StateKey<>("duration", long.class);
 
     // endregion
     // region transforms
@@ -186,7 +187,7 @@ public class MenuHandler {
 
         kickReasonInput.transform(TARGET, (input, target) -> {
             input.title("kick.reason.title");
-            input.content("kick.reason.content", target.coloredName());
+            input.content("kick.reason.content", target.coloredName(), formatDuration(input.state.get(DURATION), input.player));
 
             input.defaultText("kick.reason.default");
             input.textLength(32);
@@ -197,7 +198,7 @@ public class MenuHandler {
 
         banReasonInput.transform(TARGET, (input, target) -> {
             input.title("ban.reason.title");
-            input.content("ban.reason.content", target.coloredName());
+            input.content("ban.reason.content", target.coloredName(), formatDuration(input.state.get(DURATION), input.player));
 
             input.defaultText("ban.reason.default");
             input.textLength(32);
@@ -257,7 +258,7 @@ public class MenuHandler {
         thirty_minutes(30),
         one_hour(60),
         two_hours(120),
-        six_hours(720);
+        six_hours(360);
 
         public final long duration;
 
