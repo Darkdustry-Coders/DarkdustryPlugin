@@ -13,6 +13,7 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import useful.Bundle;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 
 import static arc.util.Strings.*;
@@ -89,15 +90,15 @@ public class Utils {
         return first.equalsIgnoreCase(second) || first.toLowerCase().contains(second.toLowerCase());
     }
 
-    public static String formatShortDate(long time) {
-        return shortDateFormat.format(Instant.ofEpochMilli(time));
+    public static String formatTime(long time) {
+        return SimpleDateFormat.getTimeInstance().format(time);
     }
 
-    public static String formatLongDate(long time) {
-        return longDateFormat.format(Instant.ofEpochMilli(time));
+    public static String formatDateTime(long time) {
+        return SimpleDateFormat.getDateTimeInstance().format(time);
     }
 
-    public static String formatDiscordDate(long time) {
+    public static String formatTimestamp(long time) {
         return LONG_DATE.format(Instant.ofEpochMilli(time));
     }
 

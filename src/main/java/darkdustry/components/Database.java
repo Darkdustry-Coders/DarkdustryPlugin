@@ -96,7 +96,7 @@ public class Database {
     }
 
     public static void addBan(Ban ban) {
-        bans.insert(ban);
+        bans.replaceOr("uuid", ban.uuid, "ip", ban.ip, ban);
     }
 
     public static Ban removeBan(String value) {

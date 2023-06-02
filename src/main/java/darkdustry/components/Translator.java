@@ -1,14 +1,13 @@
 package darkdustry.components;
 
-import arc.func.Cons;
-import arc.struct.StringMap;
+import arc.func.*;
 import arc.util.*;
 import arc.util.serialization.JsonReader;
 import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.*;
+import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static mindustry.Vars.*;
 
 public class Translator {
 
@@ -18,28 +17,24 @@ public class Translator {
                 .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).get(0).get(0).asString()));
     }
 
-    public static void translate(Player author, String text) {
-        var cache = new StringMap();
+    public static void translate(Player from, String text) {
+        translate(player -> true, from, text, (player, result) -> player.sendUnformatted(from, result));
+    }
 
-        Groups.player.each(player -> player != author, player -> {
+    public static void translate(Boolf<Player> filter, Player from, String text, String key, Object... values) {
+        translate(filter, from, text, (player, result) -> Bundle.sendFrom(player, from, result, key, values));
+    }
+
+    public static void translate(Boolf<Player> filter, Player from, String text, Cons2<Player, String> cons) {
+        Groups.player.each(filter, player -> {
             var data = Cache.get(player);
 
-            if (data.language == Language.off) {
-                player.sendUnformatted(author, text);
+            if (player == from || data.language == Language.off) {
+                cons.get(player, text);
                 return;
             }
 
-            if (cache.containsKey(data.language.code)) {
-                player.sendUnformatted(author, cache.get(data.language.code));
-                return;
-            }
-
-            translate(text, "auto", data.language.code, translated -> {
-                var result = translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])";
-
-                cache.put(data.language.code, result);
-                player.sendUnformatted(author, result);
-            });
+            translate(text, "auto", data.language.code, translated -> cons.get(player, translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])"));
         });
     }
 }

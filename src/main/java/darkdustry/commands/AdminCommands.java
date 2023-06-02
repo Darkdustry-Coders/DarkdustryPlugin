@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.Icons;
+import darkdustry.components.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.content.Blocks;
@@ -19,7 +19,7 @@ import static useful.Bundle.*;
 public class AdminCommands {
 
     public static void load() {
-        register("a", (args, player) -> Bundle.sendFrom(Player::admin, player, args[0], "commands.a.chat", player.coloredName(), args[0]));
+        register("a", (args, player) -> Translator.translate(Player::admin, player, args[0], "commands.a.chat", player.coloredName()));
 
         if (config.mode.useRtv()) {
             register("artv", (args, player) -> {

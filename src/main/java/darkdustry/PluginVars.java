@@ -75,11 +75,6 @@ public class PluginVars {
     /** Используется для считывания и записи Json объектов. */
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
-    /** Используются для форматирования времени в дату. */
-    public static final DateTimeFormatter
-            shortDateFormat = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("Europe/Moscow")),
-            longDateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Moscow"));
-
     /** Конфигурация сервера. */
     public static Config config;
 

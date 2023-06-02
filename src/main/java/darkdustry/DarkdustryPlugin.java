@@ -17,6 +17,7 @@ import mindustry.net.Packets.*;
 import useful.*;
 
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Database.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -37,6 +38,7 @@ public class DarkdustryPlugin extends Plugin {
         Time.mark();
 
         Config.load();
+        Console.load();
         PluginEvents.load();
 
         AntiDdos.loadBlacklist();
@@ -84,6 +86,8 @@ public class DarkdustryPlugin extends Plugin {
                 Ranks.name(player, data);
                 MenuHandler.showPromotionMenu(player, data);
             }
+
+            savePlayerData(data);
         }), 60f, 60f);
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());

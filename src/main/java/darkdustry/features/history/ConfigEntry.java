@@ -38,7 +38,7 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
-        var date = formatShortDate(time);
+        var date = formatTime(time);
 
         if (value instanceof MappableContent content) {
             return Bundle.format("history.config", player, info.lastName, Icons.icon(block), Icons.icon(content), date);

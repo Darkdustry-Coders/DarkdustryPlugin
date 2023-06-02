@@ -109,7 +109,7 @@ public class ServerCommands {
             Log.info("Kicked players: (@)", kicks.size);
             kicks.each((ip, time) -> {
                 var info = netServer.admins.findByIP(ip);
-                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip, formatLongDate(time));
+                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip, formatDateTime(time));
             });
         });
 
@@ -137,7 +137,7 @@ public class ServerCommands {
             var bans = Database.getBans();
 
             Log.info("Banned players: (@)", bans.size);
-            bans.each(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.uuid, ban.ip, formatLongDate(ban.unbanDate.getTime())));
+            bans.each(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.uuid, ban.ip, formatDateTime(ban.unbanDate.getTime())));
         });
 
         serverCommands.register("admin", "<add/remove> <ID/name/uuid/ip>", "Make a player admin.", args -> {

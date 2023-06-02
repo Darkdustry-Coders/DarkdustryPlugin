@@ -15,18 +15,17 @@ import static mindustry.net.Administration.ActionType.*;
 
 public class Filters {
 
-    public static String chat(Player author, String text) {
+    public static String chat(Player from, String text) {
         int sign = voteChoice(text);
         if (sign == 0 || vote == null) {
-            Log.info("&fi@: @", "&lc" + author.plainName(), "&lw" + text);
+            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + text);
+            Translator.translate(from, text);
 
-            author.sendMessage(netServer.chatFormatter.format(author, text), author, text);
-            Translator.translate(author, text);
+            Bot.sendMessage(from.plainName(), text);
+            return null;
+        }
 
-            Bot.sendMessage(author.plainName(), text);
-        } else if (!alreadyVoted(author, vote))
-            vote.vote(author, sign);
-
+        if (!alreadyVoted(from, vote)) vote.vote(from, sign);
         return null;
     }
 }

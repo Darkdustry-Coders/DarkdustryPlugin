@@ -15,7 +15,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.gateway.intent.*;
 import discord4j.rest.util.AllowedMentions;
 import mindustry.gen.Groups;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.*;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -61,27 +61,23 @@ public class Bot {
 
                 message.getChannel()
                         .map(channel -> new MessageContext(message, member, channel))
-                        .flatMap(context -> {
-                            var response = discordCommands.handleMessage(context.message().getContent(), context);
-                            return switch (response.type) {
-                                case fewArguments ->
-                                        context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText);
-                                case manyArguments ->
-                                        context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText);
-                                case unknownCommand ->
-                                        context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix);
-                                default -> Mono.empty();
-                            };
-                        }).subscribe();
+                        .subscribe(context -> {
+                            var response = discordCommands.handleMessage(message.getContent(), context);
+                            switch (response.type) {
+                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+                            }
+                        });
 
                 if (!message.getChannelId().equals(botChannel.getId())) return;
 
                 member.getHighestRole().switchIfEmpty(Mono.fromRunnable(() -> {
                     Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat.no-role", member.getDisplayName(), message.getContent());
+                    Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
                 })).subscribe(role -> {
                     Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat", Integer.toHexString(role.getColor().getRGB()), role.getName(), member.getDisplayName(), message.getContent());
+                    Bundle.send("discord.chat.role", Integer.toHexString(role.getColor().getRGB()), role.getName(), member.getDisplayName(), message.getContent());
                 });
             });
 

@@ -26,6 +26,6 @@ public class RotateEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
-        return Bundle.format("history.rotate", player, info.lastName, Icons.icon(content.block(blockID)), sides.get(rotation), formatShortDate(time));
+        return Bundle.format("history.rotate", player, info.lastName, Icons.icon(content.block(blockID)), sides.get(rotation), formatTime(time));
     }
 }

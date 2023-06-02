@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.Cache;
+import darkdustry.components.*;
 import darkdustry.features.Authme;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
@@ -20,7 +20,7 @@ import static useful.Bundle.*;
 public class ClientCommands {
 
     public static void load() {
-        register("help", PageIterator::commands);
+        register("help", (args, player) -> MenuHandler.showHelpMenu(player));
 
         register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
@@ -29,11 +29,11 @@ public class ClientCommands {
             netServer.sendWorldData(player);
         });
 
-        register("t", (args, player) -> Bundle.sendFrom(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName(), args[0]));
+        register("t", (args, player) -> Translator.translate(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName()));
 
         register("settings", (args, player) -> MenuHandler.showSettingsMenu(player));
 
-        register("players", PageIterator::players);
+        register("players", (args, player) -> MenuHandler.showPlayersMenu(player));
 
         if (!config.hubIp.isEmpty())
             register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, host.address, host.port), error -> Bundle.send(player, "commands.hub.failed", error.getMessage())));
@@ -88,7 +88,7 @@ public class ClientCommands {
                 vote.vote(player, 1);
             });
 
-            register("maps", PageIterator::maps);
+            register("maps", (args, player) -> MenuHandler.showMapsMenu(player));
         }
 
         if (config.mode.useVnw()) {
@@ -121,7 +121,7 @@ public class ClientCommands {
                 vote.vote(player, 1);
             });
 
-            register("saves", PageIterator::saves);
+            register("saves", (args, player) -> MenuHandler.showSavesMenu(player));
         }
     }
 
