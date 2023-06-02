@@ -1,12 +1,11 @@
 package darkdustry.utils;
 
-import arc.func.Cons3;
+import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import arc.util.Strings;
 import darkdustry.discord.MessageContext;
-import darkdustry.features.menus.MenuHandler;
-import mindustry.gen.*;
-import useful.Bundle;
+import mindustry.gen.Groups;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -19,26 +18,45 @@ public class PageIterator {
     // region discord
 
     public static void players(String[] args, MessageContext context) {
-        discord("Players Online: ", args, context, Groups.player.copy(new Seq<>()), (builder, i, player) ->
-                builder.append("**").append(i + 1).append(".** ").append(player.plainName()).append(" **|** ID: #").append(player.id).append(" **|** Locale: ").append(player.locale));
+        discord(args, context,
+                "Players Online: @",
+                "Page @ / @",
+
+                Groups.player.copy(new Seq<>()),
+
+                (player, index) -> format("**@.** @", index, player.plainName()),
+                (player) -> format("ID: #@\nLocale: @", player.id, player.locale)
+        );
     }
 
     public static void maps(String[] args, MessageContext context) {
-        discord("Maps in Playlist: ", args, context, getAvailableMaps(), (builder, i, map) ->
-                builder.append("**").append(i + 1).append(".** ").append(stripColors(map.name())).append(" by ").append(stripColors(map.author())).append("\n").append(map.width).append("x").append(map.height));
+        discord(args, context,
+                "Maps in Playlist: @",
+                "Page @ / @",
+
+                getAvailableMaps(),
+
+                (map, index) -> format("**@.** @", index, stripColors(map.name())),
+                (map) -> format("Author: @\nSize: @x@", stripColors(map.author()), map.width, map.height)
+        );
     }
 
-    private static <T> void discord(String title, String[] args, MessageContext context, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+    private static <T> void discord(String[] args, MessageContext context, String title, String footer, Seq<T> values, Func2<T, Integer, String> fieldName, Func<T, String> fieldValue) {
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(values.size / (float) maxPerPage));
         if (page > pages || page < 1) {
             context.error("Invalid Page", "Page must be a number between 1 and @.", pages).subscribe();
             return;
         }
 
-        context.info(embed -> embed
-                .title(title + content.size)
-                .description(formatList(content, page, cons))
-                .footer("Page " + page + " / " + pages, null)).subscribe();
+        context.info(embed -> {
+            embed.title(format(title, values.size));
+            embed.footer(format(footer, page, pages), null);
+
+            for (int index = maxPerPage * (page - 1); index < Math.min(maxPerPage * page, values.size); index++) {
+                var value = values.get(index);
+                embed.addField(fieldName.get(value, index + 1), fieldValue.get(value), false);
+            }
+        }).subscribe();
     }
 
     // endregion

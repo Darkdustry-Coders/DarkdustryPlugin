@@ -1,17 +1,18 @@
 package darkdustry.discord;
 
 import arc.func.Cons;
-import arc.util.Strings;
 import discord4j.core.object.entity.*;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
 import discord4j.rest.util.Color;
 
+import static arc.util.Strings.*;
+
 public record MessageContext(Message message, Member member, MessageChannel channel) {
 
     public MessageCreateMono success(String title, String content, Object... values) {
-        return success(embed -> embed.title(title).description(Strings.format(content, values)));
+        return success(embed -> embed.title(title).description(format(content, values)));
     }
 
     public MessageCreateMono success(Cons<Builder> cons) {
@@ -22,7 +23,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public MessageCreateMono error(String title, String content, Object... values) {
-        return error(embed -> embed.title(title).description(Strings.format(content, values)));
+        return error(embed -> embed.title(title).description(format(content, values)));
     }
 
     public MessageCreateMono error(Cons<Builder> cons) {
@@ -33,7 +34,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public MessageCreateMono info(String title, String content, Object... values) {
-        return info(embed -> embed.title(title).description(Strings.format(content, values)));
+        return info(embed -> embed.title(title).description(format(content, values)));
     }
 
     public MessageCreateMono info(Cons<Builder> cons) {

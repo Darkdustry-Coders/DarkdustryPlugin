@@ -16,6 +16,7 @@ import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
 
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.utils.Utils.*;
@@ -25,11 +26,11 @@ import static mindustry.Vars.*;
 public class DarkdustryPlugin extends Plugin {
 
     public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", Strings.format(text, values));
+        Log.infoTag("Darkdustry", format(text, values));
     }
 
     public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", Strings.format(text, values));
+        Log.errTag("Darkdustry", format(text, values));
     }
 
     @Override

@@ -46,7 +46,7 @@ public class PluginVars {
     public static final int maxFillArea = 512;
 
     /** Количество элементов на одной странице списка. */
-    public static final int maxPerPage = 6;
+    public static final int maxPerPage = 8;
 
     /** Максимальное количество записей истории на один тайл. */
     public static final int maxHistoryCapacity = 6;
