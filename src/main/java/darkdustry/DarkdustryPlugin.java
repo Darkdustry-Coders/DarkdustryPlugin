@@ -72,7 +72,7 @@ public class DarkdustryPlugin extends Plugin {
         netServer.admins.addChatFilter(Filters::chat);
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
-        maps.setMapProvider((mode, map) -> getAvailableMaps().random(map));
+        maps.setMapProvider((mode, map) -> availableMaps().random(map));
 
         Timer.schedule(() -> Groups.player.each(player -> {
             var data = Cache.get(player);

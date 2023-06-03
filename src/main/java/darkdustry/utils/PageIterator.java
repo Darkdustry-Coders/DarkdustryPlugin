@@ -3,9 +3,10 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Strings;
 import darkdustry.discord.MessageContext;
-import mindustry.gen.Groups;
+import darkdustry.features.menus.MenuHandler;
+import mindustry.gen.*;
+import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -15,6 +16,43 @@ import static darkdustry.utils.Utils.*;
 // (C) xzxADIxzx, 2023 год
 public class PageIterator {
 
+    // region client
+
+    public static void commands(String[] args, Player player) {
+        client(args, player, "help", availableCommands(player), (builder, index, command) -> {
+            var params = Bundle.get("commands." + command.text + ".params", command.paramText, player);
+            var description = Bundle.get("commands." + command.text + ".description", command.description, player);
+
+            builder.append(Bundle.format("commands.help.command", player, command.text, params, description));
+        });
+    }
+
+    public static void players(String[] args, Player player) {
+        client(args, player, "players", Groups.player.copy(new Seq<>()), (builder, index, p) ->
+                builder.append(Bundle.format("commands.players.player", player, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
+    }
+
+    public static void maps(String[] args, Player player) {
+        client(args, player, "maps", availableMaps(), (builder, index, map) ->
+                builder.append(Bundle.format("commands.maps.map", player, index, map.name(), map.author(), map.width, map.height)));
+    }
+
+    public static void saves(String[] args, Player player) {
+        client(args, player, "saves", availableSaves(), (builder, index, save) ->
+                builder.append(Bundle.format("commands.saves.save", player, index, save.nameWithoutExtension(), formatDateTime(save.lastModified()))));
+    }
+
+    private static <T> void client(String[] args, Player player, String command, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {
+        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(content.size / (float) maxPerPage));
+        if (page > pages || page < 1) {
+            Bundle.send(player, "commands.invalid-page", pages);
+            return;
+        }
+
+        MenuHandler.showListMenu(player, page, pages, "commands." + command + ".title", content, cons);
+    }
+
+    // endregion
     // region discord
 
     public static void players(String[] args, MessageContext context) {
@@ -34,7 +72,7 @@ public class PageIterator {
                 "Maps in Playlist: @",
                 "Page @ / @",
 
-                getAvailableMaps(),
+                availableMaps(),
 
                 (map, index) -> format("**@.** @", index, stripColors(map.name())),
                 (map) -> format("Author: @\nSize: @x@", stripColors(map.author()), map.width, map.height)

@@ -69,11 +69,11 @@ public class Find {
     }
 
     public static Map map(String name) {
-        return findInSeq(name, getAvailableMaps(), map -> deepEquals(map.name(), name));
+        return findInSeq(name, availableMaps(), map -> deepEquals(map.name(), name));
     }
 
     public static Fi save(String name) {
-        return findInSeq(name, getAvailableSaves(), save -> deepEquals(save.nameWithoutExtension(), name));
+        return findInSeq(name, availableSaves(), save -> deepEquals(save.nameWithoutExtension(), name));
     }
 
     public static Gamemode mode(String name) {

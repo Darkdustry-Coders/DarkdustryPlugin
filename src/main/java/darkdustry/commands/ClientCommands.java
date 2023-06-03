@@ -20,7 +20,7 @@ import static useful.Bundle.*;
 public class ClientCommands {
 
     public static void load() {
-        register("help", (args, player) -> MenuHandler.showHelpMenu(player));
+        register("help", PageIterator::commands);
 
         register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
 
@@ -33,7 +33,7 @@ public class ClientCommands {
 
         register("settings", (args, player) -> MenuHandler.showSettingsMenu(player));
 
-        register("players", (args, player) -> MenuHandler.showPlayersMenu(player));
+        register("players", PageIterator::players);
 
         if (!config.hubIp.isEmpty())
             register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, host.address, host.port), error -> Bundle.send(player, "commands.hub.failed", error.getMessage())));
@@ -88,7 +88,7 @@ public class ClientCommands {
                 vote.vote(player, 1);
             });
 
-            register("maps", (args, player) -> MenuHandler.showMapsMenu(player));
+            register("maps", PageIterator::maps);
         }
 
         if (config.mode.useVnw()) {
@@ -121,7 +121,7 @@ public class ClientCommands {
                 vote.vote(player, 1);
             });
 
-            register("saves", (args, player) -> MenuHandler.showSavesMenu(player));
+            register("saves", PageIterator::saves);
         }
     }
 

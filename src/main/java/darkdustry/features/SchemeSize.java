@@ -17,15 +17,15 @@ import static mindustry.Vars.*;
 public class SchemeSize {
 
     /** Список игроков, использующих Scheme Size и их подписи. */
-    public static final IntMap<String> signatures = new IntMap<>();
+    public static final IntMap<String> subtitles = new IntMap<>();
 
     public static void load() {
         Events.on(PlayerJoin.class, event -> Call.clientPacketReliable(event.player.con, "SendMeSubtitle", null));
-        Events.on(PlayerLeave.class, event -> signatures.remove(event.player.id));
+        Events.on(PlayerLeave.class, event -> subtitles.remove(event.player.id));
 
         netServer.addPacketHandler("MySubtitle", (player, text) -> {
-            signatures.put(player.id, text);
-            Call.clientPacketReliable("Subtitles", JsonIO.write(signatures));
+            subtitles.put(player.id, text);
+            Call.clientPacketReliable("Subtitles", JsonIO.write(subtitles));
         });
 
         netServer.addPacketHandler("fill", (player, text) -> {

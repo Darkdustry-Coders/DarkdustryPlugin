@@ -28,7 +28,7 @@ public class NetHandlers {
         if (response.type == fewArguments)
             return Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
 
-        var closest = getAvailableCommands(player)
+        var closest = availableCommands(player)
                 .map(command -> command.text)
                 .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
                 .min(command -> Strings.levenshtein(command, response.runCommand));

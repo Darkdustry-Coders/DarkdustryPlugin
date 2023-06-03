@@ -1,7 +1,6 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Cons3;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
 import arc.util.Log;
@@ -40,23 +39,23 @@ public class Utils {
     // endregion
     // region available
 
-    public static Seq<Command> getAvailableCommands(Player player) {
+    public static Seq<Command> availableCommands(Player player) {
         return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
     }
 
-    public static Seq<Map> getAvailableMaps() {
-        return maps.customMaps().isEmpty() ? maps.defaultMaps() : maps.customMaps();
+    public static Seq<Map> availableMaps() {
+        return maps.customMaps().any() ? maps.customMaps() : maps.defaultMaps();
     }
 
-    public static Seq<Fi> getAvailableSaves() {
+    public static Seq<Fi> availableSaves() {
         return saveDirectory.seq().filter(fi -> fi.extEquals(saveExtension));
     }
 
-    public static boolean isAvailable(UnitType type) {
+    public static boolean available(UnitType type) {
         return !type.internal && !state.rules.isBanned(type) && type.supportsEnv(state.rules.env);
     }
 
-    public static boolean isAvailable(Block block) {
+    public static boolean available(Block block) {
         return block.inEditor && !state.rules.isBanned(block) && block.supportsEnv(state.rules.env);
     }
 
@@ -87,7 +86,7 @@ public class Utils {
     public static boolean deepEquals(String first, String second) {
         first = stripAll(first);
         second = stripAll(second);
-        return first.equalsIgnoreCase(second) || first.toLowerCase().contains(second.toLowerCase());
+        return first.toLowerCase().contains(second.toLowerCase());
     }
 
     public static String formatTime(long time) {
@@ -120,17 +119,6 @@ public class Utils {
                 builder.append(Bundle.format(key, locale, value));
             }
         });
-
-        return builder.toString();
-    }
-
-    public static <T> String formatList(Seq<T> content, int page, Cons3<StringBuilder, Integer, T> cons) {
-        var builder = new StringBuilder();
-
-        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, content.size); i++) {
-            if (!builder.isEmpty()) builder.append("\n\n");
-            cons.get(builder, i, content.get(i));
-        }
 
         return builder.toString();
     }

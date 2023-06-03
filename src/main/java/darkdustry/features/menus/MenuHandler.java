@@ -1,15 +1,13 @@
 package darkdustry.features.menus;
 
-import arc.files.Fi;
 import arc.func.*;
 import arc.graphics.Color;
-import arc.util.CommandHandler.Command;
+import arc.struct.Seq;
 import darkdustry.components.Cache;
-import darkdustry.utils.*;
+import darkdustry.utils.Admins;
 import mindustry.content.Fx;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
-import mindustry.maps.Map;
 import useful.*;
 import useful.State.StateKey;
 import useful.menu.Menu;
@@ -30,6 +28,12 @@ public class MenuHandler {
 
     // region menu
 
+    public static final ListMenu
+            listMenu = new ListMenu();
+
+    public static final ConfirmMenu
+            confirmMenu = new ConfirmMenu();
+
     public static final Menu
             statsMenu = new Menu(),
             promotionMenu = new Menu(),
@@ -42,21 +46,6 @@ public class MenuHandler {
             languagesMenu = new Menu(),
             effectsMenu = new Menu();
 
-    public static final ConfirmMenu
-            confirmMenu = new ConfirmMenu();
-
-    public static final SelectDisplayMenu<Command>
-            helpMenu = new SelectDisplayMenu<>();
-
-    public static final SelectDisplayMenu<Player>
-            playersMenu = new SelectDisplayMenu<>();
-
-    public static final SelectDisplayMenu<Map>
-            mapsMenu = new SelectDisplayMenu<>();
-
-    public static final SelectDisplayMenu<Fi>
-            savesMenu = new SelectDisplayMenu<>();
-
     // endregion
     // region input
 
@@ -67,59 +56,16 @@ public class MenuHandler {
     // endregion
     // region keys
 
-    public static final StateKey<Long> DURATION = new StateKey<>();
+    public static final StateKey<Long> DURATION = new StateKey<>("duration");
 
-    public static final StateKey<Player> TARGET = new StateKey<>();
-    public static final StateKey<PlayerData> DATA = new StateKey<>();
+    public static final StateKey<Player> TARGET = new StateKey<>("target");
+    public static final StateKey<PlayerData> DATA = new StateKey<>("data");
 
     // endregion
     // region transforms
 
     public static void load() {
         // region menu
-
-        helpMenu.content(Utils::getAvailableCommands)
-                .button(command -> "/" + command.text)
-                .transform(menu -> {
-                    menu.title("command.select.title");
-                    menu.content("command.select.content");
-                }).display((menu, command) -> {
-                    menu.title("command.info.title");
-                    menu.content("command.info.content", command.text,
-                            Bundle.get("commands." + command.text + ".params", menu.player),
-                            Bundle.get("commands." + command.text + ".description", menu.player)
-                    );
-                });
-
-        playersMenu.content(Groups.player)
-                .button(Player::coloredName)
-                .transform(menu -> {
-                    menu.title("player.select.title");
-                    menu.content("player.select.content");
-                }).display((menu, player) -> {
-                    menu.title("player.info.title");
-                    menu.content("player.info.content", player.coloredName(), player.id, player.locale);
-                });
-
-        mapsMenu.content(Utils::getAvailableMaps)
-                .button(Map::name)
-                .transform(menu -> {
-                    menu.title("map.select.title");
-                    menu.content("map.select.content");
-                }).display((menu, map) -> {
-                    menu.title("map.info.title");
-                    menu.content("map.info.content", map.name(), map.width, map.height, map.author(), map.description());
-                });
-
-        savesMenu.content(Utils::getAvailableSaves)
-                .button(Fi::name)
-                .transform(menu -> {
-                    menu.title("save.select.title");
-                    menu.content("save.select.content");
-                }).display((menu, save) -> {
-                    menu.title("save.info.title");
-                    menu.content("save.info.content", save.name(), formatDateTime(save.lastModified()));
-                });
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
@@ -260,6 +206,10 @@ public class MenuHandler {
     // endregion
     // region show
 
+    public static <T> void showListMenu(Player player, int page, int pages, String title, Seq<T> values, Cons3<StringBuilder, Integer, T> cons) {
+        listMenu.show(player, page, pages, maxPerPage, title, values, cons);
+    }
+
     public static void showConfirmMenu(Player player, String content, Runnable confirmed, Object... values) {
         confirmMenu.show(player, "ui.title.confirm", content, confirmed, values);
     }
@@ -290,22 +240,6 @@ public class MenuHandler {
 
     public static void showSettingsMenu(Player player) {
         settingsMenu.show(player);
-    }
-
-    public static void showHelpMenu(Player player) {
-        helpMenu.show(player);
-    }
-
-    public static void showPlayersMenu(Player player) {
-        playersMenu.show(player);
-    }
-
-    public static void showMapsMenu(Player player) {
-        mapsMenu.show(player);
-    }
-
-    public static void showSavesMenu(Player player) {
-        savesMenu.show(player);
     }
 
     // endregion
