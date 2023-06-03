@@ -22,14 +22,14 @@ public class ConfigEntry implements HistoryEntry {
     public final short blockID;
     public final Object value;
     public final boolean connect;
-    public final long time;
+    public final long timestamp;
 
     public ConfigEntry(ConfigEvent event) {
         this.uuid = event.player.uuid();
         this.blockID = event.tile.block.id;
         this.value = getValue(event);
         this.connect = value instanceof Point2 point && getConnect(event, point);
-        this.time = Time.millis();
+        this.timestamp = Time.millis();
     }
 
     // Ифы сила, Дарк могила
@@ -38,41 +38,41 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
-        var date = formatTime(time);
+        var time = formatTime(timestamp);
 
         if (value instanceof MappableContent content) {
-            return Bundle.format("history.config", player, info.lastName, Icons.icon(block), Icons.icon(content), date);
+            return Bundle.format("history.config", player, info.lastName, Icons.icon(block), Icons.icon(content), time);
         }
 
         if (value instanceof Boolean on) {
-            return on ? Bundle.format("history.config.on", player, info.lastName, Icons.icon(block), date) : Bundle.format("history.config.off", player, info.lastName, Icons.icon(block), date);
+            return on ? Bundle.format("history.config.on", player, info.lastName, Icons.icon(block), time) : Bundle.format("history.config.off", player, info.lastName, Icons.icon(block), time);
         }
 
         if (value instanceof String text) {
-            return !text.isEmpty() ? Bundle.format("history.config.text", player, info.lastName, Icons.icon(block), text, date) : Bundle.format("history.config.default", player, info.lastName, Icons.icon(block), date);
+            return !text.isEmpty() ? Bundle.format("history.config.text", player, info.lastName, Icons.icon(block), text, time) : Bundle.format("history.config.default", player, info.lastName, Icons.icon(block), time);
         }
 
         if (value instanceof Point2 point) {
-            return connect ? Bundle.format("history.config.connect", player, info.lastName, Icons.icon(block), point.x, point.y, date) : Bundle.format("history.config.disconnect", player, info.lastName, Icons.icon(block), date);
+            return connect ? Bundle.format("history.config.connect", player, info.lastName, Icons.icon(block), point.x, point.y, time) : Bundle.format("history.config.disconnect", player, info.lastName, Icons.icon(block), time);
         }
 
         if (value instanceof Point2[] points) {
-            return points.length > 0 ? Bundle.format("history.config.connects", player, info.lastName, Icons.icon(block), Arrays.toString(points), date) : Bundle.format("history.config.disconnect", player, info.lastName, Icons.icon(block), date);
+            return points.length > 0 ? Bundle.format("history.config.connects", player, info.lastName, Icons.icon(block), Arrays.toString(points), time) : Bundle.format("history.config.disconnect", player, info.lastName, Icons.icon(block), time);
         }
 
         if (block instanceof LightBlock) {
-            return Bundle.format("history.config.color", player, info.lastName, Icons.icon(block), Tmp.c1.set((int) value).toString(), date);
+            return Bundle.format("history.config.color", player, info.lastName, Icons.icon(block), Tmp.c1.set((int) value).toString(), time);
         }
 
         if (block instanceof LogicBlock) {
-            return Bundle.format("history.config.code", player, info.lastName, Icons.icon(block), date);
+            return Bundle.format("history.config.code", player, info.lastName, Icons.icon(block), time);
         }
 
         if (block instanceof CanvasBlock) {
-            return Bundle.format("history.config.image", player, info.lastName, Icons.icon(block), date);
+            return Bundle.format("history.config.image", player, info.lastName, Icons.icon(block), time);
         }
 
-        return Bundle.format("history.config.default", player, info.lastName, Icons.icon(block), date);
+        return Bundle.format("history.config.default", player, info.lastName, Icons.icon(block), time);
     }
 
     public Object getValue(ConfigEvent event) {

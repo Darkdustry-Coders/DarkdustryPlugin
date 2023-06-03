@@ -15,18 +15,18 @@ public class DepositEntry implements HistoryEntry {
     public final short blockID;
     public final short itemID;
     public final int amount;
-    public final long time;
+    public final long timestamp;
 
     public DepositEntry(DepositEvent event) {
         this.uuid = event.player.uuid();
         this.blockID = event.tile.block.id;
         this.itemID = event.item.id;
         this.amount = event.amount;
-        this.time = Time.millis();
+        this.timestamp = Time.millis();
     }
 
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
-        return Bundle.format("history.deposit", player, info.lastName, amount, Icons.icon(content.item(itemID)), Icons.icon(content.block(blockID)), formatTime(time));
+        return Bundle.format("history.deposit", player, info.lastName, amount, Icons.icon(content.item(itemID)), Icons.icon(content.block(blockID)), formatTime(timestamp));
     }
 }

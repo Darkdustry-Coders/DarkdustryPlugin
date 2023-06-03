@@ -17,20 +17,20 @@ public class BlockEntry implements HistoryEntry {
     public final short blockID;
     public final int rotation;
     public final boolean breaking;
-    public final long time;
+    public final long timestamp;
 
     public BlockEntry(BlockBuildEndEvent event) {
         this.uuid = event.unit.getPlayer().uuid();
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
         this.rotation = event.tile.build.rotation;
         this.breaking = event.breaking;
-        this.time = Time.millis();
+        this.timestamp = Time.millis();
     }
 
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(time), sides.get(rotation));
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), sides.get(rotation));
     }
 }
