@@ -114,7 +114,7 @@ public class Admins {
         var ban = Database.getBan(con.uuid, con.address);
         if (ban == null || ban.expired()) return;
 
-        kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban").kick();
+        kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban", ban.admin).kick();
     }
 
     // endregion
