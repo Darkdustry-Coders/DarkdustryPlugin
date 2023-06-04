@@ -99,8 +99,11 @@ public class PluginEvents {
             if (History.enabled() && event.tile.build != null)
                 History.put(event.tile, new BlockEntry(event));
 
-            if (event.breaking) brokenBlocksCache.increment(event.unit.getPlayer().id);
-            else placedBlocksCache.increment(event.unit.getPlayer().id);
+            var data = Cache.get(event.unit.getPlayer());
+            if (event.breaking)
+                data.blocksBroken++;
+            else
+                data.blocksPlaced++;
         });
 
         Events.on(BuildRotateEvent.class, event -> {

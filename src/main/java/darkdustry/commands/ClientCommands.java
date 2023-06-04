@@ -51,20 +51,17 @@ public class ClientCommands {
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
-            showConfirmMenu(player, "commands.votekick.confirm", () -> {
-                voteKick = new VoteKick(player, target);
-                voteKick.vote(player, 1);
-            }, target.coloredName());
+            voteKick = new VoteKick(player, target, args[1]);
+            voteKick.vote(player, 1);
         });
 
         register("vote", (args, player) -> {
             if (notVoting(player, voteKick) || alreadyVoted(player, voteKick)) return;
 
-            if (invalidVoteTarget(player, voteKick.target)) return;
-
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
 
+            if (invalidVoteTarget(player, voteKick.target)) return;
             voteKick.vote(player, sign);
         });
 

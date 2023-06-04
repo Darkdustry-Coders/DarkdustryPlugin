@@ -25,7 +25,7 @@ public class VoteLoad extends VoteSession {
 
     @Override
     public void left(Player player) {
-        if (voted.remove(player.id) != 0)
+        if (voted.remove(player) != 0)
             Bundle.send("commands.loadsave.left", player.coloredName(), votes(), votesRequired());
     }
 

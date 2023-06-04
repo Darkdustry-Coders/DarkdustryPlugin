@@ -1,7 +1,7 @@
 package darkdustry.features.votes;
 
 import arc.math.Mathf;
-import arc.struct.IntIntMap;
+import arc.struct.*;
 import arc.util.Timer;
 import arc.util.Timer.Task;
 import mindustry.gen.*;
@@ -10,7 +10,7 @@ import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
 
-    public final IntIntMap voted = new IntIntMap();
+    public final ObjectIntMap<Player> voted = new ObjectIntMap<>();
     public final Task end;
 
     public VoteSession() {
@@ -18,7 +18,7 @@ public abstract class VoteSession {
     }
 
     public void vote(Player player, int sign) {
-        voted.put(player.id, sign);
+        voted.put(player, sign);
 
         if (votes() >= votesRequired())
             success();
@@ -31,8 +31,8 @@ public abstract class VoteSession {
     public abstract void fail();
 
     public void stop() {
-        vote = null;
         end.cancel();
+        vote = null;
     }
 
     public int votes() {

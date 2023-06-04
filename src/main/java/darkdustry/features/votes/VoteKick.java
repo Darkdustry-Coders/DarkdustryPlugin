@@ -9,23 +9,24 @@ import static java.util.concurrent.TimeUnit.*;
 
 public class VoteKick extends VoteSession {
 
-    public final Player started;
-    public final Player target;
+    public final Player player, target;
+    public final String reason;
 
-    public VoteKick(Player started, Player target) {
-        this.started = started;
+    public VoteKick(Player player, Player target, String reason) {
+        this.player = player;
         this.target = target;
+        this.reason = reason;
     }
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send("commands.votekick.vote", player.coloredName(), target.coloredName(), votes() + sign, votesRequired());
+        Bundle.send("commands.votekick.vote", player.coloredName(), target.coloredName(), reason, votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 
     @Override
     public void left(Player player) {
-        if (voted.remove(player.id) != 0)
+        if (voted.remove(player) != 0)
             Bundle.send("commands.votekick.left", player.coloredName(), votes(), votesRequired());
 
         if (target == player && votes() > 0)
@@ -35,20 +36,20 @@ public class VoteKick extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.votekick.passed", target.coloredName(), MILLISECONDS.toMinutes(kickDuration));
-        Admins.kick(target, kickDuration, "kick.vote-kicked", started.coloredName()).kick(kickDuration);
+        Bundle.send("commands.votekick.passed", target.coloredName(), MILLISECONDS.toMinutes(kickDuration), reason);
+        Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", player.coloredName()).kick(kickDuration);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.votekick.failed", target.coloredName());
+        Bundle.send("commands.votekick.failed", target.coloredName(), reason);
     }
 
     @Override
     public void stop() {
-        voteKick = null;
         end.cancel();
+        voteKick = null;
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Console {
 
     public static void handleInput(LineReader reader) {
         read(reader, "> ").thenAccept(text -> {
-            if (!text.isEmpty() && !text.startsWith("#"))
+            if (!text.isBlank() && !text.startsWith("#"))
                 app.post(() -> instance.handleCommandString(text));
 
             handleInput(reader);

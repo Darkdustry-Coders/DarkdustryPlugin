@@ -78,9 +78,6 @@ public class DarkdustryPlugin extends Plugin {
             var data = Cache.get(player);
             data.playTime++;
 
-            data.blocksPlaced += placedBlocksCache.remove(player.id);
-            data.blocksBroken += brokenBlocksCache.remove(player.id);
-
             while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
                 data.rank = data.rank.next;
 

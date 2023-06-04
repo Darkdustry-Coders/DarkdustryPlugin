@@ -157,7 +157,7 @@ public class Checks {
     }
 
     public static boolean alreadyVoted(Player player, VoteSession session) {
-        return check(session.voted.containsKey(player.id), player, "commands.already-voted");
+        return check(session.voted.containsKey(player), player, "commands.already-voted");
     }
 
     public static boolean onCooldown(Player player, String command) {
