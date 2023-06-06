@@ -3,7 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.util.Log;
 import darkdustry.components.*;
-import darkdustry.components.Database.Ban;
+import darkdustry.components.Database.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
@@ -46,7 +46,11 @@ public class Checks {
     }
 
     public static boolean notFound(PlayerInfo info, String name) {
-        return check(info == null, "No player @ found.", name);
+        return check(info == null, "No player info @ found.", name);
+    }
+
+    public static boolean notFound(PlayerData data, String name) {
+        return check(data == null, "No player data @ found.", name);
     }
 
     public static boolean notFound(Rank rank, String name) {
@@ -185,19 +189,23 @@ public class Checks {
     }
 
     public static boolean notFound(MessageContext context, Map map) {
-        return check(map == null, context, "Map Not Found", "Check if the name is spelled correctly.");
+        return check(map == null, context, "Map Not Found", "Check if the input is correct.");
     }
 
     public static boolean notFound(MessageContext context, Player player) {
-        return check(player == null, context, "Player Not Found", "Check if the name is spelled correctly.");
+        return check(player == null, context, "Player Not Found", "Check if the input is correct.");
     }
 
     public static boolean notFound(MessageContext context, PlayerInfo info) {
-        return check(info == null, context, "Player Not Found", "Check if the name is spelled correctly.");
+        return check(info == null, context, "Player Info Not Found", "Check if the input is correct.");
+    }
+
+    public static boolean notFound(MessageContext context, PlayerData data) {
+        return check(data == null, context, "Player Data Not Found", "Check if the input is correct.");
     }
 
     public static boolean notFound(MessageContext context, Rank rank) {
-        return check(rank == null, context, "Rank Not Found", "Check if the name is spelled correctly.");
+        return check(rank == null, context, "Rank Not Found", "Check if the input is correct.");
     }
 
     public static boolean invalidDuration(MessageContext context, int duration, int min, int max) {
@@ -205,7 +213,7 @@ public class Checks {
     }
 
     public static boolean notUnbanned(MessageContext context, Ban ban) {
-        return check(ban == null, context, "Player Not Unbanned", "No banned player found for provided data.");
+        return check(ban == null, context, "Unban Failed", "No banned player found for provided input.");
     }
 
     // endregion

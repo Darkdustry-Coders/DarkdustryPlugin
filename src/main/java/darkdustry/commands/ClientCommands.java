@@ -15,7 +15,6 @@ import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.Bundle.*;
 
 public class ClientCommands {
 
@@ -56,12 +55,13 @@ public class ClientCommands {
         });
 
         register("vote", (args, player) -> {
-            if (notVoting(player, voteKick) || alreadyVoted(player, voteKick)) return;
+            if (notVoting(player, voteKick)
+                    || alreadyVoted(player, voteKick)
+                    || invalidVoteTarget(player, voteKick.target)) return;
 
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
 
-            if (invalidVoteTarget(player, voteKick.target)) return;
             voteKick.vote(player, sign);
         });
 
@@ -123,7 +123,7 @@ public class ClientCommands {
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
-        clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
+        clientCommands.<Player>register(name, Bundle.getDefault("commands." + name + ".params", ""), Bundle.getDefault("commands." + name + ".description"), (args, player) -> {
             if (onCooldown(player, name)) return;
             runner.accept(args, player);
             Cooldowns.run(player, name);

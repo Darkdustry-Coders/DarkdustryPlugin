@@ -25,6 +25,7 @@ public class Authme {
         banChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)
                 .title("Ban")
+                .addField("ID:", ban.id, false)
                 .addField("Player:", ban.player, false)
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
@@ -54,7 +55,7 @@ public class Authme {
         var info = netServer.admins.getInfoOptional(event.getCustomId());
         if (info == null) return;
 
-        var player = Find.playerByUuid(info.id);
+        var player = Find.playerByUUID(info.id);
         if (player != null) {
             player.admin(true);
             Bundle.send(player, "commands.login.success");
@@ -73,7 +74,7 @@ public class Authme {
         var info = netServer.admins.getInfoOptional(event.getCustomId());
         if (info == null) return;
 
-        var player = Find.playerByUuid(info.id);
+        var player = Find.playerByUUID(info.id);
         if (player != null) {
             player.admin(false);
             Bundle.send(player, "commands.login.fail");

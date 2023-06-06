@@ -3,7 +3,7 @@ package darkdustry.components;
 import arc.struct.*;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import mindustry.ctype.MappableContent;
+import mindustry.ctype.*;
 import mindustry.game.Team;
 import mindustry.gen.Iconc;
 
@@ -12,7 +12,7 @@ import static darkdustry.utils.Utils.*;
 public class Icons {
 
     public static final StringMap icons = new StringMap();
-    public static final Seq<Character> sides = Seq.with(Iconc.right, Iconc.up, Iconc.left, Iconc.down);
+    public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/master/core/assets/icons/icons.properties", response -> {
@@ -34,18 +34,17 @@ public class Icons {
         return builder.toString();
     }
 
-    public static String contentList(Seq<? extends MappableContent> contents) {
+    public static String contentList(Seq<? extends UnlockableContent> contents) {
         var builder = new StringBuilder();
-        contents.each(content -> builder.append(name(content)).append(" "));
+        contents.each(content -> builder.append(icon(content)).append(content.name).append(" "));
 
         return builder.toString();
     }
 
-    public static String icon(MappableContent content) {
-        return icons.get(content.name, "");
-    }
+    public static String icon(UnlockableContent content) {
+        if (false)
+            return content.emoji();
 
-    public static String name(MappableContent content) {
-        return icon(content) + content.name;
+        return icons.get(content.name, "");
     }
 }

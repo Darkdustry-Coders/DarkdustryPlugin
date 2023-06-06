@@ -31,6 +31,6 @@ public class BlockEntry implements HistoryEntry {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), sides.get(rotation));
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), sides[rotation]);
     }
 }

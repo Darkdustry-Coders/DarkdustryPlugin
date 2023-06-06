@@ -43,7 +43,7 @@ public class PluginEvents {
             var data = Cache.get(player);
             data.gamesPlayed++;
 
-            if (player.team().isEnemy(event.winner)) return;
+            if (player.team() != event.winner) return;
 
             if (config.mode == Gamemode.attack)
                 data.attackWins++;
@@ -128,20 +128,20 @@ public class PluginEvents {
         }));
 
         Events.on(PlayerJoin.class, event -> {
-            var data = Database.getPlayerData(event.player);
+            var data = Database.getPlayerDataOrCreate(event.player.uuid());
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
 
             // Вызываем с задержкой, чтобы игрок успел появиться
             app.post(() -> data.effects.join.get(event.player));
 
-            Log.info("@ has connected. [@]", event.player.plainName(), event.player.uuid());
-            Bundle.send("events.join", event.player.coloredName());
+            Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
+            Bundle.send("events.join", event.player.coloredName(), data.id);
             Bundle.send(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.MEDIUM_SEA_GREEN)
-                    .title(event.player.plainName() + " joined")
+                    .title(event.player.plainName() + " [" + data.id + "] joined")
                     .build());
 
             if (data.welcomeMessage)
@@ -158,12 +158,12 @@ public class PluginEvents {
 
             data.effects.leave.get(event.player);
 
-            Log.info("@ has disconnected. [@]", event.player.plainName(), event.player.uuid());
-            Bundle.send("events.leave", event.player.coloredName());
+            Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
+            Bundle.send("events.leave", event.player.coloredName(), data.id);
 
             Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.CINNABAR)
-                    .title(event.player.plainName() + " left")
+                    .title(event.player.plainName() + " [" + data.id + "] left")
                     .build());
 
             if (vote != null) vote.left(event.player);

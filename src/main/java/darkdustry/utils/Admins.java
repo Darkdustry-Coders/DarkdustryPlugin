@@ -1,6 +1,5 @@
 package darkdustry.utils;
 
-import arc.struct.ObjectIntMap;
 import arc.util.*;
 import darkdustry.components.Database;
 import darkdustry.components.Database.Ban;
@@ -63,7 +62,8 @@ public class Admins {
                 .admin(admin.plainName())
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
-                .build());
+                .build()
+                .generateID());
 
         kickReason(target, duration, reason, "kick.banned-by-admin", admin.coloredName()).kick();
         Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
@@ -87,9 +87,10 @@ public class Admins {
                 .admin(admin)
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
-                .build());
+                .build()
+                .generateID());
 
-        var target = Find.playerByUuid(info.id);
+        var target = Find.playerByUUID(info.id);
         if (target == null) return;
 
         kickReason(target, duration, reason, "kick.banned-by-admin", admin).kick();

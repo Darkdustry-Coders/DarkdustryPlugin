@@ -3,7 +3,7 @@ package darkdustry.features.history;
 import arc.math.geom.Point2;
 import arc.util.*;
 import darkdustry.components.Icons;
-import mindustry.ctype.MappableContent;
+import mindustry.ctype.*;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.logic.*;
@@ -40,7 +40,7 @@ public class ConfigEntry implements HistoryEntry {
         var block = content.block(blockID);
         var time = formatTime(timestamp);
 
-        if (value instanceof MappableContent content) {
+        if (value instanceof UnlockableContent content) {
             return Bundle.format("history.config", player, info.lastName, Icons.icon(block), Icons.icon(content), time);
         }
 

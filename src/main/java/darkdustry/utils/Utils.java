@@ -26,8 +26,8 @@ public class Utils {
 
     public static int voteChoice(String vote) {
         return switch (stripFooCharacters(vote.toLowerCase())) {
-            case "y" -> 1;
-            case "n" -> -1;
+            case "y", "yes" -> 1;
+            case "n", "no" -> -1;
             default -> 0;
         };
     }

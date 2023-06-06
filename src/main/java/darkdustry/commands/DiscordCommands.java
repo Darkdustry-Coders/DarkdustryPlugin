@@ -98,7 +98,7 @@ public class DiscordCommands {
                     .addField("File:", map.file.name(), false)).subscribe();
         });
 
-        register("kick", "<ID/name> <minutes> [reason...]", "Kick a player.", adminRole, (args, context) -> {
+        register("kick", "<player> <minutes> [reason...]", "Kick a player.", adminRole, (args, context) -> {
             var target = Find.player(args[0]);
             if (notFound(context, target)) return;
 
@@ -114,7 +114,7 @@ public class DiscordCommands {
                     .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("pardon", "<uuid/ip...>", "Pardon a player.", adminRole, (args, context) -> {
+        register("pardon", "<player...>", "Pardon a player.", adminRole, (args, context) -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
@@ -124,7 +124,7 @@ public class DiscordCommands {
             context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
 
-        register("ban", "<ID/name/uuid/ip> <days> [reason...]", "Ban a player.", adminRole, (args, context) -> {
+        register("ban", "<player> <days> [reason...]", "Ban a player.", adminRole, (args, context) -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
@@ -140,21 +140,21 @@ public class DiscordCommands {
                     .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("unban", "<name/uuid/ip...>", "Unban a player.", adminRole, (args, context) -> {
+        register("unban", "<player...>", "Unban a player.", adminRole, (args, context) -> {
             var ban = Database.removeBan(args[0]);
             if (notUnbanned(context, ban)) return;
 
             context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
         });
 
-        register("stats", "<ID/name/uuid/ip...>", "Look up a player stats.", (args, context) -> {
-            var info = Find.playerInfo(args[0]);
-            if (notFound(context, info)) return;
+        register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
+            var data = Find.playerData(args[0]);
+            if (notFound(context, data)) return;
 
-            var data = Database.getPlayerData(info.id);
             context.info(embed -> embed
                     .title("Player Stats")
-                    .addField("Name:", data.name, false)
+                    .addField("Name:", data.plainName(), false)
+                    .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
                     .addField("Playtime:", data.playTime + " minutes", false)
                     .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
@@ -167,17 +167,16 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        register("setrank", "<rank> <ID/name/uuid/ip...>", "Set a player's rank.", adminRole, (args, context) -> {
+        register("setrank", "<rank> <player...>", "Set a player's rank.", adminRole, (args, context) -> {
             var rank = Find.rank(args[0]);
             if (notFound(context, rank)) return;
 
-            var info = Find.playerInfo(args[1]);
-            if (notFound(context, info)) return;
+            var data = Find.playerData(args[1]);
+            if (notFound(context, data)) return;
 
-            var data = Database.getPlayerData(info.id);
             data.rank = rank;
 
-            var target = Find.playerByUuid(info.id);
+            var target = Find.playerByUUID(data.uuid);
             if (target != null) {
                 Cache.put(target, data);
                 Ranks.name(target, data);
@@ -186,7 +185,7 @@ public class DiscordCommands {
             Database.savePlayerData(data);
             context.success(embed -> embed
                     .title("Rank Changed")
-                    .addField("Name:", info.plainLastName(), false)
+                    .addField("Name:", data.plainName(), false)
                     .addField("Rank:", rank.name(), false)).subscribe();
         });
     }

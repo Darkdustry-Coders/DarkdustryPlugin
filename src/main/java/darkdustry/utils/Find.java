@@ -4,6 +4,8 @@ import arc.files.Fi;
 import arc.func.Boolf;
 import arc.struct.Seq;
 import arc.util.Structs;
+import darkdustry.components.Database;
+import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Ranks.Rank;
 import mindustry.ctype.*;
 import mindustry.game.*;
@@ -20,87 +22,102 @@ import static mindustry.Vars.*;
 
 public class Find {
 
-    public static Player player(String nameOrId) {
-        return notNullElse(playerById(nameOrId), playerByName(nameOrId));
+    public static Player player(String input) {
+        return notNullElse(playerByID(input), playerByName(input));
     }
 
-    public static Player playerById(String id) {
-        return id.startsWith("#") ? Groups.player.getByID(parseInt(id.substring(1))) : null;
+    public static Player playerByID(String input) {
+        return input.startsWith("#") ? Groups.player.getByID(parseInt(input.substring(1))) : null;
     }
 
-    public static Player playerByName(String name) {
-        return Groups.player.find(player -> deepEquals(player.name, name));
+    public static Player playerByName(String input) {
+        return Groups.player.find(player -> deepEquals(player.name, input));
     }
 
-    public static Player playerByUuid(String uuid) {
-        return Groups.player.find(player -> player.uuid().equals(uuid));
+    public static Player playerByUUID(String input) {
+        return Groups.player.find(player -> player.uuid().equals(input));
     }
 
-    public static PlayerInfo playerInfo(String name) {
-        var player = player(name);
-        if (player != null) return player.getInfo();
+    public static PlayerInfo playerInfo(String input) {
+        var player = player(input);
+        if (player != null)
+            return player.getInfo();
 
-        return notNullElse(netServer.admins.getInfoOptional(name), netServer.admins.findByIP(name));
+        if (canParsePositiveInt(input)) {
+            var data = Database.getPlayerData(parseInt(input));
+            if (data != null)
+                return netServer.admins.getInfoOptional(data.uuid);
+        }
+
+        return notNullElse(netServer.admins.getInfoOptional(input), netServer.admins.findByIP(input));
     }
 
-    public static Team team(String name) {
-        return canParsePositiveInt(name) ? Team.get(parseInt(name)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(name));
+    public static PlayerData playerData(String input) {
+        var player = player(input);
+        if (player != null)
+            return Database.getPlayerData(player.uuid());
+
+        return canParsePositiveInt(input) ? Database.getPlayerData(parseInt(input)) : Database.getPlayerData(input);
     }
 
-    public static UnitType unit(String name) {
-        return findContent(name, ContentType.unit);
+    public static Team team(String input) {
+        return canParsePositiveInt(input) ? Team.get(parseInt(input)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(input));
     }
 
-    public static Block block(String name) {
-        return findContent(name, ContentType.block);
+    public static UnitType unit(String input) {
+        return findContent(input, ContentType.unit);
     }
 
-    public static Item item(String name) {
-        return findContent(name, ContentType.item);
+    public static Block block(String input) {
+        return findContent(input, ContentType.block);
     }
 
-    public static StatusEffect effect(String name) {
-        return findContent(name, ContentType.status);
+    public static Item item(String input) {
+        return findContent(input, ContentType.item);
     }
 
-    public static Block core(String name) {
-        var block = block(name);
+    public static StatusEffect effect(String input) {
+        return findContent(input, ContentType.status);
+    }
+
+    public static Block core(String input) {
+        var block = block(input);
         return block instanceof CoreBlock ? block : null;
     }
 
-    public static Map map(String name) {
-        return findInSeq(name, availableMaps(), map -> deepEquals(map.name(), name));
+    public static Map map(String input) {
+        return findSeq(input, availableMaps(), map -> deepEquals(map.name(), input));
     }
 
-    public static Fi save(String name) {
-        return findInSeq(name, availableSaves(), save -> deepEquals(save.nameWithoutExtension(), name));
+    public static Fi save(String input) {
+        return findSeq(input, availableSaves(), save -> deepEquals(save.nameWithoutExtension(), input));
     }
 
-    public static Gamemode mode(String name) {
-        return findInEnum(name, Gamemode.values(), mode -> mode.name().equalsIgnoreCase(name));
+    public static Gamemode mode(String input) {
+        return findEnum(input, Gamemode.values(), mode -> mode.name().equalsIgnoreCase(input));
     }
 
-    public static Rank rank(String name) {
-        return findInEnum(name, Rank.values(), rank -> rank.name().equalsIgnoreCase(name));
+    public static Rank rank(String input) {
+        return findEnum(input, Rank.values(), rank -> rank.name().equalsIgnoreCase(input));
     }
 
     // region utils
 
-    public static <T extends UnlockableContent> T findContent(String name, ContentType type) {
-        return canParsePositiveInt(name) ? content.getByID(type, parseInt(name)) : content.getByName(type, name);
+    public static <T extends UnlockableContent> T findContent(String input, ContentType type) {
+        return canParsePositiveInt(input) ? content.getByID(type, parseInt(input)) : content.getByName(type, input);
     }
 
-    public static <T> T findInSeq(String name, Seq<T> values, Boolf<T> filter) {
-        int index = parseInt(name) - 1;
-        if (index >= 0 && index < values.size)
+    public static <T> T findSeq(String input, Seq<T> values, Boolf<T> filter) {
+        int index = parseInt(input);
+        if (index > 0 && index <= values.size)
             return values.get(index);
 
         return values.find(filter);
     }
 
-    public static <T extends Enum<T>> T findInEnum(String name, T[] values, Boolf<T> filter) {
-        int index = parseInt(name) - 1;
-        if (index >= 0 && index < values.length)
+    public static <T extends Enum<T>> T findEnum(String input, T[] values, Boolf<T> filter) {
+        int index = parseInt(input);
+        if (index > 0 && index <= values.length)
             return values[index];
 
         return Structs.find(values, filter);

@@ -7,11 +7,13 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import lombok.*;
-import mindustry.gen.Player;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import useful.MongoRepository;
 
 import java.util.Date;
 
+import static arc.util.Strings.*;
+import static com.mongodb.client.model.Filters.*;
 import static darkdustry.PluginVars.*;
 
 public class Database {
@@ -28,11 +30,23 @@ public class Database {
             database = client.getDatabase("darkdustry");
 
             players = new MongoRepository<>(database, "players", PlayerData.class);
-            players.ascendingIndex("uuid");
+            players.descendingIndex("id");
+            players.descendingIndex("uuid");
             players.watchAfterChange(Cache::update);
 
             bans = new MongoRepository<>(database, "bans", Ban.class);
-            bans.ascendingIndex("unbanDate", 0L);
+            bans.descendingIndex("id");
+            bans.descendingIndex("unbanDate", 0L);
+
+            // var counter = new AtomicInteger();
+            // players.all().each(data -> {
+            //     data.id = counter.getAndIncrement();
+            //     Log.info(data.id);
+            //
+            //     savePlayerData(data);
+            // });
+            //
+            // Log.info("Total: " + counter.get());
 
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
@@ -42,22 +56,29 @@ public class Database {
 
     // region player data
 
-    public static PlayerData getPlayerData(Player player) {
-        return getPlayerData(player.uuid());
+    public static PlayerData getPlayerData(String uuid) {
+        return players.get(eq("uuid", uuid));
     }
 
-    public static PlayerData getPlayerData(String uuid) {
-        return players.get("uuid", uuid, new PlayerData(uuid));
+    public static PlayerData getPlayerData(int id) {
+        return players.get(eq("pid", id));
+    }
+
+    public static PlayerData getPlayerDataOrCreate(String uuid) {
+        return players.get(eq("uuid", uuid), () -> new PlayerData(uuid).generateID());
     }
 
     public static void savePlayerData(PlayerData data) {
-        players.replace("uuid", data.uuid, data);
+        players.replace(eq("uuid", data.uuid), data);
     }
 
     @NoArgsConstructor
     public static class PlayerData {
         public String uuid;
         public String name = "<unknown>";
+
+        @BsonProperty("pid")
+        public int id;
 
         public boolean alerts = true;
         public boolean history = false;
@@ -82,13 +103,22 @@ public class Database {
         public PlayerData(String uuid) {
             this.uuid = uuid;
         }
+
+        public PlayerData generateID() {
+            this.id = players.generateNextID("pid");
+            return this;
+        }
+
+        public String plainName() {
+            return stripColors(name);
+        }
     }
 
     // endregion
     // region ban
 
     public static Ban getBan(String uuid, String ip) {
-        return bans.getOr("uuid", uuid, "ip", ip);
+        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
     }
 
     public static Seq<Ban> getBans() {
@@ -96,11 +126,11 @@ public class Database {
     }
 
     public static void addBan(Ban ban) {
-        bans.replaceOr("uuid", ban.uuid, "ip", ban.ip, ban);
+        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
     }
 
-    public static Ban removeBan(String value) {
-        return bans.deleteOr("uuid", value, "ip", value, "player", value);
+    public static Ban removeBan(String input) {
+        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", input)));
     }
 
     @Builder
@@ -110,8 +140,16 @@ public class Database {
         public String uuid, ip;
         public String player, admin;
 
+        @BsonProperty("pid")
+        public String id;
+
         public String reason;
         public Date unbanDate;
+
+        public Ban generateID() {
+            this.id = players.getField(eq("uuid", uuid), "pid", "<none>");
+            return this;
+        }
 
         public boolean expired() {
             return unbanDate.getTime() < Time.millis();

@@ -59,7 +59,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             Call.constructFinish(player.tileOn(), core, player.unit(), (byte) 0, team, null);
-            Bundle.send(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.name(core), coloredTeam(team));
+            Bundle.send(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", Icons.icon(core), core.name, coloredTeam(team));
         });
 
         register("team", (args, player) -> {
@@ -86,9 +86,9 @@ public class AdminCommands {
             var unit = type.spawn(target.team(), target.x, target.y);
             target.unit(unit);
 
-            Bundle.send(target, "commands.unit.success", Icons.name(type));
+            Bundle.send(target, "commands.unit.success", Icons.icon(type), type.name);
             if (target != player)
-                Bundle.send(player, "commands.unit.success.player", target.coloredName(), Icons.name(type));
+                Bundle.send(player, "commands.unit.success.player", target.coloredName(), Icons.icon(type), type.name);
         });
 
         register("effect", (args, player) -> {
@@ -104,9 +104,9 @@ public class AdminCommands {
             if (duration > 0) target.unit().apply(effect, duration * 60f);
             else target.unit().unapply(effect);
 
-            Bundle.send(target, duration > 0 ? "commands.effect.apply.success" : "commands.effect.remove.success", Icons.name(effect), duration);
+            Bundle.send(target, duration > 0 ? "commands.effect.apply.success" : "commands.effect.remove.success", Icons.icon(effect), effect.name, duration);
             if (target != player)
-                Bundle.send(player, duration > 0 ? "commands.effect.apply.success.player" : "commands.effect.remove.success.player", target.coloredName(), Icons.name(effect), duration);
+                Bundle.send(player, duration > 0 ? "commands.effect.apply.success.player" : "commands.effect.remove.success.player", target.coloredName(), Icons.icon(effect), effect.name, duration);
         });
 
         register("give", (args, player) -> {
@@ -120,7 +120,7 @@ public class AdminCommands {
             if (notFound(player, team) || noCores(player, team)) return;
 
             team.items().add(item, amount);
-            Bundle.send(player, "commands.give.success", amount, Icons.name(item), coloredTeam(team));
+            Bundle.send(player, "commands.give.success", amount, Icons.icon(item), item.name, coloredTeam(team));
         });
 
         register("spawn", (args, player) -> {
@@ -134,7 +134,7 @@ public class AdminCommands {
             if (notFound(player, team)) return;
 
             for (int i = 0; i < amount; i++) type.spawn(team, player);
-            Bundle.send(player, "commands.spawn.success", amount, Icons.name(type), coloredTeam(team));
+            Bundle.send(player, "commands.spawn.success", amount, Icons.icon(type), type.name, coloredTeam(team));
         });
 
         register("tp", (args, player) -> {
@@ -171,7 +171,7 @@ public class AdminCommands {
                     else tile.setNet(block, player.team(), 0);
                 }
 
-            Bundle.send(player, "commands.fill.success", width, height, Icons.name(block));
+            Bundle.send(player, "commands.fill.success", width, height, Icons.icon(block), block.name);
         });
     }
 

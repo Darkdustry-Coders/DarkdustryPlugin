@@ -76,7 +76,7 @@ public class ServerCommands {
             Bot.sendMessage("Server", args[0]);
         });
 
-        serverCommands.register("kick", "<ID/name> <minutes> [reason...]", "Kick a player.", args -> {
+        serverCommands.register("kick", "<player> <minutes> [reason...]", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
@@ -86,10 +86,10 @@ public class ServerCommands {
             var reason = args.length > 2 ? args[2] : "Not Specified";
             Admins.kick(target, "Console", MINUTES.toMillis(minutes), reason);
 
-            Log.info("Player @ has been kicked for @ minutes.", target.plainName(), minutes);
+            Log.info("Player @ has been kicked for @ minutes for @.", target.plainName(), minutes, reason);
         });
 
-        serverCommands.register("pardon", "<uuid/ip...>", "Pardon a player.", args -> {
+        serverCommands.register("pardon", "<player...>", "Pardon a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -113,7 +113,7 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("ban", "<ID/name/uuid/ip> <days> [reason...]", "Ban a player.", args -> {
+        serverCommands.register("ban", "<player> <days> [reason...]", "Ban a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -123,10 +123,10 @@ public class ServerCommands {
             var reason = args.length > 2 ? args[2] : "Not Specified";
             Admins.ban(info, "Console", DAYS.toMillis(days), reason);
 
-            Log.info("Player @ has been banned for @ days.", info.plainLastName(), days);
+            Log.info("Player @ has been banned for @ days for @.", info.plainLastName(), days, reason);
         });
 
-        serverCommands.register("unban", "<name/uuid/ip...>", "Unban a player.", args -> {
+        serverCommands.register("unban", "<player...>", "Unban a player.", args -> {
             var ban = Database.removeBan(args[0]);
             if (notUnbanned(ban)) return;
 
@@ -140,13 +140,13 @@ public class ServerCommands {
             bans.each(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.uuid, ban.ip, formatDateTime(ban.unbanDate.getTime())));
         });
 
-        serverCommands.register("admin", "<add/remove> <ID/name/uuid/ip>", "Make a player admin.", args -> {
+        serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {
             var info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
 
             switch (args[0].toLowerCase()) {
                 case "add" -> {
-                    var target = Find.playerByUuid(info.id);
+                    var target = Find.playerByUUID(info.id);
                     if (target != null) {
                         target.admin(true);
                         Bundle.send(target, "events.server.admin");
@@ -156,7 +156,7 @@ public class ServerCommands {
                     Log.info("Player @ is now admin.", info.plainLastName());
                 }
                 case "remove" -> {
-                    var target = Find.playerByUuid(info.id);
+                    var target = Find.playerByUUID(info.id);
                     if (target != null) {
                         target.admin(false);
                         Bundle.send(target, "events.server.unadmin");
@@ -176,12 +176,14 @@ public class ServerCommands {
             admins.each(admin -> Log.info("  Name: @ / ID: @ / IP: @", admin.plainLastName(), admin.id, admin.lastIP));
         });
 
-        serverCommands.register("stats", "<ID/name/uuid/ip>", "Look up a player stats.", args -> {
-            var info = Find.playerInfo(args[0]);
-            if (notFound(info, args[0])) return;
+        serverCommands.register("stats", "<player...>", "Look up a player stats.", args -> {
+            var data = Find.playerData(args[0]);
+            if (notFound(data, args[0])) return;
 
-            var data = Database.getPlayerData(info.id);
-            Log.info("Player '@' UUID @", data.name, data.uuid);
+            Log.info("Player Stats");
+            Log.info("  Name: @", data.plainName());
+            Log.info("  UUID: @", data.uuid);
+            Log.info("  ID: @", data.id);
             Log.info("  Rank: @", data.rank.name());
             Log.info("  Playtime: @ minutes", data.playTime);
             Log.info("  Blocks placed: @", data.blocksPlaced);
@@ -193,24 +195,23 @@ public class ServerCommands {
             Log.info("  Hexed wins: @", data.hexedWins);
         });
 
-        serverCommands.register("setrank", "<rank> <ID/name/uuid/ip...> ", "Set a player's rank.", args -> {
+        serverCommands.register("setrank", "<rank> <player...> ", "Set a player's rank.", args -> {
             var rank = Find.rank(args[0]);
             if (notFound(rank, args[0])) return;
 
-            var info = Find.playerInfo(args[1]);
-            if (notFound(info, args[1])) return;
+            var data = Find.playerData(args[1]);
+            if (notFound(data, args[1])) return;
 
-            var data = Database.getPlayerData(info.id);
             data.rank = rank;
 
-            var target = Find.playerByUuid(info.id);
+            var target = Find.playerByUUID(data.uuid);
             if (target != null) {
                 Cache.put(target, data);
                 Ranks.name(target, data);
             }
 
             Database.savePlayerData(data);
-            Log.info("Successfully set rank of @ to @.", info.plainLastName(), rank.name());
+            Log.info("Successfully set rank of @ to @.", data.plainName(), rank.name());
         });
     }
 }
