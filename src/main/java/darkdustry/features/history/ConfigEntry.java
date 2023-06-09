@@ -3,7 +3,7 @@ package darkdustry.features.history;
 import arc.math.geom.Point2;
 import arc.util.*;
 import darkdustry.components.Icons;
-import mindustry.ctype.*;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.logic.*;

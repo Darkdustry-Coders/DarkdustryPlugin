@@ -2,8 +2,8 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.util.Log;
-import darkdustry.components.*;
 import darkdustry.components.Database.*;
+import darkdustry.components.Icons;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;

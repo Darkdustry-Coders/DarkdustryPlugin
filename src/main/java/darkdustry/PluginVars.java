@@ -1,6 +1,6 @@
 package darkdustry;
 
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import com.google.gson.*;
 import darkdustry.components.Config;
@@ -19,7 +19,7 @@ public class PluginVars {
     public static final int voteDuration = 50;
 
     /** Стандартная длительность кика игрока. В миллисекундах. */
-    public static final long kickDuration = 30 * 60 * 1000L;
+    public static final int kickDuration = 30 * 60 * 1000;
 
     /** Время, после которого будет загружена карта. В секундах. */
     public static final int mapLoadDelay = 10;
@@ -37,7 +37,7 @@ public class PluginVars {
     public static final int maxSpawnAmount = 25;
 
     /** Максимальная длительность применяемого эффекта статуса. В секундах. */
-    public static final int maxEffectDuration = 300;
+    public static final int maxEffectDuration = 5 * 60;
 
     /** Максимальная площадь для заливки. */
     public static final int maxFillArea = 512;

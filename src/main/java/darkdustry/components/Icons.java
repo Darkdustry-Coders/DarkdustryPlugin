@@ -3,7 +3,7 @@ package darkdustry.components;
 import arc.struct.*;
 import arc.util.*;
 import darkdustry.DarkdustryPlugin;
-import mindustry.ctype.*;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Iconc;
 

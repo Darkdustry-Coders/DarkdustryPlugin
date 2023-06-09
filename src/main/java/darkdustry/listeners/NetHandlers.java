@@ -13,7 +13,6 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 import useful.Bundle;
 
-import static arc.util.CommandHandler.ResponseType.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
@@ -23,17 +22,18 @@ import static mindustry.Vars.*;
 public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
-        if (response.type == manyArguments)
-            return Bundle.format("commands.unknown.many-arguments", player, response.command.text, response.command.paramText);
-        if (response.type == fewArguments)
-            return Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
+        return switch (response.type) {
+            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
+            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, response.command.paramText);
+            default -> {
+                var closest = availableCommands(player)
+                        .map(command -> command.text)
+                        .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
+                        .min(command -> Strings.levenshtein(command, response.runCommand));
 
-        var closest = availableCommands(player)
-                .map(command -> command.text)
-                .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
-                .min(command -> Strings.levenshtein(command, response.runCommand));
-
-        return closest != null ? Bundle.format("commands.unknown.closest", player, closest) : Bundle.format("commands.unknown", player);
+                yield closest == null ? Bundle.format("commands.unknown", player) : Bundle.format("commands.unknown.closest", player, closest);
+            }
+        };
     }
 
     public static void connect(NetConnection con, Connect packet) {

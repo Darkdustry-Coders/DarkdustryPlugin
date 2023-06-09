@@ -69,7 +69,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, formatDuration(MINUTES.toMillis(data.playTime), menu.player));
+            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, formatDuration(MINUTES.toMillis(data.playTime), menu.player));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");

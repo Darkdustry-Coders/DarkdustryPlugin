@@ -3,7 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.func.Boolf;
 import arc.struct.Seq;
-import arc.util.Structs;
+import arc.util.*;
 import darkdustry.components.Database;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Ranks.Rank;
@@ -27,7 +27,7 @@ public class Find {
     }
 
     public static Player playerByID(String input) {
-        return input.startsWith("#") ? Groups.player.getByID(parseInt(input.substring(1))) : null;
+        return canParseID(input) ? Groups.player.getByID(parseID(input)) : null;
     }
 
     public static Player playerByName(String input) {
@@ -43,8 +43,8 @@ public class Find {
         if (player != null)
             return player.getInfo();
 
-        if (canParsePositiveInt(input)) {
-            var data = Database.getPlayerData(parseInt(input));
+        if (canParseID(input)) {
+            var data = Database.getPlayerData(parseID(input));
             if (data != null)
                 return netServer.admins.getInfoOptional(data.uuid);
         }
@@ -57,11 +57,11 @@ public class Find {
         if (player != null)
             return Database.getPlayerData(player.uuid());
 
-        return canParsePositiveInt(input) ? Database.getPlayerData(parseInt(input)) : Database.getPlayerData(input);
+        return canParseID(input) ? Database.getPlayerData(parseID(input)) : Database.getPlayerData(input);
     }
 
     public static Team team(String input) {
-        return canParsePositiveInt(input) ? Team.get(parseInt(input)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(input));
+        return canParseID(input) ? Team.get(parseID(input)) : Structs.find(Team.all, team -> team.name.equalsIgnoreCase(input));
     }
 
     public static UnitType unit(String input) {
@@ -94,33 +94,41 @@ public class Find {
     }
 
     public static Gamemode mode(String input) {
-        return findEnum(input, Gamemode.values(), mode -> mode.name().equalsIgnoreCase(input));
+        return findArray(input, Gamemode.values(), mode -> mode.name().equalsIgnoreCase(input));
     }
 
     public static Rank rank(String input) {
-        return findEnum(input, Rank.values(), rank -> rank.name().equalsIgnoreCase(input));
+        return findArray(input, Rank.values(), rank -> rank.name().equalsIgnoreCase(input));
     }
 
     // region utils
 
-    public static <T extends UnlockableContent> T findContent(String input, ContentType type) {
-        return canParsePositiveInt(input) ? content.getByID(type, parseInt(input)) : content.getByName(type, input);
+    private static <T extends UnlockableContent> T findContent(String input, ContentType type) {
+        return canParseID(input) ? content.getByID(type, parseID(input)) : content.getByName(type, input);
     }
 
-    public static <T> T findSeq(String input, Seq<T> values, Boolf<T> filter) {
-        int index = parseInt(input);
+    private static <T> T findSeq(String input, Seq<T> values, Boolf<T> filter) {
+        int index = parseID(input);
         if (index > 0 && index <= values.size)
             return values.get(index);
 
         return values.find(filter);
     }
 
-    public static <T extends Enum<T>> T findEnum(String input, T[] values, Boolf<T> filter) {
-        int index = parseInt(input);
+    private static <T> T findArray(String input, T[] values, Boolf<T> filter) {
+        int index = parseID(input);
         if (index > 0 && index <= values.length)
             return values[index];
 
         return Structs.find(values, filter);
+    }
+
+    private static int parseID(String input) {
+        return parseInt(input.startsWith("#") ? input.substring(1) : input);
+    }
+
+    private static boolean canParseID(String input) {
+        return canParsePositiveInt(input.startsWith("#") ? input.substring(1) : input);
     }
 
     // endregion

@@ -42,7 +42,7 @@ public class Config {
     /** ID роли администраторов в Discord. */
     public long discordAdminRoleId = 0L;
 
-    /** ID роли администраторов в Discord. */
+    /** ID роли картоделов в Discord. */
     public long discordMapReviewerRoleId = 0L;
 
     public static void load() {
@@ -52,7 +52,7 @@ public class Config {
             DarkdustryPlugin.info("Config loaded. (@)", file.absolutePath());
         } else {
             file.writeString(gson.toJson(config = new Config()));
-            DarkdustryPlugin.info("Config file generated. (@)", file.absolutePath());
+            DarkdustryPlugin.info("Config generated. (@)", file.absolutePath());
         }
 
         motd.set("off");
