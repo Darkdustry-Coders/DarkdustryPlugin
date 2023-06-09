@@ -29,7 +29,7 @@ public class Authme {
                 .addField("Player:", ban.player, false)
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
-                .addField("Unban date:", formatTimestamp(ban.unbanDate.getTime()), false)
+                .addField("Unban Date:", formatTimestamp(ban.unbanDate.getTime()), false)
                 .build()).subscribe();
     }
 
