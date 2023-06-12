@@ -62,7 +62,7 @@ public class Utils {
     // region strings
 
     public static String coloredTeam(Team team) {
-        return "[#" + team.color + "]" + team.emoji + team.name + "[]";
+        return team.emoji + "[#" + team.color + "]" + team.name + "[]";
     }
 
     public static String stripAll(String text) {
