@@ -11,7 +11,7 @@ import static darkdustry.components.Icons.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
-public class BlockEntry implements HistoryEntry {
+public class BuildEntry implements HistoryEntry {
 
     public final String uuid;
     public final short blockID;
@@ -19,7 +19,7 @@ public class BlockEntry implements HistoryEntry {
     public final boolean breaking;
     public final long timestamp;
 
-    public BlockEntry(BlockBuildEndEvent event) {
+    public BuildEntry(BlockBuildEndEvent event) {
         this.uuid = event.unit.getPlayer().uuid();
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
         this.rotation = event.tile.build.rotation;
@@ -31,6 +31,6 @@ public class BlockEntry implements HistoryEntry {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), sides[rotation]);
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), formatRotation(rotation));
     }
 }

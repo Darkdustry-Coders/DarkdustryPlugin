@@ -123,6 +123,16 @@ public class Utils {
         return builder.toString();
     }
 
+    public static String formatRotation(int rotation) {
+        return switch (rotation) {
+            case 0 -> "\uE803";
+            case 1 -> "\uE804";
+            case 2 -> "\uE802";
+            case 3 -> "\uE805";
+            default -> "⚠";
+        };
+    }
+
     // endregion
     // region world
 

@@ -12,7 +12,6 @@ import static darkdustry.utils.Utils.*;
 public class Icons {
 
     public static final StringMap icons = new StringMap();
-    public static final char[] sides = {Iconc.right, Iconc.up, Iconc.left, Iconc.down};
 
     public static void load() {
         Http.get("https://raw.githubusercontent.com/Anuken/Mindustry/master/core/assets/icons/icons.properties", response -> {

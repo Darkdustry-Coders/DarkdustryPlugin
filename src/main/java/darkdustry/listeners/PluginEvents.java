@@ -97,7 +97,7 @@ public class PluginEvents {
             if (event.unit == null || !event.unit.isPlayer()) return;
 
             if (History.enabled() && event.tile.build != null)
-                History.put(event.tile, new BlockEntry(event));
+                History.put(event.tile, new BuildEntry(event));
 
             var data = Cache.get(event.unit.getPlayer());
             if (event.breaking)
