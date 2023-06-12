@@ -32,13 +32,13 @@ public class VoteLoad extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.loadsave.passed", file.nameWithoutExtension(), mapLoadDelay);
+        Bundle.send("commands.loadsave.success", file.nameWithoutExtension(), mapLoadDelay);
         Timer.schedule(() -> reloadWorld(() -> SaveIO.load(file)), mapLoadDelay);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.loadsave.failed", file.nameWithoutExtension());
+        Bundle.send("commands.loadsave.fail", file.nameWithoutExtension());
     }
 }

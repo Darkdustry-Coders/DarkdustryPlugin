@@ -28,13 +28,13 @@ public class VoteVnw extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.vnw.passed", waves);
+        Bundle.send("commands.vnw.success", waves);
         for (int i = 0; i < waves; i++) logic.runWave();
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.vnw.failed", waves);
+        Bundle.send("commands.vnw.fail", waves);
     }
 }

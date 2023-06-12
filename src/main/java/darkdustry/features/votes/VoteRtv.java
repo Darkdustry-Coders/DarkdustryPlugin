@@ -32,13 +32,13 @@ public class VoteRtv extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.rtv.passed", map.name(), mapLoadDelay);
+        Bundle.send("commands.rtv.success", map.name(), mapLoadDelay);
         Timer.schedule(() -> reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode()))), mapLoadDelay);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.rtv.failed", map.name());
+        Bundle.send("commands.rtv.fail", map.name());
     }
 }

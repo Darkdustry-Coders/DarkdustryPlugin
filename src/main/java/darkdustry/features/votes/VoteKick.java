@@ -36,14 +36,19 @@ public class VoteKick extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.votekick.passed", target.coloredName(), MILLISECONDS.toMinutes(kickDuration), reason);
+        Bundle.send("commands.votekick.success", target.coloredName(), MILLISECONDS.toMinutes(kickDuration), reason);
         Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", player.coloredName()).kick(kickDuration);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.votekick.failed", target.coloredName(), reason);
+        Bundle.send("commands.votekick.fail", target.coloredName(), reason);
+    }
+
+    public void cancel(Player admin) {
+        stop();
+        Bundle.send("commands.votekick.cancel", admin.coloredName(), target.coloredName(), reason);
     }
 
     @Override

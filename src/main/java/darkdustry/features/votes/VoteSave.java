@@ -28,13 +28,13 @@ public class VoteSave extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.savemap.passed", file.name());
+        Bundle.send("commands.savemap.success", file.name());
         SaveIO.save(file);
     }
 
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.savemap.failed", file.name());
+        Bundle.send("commands.savemap.fail", file.name());
     }
 }

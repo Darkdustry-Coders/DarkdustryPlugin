@@ -138,14 +138,14 @@ public class NetHandlers {
     }
 
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
-        Player admin = con.player, target = packet.other;
-        var action = packet.action;
+        var admin = con.player;
+        var target = packet.other;
 
         if (notAdmin(admin) || target == null || (target.admin && target != admin)) return;
 
-        Events.fire(new AdminRequestEvent(admin, target, action));
+        Events.fire(new AdminRequestEvent(admin, target, packet.action));
 
-        switch (action) {
+        switch (packet.action) {
             case kick -> MenuHandler.showKickMenu(admin, target);
             case ban -> MenuHandler.showBanMenu(admin, target);
             case trace -> {

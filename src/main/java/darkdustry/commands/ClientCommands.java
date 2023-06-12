@@ -56,9 +56,16 @@ public class ClientCommands {
         });
 
         register("vote", (args, player) -> {
-            if (notVoting(player, voteKick)
-                    || alreadyVoted(player, voteKick)
-                    || invalidVoteTarget(player, voteKick.target)) return;
+            if (notVoting(player, voteKick)) return;
+
+            if (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel")) {
+                if (notAdmin(player)) return;
+
+                voteKick.cancel(player);
+                return;
+            }
+
+            if (alreadyVoted(player, voteKick) || invalidVoteTarget(player, voteKick.target)) return;
 
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;

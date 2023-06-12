@@ -20,7 +20,8 @@ public class Icons {
                 icons.put(values[1], String.valueOf((char) Integer.parseInt(values[0])));
             }
 
-            Structs.each(team -> team.emoji = icons.get(team.name, ""), Team.baseTeams);
+            for (var team : Team.baseTeams)
+                team.emoji = icons.get(team.name, "");
 
             DarkdustryPlugin.info("Loaded @ content icons.", icons.size);
         }, e -> DarkdustryPlugin.error("Unable to fetch content icons from GitHub. Check your internet connection."));
