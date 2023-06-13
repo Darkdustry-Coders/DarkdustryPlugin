@@ -62,8 +62,7 @@ public class Admins {
                 .admin(admin.plainName())
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
-                .build()
-                .generateID());
+                .build());
 
         kickReason(target, duration, reason, "kick.banned-by-admin", admin.coloredName()).kick();
         Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
@@ -87,8 +86,7 @@ public class Admins {
                 .admin(admin)
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
-                .build()
-                .generateID());
+                .build());
 
         var target = Find.playerByUUID(info.id);
         if (target == null) return;
@@ -101,6 +99,8 @@ public class Admins {
     // region bans
 
     public static void ban(Ban ban) {
+        ban.generateID();
+
         Authme.sendBan(ban);
         Database.addBan(ban);
     }

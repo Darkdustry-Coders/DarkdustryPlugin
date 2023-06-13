@@ -65,7 +65,13 @@ public class Database {
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
-        return players.get(eq("uuid", uuid), () -> new PlayerData(uuid).generateID());
+        return players.get(eq("uuid", uuid), () -> {
+            var data = new PlayerData(uuid);
+            data.generateID();
+
+            savePlayerData(data);
+            return data;
+        });
     }
 
     public static void savePlayerData(PlayerData data) {
@@ -104,9 +110,8 @@ public class Database {
             this.uuid = uuid;
         }
 
-        public PlayerData generateID() {
+        public void generateID() {
             this.id = players.generateNextID("pid");
-            return this;
         }
 
         public String plainName() {
@@ -146,9 +151,8 @@ public class Database {
         public String reason;
         public Date unbanDate;
 
-        public Ban generateID() {
+        public void generateID() {
             this.id = players.getField(eq("uuid", uuid), "pid", "<none>");
-            return this;
         }
 
         public boolean expired() {
