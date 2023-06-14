@@ -38,16 +38,6 @@ public class Database {
             bans.descendingIndex("id");
             bans.descendingIndex("unbanDate", 0L);
 
-            // var counter = new AtomicInteger();
-            // players.all().each(data -> {
-            //     data.id = counter.getAndIncrement();
-            //     Log.info(data.id);
-            //
-            //     savePlayerData(data);
-            // });
-            //
-            // Log.info("Total: " + counter.get());
-
             DarkdustryPlugin.info("Database connected.");
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect to the database: @", e);
