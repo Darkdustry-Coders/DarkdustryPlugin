@@ -9,13 +9,15 @@ repositories {
     maven(url = "https://jitpack.io")
 }
 
-ext {}
+ext {
+    mindustryVersion = json["minGameVersion"]
+}
 
 dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
 
-    val mindustryVersion = json["minGameVersion"]
+    
     val usefulHash = "798e49b33b"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
