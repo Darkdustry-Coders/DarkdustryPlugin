@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>Darkdustry Plugin</h1>
+    <h1>Darkdass Plugin</h1>
     <p>Основной плагин для серверов Darkdustry.</p>
 </div>
 
