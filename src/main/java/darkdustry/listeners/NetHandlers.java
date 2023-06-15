@@ -1,5 +1,4 @@
 package darkdustry.listeners;
-
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
@@ -12,15 +11,12 @@ import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 import useful.Bundle;
-
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-
 public class NetHandlers {
-
     public static String invalidResponse(Player player, CommandResponse response) {
         return switch (response.type) {
             case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
@@ -35,10 +31,8 @@ public class NetHandlers {
             }
         };
     }
-
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
-
         var connections = Seq.with(net.getConnections()).filter(other -> other.address.equals(con.address));
         if (connections.size >= maxIdenticalIPs) {
             netServer.admins.blacklistDos(con.address);
@@ -48,56 +42,43 @@ public class NetHandlers {
 
     public static void connect(NetConnection con, ConnectPacket packet) {
         con.connectTime = Time.millis();
-
         Events.fire(new ConnectPacketEvent(con, packet));
-
         String uuid = con.uuid = packet.uuid,
                 usid = con.usid = packet.usid,
                 ip = con.address,
                 locale = packet.locale,
                 name = netServer.fixName(packet.name);
-
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
-
         if (con.hasBegunConnecting || Seq.with(net.getConnections()).count(other -> other.uuid.equals(uuid) || other.usid.equals(usid)) > 1) {
             Bundle.kick(con, locale, 0L, "kick.already-connected");
             return;
         }
-
         if (netServer.admins.isSubnetBanned(ip)) {
             Admins.kick(con, locale, "kick.subnet-ban").kick();
             return;
         }
-
         Admins.checkKicked(con, locale);
         Admins.checkBanned(con, locale);
-
         con.hasBegunConnecting = true;
-
         if (stripColors(name).trim().isEmpty()) {
             Bundle.kick(con, locale, 0L, "kick.name-is-empty");
             return;
         }
-
         if (netServer.admins.getPlayerLimit() > 0 && Groups.player.size() >= netServer.admins.getPlayerLimit()) {
             Bundle.kick(con, locale, 0L, "kick.player-limit", netServer.admins.getPlayerLimit());
             return;
         }
-
         var extraMods = packet.mods.copy();
         var missingMods = mods.getIncompatibility(extraMods);
-
         if (extraMods.any()) {
             Bundle.kick(con, locale, 0L, "kick.extra-mods", extraMods.toString("\n> "));
             return;
         }
-
         if (missingMods.any()) {
             Bundle.kick(con, locale, 0L, "kick.missing-mods", missingMods.toString("\n> "));
             return;
         }
-
         var info = netServer.admins.getInfo(uuid);
         if (!netServer.admins.isWhitelisted(uuid, usid)) {
             info.adminUsid = usid;
@@ -106,45 +87,33 @@ public class NetHandlers {
             Bundle.kick(con, locale, 0L, "kick.not-whitelisted");
             return;
         }
-
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
             Bundle.kick(con, locale, 0L, "kick.custom-client");
             return;
         }
-
         if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
             Bundle.kick(con, locale, 0L, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", packet.version, mindustryVersion);
             return;
         }
-
         if (con.kicked) return;
-
         var player = Player.create();
         player.con(con);
         player.name(name);
         player.locale(locale);
         player.admin(netServer.admins.isAdmin(uuid, usid));
         player.color.set(packet.color).a(1f);
-
         con.player = player;
-
         netServer.admins.updatePlayerJoined(uuid, ip, name);
         if (!info.admin) info.adminUsid = usid;
-
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
-
         Events.fire(new PlayerConnect(player));
     }
-
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
         var admin = con.player;
         var target = packet.other;
-
         if (notAdmin(admin) || target == null || (target.admin && target != admin)) return;
-
         Events.fire(new AdminRequestEvent(admin, target, packet.action));
-
         switch (packet.action) {
             case kick -> MenuHandler.showKickMenu(admin, target);
             case ban -> MenuHandler.showBanMenu(admin, target);
