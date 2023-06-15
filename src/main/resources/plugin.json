@@ -1,11 +1,11 @@
 {
-    "name": "darkdustry-plugin",
-    "minGameVersion": "144.3",
-    "displayName": "Darkdustry Plugin",
-    "author": "Darkness6030 & xzxADIxzx",
-    "description": "The main plugin for Darkdustry servers. Includes a lot of useful features.",
-    "version": "5.0.1",
-    "main": "darkdustry.DarkdustryPlugin",
-    "repo": "Darkdustry-Coders/DarkdustryPlugin",
-    "dependencies": []
+    "name": "darkass-plugin",
+    "minGameVersion": "144.3+-1beta alpha gamma штриъ",
+    "displayName": "Darkdass Plugin",
+    "author": "Darkness6030 & Pls, gods, kill me",
+    "description": "The main plugin for Darkdass servers. Includes a lot of useful features.",
+    "version": "spaces go brrr!",
+    "main":"darkdustry.DarkdustryPlugin",
+    "repo":"Darkdustry-Coders/DarkdustryPlugin",
+    "dependencies": ["everything from everywhere"]
 }
