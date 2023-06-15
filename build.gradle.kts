@@ -9,6 +9,8 @@ repositories {
     maven(url = "https://jitpack.io")
 }
 
+ext {}
+
 dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
