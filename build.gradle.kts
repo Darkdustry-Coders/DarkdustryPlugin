@@ -11,15 +11,12 @@ repositories {
 
 ext {
     mindustryVersion = json["minGameVersion"]
-    val usefulHash = "798e49b33b"
+    usefulHash = "798e49b33b"
 }
 
 dependencies {
     val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
-
-    
-    
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
