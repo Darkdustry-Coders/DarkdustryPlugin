@@ -101,7 +101,6 @@ public class PluginEvents {
             var data = Database.getPlayerDataOrCreate(event.player.uuid());
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
-            // Вызываем с задержкой, чтобы игрок успел появиться TODO
             app.post(() -> data.effects.join.get(event.player));
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.join", event.player.coloredName(), data.id);

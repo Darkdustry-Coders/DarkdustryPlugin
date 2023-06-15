@@ -31,9 +31,6 @@ public class ConfigEntry implements HistoryEntry {
         this.connect = value instanceof Point2 point && getConnect(event, point);
         this.timestamp = Time.millis();
     }
-
-    // Ифы сила, Дарк могила
-    // (C) Овлер, 2021 год до н.э.
     @Override
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
