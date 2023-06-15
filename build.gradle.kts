@@ -11,6 +11,7 @@ repositories {
 
 ext {
     mindustryVersion = json["minGameVersion"]
+    val usefulHash = "798e49b33b"
 }
 
 dependencies {
@@ -18,7 +19,7 @@ dependencies {
     project.version = json["version"]!!
 
     
-    val usefulHash = "798e49b33b"
+    
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
