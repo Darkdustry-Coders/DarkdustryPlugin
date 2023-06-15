@@ -82,7 +82,7 @@ public class ClientCommands {
             });
         });
 
-        if (config.mode.useRtv()) {
+        if (config.mode.enableRtv) {
             register("rtv", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
@@ -96,7 +96,7 @@ public class ClientCommands {
             register("maps", PageIterator::maps);
         }
 
-        if (config.mode.useVnw()) {
+        if (config.mode.enableVnw) {
             register("vnw", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
@@ -108,7 +108,7 @@ public class ClientCommands {
             });
         }
 
-        if (config.mode.isDefault()) {
+        if (config.mode.isDefault) {
             register("savemap", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 

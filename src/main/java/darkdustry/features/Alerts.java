@@ -27,7 +27,7 @@ public class Alerts {
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
     public static boolean enabled() {
-        return config.mode.isDefault();
+        return config.mode.isDefault;
     }
 
     public static void load() {

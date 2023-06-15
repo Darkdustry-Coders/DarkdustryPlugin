@@ -21,7 +21,7 @@ public class AdminCommands {
     public static void load() {
         register("a", (args, player) -> Translator.translate(Player::admin, player, args[0], "commands.a.chat", player.coloredName()));
 
-        if (config.mode.useRtv()) {
+        if (config.mode.enableRtv) {
             register("artv", (args, player) -> {
                 var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
                 if (notFound(player, map)) return;
@@ -49,7 +49,7 @@ public class AdminCommands {
                 Bundle.send(player, "despawn.success.player", target.coloredName());
         });
 
-        if (!config.mode.isDefault()) return;
+        if (!config.mode.isDefault) return;
 
         register("core", (args, player) -> {
             var core = args.length > 0 ? Find.core(args[0]) : Blocks.coreShard;

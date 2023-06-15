@@ -55,11 +55,13 @@ public class Config {
             DarkdustryPlugin.info("Config generated. (@)", file.absolutePath());
         }
 
-        motd.set("off");
+        allowCustomClients.set(true);
         showConnectMessages.set(false);
         logging.set(true);
         strict.set(true);
         antiSpam.set(true);
+        autoPause.set(false);
+
         interactRateWindow.set(1);
         interactRateLimit.set(25);
         interactRateKick.set(50);
@@ -68,26 +70,60 @@ public class Config {
         packetSpamLimit.set(500);
         snapshotInterval.set(200);
 
-        enableVotekick.set(config.mode != hexed && config.mode != industry && config.mode != hub);
-        autoPause.set(false);
+        enableVotekick.set(config.mode.enableVotekick);
 
-        if (config.mode.useRtv()) welcomeMessageCommands.add("rtv");
-        if (config.mode.useVnw()) welcomeMessageCommands.add("vnw");
+        if (config.mode.enableRtv) welcomeMessageCommands.add("rtv");
+        if (config.mode.enableVnw) welcomeMessageCommands.add("vnw");
     }
 
     public enum Gamemode {
-        attack, castle, crawler, hexed, hub, industry, pvp, sandbox, survival, tower;
+        anarchy {{
+            enableVotekick = false;
+        }},
 
-        public boolean isDefault() {
-            return this == attack || this == pvp || this == sandbox || this == survival || this == tower;
-        }
+        attack,
 
-        public boolean useRtv() {
-            return isDefault() || this == castle || this == crawler;
-        }
+        castle {{
+            isDefault = false;
+            enableVnw = false;
+        }},
 
-        public boolean useVnw() {
-            return isDefault() && this != pvp;
-        }
+        crawler {{
+            isDefault = false;
+            enableVnw = false;
+        }},
+
+        hexed {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+        }},
+
+        hub {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+        }},
+
+        msgo {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+        }},
+
+        pvp {{
+            enableVnw = false;
+        }},
+
+        sandbox,
+        survival,
+        tower;
+
+        public boolean isDefault = true;
+        public boolean enableRtv = true;
+        public boolean enableVnw = true;
+        public boolean enableVotekick = true;
     }
 }

@@ -11,10 +11,10 @@ public class History {
     public static HistoryStack[] history;
 
     public static boolean enabled() {
-        return config.mode.isDefault();
+        return config.mode.isDefault;
     }
 
-    public static void clear() {
+    public static void reset() {
         history = new HistoryStack[world.width() * world.height()];
     }
 

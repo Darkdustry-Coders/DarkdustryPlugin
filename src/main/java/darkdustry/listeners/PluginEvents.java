@@ -58,7 +58,7 @@ public class PluginEvents {
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
         Events.on(WorldLoadEvent.class, event -> {
-            History.clear();
+            History.reset();
             app.post(Bot::updateActivity);
         });
 
