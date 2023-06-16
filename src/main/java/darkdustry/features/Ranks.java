@@ -40,7 +40,7 @@ public class Ranks {
             tag = "[yellow]<\uE80F>[] ";
         }},
 
-        vip {{
+        sage {{
             tag = "[accent]<[white]\uF6AA[]>[] ";
         }},
 

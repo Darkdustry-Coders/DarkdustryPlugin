@@ -137,7 +137,7 @@ public class ServerCommands {
             var bans = Database.getBans();
 
             Log.info("Banned players: (@)", bans.size);
-            bans.each(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.uuid, ban.ip, formatDateTime(ban.unbanDate.getTime())));
+            bans.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, formatDateTime(ban.unbanDate.getTime())));
         });
 
         serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {
