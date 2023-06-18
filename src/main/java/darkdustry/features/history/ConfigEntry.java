@@ -2,6 +2,7 @@ package darkdustry.features.history;
 
 import arc.math.geom.Point2;
 import arc.util.*;
+import mindustry.ai.UnitCommand;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.ConfigEvent;
 import mindustry.gen.Player;
@@ -48,7 +49,11 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (value instanceof String text) {
-            return !text.isEmpty() ? Bundle.format("history.config.text", player, info.lastName, block.emoji(), text, time) : Bundle.format("history.config.default", player, info.lastName, block.emoji(), time);
+            return text.length() > 0 ? Bundle.format("history.config.text", player, info.lastName, block.emoji(), text, time) : Bundle.format("history.config.default", player, info.lastName, block.emoji(), time);
+        }
+
+        if (value instanceof UnitCommand command) {
+            return Bundle.format("history.config.command", player, info.lastName, block.emoji(), command.name, time);
         }
 
         if (value instanceof Point2 point) {

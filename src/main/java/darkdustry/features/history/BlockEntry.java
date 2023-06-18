@@ -9,7 +9,7 @@ import useful.Bundle;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
-public class BuildEntry implements HistoryEntry {
+public class BlockEntry implements HistoryEntry {
 
     public final String uuid;
     public final short blockID;
@@ -17,7 +17,7 @@ public class BuildEntry implements HistoryEntry {
     public final boolean breaking;
     public final long timestamp;
 
-    public BuildEntry(BlockBuildEndEvent event) {
+    public BlockEntry(BlockBuildEndEvent event) {
         this.uuid = event.unit.getPlayer().uuid();
         this.blockID = event.tile.build instanceof ConstructBuild build ? build.current.id : event.tile.blockID();
         this.rotation = event.tile.build.rotation;
