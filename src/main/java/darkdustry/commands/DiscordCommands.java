@@ -40,7 +40,7 @@ public class DiscordCommands {
                 .title(state.isPlaying() ? "Server Running" : "Server Offline")
                 .addField("Players:", String.valueOf(settings.getInt("totalPlayers", Groups.player.size())), false)
                 .addField("Units:", String.valueOf(Groups.unit.size()), false)
-                .addField("Map:", stripColors(state.map.name()), false)
+                .addField("Map:", state.map.plainName(), false)
                 .addField("Wave:", String.valueOf(state.wave), false)
                 .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
@@ -55,9 +55,9 @@ public class DiscordCommands {
             if (notFound(context, map)) return;
 
             context.info(embed -> embed
-                    .title(stripColors(map.name()))
-                    .addField("Author:", stripColors(map.author()), false)
-                    .addField("Description:", stripColors(map.description()), false)
+                    .title(map.plainName())
+                    .addField("Author:", map.plainAuthor(), false)
+                    .addField("Description:", map.plainDescription(), false)
                     .footer(map.width + "x" + map.height, null)).withFiles(File.of(map.file.name(), map.file.read())).subscribe();
         });
 

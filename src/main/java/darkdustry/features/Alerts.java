@@ -4,7 +4,7 @@ import arc.func.Boolp;
 import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
-import darkdustry.components.*;
+import darkdustry.components.Cache;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -47,7 +47,7 @@ public class Alerts {
 
         event.team.data().players.each(player -> {
             if (Cache.get(player).alerts)
-                Bundle.send(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), Icons.icon(event.builder.buildPlan().block), event.tile.x, event.tile.y);
+                Bundle.send(player, "alerts.dangerous-building", event.builder.getPlayer().coloredName(), event.builder.buildPlan().block.emoji(), event.tile.x, event.tile.y);
         });
     }
 
@@ -56,7 +56,7 @@ public class Alerts {
 
         event.player.team().data().players.each(player -> {
             if (Cache.get(player).alerts)
-                Bundle.send(player, "alerts.dangerous-deposit", event.player.coloredName(), Icons.icon(event.item), Icons.icon(event.tile.block), event.tile.tileX(), event.tile.tileY());
+                Bundle.send(player, "alerts.dangerous-deposit", event.player.coloredName(), event.item.emoji(), event.tile.block.emoji(), event.tile.tileX(), event.tile.tileY());
         });
     }
 

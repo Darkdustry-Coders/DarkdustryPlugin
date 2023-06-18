@@ -50,8 +50,7 @@ public class ClientCommands {
             var target = Find.player(args[0]);
             if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
-            // TODO remove when v145 arrives
-            voteKick = new VoteKick(player, target, args.length > 1 ? args[1] : "Not Specified");
+            voteKick = new VoteKick(player, target, args[1]);
             voteKick.vote(player, 1);
         });
 

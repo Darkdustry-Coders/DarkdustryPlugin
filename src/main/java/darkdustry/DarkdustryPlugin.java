@@ -56,7 +56,6 @@ public class DarkdustryPlugin extends Plugin {
         );
 
         Alerts.load();
-        Icons.load();
         MenuHandler.load();
         SchemeSize.load();
 

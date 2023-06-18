@@ -3,7 +3,6 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.util.Log;
 import darkdustry.components.Database.*;
-import darkdustry.components.Icons;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
@@ -77,11 +76,11 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, Team team) {
-        return check(team == null, player, "commands.team-not-found", Icons.teamsList());
+        return check(team == null, player, "commands.team-not-found", formatTeams());
     }
 
     public static boolean notFound(Player player, UnitType type) {
-        return check(type == null || !available(type), player, "commands.unit-not-found", Icons.contentList(content.units().select(Utils::available)));
+        return check(type == null || !available(type), player, "commands.unit-not-found", formatContents(content.units().select(Utils::available)));
     }
 
     public static boolean notFound(Player player, Block block) {
@@ -89,15 +88,15 @@ public class Checks {
     }
 
     public static boolean notFound(Player player, Item item) {
-        return check(item == null, player, "commands.item-not-found", Icons.contentList(content.items()));
+        return check(item == null, player, "commands.item-not-found", formatContents(content.items()));
     }
 
     public static boolean notFound(Player player, StatusEffect effect) {
-        return check(effect == null, player, "commands.effect-not-found", Icons.contentList(content.statusEffects()));
+        return check(effect == null, player, "commands.effect-not-found", formatContents(content.statusEffects()));
     }
 
     public static boolean notFoundCore(Player player, Block core) {
-        return check(core == null, player, "commands.core-not-found", Icons.contentList(content.blocks().select(CoreBlock.class::isInstance)));
+        return check(core == null, player, "commands.core-not-found", formatContents(content.blocks().select(CoreBlock.class::isInstance)));
     }
 
     public static boolean notFound(Player player, Map map) {
@@ -109,7 +108,7 @@ public class Checks {
     }
 
     public static boolean noCores(Player player, Team team) {
-        return check(team.cores().isEmpty(), player, "commands.give.no-core", coloredTeam(team));
+        return check(team.cores().isEmpty(), player, "commands.give.no-core", team.coloredName());
     }
 
     public static boolean votekickDisabled(Player player) {

@@ -149,12 +149,24 @@ public class NetHandlers {
             case kick -> MenuHandler.showKickMenu(admin, target);
             case ban -> MenuHandler.showBanMenu(admin, target);
             case trace -> {
-                Call.traceInfo(con, target, new TraceInfo(target.ip(), target.uuid(), target.con.modclient, target.con.mobile, target.getInfo().timesJoined, target.getInfo().timesKicked));
-                Log.info("Admin @ has requested trace info of @.", admin.plainName(), target.plainName());
+                var trace = new TraceInfo(
+                        target.ip(),
+                        target.uuid(),
+                        target.con.modclient,
+                        target.con.mobile,
+                        target.getInfo().timesJoined,
+                        target.getInfo().timesKicked,
+                        target.getInfo().ips.toArray(String.class),
+                        target.getInfo().names.toArray(String.class)
+                );
+
+                Call.traceInfo(con, target, trace);
+                Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has requested trace info of @ &fi&lk[&lb@&fi&lk]&fb.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid());
             }
             case wave -> {
                 logic.skipWave();
-                Log.info("Admin @ has skipped the wave.", admin.plainName());
+
+                Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has skipped the wave.", admin.plainName(), admin.uuid());
                 Bundle.send("events.admin.wave", admin.coloredName());
             }
         }

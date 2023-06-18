@@ -36,10 +36,6 @@ public class Admins {
                 .add("kick.disclaimer", discordServerUrl);
     }
 
-    public static KickBuilder kick(Player player, long duration, String key, Object... values) {
-        return kick(player.con, player.locale, duration, key, values);
-    }
-
     public static KickBuilder kickReason(Player player, long duration, String reason, String key, Object... values) {
         return kickReason(player.con, player.locale, duration, reason, key, values);
     }
@@ -49,9 +45,9 @@ public class Admins {
 
     public static void kick(Player target, Player admin, long duration, String reason) {
         kickReason(target, duration, reason, "kick.kicked-by-admin", admin.coloredName()).kick(duration);
-        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
 
-        Log.info("Admin @ has kicked @ for @.", admin.plainName(), target.plainName(), reason);
+        Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has kicked @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
+        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
     }
 
     public static void ban(Player target, Player admin, long duration, String reason) {
@@ -65,9 +61,9 @@ public class Admins {
                 .build());
 
         kickReason(target, duration, reason, "kick.banned-by-admin", admin.coloredName()).kick();
-        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
 
-        Log.info("Admin @ has banned @ for @.", admin.plainName(), target.plainName(), reason);
+        Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has banned @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
+        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
     }
 
     // endregion

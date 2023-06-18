@@ -3,7 +3,8 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.struct.*;
 import arc.util.CommandHandler.Command;
-import arc.util.Log;
+import arc.util.*;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.*;
@@ -61,10 +62,6 @@ public class Utils {
 
     // region strings
 
-    public static String coloredTeam(Team team) {
-        return team.emoji + "[#" + team.color + "]" + team.name + "[]";
-    }
-
     public static String stripAll(String text) {
         return stripColors(stripGlyphs(text));
     }
@@ -119,6 +116,20 @@ public class Utils {
                 builder.append(Bundle.format(key, locale, value));
             }
         });
+
+        return builder.toString();
+    }
+
+    public static String formatTeams() {
+        var builder = new StringBuilder();
+        Structs.each(team -> builder.append(team.coloredName()).append(" "), Team.baseTeams);
+
+        return builder.toString();
+    }
+
+    public static String formatContents(Seq<? extends UnlockableContent> contents) {
+        var builder = new StringBuilder();
+        contents.each(content -> builder.append(content.emoji()).append(content.name).append(" "));
 
         return builder.toString();
     }

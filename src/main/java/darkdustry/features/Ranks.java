@@ -61,7 +61,8 @@ public class Ranks {
         public Rank next;
         public Requirements requirements;
 
-        Rank() {}
+        Rank() {
+        }
 
         Rank(Rank previous) {
             previous.next = this;

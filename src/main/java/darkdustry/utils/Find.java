@@ -3,7 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.func.Boolf;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Structs;
 import darkdustry.components.Database;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Ranks.Rank;

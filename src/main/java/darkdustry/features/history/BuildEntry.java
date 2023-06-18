@@ -1,13 +1,11 @@
 package darkdustry.features.history;
 
 import arc.util.Time;
-import darkdustry.components.Icons;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import useful.Bundle;
 
-import static darkdustry.components.Icons.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -31,6 +29,6 @@ public class BuildEntry implements HistoryEntry {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, Icons.icon(block), formatTime(timestamp), formatRotation(rotation));
+        return Bundle.format(breaking ? "history.deconstruct" : block.rotate ? "history.construct.rotate" : "history.construct", player, info.lastName, block.emoji(), formatTime(timestamp), formatRotation(rotation));
     }
 }

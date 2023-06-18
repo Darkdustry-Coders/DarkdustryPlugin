@@ -74,8 +74,8 @@ public class PageIterator {
 
                 availableMaps(),
 
-                (map, index) -> format("**@.** @", index, stripColors(map.name())),
-                (map) -> format("Author: @\nSize: @x@", stripColors(map.author()), map.width, map.height)
+                (map, index) -> format("**@.** @", index, map.plainName()),
+                (map) -> format("Author: @\nSize: @x@", map.plainAuthor(), map.width, map.height)
         );
     }
 
