@@ -23,8 +23,8 @@ public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
         return switch (response.type) {
-            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, response.command.paramText);
-            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, response.command.paramText);
+            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.text)
