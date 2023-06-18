@@ -7,6 +7,7 @@ import arc.util.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
@@ -163,11 +164,22 @@ public class NetHandlers {
                 Call.traceInfo(con, target, trace);
                 Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has requested trace info of @ &fi&lk[&lb@&fi&lk]&fb.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid());
             }
+
             case wave -> {
                 logic.skipWave();
 
                 Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has skipped the wave.", admin.plainName(), admin.uuid());
                 Bundle.send("events.admin.wave", admin.coloredName());
+            }
+
+            case switchTeam -> {
+                if (packet.params instanceof Team team) {
+                    target.team(team);
+
+                    Bundle.send(target, "commands.team.success", team.coloredName());
+                    if (target != admin)
+                        Bundle.send(admin, "commands.team.success.player", target.coloredName(), team.coloredName());
+                }
             }
         }
     }
