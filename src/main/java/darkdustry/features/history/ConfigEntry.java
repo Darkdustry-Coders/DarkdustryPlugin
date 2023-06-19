@@ -49,7 +49,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (value instanceof String text) {
-            return text.length() > 0 ? Bundle.format("history.config.text", player, info.lastName, block.emoji(), text, time) : Bundle.format("history.config.default", player, info.lastName, block.emoji(), time);
+            return text.length() > 0 ? Bundle.format("history.config.text", player, info.lastName, block.emoji(), text.replaceAll("\n", " "), time) : Bundle.format("history.config.default", player, info.lastName, block.emoji(), time);
         }
 
         if (value instanceof UnitCommand command) {

@@ -17,27 +17,32 @@ public class Ranks {
         player,
 
         active(player) {{
-            tag = "[sky]<[white]\uE800[]>[] ";
+            tag = "[#00ffff]<[white]\uE800[]>[] ";
             requirements = new Requirements(320, 12500, 25, 50);
         }},
 
         hyperActive(active) {{
-            tag = "[#738adb]<[white]\uE813[]>[] ";
+            tag = "[#00ff00]<[white]\uE813[]>[] ";
             requirements = new Requirements(800, 25000, 50, 100);
         }},
 
         veteran(hyperActive) {{
-            tag = "[gold]<[white]\uE809[]>[] ";
+            tag = "[#ffff00]<[white]\uE809[]>[] ";
             requirements = new Requirements(2000, 50000, 100, 200);
         }},
 
         master(veteran) {{
-            tag = "[orange]<[white]\uE810[]>[] ";
+            tag = "[#ff8000]<[white]\uE810[]>[] ";
             requirements = new Requirements(5000, 100000, 200, 400);
         }},
 
-        contentCreator {{
-            tag = "[yellow]<\uE80F>[] ";
+        legend(master) {{
+            tag = "[#ff0000]<[white]\uE871[]>[] ";
+            requirements = new Requirements(10000, 250000, 500, 1000);
+        }},
+
+        contentMaker {{
+            tag = "[#86dca2]<[white]\uE80F[]>[] ";
         }},
 
         sage {{
@@ -61,8 +66,7 @@ public class Ranks {
         public Rank next;
         public Requirements requirements;
 
-        Rank() {
-        }
+        Rank() {}
 
         Rank(Rank previous) {
             previous.next = this;

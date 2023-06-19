@@ -175,12 +175,12 @@ public class Checks {
                 event.reply().withEmbeds(EmbedCreateSpec.builder()
                         .color(Color.CINNABAR)
                         .title("Missing Permissions")
-                        .description("You must be at least " + role.getMention() + " to use this feature.")
+                        .description("You must be " + role.getMention() + " to use this feature.")
                         .build()).withEphemeral(true).subscribe());
     }
 
     public static boolean noRole(MessageContext context, Role role) {
-        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be at least @ to use this command.", role.getMention());
+        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be @ to use this command.", role.getMention());
     }
 
     public static boolean notMap(MessageContext context) {

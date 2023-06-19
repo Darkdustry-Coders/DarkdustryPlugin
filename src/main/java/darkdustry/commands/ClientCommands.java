@@ -35,7 +35,7 @@ public class ClientCommands {
         register("players", PageIterator::players);
 
         if (!config.hubIp.isEmpty())
-            register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, config.hubIp, config.hubPort), error -> Bundle.send(player, "commands.hub.failed", error.getMessage())));
+            register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, config.hubIp, config.hubPort), e -> Bundle.send(player, "commands.hub.error")));
 
         register("stats", (args, player) -> {
             var target = args.length > 0 ? Find.player(args[0]) : player;

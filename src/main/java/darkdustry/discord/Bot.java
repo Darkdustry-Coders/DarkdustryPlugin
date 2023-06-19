@@ -16,6 +16,7 @@ import discord4j.gateway.intent.*;
 import discord4j.rest.util.AllowedMentions;
 import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
+import reactor.function.TupleUtils;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -63,21 +64,25 @@ public class Bot {
                         .subscribe(context -> {
                             var response = discordCommands.handleMessage(message.getContent(), context);
                             switch (response.type) {
-                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+                                case fewArguments ->
+                                        context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments ->
+                                        context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand ->
+                                        context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
                             }
                         });
 
                 if (!message.getChannelId().equals(botChannel.getId())) return;
 
-                member.getHighestRole().switchIfEmpty(Mono.fromRunnable(() -> {
-                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
-                })).subscribe(role -> {
-                    Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat.role", Integer.toHexString(role.getColor().getRGB()), role.getName(), member.getDisplayName(), message.getContent());
-                });
+                Mono.zip(member.getHighestRole(), member.getColor())
+                        .switchIfEmpty(Mono.fromRunnable(() -> {
+                            Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
+                            Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
+                        })).subscribe(TupleUtils.consumer((role, color) -> {
+                            Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
+                            Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
+                        }));
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {

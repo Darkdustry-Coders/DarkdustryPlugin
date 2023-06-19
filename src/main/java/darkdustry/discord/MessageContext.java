@@ -5,7 +5,7 @@ import discord4j.core.object.entity.*;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
-import discord4j.rest.util.Color;
+import discord4j.rest.util.*;
 
 import static arc.util.Strings.*;
 

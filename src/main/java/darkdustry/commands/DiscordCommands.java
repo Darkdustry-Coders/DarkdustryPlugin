@@ -1,12 +1,10 @@
 package darkdustry.commands;
 
 import arc.util.*;
-import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks;
 import darkdustry.utils.*;
-import discord4j.core.object.entity.Role;
 import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
@@ -26,16 +24,16 @@ public class DiscordCommands {
     public static void load() {
         discordCommands = new CommandHandler(config.discordBotPrefix);
 
-        register("help", "List of all commands.", (args, context) -> {
+        discordCommands.<MessageContext>register("help", "List of all commands.", (args, context) -> {
             var builder = new StringBuilder();
             discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " " + command.paramText : "").append(" - ").append(command.description).append("\n"));
             context.info("All available commands:", builder.toString()).subscribe();
         });
 
-        register("maps", "[page]", "List of all maps.", PageIterator::maps);
-        register("players", "[page]", "List of all maps.", PageIterator::players);
+        discordCommands.<MessageContext>register("maps", "[page]", "List of all maps.", PageIterator::maps);
+        discordCommands.<MessageContext>register("players", "[page]", "List of all maps.", PageIterator::players);
 
-        register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
+        discordCommands.<MessageContext>register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
                 .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
                 .title(state.isPlaying() ? "Server Running" : "Server Offline")
                 .addField("Players:", String.valueOf(settings.getInt("totalPlayers", Groups.player.size())), false)
@@ -45,12 +43,16 @@ public class DiscordCommands {
                 .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
-        register("exit", "Exit the server application.", adminRole, (args, context) -> context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> {
-            netServer.kickAll(KickReason.serverRestarting);
-            app.exit();
-        }));
+        discordCommands.<MessageContext>register("exit", "Exit the server application.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
 
-        register("map", "<map...>", "Map", (args, context) -> {
+            context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> {
+                netServer.kickAll(KickReason.serverRestarting);
+                app.exit();
+            });
+        });
+
+        discordCommands.<MessageContext>register("map", "<map...>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
             if (notFound(context, map)) return;
 
@@ -61,8 +63,8 @@ public class DiscordCommands {
                     .footer(map.width + "x" + map.height, null)).withFiles(File.of(map.file.name(), map.file.read())).subscribe();
         });
 
-        register("uploadmap", "Upload a map to the server.", mapReviewerRole, (args, context) -> {
-            if (notMap(context)) return;
+        discordCommands.<MessageContext>register("uploadmap", "Upload a map to the server.", (args, context) -> {
+            if (noRole(context, mapReviewerRole) || notMap(context)) return;
 
             context.message()
                     .getAttachments()
@@ -85,7 +87,9 @@ public class DiscordCommands {
                     }));
         });
 
-        register("removemap", "<map...>", "Remove a map from the server.", mapReviewerRole, (args, context) -> {
+        discordCommands.<MessageContext>register("removemap", "<map...>", "Remove a map from the server.", (args, context) -> {
+            if (noRole(context, mapReviewerRole)) return;
+
             var map = Find.map(args[0]);
             if (notFound(context, map)) return;
 
@@ -98,7 +102,9 @@ public class DiscordCommands {
                     .addField("File:", map.file.name(), false)).subscribe();
         });
 
-        register("kick", "<player> <minutes> [reason...]", "Kick a player.", adminRole, (args, context) -> {
+        discordCommands.<MessageContext>register("kick", "<player> <minutes> [reason...]", "Kick a player.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
             var target = Find.player(args[0]);
             if (notFound(context, target)) return;
 
@@ -114,7 +120,9 @@ public class DiscordCommands {
                     .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("pardon", "<player...>", "Pardon a player.", adminRole, (args, context) -> {
+        discordCommands.<MessageContext>register("pardon", "<player...>", "Pardon a player.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
@@ -124,7 +132,9 @@ public class DiscordCommands {
             context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
 
-        register("ban", "<player> <days> [reason...]", "Ban a player.", adminRole, (args, context) -> {
+        discordCommands.<MessageContext>register("ban", "<player> <days> [reason...]", "Ban a player.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
@@ -140,14 +150,16 @@ public class DiscordCommands {
                     .addField("Reason:", reason, false)).subscribe();
         });
 
-        register("unban", "<player...>", "Unban a player.", adminRole, (args, context) -> {
+        discordCommands.<MessageContext>register("unban", "<player...>", "Unban a player.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
             var ban = Database.removeBan(args[0]);
             if (notUnbanned(context, ban)) return;
 
             context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
         });
 
-        register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
+        discordCommands.<MessageContext>register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
             var data = Find.playerData(args[0]);
             if (notFound(context, data)) return;
 
@@ -167,7 +179,9 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        register("setrank", "<rank> <player...>", "Set a player's rank.", adminRole, (args, context) -> {
+        discordCommands.<MessageContext>register("setrank", "<rank> <player...>", "Set a player's rank.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
             var rank = Find.rank(args[0]);
             if (notFound(context, rank)) return;
 
@@ -187,25 +201,6 @@ public class DiscordCommands {
                     .title("Rank Changed")
                     .addField("Name:", data.plainName(), false)
                     .addField("Rank:", rank.name(), false)).subscribe();
-        });
-    }
-
-    public static void register(String name, String description, CommandRunner<MessageContext> runner) {
-        register(name, "", description, runner);
-    }
-
-    public static void register(String name, String description, Role role, CommandRunner<MessageContext> runner) {
-        register(name, "", description, role, runner);
-    }
-
-    public static void register(String name, String params, String description, CommandRunner<MessageContext> runner) {
-        discordCommands.register(name, params, description, runner);
-    }
-
-    public static void register(String name, String params, String description, Role role, CommandRunner<MessageContext> runner) {
-        discordCommands.<MessageContext>register(name, params, description, (args, context) -> {
-            if (noRole(context, role)) return;
-            runner.accept(args, context);
         });
     }
 }

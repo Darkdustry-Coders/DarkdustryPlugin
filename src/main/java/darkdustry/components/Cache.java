@@ -8,8 +8,8 @@ public class Cache {
 
     public static final ObjectMap<String, PlayerData> cache = new ObjectMap<>();
 
-    public static PlayerData put(Player player, PlayerData data) {
-        return cache.put(player.uuid(), data);
+    public static void put(Player player, PlayerData data) {
+        cache.put(player.uuid(), data);
     }
 
     public static PlayerData get(Player player) {
