@@ -2,6 +2,7 @@ package darkdustry.features;
 
 import arc.struct.Seq;
 import darkdustry.components.Database.PlayerData;
+import lombok.NoArgsConstructor;
 import mindustry.gen.Player;
 import useful.Bundle;
 
@@ -13,6 +14,7 @@ public class Ranks {
         player.name = data.name = data.rank.tag + player.getInfo().lastName;
     }
 
+    @NoArgsConstructor
     public enum Rank {
         player,
 
@@ -66,18 +68,12 @@ public class Ranks {
         public Rank next;
         public Requirements requirements;
 
-        Rank() {}
-
         Rank(Rank previous) {
             previous.next = this;
         }
 
-        public boolean hasNext() {
-            return next != null && next.requirements != null;
-        }
-
         public boolean checkNext(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
-            return hasNext() && next.requirements.check(playTime, blocksPlaced, gamesPlayed, wavesSurvived);
+            return next != null && next.requirements != null && next.requirements.check(playTime, blocksPlaced, gamesPlayed, wavesSurvived);
         }
 
         public String name(Player player) {

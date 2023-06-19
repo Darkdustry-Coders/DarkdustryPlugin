@@ -125,7 +125,7 @@ public class Database {
     }
 
     public static Ban removeBan(String input) {
-        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", input)));
+        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
     }
 
     @Builder
@@ -136,13 +136,13 @@ public class Database {
         public String player, admin;
 
         @BsonProperty("pid")
-        public String id;
+        public int id;
 
         public String reason;
         public Date unbanDate;
 
         public void generateID() {
-            this.id = players.getField(eq("uuid", uuid), "pid", "<none>");
+            this.id = players.getField(eq("uuid", uuid), "pid", -1);
         }
 
         public boolean expired() {

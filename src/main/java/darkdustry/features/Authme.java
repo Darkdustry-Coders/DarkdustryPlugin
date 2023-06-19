@@ -25,7 +25,7 @@ public class Authme {
         banChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)
                 .title("Ban")
-                .addField("ID:", ban.id, false)
+                .addField("ID:", String.valueOf(ban.id), false)
                 .addField("Player:", ban.player, false)
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
