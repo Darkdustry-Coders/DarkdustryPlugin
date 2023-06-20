@@ -4,8 +4,11 @@ import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
 import darkdustry.commands.DiscordCommands;
 import darkdustry.features.Authme;
+import discord4j.common.ReactorResources;
+import discord4j.common.retry.ReconnectOptions;
 import discord4j.common.util.Snowflake;
 import discord4j.core.*;
+import discord4j.core.event.EventDispatcher;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Role;
@@ -16,7 +19,11 @@ import discord4j.gateway.intent.*;
 import discord4j.rest.util.AllowedMentions;
 import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.function.TupleUtils;
+import reactor.netty.http.HttpResources;
+import reactor.netty.resources.LoopResources;
+import reactor.scheduler.forkjoin.ForkJoinPoolScheduler;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -36,10 +43,23 @@ public class Bot {
 
     public static void connect() {
         try {
+            var httpLoopResources = LoopResources.create("d4j-http", 4, true);
+            // d4j либо в rest, либо в websocket клиенте использует глобальные ресурсы, поэтому лучше их заменить
+            HttpResources.set(httpLoopResources);
+
             gateway = DiscordClientBuilder.create(config.discordBotToken)
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll())
+                    .setReactorResources(ReactorResources.builder()
+                            .timerTaskScheduler(Schedulers.newParallel("d4j-parallel", 4, true))
+                            .build())
                     .build()
                     .gateway()
+                    .setReconnectOptions(ReconnectOptions.builder()
+                            .setBackoffScheduler(Schedulers.newParallel("d4j-backoff", 4, true))
+                            .build())
+                    .setEventDispatcher(EventDispatcher.builder()
+                            .eventScheduler(ForkJoinPoolScheduler.create("d4j-events", 4))
+                            .build())
                     .setEnabledIntents(IntentSet.of(Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES))
                     .login()
                     .blockOptional()
