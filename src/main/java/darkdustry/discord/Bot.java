@@ -43,9 +43,8 @@ public class Bot {
 
     public static void connect() {
         try {
-            var httpLoopResources = LoopResources.create("d4j-http", 4, true);
             // d4j либо в rest, либо в websocket клиенте использует глобальные ресурсы, поэтому лучше их заменить
-            HttpResources.set(httpLoopResources);
+            HttpResources.set(LoopResources.create("d4j-http", 4, true));
 
             gateway = DiscordClientBuilder.create(config.discordBotToken)
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll())

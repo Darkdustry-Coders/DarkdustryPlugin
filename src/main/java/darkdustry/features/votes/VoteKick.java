@@ -20,7 +20,7 @@ public class VoteKick extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send("commands.votekick.vote", player.coloredName(), target.coloredName(), reason, votes() + sign, votesRequired());
+        Bundle.send(sign == 1 ? "commands.votekick.yes" : "commands.votekick.no", player.coloredName(), target.coloredName(), reason, votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 

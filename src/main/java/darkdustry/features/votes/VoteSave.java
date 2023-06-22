@@ -15,7 +15,7 @@ public class VoteSave extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send("commands.savemap.vote", player.coloredName(), file.name(), votes() + sign, votesRequired());
+        Bundle.send(sign == 1 ? "commands.savemap.yes" : "commands.savemap.no", player.coloredName(), file.name(), votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 

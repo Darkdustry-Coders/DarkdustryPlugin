@@ -19,7 +19,7 @@ public class VoteRtv extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send("commands.rtv.vote", player.coloredName(), map.name(), votes() + sign, votesRequired());
+        Bundle.send(sign == 1 ? "commands.rtv.yes" : "commands.rtv.no", player.coloredName(), map.name(), votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 

@@ -19,7 +19,7 @@ public class VoteLoad extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send("commands.loadsave.vote", player.coloredName(), file.nameWithoutExtension(), votes() + sign, votesRequired());
+        Bundle.send(sign == 1 ? "commands.loadsave.yes" : "commands.loadsave.no", player.coloredName(), file.nameWithoutExtension(), votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 

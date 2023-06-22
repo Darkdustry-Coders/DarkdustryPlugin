@@ -9,7 +9,6 @@ import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class RotateEntry implements HistoryEntry {
-
     public final String uuid;
     public final short blockID;
     public final int rotation;
