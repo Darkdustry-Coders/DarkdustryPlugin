@@ -46,7 +46,7 @@ public class PluginVars {
     public static final int maxPerPage = 6;
 
     /** Максимальное количество записей истории на один тайл. */
-    public static final int maxHistoryCapacity = 6;
+    public static final int maxHistoryCapacity = 8;
 
     /** Максимально допустимое количество игроков с одинаковыми IP адресами. */
     public static final int maxIdenticalIPs = 3;

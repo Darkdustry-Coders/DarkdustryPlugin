@@ -67,7 +67,7 @@ public class ConfigEntry implements HistoryEntry {
         }
 
         if (config instanceof Point2[] points) {
-            Bundle.format("history.config.connects", player, info.lastName, block.emoji(), Arrays.toString(points), time);
+            return Bundle.format("history.config.connects", player, info.lastName, block.emoji(), Arrays.toString(points), time);
         }
 
         if (block instanceof LightBlock) {
