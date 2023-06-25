@@ -15,6 +15,7 @@ import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.presence.*;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.util.OrderUtil;
 import discord4j.gateway.intent.*;
 import discord4j.rest.util.AllowedMentions;
 import mindustry.gen.Groups;
@@ -94,14 +95,24 @@ public class Bot {
 
                 if (!message.getChannelId().equals(botChannel.getId())) return;
 
-                Mono.zip(member.getHighestRole(), member.getColor())
-                        .switchIfEmpty(Mono.fromRunnable(() -> {
-                            Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                            Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
-                        })).subscribe(TupleUtils.consumer((role, color) -> {
-                            Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
-                            Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
-                        }));
+                var roles = event.getClient()
+                        .getGuildRoles(member.getGuildId())
+                        .filter(role -> member.getRoleIds().contains(role.getId()))
+                        .sort(OrderUtil.ROLE_ORDER)
+                        .cache();
+
+                Mono.zip(
+                        roles.takeLast(1).singleOrEmpty(),
+                        roles.map(Role::getColor)
+                                .filter(color -> !color.equals(Role.DEFAULT_COLOR))
+                                .last(Role.DEFAULT_COLOR)
+                ).switchIfEmpty(Mono.fromRunnable(() -> {
+                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
+                    Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
+                })).subscribe(TupleUtils.consumer((role, color) -> {
+                    Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
+                    Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
+                }));
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {
