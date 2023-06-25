@@ -101,18 +101,18 @@ public class Bot {
                         .sort(OrderUtil.ROLE_ORDER)
                         .cache();
 
-                Mono.zip(
-                        roles.takeLast(1).singleOrEmpty(),
-                        roles.map(Role::getColor)
+                roles.takeLast(1)
+                        .singleOrEmpty()
+                        .zipWith(roles.map(Role::getColor)
                                 .filter(color -> !color.equals(Role.DEFAULT_COLOR))
-                                .last(Role.DEFAULT_COLOR)
-                ).switchIfEmpty(Mono.fromRunnable(() -> {
-                    Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
-                })).subscribe(TupleUtils.consumer((role, color) -> {
-                    Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
-                    Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
-                }));
+                                .last(Role.DEFAULT_COLOR))
+                        .switchIfEmpty(Mono.fromRunnable(() -> {
+                            Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
+                            Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
+                        })).subscribe(TupleUtils.consumer((role, color) -> {
+                            Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
+                            Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
+                        }));
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {
