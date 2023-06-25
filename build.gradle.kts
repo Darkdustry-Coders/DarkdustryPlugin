@@ -23,10 +23,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
-    implementation("com.discord4j:discord4j-core:3.2.4")
-    runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
     implementation("com.discord4j:discord4j-core:3.2.5")
-    implementation("io.netty:netty-transport-native-epoll:4.1.89.Final:linux-aarch_64")
+    runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
 
     implementation("org.jline:jline-reader:3.21.0")
     implementation("org.jline:jline-console:3.21.0")
