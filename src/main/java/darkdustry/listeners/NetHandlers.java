@@ -12,7 +12,7 @@ import mindustry.gen.*;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
-import useful.Bundle;
+import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -101,15 +101,6 @@ public class NetHandlers {
             return;
         }
 
-        var info = netServer.admins.getInfo(uuid);
-        if (!netServer.admins.isWhitelisted(uuid, usid)) {
-            info.adminUsid = usid;
-            info.names.addUnique(info.lastName = name);
-            info.ips.addUnique(info.lastIP = ip);
-            Bundle.kick(con, locale, 0L, "kick.not-whitelisted");
-            return;
-        }
-
         if (packet.versionType == null || (packet.version == -1 && !netServer.admins.allowsCustomClients())) {
             Bundle.kick(con, locale, 0L, "kick.custom-client");
             return;
@@ -117,6 +108,20 @@ public class NetHandlers {
 
         if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
             Bundle.kick(con, locale, 0L, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", packet.version, mindustryVersion);
+            return;
+        }
+
+        var info = netServer.admins.getInfo(uuid);
+        if (!netServer.admins.isWhitelisted(uuid, usid)) {
+            info.adminUsid = usid;
+            info.names.addUnique(info.lastName = name);
+            info.ips.addUnique(info.lastIP = ip);
+            Bundle.kick(con, locale, 0L, "kick.not-whitelisted", discordServerUrl);
+            return;
+        }
+
+        if (AntiVpn.checkAddress(ip)) {
+            Bundle.kick(con, locale, 0L, "kick.vpn", discordServerUrl);
             return;
         }
 

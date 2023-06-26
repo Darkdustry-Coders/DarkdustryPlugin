@@ -42,7 +42,7 @@ public class DarkdustryPlugin extends Plugin {
         Console.load();
         PluginEvents.load();
 
-        AntiDdos.loadBlacklist();
+        AntiVpn.load();
         Bundle.load(getClass());
         Cooldowns.defaults(
                 "default", 1000L,

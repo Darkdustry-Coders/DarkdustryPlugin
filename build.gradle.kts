@@ -14,7 +14,7 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "8caee092db"
+    val usefulHash = "4c2df30b27"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
@@ -30,12 +30,12 @@ dependencies {
     implementation("org.jline:jline-console:3.21.0")
     implementation("org.jline:jline-terminal-jna:3.21.0")
 
-    implementation("com.github.xzxadixzx.useful-stuffs:antiddos:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
