@@ -38,7 +38,7 @@ public class Console {
             handleInput(reader);
             DarkdustryPlugin.info("JLine console loaded.");
         } catch (Exception e) {
-            DarkdustryPlugin.error("Failed to load JLine console.");
+            DarkdustryPlugin.error("Failed to load JLine console: @", e);
         }
     }
 

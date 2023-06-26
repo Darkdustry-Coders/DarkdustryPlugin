@@ -28,6 +28,8 @@ public class SchemeSize {
             Call.clientPacketReliable("Subtitles", JsonIO.write(subtitles));
         });
 
+        if (!config.mode.isDefault) return;
+
         netServer.addPacketHandler("fill", (player, text) -> {
             if (!player.admin) return;
 

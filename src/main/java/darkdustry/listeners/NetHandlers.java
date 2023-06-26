@@ -24,8 +24,10 @@ public class NetHandlers {
 
     public static String invalidResponse(Player player, CommandResponse response) {
         return switch (response.type) {
-            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
-            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case fewArguments ->
+                    Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case manyArguments ->
+                    Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.text)
@@ -173,7 +175,7 @@ public class NetHandlers {
             }
 
             case switchTeam -> {
-                if (packet.params instanceof Team team) {
+                if (config.mode.isDefault && packet.params instanceof Team team) {
                     target.team(team);
 
                     Bundle.send(target, "commands.team.success", team.coloredName());
