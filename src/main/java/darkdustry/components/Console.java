@@ -85,9 +85,9 @@ public class Console {
         }
 
         @Override
-        public void write(@NonNull byte[] buf, int off, int len) {
+        public void write(@NonNull byte[] array, int off, int len) {
             for (int i = 0; i < len; i++)
-                write(buf[off + i]);
+                write(array[off + i]);
         }
 
         @Override

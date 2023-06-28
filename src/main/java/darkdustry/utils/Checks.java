@@ -19,6 +19,8 @@ import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 import useful.*;
 
+import java.time.Duration;
+
 import static arc.math.Mathf.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -56,12 +58,12 @@ public class Checks {
         return check(rank == null, "No rank @ found.", name);
     }
 
-    public static boolean invalidDuration(int duration, int min, int max) {
-        return check(duration < min || duration > max, "Duration should be an integer between @ and @.", min, max);
+    public static boolean invalidDuration(Duration duration) {
+        return check(duration.isZero(), "The provided duration is invalid. (Example: 1h, 30min)");
     }
 
     public static boolean notUnbanned(Ban ban) {
-        return check(ban == null, "No banned player found for provided data.");
+        return check(ban == null, "No banned player found for provided input.");
     }
 
     // endregion
@@ -164,7 +166,7 @@ public class Checks {
     }
 
     public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, formatDuration(Cooldowns.cooldown(command), player));
+        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, Bundle.formatDuration(player, Cooldowns.cooldown(command)));
     }
 
     // endregion
@@ -207,8 +209,8 @@ public class Checks {
         return check(rank == null, context, "Rank Not Found", "Check if the input is correct.");
     }
 
-    public static boolean invalidDuration(MessageContext context, int duration, int min, int max) {
-        return check(duration < min || duration > max, context, "Invalid Duration", "Duration should be an integer between @ and @.", min, max);
+    public static boolean invalidDuration(MessageContext context, Duration duration) {
+        return check(duration.isZero(), context, "Invalid Duration", "The provided duration is invalid. (Example: 1h, 30min)");
     }
 
     public static boolean notUnbanned(MessageContext context, Ban ban) {

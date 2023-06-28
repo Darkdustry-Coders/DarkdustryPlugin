@@ -1,13 +1,19 @@
 package darkdustry;
 
-import arc.struct.Seq;
+import arc.struct.*;
 import arc.util.CommandHandler;
 import com.google.gson.*;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 
+import static java.util.concurrent.TimeUnit.*;
+
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+
 import static com.google.gson.FieldNamingPolicy.*;
+
 import static mindustry.Vars.*;
 
 public class PluginVars {
@@ -64,10 +70,21 @@ public class PluginVars {
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
-    public static final Seq<String> adminOnlyCommands = new Seq<>(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "settings", "stats");
+    public static final Seq<String> adminOnlyCommands = Seq.with(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "settings", "stats");
 
     /** Используется для считывания и записи Json объектов. */
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
+
+    /** Используется для перевода строки в длительность. */
+    public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
+
+    /** Используются для перевода строки в длительность. */
+    public static final OrderedMap<Pattern, TimeUnit> durationPatterns = OrderedMap.of(
+            Pattern.compile("(d|day|days|д|день|дня|дней)"), DAYS,
+            Pattern.compile("(h|hour|hours|ч|час|часа|часов)"), HOURS,
+            Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES,
+            Pattern.compile("(s|sec|secs|second|seconds|с|сек|секунда|секунды|секунд)"), SECONDS
+    );
 
     /** Конфигурация сервера. */
     public static Config config;

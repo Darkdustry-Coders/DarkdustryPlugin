@@ -110,7 +110,7 @@ public class Find {
     private static <T> T findSeq(String input, Seq<T> values, Boolf<T> filter) {
         int index = parseID(input);
         if (index > 0 && index <= values.size)
-            return values.get(index);
+            return values.get(index - 1);
 
         return values.find(filter);
     }
@@ -118,7 +118,7 @@ public class Find {
     private static <T> T findArray(String input, T[] values, Boolf<T> filter) {
         int index = parseID(input);
         if (index > 0 && index <= values.length)
-            return values[index];
+            return values[index - 1];
 
         return Structs.find(values, filter);
     }

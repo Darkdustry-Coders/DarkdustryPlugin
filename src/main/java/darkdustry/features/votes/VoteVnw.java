@@ -29,7 +29,9 @@ public class VoteVnw extends VoteSession {
     public void success() {
         stop();
         Bundle.send("commands.vnw.success", waves);
-        for (int i = 0; i < waves; i++) logic.runWave();
+
+        for (int i = 0; i < waves; i++)
+            logic.runWave();
     }
 
     @Override

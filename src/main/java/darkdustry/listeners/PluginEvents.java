@@ -30,8 +30,8 @@ public class PluginEvents {
                 .build()));
 
         Events.on(PlayEvent.class, event -> {
-            state.rules.unitPayloadUpdate = true;
             state.rules.showSpawns = true;
+            state.rules.unitPayloadUpdate = true;
 
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
 

@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
 import mindustry.ctype.UnlockableContent;
@@ -11,7 +11,6 @@ import mindustry.maps.*;
 import mindustry.net.WorldReloader;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
-import useful.Bundle;
 
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -86,6 +85,9 @@ public class Utils {
         return first.toLowerCase().contains(second.toLowerCase());
     }
 
+    // endregion
+    // region time
+
     public static String formatTime(long time) {
         return SimpleDateFormat.getTimeInstance().format(time);
     }
@@ -98,27 +100,25 @@ public class Utils {
         return LONG_DATE.format(Instant.ofEpochMilli(time));
     }
 
-    public static String formatDuration(long time, Player player) {
-        return formatDuration(time, player.locale);
+    public static Duration parseDuration(String input) {
+        var matcher = durationPattern.matcher(input);
+        long time = 0L;
+
+        while (matcher.find()) {
+            long amount = Strings.parseLong(matcher.group(1), 0);
+            if (amount == 0) continue;
+
+            var pattern = durationPatterns.orderedKeys().find(key -> key.matcher(matcher.group(2).toLowerCase()).matches());
+            if (pattern == null) continue;
+
+            time += durationPatterns.get(pattern).toSeconds(amount);
+        }
+
+        return Duration.ofSeconds(time);
     }
 
-    public static String formatDuration(long time, String locale) {
-        var duration = Duration.ofMillis(time);
-        var builder = new StringBuilder();
-
-        OrderedMap.<String, Number>of(
-                "time.days", duration.toDaysPart(),
-                "time.hours", duration.toHoursPart(),
-                "time.minutes", duration.toMinutesPart(),
-                "time.seconds", duration.toSecondsPart()).each((key, value) -> {
-            if (value.intValue() > 0) {
-                if (!builder.isEmpty()) builder.append(" ");
-                builder.append(Bundle.format(key, locale, value));
-            }
-        });
-
-        return builder.toString();
-    }
+    // endregion
+    // region format
 
     public static String formatTeams() {
         var builder = new StringBuilder();

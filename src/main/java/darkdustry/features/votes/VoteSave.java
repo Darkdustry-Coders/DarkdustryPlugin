@@ -29,6 +29,7 @@ public class VoteSave extends VoteSession {
     public void success() {
         stop();
         Bundle.send("commands.savemap.success", file.name());
+
         SaveIO.save(file);
     }
 

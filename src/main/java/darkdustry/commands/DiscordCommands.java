@@ -10,13 +10,13 @@ import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
+import useful.Bundle;
 
 import static arc.Core.*;
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
 import static darkdustry.utils.Checks.*;
-import static java.util.concurrent.TimeUnit.*;
+import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class DiscordCommands {
@@ -102,21 +102,21 @@ public class DiscordCommands {
                     .addField("File:", map.file.name(), false)).subscribe();
         });
 
-        discordCommands.<MessageContext>register("kick", "<player> <minutes> [reason...]", "Kick a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("kick", "<player> <duration> [reason...]", "Kick a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
             var target = Find.player(args[0]);
             if (notFound(context, target)) return;
 
-            int minutes = parseInt(args[1]);
-            if (invalidDuration(context, minutes, 1, 1440)) return;
+            var duration = parseDuration(args[1]);
+            if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, context.member().getDisplayName(), MINUTES.toMillis(minutes), reason);
+            Admins.kick(target, context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Kicked")
                     .addField("Name:", target.plainName(), false)
-                    .addField("Duration:", minutes + " minutes", false)
+                    .addField("Duration:", Bundle.formatDuration(duration), false)
                     .addField("Reason:", reason, false)).subscribe();
         });
 
@@ -132,21 +132,21 @@ public class DiscordCommands {
             context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
 
-        discordCommands.<MessageContext>register("ban", "<player> <days> [reason...]", "Ban a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("ban", "<player> <duration> [reason...]", "Ban a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
             var info = Find.playerInfo(args[0]);
             if (notFound(context, info)) return;
 
-            int days = parseInt(args[1]);
-            if (invalidDuration(context, days, 1, 365)) return;
+            var duration = parseDuration(args[1]);
+            if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, context.member().getDisplayName(), DAYS.toMillis(days), reason);
+            Admins.ban(info, context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Banned")
                     .addField("Name:", info.plainLastName(), false)
-                    .addField("Duration:", days + " days", false)
+                    .addField("Duration:", Bundle.formatDuration(duration), false)
                     .addField("Reason:", reason, false)).subscribe();
         });
 

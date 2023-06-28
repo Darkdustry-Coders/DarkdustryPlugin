@@ -1,6 +1,6 @@
 package darkdustry.features;
 
-import darkdustry.components.Database.Ban;
+import darkdustry.components.Database.*;
 import darkdustry.utils.Find;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.component.*;
@@ -8,7 +8,6 @@ import discord4j.core.object.component.SelectMenu.Option;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import mindustry.gen.Player;
 import useful.Bundle;
 
 import java.util.Collections;
@@ -33,18 +32,18 @@ public class Authme {
                 .build()).subscribe();
     }
 
-    public static void sendAdminRequest(Player player) {
+    public static void sendAdminRequest(PlayerData data) {
         if (!connected) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.MOON_YELLOW)
                 .title("Admin Request")
-                .addField("Name:", player.plainName(), true)
-                .addField("UUID:", player.uuid(), true)
+                .addField("Name:", data.plainName(), true)
+                .addField("ID:", String.valueOf(data.id), true)
                 .footer("Select the desired option to confirm or deny the request. Confirm only your requests!", null)
                 .build()
         ).withComponents(ActionRow.of(SelectMenu.of(
-                player.uuid(),
+                data.uuid,
                 Option.of("Confirm", "confirm").withDescription("Confirm request.").withEmoji(ReactionEmoji.unicode("✅")),
                 Option.of("Deny", "deny").withDescription("Deny request.").withEmoji(ReactionEmoji.unicode("❌")),
                 Option.of("Info", "info").withDescription("Look up all information about the player.").withEmoji(ReactionEmoji.unicode("🔎"))

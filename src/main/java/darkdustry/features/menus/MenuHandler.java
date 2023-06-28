@@ -19,7 +19,6 @@ import useful.text.TextInput;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.*;
-import static darkdustry.utils.Utils.*;
 import static java.util.concurrent.TimeUnit.*;
 import static mindustry.net.Administration.Config.*;
 
@@ -69,7 +68,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, formatDuration(MINUTES.toMillis(data.playTime), menu.player));
+            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, Bundle.formatDuration(menu.player, MINUTES.toMillis(data.playTime)));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -180,7 +179,7 @@ public class MenuHandler {
 
         kickReasonInput.transform(TARGET, (input, target) -> {
             input.title("kick.reason.title");
-            input.content("kick.reason.content", target.coloredName(), formatDuration(input.state.get(DURATION), input.player));
+            input.content("kick.reason.content", target.coloredName(), Bundle.formatDuration(input.player, input.state.get(DURATION)));
 
             input.defaultText("kick.reason.default");
             input.textLength(32);
@@ -191,7 +190,7 @@ public class MenuHandler {
 
         banReasonInput.transform(TARGET, (input, target) -> {
             input.title("ban.reason.title");
-            input.content("ban.reason.content", target.coloredName(), formatDuration(input.state.get(DURATION), input.player));
+            input.content("ban.reason.content", target.coloredName(), Bundle.formatDuration(input.player, input.state.get(DURATION)));
 
             input.defaultText("ban.reason.default");
             input.textLength(32);

@@ -33,6 +33,7 @@ public class VoteLoad extends VoteSession {
     public void success() {
         stop();
         Bundle.send("commands.loadsave.success", file.nameWithoutExtension(), mapLoadDelay);
+
         Timer.schedule(() -> reloadWorld(() -> SaveIO.load(file)), mapLoadDelay);
     }
 

@@ -12,11 +12,9 @@ import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import static arc.Core.*;
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
-import static java.util.concurrent.TimeUnit.*;
 import static mindustry.Vars.*;
 
 public class ServerCommands {
@@ -76,17 +74,17 @@ public class ServerCommands {
             Bot.sendMessage("Server", args[0]);
         });
 
-        serverCommands.register("kick", "<player> <minutes> [reason...]", "Kick a player.", args -> {
+        serverCommands.register("kick", "<player> <duration> [reason...]", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
-            int minutes = parseInt(args[1]);
-            if (invalidDuration(minutes, 1, 1440)) return;
+            var duration = parseDuration(args[1]);
+            if (invalidDuration(duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, "Console", MINUTES.toMillis(minutes), reason);
+            Admins.kick(target, "Console", duration.toMillis(), reason);
 
-            Log.info("Player @ has been kicked for @ minutes for @.", target.plainName(), minutes, reason);
+            Log.info("Player @ has been kicked for @ for @.", target.plainName(), Bundle.formatDuration(duration), reason);
         });
 
         serverCommands.register("pardon", "<player...>", "Pardon a player.", args -> {
@@ -113,17 +111,17 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("ban", "<player> <days> [reason...]", "Ban a player.", args -> {
+        serverCommands.register("ban", "<player> <duration> [reason...]", "Ban a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
-            int days = parseInt(args[1]);
-            if (invalidDuration(days, 1, 365)) return;
+            var duration = parseDuration(args[1]);
+            if (invalidDuration(duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, "Console", DAYS.toMillis(days), reason);
+            Admins.ban(info, "Console", duration.toMillis(), reason);
 
-            Log.info("Player @ has been banned for @ days for @.", info.plainLastName(), days, reason);
+            Log.info("Player @ has been banned for @ days for @.", info.plainLastName(), Bundle.formatDuration(duration), reason);
         });
 
         serverCommands.register("unban", "<player...>", "Unban a player.", args -> {

@@ -76,7 +76,7 @@ public class ClientCommands {
             if (alreadyAdmin(player)) return;
 
             showConfirmMenu(player, "commands.login.confirm", () -> {
-                Authme.sendAdminRequest(player);
+                Authme.sendAdminRequest(Cache.get(player));
                 Bundle.send(player, "commands.login.sent");
             });
         });

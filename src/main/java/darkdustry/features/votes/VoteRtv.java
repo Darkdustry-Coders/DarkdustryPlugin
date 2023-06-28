@@ -33,6 +33,7 @@ public class VoteRtv extends VoteSession {
     public void success() {
         stop();
         Bundle.send("commands.rtv.success", map.name(), mapLoadDelay);
+
         Timer.schedule(() -> reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode()))), mapLoadDelay);
     }
 

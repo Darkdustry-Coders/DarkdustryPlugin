@@ -12,7 +12,6 @@ import useful.*;
 import java.util.Date;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class Admins {
@@ -25,13 +24,13 @@ public class Admins {
 
     public static KickBuilder kick(NetConnection con, String locale, long duration, String key, Object... values) {
         return Bundle.kick(con, locale, key, values)
-                .add("kick.duration", formatDuration(duration, locale))
+                .add("kick.duration", Bundle.formatDuration(locale, duration))
                 .add("kick.disclaimer", discordServerUrl);
     }
 
     public static KickBuilder kickReason(NetConnection con, String locale, long duration, String reason, String key, Object... values) {
         return Bundle.kick(con, locale, key, values)
-                .add("kick.duration", formatDuration(duration, locale))
+                .add("kick.duration", Bundle.formatDuration(locale, duration))
                 .add("kick.reason", reason)
                 .add("kick.disclaimer", discordServerUrl);
     }

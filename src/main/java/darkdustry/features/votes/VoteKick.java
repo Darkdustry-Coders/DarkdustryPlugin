@@ -5,7 +5,6 @@ import mindustry.gen.*;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static java.util.concurrent.TimeUnit.*;
 
 public class VoteKick extends VoteSession {
 
@@ -36,7 +35,8 @@ public class VoteKick extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.votekick.success", target.coloredName(), MILLISECONDS.toMinutes(kickDuration), reason);
+        Groups.player.each(player -> Bundle.send(player, "commands.votekick.success", target.coloredName(), Bundle.formatDuration(player, kickDuration), reason));
+
         Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", player.coloredName()).kick(kickDuration);
     }
 
