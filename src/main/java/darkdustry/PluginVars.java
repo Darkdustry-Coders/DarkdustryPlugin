@@ -6,6 +6,8 @@ import com.google.gson.*;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -79,11 +81,11 @@ public class PluginVars {
     public static final Pattern durationPattern = Pattern.compile("(?<!\\S)(\\d+)\\s*([a-zA-Zа-яА-Я]+)");
 
     /** Используются для перевода строки в длительность. */
-    public static final OrderedMap<Pattern, TimeUnit> durationPatterns = OrderedMap.of(
-            Pattern.compile("(d|day|days|д|день|дня|дней)"), DAYS,
-            Pattern.compile("(h|hour|hours|ч|час|часа|часов)"), HOURS,
-            Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES,
-            Pattern.compile("(s|sec|secs|second|seconds|с|сек|секунда|секунды|секунд)"), SECONDS
+    public static final Seq<Tuple2<Pattern, TimeUnit>> durationPatterns = Seq.with(
+            Tuples.of(Pattern.compile("(d|day|days|д|день|дня|дней)"), DAYS),
+            Tuples.of(Pattern.compile("(h|hour|hours|ч|час|часа|часов)"), HOURS),
+            Tuples.of(Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES),
+            Tuples.of(Pattern.compile("(s|sec|secs|second|seconds|с|сек|секунда|секунды|секунд)"), SECONDS)
     );
 
     /** Конфигурация сервера. */
