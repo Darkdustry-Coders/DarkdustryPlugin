@@ -15,7 +15,7 @@ public class Translator {
     public static void translate(String text, String from, String to, Cons<String> result) {
         Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + encode(text))
                 .error(throwable -> result.get(""))
-                .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).get(0).get(0).asString()));
+                .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).child().child().asString()));
     }
 
     public static void translate(Player from, String text) {

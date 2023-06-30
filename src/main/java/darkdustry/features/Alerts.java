@@ -26,12 +26,12 @@ public class Alerts {
     /** Блоки, в которые опасно переносить конкретные ресурсы. */
     public static final ObjectMap<Block, Item> dangerousDepositBlocks = new ObjectMap<>();
 
-    public static boolean enabled() {
-        return config.mode.isDefault;
+    public static boolean disabled() {
+        return !config.mode.isDefault;
     }
 
     public static void load() {
-        if (!enabled()) return;
+        if (disabled()) return;
 
         dangerousBuildBlocks.put(Blocks.incinerator, () -> !state.rules.infiniteResources);
         dangerousBuildBlocks.put(Blocks.thoriumReactor, () -> state.rules.reactorExplosions);
@@ -42,7 +42,7 @@ public class Alerts {
     }
 
     public static void buildAlert(BuildSelectEvent event) {
-        if (!enabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
+        if (disabled() || !isDangerous(event.builder.buildPlan().block, event.team, event.tile) || !alertsInterval.get(60f * alertsTimer))
             return;
 
         event.team.data().players.each(player -> {
@@ -52,7 +52,7 @@ public class Alerts {
     }
 
     public static void depositAlert(DepositEvent event) {
-        if (!enabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
+        if (disabled() || !isDangerous(event.tile, event.tile.team, event.item)) return;
 
         event.player.team().data().players.each(player -> {
             if (Cache.get(player).alerts)

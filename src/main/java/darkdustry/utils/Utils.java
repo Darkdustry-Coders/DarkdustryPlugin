@@ -14,7 +14,6 @@ import mindustry.world.Block;
 
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.util.concurrent.TimeUnit;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
@@ -107,13 +106,11 @@ public class Utils {
 
         while (matcher.find()) {
             long amount = Strings.parseLong(matcher.group(1), 0);
-            if (amount == 0) continue;
+            if (amount <= 0) continue;
 
-            String timeUnitString = matcher.group(2).toLowerCase();
             for (var tuple : durationPatterns) {
-                if (tuple.getT1().matcher(timeUnitString).matches()) {
-                    TimeUnit timeUnit = tuple.getT2();
-                    time += timeUnit.toSeconds(amount);
+                if (tuple.getT1().matcher(matcher.group(2).toLowerCase()).matches()) {
+                    time += tuple.getT2().toSeconds(amount);
                     break;
                 }
             }

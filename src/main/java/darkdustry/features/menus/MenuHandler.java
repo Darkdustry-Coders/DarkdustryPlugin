@@ -16,10 +16,11 @@ import useful.menu.Menu.MenuView.OptionData;
 import useful.menu.impl.*;
 import useful.text.TextInput;
 
+import java.time.Duration;
+
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.*;
-import static java.util.concurrent.TimeUnit.*;
 import static mindustry.net.Administration.Config.*;
 
 @SuppressWarnings("unchecked")
@@ -55,10 +56,9 @@ public class MenuHandler {
     // endregion
     // region keys
 
-    public static final StateKey<Long> DURATION = new StateKey<>("duration");
-
     public static final StateKey<Player> TARGET = new StateKey<>("target");
     public static final StateKey<PlayerData> DATA = new StateKey<>("data");
+    public static final StateKey<Duration> DURATION = new StateKey<>("duration");
 
     // endregion
     // region transforms
@@ -68,7 +68,7 @@ public class MenuHandler {
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, Bundle.formatDuration(menu.player, MINUTES.toMillis(data.playTime)));
+            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.pvpWins, data.hexedWins, Bundle.formatDuration(menu.player, Duration.ofMinutes(data.playTime)));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");
@@ -185,7 +185,7 @@ public class MenuHandler {
             input.textLength(32);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.kick(target, view.player, view.state.get(DURATION), reason));
+            input.result((view, reason) -> Admins.kick(target, view.player, view.state.get(DURATION).toMillis(), reason));
         });
 
         banReasonInput.transform(TARGET, (input, target) -> {
@@ -196,7 +196,7 @@ public class MenuHandler {
             input.textLength(32);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.ban(target, view.player, view.state.get(DURATION), reason));
+            input.result((view, reason) -> Admins.ban(target, view.player, view.state.get(DURATION).toMillis(), reason));
         });
 
         // endregion
@@ -252,15 +252,15 @@ public class MenuHandler {
         two_hours(120),
         six_hours(360);
 
-        public final long duration;
+        public final Duration duration;
 
-        KickDuration(int minutes) {
-            this.duration = MINUTES.toMillis(minutes);
+        KickDuration(long minutes) {
+            this.duration = Duration.ofMinutes(minutes);
         }
 
         @Override
         public void option(MenuView menu) {
-            menu.option("kick." + name(), Action.openWith(kickReasonInput, DURATION, duration));
+            menu.option(Bundle.formatDuration(menu.player, duration), Action.openWith(kickReasonInput, DURATION, duration));
         }
     }
 
@@ -268,19 +268,19 @@ public class MenuHandler {
         one_day(1),
         three_days(3),
         five_days(5),
-        one_week(7),
-        two_weeks(14),
-        one_month(30);
+        seven_days(7),
+        fourteen_days(14),
+        thirty_days(30);
 
-        public final long duration;
+        public final Duration duration;
 
-        BanDuration(int days) {
-            this.duration = DAYS.toMillis(days);
+        BanDuration(long days) {
+            this.duration = Duration.ofDays(days);
         }
 
         @Override
         public void option(MenuView menu) {
-            menu.option("ban." + name(), Action.openWith(banReasonInput, DURATION, duration));
+            menu.option(Bundle.formatDuration(menu.player, duration), Action.openWith(banReasonInput, DURATION, duration));
         }
     }
 

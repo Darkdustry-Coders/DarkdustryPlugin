@@ -1,23 +1,21 @@
 package darkdustry;
 
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import com.google.gson.*;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
-
-import static java.util.concurrent.TimeUnit.*;
+import reactor.util.function.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.google.gson.FieldNamingPolicy.*;
-
+import static java.util.concurrent.TimeUnit.*;
 import static mindustry.Vars.*;
 
+@SuppressWarnings("unchecked")
 public class PluginVars {
 
     /** Необходимое количество игроков для успешного завершения голосования. */

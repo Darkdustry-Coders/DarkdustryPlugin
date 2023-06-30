@@ -57,8 +57,6 @@ public class Config {
 
         allowCustomClients.set(true);
         showConnectMessages.set(false);
-        logging.set(true);
-        strict.set(true);
         antiSpam.set(true);
         autoPause.set(false);
 
@@ -70,6 +68,7 @@ public class Config {
         packetSpamLimit.set(500);
         snapshotInterval.set(200);
 
+        strict.set(config.mode.enableStrict);
         enableVotekick.set(config.mode.enableVotekick);
 
         if (config.mode.enableRtv) welcomeMessageCommands.add("rtv");
@@ -78,6 +77,7 @@ public class Config {
 
     public enum Gamemode {
         anarchy {{
+            enableStrict = false;
             enableVotekick = false;
         }},
 
@@ -117,13 +117,17 @@ public class Config {
             enableVnw = false;
         }},
 
-        sandbox,
+        sandbox {{
+            enableStrict = false;
+        }},
+
         survival,
         tower;
 
         public boolean isDefault = true;
         public boolean enableRtv = true;
         public boolean enableVnw = true;
+        public boolean enableStrict = true;
         public boolean enableVotekick = true;
     }
 }
