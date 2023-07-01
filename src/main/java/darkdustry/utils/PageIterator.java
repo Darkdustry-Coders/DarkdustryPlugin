@@ -39,7 +39,7 @@ public class PageIterator {
 
     public static void saves(String[] args, Player player) {
         client(args, player, "saves", availableSaves(), (builder, index, save) ->
-                builder.append(Bundle.format("commands.saves.save", player, index, save.nameWithoutExtension(), formatDateTime(save.lastModified()))));
+                builder.append(Bundle.format("commands.saves.save", player, index, save.nameWithoutExtension(), Bundle.formatDateTime(player, save.lastModified()))));
     }
 
     private static <T> void client(String[] args, Player player, String command, Seq<T> content, Cons3<StringBuilder, Integer, T> cons) {

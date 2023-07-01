@@ -1,6 +1,7 @@
 package darkdustry.features.history;
 
 import arc.math.geom.Point2;
+import arc.struct.Seq;
 import arc.util.*;
 import mindustry.ai.UnitCommand;
 import mindustry.ctype.UnlockableContent;
@@ -13,9 +14,6 @@ import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.units.UnitFactory.UnitFactoryBuild;
 import useful.Bundle;
 
-import java.util.Arrays;
-
-import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 import static mindustry.gen.Iconc.*;
 
@@ -38,51 +36,52 @@ public class ConfigEntry implements HistoryEntry {
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
         var block = content.block(blockID);
-        var time = formatTime(timestamp);
 
         if (config instanceof UnlockableContent content) {
-            return Bundle.format("history.config", player, info.lastName, block.emoji(), content.emoji(), time);
+            return Bundle.format("history.config", player, info.lastName, block.emoji(), content.emoji(), Bundle.formatRelative(player, timestamp));
         }
 
         if (config instanceof Boolean enabled) {
             return enabled ?
-                    Bundle.format("history.config.on", player, info.lastName, block.emoji(), time) :
-                    Bundle.format("history.config.off", player, info.lastName, block.emoji(), time);
+                    Bundle.format("history.config.on", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
+                    Bundle.format("history.config.off", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
         }
 
         if (config instanceof String text) {
             return text.isBlank() ?
-                    Bundle.format("history.config.default", player, info.lastName, block.emoji(), time) :
-                    Bundle.format("history.config.text", player, info.lastName, block.emoji(), text.replaceAll("\n", " "), time);
+                    Bundle.format("history.config.default", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
+                    Bundle.format("history.config.text", player, info.lastName, block.emoji(), text.replaceAll("\n", " "), Bundle.formatRelative(player, timestamp));
         }
 
         if (config instanceof UnitCommand command) {
-            return Bundle.format("history.config.command", player, info.lastName, block.emoji(), (char) codes.get(command.icon), time);
+            return Bundle.format("history.config.command", player, info.lastName, block.emoji(), (char) codes.get(command.icon), Bundle.formatRelative(player, timestamp));
         }
 
         if (config instanceof Point2 point) {
             return point.pack() == -1 ?
-                    Bundle.format("history.config.disconnect", player, info.lastName, block.emoji(), time) :
-                    Bundle.format("history.config.connect", player, info.lastName, block.emoji(), point.x, point.y, time);
+                    Bundle.format("history.config.disconnect", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
+                    Bundle.format("history.config.connect", player, info.lastName, block.emoji(), point, Bundle.formatRelative(player, timestamp));
         }
 
         if (config instanceof Point2[] points) {
-            return Bundle.format("history.config.connects", player, info.lastName, block.emoji(), Arrays.toString(points), time);
+            return points.length == 0 ?
+                    Bundle.format("history.config.disconnect", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
+                    Bundle.format("history.config.connect", player, info.lastName, block.emoji(), Seq.with(points).map(Point2::toString).toString(", "), Bundle.formatRelative(player, timestamp));
         }
 
         if (block instanceof LightBlock) {
-            return Bundle.format("history.config.color", player, info.lastName, block.emoji(), Tmp.c1.set((int) config).toString(), time);
+            return Bundle.format("history.config.color", player, info.lastName, block.emoji(), Tmp.c1.set((int) config), Bundle.formatRelative(player, timestamp));
         }
 
         if (block instanceof LogicBlock) {
-            return Bundle.format("history.config.code", player, info.lastName, block.emoji(), time);
+            return Bundle.format("history.config.code", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
         }
 
         if (block instanceof CanvasBlock) {
-            return Bundle.format("history.config.image", player, info.lastName, block.emoji(), time);
+            return Bundle.format("history.config.image", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
         }
 
-        return Bundle.format("history.config.default", player, info.lastName, block.emoji(), time);
+        return Bundle.format("history.config.default", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
     }
 
     public Object getConfig(ConfigEvent event) {

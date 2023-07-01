@@ -62,17 +62,7 @@ public class PluginEvents {
             app.post(Bot::updateActivity);
         });
 
-        Events.on(WithdrawEvent.class, event -> {
-            if (History.enabled() && event.player != null)
-                History.put(event.tile.tile, new WithdrawEntry(event));
-        });
-
-        Events.on(DepositEvent.class, event -> {
-            if (History.enabled() && event.player != null)
-                History.put(event.tile.tile, new DepositEntry(event));
-
-            Alerts.depositAlert(event);
-        });
+        Events.on(DepositEvent.class, Alerts::depositAlert);
 
         Events.on(ConfigEvent.class, event -> {
             if (History.enabled() && event.player != null)

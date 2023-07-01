@@ -107,7 +107,7 @@ public class ServerCommands {
             Log.info("Kicked players: (@)", kicks.size);
             kicks.each((ip, time) -> {
                 var info = netServer.admins.findByIP(ip);
-                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info != null ? info.plainLastName() : "unknown", info != null ? info.id : "unknown", ip, formatDateTime(time));
+                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info == null ? "unknown" : info.plainLastName(), info == null ? "unknown" : info.id, ip, Bundle.formatDateTime(time));
             });
         });
 
@@ -121,7 +121,7 @@ public class ServerCommands {
             var reason = args.length > 2 ? args[2] : "Not Specified";
             Admins.ban(info, "Console", duration.toMillis(), reason);
 
-            Log.info("Player @ has been banned for @ days for @.", info.plainLastName(), Bundle.formatDuration(duration), reason);
+            Log.info("Player @ has been banned for @ for @.", info.plainLastName(), Bundle.formatDuration(duration), reason);
         });
 
         serverCommands.register("unban", "<player...>", "Unban a player.", args -> {
@@ -135,7 +135,7 @@ public class ServerCommands {
             var bans = Database.getBans();
 
             Log.info("Banned players: (@)", bans.size);
-            bans.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, formatDateTime(ban.unbanDate.getTime())));
+            bans.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
         });
 
         serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {

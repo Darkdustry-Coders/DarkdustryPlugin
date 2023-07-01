@@ -12,7 +12,6 @@ import mindustry.net.WorldReloader;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 
-import java.text.SimpleDateFormat;
 import java.time.*;
 
 import static arc.util.Strings.*;
@@ -83,17 +82,6 @@ public class Utils {
         first = stripAll(first);
         second = stripAll(second);
         return first.toLowerCase().contains(second.toLowerCase());
-    }
-
-    // endregion
-    // region time
-
-    public static String formatTime(long time) {
-        return SimpleDateFormat.getTimeInstance().format(time);
-    }
-
-    public static String formatDateTime(long time) {
-        return SimpleDateFormat.getDateTimeInstance().format(time);
     }
 
     public static String formatTimestamp(long time) {
