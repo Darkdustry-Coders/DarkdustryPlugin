@@ -93,6 +93,10 @@ public class Config {
             enableVnw = false;
         }},
 
+        forts {{
+            enableVnw = false;
+        }},
+
         hexed {{
             isDefault = false;
             enableRtv = false;
