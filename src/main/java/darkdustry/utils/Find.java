@@ -4,7 +4,7 @@ import arc.files.Fi;
 import arc.func.Boolf;
 import arc.struct.Seq;
 import arc.util.Structs;
-import darkdustry.components.Database;
+import darkdustry.components.*;
 import darkdustry.components.Database.PlayerData;
 import darkdustry.features.Ranks.Rank;
 import mindustry.ctype.*;
@@ -23,14 +23,14 @@ import static mindustry.Vars.*;
 public class Find {
 
     public static Player player(String input) {
-        return notNullElse(playerByID(input), playerByName(input));
-    }
+        if (canParseID(input)) {
+            var player = Groups.player.getByID(parseID(input));
+            if (player != null) return player;
 
-    public static Player playerByID(String input) {
-        return canParseID(input) ? Groups.player.getByID(parseID(input)) : null;
-    }
+            var data = Cache.get(parseID(input));
+            if (data != null) return data.player;
+        }
 
-    public static Player playerByName(String input) {
         return Groups.player.find(player -> deepEquals(player.name, input));
     }
 
@@ -40,13 +40,11 @@ public class Find {
 
     public static PlayerInfo playerInfo(String input) {
         var player = player(input);
-        if (player != null)
-            return player.getInfo();
+        if (player != null) return player.getInfo();
 
         if (canParseID(input)) {
             var data = Database.getPlayerData(parseID(input));
-            if (data != null)
-                return netServer.admins.getInfoOptional(data.uuid);
+            if (data != null) return netServer.admins.getInfoOptional(data.uuid);
         }
 
         return notNullElse(netServer.admins.getInfoOptional(input), netServer.admins.findByIP(input));
@@ -54,8 +52,7 @@ public class Find {
 
     public static PlayerData playerData(String input) {
         var player = player(input);
-        if (player != null)
-            return Database.getPlayerData(player.uuid());
+        if (player != null) return Database.getPlayerData(player.uuid());
 
         return canParseID(input) ? Database.getPlayerData(parseID(input)) : Database.getPlayerData(input);
     }

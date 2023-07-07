@@ -31,6 +31,7 @@ dependencies {
     implementation("org.jline:jline-terminal-jna:3.21.0")
 
     implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")

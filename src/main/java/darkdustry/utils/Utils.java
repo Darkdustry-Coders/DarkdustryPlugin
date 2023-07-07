@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.func.Boolf;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;

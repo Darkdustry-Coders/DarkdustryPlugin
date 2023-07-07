@@ -7,7 +7,8 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import lombok.*;
-import org.bson.codecs.pojo.annotations.BsonProperty;
+import mindustry.gen.Player;
+import org.bson.codecs.pojo.annotations.*;
 import useful.MongoRepository;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
 import static arc.util.Strings.*;
 import static com.mongodb.client.model.Filters.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Utils.*;
 
 public class Database {
 
@@ -47,11 +49,11 @@ public class Database {
     // region player data
 
     public static PlayerData getPlayerData(String uuid) {
-        return players.get(eq("uuid", uuid));
+        return notNullElse(Cache.get(uuid), players.get(eq("uuid", uuid)));
     }
 
     public static PlayerData getPlayerData(int id) {
-        return players.get(eq("pid", id));
+        return notNullElse(Cache.get(id), players.get(eq("pid", id)));
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
@@ -75,6 +77,9 @@ public class Database {
 
         @BsonProperty("pid")
         public int id;
+
+        @BsonIgnore
+        public Player player;
 
         public boolean alerts = true;
         public boolean history = false;

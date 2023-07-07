@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import darkdustry.components.Cache;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.menus.MenuHandler;
 import mindustry.gen.*;
@@ -28,8 +29,8 @@ public class PageIterator {
     }
 
     public static void players(String[] args, Player player) {
-        client(args, player, "players", Groups.player.copy(new Seq<>()), (builder, index, p) ->
-                builder.append(Bundle.format("commands.players.player", player, p.coloredName(), p.admin ? "\uE82C" : "\uE872", p.id, p.locale)));
+        client(args, player, "players", Groups.player.copy(new Seq<>()), (builder, index, other) ->
+                builder.append(Bundle.format("commands.players.player", player, other.coloredName(), other.admin ? "\uE82C" : "\uE872", Cache.get(other).id, other.locale)));
     }
 
     public static void maps(String[] args, Player player) {
@@ -62,8 +63,8 @@ public class PageIterator {
 
                 Groups.player.copy(new Seq<>()),
 
-                (player, index) -> format("**@.** @", index, player.plainName()),
-                (player) -> format("ID: #@\nLocale: @", player.id, player.locale)
+                (other, index) -> format("**@.** @", index, other.plainName()),
+                (other) -> format("ID: @\nLocale: @", Cache.get(other).id, other.locale)
         );
     }
 
