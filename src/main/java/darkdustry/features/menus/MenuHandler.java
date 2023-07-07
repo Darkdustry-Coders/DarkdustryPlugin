@@ -28,11 +28,8 @@ public class MenuHandler {
 
     // region menu
 
-    public static final ListMenu
-            listMenu = new ListMenu();
-
-    public static final ConfirmMenu
-            confirmMenu = new ConfirmMenu();
+    public static final ListMenu listMenu = new ListMenu(maxPerPage);
+    public static final ConfirmMenu confirmMenu = new ConfirmMenu();
 
     public static final Menu
             statsMenu = new Menu(),
@@ -205,8 +202,8 @@ public class MenuHandler {
     // endregion
     // region show
 
-    public static <T> void showListMenu(Player player, int page, int pages, String title, Seq<T> values, Cons3<StringBuilder, Integer, T> cons) {
-        listMenu.show(player, page, pages, maxPerPage, title, values, cons);
+    public static <T> void showListMenu(Player player, int page, String title, Prov<Seq<T>> content, Cons3<StringBuilder, Integer, T> formatter) {
+        listMenu.show(player, page, title, content, formatter);
     }
 
     public static void showConfirmMenu(Player player, String content, Runnable confirmed, Object... values) {

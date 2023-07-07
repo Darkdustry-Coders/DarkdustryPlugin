@@ -15,10 +15,10 @@ public record MessageContext(Message message, Member member, MessageChannel chan
         return success(embed -> embed.title(title).description(format(content, values)));
     }
 
-    public MessageCreateMono success(Cons<Builder> cons) {
+    public MessageCreateMono success(Cons<Builder> setter) {
         return reply(embed -> {
             embed.color(Color.MEDIUM_SEA_GREEN);
-            cons.get(embed);
+            setter.get(embed);
         });
     }
 
@@ -26,10 +26,10 @@ public record MessageContext(Message message, Member member, MessageChannel chan
         return error(embed -> embed.title(title).description(format(content, values)));
     }
 
-    public MessageCreateMono error(Cons<Builder> cons) {
+    public MessageCreateMono error(Cons<Builder> setter) {
         return reply(embed -> {
             embed.color(Color.CINNABAR);
-            cons.get(embed);
+            setter.get(embed);
         });
     }
 
@@ -37,16 +37,16 @@ public record MessageContext(Message message, Member member, MessageChannel chan
         return info(embed -> embed.title(title).description(format(content, values)));
     }
 
-    public MessageCreateMono info(Cons<Builder> cons) {
+    public MessageCreateMono info(Cons<Builder> setter) {
         return reply(embed -> {
             embed.color(Color.SUMMER_SKY);
-            cons.get(embed);
+            setter.get(embed);
         });
     }
 
-    public MessageCreateMono reply(Cons<Builder> cons) {
+    public MessageCreateMono reply(Cons<Builder> setter) {
         var embed = EmbedCreateSpec.builder();
-        cons.get(embed);
+        setter.get(embed);
 
         return reply(embed.build());
     }

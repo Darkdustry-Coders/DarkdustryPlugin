@@ -52,7 +52,7 @@ public class Find {
 
     public static PlayerData playerData(String input) {
         var player = player(input);
-        if (player != null) return Database.getPlayerData(player.uuid());
+        if (player != null) return Cache.get(player);
 
         return canParseID(input) ? Database.getPlayerData(parseID(input)) : Database.getPlayerData(input);
     }

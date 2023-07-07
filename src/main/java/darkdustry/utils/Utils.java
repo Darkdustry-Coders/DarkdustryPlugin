@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Boolf;
+import arc.func.*;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
@@ -34,6 +34,10 @@ public class Utils {
 
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
+    }
+
+    public static <T> T notNullElse(T value, Prov<T> defaultValue) {
+        return value != null ? value : defaultValue.get();
     }
 
     // endregion

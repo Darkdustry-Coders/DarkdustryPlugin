@@ -26,16 +26,16 @@ public class Translator {
         translate(filter, from, text, (player, result) -> Bundle.sendFrom(player, from, result, key, values));
     }
 
-    public static void translate(Boolf<Player> filter, Player from, String text, Cons2<Player, String> cons) {
+    public static void translate(Boolf<Player> filter, Player from, String text, Cons2<Player, String> result) {
         Groups.player.each(filter, player -> {
             var data = Cache.get(player);
 
             if (player == from || data.language == Language.off) {
-                cons.get(player, text);
+                result.get(player, text);
                 return;
             }
 
-            translate(text, "auto", data.language.code, translated -> cons.get(player, translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])"));
+            translate(text, "auto", data.language.code, translated -> result.get(player, translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])"));
         });
     }
 }

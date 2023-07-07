@@ -49,11 +49,11 @@ public class Database {
     // region player data
 
     public static PlayerData getPlayerData(String uuid) {
-        return notNullElse(Cache.get(uuid), players.get(eq("uuid", uuid)));
+        return notNullElse(Cache.get(uuid), () -> players.get(eq("uuid", uuid)));
     }
 
     public static PlayerData getPlayerData(int id) {
-        return notNullElse(Cache.get(id), players.get(eq("pid", id)));
+        return notNullElse(Cache.get(id), () -> players.get(eq("pid", id)));
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
