@@ -179,14 +179,14 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        discordCommands.<MessageContext>register("setrank", "<rank> <player...>", "Set a player's rank.", (args, context) -> {
+        discordCommands.<MessageContext>register("setrank", "<player> <rank>", "Set a player's rank.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var rank = Find.rank(args[0]);
-            if (notFound(context, rank)) return;
-
-            var data = Find.playerData(args[1]);
+            var data = Find.playerData(args[0]);
             if (notFound(context, data)) return;
+
+            var rank = Find.rank(args[1]);
+            if (notFound(context, rank)) return;
 
             data.rank = rank;
 

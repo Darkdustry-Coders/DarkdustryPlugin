@@ -461,10 +461,7 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {
-            }, player -> {
-            }, player -> {
-            });
+            this(name, button, player -> {}, player -> {}, player -> {});
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {

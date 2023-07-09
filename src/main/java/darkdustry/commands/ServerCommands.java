@@ -193,12 +193,12 @@ public class ServerCommands {
             Log.info("  Hexed wins: @", data.hexedWins);
         });
 
-        serverCommands.register("setrank", "<rank> <player...> ", "Set a player's rank.", args -> {
-            var rank = Find.rank(args[0]);
-            if (notFound(rank, args[0])) return;
+        serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
+            var data = Find.playerData(args[0]);
+            if (notFound(data, args[0])) return;
 
-            var data = Find.playerData(args[1]);
-            if (notFound(data, args[1])) return;
+            var rank = Find.rank(args[1]);
+            if (notFound(rank, args[1])) return;
 
             data.rank = rank;
 
