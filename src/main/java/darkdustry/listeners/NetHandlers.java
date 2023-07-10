@@ -154,8 +154,8 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(admin, target, packet.action));
 
         switch (packet.action) {
-            case kick -> MenuHandler.showKickMenu(admin, target);
-            case ban -> MenuHandler.showBanMenu(admin, target);
+            case kick -> MenuHandler.showKickInput(admin, target);
+            case ban -> MenuHandler.showBanInput(admin, target);
             case trace -> {
                 var trace = new TraceInfo(
                         target.ip(),

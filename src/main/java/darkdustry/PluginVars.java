@@ -76,7 +76,7 @@ public class PluginVars {
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используется для перевода строки в длительность. */
-    public static final Pattern durationPattern = Pattern.compile("(?<!\\S)(\\d+)\\s*([a-zA-Zа-яА-Я]+)");
+    public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
 
     /** Используются для перевода строки в длительность. */
     public static final Seq<Tuple2<Pattern, TimeUnit>> durationPatterns = Seq.with(

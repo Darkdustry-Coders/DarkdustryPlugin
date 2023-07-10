@@ -112,7 +112,7 @@ public class DiscordCommands {
             if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, context.member().getDisplayName(), duration.toMillis(), reason);
+            Admins.kick(target, "@" + context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Kicked")
                     .addField("Name:", target.plainName(), false)
@@ -142,7 +142,7 @@ public class DiscordCommands {
             if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, context.member().getDisplayName(), duration.toMillis(), reason);
+            Admins.ban(info, "@" + context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Banned")
                     .addField("Name:", info.plainLastName(), false)

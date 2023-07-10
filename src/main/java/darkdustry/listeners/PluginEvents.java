@@ -129,12 +129,13 @@ public class PluginEvents {
 
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.join", event.player.coloredName(), data.id);
-            Bundle.send(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.MEDIUM_SEA_GREEN)
                     .title(event.player.plainName() + " [" + data.id + "] joined")
                     .build());
+
+            Bundle.send(event.player, event.player.con.mobile ? "welcome.message.mobile" : "welcome.message", serverName.string(), discordServerUrl);
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
