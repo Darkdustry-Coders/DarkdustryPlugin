@@ -11,7 +11,6 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -75,7 +74,7 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player)) return;
 
-            showConfirmMenu(player, "commands.login.confirm", () -> {
+            MenuHandler.showConfirmMenu(player, "commands.login.confirm", () -> {
                 Authme.sendAdminRequest(Cache.get(player));
                 Bundle.send(player, "commands.login.sent");
             });

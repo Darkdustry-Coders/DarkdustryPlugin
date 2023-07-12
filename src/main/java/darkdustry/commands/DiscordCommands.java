@@ -1,5 +1,6 @@
 package darkdustry.commands;
 
+import arc.Events;
 import arc.util.*;
 import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
@@ -7,6 +8,7 @@ import darkdustry.features.Ranks;
 import darkdustry.utils.*;
 import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
+import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
@@ -43,6 +45,7 @@ public class DiscordCommands {
                 .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
+
         discordCommands.<MessageContext>register("exit", "Exit the server application.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
@@ -50,6 +53,13 @@ public class DiscordCommands {
                 netServer.kickAll(KickReason.serverRestarting);
                 app.exit();
             });
+        });
+
+        discordCommands.<MessageContext>register("gameover", "End the current game.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
+
+            Events.fire(new GameOverEvent(state.rules.waveTeam));
+            context.success(embed -> embed.title("Game Over")).subscribe();
         });
 
         discordCommands.<MessageContext>register("map", "<map...>", "Map", (args, context) -> {
@@ -124,10 +134,11 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var info = Find.playerInfo(args[0]);
-            if (notFound(context, info)) return;
+            if (notFound(context, info) || notKicked(context, info)) return;
 
             info.lastKicked = 0L;
-            info.ips.each(netServer.admins.kickedIPs::remove);
+            netServer.admins.kickedIPs.remove(info.lastIP);
+            netServer.admins.dosBlacklist.remove(info.lastIP);
 
             context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
@@ -154,7 +165,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var ban = Database.removeBan(args[0]);
-            if (notUnbanned(context, ban)) return;
+            if (notBanned(context, ban)) return;
 
             context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
         });

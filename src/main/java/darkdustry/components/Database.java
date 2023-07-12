@@ -121,7 +121,7 @@ public class Database {
         return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
     }
 
-    public static Seq<Ban> getBans() {
+    public static Seq<Ban> getBanned() {
         return bans.all();
     }
 

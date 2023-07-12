@@ -45,14 +45,13 @@ public class DarkdustryPlugin extends Plugin {
         AntiVpn.load();
         Bundle.load(getClass());
         Cooldowns.defaults(
-                "default", 1000L,
                 "sync", 15000L,
                 "votekick", 300000L,
                 "login", 900000L,
-                "rtv", 30000L,
-                "vnw", 30000L,
-                "savemap", 90000L,
-                "loadsave", 90000L
+                "rtv", 60000L,
+                "vnw", 60000L,
+                "savemap", 180000L,
+                "loadsave", 180000L
         );
 
         Alerts.load();
