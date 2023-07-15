@@ -88,7 +88,7 @@ public class Bot {
                                 case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
                                 case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
 
-                                default -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
+                                case valid -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
                             }
                         });
 
