@@ -4,6 +4,7 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
+import darkdustry.components.Cache;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
@@ -159,7 +160,7 @@ public class NetHandlers {
             case trace -> {
                 var trace = new TraceInfo(
                         target.ip(),
-                        target.uuid(),
+                        String.valueOf(Cache.get(target).id),
                         target.con.modclient,
                         target.con.mobile,
                         target.getInfo().timesJoined,

@@ -101,7 +101,7 @@ public class ServerCommands {
         serverCommands.register("kicks", "List of all kicked players", args -> {
             var kicked = netServer.admins.kickedIPs;
             kicked.each((ip, time) -> {
-                if (time <= Time.millis())
+                if (time < Time.millis())
                     kicked.remove(ip);
             });
 
