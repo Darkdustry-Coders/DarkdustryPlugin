@@ -84,16 +84,16 @@ public class Bot {
                         .subscribe(context -> {
                             var response = discordCommands.handleMessage(message.getContent(), context);
                             switch (response.type) {
-                                case fewArguments ->
-                                        context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case manyArguments ->
-                                        context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case unknownCommand ->
-                                        context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+
+                                default -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
                             }
                         });
 
-                if (!message.getChannelId().equals(botChannel.getId())) return;
+                // Prevent commands from being sent to game
+                if (message.getContent().startsWith(config.discordBotPrefix) || !message.getChannelId().equals(botChannel.getId())) return;
 
                 var roles = event.getClient()
                         .getGuildRoles(member.getGuildId())

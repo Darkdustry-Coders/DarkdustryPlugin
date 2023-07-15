@@ -25,8 +25,8 @@ public class AdminCommands {
                 if (notFound(player, map)) return;
 
                 MenuHandler.showConfirmMenu(player, "commands.artv.confirm", () -> {
-                    reloadWorld(() -> world.loadMap(map));
                     Bundle.send("commands.artv.info", player.coloredName(), map.name());
+                    reloadWorld(() -> world.loadMap(map));
                 }, map.name());
             });
         }

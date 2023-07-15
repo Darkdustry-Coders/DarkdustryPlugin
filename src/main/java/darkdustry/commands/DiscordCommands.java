@@ -1,6 +1,5 @@
 package darkdustry.commands;
 
-import arc.Events;
 import arc.util.*;
 import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
@@ -8,7 +7,6 @@ import darkdustry.features.Ranks;
 import darkdustry.utils.*;
 import discord4j.core.spec.MessageCreateFields.File;
 import discord4j.rest.util.Color;
-import mindustry.game.EventType.GameOverEvent;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
@@ -45,7 +43,6 @@ public class DiscordCommands {
                 .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
                 .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
 
-
         discordCommands.<MessageContext>register("exit", "Exit the server application.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
@@ -55,12 +52,20 @@ public class DiscordCommands {
             });
         });
 
-        discordCommands.<MessageContext>register("gameover", "End the current game.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+        if (config.mode.enableRtv)
+            discordCommands.<MessageContext>register("artv", "[map...]", "Force map change.", (args, context) -> {
+                if (noRole(context, adminRole)) return;
 
-            Events.fire(new GameOverEvent(state.rules.waveTeam));
-            context.success(embed -> embed.title("Game Over")).subscribe();
-        });
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                if (notFound(context, map)) return;
+
+                Bundle.send("commands.artv.info", "@" + context.member().getDisplayName(), map.name());
+                reloadWorld(() -> world.loadMap(map));
+
+                context.success(embed -> embed
+                        .title("Map Changed")
+                        .addField("Name:", map.name(), false)).subscribe();
+            });
 
         discordCommands.<MessageContext>register("map", "<map...>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
