@@ -50,8 +50,8 @@ public class DarkdustryPlugin extends Plugin {
                 "login", 900000L,
                 "rtv", 60000L,
                 "vnw", 60000L,
-                "savemap", 180000L,
-                "loadsave", 180000L
+                "votesave", 180000L,
+                "voteload", 180000L
         );
 
         Alerts.load();

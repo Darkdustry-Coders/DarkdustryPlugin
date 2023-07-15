@@ -107,14 +107,14 @@ public class ClientCommands {
         }
 
         if (config.mode.isDefault) {
-            register("savemap", (args, player) -> {
+            register("votesave", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
                 vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
                 vote.vote(player, 1);
             });
 
-            register("loadsave", (args, player) -> {
+            register("voteload", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
                 var save = Find.save(args[0]);

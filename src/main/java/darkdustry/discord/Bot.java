@@ -92,7 +92,7 @@ public class Bot {
                             }
                         });
 
-                // Prevent commands from being sent to game
+                // Prevent commands from being sent to the game
                 if (message.getContent().startsWith(config.discordBotPrefix) || !message.getChannelId().equals(botChannel.getId())) return;
 
                 var roles = event.getClient()
