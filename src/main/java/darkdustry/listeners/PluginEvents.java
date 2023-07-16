@@ -120,7 +120,6 @@ public class PluginEvents {
 
         Events.on(PlayerJoin.class, event -> {
             var data = Database.getPlayerDataOrCreate(event.player.uuid());
-            data.player = event.player;
 
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
