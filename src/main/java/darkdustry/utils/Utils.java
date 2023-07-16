@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.*;
+import arc.func.Prov;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
@@ -95,7 +95,7 @@ public class Utils {
 
     public static Duration parseDuration(String input) {
         var matcher = durationPattern.matcher(input);
-        long time = 0L;
+        long seconds = 0L;
 
         while (matcher.find()) {
             long amount = Strings.parseLong(matcher.group(1), 0);
@@ -103,13 +103,13 @@ public class Utils {
 
             for (var tuple : durationPatterns) {
                 if (tuple.getT1().matcher(matcher.group(2).toLowerCase()).matches()) {
-                    time += tuple.getT2().toSeconds(amount);
+                    seconds += tuple.getT2().getDuration().multipliedBy(amount).getSeconds();
                     break;
                 }
             }
         }
 
-        return Duration.ofSeconds(time);
+        return Duration.ofSeconds(seconds);
     }
 
     // endregion

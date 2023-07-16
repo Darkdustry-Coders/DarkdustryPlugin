@@ -8,11 +8,11 @@ import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import reactor.util.function.*;
 
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 import static com.google.gson.FieldNamingPolicy.*;
-import static java.util.concurrent.TimeUnit.*;
+import static java.time.temporal.ChronoUnit.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unchecked")
@@ -79,7 +79,9 @@ public class PluginVars {
     public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
 
     /** Используются для перевода строки в длительность. */
-    public static final Seq<Tuple2<Pattern, TimeUnit>> durationPatterns = Seq.with(
+    public static final Seq<Tuple2<Pattern, ChronoUnit>> durationPatterns = Seq.with(
+            Tuples.of(Pattern.compile("(mon|month|months|мес|месяц|месяца|месяцев)"), MONTHS),
+            Tuples.of(Pattern.compile("(w|week|weeks|н|нед|неделя|недели|недель)"), WEEKS),
             Tuples.of(Pattern.compile("(d|day|days|д|день|дня|дней)"), DAYS),
             Tuples.of(Pattern.compile("(h|hour|hours|ч|час|часа|часов)"), HOURS),
             Tuples.of(Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES),
