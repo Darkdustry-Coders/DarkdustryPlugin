@@ -34,19 +34,19 @@ public class History {
 
         var queue = history[index];
         if (queue == null)
-            history[index] = queue = new HistoryQueue(maxHistorySize);
+            history[index] = queue = new HistoryQueue();
 
         return queue;
     }
 
     public static class HistoryQueue extends Queue<HistoryEntry> {
-        public HistoryQueue(int size) {
-            super(size);
+        public HistoryQueue() {
+            super(maxHistorySize);
         }
 
         @Override
         public void add(HistoryEntry entry) {
-            if (size == values.length)
+            if (size >= maxHistorySize)
                 removeFirst();
 
             super.add(entry);
