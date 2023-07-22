@@ -2,7 +2,6 @@ package darkdustry.discord;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.commands.DiscordCommands;
 import darkdustry.features.Authme;
 import discord4j.common.ReactorResources;
 import discord4j.common.retry.ReconnectOptions;
@@ -133,7 +132,6 @@ public class Bot {
 
             connected = true;
 
-            DiscordCommands.load();
             DarkdustryPlugin.info("Bot connected.");
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect bot: @", e);

@@ -11,6 +11,8 @@ import mindustry.maps.Map;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.time.Duration;
+
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
@@ -184,7 +186,7 @@ public class ServerCommands {
             Log.info("  UUID: @", data.uuid);
             Log.info("  ID: @", data.id);
             Log.info("  Rank: @", data.rank.name());
-            Log.info("  Playtime: @ minutes", data.playTime);
+            Log.info("  Playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
             Log.info("  Blocks placed: @", data.blocksPlaced);
             Log.info("  Blocks broken: @", data.blocksBroken);
             Log.info("  Waves survived: @", data.wavesSurvived);

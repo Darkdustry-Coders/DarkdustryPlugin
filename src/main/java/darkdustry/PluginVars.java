@@ -3,6 +3,7 @@ package darkdustry;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import com.google.gson.*;
+import com.ospx.sock.Sock;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;

@@ -12,6 +12,8 @@ import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.time.Duration;
+
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
@@ -59,7 +61,7 @@ public class DiscordCommands {
                 var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
                 if (notFound(context, map)) return;
 
-                Bundle.send("commands.artv.info", "@" + context.member().getDisplayName(), map.name());
+                Bundle.send("commands.artv.info", context.member().getDisplayName(), map.name());
                 reloadWorld(() -> world.loadMap(map));
 
                 context.success(embed -> embed
@@ -127,7 +129,7 @@ public class DiscordCommands {
             if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, "@" + context.member().getDisplayName(), duration.toMillis(), reason);
+            Admins.kick(target, context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Kicked")
                     .addField("Name:", target.plainName(), false)
@@ -158,7 +160,7 @@ public class DiscordCommands {
             if (invalidDuration(context, duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, "@" + context.member().getDisplayName(), duration.toMillis(), reason);
+            Admins.ban(info, context.member().getDisplayName(), duration.toMillis(), reason);
 
             context.success(embed -> embed.title("Player Banned")
                     .addField("Name:", info.plainLastName(), false)
@@ -184,7 +186,7 @@ public class DiscordCommands {
                     .addField("Name:", data.plainName(), false)
                     .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
-                    .addField("Playtime:", data.playTime + " minutes", false)
+                    .addField("Playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
                     .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
                     .addField("Blocks broken:", String.valueOf(data.blocksBroken), false)
                     .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)

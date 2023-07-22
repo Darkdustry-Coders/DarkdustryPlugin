@@ -23,6 +23,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
+    implementation("com.github.osp54:Sock:1.1.1")
+
     implementation("com.discord4j:discord4j-core:3.2.5")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
 
