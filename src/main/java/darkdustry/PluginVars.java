@@ -35,7 +35,7 @@ public class PluginVars {
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
     /** Максимальное количество пропущенных волн. */
-    public static final int maxVnwAmount = 10;
+    public static final int maxVnwAmount = 5;
 
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;
