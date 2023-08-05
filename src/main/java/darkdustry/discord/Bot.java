@@ -2,6 +2,7 @@ package darkdustry.discord;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
+import darkdustry.components.Config.Gamemode;
 import darkdustry.features.Authme;
 import discord4j.common.ReactorResources;
 import discord4j.common.retry.ReconnectOptions;
@@ -139,12 +140,11 @@ public class Bot {
     }
 
     public static void updateActivity() {
-        if (connected)
-            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + state.map.plainName());
+        updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + state.map.plainName());
     }
 
     public static void updateActivity(String activity) {
-        if (connected)
+        if (connected && config.mode == Gamemode.hub)
             gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
     }
 
