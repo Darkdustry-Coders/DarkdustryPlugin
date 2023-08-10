@@ -4,13 +4,11 @@ import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.Translator;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
-import mindustry.content.Blocks;
 import mindustry.gen.*;
 import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -26,9 +24,9 @@ public class AdminCommands {
                 var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
                 if (notFound(player, map)) return;
 
-                showConfirmMenu(player, "commands.artv.confirm", () -> {
+                MenuHandler.showConfirmMenu(player, "commands.artv.confirm", () -> {
                     Bundle.send("commands.artv.info", player.coloredName(), map.name());
-                    reloadWorld(() -> world.loadMap(map, map.applyRules(state.rules.mode())));
+                    reloadWorld(() -> world.loadMap(map));
                 }, map.name());
             });
         }
@@ -52,7 +50,7 @@ public class AdminCommands {
         if (!config.mode.isDefault) return;
 
         register("core", (args, player) -> {
-            var core = args.length > 0 ? Find.core(args[0]) : Blocks.coreShard;
+            var core = args.length > 0 ? Find.core(args[0]) : state.rules.planet.defaultCore;
             if (notFoundCore(player, core)) return;
 
             var team = args.length > 1 ? Find.team(args[1]) : player.team();

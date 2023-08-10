@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.util.Log;
+import arc.util.*;
 import darkdustry.components.Database.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
@@ -62,8 +62,12 @@ public class Checks {
         return check(duration.isZero(), "The provided duration is invalid. (Example: 1h, 30min)");
     }
 
-    public static boolean notUnbanned(Ban ban) {
+    public static boolean notBanned(Ban ban) {
         return check(ban == null, "No banned player found for provided input.");
+    }
+
+    public static boolean notKicked(PlayerInfo info) {
+        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), "This player wasn't kicked from this server.");
     }
 
     // endregion
@@ -213,8 +217,12 @@ public class Checks {
         return check(duration.isZero(), context, "Invalid Duration", "The provided duration is invalid. (Example: 1h, 30min)");
     }
 
-    public static boolean notUnbanned(MessageContext context, Ban ban) {
+    public static boolean notBanned(MessageContext context, Ban ban) {
         return check(ban == null, context, "Unban Failed", "No banned player found for provided input.");
+    }
+
+    public static boolean notKicked(MessageContext context, PlayerInfo info) {
+        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), context, "Pardon Failed", "This player wasn't kicked from this server.");
     }
 
     // endregion

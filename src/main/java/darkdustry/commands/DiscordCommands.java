@@ -12,6 +12,8 @@ import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.time.Duration;
+
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.Bot.*;
@@ -51,6 +53,21 @@ public class DiscordCommands {
                 app.exit();
             });
         });
+
+        if (config.mode.enableRtv)
+            discordCommands.<MessageContext>register("artv", "[map...]", "Force map change.", (args, context) -> {
+                if (noRole(context, adminRole)) return;
+
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                if (notFound(context, map)) return;
+
+                Bundle.send("commands.artv.info", context.member().getDisplayName(), map.name());
+                reloadWorld(() -> world.loadMap(map));
+
+                context.success(embed -> embed
+                        .title("Map Changed")
+                        .addField("Name:", map.name(), false)).subscribe();
+            });
 
         discordCommands.<MessageContext>register("map", "<map...>", "Map", (args, context) -> {
             var map = Find.map(args[0]);
@@ -124,10 +141,11 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var info = Find.playerInfo(args[0]);
-            if (notFound(context, info)) return;
+            if (notFound(context, info) || notKicked(context, info)) return;
 
             info.lastKicked = 0L;
-            info.ips.each(netServer.admins.kickedIPs::remove);
+            netServer.admins.kickedIPs.remove(info.lastIP);
+            netServer.admins.dosBlacklist.remove(info.lastIP);
 
             context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
         });
@@ -154,7 +172,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var ban = Database.removeBan(args[0]);
-            if (notUnbanned(context, ban)) return;
+            if (notBanned(context, ban)) return;
 
             context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
         });
@@ -168,7 +186,7 @@ public class DiscordCommands {
                     .addField("Name:", data.plainName(), false)
                     .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
-                    .addField("Playtime:", data.playTime + " minutes", false)
+                    .addField("Playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
                     .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
                     .addField("Blocks broken:", String.valueOf(data.blocksBroken), false)
                     .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
@@ -179,14 +197,14 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        discordCommands.<MessageContext>register("setrank", "<rank> <player...>", "Set a player's rank.", (args, context) -> {
+        discordCommands.<MessageContext>register("setrank", "<player> <rank>", "Set a player's rank.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var rank = Find.rank(args[0]);
-            if (notFound(context, rank)) return;
-
-            var data = Find.playerData(args[1]);
+            var data = Find.playerData(args[0]);
             if (notFound(context, data)) return;
+
+            var rank = Find.rank(args[1]);
+            if (notFound(context, rank)) return;
 
             data.rank = rank;
 

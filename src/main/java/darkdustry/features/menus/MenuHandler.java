@@ -21,6 +21,7 @@ import java.time.Duration;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.*;
+import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.*;
 
 @SuppressWarnings("unchecked")
@@ -37,25 +38,26 @@ public class MenuHandler {
             requirementsMenu = new Menu(),
             welcomeMenu = new Menu(),
             despawnMenu = new Menu(),
-            kickDurationMenu = new Menu(),
-            banDurationMenu = new Menu(),
             settingsMenu = new Menu(),
             languagesMenu = new Menu(),
-            effectsMenu = new Menu();
+            effectsMenu = new Menu(),
+            invalidDurationMenu = new Menu();
 
     // endregion
     // region input
 
     public static final TextInput
+            kickDurationInput = new TextInput(),
+            banDurationInput = new TextInput(),
             kickReasonInput = new TextInput(),
             banReasonInput = new TextInput();
 
     // endregion
     // region keys
 
+    public static final StateKey<Long> DURATION = new StateKey<>("duration");
     public static final StateKey<Player> TARGET = new StateKey<>("target");
     public static final StateKey<PlayerData> DATA = new StateKey<>("data");
-    public static final StateKey<Duration> DURATION = new StateKey<>("duration");
 
     // endregion
     // region transforms
@@ -118,22 +120,6 @@ public class MenuHandler {
             menu.option("ui.button.close");
         });
 
-        kickDurationMenu.transform(TARGET, (menu, target) -> {
-            menu.title("kick.duration.title");
-            menu.content("kick.duration.content", target.coloredName());
-
-            menu.options(3, KickDuration.values()).row();
-            menu.option("ui.button.close");
-        });
-
-        banDurationMenu.transform(TARGET, (menu, target) -> {
-            menu.title("ban.duration.title");
-            menu.content("ban.duration.content", target.coloredName());
-
-            menu.options(3, BanDuration.values()).row();
-            menu.option("ui.button.close");
-        });
-
         settingsMenu.transform(menu -> {
             var data = Cache.get(menu.player);
 
@@ -171,18 +157,61 @@ public class MenuHandler {
             menu.option("ui.button.close");
         }).followUp(true);
 
+        invalidDurationMenu.transform(menu -> {
+            menu.title("duration.invalid.title");
+            menu.content("duration.invalid.content");
+
+            menu.option("ui.button.back", Action.back());
+        });
+
         // endregion
         // region input
+
+        kickDurationInput.transform(TARGET, (input, target) -> {
+            input.title("kick.duration.title");
+            input.content("kick.duration.content", target.coloredName());
+
+            input.defaultText("kick.duration.default");
+            input.textLength(32);
+
+            input.result(text -> {
+                var duration = parseDuration(text);
+                if (duration.isZero()) {
+                    invalidDurationMenu.open(input);
+                    return;
+                }
+
+                kickReasonInput.open(input, DURATION, duration.toMillis());
+            });
+        });
+
+        banDurationInput.transform(TARGET, (input, target) -> {
+            input.title("ban.duration.title");
+            input.content("ban.duration.content", target.coloredName());
+
+            input.defaultText("ban.duration.default");
+            input.textLength(32);
+
+            input.result(text -> {
+                var duration = parseDuration(text);
+                if (duration.isZero()) {
+                    invalidDurationMenu.open(input);
+                    return;
+                }
+
+                banReasonInput.open(input, DURATION, duration.toMillis());
+            });
+        });
 
         kickReasonInput.transform(TARGET, (input, target) -> {
             input.title("kick.reason.title");
             input.content("kick.reason.content", target.coloredName(), Bundle.formatDuration(input.player, input.state.get(DURATION)));
 
             input.defaultText("kick.reason.default");
-            input.textLength(32);
+            input.textLength(64);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.kick(target, view.player, view.state.get(DURATION).toMillis(), reason));
+            input.result(text -> Admins.kick(target, input.player, input.state.get(DURATION), text));
         });
 
         banReasonInput.transform(TARGET, (input, target) -> {
@@ -190,10 +219,10 @@ public class MenuHandler {
             input.content("ban.reason.content", target.coloredName(), Bundle.formatDuration(input.player, input.state.get(DURATION)));
 
             input.defaultText("ban.reason.default");
-            input.textLength(32);
+            input.textLength(64);
 
             input.closed(Action.back());
-            input.result((view, reason) -> Admins.ban(target, view.player, view.state.get(DURATION).toMillis(), reason));
+            input.result(text -> Admins.ban(target, input.player, input.state.get(DURATION), text));
         });
 
         // endregion
@@ -226,60 +255,20 @@ public class MenuHandler {
         despawnMenu.show(player);
     }
 
-    public static void showKickMenu(Player player, Player target) {
-        kickDurationMenu.show(player, TARGET, target);
-    }
-
-    public static void showBanMenu(Player player, Player target) {
-        banDurationMenu.show(player, TARGET, target);
-    }
-
     public static void showSettingsMenu(Player player) {
         settingsMenu.show(player);
     }
 
+    public static void showKickInput(Player player, Player target) {
+        kickDurationInput.show(player, TARGET, target);
+    }
+
+    public static void showBanInput(Player player, Player target) {
+        banDurationInput.show(player, TARGET, target);
+    }
+
     // endregion
     // region enums
-
-    public enum KickDuration implements OptionData {
-        five_minutes(5),
-        fifteen_minutes(15),
-        thirty_minutes(30),
-        one_hour(60),
-        two_hours(120),
-        six_hours(360);
-
-        public final Duration duration;
-
-        KickDuration(long minutes) {
-            this.duration = Duration.ofMinutes(minutes);
-        }
-
-        @Override
-        public void option(MenuView menu) {
-            menu.option(Bundle.formatDuration(menu.player, duration), Action.openWith(kickReasonInput, DURATION, duration));
-        }
-    }
-
-    public enum BanDuration implements OptionData {
-        one_day(1),
-        three_days(3),
-        five_days(5),
-        seven_days(7),
-        fourteen_days(14),
-        thirty_days(30);
-
-        public final Duration duration;
-
-        BanDuration(long days) {
-            this.duration = Duration.ofDays(days);
-        }
-
-        @Override
-        public void option(MenuView menu) {
-            menu.option(Bundle.formatDuration(menu.player, duration), Action.openWith(banReasonInput, DURATION, duration));
-        }
-    }
 
     public enum DespawnType implements OptionData {
         all(unit -> true),
@@ -327,7 +316,7 @@ public class MenuHandler {
                 var data = Cache.get(view.player);
                 setter.get(data);
 
-                view.getInterface().show(view.player, view.state, view.parent);
+                view.getInterface().show(view);
             }, Bundle.get(getter.get(Cache.get(menu.player)) ? "setting.on" : "setting.off", menu.player));
         }
     }
@@ -373,7 +362,7 @@ public class MenuHandler {
                 var data = Cache.get(view.player);
                 data.language = this;
 
-                view.getInterface().show(view.player, view.state, view.parent);
+                view.getInterface().show(view);
             });
         }
     }
@@ -461,10 +450,7 @@ public class MenuHandler {
         }
 
         EffectsPack(String name, String button) {
-            this(name, button, player -> {
-            }, player -> {
-            }, player -> {
-            });
+            this(name, button, player -> {}, player -> {}, player -> {});
         }
 
         EffectsPack(String name, String button, Cons<Player> join, Cons<Player> leave, Cons<Player> move) {
@@ -486,7 +472,7 @@ public class MenuHandler {
                 var data = Cache.get(view.player);
                 data.effects = this;
 
-                view.getInterface().show(view.player, view.state, view.parent);
+                view.getInterface().show(view);
             });
         }
     }

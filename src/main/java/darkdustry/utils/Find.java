@@ -28,7 +28,7 @@ public class Find {
             if (player != null) return player;
 
             var data = Cache.get(parseID(input));
-            if (data != null) return data.player;
+            if (data != null) return playerByUUID(data.uuid);
         }
 
         return Groups.player.find(player -> deepEquals(player.name, input));

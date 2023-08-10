@@ -18,7 +18,6 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -45,14 +44,13 @@ public class DarkdustryPlugin extends Plugin {
         AntiVpn.load();
         Bundle.load(getClass());
         Cooldowns.defaults(
-                "default", 1000L,
                 "sync", 15000L,
                 "votekick", 300000L,
                 "login", 900000L,
-                "rtv", 30000L,
-                "vnw", 30000L,
-                "savemap", 90000L,
-                "loadsave", 90000L
+                "rtv", 60000L,
+                "vnw", 60000L,
+                "votesave", 180000L,
+                "voteload", 180000L
         );
 
         Alerts.load();
@@ -60,7 +58,12 @@ public class DarkdustryPlugin extends Plugin {
         SchemeSize.load();
 
         Database.connect();
-        Bot.connect();
+        Socket.connect();
+
+        if (config.mode.isSockServer) {
+            Bot.connect();
+            DiscordCommands.load();
+        }
 
         Version.build = -1;
 
@@ -68,7 +71,7 @@ public class DarkdustryPlugin extends Plugin {
         net.handleServer(ConnectPacket.class, NetHandlers::connect);
         net.handleServer(AdminRequestCallPacket.class, NetHandlers::adminRequest);
 
-        netServer.admins.addChatFilter(Filters::chat);
+        netServer.admins.addChatFilter(NetHandlers::chat);
         netServer.invalidHandler = NetHandlers::invalidResponse;
 
         maps.setMapProvider((mode, map) -> availableMaps().random(map));
@@ -84,7 +87,7 @@ public class DarkdustryPlugin extends Plugin {
                 MenuHandler.showPromotionMenu(player, data);
             }
 
-            savePlayerData(data);
+            Database.savePlayerData(data);
         }), 60f, 60f);
 
         info("Darkdustry plugin loaded in @ ms.", Time.elapsed());

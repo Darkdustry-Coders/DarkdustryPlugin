@@ -11,6 +11,8 @@ import mindustry.maps.Map;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.time.Duration;
+
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Checks.*;
@@ -61,7 +63,7 @@ public class ServerCommands {
 
             app.post(() -> {
                 Log.info("Loading map...");
-                reloadWorld(() -> world.loadMap(map, map.applyRules(mode)));
+                reloadWorld(() -> world.loadMap(map));
                 Log.info("Map loaded.");
 
                 netServer.openServer();
@@ -89,23 +91,24 @@ public class ServerCommands {
 
         serverCommands.register("pardon", "<player...>", "Pardon a player.", args -> {
             var info = Find.playerInfo(args[0]);
-            if (notFound(info, args[0])) return;
+            if (notFound(info, args[0]) || notKicked(info)) return;
 
             info.lastKicked = 0L;
-            info.ips.each(netServer.admins.kickedIPs::remove);
+            netServer.admins.kickedIPs.remove(info.lastIP);
+            netServer.admins.dosBlacklist.remove(info.lastIP);
 
             Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
         serverCommands.register("kicks", "List of all kicked players", args -> {
-            var kicks = netServer.admins.kickedIPs;
-            kicks.each((ip, time) -> {
-                if (time <= Time.millis())
-                    kicks.remove(ip);
+            var kicked = netServer.admins.kickedIPs;
+            kicked.each((ip, time) -> {
+                if (time < Time.millis())
+                    kicked.remove(ip);
             });
 
-            Log.info("Kicked players: (@)", kicks.size);
-            kicks.each((ip, time) -> {
+            Log.info("Kicked players: (@)", kicked.size);
+            kicked.each((ip, time) -> {
                 var info = netServer.admins.findByIP(ip);
                 Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info == null ? "unknown" : info.plainLastName(), info == null ? "unknown" : info.id, ip, Bundle.formatDateTime(time));
             });
@@ -126,16 +129,16 @@ public class ServerCommands {
 
         serverCommands.register("unban", "<player...>", "Unban a player.", args -> {
             var ban = Database.removeBan(args[0]);
-            if (notUnbanned(ban)) return;
+            if (notBanned(ban)) return;
 
             Log.info("Player @ has been unbanned.", ban.player);
         });
 
         serverCommands.register("bans", "List of all banned players.", args -> {
-            var bans = Database.getBans();
+            var banned = Database.getBanned();
 
-            Log.info("Banned players: (@)", bans.size);
-            bans.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
+            Log.info("Banned players: (@)", banned.size);
+            banned.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
         });
 
         serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {
@@ -183,7 +186,7 @@ public class ServerCommands {
             Log.info("  UUID: @", data.uuid);
             Log.info("  ID: @", data.id);
             Log.info("  Rank: @", data.rank.name());
-            Log.info("  Playtime: @ minutes", data.playTime);
+            Log.info("  Playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
             Log.info("  Blocks placed: @", data.blocksPlaced);
             Log.info("  Blocks broken: @", data.blocksBroken);
             Log.info("  Waves survived: @", data.wavesSurvived);
@@ -193,12 +196,12 @@ public class ServerCommands {
             Log.info("  Hexed wins: @", data.hexedWins);
         });
 
-        serverCommands.register("setrank", "<rank> <player...> ", "Set a player's rank.", args -> {
-            var rank = Find.rank(args[0]);
-            if (notFound(rank, args[0])) return;
+        serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
+            var data = Find.playerData(args[0]);
+            if (notFound(data, args[0])) return;
 
-            var data = Find.playerData(args[1]);
-            if (notFound(data, args[1])) return;
+            var rank = Find.rank(args[1]);
+            if (notFound(rank, args[1])) return;
 
             data.rank = rank;
 

@@ -15,20 +15,20 @@ public class VoteSave extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
-        Bundle.send(sign == 1 ? "commands.savemap.yes" : "commands.savemap.no", player.coloredName(), file.name(), votes() + sign, votesRequired());
+        Bundle.send(sign == 1 ? "commands.votesave.yes" : "commands.votesave.no", player.coloredName(), file.name(), votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 
     @Override
     public void left(Player player) {
         if (voted.remove(player) != 0)
-            Bundle.send("commands.savemap.left", player.coloredName(), votes(), votesRequired());
+            Bundle.send("commands.votesave.left", player.coloredName(), votes(), votesRequired());
     }
 
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.savemap.success", file.name());
+        Bundle.send("commands.votesave.success", file.name());
 
         SaveIO.save(file);
     }
@@ -36,6 +36,6 @@ public class VoteSave extends VoteSession {
     @Override
     public void fail() {
         stop();
-        Bundle.send("commands.savemap.fail", file.name());
+        Bundle.send("commands.votesave.fail", file.name());
     }
 }

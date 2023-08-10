@@ -11,7 +11,6 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.features.menus.MenuHandler.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -75,7 +74,7 @@ public class ClientCommands {
         register("login", (args, player) -> {
             if (alreadyAdmin(player)) return;
 
-            showConfirmMenu(player, "commands.login.confirm", () -> {
+            MenuHandler.showConfirmMenu(player, "commands.login.confirm", () -> {
                 Authme.sendAdminRequest(Cache.get(player));
                 Bundle.send(player, "commands.login.sent");
             });
@@ -108,14 +107,14 @@ public class ClientCommands {
         }
 
         if (config.mode.isDefault) {
-            register("savemap", (args, player) -> {
+            register("votesave", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
                 vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
                 vote.vote(player, 1);
             });
 
-            register("loadsave", (args, player) -> {
+            register("voteload", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
                 var save = Find.save(args[0]);

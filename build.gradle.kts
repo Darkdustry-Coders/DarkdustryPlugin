@@ -14,7 +14,7 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "0933abc2d3"
+    val usefulHash = "a3a201c3b6"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
@@ -22,6 +22,8 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
+
+    implementation("com.github.osp54:Sock:1.1.1")
 
     implementation("com.discord4j:discord4j-core:3.2.5")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")

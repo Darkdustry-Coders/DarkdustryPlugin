@@ -4,6 +4,8 @@ import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
+import darkdustry.components.*;
+import darkdustry.discord.Bot;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
@@ -22,12 +24,24 @@ import static mindustry.Vars.*;
 
 public class NetHandlers {
 
+    public static String chat(Player from, String text) {
+        int sign = voteChoice(text);
+        if (sign == 0 || vote == null) {
+            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + text);
+            Translator.translate(from, text);
+
+            Bot.sendMessage(from.plainName(), text);
+            return null;
+        }
+
+        if (!alreadyVoted(from, vote)) vote.vote(from, sign);
+        return null;
+    }
+
     public static String invalidResponse(Player player, CommandResponse response) {
         return switch (response.type) {
-            case fewArguments ->
-                    Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
-            case manyArguments ->
-                    Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.text)
@@ -154,12 +168,12 @@ public class NetHandlers {
         Events.fire(new AdminRequestEvent(admin, target, packet.action));
 
         switch (packet.action) {
-            case kick -> MenuHandler.showKickMenu(admin, target);
-            case ban -> MenuHandler.showBanMenu(admin, target);
+            case kick -> MenuHandler.showKickInput(admin, target);
+            case ban -> MenuHandler.showBanInput(admin, target);
             case trace -> {
                 var trace = new TraceInfo(
                         target.ip(),
-                        target.uuid(),
+                        String.valueOf(Cache.get(target).id),
                         target.con.modclient,
                         target.con.mobile,
                         target.getInfo().timesJoined,

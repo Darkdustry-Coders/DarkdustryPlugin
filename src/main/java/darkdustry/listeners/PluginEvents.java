@@ -72,13 +72,14 @@ public class PluginEvents {
         Events.on(TapEvent.class, event -> {
             if (!History.enabled() || !Cache.get(event.player).history) return;
 
-            var stack = History.get(event.tile.array());
-            if (stack == null) return;
+            var queue = History.get(event.tile.array());
+            if (queue == null) return;
 
             var builder = new StringBuilder();
+            queue.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
 
-            if (stack.isEmpty()) builder.append(Bundle.get("history.empty", event.player));
-            else stack.each(entry -> builder.append("\n").append(entry.getMessage(event.player)));
+            if (queue.isEmpty())
+                builder.append(Bundle.get("history.empty", event.player));
 
             Bundle.send(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
         });
@@ -111,15 +112,14 @@ public class PluginEvents {
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
-            if (!Units.canCreate(event.build.team, UnitTypes.renale)) return;
+            if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
 
-            Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.renale);
-            UnitTypes.renale.spawn(event.build.team, event.build);
+            Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.latum);
+            UnitTypes.latum.spawn(event.build.team, event.build);
         }));
 
         Events.on(PlayerJoin.class, event -> {
             var data = Database.getPlayerDataOrCreate(event.player.uuid());
-            data.player = event.player;
 
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
@@ -129,12 +129,13 @@ public class PluginEvents {
 
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.join", event.player.coloredName(), data.id);
-            Bundle.send(event.player, "welcome.message", serverName.string(), discordServerUrl);
 
             Bot.sendMessage(EmbedCreateSpec.builder()
                     .color(Color.MEDIUM_SEA_GREEN)
                     .title(event.player.plainName() + " [" + data.id + "] joined")
                     .build());
+
+            Bundle.send(event.player, event.player.con.mobile ? "welcome.message.mobile" : "welcome.message", serverName.string(), discordServerUrl);
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);

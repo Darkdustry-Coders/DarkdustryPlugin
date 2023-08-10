@@ -9,11 +9,14 @@ import static mindustry.net.Administration.Config.*;
 
 public class Config {
 
-    /** IP адрес Хаба. */
+    /** IP-адрес хаба. */
     public String hubIp = "darkdustry.net";
 
-    /** Порт Хаба. */
+    /** Порт хаба. */
     public int hubPort = 6567;
+
+    /** Порт сокета. */
+    public int sockPort = 8306;
 
     /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
@@ -106,6 +109,7 @@ public class Config {
 
         hub {{
             isDefault = false;
+            isSockServer = true;
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
@@ -129,6 +133,8 @@ public class Config {
         tower;
 
         public boolean isDefault = true;
+        public boolean isSockServer = false;
+
         public boolean enableRtv = true;
         public boolean enableVnw = true;
         public boolean enableStrict = true;

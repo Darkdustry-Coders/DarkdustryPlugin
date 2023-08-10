@@ -2,7 +2,7 @@ package darkdustry.discord;
 
 import arc.util.Log;
 import darkdustry.DarkdustryPlugin;
-import darkdustry.commands.DiscordCommands;
+import darkdustry.components.Config.Gamemode;
 import darkdustry.features.Authme;
 import discord4j.common.ReactorResources;
 import discord4j.common.retry.ReconnectOptions;
@@ -84,16 +84,16 @@ public class Bot {
                         .subscribe(context -> {
                             var response = discordCommands.handleMessage(message.getContent(), context);
                             switch (response.type) {
-                                case fewArguments ->
-                                        context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case manyArguments ->
-                                        context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case unknownCommand ->
-                                        context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+
+                                case valid -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
                             }
                         });
 
-                if (!message.getChannelId().equals(botChannel.getId())) return;
+                // Prevent commands from being sent to the game
+                if (message.getContent().startsWith(config.discordBotPrefix) || !message.getChannelId().equals(botChannel.getId())) return;
 
                 var roles = event.getClient()
                         .getGuildRoles(member.getGuildId())
@@ -133,7 +133,6 @@ public class Bot {
 
             connected = true;
 
-            DiscordCommands.load();
             DarkdustryPlugin.info("Bot connected.");
         } catch (Exception e) {
             DarkdustryPlugin.error("Failed to connect bot: @", e);
@@ -141,12 +140,11 @@ public class Bot {
     }
 
     public static void updateActivity() {
-        if (connected)
-            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + state.map.plainName());
+        updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + state.map.plainName());
     }
 
     public static void updateActivity(String activity) {
-        if (connected)
+        if (connected && config.mode == Gamemode.hub)
             gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
     }
 

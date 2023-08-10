@@ -3,16 +3,17 @@ package darkdustry;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import com.google.gson.*;
+import com.ospx.sock.Sock;
 import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import reactor.util.function.*;
 
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 import static com.google.gson.FieldNamingPolicy.*;
-import static java.util.concurrent.TimeUnit.*;
+import static java.time.temporal.ChronoUnit.*;
 import static mindustry.Vars.*;
 
 @SuppressWarnings("unchecked")
@@ -34,7 +35,7 @@ public class PluginVars {
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
     /** Максимальное количество пропущенных волн. */
-    public static final int maxVnwAmount = 10;
+    public static final int maxVnwAmount = 5;
 
     /** Максимальное количество выдаваемых ресурсов. */
     public static final int maxGiveAmount = 100000;
@@ -52,7 +53,7 @@ public class PluginVars {
     public static final int maxPerPage = 6;
 
     /** Максимальное количество записей истории на один тайл. */
-    public static final int maxHistoryCapacity = 8;
+    public static final int maxHistorySize = 8;
 
     /** Максимально допустимое количество игроков с одинаковыми IP адресами. */
     public static final int maxIdenticalIPs = 3;
@@ -76,10 +77,12 @@ public class PluginVars {
     public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используется для перевода строки в длительность. */
-    public static final Pattern durationPattern = Pattern.compile("(?<!\\S)(\\d+)\\s*([a-zA-Zа-яА-Я]+)");
+    public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
 
     /** Используются для перевода строки в длительность. */
-    public static final Seq<Tuple2<Pattern, TimeUnit>> durationPatterns = Seq.with(
+    public static final Seq<Tuple2<Pattern, ChronoUnit>> durationPatterns = Seq.with(
+            Tuples.of(Pattern.compile("(mon|month|months|мес|месяц|месяца|месяцев)"), MONTHS),
+            Tuples.of(Pattern.compile("(w|week|weeks|н|нед|неделя|недели|недель)"), WEEKS),
             Tuples.of(Pattern.compile("(d|day|days|д|день|дня|дней)"), DAYS),
             Tuples.of(Pattern.compile("(h|hour|hours|ч|час|часа|часов)"), HOURS),
             Tuples.of(Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES),

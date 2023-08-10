@@ -7,8 +7,7 @@ import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import lombok.*;
-import mindustry.gen.Player;
-import org.bson.codecs.pojo.annotations.*;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import useful.MongoRepository;
 
 import java.util.Date;
@@ -78,9 +77,6 @@ public class Database {
         @BsonProperty("pid")
         public int id;
 
-        @BsonIgnore
-        public Player player;
-
         public boolean alerts = true;
         public boolean history = false;
         public boolean welcomeMessage = true;
@@ -121,7 +117,7 @@ public class Database {
         return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
     }
 
-    public static Seq<Ban> getBans() {
+    public static Seq<Ban> getBanned() {
         return bans.all();
     }
 
