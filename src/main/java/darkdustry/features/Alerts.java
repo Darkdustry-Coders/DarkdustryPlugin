@@ -14,6 +14,7 @@ import mindustry.world.*;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static mindustry.Vars.*;
 
 public class Alerts {

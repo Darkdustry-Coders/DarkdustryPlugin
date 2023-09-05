@@ -3,15 +3,20 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import darkdustry.components.Cache;
+import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.listeners.SocketEvents.*;
+import discord4j.core.object.component.*;
+import discord4j.core.spec.EmbedCreateSpec.Builder;
 import mindustry.gen.*;
 import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
+import static discord4j.rest.util.Color.*;
 
 // Страшно, но очень полезно.
 // (C) xzxADIxzx, 2023 год
@@ -28,11 +33,6 @@ public class PageIterator {
         });
     }
 
-    public static void players(String[] args, Player player) {
-        client(args, player, "players", () -> Groups.player.copy(new Seq<>()), (builder, index, other) ->
-                builder.append(Bundle.format("commands.players.player", player, other.coloredName(), other.admin ? "\uE82C" : "\uE872", Cache.get(other).id, other.locale)));
-    }
-
     public static void maps(String[] args, Player player) {
         client(args, player, "maps", Utils::availableMaps, (builder, index, map) ->
                 builder.append(Bundle.format("commands.maps.map", player, index, map.name(), map.author(), map.width, map.height)));
@@ -41,6 +41,11 @@ public class PageIterator {
     public static void saves(String[] args, Player player) {
         client(args, player, "saves", Utils::availableSaves, (builder, index, save) ->
                 builder.append(Bundle.format("commands.saves.save", player, index, save.nameWithoutExtension(), Bundle.formatDateTime(player, save.lastModified()))));
+    }
+
+    public static void players(String[] args, Player player) {
+        client(args, player, "players", () -> Groups.player.copy(new Seq<>()), (builder, index, other) ->
+                builder.append(Bundle.format("commands.players.player", player, other.coloredName(), other.admin ? "\uE82C" : "\uE872", Cache.get(other).id, other.locale)));
     }
 
     private static <T> void client(String[] args, Player player, String name, Prov<Seq<T>> content, Cons3<StringBuilder, Integer, T> formatter) {
@@ -56,46 +61,45 @@ public class PageIterator {
     // endregion
     // region discord
 
-    public static void players(String[] args, MessageContext context) {
-        discord(args, context,
-                "Players Online: @",
-                "Page @ / @",
-
-                Groups.player.copy(new Seq<>()),
-
-                (other, index) -> format("**@.** @", index, other.plainName()),
-                (other) -> format("ID: @\nLocale: @", Cache.get(other).id, other.locale)
-        );
-    }
-
     public static void maps(String[] args, MessageContext context) {
-        discord(args, context,
-                "Maps in Playlist: @",
-                "Page @ / @",
-
-                availableMaps(),
-
-                (map, index) -> format("**@.** @", index, map.plainName()),
-                (map) -> format("Author: @\nSize: @x@", map.plainAuthor(), map.width, map.height)
-        );
+        discord(args, context, "maps", PageIterator::formatMapsPage);
     }
 
-    private static <T> void discord(String[] args, MessageContext context, String title, String footer, Seq<T> values, Func2<T, Integer, String> fieldName, Func<T, String> fieldValue) {
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil(values.size / (float) maxPerPage));
-        if (page > pages || page < 1) {
-            context.error("Invalid Page", "Page must be a number between 1 and @.", pages).subscribe();
-            return;
-        }
+    public static void players(String[] args, MessageContext context) {
+        discord(args, context, "players", PageIterator::formatPlayersPage);
+    }
 
-        context.info(embed -> {
-            embed.title(format(title, values.size));
-            embed.footer(format(footer, page, pages), null);
+    private static void discord(String[] args, MessageContext context, String type, Cons2<Builder, ListResponse> formatter) {
+        var server = args[0];
+        if (notFoundServer(context, server)) return;
 
-            for (int index = maxPerPage * (page - 1); index < Math.min(maxPerPage * page, values.size); index++) {
-                var value = values.get(index);
-                embed.addField(fieldName.get(value, index + 1), fieldValue.get(value), false);
-            }
-        }).subscribe();
+        Socket.request(new ListRequest(type, server, 1), response -> context
+                        .reply(embed -> formatter.get(embed, response))
+                        .withComponents(createPageButtons(type, server, response))
+                        .subscribe(), context::timeout);
+    }
+
+    public static void formatMapsPage(Builder embed, ListResponse response) {
+        formatDiscordPage(embed, "Maps in Playlist: @", "Page @ / @", response);
+    }
+
+    public static void formatPlayersPage(Builder embed, ListResponse response) {
+        formatDiscordPage(embed, "Players Online: @", "Page @ / @", response);
+    }
+
+    public static void formatDiscordPage(Builder embed, String title, String footer, ListResponse response) {
+        embed.title(format(title, response.total));
+        embed.footer(format(footer, response.page, response.pages), null);
+
+        embed.color(SUMMER_SKY);
+        embed.description(response.content);
+    }
+
+    public static ActionRow createPageButtons(String type, String server, ListResponse response) {
+        return ActionRow.of(
+                Button.primary(type + "-" + server + "-" + (response.page - 1), "<--").disabled(response.page <= 1),
+                Button.primary(type + "-" + server + "-" + (response.page + 1), "-->").disabled(response.page >= response.pages)
+        );
     }
 
     // endregion

@@ -6,7 +6,7 @@ package darkdustry;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
+import darkdustry.discord.DiscordConfig;
 import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.*;
@@ -16,7 +16,6 @@ import mindustry.mod.Plugin;
 import mindustry.net.Packets.*;
 import useful.*;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -24,22 +23,14 @@ import static mindustry.Vars.*;
 @SuppressWarnings("unused")
 public class DarkdustryPlugin extends Plugin {
 
-    public static void info(String text, Object... values) {
-        Log.infoTag("Darkdustry", format(text, values));
-    }
-
-    public static void error(String text, Object... values) {
-        Log.errTag("Darkdustry", format(text, values));
-    }
-
     @Override
     public void init() {
-        info("Loading Darkdustry plugin.");
+        Log.info("Loading Darkdustry plugin.");
         Time.mark();
 
-        Config.load();
         Console.load();
-        PluginEvents.load();
+        Config.load();
+        DiscordConfig.load();
 
         AntiVpn.load();
         Bundle.load(getClass());
@@ -60,10 +51,8 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Socket.connect();
 
-        if (config.mode.isSockServer) {
-            Bot.connect();
-            DiscordCommands.load();
-        }
+        PluginEvents.load();
+        SocketEvents.load();
 
         Version.build = -1;
 
@@ -90,7 +79,7 @@ public class DarkdustryPlugin extends Plugin {
             Database.savePlayerData(data);
         }), 60f, 60f);
 
-        info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
+        Log.info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
     }
 
     @Override

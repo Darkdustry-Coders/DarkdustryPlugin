@@ -5,8 +5,8 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -18,19 +18,21 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
+import static darkdustry.components.Socket.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
 
-    public static String chat(Player from, String text) {
-        int sign = voteChoice(text);
+    public static String chat(Player from, String message) {
+        int sign = voteChoice(message);
         if (sign == 0 || vote == null) {
-            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + text);
-            Translator.translate(from, text);
+            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + message);
+            Translator.translate(from, message);
 
-            Bot.sendMessage(from.plainName(), text);
+            Socket.send(new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(message)));
             return null;
         }
 

@@ -14,18 +14,21 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "a3a201c3b6"
+    val usefulHash = "2673d10f0f"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion")
+    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
+        exclude(group = "com.github.Anuken.Arc")
+    }
 
-    implementation("com.google.code.gson:gson:2.10.1")
+    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion") {
+        exclude(group = "com.github.Anuken.Arc")
+    }
+
+    implementation("com.github.osp54:Sock:9d465f7210")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
-    implementation("com.github.osp54:Sock:1.1.1")
-
-    implementation("com.discord4j:discord4j-core:3.2.5")
+    implementation("com.discord4j:discord4j-core:3.3.0-M2")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
 
     implementation("org.jline:jline-reader:3.21.0")
@@ -34,6 +37,7 @@ dependencies {
 
     implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:config:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")

@@ -1,14 +1,16 @@
 package darkdustry.discord;
 
 import arc.util.Log;
-import darkdustry.DarkdustryPlugin;
+import darkdustry.components.Socket;
 import darkdustry.features.Authme;
+import darkdustry.listeners.SocketEvents.*;
+import darkdustry.utils.PageIterator;
 import discord4j.common.ReactorResources;
 import discord4j.common.retry.ReconnectOptions;
 import discord4j.common.util.Snowflake;
 import discord4j.core.*;
 import discord4j.core.event.EventDispatcher;
-import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
+import discord4j.core.event.domain.interaction.*;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
@@ -24,19 +26,20 @@ import reactor.function.TupleUtils;
 import reactor.netty.http.HttpResources;
 import reactor.netty.resources.LoopResources;
 import reactor.scheduler.forkjoin.ForkJoinPoolScheduler;
-import useful.Bundle;
+
+import java.util.function.Predicate;
 
 import static arc.Core.*;
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.discord.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.Vars.*;
 
-public class Bot {
+public class DiscordBot {
 
     public static GatewayDiscordClient gateway;
 
-    public static GuildMessageChannel botChannel, banChannel, adminChannel;
+    public static GuildMessageChannel banChannel, adminChannel;
     public static Role adminRole, mapReviewerRole;
 
     public static boolean connected;
@@ -46,7 +49,7 @@ public class Bot {
             // d4j либо в rest, либо в websocket клиенте использует глобальные ресурсы, поэтому лучше их заменить
             HttpResources.set(LoopResources.create("d4j-http", 4, true));
 
-            gateway = DiscordClientBuilder.create(config.discordBotToken)
+            gateway = DiscordClientBuilder.create(discordConfig.token)
                     .setDefaultAllowedMentions(AllowedMentions.suppressAll())
                     .setReactorResources(ReactorResources.builder()
                             .timerTaskScheduler(Schedulers.newParallel("d4j-parallel", 4, true))
@@ -64,12 +67,11 @@ public class Bot {
                     .blockOptional()
                     .orElseThrow();
 
-            botChannel = gateway.getChannelById(Snowflake.of(config.discordBotChannelId)).ofType(GuildMessageChannel.class).block();
-            banChannel = gateway.getChannelById(Snowflake.of(config.discordBanChannelId)).ofType(GuildMessageChannel.class).block();
-            adminChannel = gateway.getChannelById(Snowflake.of(config.discordAdminChannelId)).ofType(GuildMessageChannel.class).block();
+            banChannel = gateway.getChannelById(Snowflake.of(discordConfig.banChannelId)).ofType(GuildMessageChannel.class).block();
+            adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelId)).ofType(GuildMessageChannel.class).block();
 
-            adminRole = gateway.getRoleById(Snowflake.of(config.discordBotGuildId), Snowflake.of(config.discordAdminRoleId)).block();
-            mapReviewerRole = gateway.getRoleById(Snowflake.of(config.discordBotGuildId), Snowflake.of(config.discordMapReviewerRoleId)).block();
+            adminRole = gateway.getRoleById(Snowflake.of(discordConfig.botGuildId), Snowflake.of(discordConfig.adminRoleId)).block();
+            mapReviewerRole = gateway.getRoleById(Snowflake.of(discordConfig.botGuildId), Snowflake.of(discordConfig.mapReviewerRoleId)).block();
 
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 var message = event.getMessage();
@@ -92,7 +94,10 @@ public class Bot {
                         });
 
                 // Prevent commands from being sent to the game
-                if (message.getContent().startsWith(config.discordBotPrefix) || !message.getChannelId().equals(botChannel.getId())) return;
+                if (message.getContent().startsWith(discordConfig.prefix)) return;
+
+                var server = discordConfig.serverToChannel.findKey(message.getChannelId().asLong(), false);
+                if (server == null) return;
 
                 var roles = event.getClient()
                         .getGuildRoles(member.getGuildId())
@@ -103,44 +108,63 @@ public class Bot {
                 roles.takeLast(1)
                         .singleOrEmpty()
                         .zipWith(roles.map(Role::getColor)
-                                .filter(color -> !color.equals(Role.DEFAULT_COLOR))
+                                .filter(Predicate.isEqual(Role.DEFAULT_COLOR).negate())
                                 .last(Role.DEFAULT_COLOR))
-                        .switchIfEmpty(Mono.fromRunnable(() -> {
-                            Log.info("[Discord] @: @", member.getDisplayName(), message.getContent());
-                            Bundle.send("discord.chat", member.getDisplayName(), message.getContent());
-                        })).subscribe(TupleUtils.consumer((role, color) -> {
-                            Log.info("[Discord] @ | @: @", role.getName(), member.getDisplayName(), message.getContent());
-                            Bundle.send("discord.chat.role", Integer.toHexString(color.getRGB()), role.getName(), member.getDisplayName(), message.getContent());
-                        }));
+                        .switchIfEmpty(Mono.fromRunnable(() ->
+                                Socket.send(new DiscordMessageEvent(server, member.getDisplayName(), message.getContent()))))
+                        .subscribe(TupleUtils.consumer((role, color) ->
+                                Socket.send(new DiscordMessageEvent(server, role.getName(), Integer.toHexString(color.getRGB()), member.getDisplayName(), message.getContent()))));
+            });
+
+            gateway.on(ButtonInteractionEvent.class).subscribe(event -> {
+                var content = event.getCustomId().split("-", 3);
+                if (content.length < 3) return;
+
+                Socket.request(new ListRequest(content[0], content[1], parseInt(content[2])), response -> {
+                    var embed = EmbedCreateSpec.builder();
+
+                    switch (content[0]) {
+                        case "maps" -> PageIterator.formatMapsPage(embed, response);
+                        case "players" -> PageIterator.formatPlayersPage(embed, response);
+
+                        default -> throw new IllegalStateException();
+                    }
+
+                    event.edit().withEmbeds(embed.build()).withComponents(PageIterator.createPageButtons(content[0], content[1], response)).subscribe();
+                });
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {
                 if (noRole(event, adminRole)) return;
 
-                switch (event.getValues().get(0)) {
-                    case "confirm" -> Authme.confirm(event);
-                    case "deny" -> Authme.deny(event);
-                    case "info" -> Authme.info(event);
+                if (event.getCustomId().equals("admin-request")) {
+                    var content = event.getValues().get(0).split("-", 3);
+                    if (content.length < 3) return;
+
+                    switch (content[0]) {
+                        case "confirm" -> Authme.confirm(event, content[1], content[2]);
+                        case "deny" -> Authme.deny(event, content[1], content[2]);
+                    }
                 }
             });
 
             gateway.getSelf()
                     .flatMap(user -> gateway.getGuilds()
-                            .flatMap(guild -> guild.changeSelfNickname("[" + config.discordBotPrefix + "] " + user.getUsername()))
+                            .flatMap(guild -> guild.changeSelfNickname("[" + discordConfig.prefix + "] " + user.getUsername()))
                             .then()
                     ).subscribe();
 
             connected = true;
 
-            DarkdustryPlugin.info("Bot connected.");
+            Log.info("Bot connected.");
         } catch (Exception e) {
-            DarkdustryPlugin.error("Failed to connect bot: @", e);
+            Log.err("Failed to connect bot", e);
         }
     }
 
     public static void updateActivity() {
         if (connected)
-            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on " + state.map.plainName());
+            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on Darkdustry");
     }
 
     public static void updateActivity(String activity) {
@@ -148,13 +172,19 @@ public class Bot {
             gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
     }
 
-    public static void sendMessage(String name, String message) {
+    public static void sendMessage(long channelId, String message) {
         if (connected)
-            botChannel.createMessage("`" + stripDiscord(name) + ": " + stripDiscord(message) + "`").subscribe();
+            gateway.getChannelById(Snowflake.of(channelId))
+                    .ofType(GuildMessageChannel.class)
+                    .flatMap(channel -> channel.createMessage(message))
+                    .subscribe();
     }
 
-    public static void sendMessage(EmbedCreateSpec embed) {
+    public static void sendMessageEmbed(long channelId, EmbedCreateSpec embed) {
         if (connected)
-            botChannel.createMessage(embed).subscribe();
+            gateway.getChannelById(Snowflake.of(channelId))
+                    .ofType(GuildMessageChannel.class)
+                    .flatMap(channel -> channel.createMessage(embed))
+                    .subscribe();
     }
 }

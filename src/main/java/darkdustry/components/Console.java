@@ -1,7 +1,7 @@
 package darkdustry.components;
 
 import arc.func.Cons;
-import darkdustry.DarkdustryPlugin;
+import arc.util.Log;
 import org.jline.reader.*;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.TerminalBuilder;
@@ -36,9 +36,9 @@ public class Console {
             System.setOut(new BlockingPrintStream(reader::printAbove));
 
             handleInput(reader);
-            DarkdustryPlugin.info("JLine console loaded.");
+            Log.info("JLine console loaded.");
         } catch (Exception e) {
-            DarkdustryPlugin.error("Failed to load JLine console: @", e);
+            Log.err("Failed to load JLine console", e);
         }
     }
 

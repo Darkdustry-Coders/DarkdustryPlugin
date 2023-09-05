@@ -2,8 +2,8 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
+import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -15,6 +15,8 @@ import java.time.Duration;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
+import static darkdustry.components.Socket.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -73,7 +75,8 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             Bundle.send("commands.say.chat", args[0]);
-            Bot.sendMessage("Server", args[0]);
+
+            Socket.send(new ServerMessageEvent(config.mode.name(), "Server", stripDiscord(args[0])));
         });
 
         serverCommands.register("kick", "<player> <duration> [reason...]", "Kick a player.", args -> {

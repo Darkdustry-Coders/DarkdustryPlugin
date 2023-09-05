@@ -1,7 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Prov;
+import arc.func.*;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
@@ -13,11 +13,10 @@ import mindustry.net.WorldReloader;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 
-import java.time.*;
+import java.time.Duration;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static discord4j.common.util.TimestampFormat.*;
 import static mindustry.Vars.*;
 
 public class Utils {
@@ -89,10 +88,6 @@ public class Utils {
         return first.toLowerCase().contains(second.toLowerCase());
     }
 
-    public static String formatTimestamp(long time) {
-        return LONG_DATE.format(Instant.ofEpochMilli(time));
-    }
-
     public static Duration parseDuration(String input) {
         var matcher = durationPattern.matcher(input);
         long seconds = 0L;
@@ -125,6 +120,17 @@ public class Utils {
     public static String formatContents(Seq<? extends UnlockableContent> contents) {
         var builder = new StringBuilder();
         contents.each(content -> builder.append(content.emoji()).append(content.name).append(" "));
+
+        return builder.toString();
+    }
+
+    public static <T> String formatList(Seq<T> values, int page, Cons3<StringBuilder, Integer, T> formatter) {
+        var builder = new StringBuilder();
+
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, values.size); i++) {
+            if (!builder.isEmpty()) builder.append("\n");
+            formatter.get(builder, i + 1, values.get(i));
+        }
 
         return builder.toString();
     }

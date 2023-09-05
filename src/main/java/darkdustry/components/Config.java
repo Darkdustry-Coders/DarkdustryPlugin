@@ -1,6 +1,7 @@
 package darkdustry.components;
 
-import darkdustry.DarkdustryPlugin;
+import arc.util.Log;
+import useful.ConfigLoader;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.Gamemode.*;
@@ -9,54 +10,12 @@ import static mindustry.net.Administration.Config.*;
 
 public class Config {
 
-    /** IP-адрес хаба. */
-    public String hubIp = "darkdustry.net";
-
-    /** Порт хаба. */
-    public int hubPort = 6567;
-
-    /** Порт сокета. */
-    public int sockPort = 8306;
-
-    /** Url для подключения к базе данных. */
-    public String mongoUrl = "url";
-
-    /** Режим игры на сервере. */
-    public Gamemode mode = survival;
-
-    /** Токен бота, привязанного к серверу. */
-    public String discordBotToken = "token";
-
-    /** Токен бота, привязанного к серверу. */
-    public String discordBotPrefix = "prefix";
-
-    /** ID сервера в Discord, к которому привязан бот. */
-    public long discordBotGuildId = 0L;
-
-    /** ID канала в Discord, куда отправляются все сообщения. */
-    public long discordBotChannelId = 0L;
-
-    /** ID канала в Discord, куда отправляются баны. */
-    public long discordBanChannelId = 0L;
-
-    /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
-    public long discordAdminChannelId = 0L;
-
-    /** ID роли администраторов в Discord. */
-    public long discordAdminRoleId = 0L;
-
-    /** ID роли картоделов в Discord. */
-    public long discordMapReviewerRoleId = 0L;
+    /** Конфигурация сервера. */
+    public static Config config;
 
     public static void load() {
-        var file = dataDirectory.child(configFileName);
-        if (file.exists()) {
-            config = gson.fromJson(file.reader(), Config.class);
-            DarkdustryPlugin.info("Config loaded. (@)", file.absolutePath());
-        } else {
-            file.writeString(gson.toJson(config = new Config()));
-            DarkdustryPlugin.info("Config generated. (@)", file.absolutePath());
-        }
+        config = ConfigLoader.load(Config.class, configFile);
+        Log.info("Config loaded. (@)", dataDirectory.child(configFile).absolutePath());
 
         allowCustomClients.set(true);
         showConnectMessages.set(false);
@@ -77,6 +36,21 @@ public class Config {
         if (config.mode.enableRtv) welcomeMessageCommands.add("rtv");
         if (config.mode.enableVnw) welcomeMessageCommands.add("vnw");
     }
+
+    /** IP-адрес хаба. */
+    public String hubIp = "darkdustry.net";
+
+    /** Порт хаба. */
+    public int hubPort = 6567;
+
+    /** Порт сокета. */
+    public int sockPort = 8306;
+
+    /** Url для подключения к базе данных. */
+    public String mongoUrl = "url";
+
+    /** Режим игры на сервере. */
+    public Gamemode mode = survival;
 
     public enum Gamemode {
         anarchy {{

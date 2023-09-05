@@ -9,6 +9,7 @@ import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;

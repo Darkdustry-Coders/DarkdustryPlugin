@@ -12,6 +12,7 @@ import useful.*;
 import java.util.Date;
 
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static mindustry.Vars.*;
 
 public class Admins {
@@ -96,7 +97,8 @@ public class Admins {
     public static void ban(Ban ban) {
         ban.generateID();
 
-        Authme.sendBan(ban);
+        // TODO
+        Authme.sendBan(config.mode.name(), ban);
         Database.addBan(ban);
     }
 

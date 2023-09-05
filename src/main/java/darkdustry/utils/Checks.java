@@ -2,14 +2,16 @@ package darkdustry.utils;
 
 import arc.files.Fi;
 import arc.util.*;
+import com.ospx.sock.EventBus.Request;
 import darkdustry.components.Database.*;
+import darkdustry.components.Socket;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.votes.VoteSession;
-import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
+import darkdustry.listeners.SocketEvents.EmbedResponse;
+import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.rest.util.Color;
 import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
@@ -22,7 +24,9 @@ import useful.*;
 import java.time.Duration;
 
 import static arc.math.Mathf.*;
+import static darkdustry.discord.DiscordConfig.*;
 import static darkdustry.utils.Utils.*;
+import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 
@@ -176,10 +180,10 @@ public class Checks {
     // endregion
     // region discord
 
-    public static boolean noRole(ComponentInteractionEvent event, Role role) {
+    public static boolean noRole(SelectMenuInteractionEvent event, Role role) {
         return check(event.getInteraction().getMember().map(member -> !member.getRoleIds().contains(role.getId())).orElse(true), () ->
                 event.reply().withEmbeds(EmbedCreateSpec.builder()
-                        .color(Color.CINNABAR)
+                        .color(CINNABAR)
                         .title("Missing Permissions")
                         .description("You must be " + role.getMention() + " to use this feature.")
                         .build()).withEphemeral(true).subscribe());
@@ -193,8 +197,19 @@ public class Checks {
         return check(context.message().getAttachments().stream().noneMatch(attachment -> attachment.getFilename().endsWith(mapExtension)), context, "Invalid Attachments", "You need to attach at least one **.@** file.", mapExtension);
     }
 
-    public static boolean notFound(MessageContext context, Map map) {
-        return check(map == null, context, "Map Not Found", "Check if the input is correct.");
+    public static boolean notFoundServer(MessageContext context, String server) {
+        return check(!discordConfig.serverToChannel.containsKey(server), context, "Server Not Found", "**Available servers:** @", Strings.join(", ", discordConfig.serverToChannel.keys()));
+    }
+
+    // endregion
+    // region response
+
+    public static boolean notFound(Request<EmbedResponse> request, Map map) {
+        return check(map == null, request, "Map Not Found", "Check if the input is correct.");
+    }
+
+    public static boolean notRemoved(Request<EmbedResponse> request, Map map) {
+        return check(!map.custom, request, "Map Not Removed", "This map is built-in and can't be removed.");
     }
 
     public static boolean notFound(MessageContext context, Player player) {
@@ -212,6 +227,8 @@ public class Checks {
     public static boolean notFound(MessageContext context, Rank rank) {
         return check(rank == null, context, "Rank Not Found", "Check if the input is correct.");
     }
+
+
 
     public static boolean invalidDuration(MessageContext context, Duration duration) {
         return check(duration.isZero(), context, "Invalid Duration", "The provided duration is invalid. (Example: 1h, 30min)");
@@ -243,6 +260,10 @@ public class Checks {
 
     private static boolean check(boolean result, MessageContext context, String title, String content, Object... values) {
         return check(result, () -> context.error(title, content, values).subscribe());
+    }
+
+    private static boolean check(boolean result, Request<EmbedResponse> request, String title, String content, Object... values) {
+        return check(result, () -> Socket.respond(request, EmbedResponse.error(title, content, values)));
     }
 
     // endregion

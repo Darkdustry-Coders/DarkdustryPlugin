@@ -1,9 +1,8 @@
 package darkdustry.components;
 
 import arc.struct.Seq;
-import arc.util.Time;
+import arc.util.*;
 import com.mongodb.client.*;
-import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import lombok.*;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 import static arc.util.Strings.*;
 import static com.mongodb.client.model.Filters.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Utils.*;
 
 public class Database {
@@ -39,9 +38,9 @@ public class Database {
             bans.descendingIndex("id");
             bans.descendingIndex("unbanDate", 0L);
 
-            DarkdustryPlugin.info("Database connected.");
+            Log.info("Database connected.");
         } catch (Exception e) {
-            DarkdustryPlugin.error("Failed to connect to the database: @", e);
+            Log.err("Failed to connect to the database", e);
         }
     }
 

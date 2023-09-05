@@ -3,13 +3,11 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.components.Config.Gamemode;
-import darkdustry.discord.Bot;
+import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
-import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.rest.util.Color;
+import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
@@ -18,16 +16,16 @@ import useful.Bundle;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
+import static darkdustry.components.Socket.*;
+import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> Bot.sendMessage(EmbedCreateSpec.builder()
-                .color(Color.SUMMER_SKY)
-                .title("Server launched")
-                .build()));
+        Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
             state.rules.showSpawns = true;
@@ -59,7 +57,7 @@ public class PluginEvents {
 
         Events.on(WorldLoadEvent.class, event -> {
             History.reset();
-            app.post(Bot::updateActivity);
+            app.post(DiscordBot::updateActivity);
         });
 
         Events.on(DepositEvent.class, Alerts::depositAlert);
@@ -130,19 +128,19 @@ public class PluginEvents {
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.join", event.player.coloredName(), data.id);
 
-            Bot.sendMessage(EmbedCreateSpec.builder()
-                    .color(Color.MEDIUM_SEA_GREEN)
-                    .title(event.player.plainName() + " [" + data.id + "] joined")
-                    .build());
-
-            Bundle.send(event.player, event.player.con.mobile ? "welcome.message.mobile" : "welcome.message", serverName.string(), discordServerUrl);
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] joined", MEDIUM_SEA_GREEN));
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
             else if (data.discordLink)
                 Call.openURI(event.player.con, discordServerUrl);
 
-            app.post(Bot::updateActivity);
+            // На мобильных устройствах приветственное сообщение отображается по-другому
+            Bundle.send(event.player, event.player.con.mobile ?
+                            "welcome.message.mobile" :
+                            "welcome.message", serverName.string(), discordServerUrl);
+
+            app.post(DiscordBot::updateActivity);
         });
 
         Events.on(PlayerLeave.class, event -> {
@@ -154,15 +152,12 @@ public class PluginEvents {
             Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.leave", event.player.coloredName(), data.id);
 
-            Bot.sendMessage(EmbedCreateSpec.builder()
-                    .color(Color.CINNABAR)
-                    .title(event.player.plainName() + " [" + data.id + "] left")
-                    .build());
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", CINNABAR));
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
 
-            app.post(Bot::updateActivity);
+            app.post(DiscordBot::updateActivity);
         });
 
         Timer.schedule(() -> Groups.player.each(player -> {
