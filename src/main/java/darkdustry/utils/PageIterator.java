@@ -14,7 +14,6 @@ import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static discord4j.rest.util.Color.*;
 
@@ -71,7 +70,7 @@ public class PageIterator {
 
     private static void discord(String[] args, MessageContext context, String type, Cons2<Builder, ListResponse> formatter) {
         var server = args[0];
-        if (notFoundServer(context, server)) return;
+        if (Checks.notFound(context, server)) return;
 
         Socket.request(new ListRequest(type, server, 1), response -> context
                         .reply(embed -> formatter.get(embed, response))

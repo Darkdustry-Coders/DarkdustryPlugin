@@ -19,7 +19,6 @@ import useful.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.*;
-import static darkdustry.components.Socket.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -47,7 +46,7 @@ public class NetHandlers {
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.text)
-                        .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
+                        .retainAll(command -> Strings.levenshtein(command, response.runCommand) < 3)
                         .min(command -> Strings.levenshtein(command, response.runCommand));
 
                 yield closest == null ? Bundle.format("commands.unknown", player) : Bundle.format("commands.unknown.closest", player, closest);
@@ -58,7 +57,7 @@ public class NetHandlers {
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
 
-        var connections = Seq.with(net.getConnections()).filter(other -> other.address.equals(con.address));
+        var connections = Seq.with(net.getConnections()).retainAll(other -> other.address.equals(con.address));
         if (connections.size >= maxIdenticalIPs) {
             netServer.admins.blacklistDos(con.address);
             connections.each(NetConnection::close);

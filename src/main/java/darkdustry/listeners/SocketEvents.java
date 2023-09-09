@@ -9,18 +9,19 @@ import darkdustry.commands.DiscordCommands;
 import darkdustry.components.*;
 import darkdustry.components.Database.*;
 import darkdustry.discord.DiscordBot;
-import darkdustry.features.Authme;
-import darkdustry.utils.Find;
-import discord4j.core.spec.EmbedCreateFields.Footer;
+import darkdustry.features.*;
+import darkdustry.features.Ranks.Rank;
+import darkdustry.utils.*;
+import discord4j.core.spec.EmbedCreateFields.*;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
+import lombok.*;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import static arc.Core.*;
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.*;
 import static darkdustry.discord.DiscordConfig.*;
@@ -50,7 +51,7 @@ public class SocketEvents {
                 DiscordBot.sendMessageEmbed(channel, EmbedCreateSpec.builder().title(event.title).color(event.color).build());
             });
 
-            Socket.on(BanSendEvent.class, event -> Authme.sendBan(event.server, event.ban));
+            Socket.on(BanSyncEvent.class, event -> Authme.sendBan(event.server, event.ban));
             Socket.on(AdminRequestEvent.class, event -> Authme.sendAdminRequest(event.server, event.data));
         }
 
@@ -66,6 +67,13 @@ public class SocketEvents {
             }
         });
 
+        Socket.on(BanSyncEvent.class, event -> Groups.player.each(
+                player -> player.uuid().equals(event.ban.uuid) || player.ip().equals(event.ban.ip),
+                player -> {
+                    Admins.kickReason(player, event.ban.remaining(), event.ban.reason, "kick.banned-by-admin", event.ban.admin).kick();
+                    Bundle.send("events.admin.ban", event.ban.admin, player.coloredName(), event.ban.reason);
+                }));
+
         Socket.on(AdminRequestConfirmEvent.class, event -> {
             if (event.server.equals(config.mode.name()))
                 Authme.confirm(event.uuid);
@@ -74,6 +82,16 @@ public class SocketEvents {
         Socket.on(AdminRequestDenyEvent.class, event -> {
             if (event.server.equals(config.mode.name()))
                 Authme.deny(event.uuid);
+        });
+
+        Socket.on(SetRankSyncEvent.class, event -> {
+            var player = Find.playerByUUID(event.uuid);
+            if (player == null) return;
+
+            var data = Cache.get(player);
+            data.rank = event.rank;
+
+            Ranks.name(player, data);
         });
 
         Socket.on(ListRequest.class, request -> {
@@ -104,15 +122,18 @@ public class SocketEvents {
 
         Socket.on(StatusRequest.class, request -> {
             if (request.server.equals(config.mode.name()))
-                Socket.respond(request, new StatusResponse(
-                        state.isPlaying(),
-                        state.map.plainName(),
-                        Groups.player.size(),
-                        Groups.unit.size(),
-                        state.wave,
-                        graphics.getFramesPerSecond(),
-                        app.getJavaHeap()
-                ));
+                Socket.respond(request, state.isPlaying() ?
+                        EmbedResponse.success("Server Running")
+                                .withField("Players:", String.valueOf(Groups.player.size()))
+                                .withField("Units:", String.valueOf(Groups.unit.size()))
+                                .withField("Map:", state.map.plainName())
+                                .withField("Wave:", String.valueOf(state.wave))
+                                .withField("TPS:", String.valueOf(graphics.getFramesPerSecond()))
+                                .withField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB") :
+                        EmbedResponse.error("Server Offline")
+                                .withField("TPS:", String.valueOf(graphics.getFramesPerSecond()))
+                                .withField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB")
+                );
         });
 
         Socket.on(ExitRequest.class, request -> {
@@ -127,23 +148,25 @@ public class SocketEvents {
         Socket.on(ArtvRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
-            var map = request.mapName == null ? maps.getNextMap(state.rules.mode(), state.map) : Find.map(request.mapName);
+            var map = request.map == null ? maps.getNextMap(state.rules.mode(), state.map) : Find.map(request.map);
             if (notFound(request, map)) return;
 
-            Bundle.send("commands.artv.info", request.adminName);
+            Bundle.send("commands.artv.info", request.admin);
             reloadWorld(() -> world.loadMap(map));
 
-            Socket.respond(request, EmbedResponse.success("Map Changed", "**Name:** @", map.plainName()));
+            Socket.respond(request, EmbedResponse.success("Map Changed").withField("Name:", map.plainName()));
         });
 
         Socket.on(MapRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
-            var map = Find.map(request.mapName);
+            var map = Find.map(request.map);
             if (notFound(request, map)) return;
 
-            Socket.respond(request, EmbedResponse.success(map.plainName(), "**Author:** @\n**Description:** @", map.plainAuthor(), map.plainDescription())
-                    .withFooter(map.width + "x" + map.height)
+            Socket.respond(request, EmbedResponse.success(map.plainName())
+                    .withField("Author:", map.plainAuthor())
+                    .withField("Description:", map.plainDescription())
+                    .withFooter("@x@", map.width, map.height)
                     .withFile(map.file));
         });
 
@@ -157,23 +180,81 @@ public class SocketEvents {
                 var map = MapIO.createMap(file, true);
                 maps.reload();
 
-                Socket.respond(request, EmbedResponse.success("Map Uploaded", "**Name:** @\n**File:** @", map.plainName(), file.name()));
+                Socket.respond(request, EmbedResponse.success("Map Uploaded")
+                        .withField("Name:", map.name())
+                        .withField("File:", file.name()));
             } catch (Exception error) {
                 file.delete();
-                Socket.respond(request, EmbedResponse.error("Invalid Map", "**@** is not a valid map.", file.name()));
+                Socket.respond(request, EmbedResponse.error("Invalid Map").withContent("**@** is not a valid map.", file.name()));
             }
         });
 
         Socket.on(RemoveMapRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
-            var map = Find.map(request.mapName);
+            var map = Find.map(request.map);
             if (notFound(request, map) || notRemoved(request, map)) return;
 
             maps.removeMap(map);
             maps.reload();
 
-            Socket.respond(request, EmbedResponse.success("Map Removed", "**Name:** @\n**File:** @", map.name(), map.file.name()));
+            Socket.respond(request, EmbedResponse.success("Map Removed")
+                    .withField("Name:", map.name())
+                    .withField("File:", map.file.name()));
+        });
+
+        Socket.on(KickRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var target = Find.player(request.player);
+            if (notFound(request, target)) return;
+
+            var duration = parseDuration(request.duration);
+            if (invalidDuration(request, duration)) return;
+
+            Admins.kick(target, request.admin, duration.toMillis(), request.reason);
+            Socket.respond(request, EmbedResponse.success("Player Kicked")
+                    .withField("Name:", target.plainName())
+                    .withField("Duration:", Bundle.formatDuration(duration))
+                    .withField("Reason:", request.reason));
+        });
+
+        Socket.on(PardonRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info) || notKicked(request, info)) return;
+
+            info.lastKicked = 0L;
+            netServer.admins.kickedIPs.remove(info.lastIP);
+            netServer.admins.dosBlacklist.remove(info.lastIP);
+
+            Socket.respond(request, EmbedResponse.success("Player Pardoned").withField("Name:", info.plainLastName()));
+        });
+
+        Socket.on(BanRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info)) return;
+
+            var duration = parseDuration(request.duration);
+            if (invalidDuration(request, duration)) return;
+
+            Admins.ban(info, request.admin, duration.toMillis(), request.reason);
+            Socket.respond(request, EmbedResponse.success("Player Banned")
+                    .withField("Name:", info.plainLastName())
+                    .withField("Duration:", Bundle.formatDuration(duration))
+                    .withField("Reason:", request.reason));
+        });
+
+        Socket.on(UnbanRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var ban = Database.removeBan(request.player);
+            if (notBanned(request, ban)) return;
+
+            Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Name:", ban.player));
         });
     }
 
@@ -189,7 +270,7 @@ public class SocketEvents {
     public record ServerMessageEmbedEvent(String server, String title, Color color) {
     }
 
-    public record BanSendEvent(String server, Ban ban) {
+    public record BanSyncEvent(String server, Ban ban) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {
@@ -201,130 +282,105 @@ public class SocketEvents {
     public record AdminRequestDenyEvent(String server, String uuid) {
     }
 
+    public record SetRankSyncEvent(String uuid, Rank rank) {
+    }
+
+    @AllArgsConstructor
     public static class ListRequest extends Request<ListResponse> {
         public final String type, server;
         public final int page;
-
-        public ListRequest(String type, String server, int page) {
-            this.server = server;
-            this.type = type;
-            this.page = page;
-        }
     }
 
+    @AllArgsConstructor
     public static class ListResponse extends Response {
         public final String content;
         public final int page, pages, total;
-
-        public ListResponse(String content, int page, int pages, int total) {
-            this.content = content;
-            this.page = page;
-            this.pages = pages;
-            this.total = total;
-        }
     }
 
-    public static class StatusRequest extends Request<StatusResponse> {
+    @AllArgsConstructor
+    public static class StatusRequest extends Request<EmbedResponse> {
         public final String server;
-
-        public StatusRequest(String server) {
-            this.server = server;
-        }
     }
 
-    public static class StatusResponse extends Response {
-        public final boolean playing;
-        public final String mapName;
-        public final int players, units, wave, tps;
-        public final long javaHeap;
-
-        public StatusResponse(boolean playing, String mapName, int players, int units, int wave, int tps, long javaHeap) {
-            this.playing = playing;
-            this.mapName = mapName;
-            this.players = players;
-            this.units = units;
-            this.wave = wave;
-            this.tps = tps;
-            this.javaHeap = javaHeap;
-        }
-    }
-
+    @AllArgsConstructor
     public static class ExitRequest extends Request<ExitResponse> {
         public final String server;
-
-        public ExitRequest(String server) {
-            this.server = server;
-        }
     }
 
     public static class ExitResponse extends Response {
     }
 
+    @AllArgsConstructor
     public static class ArtvRequest extends Request<EmbedResponse> {
-        public final String server, mapName, adminName;
-
-        public ArtvRequest(String server, String mapName, String adminName) {
-            this.server = server;
-            this.mapName = mapName;
-            this.adminName = adminName;
-        }
+        public final String server, map, admin;
     }
 
+    @AllArgsConstructor
     public static class MapRequest extends Request<EmbedResponse> {
-        public final String server, mapName;
-
-        public MapRequest(String server, String mapName) {
-            this.server = server;
-            this.mapName = mapName;
-        }
+        public final String server, map;
     }
 
+    @AllArgsConstructor
     public static class UploadMapRequest extends Request<EmbedResponse> {
         public final String server;
         public final Fi file;
-
-        public UploadMapRequest(String server, Fi file) {
-            this.server = server;
-            this.file = file;
-        }
     }
 
+    @AllArgsConstructor
     public static class RemoveMapRequest extends Request<EmbedResponse> {
-        public final String server, mapName;
-
-        public RemoveMapRequest(String server, String mapName) {
-            this.server = server;
-            this.mapName = mapName;
-        }
+        public final String server, map;
     }
 
+    @AllArgsConstructor
+    public static class KickRequest extends Request<EmbedResponse> {
+        public final String server, player, duration, reason, admin;
+    }
+
+    @AllArgsConstructor
+    public static class PardonRequest extends Request<EmbedResponse> {
+        public final String server, player;
+    }
+
+    @AllArgsConstructor
+    public static class BanRequest extends Request<EmbedResponse> {
+        public final String server, player, duration, reason, admin;
+    }
+
+    @AllArgsConstructor
+    public static class UnbanRequest extends Request<EmbedResponse> {
+        public final String server, player;
+    }
+
+    @RequiredArgsConstructor
     public static class EmbedResponse extends Response {
         public final Color color;
         public final String title;
-        public final String content;
-        public @Nullable Footer footer;
+        public final Seq<Field> fields = new Seq<>();
+
+        public @Nullable String content;
+        public @Nullable String footer;
         public @Nullable Fi file;
 
-        public EmbedResponse(Color color, String title, String content) {
-            this.color = color;
-            this.title = title;
-            this.content = content;
+        public static EmbedResponse success(String title) {
+            return new EmbedResponse(MEDIUM_SEA_GREEN, title);
         }
 
-        public static EmbedResponse success(String title, String content, Object... args) {
-            return new EmbedResponse(MEDIUM_SEA_GREEN, title, format(content, args));
+        public static EmbedResponse error(String title) {
+            return new EmbedResponse(CINNABAR, title);
         }
 
-        public static EmbedResponse info(String title, String content, Object... args) {
-            return new EmbedResponse(SUMMER_SKY, title, format(content, args));
+        public EmbedResponse withField(String name, String value) {
+            this.fields.add(Field.of(name, value, false));
+            return this;
         }
 
-        public static EmbedResponse error(String title, String content, Object... args) {
-            return new EmbedResponse(CINNABAR, title, format(content, args));
+        public EmbedResponse withContent(String content, Object... args) {
+            this.content = Strings.format(content, args);
+            return this;
         }
 
-        public EmbedResponse withFooter(String footer) {
-            this.footer = Footer.of(footer, null);
+        public EmbedResponse withFooter(String footer, Object... args) {
+            this.footer = Strings.format(footer, args);;
             return this;
         }
 

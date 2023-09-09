@@ -67,14 +67,19 @@ public record MessageContext(Message message, Member member, MessageChannel chan
         var mono = reply(embed -> {
             embed.color(response.color);
             embed.title(response.title);
-            embed.description(response.content);
-            embed.footer(response.footer);
+            embed.fields(response.fields);
+
+            if (response.content != null)
+                embed.description(response.content);
+
+            if (response.footer != null)
+                embed.footer(response.footer, null);
         });
 
-        if (response.file == null)
-            mono.subscribe();
-        else
-            mono.withFiles(File.of(response.file.name(), response.file.read())).subscribe();
+        if (response.file != null)
+            mono = mono.withFiles(File.of(response.file.name(), response.file.read()));
+
+        mono.subscribe();
     }
 
     // endregion

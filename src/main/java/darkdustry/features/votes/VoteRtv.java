@@ -5,9 +5,9 @@ import mindustry.gen.Player;
 import mindustry.maps.Map;
 import useful.Bundle;
 
-import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.net.Administration.Config.*;
 
 public class VoteRtv extends VoteSession {
 
@@ -32,9 +32,9 @@ public class VoteRtv extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.rtv.success", map.name(), mapLoadDelay);
+        Bundle.send("commands.rtv.success", map.name(), roundExtraTime.num());
 
-        Timer.schedule(() -> reloadWorld(() -> world.loadMap(map)), mapLoadDelay);
+        Timer.schedule(() -> reloadWorld(() -> world.loadMap(map)), roundExtraTime.num());
     }
 
     @Override

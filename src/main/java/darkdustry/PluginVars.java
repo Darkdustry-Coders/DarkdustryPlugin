@@ -24,9 +24,6 @@ public class PluginVars {
     /** Стандартная длительность кика игрока. В миллисекундах. */
     public static final int kickDuration = 30 * 60 * 1000;
 
-    /** Время, после которого будет загружена карта. В секундах. */
-    public static final int mapLoadDelay = 10;
-
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 

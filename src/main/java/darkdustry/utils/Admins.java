@@ -1,9 +1,9 @@
 package darkdustry.utils;
 
 import arc.util.*;
-import darkdustry.components.Database;
+import darkdustry.components.*;
 import darkdustry.components.Database.Ban;
-import darkdustry.features.Authme;
+import darkdustry.listeners.SocketEvents.BanSyncEvent;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
@@ -45,9 +45,9 @@ public class Admins {
 
     public static void kick(Player target, Player admin, long duration, String reason) {
         kickReason(target, duration, reason, "kick.kicked-by-admin", admin.coloredName()).kick(duration);
+        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
 
         Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has kicked @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
-        Bundle.send("events.admin.kick", admin.coloredName(), target.coloredName(), reason);
     }
 
     public static void ban(Player target, Player admin, long duration, String reason) {
@@ -60,10 +60,7 @@ public class Admins {
                 .unbanDate(new Date(Time.millis() + duration))
                 .build());
 
-        kickReason(target, duration, reason, "kick.banned-by-admin", admin.coloredName()).kick();
-
         Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has banned @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
-        Bundle.send("events.admin.ban", admin.coloredName(), target.coloredName(), reason);
     }
 
     // endregion
@@ -83,12 +80,6 @@ public class Admins {
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
                 .build());
-
-        var target = Find.playerByUUID(info.id);
-        if (target == null) return;
-
-        kickReason(target, duration, reason, "kick.banned-by-admin", admin).kick();
-        Bundle.send("events.admin.ban", admin, target.coloredName(), reason);
     }
 
     // endregion
@@ -96,10 +87,10 @@ public class Admins {
 
     public static void ban(Ban ban) {
         ban.generateID();
-
-        // TODO
-        Authme.sendBan(config.mode.name(), ban);
         Database.addBan(ban);
+
+        // Отправляем бан по сокету, чтобы его увидели другие сервера
+        Socket.send(new BanSyncEvent(config.mode.name(), ban));
     }
 
     public static void checkKicked(NetConnection con, String locale) {

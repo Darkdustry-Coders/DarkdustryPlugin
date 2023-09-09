@@ -181,43 +181,29 @@ public class Checks {
     // region discord
 
     public static boolean noRole(SelectMenuInteractionEvent event, Role role) {
-        return check(event.getInteraction().getMember().map(member -> !member.getRoleIds().contains(role.getId())).orElse(true), () ->
-                event.reply().withEmbeds(EmbedCreateSpec.builder()
-                        .color(CINNABAR)
-                        .title("Missing Permissions")
-                        .description("You must be " + role.getMention() + " to use this feature.")
-                        .build()).withEphemeral(true).subscribe());
+        return check(event.getInteraction()
+                        .getMember()
+                        .map(member -> !member.getRoleIds().contains(role.getId()))
+                        .orElse(true),
+                () -> event.reply()
+                        .withEmbeds(EmbedCreateSpec.builder()
+                                .color(CINNABAR)
+                                .title("Missing Permissions")
+                                .description("You must be " + role.getMention() + " to use this feature.")
+                                .build()).withEphemeral(true).subscribe());
     }
 
     public static boolean noRole(MessageContext context, Role role) {
-        return check(!context.member().getRoleIds().contains(role.getId()), context, "Missing Permissions", "You must be @ to use this command.", role.getMention());
+        return check(!context.member()
+                .getRoleIds()
+                .contains(role.getId()), context, "Missing Permissions", "You must be @ to use this command.", role.getMention());
     }
 
     public static boolean notMap(MessageContext context) {
-        return check(context.message().getAttachments().stream().noneMatch(attachment -> attachment.getFilename().endsWith(mapExtension)), context, "Invalid Attachments", "You need to attach at least one **.@** file.", mapExtension);
-    }
-
-    public static boolean notFoundServer(MessageContext context, String server) {
-        return check(!discordConfig.serverToChannel.containsKey(server), context, "Server Not Found", "**Available servers:** @", Strings.join(", ", discordConfig.serverToChannel.keys()));
-    }
-
-    // endregion
-    // region response
-
-    public static boolean notFound(Request<EmbedResponse> request, Map map) {
-        return check(map == null, request, "Map Not Found", "Check if the input is correct.");
-    }
-
-    public static boolean notRemoved(Request<EmbedResponse> request, Map map) {
-        return check(!map.custom, request, "Map Not Removed", "This map is built-in and can't be removed.");
-    }
-
-    public static boolean notFound(MessageContext context, Player player) {
-        return check(player == null, context, "Player Not Found", "Check if the input is correct.");
-    }
-
-    public static boolean notFound(MessageContext context, PlayerInfo info) {
-        return check(info == null, context, "Player Info Not Found", "Check if the input is correct.");
+        return check(context.message()
+                .getAttachments()
+                .stream()
+                .noneMatch(attachment -> attachment.getFilename().endsWith(mapExtension)), context, "Invalid Attachments", "You need to attach at least one **.@** file.", mapExtension);
     }
 
     public static boolean notFound(MessageContext context, PlayerData data) {
@@ -228,18 +214,39 @@ public class Checks {
         return check(rank == null, context, "Rank Not Found", "Check if the input is correct.");
     }
 
-
-
-    public static boolean invalidDuration(MessageContext context, Duration duration) {
-        return check(duration.isZero(), context, "Invalid Duration", "The provided duration is invalid. (Example: 1h, 30min)");
+    public static boolean notFound(MessageContext context, String server) {
+        return check(!discordConfig.serverToChannel.containsKey(server), context, "Server Not Found", "**Available servers:** @", Strings.join(", ", discordConfig.serverToChannel.keys()));
     }
 
-    public static boolean notBanned(MessageContext context, Ban ban) {
-        return check(ban == null, context, "Unban Failed", "No banned player found for provided input.");
+    // endregion
+    // region response
+
+    public static boolean notFound(Request<EmbedResponse> request, Player player) {
+        return check(player == null, request, "Player Not Found", "Check if the input is correct.");
     }
 
-    public static boolean notKicked(MessageContext context, PlayerInfo info) {
-        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), context, "Pardon Failed", "This player wasn't kicked from this server.");
+    public static boolean notFound(Request<EmbedResponse> request, PlayerInfo info) {
+        return check(info == null, request, "Player Info Not Found", "Check if the input is correct.");
+    }
+
+    public static boolean notFound(Request<EmbedResponse> request, Map map) {
+        return check(map == null, request, "Map Not Found", "Check if the input is correct.");
+    }
+
+    public static boolean invalidDuration(Request<EmbedResponse> request, Duration duration) {
+        return check(duration.isZero(), request, "Invalid Duration", "The provided duration is invalid. (Example: 1h, 30min)");
+    }
+
+    public static boolean notRemoved(Request<EmbedResponse> request, Map map) {
+        return check(!map.custom, request, "Map Not Removed", "This map is built-in and can't be removed.");
+    }
+
+    public static boolean notKicked(Request<EmbedResponse> request, PlayerInfo info) {
+        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), request, "Pardon Failed", "This player wasn't kicked from this server.");
+    }
+
+    public static boolean notBanned(Request<EmbedResponse> request, Ban ban) {
+        return check(ban == null, request, "Unban Failed", "No banned player found for provided input.");
     }
 
     // endregion
@@ -263,7 +270,7 @@ public class Checks {
     }
 
     private static boolean check(boolean result, Request<EmbedResponse> request, String title, String content, Object... values) {
-        return check(result, () -> Socket.respond(request, EmbedResponse.error(title, content, values)));
+        return check(result, () -> Socket.respond(request, EmbedResponse.error(title).withContent(content, values)));
     }
 
     // endregion

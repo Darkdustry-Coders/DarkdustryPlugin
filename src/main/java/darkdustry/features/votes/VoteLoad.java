@@ -8,6 +8,7 @@ import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
+import static mindustry.net.Administration.Config.*;
 
 public class VoteLoad extends VoteSession {
 
@@ -32,9 +33,9 @@ public class VoteLoad extends VoteSession {
     @Override
     public void success() {
         stop();
-        Bundle.send("commands.voteload.success", file.nameWithoutExtension(), mapLoadDelay);
+        Bundle.send("commands.voteload.success", file.nameWithoutExtension(), roundExtraTime.num());
 
-        Timer.schedule(() -> reloadWorld(() -> SaveIO.load(file)), mapLoadDelay);
+        Timer.schedule(() -> reloadWorld(() -> SaveIO.load(file)), roundExtraTime.num());
     }
 
     @Override
