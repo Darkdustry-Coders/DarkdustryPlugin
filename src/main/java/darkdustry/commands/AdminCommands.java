@@ -11,8 +11,8 @@ import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 import static useful.Bundle.*;
 
 public class AdminCommands {
@@ -27,7 +27,7 @@ public class AdminCommands {
 
                 MenuHandler.showConfirmMenu(player, "commands.artv.confirm", () -> {
                     Bundle.send("commands.artv.info", player.coloredName(), map.name());
-                    reloadWorld(() -> world.loadMap(map));
+                    instance.play(false, () -> world.loadMap(map));
                 }, map.name());
             });
         }

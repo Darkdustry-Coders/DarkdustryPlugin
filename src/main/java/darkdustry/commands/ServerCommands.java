@@ -16,10 +16,10 @@ import java.time.Duration;
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.*;
-import static darkdustry.components.Socket.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 
 public class ServerCommands {
 
@@ -65,7 +65,7 @@ public class ServerCommands {
 
             app.post(() -> {
                 Log.info("Loading map...");
-                reloadWorld(() -> world.loadMap(map));
+                instance.play(false, () -> world.loadMap(map));
                 Log.info("Map loaded.");
 
                 netServer.openServer();

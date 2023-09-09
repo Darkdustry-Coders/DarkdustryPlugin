@@ -12,7 +12,7 @@ import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.*;
-import discord4j.core.spec.EmbedCreateFields.*;
+import discord4j.core.spec.EmbedCreateFields.Field;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.*;
@@ -29,6 +29,7 @@ import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 
 public class SocketEvents {
 
@@ -142,7 +143,7 @@ public class SocketEvents {
             netServer.kickAll(KickReason.serverRestarting);
             app.exit();
 
-            Socket.respond(request, new ExitResponse());
+            Socket.respond(request, EmbedResponse.success("Server Exited"));
         });
 
         Socket.on(ArtvRequest.class, request -> {
@@ -152,7 +153,7 @@ public class SocketEvents {
             if (notFound(request, map)) return;
 
             Bundle.send("commands.artv.info", request.admin);
-            reloadWorld(() -> world.loadMap(map));
+            instance.play(false, () -> world.loadMap(map));
 
             Socket.respond(request, EmbedResponse.success("Map Changed").withField("Name:", map.plainName()));
         });
@@ -303,11 +304,8 @@ public class SocketEvents {
     }
 
     @AllArgsConstructor
-    public static class ExitRequest extends Request<ExitResponse> {
+    public static class ExitRequest extends Request<EmbedResponse> {
         public final String server;
-    }
-
-    public static class ExitResponse extends Response {
     }
 
     @AllArgsConstructor
@@ -380,7 +378,8 @@ public class SocketEvents {
         }
 
         public EmbedResponse withFooter(String footer, Object... args) {
-            this.footer = Strings.format(footer, args);;
+            this.footer = Strings.format(footer, args);
+            ;
             return this;
         }
 

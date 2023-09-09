@@ -8,8 +8,7 @@ import arc.util.*;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import mindustry.maps.*;
-import mindustry.net.WorldReloader;
+import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 
@@ -51,7 +50,7 @@ public class Utils {
     }
 
     public static Seq<Fi> availableSaves() {
-        return saveDirectory.seq().filter(fi -> fi.extEquals(saveExtension));
+        return Seq.select(saveDirectory.list(), fi -> fi.extEquals(saveExtension));
     }
 
     public static boolean available(UnitType type) {
@@ -143,24 +142,6 @@ public class Utils {
             case 3 -> "\uE805";
             default -> "⚠";
         };
-    }
-
-    // endregion
-    // region world
-
-    public static void reloadWorld(Runnable runnable) {
-        try {
-            var reloader = new WorldReloader();
-            reloader.begin();
-
-            runnable.run();
-            state.rules = state.map.applyRules(state.rules.mode());
-
-            logic.play();
-            reloader.end();
-        } catch (MapException e) {
-            Log.err("@: @", e.map.name(), e.getMessage());
-        }
     }
 
     // endregion

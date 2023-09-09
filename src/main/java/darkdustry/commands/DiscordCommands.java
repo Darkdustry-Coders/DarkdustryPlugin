@@ -22,7 +22,8 @@ public class DiscordCommands {
 
         discordCommands.<MessageContext>register("help", "List of all commands.", (args, context) -> {
             var builder = new StringBuilder();
-            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " " + command.paramText : "").append(" - ").append(command.description).append("\n"));
+            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(command.paramText.isEmpty() ? "" : " " + command.paramText).append(" - ").append(command.description).append("\n"));
+
             context.info("All available commands:", builder.toString()).subscribe();
         });
 
@@ -42,7 +43,7 @@ public class DiscordCommands {
             var server = args[0];
             if (notFound(context, server)) return;
 
-            Socket.request(new ExitRequest(server), response -> context.success(embed -> embed.title("Server Exited")).subscribe(), context::timeout);
+            Socket.request(new ExitRequest(server), context::reply, context::timeout);
         });
 
         discordCommands.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {

@@ -17,7 +17,6 @@ import useful.Bundle;
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.components.Config.*;
-import static darkdustry.components.Socket.*;
 import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
@@ -137,8 +136,8 @@ public class PluginEvents {
 
             // На мобильных устройствах приветственное сообщение отображается по-другому
             Bundle.send(event.player, event.player.con.mobile ?
-                            "welcome.message.mobile" :
-                            "welcome.message", serverName.string(), discordServerUrl);
+                    "welcome.message.mobile" :
+                    "welcome.message", serverName.string(), discordServerUrl);
 
             app.post(DiscordBot::updateActivity);
         });
