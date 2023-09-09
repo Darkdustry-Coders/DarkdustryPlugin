@@ -31,7 +31,7 @@ public class DiscordCommands {
 
         discordCommands.<MessageContext>register("status", "<server>", "Display server status.", (args, context) -> {
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new StatusRequest(server), context::reply, context::timeout);
         });
@@ -40,7 +40,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new ExitRequest(server), response -> context.success(embed -> embed.title("Server Exited")).subscribe(), context::timeout);
         });
@@ -49,14 +49,14 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new ArtvRequest(server, args.length > 1 ? args[1] : null, context.member().getDisplayName()), context::reply, context::timeout);
         });
 
         discordCommands.<MessageContext>register("map", "<server> <map...>", "Map", (args, context) -> {
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new MapRequest(server, args[1]), context::reply, context::timeout);
         });
@@ -65,7 +65,7 @@ public class DiscordCommands {
             if (noRole(context, mapReviewerRole) || notMap(context)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             context.message()
                     .getAttachments()
@@ -83,7 +83,7 @@ public class DiscordCommands {
             if (noRole(context, mapReviewerRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new RemoveMapRequest(server, args[1]), context::reply, context::timeout);
         });
@@ -92,7 +92,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new KickRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
@@ -101,7 +101,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new PardonRequest(server, args[1]), context::reply, context::timeout);
         });
@@ -110,7 +110,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new BanRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
@@ -119,7 +119,7 @@ public class DiscordCommands {
             if (noRole(context, adminRole)) return;
 
             var server = args[0];
-            if (Checks.notFound(context, server)) return;
+            if (notFound(context, server)) return;
 
             Socket.request(new UnbanRequest(server, args[1]), context::reply, context::timeout);
         });
