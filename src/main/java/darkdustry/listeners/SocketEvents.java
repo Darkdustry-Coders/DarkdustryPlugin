@@ -147,7 +147,7 @@ public class SocketEvents {
         });
 
         Socket.on(ArtvRequest.class, request -> {
-            if (!request.server.equals(config.mode.name())) return;
+            if (!request.server.equals(config.mode.name()) || noRtv(request)) return;
 
             var map = request.map == null ? maps.getNextMap(state.rules.mode(), state.map) : Find.map(request.map);
             if (notFound(request, map)) return;
@@ -155,7 +155,7 @@ public class SocketEvents {
             Bundle.send("commands.artv.info", request.admin);
             instance.play(false, () -> world.loadMap(map));
 
-            Socket.respond(request, EmbedResponse.success("Map Changed").withField("Name:", map.plainName()));
+            Socket.respond(request, EmbedResponse.success("Map Changed").withField("Map:", map.plainName()));
         });
 
         Socket.on(MapRequest.class, request -> {
@@ -182,7 +182,7 @@ public class SocketEvents {
                 maps.reload();
 
                 Socket.respond(request, EmbedResponse.success("Map Uploaded")
-                        .withField("Name:", map.name())
+                        .withField("Map:", map.name())
                         .withField("File:", file.name()));
             } catch (Exception error) {
                 file.delete();
@@ -200,7 +200,7 @@ public class SocketEvents {
             maps.reload();
 
             Socket.respond(request, EmbedResponse.success("Map Removed")
-                    .withField("Name:", map.name())
+                    .withField("Map:", map.name())
                     .withField("File:", map.file.name()));
         });
 
@@ -215,7 +215,7 @@ public class SocketEvents {
 
             Admins.kick(target, request.admin, duration.toMillis(), request.reason);
             Socket.respond(request, EmbedResponse.success("Player Kicked")
-                    .withField("Name:", target.plainName())
+                    .withField("Player:", target.plainName())
                     .withField("Duration:", Bundle.formatDuration(duration))
                     .withField("Reason:", request.reason));
         });
@@ -230,7 +230,7 @@ public class SocketEvents {
             netServer.admins.kickedIPs.remove(info.lastIP);
             netServer.admins.dosBlacklist.remove(info.lastIP);
 
-            Socket.respond(request, EmbedResponse.success("Player Pardoned").withField("Name:", info.plainLastName()));
+            Socket.respond(request, EmbedResponse.success("Player Pardoned").withField("Player:", info.plainLastName()));
         });
 
         Socket.on(BanRequest.class, request -> {
@@ -244,7 +244,7 @@ public class SocketEvents {
 
             Admins.ban(info, request.admin, duration.toMillis(), request.reason);
             Socket.respond(request, EmbedResponse.success("Player Banned")
-                    .withField("Name:", info.plainLastName())
+                    .withField("Player:", info.plainLastName())
                     .withField("Duration:", Bundle.formatDuration(duration))
                     .withField("Reason:", request.reason));
         });
@@ -255,7 +255,7 @@ public class SocketEvents {
             var ban = Database.removeBan(request.player);
             if (notBanned(request, ban)) return;
 
-            Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Name:", ban.player));
+            Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.player));
         });
     }
 
@@ -379,7 +379,6 @@ public class SocketEvents {
 
         public EmbedResponse withFooter(String footer, Object... args) {
             this.footer = Strings.format(footer, args);
-            ;
             return this;
         }
 

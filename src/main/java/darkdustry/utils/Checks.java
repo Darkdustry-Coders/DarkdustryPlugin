@@ -12,6 +12,7 @@ import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.EmbedCreateSpec;
+import mindustry.game.Gamemode;
 import mindustry.game.*;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
@@ -24,6 +25,7 @@ import useful.*;
 import java.time.Duration;
 
 import static arc.math.Mathf.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.discord.DiscordConfig.*;
 import static darkdustry.utils.Utils.*;
 import static discord4j.rest.util.Color.*;
@@ -247,6 +249,10 @@ public class Checks {
 
     public static boolean notBanned(Request<EmbedResponse> request, Ban ban) {
         return check(ban == null, request, "Unban Failed", "No banned player found for provided input.");
+    }
+
+    public static boolean noRtv(Request<EmbedResponse> request) {
+        return check(!config.mode.enableRtv, request, "Not Allowed", "This server doesn't allow changing the map.");
     }
 
     // endregion

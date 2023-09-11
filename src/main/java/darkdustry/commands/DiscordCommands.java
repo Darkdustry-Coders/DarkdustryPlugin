@@ -131,7 +131,7 @@ public class DiscordCommands {
 
             context.info(embed -> embed
                     .title("Player Stats")
-                    .addField("Name:", data.plainName(), false)
+                    .addField("Player:", data.plainName(), false)
                     .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
                     .addField("Playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
@@ -160,7 +160,7 @@ public class DiscordCommands {
             Socket.send(new SetRankSyncEvent(data.uuid, rank));
             context.success(embed -> embed
                     .title("Rank Changed")
-                    .addField("Name:", data.plainName(), false)
+                    .addField("Player:", data.plainName(), false)
                     .addField("Rank:", rank.name(), false)).subscribe();
         });
     }
