@@ -25,10 +25,10 @@ dependencies {
         exclude(group = "com.github.Anuken.Arc")
     }
 
-    implementation("com.github.osp54:Sock:9d465f7210")
+    implementation("com.github.osp54:Sock:ed404a96ff")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
-    implementation("com.discord4j:discord4j-core:3.3.0-M2")
+    implementation("com.discord4j:discord4j-core:3.2.6")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
 
     implementation("org.jline:jline-reader:3.21.0")

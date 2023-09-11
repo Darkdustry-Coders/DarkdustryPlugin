@@ -12,7 +12,6 @@ import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.utils.*;
-import discord4j.core.spec.EmbedCreateFields.Field;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.*;
@@ -168,7 +167,7 @@ public class SocketEvents {
                     .withField("Author:", map.plainAuthor())
                     .withField("Description:", map.plainDescription())
                     .withFooter("@x@", map.width, map.height)
-                    .withFile(map.file));
+                    .withFile(map.file.absolutePath()));
         });
 
         Socket.on(UploadMapRequest.class, request -> {
@@ -353,11 +352,11 @@ public class SocketEvents {
     public static class EmbedResponse extends Response {
         public final Color color;
         public final String title;
-        public final Seq<Field> fields = new Seq<>();
+        public final Seq<Field> fields = new Seq<>(0);
+        public final Seq<String> files = new Seq<>(0);
 
         public @Nullable String content;
         public @Nullable String footer;
-        public @Nullable Fi file;
 
         public static EmbedResponse success(String title) {
             return new EmbedResponse(MEDIUM_SEA_GREEN, title);
@@ -368,7 +367,12 @@ public class SocketEvents {
         }
 
         public EmbedResponse withField(String name, String value) {
-            this.fields.add(Field.of(name, value, false));
+            this.fields.add(new Field(name, value));
+            return this;
+        }
+
+        public EmbedResponse withFile(String file) {
+            this.files.add(file);
             return this;
         }
 
@@ -382,9 +386,6 @@ public class SocketEvents {
             return this;
         }
 
-        public EmbedResponse withFile(Fi file) {
-            this.file = file;
-            return this;
-        }
+        public record Field(String name, String value) {}
     }
 }

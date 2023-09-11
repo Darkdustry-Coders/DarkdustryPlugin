@@ -1,9 +1,11 @@
 package darkdustry.discord;
 
+import arc.files.Fi;
 import arc.func.Cons;
 import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.object.entity.*;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.EmbedCreateFields.Field;
 import discord4j.core.spec.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
 import discord4j.core.spec.MessageCreateFields.File;
@@ -64,22 +66,17 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     }
 
     public void reply(EmbedResponse response) {
-        var mono = reply(embed -> {
+        reply(embed -> {
             embed.color(response.color);
             embed.title(response.title);
-            embed.fields(response.fields);
+            embed.fields(response.fields.map(field -> Field.of(field.name(), field.value(), false)));
 
-            if (response.content != null)
-                embed.description(response.content);
-
-            if (response.footer != null)
-                embed.footer(response.footer, null);
-        });
-
-        if (response.file != null)
-            mono = mono.withFiles(File.of(response.file.name(), response.file.read()));
-
-        mono.subscribe();
+            if (response.content != null) embed.description(response.content);
+            if (response.footer != null) embed.footer(response.footer, null);
+        }).withFiles(response.files
+                .map(Fi::get)
+                .map(file -> File.of(file.name(), file.read()))
+        ).subscribe();
     }
 
     // endregion
