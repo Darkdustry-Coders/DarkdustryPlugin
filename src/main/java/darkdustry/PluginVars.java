@@ -61,7 +61,7 @@ public class PluginVars {
     public static final String discordConfigFile = "discord-config.json";
 
     /** Ссылка на наш Discord сервер. */
-    public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
+    public static final String discordServerUrl = "https://discord.gg/YPAec842q9";
 
     /** Ссылка на API для перевода текста. */
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
