@@ -76,7 +76,7 @@ public class DiscordCommands {
                         var file = tmpDirectory.child(attachment.getFilename());
                         file.writeBytes(response.getResult());
 
-                        Socket.request(new UploadMapRequest(server, file), context::reply, context::timeout);
+                        Socket.request(new UploadMapRequest(server, file.absolutePath()), context::reply, context::timeout);
                     }));
         });
 

@@ -73,10 +73,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
 
             if (response.content != null) embed.description(response.content);
             if (response.footer != null) embed.footer(response.footer, null);
-        }).withFiles(response.files
-                .map(Fi::get)
-                .map(file -> File.of(file.name(), file.read()))
-        ).subscribe();
+        }).withFiles(response.files.map(Fi::get).map(file -> File.of(file.name(), file.read()))).subscribe();
     }
 
     // endregion

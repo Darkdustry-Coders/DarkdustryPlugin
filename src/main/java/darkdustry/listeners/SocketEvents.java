@@ -173,8 +173,11 @@ public class SocketEvents {
         Socket.on(UploadMapRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
-            var file = customMapDirectory.child(request.file.name());
-            file.writeBytes(request.file.readBytes());
+            var source = Fi.get(request.file);
+            var file = customMapDirectory.child(source.name());
+
+            // Перезаписываем файлы из одного файла в другой
+            file.writeBytes(source.readBytes());
 
             try {
                 var map = MapIO.createMap(file, true);
@@ -319,8 +322,7 @@ public class SocketEvents {
 
     @AllArgsConstructor
     public static class UploadMapRequest extends Request<EmbedResponse> {
-        public final String server;
-        public final Fi file;
+        public final String server, file;
     }
 
     @AllArgsConstructor
