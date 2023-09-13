@@ -53,6 +53,8 @@ public class SocketEvents {
 
             Socket.on(BanSyncEvent.class, event -> Authme.sendBan(event.server, event.ban));
             Socket.on(AdminRequestEvent.class, event -> Authme.sendAdminRequest(event.server, event.data));
+
+            Timer.schedule(DiscordBot::updateActivity, 60f, 60f);
         }
 
         Socket.on(DiscordMessageEvent.class, event -> {
@@ -176,7 +178,7 @@ public class SocketEvents {
             var source = Fi.get(request.file);
             var file = customMapDirectory.child(source.name());
 
-            // Перезаписываем файлы из одного файла в другой
+            // Перезаписываем содержимое из одного файла в другой
             file.writeBytes(source.readBytes());
 
             try {

@@ -54,10 +54,7 @@ public class PluginEvents {
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
-        Events.on(WorldLoadEvent.class, event -> {
-            History.reset();
-            app.post(DiscordBot::updateActivity);
-        });
+        Events.on(WorldLoadEvent.class, event -> History.reset());
 
         Events.on(DepositEvent.class, Alerts::depositAlert);
 
