@@ -83,7 +83,7 @@ public class Admins {
     }
 
     // endregion
-    // region bans
+    // region actions
 
     public static void ban(Ban ban) {
         ban.generateID();
@@ -91,6 +91,10 @@ public class Admins {
 
         // Отправляем бан по сокету, чтобы его увидели другие сервера
         Socket.send(new BanSyncEvent(config.mode.name(), ban));
+    }
+
+    public static void voteKick() {
+
     }
 
     public static void checkKicked(NetConnection con, String locale) {

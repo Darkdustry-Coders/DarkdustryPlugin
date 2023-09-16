@@ -22,7 +22,7 @@ public class AdminCommands {
 
         if (config.mode.enableRtv) {
             register("artv", (args, player) -> {
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                 if (notFound(player, map)) return;
 
                 MenuHandler.showConfirmMenu(player, "commands.artv.confirm", () -> {

@@ -6,7 +6,7 @@ package darkdustry;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.components.*;
-import darkdustry.discord.*;
+import darkdustry.discord.DiscordConfig;
 import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.*;

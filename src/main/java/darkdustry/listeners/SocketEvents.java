@@ -18,6 +18,7 @@ import lombok.*;
 import mindustry.gen.Groups;
 import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
+import reactor.util.function.Tuples;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -48,10 +49,11 @@ public class SocketEvents {
                 var channel = discordConfig.serverToChannel.get(event.server);
                 if (channel == null) return;
 
-                DiscordBot.sendMessageEmbed(channel, EmbedCreateSpec.builder().title(event.title).color(event.color).build());
+                DiscordBot.sendMessageEmbed(channel, EmbedCreateSpec.builder().color(event.color).title(event.title).build());
             });
 
             Socket.on(BanSyncEvent.class, event -> Authme.sendBan(event.server, event.ban));
+            Socket.on(VoteKickEvent.class, event -> Authme.sendVoteKick(event.server, event.initiator, event.target, event.votesFor, event.votesAgainst));
             Socket.on(AdminRequestEvent.class, event -> Authme.sendAdminRequest(event.server, event.data));
 
             Timer.schedule(DiscordBot::updateActivity, 60f, 60f);
@@ -150,7 +152,7 @@ public class SocketEvents {
         Socket.on(ArtvRequest.class, request -> {
             if (!request.server.equals(config.mode.name()) || noRtv(request)) return;
 
-            var map = request.map == null ? maps.getNextMap(state.rules.mode(), state.map) : Find.map(request.map);
+            var map = request.map == null ? maps.getNextMap(instance.lastMode, state.map) : Find.map(request.map);
             if (notFound(request, map)) return;
 
             Bundle.send("commands.artv.info", request.admin);
@@ -276,6 +278,9 @@ public class SocketEvents {
     }
 
     public record BanSyncEvent(String server, Ban ban) {
+    }
+
+    public record VoteKickEvent(String server, String initiator, String target, String votesFor, String votesAgainst) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {

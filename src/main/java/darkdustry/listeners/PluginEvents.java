@@ -20,6 +20,7 @@ import static darkdustry.components.Config.*;
 import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
+import static mindustry.server.ServerControl.*;
 
 public class PluginEvents {
 
@@ -35,22 +36,6 @@ public class PluginEvents {
             if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
-
-        Events.on(GameOverEvent.class, event -> Groups.player.each(player -> {
-            var data = Cache.get(player);
-            data.gamesPlayed++;
-
-            if (player.team() != event.winner) return;
-
-            if (config.mode == Gamemode.attack)
-                data.attackWins++;
-
-            if (config.mode == Gamemode.pvp || config.mode == Gamemode.castle)
-                data.pvpWins++;
-
-            if (config.mode == Gamemode.hexed)
-                data.hexedWins++;
-        }));
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
@@ -155,6 +140,37 @@ public class PluginEvents {
 
             app.post(DiscordBot::updateActivity);
         });
+
+        instance.gameOverListener = event -> {
+            Groups.player.each(player -> {
+                var data = Cache.get(player);
+                data.gamesPlayed++;
+
+                if (player.team() == event.winner)
+                    switch (config.mode) {
+                        case attack -> data.attackWins++;
+                        case pvp, castle -> data.pvpWins++;
+                        case hexed -> data.hexedWins++;
+                    }
+            });
+
+            // На хексах игра сменяется автоматически
+            if (config.mode == Gamemode.hexed) return;
+
+            if (state.rules.waves) Log.info("Game over! Reached wave @ with @ players online on map @.", state.wave, Groups.player.size(), state.map.plainName());
+            else Log.info("Game over! Team @ is victorious with @ players online on map @.", event.winner.name, Groups.player.size(), state.map.plainName());
+
+            var map = maps.getNextMap(instance.lastMode, state.map);
+            Log.info("Selected next map to be @.", map.plainName());
+
+            if (state.rules.pvp) Bundle.infoMessage("events.gameover.pvp", event.winner.coloredName(), map.name(), map.author(), roundExtraTime.num());
+            else Bundle.infoMessage("events.gameover", map.name(), map.author(), roundExtraTime.num());
+
+            // Оповещаем все клиенты о завершении игры
+            Call.updateGameOver(event.winner);
+
+            instance.play(() -> world.loadMap(map, map.applyRules(instance.lastMode)));
+        };
 
         Timer.schedule(() -> Groups.player.each(player -> {
             if (player.unit().moving())

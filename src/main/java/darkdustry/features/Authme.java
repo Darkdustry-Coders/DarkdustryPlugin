@@ -36,6 +36,20 @@ public class Authme {
                 .build()).subscribe();
     }
 
+    public static void sendVoteKick(String server, String initiator, String target, String votesFor, String votesAgainst) {
+        if (!connected) return;
+
+        banChannel.createMessage(EmbedCreateSpec.builder()
+                .color(RUST)
+                .title("Vote Kick")
+                .addField("Server:", capitalize(server), false)
+                .addField("Initiator:", initiator, false)
+                .addField("Target:", target, false)
+                .addField("Votes For:", votesFor.isEmpty() ? "<none>" : votesFor, false)
+                .addField("Votes Against:", votesAgainst.isEmpty() ? "<none>" : votesFor, false)
+                .build()).subscribe();
+    }
+
     public static void sendAdminRequest(String server, PlayerData data) {
         if (!connected) return;
 

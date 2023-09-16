@@ -15,6 +15,7 @@ import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 
 public class ClientCommands {
 
@@ -90,7 +91,7 @@ public class ClientCommands {
             register("rtv", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                 if (notFound(player, map)) return;
 
                 vote = new VoteRtv(map);
