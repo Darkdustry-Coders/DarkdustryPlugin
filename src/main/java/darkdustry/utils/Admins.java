@@ -93,10 +93,6 @@ public class Admins {
         Socket.send(new BanSyncEvent(config.mode.name(), ban));
     }
 
-    public static void voteKick() {
-
-    }
-
     public static void checkKicked(NetConnection con, String locale) {
         long kickTime = netServer.admins.getKickTime(con.uuid, con.address);
         if (kickTime < Time.millis()) return;
