@@ -45,8 +45,8 @@ public class Authme {
                 .addField("Server:", capitalize(server), false)
                 .addField("Initiator:", initiator, false)
                 .addField("Target:", target, false)
-                .addField("Votes For:", votesFor.isEmpty() ? "<none>" : votesFor, false)
-                .addField("Votes Against:", votesAgainst.isEmpty() ? "<none>" : votesFor, false)
+                .addField("Votes For:", votesFor, false)
+                .addField("Votes Against:", votesAgainst, false)
                 .build()).subscribe();
     }
 
