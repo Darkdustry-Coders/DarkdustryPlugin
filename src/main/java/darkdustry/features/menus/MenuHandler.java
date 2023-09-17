@@ -440,6 +440,18 @@ public class MenuHandler {
                 player -> Effects.at(Fx.regenSuppressSeek, player, player.unit())
         ),
 
+        missileSmoke("Missile Smoke",
+                player -> Effects.rotatedPoly(Fx.shootSmokeMissile, player, 6, 6f, -180f, 50f),
+                player -> Effects.rotatedPoly(Fx.shootSmokeMissile, player, 6, 6f, 0f, 100f),
+                player -> Effects.at(Fx.shootSmokeDisperse, player, player.unit().rotation - 180)
+        ),
+
+        coreLaunch("Core Launch",
+                player -> Effects.repeat(3, 30f, number -> Effects.at(Fx.coreLaunchConstruct, player, (number + 1) * 5f)),
+                player -> Effects.repeat(3, 30f, number -> Effects.at(Fx.coreLaunchConstruct, player, (3 - number) * 5f)),
+                player -> Effects.at(Fx.shootSmokeSquareBig, player, player.unit().rotation - 180, Color.acid)
+        ),
+
         none("effects.disabled", "effects.disable");
 
         public final String name, button;
