@@ -36,15 +36,16 @@ public class Authme {
                 .build()).subscribe();
     }
 
-    public static void sendVoteKick(String server, String initiator, String target, String votesFor, String votesAgainst) {
+    public static void sendVoteKick(String server, String initiator, String target, String reason, String votesFor, String votesAgainst) {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
-                .color(RUST)
+                .color(RUBY)
                 .title("Vote Kick")
                 .addField("Server:", capitalize(server), false)
                 .addField("Initiator:", initiator, false)
                 .addField("Target:", target, false)
+                .addField("Reason:", reason, false)
                 .addField("Votes For:", votesFor, false)
                 .addField("Votes Against:", votesAgainst, false)
                 .build()).subscribe();

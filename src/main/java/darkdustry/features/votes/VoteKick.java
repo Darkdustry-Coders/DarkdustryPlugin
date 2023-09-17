@@ -46,8 +46,8 @@ public class VoteKick extends VoteSession {
 
         voted.forEach(entry -> {
             switch (entry.value) {
-                case 1 -> votesFor.append(entry.key.coloredName()).append("\n");
-                case -1 -> votesAgainst.append(entry.key.coloredName()).append("\n");
+                case 1 -> votesFor.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
+                case -1 -> votesAgainst.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
             }
         });
 
@@ -55,7 +55,7 @@ public class VoteKick extends VoteSession {
         if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
 
         Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), stripColors(votesFor), stripColors(votesAgainst)));
+        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, stripColors(votesFor), stripColors(votesAgainst)));
     }
 
     @Override

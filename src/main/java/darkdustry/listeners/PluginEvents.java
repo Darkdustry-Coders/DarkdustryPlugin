@@ -7,6 +7,7 @@ import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.votes.VoteKick;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
 import mindustry.content.*;
 import mindustry.entities.Units;
@@ -102,6 +103,8 @@ public class PluginEvents {
 
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
+
+            VoteKick.test(event.player);
 
             // Вызываем с задержкой, чтобы игрок успел появиться
             app.post(() -> data.effects.join.get(event.player));

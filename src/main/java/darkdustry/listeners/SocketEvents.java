@@ -52,7 +52,7 @@ public class SocketEvents {
             });
 
             Socket.on(BanSyncEvent.class, event -> Authme.sendBan(event.server, event.ban));
-            Socket.on(VoteKickEvent.class, event -> Authme.sendVoteKick(event.server, event.initiator, event.target, event.votesFor, event.votesAgainst));
+            Socket.on(VoteKickEvent.class, event -> Authme.sendVoteKick(event.server, event.initiator, event.target, event.reason, event.votesFor, event.votesAgainst));
             Socket.on(AdminRequestEvent.class, event -> Authme.sendAdminRequest(event.server, event.data));
 
             Timer.schedule(DiscordBot::updateActivity, 60f, 60f);
@@ -279,7 +279,7 @@ public class SocketEvents {
     public record BanSyncEvent(String server, Ban ban) {
     }
 
-    public record VoteKickEvent(String server, String initiator, String target, String votesFor, String votesAgainst) {
+    public record VoteKickEvent(String server, String initiator, String target, String reason, String votesFor, String votesAgainst) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {

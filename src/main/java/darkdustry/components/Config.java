@@ -29,6 +29,8 @@ public class Config {
         messageSpamKick.set(5);
         packetSpamLimit.set(500);
         snapshotInterval.set(200);
+        roundExtraTime.set(10);
+        maxLogLength.set(1024 * 1024);
 
         strict.set(config.mode.enableStrict);
         enableVotekick.set(config.mode.enableVotekick);
