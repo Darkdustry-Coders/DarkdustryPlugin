@@ -3,7 +3,6 @@ package darkdustry.listeners;
 import arc.Events;
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
@@ -25,9 +24,9 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
+        Events.on(ServerLoadEvent.class, _ -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
 
-        Events.on(PlayEvent.class, event -> {
+        Events.on(PlayEvent.class, _ -> {
             state.rules.showSpawns = true;
             state.rules.unitPayloadUpdate = true;
 
@@ -37,9 +36,9 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
+        Events.on(WaveEvent.class, _ -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
-        Events.on(WorldLoadEvent.class, event -> History.reset());
+        Events.on(WorldLoadEvent.class, _ -> History.reset());
 
         Events.on(DepositEvent.class, Alerts::depositAlert);
 
@@ -120,8 +119,6 @@ public class PluginEvents {
             Bundle.send(event.player, event.player.con.mobile ?
                     "welcome.message.mobile" :
                     "welcome.message", serverName.string(), discordServerUrl);
-
-            app.post(DiscordBot::updateActivity);
         });
 
         Events.on(PlayerLeave.class, event -> {
@@ -137,8 +134,6 @@ public class PluginEvents {
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
-
-            app.post(DiscordBot::updateActivity);
         });
 
         instance.gameOverListener = event -> {
