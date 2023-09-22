@@ -55,11 +55,6 @@ public class Config {
     public Gamemode mode = survival;
 
     public enum Gamemode {
-        anarchy {{
-            enableStrict = false;
-            enableVotekick = false;
-        }},
-
         attack,
 
         castle {{

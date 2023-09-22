@@ -166,7 +166,7 @@ public class PluginEvents {
             if (state.rules.pvp) Bundle.infoMessage("events.gameover.pvp", event.winner.coloredName(), map.name(), map.author(), roundExtraTime.num());
             else Bundle.infoMessage("events.gameover", map.name(), map.author(), roundExtraTime.num());
 
-            // Оповещаем все клиенты о завершении игры
+            // Оповещаем все клиенты игроков о завершении игры
             Call.updateGameOver(event.winner);
 
             instance.play(() -> world.loadMap(map, map.applyRules(instance.lastMode)));

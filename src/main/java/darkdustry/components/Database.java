@@ -68,6 +68,25 @@ public class Database {
         players.replace(eq("uuid", data.uuid), data);
     }
 
+    public static Ban getBan(String uuid, String ip) {
+        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
+    }
+
+    // endregion
+    // region ban
+
+    public static Seq<Ban> getBanned() {
+        return bans.all();
+    }
+
+    public static void addBan(Ban ban) {
+        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
+    }
+
+    public static Ban removeBan(String input) {
+        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
+    }
+
     @NoArgsConstructor
     public static class PlayerData {
         public String uuid;
@@ -88,8 +107,8 @@ public class Database {
         public int blocksPlaced = 0;
         public int blocksBroken = 0;
         public int wavesSurvived = 0;
-
         public int gamesPlayed = 0;
+
         public int attackWins = 0;
         public int pvpWins = 0;
         public int hexedWins = 0;
@@ -107,25 +126,6 @@ public class Database {
         public String plainName() {
             return stripColors(name);
         }
-    }
-
-    // endregion
-    // region ban
-
-    public static Ban getBan(String uuid, String ip) {
-        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
-    }
-
-    public static Seq<Ban> getBanned() {
-        return bans.all();
-    }
-
-    public static void addBan(Ban ban) {
-        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
-    }
-
-    public static Ban removeBan(String input) {
-        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
     }
 
     @Builder
