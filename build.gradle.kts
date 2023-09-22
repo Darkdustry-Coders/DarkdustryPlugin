@@ -16,12 +16,12 @@ dependencies {
     val mindustryVersion = json["minGameVersion"]
     val usefulHash = "96f5ca2126"
 
-    implementation("com.github.anuken.arc:arc-core:v$mindustryVersion")
-    implementation("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
+    compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
+    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
         exclude(group = "com.github.Anuken.Arc")
     }
 
-    implementation("com.github.anuken.mindustryjitpack:server:v$mindustryVersion") {
+    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion") {
         exclude(group = "com.github.Anuken.Arc")
     }
 
