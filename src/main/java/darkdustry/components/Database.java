@@ -68,12 +68,12 @@ public class Database {
         players.replace(eq("uuid", data.uuid), data);
     }
 
+    // endregion
+    // region ban
+
     public static Ban getBan(String uuid, String ip) {
         return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
     }
-
-    // endregion
-    // region ban
 
     public static Seq<Ban> getBanned() {
         return bans.all();

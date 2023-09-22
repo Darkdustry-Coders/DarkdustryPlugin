@@ -65,20 +65,6 @@ public class DarkdustryPlugin extends Plugin {
 
         maps.setMapProvider((mode, map) -> availableMaps().random(map));
 
-        Timer.schedule(() -> Groups.player.each(player -> {
-            var data = Cache.get(player);
-            data.playTime++;
-
-            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
-                data.rank = data.rank.next;
-
-                Ranks.name(player, data);
-                MenuHandler.showPromotionMenu(player, data);
-            }
-
-            Database.savePlayerData(data);
-        }), 60f, 60f);
-
         Log.info("Darkdustry plugin loaded in @ ms.", Time.elapsed());
     }
 
