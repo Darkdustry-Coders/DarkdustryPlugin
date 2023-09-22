@@ -24,9 +24,9 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, _ -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
+        Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
 
-        Events.on(PlayEvent.class, _ -> {
+        Events.on(PlayEvent.class, event -> {
             state.rules.showSpawns = true;
             state.rules.unitPayloadUpdate = true;
 
@@ -36,9 +36,9 @@ public class PluginEvents {
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
         });
 
-        Events.on(WaveEvent.class, _ -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
+        Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
-        Events.on(WorldLoadEvent.class, _ -> History.reset());
+        Events.on(WorldLoadEvent.class, event -> History.reset());
 
         Events.on(DepositEvent.class, Alerts::depositAlert);
 
