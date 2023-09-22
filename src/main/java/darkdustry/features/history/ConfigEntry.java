@@ -57,7 +57,7 @@ public class ConfigEntry implements HistoryEntry {
                     Bundle.format("history.config.disconnect", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
                     Bundle.format("history.config.connect", player, info.lastName, block.emoji(), Seq.with(points).toString(", "), Bundle.formatRelative(player, timestamp));
 
-            default -> switch (block) {
+            case null, default -> switch (block) {
                 case LightBlock _ -> Bundle.format("history.config.color", player, info.lastName, block.emoji(), Tmp.c1.set((int) config), Bundle.formatRelative(player, timestamp));
                 case LogicBlock _ -> Bundle.format("history.config.code", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
                 case CanvasBlock _ -> Bundle.format("history.config.image", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
