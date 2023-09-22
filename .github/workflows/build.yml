@@ -26,8 +26,8 @@ jobs:
       - name: Set up JDK 18
         uses: actions/setup-java@v3
         with:
-          java-version: 18
-          distribution: 'temurin'
+          java-version: 21
+          distribution: 'openjdk'
           cache: 'gradle'
 
       - name: Build Artifact
