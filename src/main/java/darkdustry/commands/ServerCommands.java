@@ -189,14 +189,18 @@ public class ServerCommands {
             Log.info("  UUID: @", data.uuid);
             Log.info("  ID: @", data.id);
             Log.info("  Rank: @", data.rank.name());
-            Log.info("  Playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
             Log.info("  Blocks placed: @", data.blocksPlaced);
             Log.info("  Blocks broken: @", data.blocksBroken);
-            Log.info("  Waves survived: @", data.wavesSurvived);
             Log.info("  Games played: @", data.gamesPlayed);
-            Log.info("  Attack wins: @", data.attackWins);
-            Log.info("  PvP wins: @", data.pvpWins);
-            Log.info("  Hexed wins: @", data.hexedWins);
+            Log.info("  Waves survived: @", data.wavesSurvived);
+            Log.info("  Wins:");
+            Log.info("  - Attack: @", data.attackWins);
+            Log.info("  - Castle: @", data.hexedWins);
+            Log.info("  - Forts: @", data.hexedWins);
+            Log.info("  - Hexed: @", data.hexedWins);
+            Log.info("  - MS:GO: @", data.hexedWins);
+            Log.info("  - PvP: @", data.pvpWins);
+            Log.info("  Total playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
         });
 
         serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {

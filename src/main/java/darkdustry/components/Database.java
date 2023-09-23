@@ -106,12 +106,15 @@ public class Database {
         public int playTime = 0;
         public int blocksPlaced = 0;
         public int blocksBroken = 0;
-        public int wavesSurvived = 0;
         public int gamesPlayed = 0;
+        public int wavesSurvived = 0;
 
         public int attackWins = 0;
-        public int pvpWins = 0;
+        public int castleWins = 0;
+        public int fortsWins = 0;
         public int hexedWins = 0;
+        public int msgoWins = 0;
+        public int pvpWins = 0;
 
         public Rank rank = Rank.player;
 

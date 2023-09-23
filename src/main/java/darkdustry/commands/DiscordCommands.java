@@ -134,14 +134,19 @@ public class DiscordCommands {
                     .addField("Player:", data.plainName(), false)
                     .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
-                    .addField("Playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
                     .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
                     .addField("Blocks broken:", String.valueOf(data.blocksBroken), false)
-                    .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
                     .addField("Games played:", String.valueOf(data.gamesPlayed), false)
-                    .addField("Attack wins:", String.valueOf(data.attackWins), false)
-                    .addField("PvP wins:", String.valueOf(data.pvpWins), false)
-                    .addField("Hexed wins:", String.valueOf(data.hexedWins), false)
+                    .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
+                    .addField("Wins:", Strings.format("""
+                            - Attack: @
+                            - Castle: @
+                            - Forts: @
+                            - Hexed: @
+                            - MS:GO: @
+                            - PvP: @
+                            """, data.attackWins, data.castleWins, data.fortsWins, data.hexedWins, data.msgoWins, data.pvpWins), false)
+                    .addField("Total playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
             ).subscribe();
         });
 

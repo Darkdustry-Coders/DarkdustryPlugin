@@ -142,15 +142,19 @@ public class PluginEvents {
                 data.gamesPlayed++;
 
                 if (player.team() == event.winner)
+                    // Для этого не будет лучше использовать мапу, т.к. Mongo не любит их хранить
                     switch (config.mode) {
                         case attack -> data.attackWins++;
-                        case pvp, castle -> data.pvpWins++;
+                        case castle -> data.castleWins++;
+                        case forts -> data.fortsWins++;
                         case hexed -> data.hexedWins++;
+                        case msgo -> data.msgoWins++;
+                        case pvp -> data.pvpWins++;
                     }
             });
 
-            // На хексах игра сменяется автоматически
-            if (config.mode == Gamemode.hexed) return;
+            // На этих режимах игра сменяется автоматически
+            if (config.mode == Gamemode.hexed || config.mode == Gamemode.msgo) return;
 
             if (state.rules.waves) Log.info("Game over! Reached wave @ with @ players online on map @.", state.wave, Groups.player.size(), state.map.plainName());
             else Log.info("Game over! Team @ is victorious with @ players online on map @.", event.winner.name, Groups.player.size(), state.map.plainName());
