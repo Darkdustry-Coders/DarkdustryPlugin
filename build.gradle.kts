@@ -44,8 +44,8 @@ dependencies {
     implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")
 
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 tasks.jar {
