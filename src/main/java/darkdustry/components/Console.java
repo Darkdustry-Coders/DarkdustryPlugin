@@ -32,7 +32,7 @@ public class Console {
 
             terminal.enterRawMode();
 
-            instance.serverInput = () -> {};
+            instance.serverInput = null;
             System.setOut(new BlockingPrintStream(reader::printAbove));
 
             handleInput(reader);

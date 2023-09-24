@@ -37,7 +37,7 @@ public class PluginVars {
     public static final int maxSpawnAmount = 25;
 
     /** Максимальная длительность применяемого эффекта статуса. В секундах. */
-    public static final int maxEffectDuration = 5 * 60;
+    public static final int maxEffectDuration = 60 * 60;
 
     /** Максимальная площадь для заливки. */
     public static final int maxFillArea = 512;

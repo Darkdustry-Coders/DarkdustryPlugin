@@ -3,6 +3,7 @@ package darkdustry.features.menus;
 import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
+import arc.util.Tmp;
 import darkdustry.components.Cache;
 import darkdustry.utils.Admins;
 import mindustry.content.Fx;
@@ -371,7 +372,7 @@ public class MenuHandler {
         scathe("Scathe",
                 player -> Effects.stack(player, Fx.scatheExplosion, Fx.scatheLight),
                 player -> Effects.stack(player, Fx.scatheExplosion, Fx.scatheLight),
-                player -> Effects.at(Fx.neoplasiaSmoke, player)
+                player -> Effects.at(Fx.artilleryTrailSmoke, player)
         ),
 
         titan("Titan",
@@ -404,34 +405,40 @@ public class MenuHandler {
                 player -> Effects.at(Fx.smeltsmoke, player, Color.red)
         ),
 
-        coreDust("Core Dust",
-                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 12f, -180f, 90f, Color.royal),
-                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 4f, -90f, 30f, Color.royal),
-                player -> Effects.at(Fx.shootLiquid, player, player.unit().rotation - 180f, Color.royal)
+        waterBubbles("Water Bubbles",
+                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 12f, -180f, 90f),
+                player -> Effects.rotatedPoly(Fx.coreLandDust, player, 6, 4f, -90f, 30f),
+                player -> Effects.at(Fx.bubble, player, 30f)
+        ),
+
+        airBubbles("Air Bubbles",
+                player -> Effects.repeat(6, 60f, time -> Effects.at(Fx.missileTrailSmoke, Tmp.v1.set(60f, 0f).rotate(time * 60f).add(player))),
+                player -> Effects.repeat(6, 60f, time -> Effects.at(Fx.missileTrailSmoke, Tmp.v1.set(60f, 0f).rotate(time * 300f).add(player))),
+                player -> Effects.at(Fx.airBubble, player)
         ),
 
         impactDrill("Impact Drill",
                 player -> Effects.stack(player, 120f, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpact),
                 player -> Effects.stack(player, 120f, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpactWave, Fx.mineImpact),
-                player -> Effects.at(Fx.mineSmall, player, Color.cyan)
-        ),
-
-        thoriumReactor("Thorium reactor",
-                player -> Effects.at(Fx.reactorExplosion, player),
-                player -> Effects.at(Fx.reactorExplosion, player),
-                player -> Effects.at(Fx.shootSmokeSquareSparse, player, player.unit().rotation - 180f, Color.purple)
-        ),
-
-        impactReactor("Impact reactor",
-                player -> Effects.at(Fx.impactReactorExplosion, player),
-                player -> Effects.at(Fx.impactReactorExplosion, player),
-                player -> Effects.at(Fx.shootSmokeSquareSparse, player, player.unit().rotation - 180f, Color.gold)
+                player -> Effects.at(Fx.mine, player, Color.cyan)
         ),
 
         greenLaser("Green Laser",
                 player -> Effects.at(Fx.greenBomb, player),
                 player -> Effects.at(Fx.greenLaserCharge, player),
-                player -> Effects.at(Fx.electrified, player)
+                player -> Effects.at(Fx.greenCloud, player)
+        ),
+
+        thoriumReactor("Thorium Reactor",
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> Effects.at(Fx.reactorExplosion, player),
+                player -> Effects.at(Fx.shootSmokeSquare, player, player.unit().rotation - 180f, Pal.reactorPurple)
+        ),
+
+        impactReactor("Impact Reactor",
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> Effects.at(Fx.impactReactorExplosion, player),
+                player -> Effects.at(Fx.shootSmokeSquare, player, player.unit().rotation - 180f, Pal.lighterOrange)
         ),
 
         suppressParticle("Suppress Particle",
@@ -443,13 +450,7 @@ public class MenuHandler {
         missileSmoke("Missile Smoke",
                 player -> Effects.rotatedPoly(Fx.shootSmokeMissile, player, 6, 6f, -180f, 50f),
                 player -> Effects.rotatedPoly(Fx.shootSmokeMissile, player, 6, 6f, 0f, 100f),
-                player -> Effects.at(Fx.shootSmokeDisperse, player, player.unit().rotation - 180)
-        ),
-
-        coreLaunch("Core Launch",
-                player -> Effects.repeat(3, 30f, number -> Effects.at(Fx.coreLaunchConstruct, player, (number + 1) * 5f)),
-                player -> Effects.repeat(3, 30f, number -> Effects.at(Fx.coreLaunchConstruct, player, (3 - number) * 5f)),
-                player -> Effects.at(Fx.shootSmokeSquareBig, player, player.unit().rotation - 180, Color.acid)
+                player -> Effects.at(Fx.vapor, player)
         ),
 
         none("effects.disabled", "effects.disable");
