@@ -142,7 +142,6 @@ public class PluginEvents {
                 data.gamesPlayed++;
 
                 if (player.team() == event.winner)
-                    // Для этого не будет лучше использовать мапу, т.к. Mongo не любит их хранить
                     switch (config.mode) {
                         case attack -> data.attackWins++;
                         case castle -> data.castleWins++;
