@@ -18,7 +18,7 @@ import discord4j.core.object.presence.*;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.util.OrderUtil;
 import discord4j.gateway.intent.*;
-import discord4j.rest.util.AllowedMentions;
+import discord4j.rest.util.*;
 import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -108,8 +108,8 @@ public class DiscordBot {
                 roles.takeLast(1)
                         .singleOrEmpty()
                         .zipWith(roles.map(Role::getColor)
-                                .filter(Predicate.isEqual(Role.DEFAULT_COLOR).negate())
-                                .last(Role.DEFAULT_COLOR))
+                                .filter(Predicate.not(Predicate.isEqual(Role.DEFAULT_COLOR)))
+                                .last(Color.WHITE))
                         .switchIfEmpty(Mono.fromRunnable(() ->
                                 Socket.send(new DiscordMessageEvent(server, member.getDisplayName(), message.getContent()))))
                         .subscribe(TupleUtils.consumer((role, color) ->
@@ -138,7 +138,7 @@ public class DiscordBot {
                 if (noRole(event, adminRole)) return;
 
                 if (event.getCustomId().equals("admin-request")) {
-                    var content = event.getValues().get(0).split("-", 3);
+                    var content = event.getValues().getFirst().split("-", 3);
                     if (content.length < 3) return;
 
                     switch (content[0]) {
