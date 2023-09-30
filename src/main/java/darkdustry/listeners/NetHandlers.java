@@ -5,8 +5,8 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.Admins;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -18,19 +18,20 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
 
-    public static String chat(Player from, String text) {
-        int sign = voteChoice(text);
+    public static String chat(Player from, String message) {
+        int sign = voteChoice(message);
         if (sign == 0 || vote == null) {
-            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + text);
-            Translator.translate(from, text);
+            Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + message);
+            Translator.translate(from, message);
 
-            Bot.sendMessage(from.plainName(), text);
+            Socket.send(new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(message)));
             return null;
         }
 
@@ -45,7 +46,7 @@ public class NetHandlers {
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.text)
-                        .filter(command -> Strings.levenshtein(command, response.runCommand) < 3)
+                        .retainAll(command -> Strings.levenshtein(command, response.runCommand) < 3)
                         .min(command -> Strings.levenshtein(command, response.runCommand));
 
                 yield closest == null ? Bundle.format("commands.unknown", player) : Bundle.format("commands.unknown.closest", player, closest);
@@ -56,7 +57,7 @@ public class NetHandlers {
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
 
-        var connections = Seq.with(net.getConnections()).filter(other -> other.address.equals(con.address));
+        var connections = Seq.with(net.getConnections()).retainAll(other -> other.address.equals(con.address));
         if (connections.size >= maxIdenticalIPs) {
             netServer.admins.blacklistDos(con.address);
             connections.each(NetConnection::close);

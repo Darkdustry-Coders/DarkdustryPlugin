@@ -1,23 +1,21 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.Prov;
+import arc.func.*;
 import arc.struct.Seq;
 import arc.util.CommandHandler.Command;
 import arc.util.*;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
-import mindustry.maps.*;
-import mindustry.net.WorldReloader;
+import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 
-import java.time.*;
+import java.time.Duration;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static discord4j.common.util.TimestampFormat.*;
 import static mindustry.Vars.*;
 
 public class Utils {
@@ -52,7 +50,7 @@ public class Utils {
     }
 
     public static Seq<Fi> availableSaves() {
-        return saveDirectory.seq().filter(fi -> fi.extEquals(saveExtension));
+        return Seq.select(saveDirectory.list(), fi -> fi.extEquals(saveExtension));
     }
 
     public static boolean available(UnitType type) {
@@ -87,10 +85,6 @@ public class Utils {
         first = stripAll(first);
         second = stripAll(second);
         return first.toLowerCase().contains(second.toLowerCase());
-    }
-
-    public static String formatTimestamp(long time) {
-        return LONG_DATE.format(Instant.ofEpochMilli(time));
     }
 
     public static Duration parseDuration(String input) {
@@ -129,6 +123,17 @@ public class Utils {
         return builder.toString();
     }
 
+    public static <T> String formatList(Seq<T> values, int page, Cons3<StringBuilder, Integer, T> formatter) {
+        var builder = new StringBuilder();
+
+        for (int i = maxPerPage * (page - 1); i < Math.min(maxPerPage * page, values.size); i++) {
+            if (!builder.isEmpty()) builder.append("\n");
+            formatter.get(builder, i + 1, values.get(i));
+        }
+
+        return builder.toString();
+    }
+
     public static String formatRotation(int rotation) {
         return switch (rotation) {
             case 0 -> "\uE803";
@@ -137,24 +142,6 @@ public class Utils {
             case 3 -> "\uE805";
             default -> "⚠";
         };
-    }
-
-    // endregion
-    // region world
-
-    public static void reloadWorld(Runnable runnable) {
-        try {
-            var reloader = new WorldReloader();
-            reloader.begin();
-
-            runnable.run();
-            state.rules = state.map.applyRules(state.rules.mode());
-
-            logic.play();
-            reloader.end();
-        } catch (MapException e) {
-            Log.err("@: @", e.map.name(), e.getMessage());
-        }
     }
 
     // endregion

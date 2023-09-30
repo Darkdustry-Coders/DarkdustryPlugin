@@ -3,178 +3,126 @@ package darkdustry.commands;
 import arc.util.*;
 import darkdustry.components.*;
 import darkdustry.discord.MessageContext;
-import darkdustry.features.Ranks;
+import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
-import discord4j.core.spec.MessageCreateFields.File;
-import discord4j.rest.util.Color;
-import mindustry.gen.Groups;
-import mindustry.io.MapIO;
-import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import java.time.Duration;
 
-import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.Bot.*;
+import static darkdustry.discord.DiscordBot.*;
+import static darkdustry.discord.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class DiscordCommands {
 
     public static void load() {
-        discordCommands = new CommandHandler(config.discordBotPrefix);
+        discordCommands = new CommandHandler(discordConfig.prefix);
 
         discordCommands.<MessageContext>register("help", "List of all commands.", (args, context) -> {
             var builder = new StringBuilder();
-            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(!command.paramText.isEmpty() ? " " + command.paramText : "").append(" - ").append(command.description).append("\n"));
+            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(command.paramText.isEmpty() ? "" : " " + command.paramText).append(" - ").append(command.description).append("\n"));
+
             context.info("All available commands:", builder.toString()).subscribe();
         });
 
-        discordCommands.<MessageContext>register("maps", "[page]", "List of all maps.", PageIterator::maps);
-        discordCommands.<MessageContext>register("players", "[page]", "List of all maps.", PageIterator::players);
+        discordCommands.<MessageContext>register("maps", "<server>", "List of all maps of the server.", PageIterator::maps);
+        discordCommands.<MessageContext>register("players", "<server>", "List of all maps of the server.", PageIterator::players);
 
-        discordCommands.<MessageContext>register("status", "Display server status.", (args, context) -> context.reply(embed -> embed
-                .color(state.isPlaying() ? Color.MEDIUM_SEA_GREEN : Color.CINNABAR)
-                .title(state.isPlaying() ? "Server Running" : "Server Offline")
-                .addField("Players:", String.valueOf(settings.getInt("totalPlayers", Groups.player.size())), false)
-                .addField("Units:", String.valueOf(Groups.unit.size()), false)
-                .addField("Map:", state.map.plainName(), false)
-                .addField("Wave:", String.valueOf(state.wave), false)
-                .addField("TPS:", String.valueOf(graphics.getFramesPerSecond()), false)
-                .addField("RAM usage:", app.getJavaHeap() / 1024 / 1024 + " MB", false)).subscribe());
+        discordCommands.<MessageContext>register("status", "<server>", "Display server status.", (args, context) -> {
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-        discordCommands.<MessageContext>register("exit", "Exit the server application.", (args, context) -> {
+            Socket.request(new StatusRequest(server), context::reply, context::timeout);
+        });
+
+        discordCommands.<MessageContext>register("exit", "<server>", "Exit the server application.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            context.success(embed -> embed.title("Shutting Down Server")).subscribe(message -> {
-                netServer.kickAll(KickReason.serverRestarting);
-                app.exit();
-            });
+            var server = args[0];
+            if (notFound(context, server)) return;
+
+            Socket.request(new ExitRequest(server), context::reply, context::timeout);
         });
 
-        if (config.mode.enableRtv)
-            discordCommands.<MessageContext>register("artv", "[map...]", "Force map change.", (args, context) -> {
-                if (noRole(context, adminRole)) return;
+        discordCommands.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {
+            if (noRole(context, adminRole)) return;
 
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
-                if (notFound(context, map)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-                Bundle.send("commands.artv.info", context.member().getDisplayName(), map.name());
-                reloadWorld(() -> world.loadMap(map));
-
-                context.success(embed -> embed
-                        .title("Map Changed")
-                        .addField("Name:", map.name(), false)).subscribe();
-            });
-
-        discordCommands.<MessageContext>register("map", "<map...>", "Map", (args, context) -> {
-            var map = Find.map(args[0]);
-            if (notFound(context, map)) return;
-
-            context.info(embed -> embed
-                    .title(map.plainName())
-                    .addField("Author:", map.plainAuthor(), false)
-                    .addField("Description:", map.plainDescription(), false)
-                    .footer(map.width + "x" + map.height, null)).withFiles(File.of(map.file.name(), map.file.read())).subscribe();
+            Socket.request(new ArtvRequest(server, args.length > 1 ? args[1] : null, context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("uploadmap", "Upload a map to the server.", (args, context) -> {
+        discordCommands.<MessageContext>register("map", "<server> <map...>", "Map", (args, context) -> {
+            var server = args[0];
+            if (notFound(context, server)) return;
+
+            Socket.request(new MapRequest(server, args[1]), context::reply, context::timeout);
+        });
+
+        discordCommands.<MessageContext>register("uploadmap", "<server>", "Upload a map to the server.", (args, context) -> {
             if (noRole(context, mapReviewerRole) || notMap(context)) return;
+
+            var server = args[0];
+            if (notFound(context, server)) return;
 
             context.message()
                     .getAttachments()
                     .stream()
                     .filter(attachment -> attachment.getFilename().endsWith(mapExtension))
                     .forEach(attachment -> Http.get(attachment.getUrl(), response -> {
-                        var file = customMapDirectory.child(attachment.getFilename());
+                        var file = tmpDirectory.child(attachment.getFilename());
                         file.writeBytes(response.getResult());
 
-                        var map = MapIO.createMap(file, true);
-                        maps.reload();
-
-                        context.success(embed -> embed
-                                .title("Map Uploaded")
-                                .addField("Name:", map.name(), false)
-                                .addField("File:", file.name(), false)).subscribe();
-                    }, error -> {
-                        customMapDirectory.child(attachment.getFilename()).delete();
-                        context.error("Invalid Attachment", "**@** is not a valid map.", attachment.getFilename()).subscribe();
+                        Socket.request(new UploadMapRequest(server, file.absolutePath()), context::reply, context::timeout);
                     }));
         });
 
-        discordCommands.<MessageContext>register("removemap", "<map...>", "Remove a map from the server.", (args, context) -> {
+        discordCommands.<MessageContext>register("removemap", "<server> <map...>", "Remove a map from the server.", (args, context) -> {
             if (noRole(context, mapReviewerRole)) return;
 
-            var map = Find.map(args[0]);
-            if (notFound(context, map)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-            maps.removeMap(map);
-            maps.reload();
-
-            context.success(embed -> embed
-                    .title("Map Removed")
-                    .addField("Name:", map.name(), false)
-                    .addField("File:", map.file.name(), false)).subscribe();
+            Socket.request(new RemoveMapRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("kick", "<player> <duration> [reason...]", "Kick a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("kick", "<server> <player> <duration> [reason...]", "Kick a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var target = Find.player(args[0]);
-            if (notFound(context, target)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-            var duration = parseDuration(args[1]);
-            if (invalidDuration(context, duration)) return;
-
-            var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, context.member().getDisplayName(), duration.toMillis(), reason);
-
-            context.success(embed -> embed.title("Player Kicked")
-                    .addField("Name:", target.plainName(), false)
-                    .addField("Duration:", Bundle.formatDuration(duration), false)
-                    .addField("Reason:", reason, false)).subscribe();
+            Socket.request(new KickRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("pardon", "<player...>", "Pardon a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("pardon", "<server> <player...>", "Pardon a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var info = Find.playerInfo(args[0]);
-            if (notFound(context, info) || notKicked(context, info)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-            info.lastKicked = 0L;
-            netServer.admins.kickedIPs.remove(info.lastIP);
-            netServer.admins.dosBlacklist.remove(info.lastIP);
-
-            context.success(embed -> embed.title("Player Pardoned").addField("Name:", info.plainLastName(), false)).subscribe();
+            Socket.request(new PardonRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("ban", "<player> <duration> [reason...]", "Ban a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("ban", "<server> <player> <duration> [reason...]", "Ban a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var info = Find.playerInfo(args[0]);
-            if (notFound(context, info)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-            var duration = parseDuration(args[1]);
-            if (invalidDuration(context, duration)) return;
-
-            var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, context.member().getDisplayName(), duration.toMillis(), reason);
-
-            context.success(embed -> embed.title("Player Banned")
-                    .addField("Name:", info.plainLastName(), false)
-                    .addField("Duration:", Bundle.formatDuration(duration), false)
-                    .addField("Reason:", reason, false)).subscribe();
+            Socket.request(new BanRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("unban", "<player...>", "Unban a player.", (args, context) -> {
+        discordCommands.<MessageContext>register("unban", "<server> <player...>", "Unban a player.", (args, context) -> {
             if (noRole(context, adminRole)) return;
 
-            var ban = Database.removeBan(args[0]);
-            if (notBanned(context, ban)) return;
+            var server = args[0];
+            if (notFound(context, server)) return;
 
-            context.success(embed -> embed.title("Player Unbanned").addField("Name:", ban.player, false)).subscribe();
+            Socket.request(new UnbanRequest(server, args[1]), context::reply, context::timeout);
         });
 
         discordCommands.<MessageContext>register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
@@ -183,17 +131,22 @@ public class DiscordCommands {
 
             context.info(embed -> embed
                     .title("Player Stats")
-                    .addField("Name:", data.plainName(), false)
+                    .addField("Player:", data.plainName(), false)
                     .addField("ID:", String.valueOf(data.id), false)
                     .addField("Rank:", data.rank.name(), false)
-                    .addField("Playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
                     .addField("Blocks placed:", String.valueOf(data.blocksPlaced), false)
                     .addField("Blocks broken:", String.valueOf(data.blocksBroken), false)
-                    .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
                     .addField("Games played:", String.valueOf(data.gamesPlayed), false)
-                    .addField("Attack wins:", String.valueOf(data.attackWins), false)
-                    .addField("PvP wins:", String.valueOf(data.pvpWins), false)
-                    .addField("Hexed wins:", String.valueOf(data.hexedWins), false)
+                    .addField("Waves survived:", String.valueOf(data.wavesSurvived), false)
+                    .addField("Wins:", Strings.format("""
+                            - Attack: @
+                            - Castle: @
+                            - Forts: @
+                            - Hexed: @
+                            - MS:GO: @
+                            - PvP: @
+                            """, data.attackWins, data.castleWins, data.fortsWins, data.hexedWins, data.msgoWins, data.pvpWins), false)
+                    .addField("Total playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
             ).subscribe();
         });
 
@@ -207,17 +160,12 @@ public class DiscordCommands {
             if (notFound(context, rank)) return;
 
             data.rank = rank;
-
-            var target = Find.playerByUUID(data.uuid);
-            if (target != null) {
-                Cache.put(target, data);
-                Ranks.name(target, data);
-            }
-
             Database.savePlayerData(data);
+
+            Socket.send(new SetRankSyncEvent(data.uuid, rank));
             context.success(embed -> embed
                     .title("Rank Changed")
-                    .addField("Name:", data.plainName(), false)
+                    .addField("Player:", data.plainName(), false)
                     .addField("Rank:", rank.name(), false)).subscribe();
         });
     }

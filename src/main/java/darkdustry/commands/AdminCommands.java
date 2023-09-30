@@ -9,9 +9,10 @@ import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
-import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 import static useful.Bundle.*;
 
 public class AdminCommands {
@@ -21,12 +22,12 @@ public class AdminCommands {
 
         if (config.mode.enableRtv) {
             register("artv", (args, player) -> {
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                 if (notFound(player, map)) return;
 
                 MenuHandler.showConfirmMenu(player, "commands.artv.confirm", () -> {
                     Bundle.send("commands.artv.info", player.coloredName(), map.name());
-                    reloadWorld(() -> world.loadMap(map));
+                    instance.play(false, () -> world.loadMap(map));
                 }, map.name());
             });
         }

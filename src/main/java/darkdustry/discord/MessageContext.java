@@ -1,13 +1,17 @@
 package darkdustry.discord;
 
+import arc.files.Fi;
 import arc.func.Cons;
+import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.object.entity.*;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.EmbedCreateFields.Field;
 import discord4j.core.spec.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
-import discord4j.rest.util.*;
+import discord4j.core.spec.MessageCreateFields.File;
 
 import static arc.util.Strings.*;
+import static discord4j.rest.util.Color.*;
 
 public record MessageContext(Message message, Member member, MessageChannel channel) {
 
@@ -17,7 +21,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
 
     public MessageCreateMono success(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(Color.MEDIUM_SEA_GREEN);
+            embed.color(MEDIUM_SEA_GREEN);
             setter.get(embed);
         });
     }
@@ -28,7 +32,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
 
     public MessageCreateMono error(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(Color.CINNABAR);
+            embed.color(CINNABAR);
             setter.get(embed);
         });
     }
@@ -39,7 +43,7 @@ public record MessageContext(Message message, Member member, MessageChannel chan
 
     public MessageCreateMono info(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(Color.SUMMER_SKY);
+            embed.color(SUMMER_SKY);
             setter.get(embed);
         });
     }
@@ -54,4 +58,23 @@ public record MessageContext(Message message, Member member, MessageChannel chan
     public MessageCreateMono reply(EmbedCreateSpec embed) {
         return channel.createMessage(embed).withMessageReference(message.getId());
     }
+
+    // region special methods
+
+    public void timeout() {
+        error("Internal Error", "The server did not respond. Perhaps the server is down or an error has occurred.").subscribe();
+    }
+
+    public void reply(EmbedResponse response) {
+        reply(embed -> {
+            embed.color(response.color);
+            embed.title(response.title);
+            embed.fields(response.fields.map(field -> Field.of(field.name(), field.value(), false)));
+
+            if (response.content != null) embed.description(response.content);
+            if (response.footer != null) embed.footer(response.footer, null);
+        }).withFiles(response.files.map(Fi::get).map(file -> File.of(file.name(), file.read()))).subscribe();
+    }
+
+    // endregion
 }

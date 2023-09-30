@@ -1,18 +1,22 @@
 package darkdustry.features.votes;
 
+import darkdustry.components.Socket;
+import darkdustry.listeners.SocketEvents.VoteKickEvent;
 import darkdustry.utils.Admins;
 import mindustry.gen.*;
 import useful.Bundle;
 
+import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 
 public class VoteKick extends VoteSession {
 
-    public final Player player, target;
+    public final Player initiator, target;
     public final String reason;
 
-    public VoteKick(Player player, Player target, String reason) {
-        this.player = player;
+    public VoteKick(Player initiator, Player target, String reason) {
+        this.initiator = initiator;
         this.target = target;
         this.reason = reason;
     }
@@ -37,7 +41,21 @@ public class VoteKick extends VoteSession {
         stop();
         Groups.player.each(player -> Bundle.send(player, "commands.votekick.success", target.coloredName(), Bundle.formatDuration(player, kickDuration), reason));
 
-        Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", player.coloredName()).kick(kickDuration);
+        var votesFor = new StringBuilder();
+        var votesAgainst = new StringBuilder();
+
+        voted.forEach(entry -> {
+            switch (entry.value) {
+                case 1 -> votesFor.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
+                case -1 -> votesAgainst.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
+            }
+        });
+
+        if (votesFor.isEmpty()) votesFor.append("<none>").append("\n");
+        if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
+
+        Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
+        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, stripColors(votesFor), stripColors(votesAgainst)));
     }
 
     @Override

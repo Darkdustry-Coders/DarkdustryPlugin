@@ -2,8 +2,8 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.components.*;
-import darkdustry.discord.Bot;
 import darkdustry.features.Ranks;
+import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
@@ -15,9 +15,11 @@ import java.time.Duration;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 
 public class ServerCommands {
 
@@ -63,7 +65,7 @@ public class ServerCommands {
 
             app.post(() -> {
                 Log.info("Loading map...");
-                reloadWorld(() -> world.loadMap(map));
+                instance.play(false, () -> world.loadMap(map));
                 Log.info("Map loaded.");
 
                 netServer.openServer();
@@ -73,7 +75,8 @@ public class ServerCommands {
         serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             Bundle.send("commands.say.chat", args[0]);
-            Bot.sendMessage("Server", args[0]);
+
+            Socket.send(new ServerMessageEvent(config.mode.name(), "Server", stripDiscord(args[0])));
         });
 
         serverCommands.register("kick", "<player> <duration> [reason...]", "Kick a player.", args -> {
@@ -186,14 +189,18 @@ public class ServerCommands {
             Log.info("  UUID: @", data.uuid);
             Log.info("  ID: @", data.id);
             Log.info("  Rank: @", data.rank.name());
-            Log.info("  Playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
             Log.info("  Blocks placed: @", data.blocksPlaced);
             Log.info("  Blocks broken: @", data.blocksBroken);
-            Log.info("  Waves survived: @", data.wavesSurvived);
             Log.info("  Games played: @", data.gamesPlayed);
-            Log.info("  Attack wins: @", data.attackWins);
-            Log.info("  PvP wins: @", data.pvpWins);
-            Log.info("  Hexed wins: @", data.hexedWins);
+            Log.info("  Waves survived: @", data.wavesSurvived);
+            Log.info("  Wins:");
+            Log.info("  - Attack: @", data.attackWins);
+            Log.info("  - Castle: @", data.hexedWins);
+            Log.info("  - Forts: @", data.hexedWins);
+            Log.info("  - Hexed: @", data.hexedWins);
+            Log.info("  - MS:GO: @", data.hexedWins);
+            Log.info("  - PvP: @", data.pvpWins);
+            Log.info("  Total playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
         });
 
         serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {

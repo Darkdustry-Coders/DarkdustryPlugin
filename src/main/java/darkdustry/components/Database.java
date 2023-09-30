@@ -1,9 +1,8 @@
 package darkdustry.components;
 
 import arc.struct.Seq;
-import arc.util.Time;
+import arc.util.*;
 import com.mongodb.client.*;
-import darkdustry.DarkdustryPlugin;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import lombok.*;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 import static arc.util.Strings.*;
 import static com.mongodb.client.model.Filters.*;
-import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Utils.*;
 
 public class Database {
@@ -39,9 +38,9 @@ public class Database {
             bans.descendingIndex("id");
             bans.descendingIndex("unbanDate", 0L);
 
-            DarkdustryPlugin.info("Database connected.");
+            Log.info("Database connected.");
         } catch (Exception e) {
-            DarkdustryPlugin.error("Failed to connect to the database: @", e);
+            Log.err("Failed to connect to the database", e);
         }
     }
 
@@ -69,6 +68,25 @@ public class Database {
         players.replace(eq("uuid", data.uuid), data);
     }
 
+    // endregion
+    // region ban
+
+    public static Ban getBan(String uuid, String ip) {
+        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
+    }
+
+    public static Seq<Ban> getBanned() {
+        return bans.all();
+    }
+
+    public static void addBan(Ban ban) {
+        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
+    }
+
+    public static Ban removeBan(String input) {
+        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
+    }
+
     @NoArgsConstructor
     public static class PlayerData {
         public String uuid;
@@ -88,12 +106,15 @@ public class Database {
         public int playTime = 0;
         public int blocksPlaced = 0;
         public int blocksBroken = 0;
+        public int gamesPlayed = 0;
         public int wavesSurvived = 0;
 
-        public int gamesPlayed = 0;
         public int attackWins = 0;
-        public int pvpWins = 0;
+        public int castleWins = 0;
+        public int fortsWins = 0;
         public int hexedWins = 0;
+        public int msgoWins = 0;
+        public int pvpWins = 0;
 
         public Rank rank = Rank.player;
 
@@ -108,25 +129,6 @@ public class Database {
         public String plainName() {
             return stripColors(name);
         }
-    }
-
-    // endregion
-    // region ban
-
-    public static Ban getBan(String uuid, String ip) {
-        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
-    }
-
-    public static Seq<Ban> getBanned() {
-        return bans.all();
-    }
-
-    public static void addBan(Ban ban) {
-        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
-    }
-
-    public static Ban removeBan(String input) {
-        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
     }
 
     @Builder

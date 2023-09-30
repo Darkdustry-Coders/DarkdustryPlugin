@@ -91,7 +91,7 @@ public class Ranks {
 
     public record Requirements(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
         public boolean check(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
-            return this.playTime < playTime && this.blocksPlaced < blocksPlaced && this.gamesPlayed < gamesPlayed && this.wavesSurvived < wavesSurvived;
+            return this.playTime <= playTime && this.blocksPlaced <= blocksPlaced && this.gamesPlayed <= gamesPlayed && this.wavesSurvived <= wavesSurvived;
         }
     }
 }

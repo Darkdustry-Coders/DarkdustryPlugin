@@ -1,57 +1,107 @@
 package darkdustry.features;
 
+import darkdustry.components.*;
 import darkdustry.components.Database.*;
+import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.Find;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.component.*;
 import discord4j.core.object.component.SelectMenu.Option;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.rest.util.Color;
 import useful.Bundle;
 
 import java.util.Collections;
 
-import static darkdustry.discord.Bot.*;
-import static darkdustry.utils.Utils.*;
+import static arc.util.Strings.*;
+import static darkdustry.discord.DiscordBot.*;
+import static discord4j.common.util.TimestampFormat.*;
+import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 
 public class Authme {
 
-    public static void sendBan(Ban ban) {
+    public static void sendBan(String server, Ban ban) {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
-                .color(Color.CINNABAR)
+                .color(CINNABAR)
                 .title("Ban")
+                .addField("Server:", capitalize(server), false)
                 .addField("ID:", String.valueOf(ban.id), false)
                 .addField("Player:", ban.player, false)
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
-                .addField("Unban Date:", formatTimestamp(ban.unbanDate.getTime()), false)
+                .addField("Unban Date:", LONG_DATE.format(ban.unbanDate.toInstant()), false)
                 .build()).subscribe();
     }
 
-    public static void sendAdminRequest(PlayerData data) {
+    public static void sendVoteKick(String server, String initiator, String target, String reason, String votesFor, String votesAgainst) {
+        if (!connected) return;
+
+        banChannel.createMessage(EmbedCreateSpec.builder()
+                .color(RUBY)
+                .title("Vote Kick")
+                .addField("Server:", capitalize(server), false)
+                .addField("Initiator:", initiator, false)
+                .addField("Target:", target, false)
+                .addField("Reason:", reason, false)
+                .addField("Votes For:", votesFor, false)
+                .addField("Votes Against:", votesAgainst, false)
+                .build()).subscribe();
+    }
+
+    public static void sendAdminRequest(String server, PlayerData data) {
         if (!connected) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
-                .color(Color.MOON_YELLOW)
+                .color(BISMARK)
                 .title("Admin Request")
-                .addField("Name:", data.plainName(), true)
-                .addField("ID:", String.valueOf(data.id), true)
+                .addField("Player:", data.plainName(), false)
+                .addField("ID:", String.valueOf(data.id), false)
+                .addField("Server:", capitalize(server), false)
                 .footer("Select the desired option to confirm or deny the request. Confirm only your requests!", null)
                 .build()
-        ).withComponents(ActionRow.of(SelectMenu.of(
-                data.uuid,
-                Option.of("Confirm", "confirm").withDescription("Confirm request.").withEmoji(ReactionEmoji.unicode("✅")),
-                Option.of("Deny", "deny").withDescription("Deny request.").withEmoji(ReactionEmoji.unicode("❌")),
-                Option.of("Info", "info").withDescription("Look up all information about the player.").withEmoji(ReactionEmoji.unicode("🔎"))
+        ).withComponents(ActionRow.of(SelectMenu.of("admin-request",
+                Option.of("Confirm", "confirm-" + server + "-" + data.uuid).withDescription("Confirm this request.").withEmoji(ReactionEmoji.unicode("✅")),
+                Option.of("Deny", "deny-" + server + "-" + data.uuid).withDescription("Deny this request.").withEmoji(ReactionEmoji.unicode("❌"))
         ))).subscribe();
     }
 
-    public static void confirm(SelectMenuInteractionEvent event) {
-        var info = netServer.admins.getInfoOptional(event.getCustomId());
+    public static void confirm(SelectMenuInteractionEvent event, String server, String uuid) {
+        Socket.send(new AdminRequestConfirmEvent(server, uuid));
+
+        var data = Database.getPlayerData(uuid);
+        if (data == null) return; // Just in case
+
+        event.edit().withEmbeds(EmbedCreateSpec.builder()
+                .color(MEDIUM_SEA_GREEN)
+                .title("Admin Request Confirmed")
+                .addField("Player:", data.plainName(), false)
+                .addField("ID:", String.valueOf(data.id), false)
+                .addField("Server:", capitalize(server), false)
+                .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
+                .build()).withComponents(Collections.emptyList()).subscribe();
+    }
+
+    public static void deny(SelectMenuInteractionEvent event, String server, String uuid) {
+        Socket.send(new AdminRequestDenyEvent(server, uuid));
+
+        var data = Database.getPlayerData(uuid);
+        if (data == null) return; // Just in case
+
+        event.edit().withEmbeds(EmbedCreateSpec.builder()
+                .color(CINNABAR)
+                .title("Admin Request Denied")
+                .addField("Player:", data.plainName(), false)
+                .addField("ID:", String.valueOf(data.id), false)
+                .addField("Server:", capitalize(server), false)
+                .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
+                .build()).withComponents(Collections.emptyList()).subscribe();
+    }
+
+    public static void confirm(String uuid) {
+        var info = netServer.admins.getInfoOptional(uuid);
         if (info == null) return;
 
         var player = Find.playerByUUID(info.id);
@@ -61,16 +111,10 @@ public class Authme {
         }
 
         netServer.admins.adminPlayer(info.id, player == null ? info.adminUsid : player.usid());
-        event.edit().withEmbeds(EmbedCreateSpec.builder()
-                .color(Color.MEDIUM_SEA_GREEN)
-                .title("Request Confirmed")
-                .addField("Administrator:", event.getInteraction().getUser().getMention(), true)
-                .addField("Player:", info.plainLastName(), true)
-                .build()).withComponents(Collections.emptyList()).subscribe();
     }
 
-    public static void deny(SelectMenuInteractionEvent event) {
-        var info = netServer.admins.getInfoOptional(event.getCustomId());
+    public static void deny(String uuid) {
+        var info = netServer.admins.getInfoOptional(uuid);
         if (info == null) return;
 
         var player = Find.playerByUUID(info.id);
@@ -80,27 +124,5 @@ public class Authme {
         }
 
         netServer.admins.unAdminPlayer(info.id);
-        event.edit().withEmbeds(EmbedCreateSpec.builder()
-                .color(Color.CINNABAR)
-                .title("Request Denied")
-                .addField("Administrator:", event.getInteraction().getUser().getMention(), true)
-                .addField("Player:", info.plainLastName(), true)
-                .build()).withComponents(Collections.emptyList()).subscribe();
-    }
-
-    public static void info(SelectMenuInteractionEvent event) {
-        var info = netServer.admins.getInfoOptional(event.getCustomId());
-        if (info == null) return;
-
-        event.reply().withEmbeds(EmbedCreateSpec.builder()
-                .color(Color.SUMMER_SKY)
-                .title("Player Info")
-                .addField("UUID:", info.id, false)
-                .addField("IP:", info.lastIP, false)
-                .addField("Times joined:", String.valueOf(info.timesJoined), false)
-                .addField("Times kicked:", String.valueOf(info.timesKicked), false)
-                .addField("All nicknames:", info.names.toString(), false)
-                .addField("All IPs", info.ips.toString(), false)
-                .build()).withEphemeral(true).subscribe();
     }
 }

@@ -2,9 +2,6 @@ package darkdustry;
 
 import arc.struct.Seq;
 import arc.util.CommandHandler;
-import com.google.gson.*;
-import com.ospx.sock.Sock;
-import darkdustry.components.Config;
 import darkdustry.features.votes.*;
 import mindustry.core.Version;
 import reactor.util.function.*;
@@ -12,7 +9,6 @@ import reactor.util.function.*;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
-import static com.google.gson.FieldNamingPolicy.*;
 import static java.time.temporal.ChronoUnit.*;
 import static mindustry.Vars.*;
 
@@ -28,9 +24,6 @@ public class PluginVars {
     /** Стандартная длительность кика игрока. В миллисекундах. */
     public static final int kickDuration = 30 * 60 * 1000;
 
-    /** Время, после которого будет загружена карта. В секундах. */
-    public static final int mapLoadDelay = 10;
-
     /** Расстояние до ядра, в котором отслеживаются опасные блоки. Интервал оповещений об опасных блоках. */
     public static final int alertsDistance = 16 * tilesize, alertsTimer = 3;
 
@@ -44,7 +37,7 @@ public class PluginVars {
     public static final int maxSpawnAmount = 25;
 
     /** Максимальная длительность применяемого эффекта статуса. В секундах. */
-    public static final int maxEffectDuration = 5 * 60;
+    public static final int maxEffectDuration = 60 * 60;
 
     /** Максимальная площадь для заливки. */
     public static final int maxFillArea = 512;
@@ -61,20 +54,20 @@ public class PluginVars {
     /** Версия Mindustry, запущенная на сервере. */
     public static final int mindustryVersion = Version.build;
 
-    /** Название файла, в котором хранится конфигурация сервера. */
-    public static final String configFileName = "config.json";
+    /** Путь к файлу, в котором хранится конфигурация сервера. */
+    public static final String configFile = "config.json";
+
+    /** Путь к файлу, в котором хранится конфигурация discord-бота. */
+    public static final String discordConfigFile = "discord-config.json";
 
     /** Ссылка на наш Discord сервер. */
-    public static final String discordServerUrl = "https://discord.gg/uDPPVN6V3E";
+    public static final String discordServerUrl = "https://discord.gg/uPUZHp7xQn";
 
     /** Ссылка на API для перевода текста. */
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
     /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
     public static final Seq<String> adminOnlyCommands = Seq.with(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "settings", "stats");
-
-    /** Используется для считывания и записи Json объектов. */
-    public static final Gson gson = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_DASHES).setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
 
     /** Используется для перевода строки в длительность. */
     public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
@@ -88,9 +81,6 @@ public class PluginVars {
             Tuples.of(Pattern.compile("(m|min|mins|minute|minutes|м|мин|минута|минуты|минут)"), MINUTES),
             Tuples.of(Pattern.compile("(s|sec|secs|second|seconds|с|сек|секунда|секунды|секунд)"), SECONDS)
     );
-
-    /** Конфигурация сервера. */
-    public static Config config;
 
     /** Текущее голосование. */
     public static VoteSession vote;

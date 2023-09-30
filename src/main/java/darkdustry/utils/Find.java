@@ -125,7 +125,7 @@ public class Find {
     }
 
     private static boolean canParseID(String input) {
-        return canParsePositiveInt(input.startsWith("#") ? input.substring(1) : input);
+        return canParseInt(input.startsWith("#") ? input.substring(1) : input);
     }
 
     // endregion

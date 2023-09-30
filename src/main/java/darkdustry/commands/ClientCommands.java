@@ -2,18 +2,20 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import darkdustry.components.*;
-import darkdustry.features.Authme;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.votes.*;
+import darkdustry.listeners.SocketEvents.AdminRequestEvent;
 import darkdustry.utils.*;
 import mindustry.gen.*;
 import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
+import static darkdustry.components.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static mindustry.server.ServerControl.*;
 
 public class ClientCommands {
 
@@ -75,7 +77,12 @@ public class ClientCommands {
             if (alreadyAdmin(player)) return;
 
             MenuHandler.showConfirmMenu(player, "commands.login.confirm", () -> {
-                Authme.sendAdminRequest(Cache.get(player));
+                if (!Socket.isConnected()) {
+                    Bundle.send(player, "commands.login.error");
+                    return;
+                }
+
+                Socket.send(new AdminRequestEvent(config.mode.name(), Cache.get(player)));
                 Bundle.send(player, "commands.login.sent");
             });
         });
@@ -84,7 +91,7 @@ public class ClientCommands {
             register("rtv", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(state.rules.mode(), state.map);
+                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                 if (notFound(player, map)) return;
 
                 vote = new VoteRtv(map);

@@ -14,18 +14,21 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "a3a201c3b6"
+    val usefulHash = "32fc5f4d1c"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion")
+    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
+        exclude(group = "com.github.Anuken.Arc")
+    }
 
-    implementation("com.google.code.gson:gson:2.10.1")
+    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion") {
+        exclude(group = "com.github.Anuken.Arc")
+    }
+
+    implementation("com.github.osp54:Sock:ed404a96ff")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
 
-    implementation("com.github.osp54:Sock:1.1.1")
-
-    implementation("com.discord4j:discord4j-core:3.2.5")
+    implementation("com.discord4j:discord4j-core:3.2.6")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
 
     implementation("org.jline:jline-reader:3.21.0")
@@ -34,14 +37,15 @@ dependencies {
 
     implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:config:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")
 
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 tasks.jar {
