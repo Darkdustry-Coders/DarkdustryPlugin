@@ -1,4 +1,4 @@
-package darkdustry.components;
+package darkdustry.features;
 
 import arc.func.Cons;
 import arc.util.Log;

@@ -1,8 +1,9 @@
-package darkdustry.components;
+package darkdustry.features.net;
 
 import arc.func.*;
 import arc.util.Http;
 import arc.util.serialization.JsonReader;
+import darkdustry.database.Cache;
 import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.*;
 import useful.Bundle;

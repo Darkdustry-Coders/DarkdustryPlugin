@@ -1,6 +1,6 @@
 package darkdustry.features.votes;
 
-import darkdustry.components.Socket;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.VoteKickEvent;
 import darkdustry.utils.Admins;
 import mindustry.gen.*;
@@ -8,7 +8,7 @@ import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 
 public class VoteKick extends VoteSession {
 

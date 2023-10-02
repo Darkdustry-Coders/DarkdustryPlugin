@@ -1,25 +1,31 @@
-package darkdustry.features;
+package darkdustry.discord;
 
-import darkdustry.components.*;
-import darkdustry.components.Database.*;
+import darkdustry.database.Database;
+import darkdustry.database.models.*;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.Find;
+import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.component.*;
 import discord4j.core.object.component.SelectMenu.Option;
+import discord4j.core.object.entity.channel.GuildMessageChannel;
+import discord4j.core.object.presence.*;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
+import mindustry.gen.Groups;
 import useful.Bundle;
 
 import java.util.Collections;
 
+import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.discord.DiscordBot.*;
 import static discord4j.common.util.TimestampFormat.*;
 import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 
-public class Authme {
+public class DiscordIntegration {
 
     public static void sendBan(String server, Ban ban) {
         if (!connected) return;
@@ -40,7 +46,7 @@ public class Authme {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
-                .color(RUBY)
+                .color(MOON_YELLOW)
                 .title("Vote Kick")
                 .addField("Server:", capitalize(server), false)
                 .addField("Initiator:", initiator, false)
@@ -124,5 +130,31 @@ public class Authme {
         }
 
         netServer.admins.unAdminPlayer(info.id);
+    }
+
+    public static void updateActivity() {
+        if (connected)
+            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on Darkdustry");
+    }
+
+    public static void updateActivity(String activity) {
+        if (connected)
+            gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
+    }
+
+    public static void sendMessage(long channelId, String message) {
+        if (connected)
+            gateway.getChannelById(Snowflake.of(channelId))
+                    .ofType(GuildMessageChannel.class)
+                    .flatMap(channel -> channel.createMessage(message))
+                    .subscribe();
+    }
+
+    public static void sendMessageEmbed(long channelId, EmbedCreateSpec embed) {
+        if (connected)
+            gateway.getChannelById(Snowflake.of(channelId))
+                    .ofType(GuildMessageChannel.class)
+                    .flatMap(channel -> channel.createMessage(embed))
+                    .subscribe();
     }
 }

@@ -1,19 +1,14 @@
-package darkdustry.components;
+package darkdustry.database;
 
 import arc.struct.Seq;
 import arc.util.*;
 import com.mongodb.client.*;
-import darkdustry.features.Ranks.Rank;
-import darkdustry.features.menus.MenuHandler.*;
-import lombok.*;
-import org.bson.codecs.pojo.annotations.BsonProperty;
+import darkdustry.database.models.*;
 import useful.MongoRepository;
-
-import java.util.Date;
 
 import static arc.util.Strings.*;
 import static com.mongodb.client.model.Filters.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Utils.*;
 
 public class Database {
@@ -85,76 +80,6 @@ public class Database {
 
     public static Ban removeBan(String input) {
         return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
-    }
-
-    @NoArgsConstructor
-    public static class PlayerData {
-        public String uuid;
-        public String name = "<unknown>";
-
-        @BsonProperty("pid")
-        public int id;
-
-        public boolean alerts = true;
-        public boolean history = false;
-        public boolean welcomeMessage = true;
-        public boolean discordLink = true;
-
-        public Language language = Language.off;
-        public EffectsPack effects = EffectsPack.none;
-
-        public int playTime = 0;
-        public int blocksPlaced = 0;
-        public int blocksBroken = 0;
-        public int gamesPlayed = 0;
-        public int wavesSurvived = 0;
-
-        public int attackWins = 0;
-        public int castleWins = 0;
-        public int fortsWins = 0;
-        public int hexedWins = 0;
-        public int msgoWins = 0;
-        public int pvpWins = 0;
-
-        public Rank rank = Rank.player;
-
-        public PlayerData(String uuid) {
-            this.uuid = uuid;
-        }
-
-        public void generateID() {
-            this.id = players.generateNextID("pid");
-        }
-
-        public String plainName() {
-            return stripColors(name);
-        }
-    }
-
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Ban {
-        public String uuid, ip;
-        public String player, admin;
-
-        @BsonProperty("pid")
-        public int id;
-
-        public String reason;
-        public Date unbanDate;
-
-        public void generateID() {
-            this.id = players.getField(eq("uuid", uuid), "pid", -1);
-        }
-
-        public boolean expired() {
-            return unbanDate.getTime() < Time.millis();
-        }
-
-        public long remaining() {
-            return unbanDate.getTime() - Time.millis();
-        }
     }
 
     // endregion

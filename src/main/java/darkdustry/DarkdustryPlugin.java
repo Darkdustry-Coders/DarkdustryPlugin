@@ -5,10 +5,12 @@ package darkdustry;
 
 import arc.util.*;
 import darkdustry.commands.*;
-import darkdustry.components.*;
-import darkdustry.discord.DiscordConfig;
+import darkdustry.config.Config;
+import darkdustry.database.Database;
+import darkdustry.config.DiscordConfig;
 import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.*;
 import mindustry.core.Version;
 import mindustry.gen.*;

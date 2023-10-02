@@ -6,11 +6,12 @@ import arc.struct.Seq;
 import arc.util.*;
 import com.ospx.sock.EventBus.*;
 import darkdustry.commands.DiscordCommands;
-import darkdustry.components.*;
-import darkdustry.components.Database.*;
-import darkdustry.discord.DiscordBot;
+import darkdustry.database.*;
+import darkdustry.database.models.*;
+import darkdustry.discord.*;
 import darkdustry.features.*;
 import darkdustry.features.Ranks.Rank;
+import darkdustry.features.net.Socket;
 import darkdustry.utils.*;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
@@ -22,8 +23,8 @@ import useful.Bundle;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
-import static darkdustry.discord.DiscordConfig.*;
+import static darkdustry.config.Config.*;
+import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static discord4j.rest.util.Color.*;
@@ -41,21 +42,21 @@ public class SocketEvents {
                 var channel = discordConfig.serverToChannel.get(event.server);
                 if (channel == null) return;
 
-                DiscordBot.sendMessage(channel, "`" + event.name + ": " + event.message + "`");
+                DiscordIntegration.sendMessage(channel, "`" + event.name + ": " + event.message + "`");
             });
 
             Socket.on(ServerMessageEmbedEvent.class, event -> {
                 var channel = discordConfig.serverToChannel.get(event.server);
                 if (channel == null) return;
 
-                DiscordBot.sendMessageEmbed(channel, EmbedCreateSpec.builder().color(event.color).title(event.title).build());
+                DiscordIntegration.sendMessageEmbed(channel, EmbedCreateSpec.builder().color(event.color).title(event.title).build());
             });
 
-            Socket.on(BanSyncEvent.class, event -> Authme.sendBan(event.server, event.ban));
-            Socket.on(VoteKickEvent.class, event -> Authme.sendVoteKick(event.server, event.initiator, event.target, event.reason, event.votesFor, event.votesAgainst));
-            Socket.on(AdminRequestEvent.class, event -> Authme.sendAdminRequest(event.server, event.data));
+            Socket.on(BanSyncEvent.class, event -> DiscordIntegration.sendBan(event.server, event.ban));
+            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.initiator, event.target, event.reason, event.votesFor, event.votesAgainst));
+            Socket.on(AdminRequestEvent.class, event -> DiscordIntegration.sendAdminRequest(event.server, event.data));
 
-            Timer.schedule(DiscordBot::updateActivity, 60f, 60f);
+            Timer.schedule(DiscordIntegration::updateActivity, 60f, 60f);
         }
 
         Socket.on(DiscordMessageEvent.class, event -> {
@@ -79,12 +80,12 @@ public class SocketEvents {
 
         Socket.on(AdminRequestConfirmEvent.class, event -> {
             if (event.server.equals(config.mode.name()))
-                Authme.confirm(event.uuid);
+                DiscordIntegration.confirm(event.uuid);
         });
 
         Socket.on(AdminRequestDenyEvent.class, event -> {
             if (event.server.equals(config.mode.name()))
-                Authme.deny(event.uuid);
+                DiscordIntegration.deny(event.uuid);
         });
 
         Socket.on(SetRankSyncEvent.class, event -> {

@@ -4,7 +4,8 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.struct.Seq;
 import arc.util.Tmp;
-import darkdustry.components.Cache;
+import darkdustry.database.Cache;
+import darkdustry.database.models.PlayerData;
 import darkdustry.utils.Admins;
 import mindustry.content.Fx;
 import mindustry.gen.*;
@@ -20,7 +21,6 @@ import useful.text.TextInput;
 import java.time.Duration;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Database.*;
 import static darkdustry.features.Ranks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.net.Administration.Config.*;

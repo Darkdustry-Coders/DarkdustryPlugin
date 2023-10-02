@@ -2,10 +2,11 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.util.*;
-import darkdustry.components.*;
+import darkdustry.database.*;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
 import mindustry.content.*;
 import mindustry.entities.Units;
@@ -15,7 +16,7 @@ import useful.Bundle;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;

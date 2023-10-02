@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.Translator;
+import darkdustry.features.net.Translator;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
@@ -9,7 +9,7 @@ import useful.Bundle;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
 import static mindustry.server.ServerControl.*;

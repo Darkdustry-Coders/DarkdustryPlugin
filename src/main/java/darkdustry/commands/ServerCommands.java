@@ -1,8 +1,9 @@
 package darkdustry.commands;
 
 import arc.util.*;
-import darkdustry.components.*;
-import darkdustry.features.Ranks;
+import darkdustry.database.*;
+import darkdustry.features.*;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
@@ -15,7 +16,7 @@ import java.time.Duration;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;

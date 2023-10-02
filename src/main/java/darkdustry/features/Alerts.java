@@ -4,7 +4,7 @@ import arc.func.Boolp;
 import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.util.Interval;
-import darkdustry.components.Cache;
+import darkdustry.database.Cache;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
@@ -14,7 +14,7 @@ import mindustry.world.*;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static mindustry.Vars.*;
 
 public class Alerts {

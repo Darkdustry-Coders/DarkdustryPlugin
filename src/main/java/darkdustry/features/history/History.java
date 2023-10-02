@@ -4,7 +4,7 @@ import arc.struct.Queue;
 import mindustry.world.Tile;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static mindustry.Vars.*;
 
 public class History {

@@ -1,4 +1,4 @@
-package darkdustry.discord;
+package darkdustry.config;
 
 import arc.struct.ObjectMap;
 import arc.util.Log;

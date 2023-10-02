@@ -1,8 +1,9 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
-import darkdustry.components.*;
+import darkdustry.database.Cache;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
 import darkdustry.listeners.SocketEvents.AdminRequestEvent;
 import darkdustry.utils.*;
@@ -11,7 +12,7 @@ import useful.*;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;

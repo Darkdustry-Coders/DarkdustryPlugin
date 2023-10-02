@@ -11,7 +11,7 @@ import mindustry.world.Block;
 
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
 

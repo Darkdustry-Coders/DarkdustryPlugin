@@ -1,6 +1,6 @@
-package darkdustry.components;
+package darkdustry.database;
 
-import darkdustry.components.Database.PlayerData;
+import darkdustry.database.models.PlayerData;
 import mindustry.gen.Player;
 import useful.ExtendedMap;
 

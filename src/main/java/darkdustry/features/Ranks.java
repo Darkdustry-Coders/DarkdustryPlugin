@@ -1,7 +1,7 @@
 package darkdustry.features;
 
 import arc.struct.Seq;
-import darkdustry.components.Database.PlayerData;
+import darkdustry.database.models.PlayerData;
 import lombok.NoArgsConstructor;
 import mindustry.gen.Player;
 import useful.Bundle;

@@ -1,10 +1,10 @@
-package darkdustry.components;
+package darkdustry.config;
 
 import arc.util.Log;
 import useful.ConfigLoader;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.Gamemode.*;
+import static darkdustry.config.Config.Gamemode.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 

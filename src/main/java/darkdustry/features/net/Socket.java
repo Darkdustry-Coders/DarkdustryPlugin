@@ -1,11 +1,11 @@
-package darkdustry.components;
+package darkdustry.features.net;
 
 import arc.func.Cons;
 import arc.util.Log;
 import com.ospx.sock.EventBus.*;
 import com.ospx.sock.Sock;
 
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 
 public class Socket {
 

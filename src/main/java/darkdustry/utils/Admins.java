@@ -1,8 +1,9 @@
 package darkdustry.utils;
 
 import arc.util.*;
-import darkdustry.components.*;
-import darkdustry.components.Database.Ban;
+import darkdustry.database.Database;
+import darkdustry.database.models.Ban;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.BanSyncEvent;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
@@ -12,7 +13,7 @@ import useful.*;
 import java.util.Date;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.components.Config.*;
+import static darkdustry.config.Config.*;
 import static mindustry.Vars.*;
 
 public class Admins {

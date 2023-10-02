@@ -1,8 +1,9 @@
 package darkdustry.commands;
 
 import arc.util.*;
-import darkdustry.components.*;
+import darkdustry.database.Database;
 import darkdustry.discord.MessageContext;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import useful.Bundle;
@@ -11,7 +12,7 @@ import java.time.Duration;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.discord.DiscordBot.*;
-import static darkdustry.discord.DiscordConfig.*;
+import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
 

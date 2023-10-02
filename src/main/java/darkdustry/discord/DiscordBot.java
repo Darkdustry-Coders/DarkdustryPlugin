@@ -1,8 +1,7 @@
 package darkdustry.discord;
 
 import arc.util.Log;
-import darkdustry.components.Socket;
-import darkdustry.features.Authme;
+import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.PageIterator;
 import discord4j.common.ReactorResources;
@@ -14,12 +13,10 @@ import discord4j.core.event.domain.interaction.*;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.object.presence.*;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.util.OrderUtil;
 import discord4j.gateway.intent.*;
 import discord4j.rest.util.*;
-import mindustry.gen.Groups;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.function.TupleUtils;
@@ -29,10 +26,9 @@ import reactor.scheduler.forkjoin.ForkJoinPoolScheduler;
 
 import java.util.function.Predicate;
 
-import static arc.Core.*;
 import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.DiscordConfig.*;
+import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
 
 public class DiscordBot {
@@ -142,8 +138,8 @@ public class DiscordBot {
                     if (content.length < 3) return;
 
                     switch (content[0]) {
-                        case "confirm" -> Authme.confirm(event, content[1], content[2]);
-                        case "deny" -> Authme.deny(event, content[1], content[2]);
+                        case "confirm" -> DiscordIntegration.confirm(event, content[1], content[2]);
+                        case "deny" -> DiscordIntegration.deny(event, content[1], content[2]);
                     }
                 }
             });
@@ -160,31 +156,5 @@ public class DiscordBot {
         } catch (Exception e) {
             Log.err("Failed to connect bot", e);
         }
-    }
-
-    public static void updateActivity() {
-        if (connected)
-            updateActivity("at " + settings.getInt("totalPlayers", Groups.player.size()) + " players on Darkdustry");
-    }
-
-    public static void updateActivity(String activity) {
-        if (connected)
-            gateway.updatePresence(ClientPresence.of(Status.ONLINE, ClientActivity.watching(activity))).subscribe();
-    }
-
-    public static void sendMessage(long channelId, String message) {
-        if (connected)
-            gateway.getChannelById(Snowflake.of(channelId))
-                    .ofType(GuildMessageChannel.class)
-                    .flatMap(channel -> channel.createMessage(message))
-                    .subscribe();
-    }
-
-    public static void sendMessageEmbed(long channelId, EmbedCreateSpec embed) {
-        if (connected)
-            gateway.getChannelById(Snowflake.of(channelId))
-                    .ofType(GuildMessageChannel.class)
-                    .flatMap(channel -> channel.createMessage(embed))
-                    .subscribe();
     }
 }
