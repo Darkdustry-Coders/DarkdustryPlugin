@@ -1,13 +1,13 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
+import arc.util.Strings;
 import darkdustry.features.net.Translator;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
@@ -94,7 +94,7 @@ public class AdminCommands {
             var effect = Find.effect(args[0]);
             if (notFound(player, effect)) return;
 
-            int duration = args.length > 1 ? parseInt(args[1]) : 60;
+            int duration = args.length > 1 ? Strings.parseInt(args[1]) : 60;
             if (invalidDuration(player, duration, 0, maxEffectDuration)) return;
 
             var target = args.length > 2 ? Find.player(args[2]) : player;
@@ -112,7 +112,7 @@ public class AdminCommands {
             var item = Find.item(args[0]);
             if (notFound(player, item)) return;
 
-            int amount = args.length > 1 ? parseInt(args[1]) : 1;
+            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
             if (invalidAmount(player, amount, 1, maxGiveAmount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
@@ -126,7 +126,7 @@ public class AdminCommands {
             var type = Find.unit(args[0]);
             if (notFound(player, type)) return;
 
-            int amount = args.length > 1 ? parseInt(args[1]) : 1;
+            int amount = args.length > 1 ? Strings.parseInt(args[1]) : 1;
             if (invalidAmount(player, amount, 1, maxSpawnAmount)) return;
 
             var team = args.length > 2 ? Find.team(args[2]) : player.team();
@@ -137,7 +137,7 @@ public class AdminCommands {
         });
 
         register("tp", (args, player) -> {
-            int x = parseInt(args[0]), y = parseInt(args[1]);
+            int x = Strings.parseInt(args[0]), y = Strings.parseInt(args[1]);
             if (invalidCoordinates(player, x, y)) return;
 
             var unit = player.unit();
@@ -156,7 +156,7 @@ public class AdminCommands {
             var block = Find.block(args[0]);
             if (notFound(player, block)) return;
 
-            int width = parseInt(args[1]), height = parseInt(args[2]);
+            int width = Strings.parseInt(args[1]), height = Strings.parseInt(args[2]);
             if (invalidArea(player, width, height, maxFillArea)) return;
 
             for (int x = player.tileX(); x < player.tileX() + width; x += block.size)

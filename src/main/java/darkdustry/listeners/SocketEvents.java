@@ -5,7 +5,6 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.*;
 import com.ospx.sock.EventBus.*;
-import darkdustry.commands.DiscordCommands;
 import darkdustry.database.*;
 import darkdustry.database.models.*;
 import darkdustry.discord.*;
@@ -27,17 +26,13 @@ import static darkdustry.config.Config.*;
 import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
-import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.server.ServerControl.*;
 
 public class SocketEvents {
 
     public static void load() {
-        if (config.mode.isSockServer) {
-            DiscordBot.connect();
-            DiscordCommands.load();
-
+        if (config.mode.isMainServer) {
             Socket.on(ServerMessageEvent.class, event -> {
                 var channel = discordConfig.serverToChannel.get(event.server);
                 if (channel == null) return;
@@ -258,7 +253,10 @@ public class SocketEvents {
         Socket.on(UnbanRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
-            var ban = Database.removeBan(request.player);
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info)) return;
+
+            var ban = Database.removeBan(info.id, info.lastIP);
             if (notBanned(request, ban)) return;
 
             Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.player));
@@ -368,11 +366,11 @@ public class SocketEvents {
         public @Nullable String footer;
 
         public static EmbedResponse success(String title) {
-            return new EmbedResponse(MEDIUM_SEA_GREEN, title);
+            return new EmbedResponse(Color.MEDIUM_SEA_GREEN, title);
         }
 
         public static EmbedResponse error(String title) {
-            return new EmbedResponse(CINNABAR, title);
+            return new EmbedResponse(Color.CINNABAR, title);
         }
 
         public EmbedResponse withField(String name, String value) {

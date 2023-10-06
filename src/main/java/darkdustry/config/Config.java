@@ -80,7 +80,7 @@ public class Config {
 
         hub {{
             isDefault = false;
-            isSockServer = true;
+            isMainServer = true;
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
@@ -104,7 +104,7 @@ public class Config {
         tower;
 
         public boolean isDefault = true;
-        public boolean isSockServer = false;
+        public boolean isMainServer = false;
 
         public boolean enableRtv = true;
         public boolean enableVnw = true;

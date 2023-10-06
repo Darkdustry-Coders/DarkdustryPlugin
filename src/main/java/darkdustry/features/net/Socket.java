@@ -14,7 +14,7 @@ public class Socket {
 
     public static void connect() {
         try {
-            socket = Sock.create(config.sockPort, config.mode.isSockServer);
+            socket = Sock.create(config.sockPort, config.mode.isMainServer);
             socket.connect();
         } catch (Exception e) {
             Log.err("Failed to connect socket", e);

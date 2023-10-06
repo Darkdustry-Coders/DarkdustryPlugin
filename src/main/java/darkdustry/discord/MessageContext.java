@@ -2,6 +2,7 @@ package darkdustry.discord;
 
 import arc.files.Fi;
 import arc.func.Cons;
+import arc.util.Strings;
 import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.object.entity.*;
 import discord4j.core.object.entity.channel.MessageChannel;
@@ -9,41 +10,40 @@ import discord4j.core.spec.EmbedCreateFields.Field;
 import discord4j.core.spec.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
 import discord4j.core.spec.MessageCreateFields.File;
+import discord4j.rest.util.Color;
 
-import static arc.util.Strings.*;
-import static discord4j.rest.util.Color.*;
 
 public record MessageContext(Message message, Member member, MessageChannel channel) {
 
     public MessageCreateMono success(String title, String content, Object... values) {
-        return success(embed -> embed.title(title).description(format(content, values)));
+        return success(embed -> embed.title(title).description(Strings.format(content, values)));
     }
 
     public MessageCreateMono success(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(MEDIUM_SEA_GREEN);
+            embed.color(Color.MEDIUM_SEA_GREEN);
             setter.get(embed);
         });
     }
 
     public MessageCreateMono error(String title, String content, Object... values) {
-        return error(embed -> embed.title(title).description(format(content, values)));
+        return error(embed -> embed.title(title).description(Strings.format(content, values)));
     }
 
     public MessageCreateMono error(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(CINNABAR);
+            embed.color(Color.CINNABAR);
             setter.get(embed);
         });
     }
 
     public MessageCreateMono info(String title, String content, Object... values) {
-        return info(embed -> embed.title(title).description(format(content, values)));
+        return info(embed -> embed.title(title).description(Strings.format(content, values)));
     }
 
     public MessageCreateMono info(Cons<Builder> setter) {
         return reply(embed -> {
-            embed.color(SUMMER_SKY);
+            embed.color(Color.SUMMER_SKY);
             setter.get(embed);
         });
     }

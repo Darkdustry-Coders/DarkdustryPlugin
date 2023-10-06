@@ -14,7 +14,6 @@ import mindustry.world.Block;
 
 import java.time.Duration;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static mindustry.Vars.*;
 
@@ -32,10 +31,6 @@ public class Utils {
 
     public static <T> T notNullElse(T value, T defaultValue) {
         return value != null ? value : defaultValue;
-    }
-
-    public static <T> T notNullElse(T value, Prov<T> defaultValue) {
-        return value != null ? value : defaultValue.get();
     }
 
     // endregion
@@ -64,7 +59,7 @@ public class Utils {
     // region strings
 
     public static String stripAll(String text) {
-        return stripColors(stripGlyphs(text));
+        return Strings.stripColors(Strings.stripGlyphs(text));
     }
 
     public static String stripDiscord(String text) {

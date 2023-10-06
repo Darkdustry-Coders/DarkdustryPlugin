@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
+import arc.util.Strings;
 import darkdustry.database.Cache;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.*;
@@ -10,7 +11,6 @@ import darkdustry.utils.*;
 import mindustry.gen.*;
 import useful.*;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
@@ -106,7 +106,7 @@ public class ClientCommands {
             register("vnw", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
-                int amount = args.length > 0 ? parseInt(args[0]) : 1;
+                int amount = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                 if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
 
                 vote = new VoteVnw(amount);

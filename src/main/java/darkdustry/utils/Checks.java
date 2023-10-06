@@ -3,15 +3,16 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.util.*;
 import com.ospx.sock.EventBus.Request;
-import darkdustry.features.net.Socket;
 import darkdustry.database.models.*;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
+import darkdustry.features.net.Socket;
 import darkdustry.features.votes.VoteSession;
 import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
 import mindustry.game.Gamemode;
 import mindustry.game.*;
 import mindustry.gen.Player;
@@ -28,7 +29,6 @@ import static arc.math.Mathf.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Utils.*;
-import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 
@@ -187,12 +187,11 @@ public class Checks {
                         .getMember()
                         .map(member -> !member.getRoleIds().contains(role.getId()))
                         .orElse(true),
-                () -> event.reply()
-                        .withEmbeds(EmbedCreateSpec.builder()
-                                .color(CINNABAR)
-                                .title("Missing Permissions")
-                                .description("You must be " + role.getMention() + " to use this feature.")
-                                .build()).withEphemeral(true).subscribe());
+                () -> event.reply().withEmbeds(EmbedCreateSpec.builder()
+                        .color(Color.CINNABAR)
+                        .title("Missing Permissions")
+                        .description("You must be " + role.getMention() + " to use this feature.")
+                        .build()).withEphemeral(true).subscribe());
     }
 
     public static boolean noRole(MessageContext context, Role role) {

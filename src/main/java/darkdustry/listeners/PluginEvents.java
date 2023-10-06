@@ -8,6 +8,7 @@ import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
+import discord4j.rest.util.Color;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
@@ -17,7 +18,6 @@ import useful.Bundle;
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
-import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 import static mindustry.net.Administration.Config.*;
 import static mindustry.server.ServerControl.*;
@@ -25,7 +25,7 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
 
     public static void load() {
-        Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", SUMMER_SKY)));
+        Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", Color.SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
             state.rules.showSpawns = true;
@@ -109,7 +109,7 @@ public class PluginEvents {
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.join", event.player.coloredName(), data.id);
 
-            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] joined", MEDIUM_SEA_GREEN));
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] joined", Color.MEDIUM_SEA_GREEN));
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
@@ -131,7 +131,7 @@ public class PluginEvents {
             Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.leave", event.player.coloredName(), data.id);
 
-            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", CINNABAR));
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);

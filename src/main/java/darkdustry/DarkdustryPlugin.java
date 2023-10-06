@@ -6,8 +6,9 @@ package darkdustry;
 import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.config.Config;
-import darkdustry.database.Database;
+import darkdustry.database.*;
 import darkdustry.config.DiscordConfig;
+import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
@@ -19,6 +20,7 @@ import mindustry.net.Packets.*;
 import useful.*;
 
 import static darkdustry.PluginVars.*;
+import static darkdustry.config.Config.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -55,6 +57,11 @@ public class DarkdustryPlugin extends Plugin {
 
         PluginEvents.load();
         SocketEvents.load();
+
+        if (config.mode.isMainServer) {
+            DiscordBot.connect();
+            DiscordCommands.load();
+        }
 
         Version.build = -1;
 

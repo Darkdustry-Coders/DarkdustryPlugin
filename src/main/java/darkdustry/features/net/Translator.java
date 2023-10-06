@@ -1,20 +1,19 @@
 package darkdustry.features.net;
 
 import arc.func.*;
-import arc.util.Http;
+import arc.util.*;
 import arc.util.serialization.JsonReader;
 import darkdustry.database.Cache;
 import darkdustry.features.menus.MenuHandler.Language;
 import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 
 public class Translator {
 
     public static void translate(String text, String from, String to, Cons<String> result) {
-        Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + encode(text))
+        Http.post(translationApiUrl, "tl=" + to + "&sl=" + from + "&q=" + Strings.encode(text))
                 .error(throwable -> result.get(""))
                 .submit(response -> result.get(new JsonReader().parse(response.getResultAsString()).child().child().asString()));
     }

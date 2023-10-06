@@ -1,12 +1,12 @@
 package darkdustry.features.votes;
 
+import arc.util.Strings;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.VoteKickEvent;
 import darkdustry.utils.Admins;
 import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 
@@ -55,7 +55,7 @@ public class VoteKick extends VoteSession {
         if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
 
         Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, stripColors(votesFor), stripColors(votesAgainst)));
+        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
     }
 
     @Override

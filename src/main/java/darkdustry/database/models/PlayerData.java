@@ -1,19 +1,23 @@
 package darkdustry.database.models;
 
+import arc.util.Strings;
 import darkdustry.database.Database;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
+import dev.morphia.annotations.*;
 import lombok.NoArgsConstructor;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
-import static arc.util.Strings.*;
-
+@Entity("players")
+@Indexes({
+        @Index(fields = @Field("uuid")),
+        @Index(fields = @Field("_id"))
+})
 @NoArgsConstructor
 public class PlayerData {
     public String uuid;
     public String name = "<unknown>";
 
-    @BsonProperty("pid")
+    @Id
     public int id;
 
     public boolean alerts = true;
@@ -44,10 +48,10 @@ public class PlayerData {
     }
 
     public void generateID() {
-        this.id = Database.players.generateNextID("pid");
+        this.id = Database.generateNextID(PlayerData.class);
     }
 
     public String plainName() {
-        return stripColors(name);
+        return Strings.stripColors(name);
     }
 }

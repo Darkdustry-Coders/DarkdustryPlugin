@@ -1,37 +1,32 @@
 package darkdustry.database;
 
-import arc.struct.Seq;
-import arc.util.*;
-import com.mongodb.client.*;
+import arc.util.Log;
+import com.mongodb.client.MongoClients;
 import darkdustry.database.models.*;
-import useful.MongoRepository;
+import dev.morphia.*;
+import dev.morphia.mapping.*;
+import dev.morphia.query.*;
 
-import static arc.util.Strings.*;
-import static com.mongodb.client.model.Filters.*;
+import java.util.*;
+
 import static darkdustry.config.Config.*;
-import static darkdustry.utils.Utils.*;
+import static dev.morphia.query.filters.Filters.*;
 
 public class Database {
 
-    public static MongoClient client;
-    public static MongoDatabase database;
-
-    public static MongoRepository<PlayerData> players;
-    public static MongoRepository<Ban> bans;
+    public static Datastore datastore;
+    public static Mapper mapper;
 
     public static void connect() {
         try {
-            client = MongoClients.create(config.mongoUrl);
-            database = client.getDatabase("darkdustry");
+            datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "darkdustry");
+            mapper = datastore.getMapper();
 
-            players = new MongoRepository<>(database, "players", PlayerData.class);
-            players.descendingIndex("id");
-            players.descendingIndex("uuid");
-            players.watchAfterChange(Cache::update);
+            mapper.getEntityModel(PlayerData.class);
+            mapper.getEntityModel(Ban.class);
 
-            bans = new MongoRepository<>(database, "bans", Ban.class);
-            bans.descendingIndex("id");
-            bans.descendingIndex("unbanDate", 0L);
+            datastore.ensureCaps();
+            datastore.ensureIndexes();
 
             Log.info("Database connected.");
         } catch (Exception e) {
@@ -42,44 +37,63 @@ public class Database {
     // region player data
 
     public static PlayerData getPlayerData(String uuid) {
-        return notNullElse(Cache.get(uuid), () -> players.get(eq("uuid", uuid)));
+        return Optional.ofNullable(Cache.get(uuid)).orElseGet(() -> datastore.find(PlayerData.class)
+                .filter(eq("uuid", uuid))
+                .first());
     }
 
     public static PlayerData getPlayerData(int id) {
-        return notNullElse(Cache.get(id), () -> players.get(eq("pid", id)));
+        return Optional.ofNullable(Cache.get(id)).orElseGet(() -> datastore.find(PlayerData.class)
+                .filter(eq("_id", id))
+                .first());
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
-        return players.get(eq("uuid", uuid), () -> {
+        return Optional.ofNullable(datastore.find(PlayerData.class).filter(eq("uuid", uuid)).first()).orElseGet(() -> {
             var data = new PlayerData(uuid);
             data.generateID();
 
-            savePlayerData(data);
-            return data;
+            return savePlayerData(data);
         });
     }
 
-    public static void savePlayerData(PlayerData data) {
-        players.replace(eq("uuid", data.uuid), data);
+    public static PlayerData savePlayerData(PlayerData data) {
+        return datastore.save(data);
     }
 
     // endregion
     // region ban
 
-    public static Ban getBan(String uuid, String ip) {
-        return bans.get(or(eq("uuid", uuid), eq("ip", ip)));
-    }
-
-    public static Seq<Ban> getBanned() {
-        return bans.all();
-    }
-
     public static void addBan(Ban ban) {
-        bans.replace(or(eq("uuid", ban.uuid), eq("ip", ban.ip)), ban);
+        datastore.save(ban);
     }
 
-    public static Ban removeBan(String input) {
-        return bans.delete(or(eq("uuid", input), eq("ip", input), eq("pid", parseInt(input))));
+    public static Ban removeBan(String uuid, String ip) {
+        return datastore.find(Ban.class)
+                .filter(or(eq("uuid", uuid), eq("ip", ip)))
+                .findAndDelete();
+    }
+
+    public static Ban getBan(String uuid, String ip) {
+        return datastore.find(Ban.class)
+                .filter(or(eq("uuid", uuid), eq("ip", ip)))
+                .first();
+    }
+
+    public static List<Ban> getBans() {
+        return datastore.find(Ban.class).stream().toList();
+    }
+
+    // endregion
+    // region ID
+
+    public static int generateNextID(Class<?> type) {
+        try (var iterator = datastore.find(type).iterator(new FindOptions()
+                .sort(Sort.descending("_id"))
+                .limit(1)
+        )) {
+            return iterator.hasNext() ? mapper.getId(iterator.next()) instanceof Integer id ? id + 1 : 0 : 0;
+        }
     }
 
     // endregion

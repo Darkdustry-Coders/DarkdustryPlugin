@@ -17,7 +17,6 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 import useful.*;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
@@ -94,7 +93,7 @@ public class NetHandlers {
 
         con.hasBegunConnecting = true;
 
-        if (stripColors(name).trim().isEmpty()) {
+        if (Strings.stripColors(name).trim().isEmpty()) {
             Bundle.kick(con, locale, 0L, "kick.name-is-empty");
             return;
         }

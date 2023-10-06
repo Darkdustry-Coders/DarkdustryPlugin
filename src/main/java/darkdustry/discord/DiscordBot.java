@@ -1,6 +1,6 @@
 package darkdustry.discord;
 
-import arc.util.Log;
+import arc.util.*;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.PageIterator;
@@ -26,7 +26,6 @@ import reactor.scheduler.forkjoin.ForkJoinPoolScheduler;
 
 import java.util.function.Predicate;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
@@ -116,7 +115,7 @@ public class DiscordBot {
                 var content = event.getCustomId().split("-", 3);
                 if (content.length < 3) return;
 
-                Socket.request(new ListRequest(content[0], content[1], parseInt(content[2])), response -> {
+                Socket.request(new ListRequest(content[0], content[1], Strings.parseInt(content[2])), response -> {
                     var embed = EmbedCreateSpec.builder();
 
                     switch (content[0]) {

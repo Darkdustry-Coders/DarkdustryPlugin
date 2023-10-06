@@ -26,7 +26,7 @@ dependencies {
     }
 
     implementation("com.github.osp54:Sock:ed404a96ff")
-    implementation("org.mongodb:mongodb-driver-sync:4.9.0")
+    implementation("dev.morphia.morphia:morphia-core:2.3.7")
 
     implementation("com.discord4j:discord4j-core:3.2.6")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")
@@ -39,7 +39,6 @@ dependencies {
     implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:config:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
-    implementation("com.github.xzxadixzx.useful-stuffs:database:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")

@@ -3,6 +3,7 @@ package darkdustry.utils;
 import arc.func.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import arc.util.Strings;
 import darkdustry.database.Cache;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
@@ -10,13 +11,12 @@ import darkdustry.features.menus.MenuHandler;
 import darkdustry.listeners.SocketEvents.*;
 import discord4j.core.object.component.*;
 import discord4j.core.spec.EmbedCreateSpec.Builder;
+import discord4j.rest.util.Color;
 import mindustry.gen.*;
 import useful.Bundle;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.utils.Utils.*;
-import static discord4j.rest.util.Color.*;
 
 // Страшно, но очень полезно.
 // (C) xzxADIxzx, 2023 год
@@ -49,7 +49,7 @@ public class PageIterator {
     }
 
     private static <T> void client(String[] args, Player player, String name, Prov<Seq<T>> content, Cons3<StringBuilder, Integer, T> formatter) {
-        int page = args.length > 0 ? parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil((float) content.get().size / maxPerPage));
+        int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil((float) content.get().size / maxPerPage));
         if (page > pages || page < 1) {
             Bundle.send(player, "commands.invalid-page", pages);
             return;
@@ -88,10 +88,10 @@ public class PageIterator {
     }
 
     public static void formatDiscordPage(Builder embed, String title, String footer, ListResponse response) {
-        embed.title(format(title, response.total));
-        embed.footer(format(footer, response.page, response.pages), null);
+        embed.title(Strings.format(title, response.total));
+        embed.footer(Strings.format(footer, response.page, response.pages), null);
 
-        embed.color(SUMMER_SKY);
+        embed.color(Color.SUMMER_SKY);
         embed.description(response.content);
     }
 

@@ -13,6 +13,7 @@ import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
@@ -49,7 +50,7 @@ public class ServerCommands {
                 mode = Find.mode(args[1]);
                 if (notFound(mode, args[1])) return;
             } else {
-                mode = notNullElse(Find.mode(settings.getString("lastServerMode", "")), Gamemode.survival);
+                mode = Optional.ofNullable(Find.mode(settings.getString("lastServerMode", ""))).orElse(Gamemode.survival);
                 Log.info("Default mode selected to be @.", mode.name());
             }
 
@@ -88,7 +89,7 @@ public class ServerCommands {
             if (invalidDuration(duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.kick(target, "Console", duration.toMillis(), reason);
+            Admins.kick(target, "<Console>", duration.toMillis(), reason);
 
             Log.info("Player @ has been kicked for @ for @.", target.plainName(), Bundle.formatDuration(duration), reason);
         });
@@ -114,7 +115,7 @@ public class ServerCommands {
             Log.info("Kicked players: (@)", kicked.size);
             kicked.each((ip, time) -> {
                 var info = netServer.admins.findByIP(ip);
-                Log.info("  Name: @ / ID: @ / IP: @ / Unban date: @", info == null ? "unknown" : info.plainLastName(), info == null ? "unknown" : info.id, ip, Bundle.formatDateTime(time));
+                Log.info("  Name: @ / UUID: @ / IP: @ / Unban Date: @", info == null ? "unknown" : info.plainLastName(), info == null ? "unknown" : info.id, ip, Bundle.formatDateTime(time));
             });
         });
 
@@ -126,23 +127,26 @@ public class ServerCommands {
             if (invalidDuration(duration)) return;
 
             var reason = args.length > 2 ? args[2] : "Not Specified";
-            Admins.ban(info, "Console", duration.toMillis(), reason);
+            Admins.ban(info, "<Console>", duration.toMillis(), reason);
 
             Log.info("Player @ has been banned for @ for @.", info.plainLastName(), Bundle.formatDuration(duration), reason);
         });
 
         serverCommands.register("unban", "<player...>", "Unban a player.", args -> {
-            var ban = Database.removeBan(args[0]);
+            var info = Find.playerInfo(args[0]);
+            if (notFound(info, args[0])) return;
+
+            var ban = Database.removeBan(info.id, info.lastIP);
             if (notBanned(ban)) return;
 
             Log.info("Player @ has been unbanned.", ban.player);
         });
 
         serverCommands.register("bans", "List of all banned players.", args -> {
-            var banned = Database.getBanned();
+            var banned = Database.getBans();
 
-            Log.info("Banned players: (@)", banned.size);
-            banned.each(ban -> Log.info("  Name: @ / ID: @ / UUID: @ / IP: @ / Unban date: @", ban.player, ban.id, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
+            Log.info("Banned players: (@)", banned.size());
+            banned.forEach(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban Date: @", ban.player, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
         });
 
         serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {

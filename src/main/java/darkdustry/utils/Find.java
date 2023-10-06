@@ -3,7 +3,7 @@ package darkdustry.utils;
 import arc.files.Fi;
 import arc.func.Boolf;
 import arc.struct.Seq;
-import arc.util.Structs;
+import arc.util.*;
 import darkdustry.database.*;
 import darkdustry.database.models.PlayerData;
 import darkdustry.features.Ranks.Rank;
@@ -16,7 +16,8 @@ import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static arc.util.Strings.*;
+import java.util.Optional;
+
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
@@ -47,7 +48,7 @@ public class Find {
             if (data != null) return netServer.admins.getInfoOptional(data.uuid);
         }
 
-        return notNullElse(netServer.admins.getInfoOptional(input), netServer.admins.findByIP(input));
+        return Optional.ofNullable(netServer.admins.getInfoOptional(input)).orElseGet(() -> netServer.admins.findByIP(input));
     }
 
     public static PlayerData playerData(String input) {
@@ -121,11 +122,11 @@ public class Find {
     }
 
     private static int parseID(String input) {
-        return parseInt(input.startsWith("#") ? input.substring(1) : input);
+        return Strings.parseInt(input.startsWith("#") ? input.substring(1) : input);
     }
 
     private static boolean canParseID(String input) {
-        return canParseInt(input.startsWith("#") ? input.substring(1) : input);
+        return Strings.canParseInt(input.startsWith("#") ? input.substring(1) : input);
     }
 
     // endregion

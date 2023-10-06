@@ -3,13 +3,13 @@ package darkdustry.features;
 import arc.Events;
 import arc.math.geom.Geometry;
 import arc.struct.IntMap;
+import arc.util.Strings;
 import darkdustry.utils.Find;
 import mindustry.game.EventType.*;
 import mindustry.gen.Call;
 import mindustry.io.JsonIO;
 import mindustry.world.Block;
 
-import static arc.util.Strings.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
@@ -36,7 +36,7 @@ public class SchemeSize {
 
             var args = text.split(" ");
 
-            int cx = parseInt(args[3]), cy = parseInt(args[4]), width = parseInt(args[5]), height = parseInt(args[6]);
+            int cx = Strings.parseInt(args[3]), cy = Strings.parseInt(args[4]), width = Strings.parseInt(args[5]), height = Strings.parseInt(args[6]);
             if (invalidArea(player, width, height, maxFillArea)) return;
 
             Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);
@@ -49,7 +49,7 @@ public class SchemeSize {
 
             var args = text.split(" ");
 
-            int cx = parseInt(args[3]), cy = parseInt(args[4]), radius = parseInt(args[5]);
+            int cx = Strings.parseInt(args[3]), cy = Strings.parseInt(args[4]), radius = Strings.parseInt(args[5]);
             if (invalidArea(player, radius, maxFillArea)) return;
 
             Block floor = Find.block(args[0]), block = Find.block(args[1]), overlay = Find.block(args[2]);

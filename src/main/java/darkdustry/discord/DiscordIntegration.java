@@ -13,16 +13,16 @@ import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.presence.*;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
 import mindustry.gen.Groups;
 import useful.Bundle;
 
+import java.time.Instant;
 import java.util.Collections;
 
 import static arc.Core.*;
-import static arc.util.Strings.*;
 import static darkdustry.discord.DiscordBot.*;
 import static discord4j.common.util.TimestampFormat.*;
-import static discord4j.rest.util.Color.*;
 import static mindustry.Vars.*;
 
 public class DiscordIntegration {
@@ -31,14 +31,14 @@ public class DiscordIntegration {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
-                .color(CINNABAR)
+                .color(Color.CINNABAR)
                 .title("Ban")
-                .addField("Server:", capitalize(server), false)
-                .addField("ID:", String.valueOf(ban.id), false)
                 .addField("Player:", ban.player, false)
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
                 .addField("Unban Date:", LONG_DATE.format(ban.unbanDate.toInstant()), false)
+                .footer(server, null)
+                .timestamp(Instant.now())
                 .build()).subscribe();
     }
 
@@ -46,14 +46,15 @@ public class DiscordIntegration {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
-                .color(MOON_YELLOW)
+                .color(Color.MOON_YELLOW)
                 .title("Vote Kick")
-                .addField("Server:", capitalize(server), false)
                 .addField("Initiator:", initiator, false)
                 .addField("Target:", target, false)
                 .addField("Reason:", reason, false)
                 .addField("Votes For:", votesFor, false)
                 .addField("Votes Against:", votesAgainst, false)
+                .footer(server, null)
+                .timestamp(Instant.now())
                 .build()).subscribe();
     }
 
@@ -61,12 +62,13 @@ public class DiscordIntegration {
         if (!connected) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
-                .color(BISMARK)
+                .color(Color.BISMARK)
                 .title("Admin Request")
+                .description("Select the desired option to confirm or deny the request. Confirm only your requests!")
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
-                .addField("Server:", capitalize(server), false)
-                .footer("Select the desired option to confirm or deny the request. Confirm only your requests!", null)
+                .footer(server, null)
+                .timestamp(Instant.now())
                 .build()
         ).withComponents(ActionRow.of(SelectMenu.of("admin-request",
                 Option.of("Confirm", "confirm-" + server + "-" + data.uuid).withDescription("Confirm this request.").withEmoji(ReactionEmoji.unicode("✅")),
@@ -81,12 +83,13 @@ public class DiscordIntegration {
         if (data == null) return; // Just in case
 
         event.edit().withEmbeds(EmbedCreateSpec.builder()
-                .color(MEDIUM_SEA_GREEN)
+                .color(Color.MEDIUM_SEA_GREEN)
                 .title("Admin Request Confirmed")
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
-                .addField("Server:", capitalize(server), false)
                 .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
+                .footer(server, null)
+                .timestamp(Instant.now())
                 .build()).withComponents(Collections.emptyList()).subscribe();
     }
 
@@ -97,12 +100,13 @@ public class DiscordIntegration {
         if (data == null) return; // Just in case
 
         event.edit().withEmbeds(EmbedCreateSpec.builder()
-                .color(CINNABAR)
+                .color(Color.CINNABAR)
                 .title("Admin Request Denied")
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
-                .addField("Server:", capitalize(server), false)
                 .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
+                .footer(server, null)
+                .timestamp(Instant.now())
                 .build()).withComponents(Collections.emptyList()).subscribe();
     }
 
