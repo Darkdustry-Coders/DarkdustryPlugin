@@ -2,8 +2,8 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
-import darkdustry.features.net.Translator;
 import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.net.Translator;
 import darkdustry.utils.Find;
 import mindustry.gen.*;
 import useful.Bundle;
@@ -13,7 +13,6 @@ import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
 import static mindustry.server.ServerControl.*;
-import static useful.Bundle.*;
 
 public class AdminCommands {
 
@@ -175,7 +174,7 @@ public class AdminCommands {
     }
 
     public static void register(String name, CommandRunner<Player> runner) {
-        adminOnlyCommands.add(clientCommands.<Player>register(name, Bundle.get("commands." + name + ".params", "", defaultLocale), Bundle.get("commands." + name + ".description", defaultLocale), (args, player) -> {
+        adminOnlyCommands.add(clientCommands.<Player>register(name, Bundle.getDefault("commands." + name + ".params", ""), Bundle.getDefault("commands." + name + ".description"), (args, player) -> {
             if (notAdmin(player)) return;
             runner.accept(args, player);
         }).text);

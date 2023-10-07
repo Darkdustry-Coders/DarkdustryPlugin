@@ -1,10 +1,11 @@
 package darkdustry.utils;
 
+import arc.struct.ObjectIntMap;
 import arc.util.*;
 import darkdustry.database.Database;
 import darkdustry.database.models.Ban;
 import darkdustry.features.net.Socket;
-import darkdustry.listeners.SocketEvents.BanSyncEvent;
+import darkdustry.listeners.SocketEvents.*;
 import mindustry.gen.Player;
 import mindustry.net.Administration.PlayerInfo;
 import mindustry.net.NetConnection;
@@ -90,8 +91,25 @@ public class Admins {
         ban.generateID();
         Database.addBan(ban);
 
-        // Отправляем бан по сокету, чтобы его увидели другие сервера
         Socket.send(new BanSyncEvent(config.mode.name(), ban));
+    }
+
+    public static void voteKick(Player target, Player initiator, ObjectIntMap<Player> votes, String reason) {
+        var votesFor = new StringBuilder();
+        var votesAgainst = new StringBuilder();
+
+        votes.forEach(entry -> {
+            switch (entry.value) {
+                case 1 -> votesFor.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
+                case -1 -> votesAgainst.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
+            }
+        });
+
+        if (votesFor.isEmpty()) votesFor.append("<none>").append("\n");
+        if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
+
+        kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
+        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
     }
 
     public static void checkKicked(NetConnection con, String locale) {

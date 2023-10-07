@@ -60,6 +60,7 @@ public class Config {
         castle {{
             isDefault = false;
             enableVnw = false;
+            enableSurrender = true;
         }},
 
         crawler {{
@@ -69,6 +70,7 @@ public class Config {
 
         forts {{
             enableVnw = false;
+            enableSurrender = true;
         }},
 
         hexed {{
@@ -94,6 +96,7 @@ public class Config {
 
         pvp {{
             enableVnw = false;
+            enableSurrender = true;
         }},
 
         sandbox {{
@@ -110,5 +113,6 @@ public class Config {
         public boolean enableVnw = true;
         public boolean enableStrict = true;
         public boolean enableVotekick = true;
+        public boolean enableSurrender = false;
     }
 }

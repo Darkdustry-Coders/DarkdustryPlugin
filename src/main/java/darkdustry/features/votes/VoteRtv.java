@@ -24,7 +24,7 @@ public class VoteRtv extends VoteSession {
 
     @Override
     public void left(Player player) {
-        if (voted.remove(player) != 0)
+        if (votes.remove(player) != 0)
             Bundle.send("commands.rtv.left", player.coloredName(), votes(), votesRequired());
     }
 

@@ -1,14 +1,11 @@
 package darkdustry.features.votes;
 
-import arc.util.Strings;
-import darkdustry.features.net.Socket;
-import darkdustry.listeners.SocketEvents.VoteKickEvent;
 import darkdustry.utils.Admins;
 import mindustry.gen.*;
 import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.config.Config.*;
+import static darkdustry.utils.Checks.*;
 
 public class VoteKick extends VoteSession {
 
@@ -23,13 +20,15 @@ public class VoteKick extends VoteSession {
 
     @Override
     public void vote(Player player, int sign) {
+        if (alreadyVoted(player, this) || invalidVoteTarget(player, target)) return;
+
         Bundle.send(sign == 1 ? "commands.votekick.yes" : "commands.votekick.no", player.coloredName(), target.coloredName(), reason, votes() + sign, votesRequired());
         super.vote(player, sign);
     }
 
     @Override
     public void left(Player player) {
-        if (voted.remove(player) != 0)
+        if (votes.remove(player) != 0)
             Bundle.send("commands.votekick.left", player.coloredName(), votes(), votesRequired());
 
         if (target == player && votes() > 0)
@@ -41,21 +40,7 @@ public class VoteKick extends VoteSession {
         stop();
         Groups.player.each(player -> Bundle.send(player, "commands.votekick.success", target.coloredName(), Bundle.formatDuration(player, kickDuration), reason));
 
-        var votesFor = new StringBuilder();
-        var votesAgainst = new StringBuilder();
-
-        voted.forEach(entry -> {
-            switch (entry.value) {
-                case 1 -> votesFor.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
-                case -1 -> votesAgainst.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
-            }
-        });
-
-        if (votesFor.isEmpty()) votesFor.append("<none>").append("\n");
-        if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
-
-        Admins.kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
+        Admins.voteKick(target, initiator, votes, reason);
     }
 
     @Override
@@ -77,6 +62,6 @@ public class VoteKick extends VoteSession {
 
     @Override
     public int votesRequired() {
-        return Groups.player.size() > 3 ? 3 : 2;
+        return Math.min(3, Groups.player.size());
     }
 }

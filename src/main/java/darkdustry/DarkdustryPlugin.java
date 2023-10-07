@@ -41,9 +41,10 @@ public class DarkdustryPlugin extends Plugin {
         Cooldowns.defaults(
                 "sync", 15000L,
                 "votekick", 300000L,
-                "login", 900000L,
+                "login", 300000L,
                 "rtv", 60000L,
                 "vnw", 60000L,
+                "surrender", 180000L,
                 "votesave", 180000L,
                 "voteload", 180000L
         );

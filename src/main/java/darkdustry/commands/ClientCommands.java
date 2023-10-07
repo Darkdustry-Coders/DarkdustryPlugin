@@ -66,8 +66,6 @@ public class ClientCommands {
                 return;
             }
 
-            if (alreadyVoted(player, voteKick) || invalidVoteTarget(player, voteKick.target)) return;
-
             int sign = voteChoice(args[0]);
             if (invalidVoteSign(player, sign)) return;
 
@@ -110,6 +108,15 @@ public class ClientCommands {
                 if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
 
                 vote = new VoteVnw(amount);
+                vote.vote(player, 1);
+            });
+        }
+
+        if (config.mode.enableSurrender || true) {
+            register("surrender", (args, player) -> {
+                if (alreadyVoting(player, vote)) return;
+
+                vote = new VoteSurrender(player.team());
                 vote.vote(player, 1);
             });
         }

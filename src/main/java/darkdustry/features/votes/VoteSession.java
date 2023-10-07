@@ -10,15 +10,15 @@ import static darkdustry.PluginVars.*;
 
 public abstract class VoteSession {
 
-    public final ObjectIntMap<Player> voted = new ObjectIntMap<>();
+    public final ObjectIntMap<Player> votes = new ObjectIntMap<>();
     public final Task end;
 
     public VoteSession() {
-        end = Timer.schedule(this::fail, voteDuration);
+        this.end = Timer.schedule(this::fail, voteDuration);
     }
 
     public void vote(Player player, int sign) {
-        voted.put(player, sign);
+        votes.put(player, sign);
 
         if (votes() >= votesRequired())
             success();
@@ -36,10 +36,10 @@ public abstract class VoteSession {
     }
 
     public int votes() {
-        return voted.values().toArray().sum();
+        return votes.values().toArray().sum();
     }
 
     public int votesRequired() {
-        return Groups.player.size() > 2 ? Mathf.ceil(Groups.player.size() * voteRatio) : Groups.player.size();
+        return Math.max(Math.min(2, Groups.player.size()), Mathf.ceil(Groups.player.size() * voteRatio));
     }
 }

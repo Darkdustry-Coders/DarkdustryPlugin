@@ -69,11 +69,11 @@ public class Checks {
     }
 
     public static boolean notBanned(Ban ban) {
-        return check(ban == null, "No banned player found for provided input.");
+        return check(ban == null, "This player wasn't banned from the server.");
     }
 
     public static boolean notKicked(PlayerInfo info) {
-        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), "This player wasn't kicked from this server.");
+        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), "This player wasn't kicked from the server.");
     }
 
     // endregion
@@ -128,11 +128,15 @@ public class Checks {
     }
 
     public static boolean invalidVotekickTarget(Player player, Player target) {
-        return check(target == player, player, "commands.votekick.player-is-you") || check(target.admin, player, "commands.votekick.player-is-admin") || check(target.team() != player.team(), player, "commands.votekick.player-is-enemy");
+        return check(player == target, player, "commands.votekick.player-is-you") || check(target.admin, player, "commands.votekick.player-is-admin") || check(player.team() != target.team(), player, "commands.votekick.player-is-enemy");
     }
 
     public static boolean invalidVoteTarget(Player player, Player target) {
-        return check(target == player, player, "commands.vote.player-is-you") || check(target.team() != player.team(), player, "commands.vote.player-is-enemy");
+        return check(player == target, player, "commands.vote.player-is-you") || check(player.team() != target.team(), player, "commands.vote.player-is-enemy");
+    }
+
+    public static boolean invalidSurrenderTeam(Player player, Team team) {
+        return check(player.team() != team, player, "commands.surrender.other-team");
     }
 
     public static boolean invalidVoteSign(Player player, int sign) {
@@ -160,11 +164,11 @@ public class Checks {
     }
 
     public static boolean alreadyVoting(Player player, VoteSession session) {
-        return check(session != null, player, "commands.vote-already-started");
+        return check(session != null, player, "commands.voting.already-started");
     }
 
     public static boolean notVoting(Player player, VoteSession session) {
-        return check(session == null, player, "commands.no-voting");
+        return check(session == null, player, "commands.voting.none");
     }
 
     public static boolean alreadyAdmin(Player player) {
@@ -172,7 +176,7 @@ public class Checks {
     }
 
     public static boolean alreadyVoted(Player player, VoteSession session) {
-        return check(session.voted.containsKey(player), player, "commands.already-voted");
+        return check(session.votes.containsKey(player), player, "commands.voting.already-voted");
     }
 
     public static boolean onCooldown(Player player, String command) {
@@ -242,12 +246,12 @@ public class Checks {
         return check(!map.custom, request, "Map Not Removed", "This map is built-in and can't be removed.");
     }
 
-    public static boolean notKicked(Request<EmbedResponse> request, PlayerInfo info) {
-        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), request, "Pardon Failed", "This player wasn't kicked from this server.");
+    public static boolean notBanned(Request<EmbedResponse> request, Ban ban) {
+        return check(ban == null, request, "Unban Failed", "This player wasn't banned from the server.");
     }
 
-    public static boolean notBanned(Request<EmbedResponse> request, Ban ban) {
-        return check(ban == null, request, "Unban Failed", "No banned player found for provided input.");
+    public static boolean notKicked(Request<EmbedResponse> request, PlayerInfo info) {
+        return check(netServer.admins.getKickTime(info.id, info.lastIP) < Time.millis() && !netServer.admins.isDosBlacklisted(info.lastIP), request, "Pardon Failed", "This player wasn't kicked from the server.");
     }
 
     public static boolean noRtv(Request<EmbedResponse> request) {
