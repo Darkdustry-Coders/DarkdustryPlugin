@@ -112,7 +112,7 @@ public class ClientCommands {
             });
         }
 
-        if (config.mode.enableSurrender || true) {
+        if (config.mode.enableSurrender) {
             register("surrender", (args, player) -> {
                 if (alreadyVoting(player, vote)) return;
 
