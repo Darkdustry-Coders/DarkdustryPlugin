@@ -52,35 +52,35 @@ public class Config {
     public String mongoUrl = "url";
 
     /** Режим игры на сервере. */
-    public Gamemode mode = survival;
+    public Gamemode mode = hub;
 
     public enum Gamemode {
-        attack,
+        attack("Attack"),
 
-        castle {{
+        castle("Castle Wars") {{
             isDefault = false;
             enableVnw = false;
             enableSurrender = true;
         }},
 
-        crawler {{
+        crawler("Crawler Arena") {{
             isDefault = false;
             enableVnw = false;
         }},
 
-        forts {{
+        forts("Forts") {{
             enableVnw = false;
             enableSurrender = true;
         }},
 
-        hexed {{
+        hexed("Hexed PvP") {{
             isDefault = false;
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
         }},
 
-        hub {{
+        hub("Hub") {{
             isDefault = false;
             isMainServer = true;
             enableRtv = false;
@@ -88,23 +88,25 @@ public class Config {
             enableVotekick = false;
         }},
 
-        msgo {{
+        msgo("MS:GO") {{
             isDefault = false;
             enableRtv = false;
             enableVnw = false;
         }},
 
-        pvp {{
+        pvp("PvP") {{
             enableVnw = false;
             enableSurrender = true;
         }},
 
-        sandbox {{
+        sandbox("Sandbox") {{
             enableStrict = false;
         }},
 
-        survival,
-        tower;
+        survival("Survival"),
+        tower("Tower Defense");
+
+        public final String displayName;
 
         public boolean isDefault = true;
         public boolean isMainServer = false;
@@ -114,5 +116,9 @@ public class Config {
         public boolean enableStrict = true;
         public boolean enableVotekick = true;
         public boolean enableSurrender = false;
+
+        Gamemode(String displayName) {
+            this.displayName = displayName;
+        }
     }
 }
