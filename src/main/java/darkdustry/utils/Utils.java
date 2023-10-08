@@ -29,10 +29,6 @@ public class Utils {
         };
     }
 
-    public static <T> T notNullElse(T value, T defaultValue) {
-        return value != null ? value : defaultValue;
-    }
-
     // endregion
     // region available
 

@@ -31,6 +31,7 @@ public class PluginEvents {
             state.rules.showSpawns = true;
             state.rules.unitPayloadUpdate = true;
 
+            state.rules.modeName = config.mode.displayName;
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
 
             if (state.rules.infiniteResources)
