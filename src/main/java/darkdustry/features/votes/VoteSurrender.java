@@ -17,7 +17,7 @@ public class VoteSurrender extends VoteSession{
     }
 
     public void vote(Player player, int sign) {
-        if (invalidSurrenderTeam(player, team)) return;
+        if (otherSurrenderTeam(player, team)) return;
 
         Bundle.send(sign == 1 ? "commands.surrender.yes" : "commands.surrender.no", player.coloredName(), team.coloredName(), votes() + sign, votesRequired());
         super.vote(player, sign);

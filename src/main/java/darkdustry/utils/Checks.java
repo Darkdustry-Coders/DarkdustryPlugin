@@ -135,7 +135,11 @@ public class Checks {
         return check(player == target, player, "commands.vote.player-is-you") || check(player.team() != target.team(), player, "commands.vote.player-is-enemy");
     }
 
-    public static boolean invalidSurrenderTeam(Player player, Team team) {
+    public static boolean invalidSurrenderTeam(Player player) {
+        return check(player.team().data().noCores(), player, "commands.surrender.invalid-team");
+    }
+
+    public static boolean otherSurrenderTeam(Player player, Team team) {
         return check(player.team() != team, player, "commands.surrender.other-team");
     }
 

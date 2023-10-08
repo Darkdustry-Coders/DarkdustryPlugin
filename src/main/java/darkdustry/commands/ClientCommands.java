@@ -114,7 +114,7 @@ public class ClientCommands {
 
         if (config.mode.enableSurrender) {
             register("surrender", (args, player) -> {
-                if (alreadyVoting(player, vote)) return;
+                if (alreadyVoting(player, vote) || invalidSurrenderTeam(player)) return;
 
                 vote = new VoteSurrender(player.team());
                 vote.vote(player, 1);
