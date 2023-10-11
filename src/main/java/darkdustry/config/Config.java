@@ -37,6 +37,7 @@ public class Config {
 
         if (config.mode.enableRtv) welcomeMessageCommands.add("rtv");
         if (config.mode.enableVnw) welcomeMessageCommands.add("vnw");
+        if (config.mode.enableSurrender) welcomeMessageCommands.add("surrender");
     }
 
     /** IP-адрес хаба. */
