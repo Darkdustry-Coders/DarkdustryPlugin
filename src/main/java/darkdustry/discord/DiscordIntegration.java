@@ -1,5 +1,6 @@
 package darkdustry.discord;
 
+import darkdustry.config.Config.Gamemode;
 import darkdustry.database.Database;
 import darkdustry.database.models.*;
 import darkdustry.features.net.Socket;
@@ -37,7 +38,7 @@ public class DiscordIntegration {
                 .addField("Admin:", ban.admin, false)
                 .addField("Reason:", ban.reason, false)
                 .addField("Unban Date:", LONG_DATE.format(ban.unbanDate.toInstant()), false)
-                .footer(server, null)
+                .footer(Gamemode.valueOf(server).displayName, null)
                 .timestamp(Instant.now())
                 .build()).subscribe();
     }
@@ -53,7 +54,7 @@ public class DiscordIntegration {
                 .addField("Reason:", reason, false)
                 .addField("Votes For:", votesFor, false)
                 .addField("Votes Against:", votesAgainst, false)
-                .footer(server, null)
+                .footer(Gamemode.valueOf(server).displayName, null)
                 .timestamp(Instant.now())
                 .build()).subscribe();
     }
@@ -67,7 +68,7 @@ public class DiscordIntegration {
                 .description("Select the desired option to confirm or deny the request. Confirm only your requests!")
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
-                .footer(server, null)
+                .footer(Gamemode.valueOf(server).displayName, null)
                 .timestamp(Instant.now())
                 .build()
         ).withComponents(ActionRow.of(SelectMenu.of("admin-request",

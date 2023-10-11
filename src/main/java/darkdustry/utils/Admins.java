@@ -89,7 +89,7 @@ public class Admins {
 
     public static void ban(Ban ban) {
         ban.generateID();
-        Socket.send(new BanSyncEvent(config.mode.displayName, Database.addBan(ban)));
+        Socket.send(new BanSyncEvent(config.mode.name(), Database.addBan(ban)));
     }
 
     public static void voteKick(Player target, Player initiator, ObjectIntMap<Player> votes, String reason) {
@@ -107,7 +107,7 @@ public class Admins {
         if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
 
         kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.displayName, initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
+        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
     }
 
     public static void checkKicked(NetConnection con, String locale) {
