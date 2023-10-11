@@ -4,7 +4,7 @@ import arc.util.Log;
 import com.mongodb.client.MongoClients;
 import darkdustry.database.models.*;
 import dev.morphia.*;
-import dev.morphia.mapping.*;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.*;
 
 import java.util.*;
@@ -64,8 +64,8 @@ public class Database {
     // endregion
     // region ban
 
-    public static void addBan(Ban ban) {
-        datastore.save(ban);
+    public static Ban addBan(Ban ban) {
+        return datastore.save(ban);
     }
 
     public static Ban removeBan(String uuid, String ip) {
