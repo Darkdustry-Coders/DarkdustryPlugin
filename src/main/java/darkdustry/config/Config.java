@@ -52,6 +52,12 @@ public class Config {
     /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
 
+    /** ID магазина Payok. */
+    public int payokShopID = 1234;
+
+    /** Секретный ключ API Payok. */
+    public String payokSecretKey = "key";
+
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
 

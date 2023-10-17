@@ -7,7 +7,7 @@ import darkdustry.features.menus.MenuHandler.*;
 import dev.morphia.annotations.*;
 import lombok.NoArgsConstructor;
 
-@Entity("players")
+@Entity(value = "players", useDiscriminator = false)
 @Indexes({
         @Index(fields = @Field("uuid")),
         @Index(fields = @Field("_id"))
@@ -48,7 +48,7 @@ public class PlayerData {
     }
 
     public void generateID() {
-        this.id = Database.generateNextID(PlayerData.class);
+        this.id = Database.generateNextID("players");
     }
 
     public String plainName() {

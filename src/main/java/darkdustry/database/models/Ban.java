@@ -7,7 +7,7 @@ import lombok.*;
 
 import java.util.Date;
 
-@Entity("bans")
+@Entity(value = "bans", useDiscriminator = false)
 @Indexes({
         @Index(fields = @Field("uuid")),
         @Index(fields = @Field("ip")),
@@ -31,7 +31,7 @@ public class Ban {
     public Date unbanDate;
 
     public void generateID() {
-        this.id = Database.generateNextID(Ban.class);
+        this.id = Database.generateNextID("bans");
     }
 
     public boolean expired() {

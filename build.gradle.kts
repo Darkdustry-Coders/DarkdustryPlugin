@@ -26,7 +26,9 @@ dependencies {
     }
 
     implementation("com.github.osp54:Sock:ed404a96ff")
-    implementation("dev.morphia.morphia:morphia-core:2.3.7")
+    implementation("com.github.darkness6030:JavaPayokSDK:v1.1.0")
+
+    implementation("dev.morphia.morphia:morphia-core:2.3.8")
 
     implementation("com.discord4j:discord4j-core:3.2.6")
     runtimeOnly("io.netty:netty-transport-native-epoll::linux-aarch_64")

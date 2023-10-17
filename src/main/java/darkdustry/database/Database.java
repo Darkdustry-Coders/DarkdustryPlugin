@@ -2,15 +2,17 @@ package darkdustry.database;
 
 import arc.util.Log;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.model.ReturnDocument;
 import darkdustry.database.models.*;
 import dev.morphia.*;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.*;
+import dev.morphia.query.filters.Filters;
+import dev.morphia.query.updates.UpdateOperators;
 
 import java.util.*;
 
 import static darkdustry.config.Config.*;
-import static dev.morphia.query.filters.Filters.*;
+
 
 public class Database {
 
@@ -22,8 +24,9 @@ public class Database {
             datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "darkdustry");
             mapper = datastore.getMapper();
 
-            mapper.getEntityModel(PlayerData.class);
             mapper.getEntityModel(Ban.class);
+            mapper.getEntityModel(Counter.class);
+            mapper.getEntityModel(PlayerData.class);
 
             datastore.ensureCaps();
             datastore.ensureIndexes();
@@ -38,18 +41,18 @@ public class Database {
 
     public static PlayerData getPlayerData(String uuid) {
         return Optional.ofNullable(Cache.get(uuid)).orElseGet(() -> datastore.find(PlayerData.class)
-                .filter(eq("uuid", uuid))
+                .filter(Filters.eq("uuid", uuid))
                 .first());
     }
 
     public static PlayerData getPlayerData(int id) {
         return Optional.ofNullable(Cache.get(id)).orElseGet(() -> datastore.find(PlayerData.class)
-                .filter(eq("_id", id))
+                .filter(Filters.eq("_id", id))
                 .first());
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
-        return Optional.ofNullable(datastore.find(PlayerData.class).filter(eq("uuid", uuid)).first()).orElseGet(() -> {
+        return Optional.ofNullable(datastore.find(PlayerData.class).filter(Filters.eq("uuid", uuid)).first()).orElseGet(() -> {
             var data = new PlayerData(uuid);
             data.generateID();
 
@@ -70,13 +73,13 @@ public class Database {
 
     public static Ban removeBan(String uuid, String ip) {
         return datastore.find(Ban.class)
-                .filter(or(eq("uuid", uuid), eq("ip", ip)))
+                .filter(Filters.or(Filters.eq("uuid", uuid), Filters.eq("ip", ip)))
                 .findAndDelete();
     }
 
     public static Ban getBan(String uuid, String ip) {
         return datastore.find(Ban.class)
-                .filter(or(eq("uuid", uuid), eq("ip", ip)))
+                .filter(Filters.or(Filters.eq("uuid", uuid), Filters.eq("ip", ip)))
                 .first();
     }
 
@@ -87,13 +90,11 @@ public class Database {
     // endregion
     // region ID
 
-    public static int generateNextID(Class<?> type) {
-        try (var iterator = datastore.find(type).iterator(new FindOptions()
-                .sort(Sort.descending("_id"))
-                .limit(1)
-        )) {
-            return iterator.hasNext() ? mapper.getId(iterator.next()) instanceof Integer id ? id + 1 : 0 : 0;
-        }
+    public static int generateNextID(String key) {
+        return Optional.ofNullable(datastore.find(Counter.class)
+                .filter(Filters.eq("_id", key))
+                .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value"))
+        ).orElseGet(() -> datastore.save(new Counter(key))).value;
     }
 
     // endregion
