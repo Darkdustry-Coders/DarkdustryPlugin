@@ -42,14 +42,14 @@ public class DiscordIntegration {
                 .timestamp(Instant.now()).build()).subscribe();
     }
 
-    public static void sendVoteKick(String server, String targetName, int targetID, String initiatorName, int initiatorID, String reason, String votesFor, String votesAgainst) {
+    public static void sendVoteKick(String server, String target, String initiator, String reason, String votesFor, String votesAgainst) {
         if (!connected) return;
 
         votekickChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.MOON_YELLOW)
                 .title("Vote Kick")
-                .addField("Target:", targetName + " [" + targetID + "]", false)
-                .addField("Initiator:", initiatorName + " [" + initiatorID + "]", false)
+                .addField("Target:", target, false)
+                .addField("Initiator:", initiator, false)
                 .addField("Reason:", reason, false)
                 .addField("Votes For:", votesFor, false)
                 .addField("Votes Against:", votesAgainst, false)

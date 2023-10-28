@@ -48,7 +48,7 @@ public class SocketEvents {
             });
 
             Socket.on(BanSyncEvent.class, event -> DiscordIntegration.sendBan(event.server, event.ban));
-            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.targetName, event.targetID,  event.initiatorName, event.initiatorID, event.reason, event.votesFor, event.votesAgainst));
+            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.target, event.initiator, event.reason, event.votesFor, event.votesAgainst));
             Socket.on(AdminRequestEvent.class, event -> DiscordIntegration.sendAdminRequest(event.server, event.data));
 
             Timer.schedule(DiscordIntegration::updateActivity, 60f, 60f);
@@ -278,7 +278,7 @@ public class SocketEvents {
     public record BanSyncEvent(String server, Ban ban) {
     }
 
-    public record VoteKickEvent(String server, String targetName, int targetID, String initiatorName, int initiatorID, String reason, String votesFor, String votesAgainst) {
+    public record VoteKickEvent(String server, String target, String initiator, String reason, String votesFor, String votesAgainst) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {

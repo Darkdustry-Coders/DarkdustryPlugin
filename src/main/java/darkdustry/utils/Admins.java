@@ -2,7 +2,7 @@ package darkdustry.utils;
 
 import arc.struct.ObjectIntMap;
 import arc.util.*;
-import darkdustry.database.*;
+import darkdustry.database.Database;
 import darkdustry.database.models.Ban;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
@@ -103,7 +103,7 @@ public class Admins {
             case -1 -> votesAgainst;
 
             default -> throw new IllegalStateException();
-        }).append("[scarlet]- ").append(entry.key.coloredName()).append("[accent] [").append(Database.getPlayerID(entry.key.uuid())).append("]\n"));
+        }).append("[scarlet]- ").append(entry.key.coloredName()).append("[accent] [").append(Database.getPlayerData(entry.key).id).append("]\n"));
 
         if (votesFor.isEmpty())
             votesFor.append("[scarlet]- [gray]<none>").append("\n");
@@ -112,7 +112,14 @@ public class Admins {
             votesAgainst.append("[scarlet]- [gray]<none>").append("\n");
 
         kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.name(), target.plainName(), Database.getPlayerID(target.uuid()), initiator.plainName(), Database.getPlayerID(initiator.uuid()), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
+        Socket.send(new VoteKickEvent(
+                config.mode.name(),
+                target.plainName() + " [" + Database.getPlayerData(target).id + "]",
+                initiator.plainName() + " [" + Database.getPlayerData(initiator).id + "]",
+                reason,
+                Strings.stripColors(votesFor),
+                Strings.stripColors(votesAgainst)
+        ));
     }
 
     public static void checkKicked(NetConnection con, String locale) {

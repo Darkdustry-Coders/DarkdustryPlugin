@@ -8,6 +8,7 @@ import dev.morphia.*;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
+import mindustry.gen.Player;
 
 import java.util.*;
 
@@ -39,6 +40,10 @@ public class Database {
 
     // region player data
 
+    public static PlayerData getPlayerData(Player player) {
+        return getPlayerData(player.uuid());
+    }
+
     public static PlayerData getPlayerData(String uuid) {
         return Optional.ofNullable(Cache.get(uuid)).orElseGet(() -> datastore.find(PlayerData.class)
                 .filter(Filters.eq("uuid", uuid))
@@ -58,10 +63,6 @@ public class Database {
 
             return savePlayerData(data);
         });
-    }
-
-    public static int getPlayerID(String uuid) {
-        return getPlayerData(uuid).id;
     }
 
     public static PlayerData savePlayerData(PlayerData data) {

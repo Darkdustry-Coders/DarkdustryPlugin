@@ -1,7 +1,6 @@
 package darkdustry.listeners;
 
 import arc.Events;
-import arc.struct.ObjectIntMap;
 import arc.util.*;
 import darkdustry.database.*;
 import darkdustry.features.*;
@@ -9,7 +8,6 @@ import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
-import darkdustry.utils.Admins;
 import discord4j.rest.util.Color;
 import mindustry.content.*;
 import mindustry.entities.Units;
@@ -106,12 +104,6 @@ public class PluginEvents {
             Cache.put(event.player, data);
             Ranks.name(event.player, data);
 
-            var map = new ObjectIntMap<Player>() {{
-                put(event.player, 1);
-            }};
-
-            Admins.voteKick(event.player, event.player, map, "Потому что чтоб не втыкал");
-
             // Вызываем с задержкой, чтобы игрок успел появиться
             app.post(() -> data.effects.join.get(event.player));
 
@@ -132,9 +124,6 @@ public class PluginEvents {
         });
 
         Events.on(PlayerLeave.class, event -> {
-            if (vote != null) vote.left(event.player);
-            if (voteKick != null) voteKick.left(event.player);
-
             var data = Cache.remove(event.player);
             Database.savePlayerData(data);
 
@@ -142,6 +131,9 @@ public class PluginEvents {
 
             Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
             Bundle.send("events.leave", event.player.coloredName(), data.id);
+
+            if (vote != null) vote.left(event.player);
+            if (voteKick != null) voteKick.left(event.player);
 
             Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
         });
