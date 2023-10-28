@@ -34,8 +34,9 @@ public class DiscordBot {
 
     public static GatewayDiscordClient gateway;
 
-    public static GuildMessageChannel banChannel, adminChannel;
-    public static Role adminRole, mapReviewerRole;
+    public static GuildMessageChannel banChannel;
+    public static GuildMessageChannel adminChannel;
+    public static GuildMessageChannel votekickChannel;
 
     public static boolean connected;
 
@@ -62,11 +63,9 @@ public class DiscordBot {
                     .blockOptional()
                     .orElseThrow();
 
-            banChannel = gateway.getChannelById(Snowflake.of(discordConfig.banChannelId)).ofType(GuildMessageChannel.class).block();
-            adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelId)).ofType(GuildMessageChannel.class).block();
-
-            adminRole = gateway.getRoleById(Snowflake.of(discordConfig.botGuildId), Snowflake.of(discordConfig.adminRoleId)).block();
-            mapReviewerRole = gateway.getRoleById(Snowflake.of(discordConfig.botGuildId), Snowflake.of(discordConfig.mapReviewerRoleId)).block();
+            banChannel = gateway.getChannelById(Snowflake.of(discordConfig.banChannelID)).ofType(GuildMessageChannel.class).block();
+            adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelID)).ofType(GuildMessageChannel.class).block();
+            votekickChannel = gateway.getChannelById(Snowflake.of(discordConfig.votekickChannelID)).ofType(GuildMessageChannel.class).block();
 
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 var message = event.getMessage();
@@ -130,7 +129,7 @@ public class DiscordBot {
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {
-                if (noRole(event, adminRole)) return;
+                if (noRole(event, discordConfig.adminRoleIDs)) return;
 
                 if (event.getCustomId().equals("admin-request")) {
                     var content = event.getValues().getFirst().split("-", 3);

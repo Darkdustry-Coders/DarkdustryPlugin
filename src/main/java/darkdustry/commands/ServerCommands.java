@@ -139,14 +139,14 @@ public class ServerCommands {
             var ban = Database.removeBan(info.id, info.lastIP);
             if (notBanned(ban)) return;
 
-            Log.info("Player @ has been unbanned.", ban.player);
+            Log.info("Player @ has been unbanned.", ban.playerName);
         });
 
         serverCommands.register("bans", "List of all banned players.", args -> {
             var banned = Database.getBans();
 
             Log.info("Banned players: (@)", banned.size());
-            banned.forEach(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban Date: @", ban.player, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
+            banned.forEach(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban Date: @", ban.playerName, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
         });
 
         serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {

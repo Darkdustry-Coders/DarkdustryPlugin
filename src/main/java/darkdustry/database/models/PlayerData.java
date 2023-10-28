@@ -5,13 +5,14 @@ import darkdustry.database.Database;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.menus.MenuHandler.*;
 import dev.morphia.annotations.*;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(value = "players", useDiscriminator = false)
 @Indexes({
         @Index(fields = @Field("uuid")),
         @Index(fields = @Field("_id"))
 })
+@Data
 @NoArgsConstructor
 public class PlayerData {
     public String uuid;

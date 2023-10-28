@@ -48,7 +48,7 @@ public class SocketEvents {
             });
 
             Socket.on(BanSyncEvent.class, event -> DiscordIntegration.sendBan(event.server, event.ban));
-            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.initiator, event.target, event.reason, event.votesFor, event.votesAgainst));
+            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.targetName, event.targetID,  event.initiatorName, event.initiatorID, event.reason, event.votesFor, event.votesAgainst));
             Socket.on(AdminRequestEvent.class, event -> DiscordIntegration.sendAdminRequest(event.server, event.data));
 
             Timer.schedule(DiscordIntegration::updateActivity, 60f, 60f);
@@ -69,8 +69,8 @@ public class SocketEvents {
         Socket.on(BanSyncEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.ban.uuid) || player.ip().equals(event.ban.ip),
                 player -> {
-                    Admins.kickReason(player, event.ban.remaining(), event.ban.reason, "kick.banned-by-admin", event.ban.admin).kick();
-                    Bundle.send("events.admin.ban", event.ban.admin, player.coloredName(), event.ban.reason);
+                    Admins.kickReason(player, event.ban.remaining(), event.ban.reason, "kick.banned-by-admin", event.ban.adminName).kick();
+                    Bundle.send("events.admin.ban", event.ban.adminName, player.coloredName(), event.ban.reason);
                 }));
 
         Socket.on(AdminRequestConfirmEvent.class, event -> {
@@ -259,7 +259,7 @@ public class SocketEvents {
             var ban = Database.removeBan(info.id, info.lastIP);
             if (notBanned(request, ban)) return;
 
-            Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.player));
+            Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.playerName));
         });
     }
 
@@ -278,7 +278,7 @@ public class SocketEvents {
     public record BanSyncEvent(String server, Ban ban) {
     }
 
-    public record VoteKickEvent(String server, String initiator, String target, String reason, String votesFor, String votesAgainst) {
+    public record VoteKickEvent(String server, String targetName, int targetID, String initiatorName, int initiatorID, String reason, String votesFor, String votesAgainst) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {

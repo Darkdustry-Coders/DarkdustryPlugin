@@ -135,5 +135,9 @@ public class Utils {
         };
     }
 
+    public static String formatRoles(Seq<Long> roleIDs, String separator) {
+        return separator + roleIDs.toString(separator, role -> "<@&" + role + ">");
+    }
+
     // endregion
 }

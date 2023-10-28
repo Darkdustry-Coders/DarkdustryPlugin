@@ -1,6 +1,6 @@
 package darkdustry.config;
 
-import arc.struct.ObjectMap;
+import arc.struct.*;
 import arc.util.Log;
 import useful.ConfigLoader;
 
@@ -23,20 +23,20 @@ public class DiscordConfig {
     /** Токен бота, привязанного к серверу. */
     public String prefix = "prefix";
 
-    /** ID сервера в Discord, к которому привязан бот. */
-    public long botGuildId = 0L;
-
     /** ID канала в Discord, куда отправляются баны. */
-    public long banChannelId = 0L;
+    public long banChannelID = 0L;
 
     /** ID канала в Discord, куда отправляются подтверждения для администраторов. */
-    public long adminChannelId = 0L;
+    public long adminChannelID = 0L;
 
-    /** ID роли администраторов в Discord. */
-    public long adminRoleId = 0L;
+    /** ID канала в Discord, куда отправляются успешные голосования за кик. */
+    public long votekickChannelID = 0L;
 
-    /** ID роли картоделов в Discord. */
-    public long mapReviewerRoleId = 0L;
+    /** ID ролей администраторов в Discord. */
+    public Seq<Long> adminRoleIDs = Seq.with(0L);
+
+    /** ID ролей картоделов в Discord. */
+    public Seq<Long> mapReviewerRoleIDs = Seq.with(0L);
 
     /** ID каналов, привязанных к серверам. */
     public ObjectMap<String, Long> serverToChannel = ObjectMap.of("server", 0L);

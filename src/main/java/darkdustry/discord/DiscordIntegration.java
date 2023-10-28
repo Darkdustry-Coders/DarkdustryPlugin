@@ -34,29 +34,27 @@ public class DiscordIntegration {
         banChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)
                 .title("Ban")
-                .addField("Player:", ban.player, false)
-                .addField("Admin:", ban.admin, false)
+                .addField("Player:", ban.playerName + " [" + ban.playerID + "]", false)
+                .addField("Admin:", ban.adminName, false)
                 .addField("Reason:", ban.reason, false)
                 .addField("Unban Date:", LONG_DATE.format(ban.unbanDate.toInstant()), false)
                 .footer(Gamemode.valueOf(server).displayName, null)
-                .timestamp(Instant.now())
-                .build()).subscribe();
+                .timestamp(Instant.now()).build()).subscribe();
     }
 
-    public static void sendVoteKick(String server, String initiator, String target, String reason, String votesFor, String votesAgainst) {
+    public static void sendVoteKick(String server, String targetName, int targetID, String initiatorName, int initiatorID, String reason, String votesFor, String votesAgainst) {
         if (!connected) return;
 
-        banChannel.createMessage(EmbedCreateSpec.builder()
+        votekickChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.MOON_YELLOW)
                 .title("Vote Kick")
-                .addField("Initiator:", initiator, false)
-                .addField("Target:", target, false)
+                .addField("Target:", targetName + " [" + targetID + "]", false)
+                .addField("Initiator:", initiatorName + " [" + initiatorID + "]", false)
                 .addField("Reason:", reason, false)
                 .addField("Votes For:", votesFor, false)
                 .addField("Votes Against:", votesAgainst, false)
                 .footer(Gamemode.valueOf(server).displayName, null)
-                .timestamp(Instant.now())
-                .build()).subscribe();
+                .timestamp(Instant.now()).build()).subscribe();
     }
 
     public static void sendAdminRequest(String server, PlayerData data) {

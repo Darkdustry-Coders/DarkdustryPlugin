@@ -2,7 +2,7 @@ package darkdustry.commands;
 
 import arc.util.CommandHandler.CommandRunner;
 import arc.util.Strings;
-import darkdustry.database.Cache;
+import darkdustry.database.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
@@ -141,6 +141,13 @@ public class ClientCommands {
 
             register("saves", PageIterator::saves);
         }
+
+//      register("pay", (args, player) -> {
+//          var data = Cache.get(player);
+//          if (Database.hasPayment(data.id)) return;
+//
+//          Call.openURI(player.con, PayokServer.generatePaymentLink(101, data.id, "RUB", "Test DESCRIPTION"));
+//      });
     }
 
     public static void register(String name, CommandRunner<Player> runner) {

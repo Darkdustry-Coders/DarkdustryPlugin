@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.struct.Seq;
 import arc.util.*;
 import com.ospx.sock.EventBus.Request;
 import darkdustry.database.models.*;
@@ -10,7 +11,6 @@ import darkdustry.features.net.Socket;
 import darkdustry.features.votes.VoteSession;
 import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
-import discord4j.core.object.entity.Role;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import mindustry.game.Gamemode;
@@ -190,22 +190,22 @@ public class Checks {
     // endregion
     // region discord
 
-    public static boolean noRole(SelectMenuInteractionEvent event, Role role) {
+    public static boolean noRole(SelectMenuInteractionEvent event, Seq<Long> roleIDs) {
         return check(event.getInteraction()
                         .getMember()
-                        .map(member -> !member.getRoleIds().contains(role.getId()))
+                        .map(member -> member.getRoleIds().stream().noneMatch(role -> roleIDs.contains(role.asLong())))
                         .orElse(true),
                 () -> event.reply().withEmbeds(EmbedCreateSpec.builder()
                         .color(Color.CINNABAR)
                         .title("Missing Permissions")
-                        .description("You must be " + role.getMention() + " to use this feature.")
+                        .description("You must have one of these roles to use this feature: " + formatRoles(roleIDs, "\n- "))
                         .build()).withEphemeral(true).subscribe());
     }
 
-    public static boolean noRole(MessageContext context, Role role) {
-        return check(!context.member()
+    public static boolean noRole(MessageContext context, Seq<Long> roleIDs) {
+        return check(context.member()
                 .getRoleIds()
-                .contains(role.getId()), context, "Missing Permissions", "You must be @ to use this command.", role.getMention());
+                .stream().noneMatch(role -> roleIDs.contains(role.asLong())), context, "Missing Permissions", "You must have one of these roles to use this feature: @", formatRoles(roleIDs, "\n- "));
     }
 
     public static boolean notMap(MessageContext context) {

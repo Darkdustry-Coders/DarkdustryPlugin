@@ -40,7 +40,7 @@ public class VoteKick extends VoteSession {
         stop();
         Groups.player.each(player -> Bundle.send(player, "commands.votekick.success", target.coloredName(), Bundle.formatDuration(player, kickDuration), reason));
 
-        Admins.voteKick(target, initiator, votes, reason);
+        Admins.voteKick(initiator, target, votes, reason);
     }
 
     @Override

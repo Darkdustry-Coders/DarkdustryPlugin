@@ -1,7 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.*;
-import darkdustry.database.*;
+import darkdustry.database.Database;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
@@ -11,7 +11,6 @@ import useful.Bundle;
 import java.time.Duration;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.discord.DiscordBot.*;
 import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
@@ -39,7 +38,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("exit", "<server>", "Exit the server application.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -48,7 +47,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -64,7 +63,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("uploadmap", "<server>", "Upload a map to the server.", (args, context) -> {
-            if (noRole(context, mapReviewerRole) || notMap(context)) return;
+            if (noRole(context, discordConfig.mapReviewerRoleIDs) || notMap(context)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -82,7 +81,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("removemap", "<server> <map...>", "Remove a map from the server.", (args, context) -> {
-            if (noRole(context, mapReviewerRole)) return;
+            if (noRole(context, discordConfig.mapReviewerRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -91,7 +90,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("kick", "<server> <player> <duration> [reason...]", "Kick a player.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -100,7 +99,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("pardon", "<server> <player...>", "Pardon a player.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -109,7 +108,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("ban", "<server> <player> <duration> [reason...]", "Ban a player.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -118,7 +117,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("unban", "<server> <player...>", "Unban a player.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
             if (notFound(context, server)) return;
@@ -152,7 +151,7 @@ public class DiscordCommands {
         });
 
         discordCommands.<MessageContext>register("setrank", "<player> <rank>", "Set a player's rank.", (args, context) -> {
-            if (noRole(context, adminRole)) return;
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var data = Find.playerData(args[0]);
             if (notFound(context, data)) return;

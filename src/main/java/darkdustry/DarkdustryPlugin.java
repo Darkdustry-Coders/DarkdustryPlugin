@@ -11,7 +11,7 @@ import darkdustry.config.DiscordConfig;
 import darkdustry.discord.DiscordBot;
 import darkdustry.features.*;
 import darkdustry.features.menus.MenuHandler;
-import darkdustry.features.net.Socket;
+import darkdustry.features.net.*;
 import darkdustry.listeners.*;
 import mindustry.core.Version;
 import mindustry.gen.*;
@@ -51,6 +51,7 @@ public class DarkdustryPlugin extends Plugin {
 
         Alerts.load();
         MenuHandler.load();
+        PayokServer.load();
         SchemeSize.load();
 
         Database.connect();

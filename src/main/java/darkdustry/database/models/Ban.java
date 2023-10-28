@@ -17,12 +17,16 @@ import java.util.Date;
                 options = @IndexOptions(expireAfterSeconds = 0)
         )
 })
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ban {
-    public String uuid, ip;
-    public String player, admin;
+    public String uuid;
+    public String ip;
+
+    public String playerName, adminName;
+    public int playerID;
 
     @Id
     public int id;
@@ -32,6 +36,10 @@ public class Ban {
 
     public void generateID() {
         this.id = Database.generateNextID("bans");
+    }
+
+    public void generatePlayerID() {
+        this.playerID = Database.getPlayerData(uuid).id;
     }
 
     public boolean expired() {

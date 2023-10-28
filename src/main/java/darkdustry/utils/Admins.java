@@ -2,7 +2,7 @@ package darkdustry.utils;
 
 import arc.struct.ObjectIntMap;
 import arc.util.*;
-import darkdustry.database.Database;
+import darkdustry.database.*;
 import darkdustry.database.models.Ban;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
@@ -56,8 +56,8 @@ public class Admins {
         ban(Ban.builder()
                 .uuid(target.uuid())
                 .ip(target.ip())
-                .player(target.plainName())
-                .admin(admin.plainName())
+                .playerName(target.plainName())
+                .adminName(admin.plainName())
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
                 .build());
@@ -77,8 +77,8 @@ public class Admins {
         ban(Ban.builder()
                 .uuid(info.id)
                 .ip(info.lastIP)
-                .player(info.plainLastName())
-                .admin(admin)
+                .playerName(info.plainLastName())
+                .adminName(admin)
                 .reason(reason)
                 .unbanDate(new Date(Time.millis() + duration))
                 .build());
@@ -89,25 +89,30 @@ public class Admins {
 
     public static void ban(Ban ban) {
         ban.generateID();
+        ban.generatePlayerID();
+
         Socket.send(new BanSyncEvent(config.mode.name(), Database.addBan(ban)));
     }
 
-    public static void voteKick(Player target, Player initiator, ObjectIntMap<Player> votes, String reason) {
+    public static void voteKick(Player initiator, Player target, ObjectIntMap<Player> votes, String reason) {
         var votesFor = new StringBuilder();
         var votesAgainst = new StringBuilder();
 
-        votes.forEach(entry -> {
-            switch (entry.value) {
-                case 1 -> votesFor.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
-                case -1 -> votesAgainst.append("[scarlet]- ").append(entry.key.coloredName()).append("\n");
-            }
-        });
+        votes.forEach(entry -> (switch (entry.value) {
+            case 1 -> votesFor;
+            case -1 -> votesAgainst;
 
-        if (votesFor.isEmpty()) votesFor.append("<none>").append("\n");
-        if (votesAgainst.isEmpty()) votesAgainst.append("<none>").append("\n");
+            default -> throw new IllegalStateException();
+        }).append("[scarlet]- ").append(entry.key.coloredName()).append("[accent] [").append(Database.getPlayerID(entry.key.uuid())).append("]\n"));
+
+        if (votesFor.isEmpty())
+            votesFor.append("[scarlet]- [gray]<none>").append("\n");
+
+        if (votesAgainst.isEmpty())
+            votesAgainst.append("[scarlet]- [gray]<none>").append("\n");
 
         kickReason(target, kickDuration, reason, "kick.vote-kicked", initiator.coloredName(), votesFor, votesAgainst).kick(kickDuration);
-        Socket.send(new VoteKickEvent(config.mode.name(), initiator.plainName(), target.plainName(), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
+        Socket.send(new VoteKickEvent(config.mode.name(), target.plainName(), Database.getPlayerID(target.uuid()), initiator.plainName(), Database.getPlayerID(initiator.uuid()), reason, Strings.stripColors(votesFor), Strings.stripColors(votesAgainst)));
     }
 
     public static void checkKicked(NetConnection con, String locale) {
@@ -121,7 +126,7 @@ public class Admins {
         var ban = Database.getBan(con.uuid, con.address);
         if (ban == null || ban.expired()) return;
 
-        kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban", ban.admin).kick();
+        kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban", ban.adminName).kick();
     }
 
     // endregion
