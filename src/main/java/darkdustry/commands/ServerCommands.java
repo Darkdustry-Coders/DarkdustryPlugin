@@ -3,17 +3,17 @@ package darkdustry.commands;
 import arc.util.*;
 import darkdustry.database.*;
 import darkdustry.features.*;
-import darkdustry.features.net.Socket;
-import darkdustry.listeners.SocketEvents.ServerMessageEvent;
+import darkdustry.features.net.*;
+import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
 import mindustry.maps.Map;
-import mindustry.net.Packets.KickReason;
-import useful.Bundle;
+import mindustry.net.Packets.*;
+import useful.*;
 
-import java.time.Duration;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
@@ -27,22 +27,24 @@ public class ServerCommands {
 
     // Зарежу дарка
     // (C) xzxADIxzx, 2023 год вне н.э.
-    public static void load() {
-        serverCommands.register("exit", "Exit the server application.", args -> {
+    public static void load(CommandHandler handler) {
+        serverHandler = handler;
+
+        serverHandler.register("exit", "Exit the server application.", args -> {
             netServer.kickAll(KickReason.serverRestarting);
             app.exit();
 
             Log.info("Server exited.");
         });
 
-        serverCommands.register("stop", "Stop hosting the server.", args -> {
+        serverHandler.register("stop", "Stop hosting the server.", args -> {
             net.closeServer();
             state.set(State.menu);
 
             Log.info("Server stopped.");
         });
 
-        serverCommands.register("host", "[map] [mode]", "Start server on selected map.", args -> {
+        serverHandler.register("host", "[map] [mode]", "Start server on selected map.", args -> {
             if (alreadyHosting()) return;
 
             Gamemode mode;
@@ -74,14 +76,14 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("say", "<message...>", "Send a message to all players.", args -> {
+        serverHandler.register("say", "<message...>", "Send a message to all players.", args -> {
             Log.info("&fi@: &fr&lw@", "&lcServer", "&lw" + args[0]);
             Bundle.send("commands.say.chat", args[0]);
 
             Socket.send(new ServerMessageEvent(config.mode.name(), "Server", stripDiscord(args[0])));
         });
 
-        serverCommands.register("kick", "<player> <duration> [reason...]", "Kick a player.", args -> {
+        serverHandler.register("kick", "<player> <duration> [reason...]", "Kick a player.", args -> {
             var target = Find.player(args[0]);
             if (notFound(target, args[0])) return;
 
@@ -94,7 +96,7 @@ public class ServerCommands {
             Log.info("Player @ has been kicked for @ for @.", target.plainName(), Bundle.formatDuration(duration), reason);
         });
 
-        serverCommands.register("pardon", "<player...>", "Pardon a player.", args -> {
+        serverHandler.register("pardon", "<player...>", "Pardon a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0]) || notKicked(info)) return;
 
@@ -105,7 +107,7 @@ public class ServerCommands {
             Log.info("Player @ has been pardoned.", info.plainLastName());
         });
 
-        serverCommands.register("kicks", "List of all kicked players", args -> {
+        serverHandler.register("kicks", "List of all kicked players", args -> {
             var kicked = netServer.admins.kickedIPs;
             kicked.each((ip, time) -> {
                 if (time < Time.millis())
@@ -119,7 +121,7 @@ public class ServerCommands {
             });
         });
 
-        serverCommands.register("ban", "<player> <duration> [reason...]", "Ban a player.", args -> {
+        serverHandler.register("ban", "<player> <duration> [reason...]", "Ban a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -132,7 +134,7 @@ public class ServerCommands {
             Log.info("Player @ has been banned for @ for @.", info.plainLastName(), Bundle.formatDuration(duration), reason);
         });
 
-        serverCommands.register("unban", "<player...>", "Unban a player.", args -> {
+        serverHandler.register("unban", "<player...>", "Unban a player.", args -> {
             var info = Find.playerInfo(args[0]);
             if (notFound(info, args[0])) return;
 
@@ -142,14 +144,14 @@ public class ServerCommands {
             Log.info("Player @ has been unbanned.", ban.playerName);
         });
 
-        serverCommands.register("bans", "List of all banned players.", args -> {
+        serverHandler.register("bans", "List of all banned players.", args -> {
             var banned = Database.getBans();
 
             Log.info("Banned players: (@)", banned.size());
             banned.forEach(ban -> Log.info("  Name: @ / UUID: @ / IP: @ / Unban Date: @", ban.playerName, ban.uuid, ban.ip, Bundle.formatDateTime(1, 2, ban.unbanDate)));
         });
 
-        serverCommands.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {
+        serverHandler.register("admin", "<add/remove> <player...>", "Make a player admin.", args -> {
             var info = Find.playerInfo(args[1]);
             if (notFound(info, args[1])) return;
 
@@ -178,14 +180,14 @@ public class ServerCommands {
             }
         });
 
-        serverCommands.register("admins", "List all admins.", args -> {
+        serverHandler.register("admins", "List all admins.", args -> {
             var admins = netServer.admins.getAdmins();
 
             Log.info("Admins: (@)", admins.size);
             admins.each(admin -> Log.info("  Name: @ / ID: @ / IP: @", admin.plainLastName(), admin.id, admin.lastIP));
         });
 
-        serverCommands.register("stats", "<player...>", "Look up a player stats.", args -> {
+        serverHandler.register("stats", "<player...>", "Look up a player stats.", args -> {
             var data = Find.playerData(args[0]);
             if (notFound(data, args[0])) return;
 
@@ -208,7 +210,7 @@ public class ServerCommands {
             Log.info("  Total playtime: @", Bundle.formatDuration(Duration.ofMinutes(data.playTime)));
         });
 
-        serverCommands.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
+        serverHandler.register("setrank", "<player> <rank>", "Set a player's rank.", args -> {
             var data = Find.playerData(args[0]);
             if (notFound(data, args[0])) return;
 

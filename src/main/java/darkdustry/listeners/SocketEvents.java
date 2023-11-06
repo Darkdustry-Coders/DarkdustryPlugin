@@ -47,9 +47,9 @@ public class SocketEvents {
                 DiscordIntegration.sendMessageEmbed(channel, EmbedCreateSpec.builder().color(event.color).title(event.title).build());
             });
 
-            Socket.on(BanSyncEvent.class, event -> DiscordIntegration.sendBan(event.server, event.ban));
-            Socket.on(VoteKickEvent.class, event -> DiscordIntegration.sendVoteKick(event.server, event.target, event.initiator, event.reason, event.votesFor, event.votesAgainst));
-            Socket.on(AdminRequestEvent.class, event -> DiscordIntegration.sendAdminRequest(event.server, event.data));
+            Socket.on(BanEvent.class, DiscordIntegration::sendBan);
+            Socket.on(VoteKickEvent.class, DiscordIntegration::sendVoteKick);
+            Socket.on(AdminRequestEvent.class, DiscordIntegration::sendAdminRequest);
 
             Timer.schedule(DiscordIntegration::updateActivity, 60f, 60f);
         }
@@ -66,7 +66,7 @@ public class SocketEvents {
             }
         });
 
-        Socket.on(BanSyncEvent.class, event -> Groups.player.each(
+        Socket.on(BanEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.ban.uuid) || player.ip().equals(event.ban.ip),
                 player -> {
                     Admins.kickReason(player, event.ban.remaining(), event.ban.reason, "kick.banned-by-admin", event.ban.adminName).kick();
@@ -275,10 +275,12 @@ public class SocketEvents {
     public record ServerMessageEmbedEvent(String server, String title, Color color) {
     }
 
-    public record BanSyncEvent(String server, Ban ban) {
+    public record BanEvent(String server, Ban ban) {
     }
 
-    public record VoteKickEvent(String server, String target, String initiator, String reason, String votesFor, String votesAgainst) {
+    public record VoteKickEvent(String server, String target,
+                                String initiator, String reason,
+                                String votesFor, String votesAgainst) {
     }
 
     public record AdminRequestEvent(String server, PlayerData data) {
@@ -393,6 +395,7 @@ public class SocketEvents {
             return this;
         }
 
-        public record Field(String name, String value) {}
+        public record Field(String name, String value) {
+        }
     }
 }

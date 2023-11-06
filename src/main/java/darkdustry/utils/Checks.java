@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
+import arc.struct.ObjectSet;
 import arc.struct.Seq;
 import arc.util.*;
 import com.ospx.sock.EventBus.Request;
@@ -181,10 +182,6 @@ public class Checks {
 
     public static boolean alreadyVoted(Player player, VoteSession session) {
         return check(session.votes.containsKey(player), player, "commands.voting.already-voted");
-    }
-
-    public static boolean onCooldown(Player player, String command) {
-        return check(!Cooldowns.canRun(player, command), player, "commands.cooldown", command, Bundle.formatDuration(player, Cooldowns.cooldown(command)));
     }
 
     // endregion

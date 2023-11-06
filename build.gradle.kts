@@ -14,7 +14,7 @@ dependencies {
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
-    val usefulHash = "32fc5f4d1c"
+    val usefulHash = "2f1d9eb899"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
     compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
@@ -26,8 +26,6 @@ dependencies {
     }
 
     implementation("com.github.osp54:Sock:ed404a96ff")
-    implementation("com.github.darkness6030:JavaPayokSDK:v1.1.0")
-
     implementation("dev.morphia.morphia:morphia-core:2.3.8")
 
     implementation("com.discord4j:discord4j-core:3.2.6")
@@ -39,8 +37,8 @@ dependencies {
 
     implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:commands:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:config:$usefulHash")
-    implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
     implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")

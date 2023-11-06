@@ -1,12 +1,11 @@
 package darkdustry.commands;
 
-import arc.util.CommandHandler.CommandRunner;
-import arc.util.Strings;
+import arc.util.*;
 import darkdustry.database.*;
-import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.menus.*;
 import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
-import darkdustry.listeners.SocketEvents.AdminRequestEvent;
+import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import mindustry.gen.*;
 import useful.*;
@@ -21,140 +20,149 @@ import static mindustry.server.ServerControl.*;
 public class ClientCommands {
 
     public static void load() {
-        register("help", PageIterator::commands);
+        Commands.create("help").register(PageIterator::commands);
+        Commands.create("discord").register((args, player) -> Call.openURI(player.con, discordServerUrl));
 
-        register("discord", (args, player) -> Call.openURI(player.con, discordServerUrl));
+        Commands.create("sync")
+                .cooldown(15000L)
+                .register((args, player) -> {
+                    Call.worldDataBegin(player.con);
+                    netServer.sendWorldData(player);
+                });
 
-        register("sync", (args, player) -> {
-            Call.worldDataBegin(player.con);
-            netServer.sendWorldData(player);
-        });
+        Commands.create("t").register((args, player) -> Translator.translate(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName()));
+        Commands.create("players").register(PageIterator::players);
 
-        register("t", (args, player) -> Translator.translate(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName()));
+        Commands.create("settings")
+                .welcomeMessage(true)
+                .register((args, player) -> MenuHandler.showSettingsMenu(player));
 
-        register("settings", (args, player) -> MenuHandler.showSettingsMenu(player));
+        Commands.create("hub")
+                .enabled(!config.hubIp.isEmpty())
+                .register((args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, config.hubIp, config.hubPort), e -> Bundle.send(player, "commands.hub.error")));
 
-        register("players", PageIterator::players);
+        Commands.create("stats")
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    var target = args.length > 0 ? Find.player(args[0]) : player;
+                    if (notFound(player, target)) return;
 
-        if (!config.hubIp.isEmpty())
-            register("hub", (args, player) -> net.pingHost(config.hubIp, config.hubPort, host -> Call.connect(player.con, config.hubIp, config.hubPort), e -> Bundle.send(player, "commands.hub.error")));
+                    MenuHandler.showStatsMenu(player, target, Cache.get(target));
+                });
 
-        register("stats", (args, player) -> {
-            var target = args.length > 0 ? Find.player(args[0]) : player;
-            if (notFound(player, target)) return;
+        Commands.create("votekick")
+                .cooldown(300000L)
+                .register((args, player) -> {
+                    if (votekickDisabled(player) || alreadyVoting(player, voteKick)) return;
 
-            MenuHandler.showStatsMenu(player, target, Cache.get(target));
-        });
+                    var target = Find.player(args[0]);
+                    if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
 
-        register("votekick", (args, player) -> {
-            if (votekickDisabled(player) || alreadyVoting(player, voteKick)) return;
+                    voteKick = new VoteKick(player, target, args[1]);
+                    voteKick.vote(player, 1);
+                });
 
-            var target = Find.player(args[0]);
-            if (notFound(player, target) || invalidVotekickTarget(player, target)) return;
+        Commands.create("vote")
+                .register((args, player) -> {
+                    if (notVoting(player, voteKick)) return;
 
-            voteKick = new VoteKick(player, target, args[1]);
-            voteKick.vote(player, 1);
-        });
+                    if (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel")) {
+                        if (notAdmin(player)) return;
 
-        register("vote", (args, player) -> {
-            if (notVoting(player, voteKick)) return;
+                        voteKick.cancel(player);
+                        return;
+                    }
 
-            if (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel")) {
-                if (notAdmin(player)) return;
+                    int sign = voteChoice(args[0]);
+                    if (invalidVoteSign(player, sign)) return;
 
-                voteKick.cancel(player);
-                return;
-            }
+                    voteKick.vote(player, sign);
+                });
 
-            int sign = voteChoice(args[0]);
-            if (invalidVoteSign(player, sign)) return;
+        Commands.hidden("login")
+                .cooldown(300000L)
+                .register((args, player) -> {
+                    if (alreadyAdmin(player)) return;
 
-            voteKick.vote(player, sign);
-        });
+                    MenuHandler.showConfirmMenu(player, "commands.login.confirm", () -> {
+                        if (!Socket.isConnected()) {
+                            Bundle.send(player, "commands.login.error");
+                            return;
+                        }
 
-        register("login", (args, player) -> {
-            if (alreadyAdmin(player)) return;
+                        Socket.send(new AdminRequestEvent(config.mode.name(), Cache.get(player)));
+                        Bundle.send(player, "commands.login.sent");
+                    });
+                });
 
-            MenuHandler.showConfirmMenu(player, "commands.login.confirm", () -> {
-                if (!Socket.isConnected()) {
-                    Bundle.send(player, "commands.login.error");
-                    return;
-                }
+        Commands.create("rtv")
+                .enabled(config.mode.enableRtv)
+                .cooldown(60000L)
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote)) return;
 
-                Socket.send(new AdminRequestEvent(config.mode.name(), Cache.get(player)));
-                Bundle.send(player, "commands.login.sent");
-            });
-        });
+                    var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
+                    if (notFound(player, map)) return;
 
-        if (config.mode.enableRtv) {
-            register("rtv", (args, player) -> {
-                if (alreadyVoting(player, vote)) return;
+                    vote = new VoteRtv(map);
+                    vote.vote(player, 1);
+                });
 
-                var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
-                if (notFound(player, map)) return;
+        Commands.create("maps")
+                .enabled(config.mode.enableRtv)
+                .register(PageIterator::maps);
 
-                vote = new VoteRtv(map);
-                vote.vote(player, 1);
-            });
+        Commands.create("vnw")
+                .enabled(config.mode.enableVnw)
+                .cooldown(60000L)
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote)) return;
 
-            register("maps", PageIterator::maps);
-        }
+                    int amount = args.length > 0 ? Strings.parseInt(args[0]) : 1;
+                    if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
 
-        if (config.mode.enableVnw) {
-            register("vnw", (args, player) -> {
-                if (alreadyVoting(player, vote)) return;
+                    vote = new VoteVnw(amount);
+                    vote.vote(player, 1);
+                });
 
-                int amount = args.length > 0 ? Strings.parseInt(args[0]) : 1;
-                if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
+        Commands.create("surrender")
+                .enabled(config.mode.enableSurrender)
+                .cooldown(180000L)
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote) || invalidSurrenderTeam(player)) return;
 
-                vote = new VoteVnw(amount);
-                vote.vote(player, 1);
-            });
-        }
+                    vote = new VoteSurrender(player.team());
+                    vote.vote(player, 1);
+                });
 
-        if (config.mode.enableSurrender) {
-            register("surrender", (args, player) -> {
-                if (alreadyVoting(player, vote) || invalidSurrenderTeam(player)) return;
+        Commands.create("votesave")
+                .enabled(config.mode.isDefault)
+                .cooldown(180000L)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote)) return;
 
-                vote = new VoteSurrender(player.team());
-                vote.vote(player, 1);
-            });
-        }
+                    vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
+                    vote.vote(player, 1);
+                });
 
-        if (config.mode.isDefault) {
-            register("votesave", (args, player) -> {
-                if (alreadyVoting(player, vote)) return;
+        Commands.create("voteload")
+                .enabled(config.mode.isDefault)
+                .cooldown(180000L)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote)) return;
 
-                vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
-                vote.vote(player, 1);
-            });
+                    var save = Find.save(args[0]);
+                    if (notFound(player, save)) return;
 
-            register("voteload", (args, player) -> {
-                if (alreadyVoting(player, vote)) return;
+                    vote = new VoteLoad(save);
+                    vote.vote(player, 1);
+                });
 
-                var save = Find.save(args[0]);
-                if (notFound(player, save)) return;
-
-                vote = new VoteLoad(save);
-                vote.vote(player, 1);
-            });
-
-            register("saves", PageIterator::saves);
-        }
-
-//      register("pay", (args, player) -> {
-//          var data = Cache.get(player);
-//          if (Database.hasPayment(data.id)) return;
-//
-//          Call.openURI(player.con, PayokServer.generatePaymentLink(101, data.id, "RUB", "Test DESCRIPTION"));
-//      });
-    }
-
-    public static void register(String name, CommandRunner<Player> runner) {
-        clientCommands.<Player>register(name, Bundle.getDefault("commands." + name + ".params", ""), Bundle.getDefault("commands." + name + ".description"), (args, player) -> {
-            if (onCooldown(player, name)) return;
-            runner.accept(args, player);
-            Cooldowns.run(player, name);
-        });
+        Commands.create("saves")
+                .enabled(config.mode.isDefault)
+                .register(PageIterator::saves);
     }
 }

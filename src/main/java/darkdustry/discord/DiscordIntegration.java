@@ -2,7 +2,6 @@ package darkdustry.discord;
 
 import darkdustry.config.Config.Gamemode;
 import darkdustry.database.Database;
-import darkdustry.database.models.*;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.Find;
@@ -28,50 +27,50 @@ import static mindustry.Vars.*;
 
 public class DiscordIntegration {
 
-    public static void sendBan(String server, Ban ban) {
+    public static void sendBan(BanEvent event) {
         if (!connected) return;
 
         banChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.CINNABAR)
                 .title("Ban")
-                .addField("Player:", ban.playerName + " [" + ban.playerID + "]", false)
-                .addField("Admin:", ban.adminName, false)
-                .addField("Reason:", ban.reason, false)
-                .addField("Unban Date:", LONG_DATE.format(ban.unbanDate.toInstant()), false)
-                .footer(Gamemode.valueOf(server).displayName, null)
+                .addField("Player:", event.ban().playerName + " [" + event.ban().playerID + "]", false)
+                .addField("Admin:", event.ban().adminName, false)
+                .addField("Reason:", event.ban().reason, false)
+                .addField("Unban Date:", LONG_DATE.format(event.ban().unbanDate.toInstant()), false)
+                .footer(Gamemode.getDisplayName(event.server()), null)
                 .timestamp(Instant.now()).build()).subscribe();
     }
 
-    public static void sendVoteKick(String server, String target, String initiator, String reason, String votesFor, String votesAgainst) {
+    public static void sendVoteKick(VoteKickEvent event) {
         if (!connected) return;
 
         votekickChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.MOON_YELLOW)
                 .title("Vote Kick")
-                .addField("Target:", target, false)
-                .addField("Initiator:", initiator, false)
-                .addField("Reason:", reason, false)
-                .addField("Votes For:", votesFor, false)
-                .addField("Votes Against:", votesAgainst, false)
-                .footer(Gamemode.valueOf(server).displayName, null)
+                .addField("Target:", event.target(), false)
+                .addField("Initiator:", event.initiator(), false)
+                .addField("Reason:", event.reason(), false)
+                .addField("Votes For:", event.votesFor(), false)
+                .addField("Votes Against:", event.votesAgainst(), false)
+                .footer(Gamemode.getDisplayName(event.server()), null)
                 .timestamp(Instant.now()).build()).subscribe();
     }
 
-    public static void sendAdminRequest(String server, PlayerData data) {
+    public static void sendAdminRequest(AdminRequestEvent event) {
         if (!connected) return;
 
         adminChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.BISMARK)
                 .title("Admin Request")
                 .description("Select the desired option to confirm or deny the request. Confirm only your requests!")
-                .addField("Player:", data.plainName(), false)
-                .addField("ID:", String.valueOf(data.id), false)
-                .footer(Gamemode.valueOf(server).displayName, null)
+                .addField("Player:", event.data().plainName(), false)
+                .addField("ID:", String.valueOf(event.data().id), false)
+                .footer(Gamemode.getDisplayName(event.server()), null)
                 .timestamp(Instant.now())
                 .build()
         ).withComponents(ActionRow.of(SelectMenu.of("admin-request",
-                Option.of("Confirm", "confirm-" + server + "-" + data.uuid).withDescription("Confirm this request.").withEmoji(ReactionEmoji.unicode("✅")),
-                Option.of("Deny", "deny-" + server + "-" + data.uuid).withDescription("Deny this request.").withEmoji(ReactionEmoji.unicode("❌"))
+                Option.of("Confirm", "confirm-" + event.server() + "-" + event.data().uuid).withDescription("Confirm this request.").withEmoji(ReactionEmoji.unicode("✅")),
+                Option.of("Deny", "deny-" + event.server() + "-" + event.data().uuid).withDescription("Deny this request.").withEmoji(ReactionEmoji.unicode("❌"))
         ))).subscribe();
     }
 
@@ -87,7 +86,7 @@ public class DiscordIntegration {
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
                 .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
-                .footer(server, null)
+                .footer(Gamemode.getDisplayName(server), null)
                 .timestamp(Instant.now())
                 .build()).withComponents(Collections.emptyList()).subscribe();
     }
@@ -104,7 +103,7 @@ public class DiscordIntegration {
                 .addField("Player:", data.plainName(), false)
                 .addField("ID:", String.valueOf(data.id), false)
                 .addField("Administrator:", event.getInteraction().getUser().getMention(), false)
-                .footer(server, null)
+                .footer(Gamemode.getDisplayName(server), null)
                 .timestamp(Instant.now())
                 .build()).withComponents(Collections.emptyList()).subscribe();
     }

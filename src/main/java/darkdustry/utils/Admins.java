@@ -91,7 +91,7 @@ public class Admins {
         ban.generateID();
         ban.generatePlayerID();
 
-        Socket.send(new BanSyncEvent(config.mode.name(), Database.addBan(ban)));
+        Socket.send(new BanEvent(config.mode.name(), Database.addBan(ban)));
     }
 
     public static void voteKick(Player initiator, Player target, ObjectIntMap<Player> votes, String reason) {

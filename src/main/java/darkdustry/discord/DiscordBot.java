@@ -1,30 +1,30 @@
 package darkdustry.discord;
 
 import arc.util.*;
-import darkdustry.features.net.Socket;
+import darkdustry.features.net.*;
 import darkdustry.listeners.SocketEvents.*;
-import darkdustry.utils.PageIterator;
-import discord4j.common.ReactorResources;
-import discord4j.common.retry.ReconnectOptions;
-import discord4j.common.util.Snowflake;
+import darkdustry.utils.*;
+import discord4j.common.*;
+import discord4j.common.retry.*;
+import discord4j.common.util.*;
 import discord4j.core.*;
-import discord4j.core.event.EventDispatcher;
+import discord4j.core.event.*;
 import discord4j.core.event.domain.interaction.*;
-import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Role;
-import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.event.domain.message.*;
+import discord4j.core.object.entity.*;
+import discord4j.core.object.entity.channel.*;
+import discord4j.core.spec.*;
 import discord4j.core.util.OrderUtil;
 import discord4j.gateway.intent.*;
 import discord4j.rest.util.*;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-import reactor.function.TupleUtils;
-import reactor.netty.http.HttpResources;
-import reactor.netty.resources.LoopResources;
-import reactor.scheduler.forkjoin.ForkJoinPoolScheduler;
+import reactor.core.publisher.*;
+import reactor.core.scheduler.*;
+import reactor.function.*;
+import reactor.netty.http.*;
+import reactor.netty.resources.*;
+import reactor.scheduler.forkjoin.*;
 
-import java.util.function.Predicate;
+import java.util.function.*;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.DiscordConfig.*;
@@ -77,11 +77,11 @@ public class DiscordBot {
                 message.getChannel()
                         .map(channel -> new MessageContext(message, member, channel))
                         .subscribe(context -> {
-                            var response = discordCommands.handleMessage(message.getContent(), context);
+                            var response = discordHandler.handleMessage(message.getContent(), context);
                             switch (response.type) {
-                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordCommands.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordCommands.prefix).subscribe();
+                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordHandler.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordHandler.prefix, response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordHandler.prefix).subscribe();
 
                                 case valid -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
                             }

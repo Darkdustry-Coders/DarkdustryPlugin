@@ -45,7 +45,7 @@ public class NetHandlers {
             case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
             default -> {
                 var closest = availableCommands(player)
-                        .map(command -> command.text)
+                        .map(command -> command.name)
                         .retainAll(command -> Strings.levenshtein(command, response.runCommand) < 3)
                         .min(command -> Strings.levenshtein(command, response.runCommand));
 

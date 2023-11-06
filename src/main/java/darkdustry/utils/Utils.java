@@ -1,16 +1,18 @@
 package darkdustry.utils;
 
 import arc.files.Fi;
-import arc.func.*;
+import arc.func.Cons3;
 import arc.struct.Seq;
-import arc.util.CommandHandler.Command;
-import arc.util.*;
+import arc.util.Strings;
+import arc.util.Structs;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
+import useful.Commands;
+import useful.Commands.Command;
 
 import java.time.Duration;
 
@@ -33,7 +35,7 @@ public class Utils {
     // region available
 
     public static Seq<Command> availableCommands(Player player) {
-        return netServer.clientCommands.getCommandList().select(command -> !hiddenCommands.contains(command.text) && (player.admin || !adminOnlyCommands.contains(command.text)));
+        return Commands.getCommands(player.admin);
     }
 
     public static Seq<Map> availableMaps() {

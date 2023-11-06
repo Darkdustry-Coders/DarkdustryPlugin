@@ -5,21 +5,19 @@ package darkdustry;
 
 import arc.util.*;
 import darkdustry.commands.*;
-import darkdustry.config.Config;
+import darkdustry.config.*;
 import darkdustry.database.*;
-import darkdustry.config.DiscordConfig;
-import darkdustry.discord.DiscordBot;
+import darkdustry.discord.*;
 import darkdustry.features.*;
-import darkdustry.features.menus.MenuHandler;
+import darkdustry.features.menus.*;
 import darkdustry.features.net.*;
 import darkdustry.listeners.*;
-import mindustry.core.Version;
+import mindustry.core.*;
 import mindustry.gen.*;
-import mindustry.mod.Plugin;
+import mindustry.mod.*;
 import mindustry.net.Packets.*;
 import useful.*;
 
-import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
@@ -38,20 +36,11 @@ public class DarkdustryPlugin extends Plugin {
 
         AntiVpn.load();
         Bundle.load(getClass());
-        Cooldowns.defaults(
-                "sync", 15000L,
-                "votekick", 300000L,
-                "login", 300000L,
-                "rtv", 60000L,
-                "vnw", 60000L,
-                "surrender", 180000L,
-                "votesave", 180000L,
-                "voteload", 180000L
-        );
+        Commands.load();
 
         Alerts.load();
+        Commands.load();
         MenuHandler.load();
-        PayokServer.load();
         SchemeSize.load();
 
         Database.connect();
@@ -81,14 +70,12 @@ public class DarkdustryPlugin extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        clientCommands = handler;
         ClientCommands.load();
         AdminCommands.load();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        serverCommands = handler;
-        ServerCommands.load();
+        ServerCommands.load(handler);
     }
 }

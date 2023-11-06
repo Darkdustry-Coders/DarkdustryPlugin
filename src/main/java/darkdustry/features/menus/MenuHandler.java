@@ -8,22 +8,30 @@ import darkdustry.database.Cache;
 import darkdustry.database.models.PlayerData;
 import darkdustry.utils.Admins;
 import mindustry.content.Fx;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
-import useful.*;
+import useful.Action;
+import useful.Bundle;
+import useful.Effects;
 import useful.State.StateKey;
 import useful.menu.Menu;
 import useful.menu.Menu.MenuView;
 import useful.menu.Menu.MenuView.OptionData;
-import useful.menu.impl.*;
+import useful.menu.impl.ConfirmMenu;
+import useful.menu.impl.ListMenu;
 import useful.text.TextInput;
 
 import java.time.Duration;
 
-import static darkdustry.PluginVars.*;
-import static darkdustry.features.Ranks.*;
-import static darkdustry.utils.Utils.*;
-import static mindustry.net.Administration.Config.*;
+import static darkdustry.PluginVars.discordServerUrl;
+import static darkdustry.PluginVars.maxPerPage;
+import static darkdustry.features.Ranks.ranks;
+import static darkdustry.utils.Utils.availableCommands;
+import static darkdustry.utils.Utils.parseDuration;
+import static mindustry.net.Administration.Config.serverName;
 
 @SuppressWarnings("unchecked")
 public class MenuHandler {
@@ -95,7 +103,7 @@ public class MenuHandler {
 
         welcomeMenu.transform(menu -> {
             var builder = new StringBuilder();
-            welcomeMessageCommands.each(command -> builder.append("[cyan]/").append(command).append("[gray] - [lightgray]").append(Bundle.get("commands." + command + ".description", menu.player)).append("\n"));
+            availableCommands(menu.player).each(command -> command.welcomeMessage, command -> builder.append("[cyan]/").append(command.name).append("[gray] - [lightgray]").append(command.description(menu.player)).append("\n"));
 
             menu.title("welcome.title");
             menu.content("welcome.content", serverName.string(), builder.toString());

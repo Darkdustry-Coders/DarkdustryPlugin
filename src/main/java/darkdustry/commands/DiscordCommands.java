@@ -18,26 +18,26 @@ import static mindustry.Vars.*;
 public class DiscordCommands {
 
     public static void load() {
-        discordCommands = new CommandHandler(discordConfig.prefix);
+        discordHandler = new CommandHandler(discordConfig.prefix);
 
-        discordCommands.<MessageContext>register("help", "List of all commands.", (args, context) -> {
+        discordHandler.<MessageContext>register("help", "List of all commands.", (args, context) -> {
             var builder = new StringBuilder();
-            discordCommands.getCommandList().each(command -> builder.append(discordCommands.prefix).append("**").append(command.text).append("**").append(command.paramText.isEmpty() ? "" : " " + command.paramText).append(" - ").append(command.description).append("\n"));
+            discordHandler.getCommandList().each(command -> builder.append(discordHandler.prefix).append("**").append(command.text).append("**").append(command.paramText.isEmpty() ? "" : " " + command.paramText).append(" - ").append(command.description).append("\n"));
 
             context.info("All available commands:", builder.toString()).subscribe();
         });
 
-        discordCommands.<MessageContext>register("maps", "<server>", "List of all maps of the server.", PageIterator::maps);
-        discordCommands.<MessageContext>register("players", "<server>", "List of all maps of the server.", PageIterator::players);
+        discordHandler.<MessageContext>register("maps", "<server>", "List of all maps of the server.", PageIterator::maps);
+        discordHandler.<MessageContext>register("players", "<server>", "List of all players of the server.", PageIterator::players);
 
-        discordCommands.<MessageContext>register("status", "<server>", "Display server status.", (args, context) -> {
+        discordHandler.<MessageContext>register("status", "<server>", "Display server status.", (args, context) -> {
             var server = args[0];
             if (notFound(context, server)) return;
 
             Socket.request(new StatusRequest(server), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("exit", "<server>", "Exit the server application.", (args, context) -> {
+        discordHandler.<MessageContext>register("exit", "<server>", "Exit the server application.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -46,7 +46,7 @@ public class DiscordCommands {
             Socket.request(new ExitRequest(server), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {
+        discordHandler.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -55,14 +55,14 @@ public class DiscordCommands {
             Socket.request(new ArtvRequest(server, args.length > 1 ? args[1] : null, context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("map", "<server> <map...>", "Map", (args, context) -> {
+        discordHandler.<MessageContext>register("map", "<server> <map...>", "Map", (args, context) -> {
             var server = args[0];
             if (notFound(context, server)) return;
 
             Socket.request(new MapRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("uploadmap", "<server>", "Upload a map to the server.", (args, context) -> {
+        discordHandler.<MessageContext>register("uploadmap", "<server>", "Upload a map to the server.", (args, context) -> {
             if (noRole(context, discordConfig.mapReviewerRoleIDs) || notMap(context)) return;
 
             var server = args[0];
@@ -80,7 +80,7 @@ public class DiscordCommands {
                     }));
         });
 
-        discordCommands.<MessageContext>register("removemap", "<server> <map...>", "Remove a map from the server.", (args, context) -> {
+        discordHandler.<MessageContext>register("removemap", "<server> <map...>", "Remove a map from the server.", (args, context) -> {
             if (noRole(context, discordConfig.mapReviewerRoleIDs)) return;
 
             var server = args[0];
@@ -89,7 +89,7 @@ public class DiscordCommands {
             Socket.request(new RemoveMapRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("kick", "<server> <player> <duration> [reason...]", "Kick a player.", (args, context) -> {
+        discordHandler.<MessageContext>register("kick", "<server> <player> <duration> [reason...]", "Kick a player.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -98,7 +98,7 @@ public class DiscordCommands {
             Socket.request(new KickRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("pardon", "<server> <player...>", "Pardon a player.", (args, context) -> {
+        discordHandler.<MessageContext>register("pardon", "<server> <player...>", "Pardon a player.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -107,7 +107,7 @@ public class DiscordCommands {
             Socket.request(new PardonRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("ban", "<server> <player> <duration> [reason...]", "Ban a player.", (args, context) -> {
+        discordHandler.<MessageContext>register("ban", "<server> <player> <duration> [reason...]", "Ban a player.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -116,7 +116,7 @@ public class DiscordCommands {
             Socket.request(new BanRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified", context.member().getDisplayName()), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("unban", "<server> <player...>", "Unban a player.", (args, context) -> {
+        discordHandler.<MessageContext>register("unban", "<server> <player...>", "Unban a player.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var server = args[0];
@@ -125,7 +125,7 @@ public class DiscordCommands {
             Socket.request(new UnbanRequest(server, args[1]), context::reply, context::timeout);
         });
 
-        discordCommands.<MessageContext>register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
+        discordHandler.<MessageContext>register("stats", "<player...>", "Look up a player stats.", (args, context) -> {
             var data = Find.playerData(args[0]);
             if (notFound(context, data)) return;
 
@@ -150,7 +150,7 @@ public class DiscordCommands {
             ).subscribe();
         });
 
-        discordCommands.<MessageContext>register("setrank", "<player> <rank>", "Set a player's rank.", (args, context) -> {
+        discordHandler.<MessageContext>register("setrank", "<player> <rank>", "Set a player's rank.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
             var data = Find.playerData(args[0]);

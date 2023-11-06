@@ -34,10 +34,6 @@ public class Config {
 
         strict.set(config.mode.enableStrict);
         enableVotekick.set(config.mode.enableVotekick);
-
-        if (config.mode.enableRtv) welcomeMessageCommands.add("rtv");
-        if (config.mode.enableVnw) welcomeMessageCommands.add("vnw");
-        if (config.mode.enableSurrender) welcomeMessageCommands.add("surrender");
     }
 
     /** IP-адрес хаба. */
@@ -51,12 +47,6 @@ public class Config {
 
     /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
-
-    /** ID магазина Payok. */
-    public int payokShopID = 1234;
-
-    /** Секретный ключ API Payok. */
-    public String payokSecretKey = "key";
 
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
@@ -126,6 +116,10 @@ public class Config {
 
         Gamemode(String displayName) {
             this.displayName = displayName;
+        }
+
+        public static String getDisplayName(String name) {
+            return Gamemode.valueOf(name).displayName;
         }
     }
 }

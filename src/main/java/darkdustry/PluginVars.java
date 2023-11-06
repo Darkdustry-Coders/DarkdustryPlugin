@@ -2,15 +2,17 @@ package darkdustry;
 
 import arc.struct.Seq;
 import arc.util.CommandHandler;
-import darkdustry.features.votes.*;
+import darkdustry.features.votes.VoteKick;
+import darkdustry.features.votes.VoteSession;
 import mindustry.core.Version;
-import reactor.util.function.*;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 import static java.time.temporal.ChronoUnit.*;
-import static mindustry.Vars.*;
+import static mindustry.Vars.tilesize;
 
 @SuppressWarnings("unchecked")
 public class PluginVars {
@@ -66,9 +68,6 @@ public class PluginVars {
     /** Ссылка на API для перевода текста. */
     public static final String translationApiUrl = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&dt=t";
 
-    /** Список команд, доступных только администраторам игрового сервера. Список скрытых команд, которые не отображаются в /help. Список команд, которые показываются в приветственном сообщении. */
-    public static final Seq<String> adminOnlyCommands = Seq.with(), hiddenCommands = Seq.with("login"), welcomeMessageCommands = Seq.with("help", "settings", "stats");
-
     /** Используется для перевода строки в длительность. */
     public static final Pattern durationPattern = Pattern.compile("(\\d+)\\s*?([a-zA-Zа-яА-Я]+)");
 
@@ -88,6 +87,6 @@ public class PluginVars {
     /** Текущее голосование за кик игрока. */
     public static VoteKick voteKick;
 
-    /** Кэшированные хандлеры, которые используются для регистрации команд. */
-    public static CommandHandler clientCommands, serverCommands, discordCommands;
+    /** Обработчики команд, которые используются для их регистрации. */
+    public static CommandHandler serverHandler, discordHandler;
 }

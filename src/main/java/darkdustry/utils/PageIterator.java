@@ -25,12 +25,8 @@ public class PageIterator {
     // region client
 
     public static void commands(String[] args, Player player) {
-        client(args, player, "help", () -> availableCommands(player), (builder, index, command) -> {
-            var params = Bundle.get("commands." + command.text + ".params", command.paramText, player);
-            var description = Bundle.get("commands." + command.text + ".description", command.description, player);
-
-            builder.append(Bundle.format("commands.help.command", player, command.text, params, description));
-        });
+        client(args, player, "help", () -> availableCommands(player), (builder, index, command) ->
+                builder.append(Bundle.format("commands.help.command", player, command.name, command.params(player), command.description(player))));
     }
 
     public static void maps(String[] args, Player player) {

@@ -26,7 +26,6 @@ public class Database {
 
             mapper.getEntityModel(Ban.class);
             mapper.getEntityModel(Counter.class);
-            mapper.getEntityModel(Payment.class);
             mapper.getEntityModel(PlayerData.class);
 
             datastore.ensureCaps();
@@ -90,17 +89,6 @@ public class Database {
 
     public static List<Ban> getBans() {
         return datastore.find(Ban.class).stream().toList();
-    }
-
-    // endregion
-    // region payment
-
-    public static Payment savePayment(Payment payment) {
-        return datastore.save(payment);
-    }
-
-    public static boolean hasPayment(int playerID) {
-        return datastore.find(Payment.class).filter(Filters.eq("playerID", playerID)).count() > 0;
     }
 
     // endregion
