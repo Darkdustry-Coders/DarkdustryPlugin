@@ -75,6 +75,15 @@ public class PageIterator {
                         .subscribe(), context::timeout);
     }
 
+    public static <T> void formatListResponse(ListRequest request, Seq<T> values, Cons3<StringBuilder, Integer, T> formatter) {
+        int page = request.page;
+        int pages = Math.max(1, Mathf.ceil((float) values.size / maxPerPage));
+
+        if (page < 1 || page > pages) return;
+
+        Socket.respond(request, new ListResponse(formatList(values, page, formatter), page, pages, values.size));
+    }
+
     public static void formatMapsPage(Builder embed, ListResponse response) {
         formatDiscordPage(embed, "Maps in Playlist: @", "Page @ / @", response);
     }

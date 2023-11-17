@@ -20,8 +20,13 @@ import static mindustry.server.ServerControl.*;
 public class ClientCommands {
 
     public static void load() {
-        Commands.create("help").register(PageIterator::commands);
-        Commands.create("discord").register((args, player) -> Call.openURI(player.con, discordServerUrl));
+        Commands.create("help")
+                .welcomeMessage(true)
+                .register(PageIterator::commands);
+
+        Commands.create("discord")
+                .welcomeMessage(true)
+                .register((args, player) -> Call.openURI(player.con, discordServerUrl));
 
         Commands.create("sync")
                 .cooldown(15000L)

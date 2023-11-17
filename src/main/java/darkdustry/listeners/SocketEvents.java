@@ -1,14 +1,13 @@
 package darkdustry.listeners;
 
 import arc.files.Fi;
-import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.*;
 import com.ospx.sock.EventBus.*;
 import darkdustry.database.*;
 import darkdustry.database.models.*;
-import darkdustry.discord.*;
-import darkdustry.features.*;
+import darkdustry.discord.DiscordIntegration;
+import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.net.Socket;
 import darkdustry.utils.*;
@@ -21,7 +20,6 @@ import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
 import static arc.Core.*;
-import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.config.DiscordConfig.*;
 import static darkdustry.utils.Checks.*;
@@ -97,23 +95,17 @@ public class SocketEvents {
             if (!request.server.equals(config.mode.name())) return;
 
             switch (request.type) {
-                case "maps" -> {
-                    var maps = availableMaps();
+                case "maps" -> PageIterator.formatListResponse(request, availableMaps(), (builder, index, map) -> builder
+                        .append("**").append(index).append(".** ").append(map.plainName())
+                        .append("\n").append("Author: ").append(map.plainAuthor())
+                        .append("\n").append(map.width).append("x").append(map.height)
+                        .append("\n"));
 
-                    int page = request.page, pages = Math.max(1, Mathf.ceil((float) maps.size / maxPerPage));
-                    if (page < 1 || page > pages) return;
-
-                    Socket.respond(request, new ListResponse(formatList(maps, page, (builder, index, map) -> builder.append("**").append(index).append(".** ").append(map.plainName()).append("\n").append("Author: ").append(map.plainAuthor()).append("\n").append(map.width).append("x").append(map.height).append("\n")), page, pages, maps.size));
-                }
-
-                case "players" -> {
-                    var players = Groups.player.copy(new Seq<>());
-
-                    int page = request.page, pages = Math.max(1, Mathf.ceil((float) players.size / maxPerPage));
-                    if (page < 1 || page > pages) return;
-
-                    Socket.respond(request, new ListResponse(formatList(players, page, (builder, index, player) -> builder.append("**").append(index).append(".** ").append(player.plainName()).append("\nID: ").append(Cache.get(player).id).append("\nLanguage: ").append(player.locale).append("\n")), page, pages, players.size));
-                }
+                case "players" -> PageIterator.formatListResponse(request, Groups.player.copy(new Seq<>()), (builder, index, player) -> builder
+                        .append("**").append(index).append(".** ").append(player.plainName())
+                        .append("\nID: ").append(Cache.get(player).id)
+                        .append("\nLanguage: ").append(player.locale)
+                        .append("\n"));
 
                 default -> throw new IllegalStateException();
             }

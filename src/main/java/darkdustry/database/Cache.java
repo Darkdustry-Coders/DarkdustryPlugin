@@ -27,9 +27,4 @@ public class Cache {
     public static PlayerData remove(Player player) {
         return cache.remove(player.uuid());
     }
-
-    public static void update(PlayerData data) {
-        if (cache.containsKey(data.uuid))
-            cache.put(data.uuid, data);
-    }
 }
