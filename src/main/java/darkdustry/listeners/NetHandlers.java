@@ -1,7 +1,9 @@
 package darkdustry.listeners;
 
+import arc.Core;
 import arc.Events;
 import arc.struct.Seq;
+import arc.struct.ObjectSet;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import darkdustry.database.Cache;
@@ -17,13 +19,21 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packets.*;
 import useful.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
+import static useful.AntiVpn.subnets;
 
 public class NetHandlers {
+    public static final ObjectSet<String> alreadyBlockedIps = new ObjectSet<>();
+    public static final Seq<Subnet> subnets = new Seq<>();
+    public record Subnet(int ip, int mask) {}
+
 
     public static String chat(Player from, String message) {
         int sign = voteChoice(message);
@@ -136,7 +146,16 @@ public class NetHandlers {
         }
 
         if (AntiVpn.checkAddress(ip)) {
-            Bundle.kick(con, locale, 0L, "kick.vpn", discordServerUrl);
+            if(!verify(ip)) {
+                con.close();
+            }
+            //redundant
+            try {
+                Bundle.kick(con, locale, 0L, "kick.vpn", discordServerUrl);
+            }
+            catch (Exception e) {
+                //ignored
+            }
             return;
         }
 
@@ -160,6 +179,45 @@ public class NetHandlers {
         Events.fire(new PlayerConnect(player));
     }
 
+    public static boolean verify(String address) {
+        if (alreadyBlockedIps.contains(address)) return true;
+        int ip;
+
+        try {
+            ip = parseSubnet(address).ip;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        for (var subnet : subnets)
+            if ((ip & subnet.mask) == subnet.ip) {
+                if (!Core.settings.getBool("disable-connect-filter")) alreadyBlockedIps.add(address);
+                return true;
+            }
+        return false;
+    }
+    private static Subnet parseSubnet(String address) throws UnknownHostException {
+        var parts = address.split("/");
+
+        if (parts.length > 2) throw new IllegalArgumentException("Invalid IP address: " + address);
+
+        int ip = 0;
+        int mask = -1;
+
+        for (var token : InetAddress.getByName(parts[0]).getAddress()) {
+            ip = (ip << 8) + (token & 0xFF);
+        }
+
+        if (parts.length == 2) {
+            mask = Integer.parseInt(parts[1]);
+            if (mask > 32)
+                throw new IllegalArgumentException("Invalid IP address: " + address);
+
+            mask = 0xFFFFFFFF << (32 - mask);
+        }
+
+        return new Subnet(ip, mask);
+    }
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
         var admin = con.player;
         var target = packet.other;
