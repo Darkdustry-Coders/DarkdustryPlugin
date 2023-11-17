@@ -5,6 +5,7 @@ import arc.func.Cons3;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
+import darkdustry.listeners.NetHandlers;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
@@ -14,6 +15,8 @@ import mindustry.world.Block;
 import useful.Commands;
 import useful.Commands.Command;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Duration;
 
 import static darkdustry.PluginVars.*;
@@ -29,6 +32,28 @@ public class Utils {
             case "n" -> -1;
             default -> 0;
         };
+    }
+    public static NetHandlers.Subnet parseSubnet(String address) throws UnknownHostException {
+        var parts = address.split("/");
+
+        if (parts.length > 2) throw new IllegalArgumentException("Invalid IP address: " + address);
+
+        int ip = 0;
+        int mask = -1;
+
+        for (var token : InetAddress.getByName(parts[0]).getAddress()) {
+            ip = (ip << 8) + (token & 0xFF);
+        }
+
+        if (parts.length == 2) {
+            mask = Integer.parseInt(parts[1]);
+            if (mask > 32)
+                throw new IllegalArgumentException("Invalid IP address: " + address);
+
+            mask = 0xFFFFFFFF << (32 - mask);
+        }
+
+        return new NetHandlers.Subnet(ip, mask);
     }
 
     // endregion

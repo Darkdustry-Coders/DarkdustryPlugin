@@ -2,32 +2,41 @@ package darkdustry.listeners;
 
 import arc.Core;
 import arc.Events;
-import arc.struct.Seq;
 import arc.struct.ObjectSet;
+import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
-import arc.util.*;
+import arc.util.Log;
+import arc.util.Strings;
+import arc.util.Time;
 import darkdustry.database.Cache;
 import darkdustry.features.menus.MenuHandler;
-import darkdustry.features.net.*;
+import darkdustry.features.net.Socket;
+import darkdustry.features.net.Translator;
 import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.Admins;
-import mindustry.game.EventType.*;
+import darkdustry.utils.Utils;
+import mindustry.game.EventType.AdminRequestEvent;
+import mindustry.game.EventType.ConnectPacketEvent;
+import mindustry.game.EventType.ConnectionEvent;
+import mindustry.game.EventType.PlayerConnect;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.AdminRequestCallPacket;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
 import mindustry.net.Administration.TraceInfo;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets.*;
-import useful.*;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import mindustry.net.Packets.Connect;
+import mindustry.net.Packets.ConnectPacket;
+import useful.AntiVpn;
+import useful.Bundle;
 
 import static darkdustry.PluginVars.*;
-import static darkdustry.config.Config.*;
-import static darkdustry.utils.Checks.*;
+import static darkdustry.config.Config.config;
+import static darkdustry.utils.Checks.alreadyVoted;
+import static darkdustry.utils.Checks.notAdmin;
 import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
-import static useful.AntiVpn.subnets;
 
 public class NetHandlers {
     public static final ObjectSet<String> alreadyBlockedIps = new ObjectSet<>();
@@ -184,7 +193,7 @@ public class NetHandlers {
         int ip;
 
         try {
-            ip = parseSubnet(address).ip;
+            ip = Utils.parseSubnet(address).ip;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -196,28 +205,7 @@ public class NetHandlers {
             }
         return false;
     }
-    private static Subnet parseSubnet(String address) throws UnknownHostException {
-        var parts = address.split("/");
 
-        if (parts.length > 2) throw new IllegalArgumentException("Invalid IP address: " + address);
-
-        int ip = 0;
-        int mask = -1;
-
-        for (var token : InetAddress.getByName(parts[0]).getAddress()) {
-            ip = (ip << 8) + (token & 0xFF);
-        }
-
-        if (parts.length == 2) {
-            mask = Integer.parseInt(parts[1]);
-            if (mask > 32)
-                throw new IllegalArgumentException("Invalid IP address: " + address);
-
-            mask = 0xFFFFFFFF << (32 - mask);
-        }
-
-        return new Subnet(ip, mask);
-    }
     public static void adminRequest(NetConnection con, AdminRequestCallPacket packet) {
         var admin = con.player;
         var target = packet.other;
