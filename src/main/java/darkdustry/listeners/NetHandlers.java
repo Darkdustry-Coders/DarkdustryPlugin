@@ -157,6 +157,7 @@ public class NetHandlers {
         if (AntiVpn.checkAddress(ip)) {
             if(!verify(ip)) {
                 con.close();
+                return;
             }
             //redundant
             try {
