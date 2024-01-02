@@ -94,12 +94,10 @@ public class PluginEvents {
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
             Groups.unit.forEach(unit -> {
-                if (unit instanceof Payloadc) ((Payloadc) unit).payloads().forEach(payload -> {
-                    if (payload instanceof BuildPayload && ((BuildPayload) payload).build.id == event.build.id) {
-                        ((Payloadc) unit).payloads().clear();
-                        unit.kill();
-                    }
-                });
+                if (unit instanceof Payloadc payloadc && payloadc.payloads().contains(payload -> payload instanceof BuildPayload buildPayload && buildPayload.build.id == event.build.id)) {
+                    payloadc.payloads().clear();
+                    payloadc.kill();
+                }
             });
 
             if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
@@ -177,7 +175,8 @@ public class PluginEvents {
 
             if (state.rules.pvp)
                 Bundle.infoMessage("events.gameover.pvp", event.winner.coloredName(), map.name(), map.author(), roundExtraTime.num());
-            else Bundle.infoMessage("events.gameover", map.name(), map.author(), roundExtraTime.num());
+            else
+                Bundle.infoMessage("events.gameover", map.name(), map.author(), roundExtraTime.num());
 
             // Оповещаем все клиенты игроков о завершении игры
             Call.updateGameOver(event.winner);
