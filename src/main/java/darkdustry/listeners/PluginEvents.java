@@ -13,6 +13,7 @@ import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
+import mindustry.world.blocks.payloads.BuildPayload;
 import useful.Bundle;
 
 import static arc.Core.*;
@@ -92,6 +93,15 @@ public class PluginEvents {
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
+            Groups.unit.forEach(unit -> {
+                if (unit instanceof Payloadc) ((Payloadc) unit).payloads().forEach(payload -> {
+                    if (payload instanceof BuildPayload && ((BuildPayload) payload).build.id == event.build.id) {
+                        ((Payloadc) unit).payloads().clear();
+                        unit.kill();
+                    }
+                });
+            });
+
             if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
 
             Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.latum);
@@ -157,13 +167,16 @@ public class PluginEvents {
             // На этих режимах игра сменяется автоматически
             if (config.mode == Gamemode.hexed || config.mode == Gamemode.msgo) return;
 
-            if (state.rules.waves) Log.info("Game over! Reached wave @ with @ players online on map @.", state.wave, Groups.player.size(), state.map.plainName());
-            else Log.info("Game over! Team @ is victorious with @ players online on map @.", event.winner.name, Groups.player.size(), state.map.plainName());
+            if (state.rules.waves)
+                Log.info("Game over! Reached wave @ with @ players online on map @.", state.wave, Groups.player.size(), state.map.plainName());
+            else
+                Log.info("Game over! Team @ is victorious with @ players online on map @.", event.winner.name, Groups.player.size(), state.map.plainName());
 
             var map = maps.getNextMap(instance.lastMode, state.map);
             Log.info("Selected next map to be @.", map.plainName());
 
-            if (state.rules.pvp) Bundle.infoMessage("events.gameover.pvp", event.winner.coloredName(), map.name(), map.author(), roundExtraTime.num());
+            if (state.rules.pvp)
+                Bundle.infoMessage("events.gameover.pvp", event.winner.coloredName(), map.name(), map.author(), roundExtraTime.num());
             else Bundle.infoMessage("events.gameover", map.name(), map.author(), roundExtraTime.num());
 
             // Оповещаем все клиенты игроков о завершении игры

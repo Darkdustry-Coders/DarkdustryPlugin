@@ -6,7 +6,8 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url = "https://jitpack.io")
+    maven("https://jitpack.io")
+    maven("https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository")
 }
 
 dependencies {
@@ -17,11 +18,11 @@ dependencies {
     val usefulHash = "2f1d9eb899"
 
     compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustryjitpack:core:v$mindustryVersion") {
+    compileOnly("com.github.anuken.mindustry:core:v$mindustryVersion") {
         exclude(group = "com.github.Anuken.Arc")
     }
 
-    compileOnly("com.github.anuken.mindustryjitpack:server:v$mindustryVersion") {
+    compileOnly("com.github.anuken.mindustry:server:v$mindustryVersion") {
         exclude(group = "com.github.Anuken.Arc")
     }
 
