@@ -21,10 +21,11 @@ public class Database {
 
     public static void connect() {
         try {
-            datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "mindurka");
+            datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "darkdustry");
             mapper = datastore.getMapper();
 
             mapper.getEntityModel(Ban.class);
+            mapper.getEntityModel(Counter.class);
             mapper.getEntityModel(PlayerData.class);
 
             datastore.ensureCaps();
@@ -94,15 +95,10 @@ public class Database {
     // region ID
 
     public static int generateNextID(String key) {
-        Query<Player> query = datastore.find(Player.class)
-                                .order("-_id")
-                                .limit(1);
-        List<Player> players = query.asList();
-        if (!players.isEmpty()) {
-            return players.get(0).getId() + 1;
-        } else {
-            return 0;
-        }
+        return Optional.ofNullable(datastore.find(Counter.class)
+                .filter(Filters.eq("_id", key))
+                .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value"))
+        ).orElseGet(() -> datastore.save(new Counter(key))).value;
     }
 
     // endregion
