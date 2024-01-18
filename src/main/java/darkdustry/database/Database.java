@@ -25,7 +25,6 @@ public class Database {
             mapper = datastore.getMapper();
 
             mapper.getEntityModel(Ban.class);
-            mapper.getEntityModel(Counter.class);
             mapper.getEntityModel(PlayerData.class);
 
             datastore.ensureCaps();
