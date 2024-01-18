@@ -95,10 +95,15 @@ public class Database {
     // region ID
 
     public static int generateNextID(String key) {
-        return Optional.ofNullable(datastore.find(Counter.class)
-                .filter(Filters.eq("_id", key))
-                .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value"))
-        ).orElseGet(() -> datastore.save(new Counter(key))).value;
+        Query<Player> query = datastore.find(Player.class)
+                                .order("-_id")
+                                .limit(1);
+        List<Player> players = query.asList();
+        if (!players.isEmpty()) {
+            return players.get(0).getId() + 1;
+        } else {
+            return 0;
+        }
     }
 
     // endregion
