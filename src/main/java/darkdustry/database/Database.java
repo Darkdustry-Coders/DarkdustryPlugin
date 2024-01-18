@@ -21,7 +21,7 @@ public class Database {
 
     public static void connect() {
         try {
-            datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "darkdustry");
+            datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "mindurka");
             mapper = datastore.getMapper();
 
             mapper.getEntityModel(Ban.class);
