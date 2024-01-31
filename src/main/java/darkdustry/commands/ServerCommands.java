@@ -69,6 +69,7 @@ public class ServerCommands {
 
             app.post(() -> {
                 Log.info("Loading map...");
+                instance.lastMode = mode; // должно пофиксить то что host <map> <mode> просто игнорирует mode
                 instance.play(false, () -> world.loadMap(map));
                 Log.info("Map loaded.");
 
