@@ -93,14 +93,14 @@ public class PluginEvents {
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
-            Groups.unit.forEach(unit -> {
+            if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
+
+            Groups.unit.each(unit -> {
                 if (unit instanceof Payloadc payloadc && payloadc.payloads().contains(payload -> payload instanceof BuildPayload buildPayload && buildPayload.build.id == event.build.id)) {
                     payloadc.payloads().clear();
                     payloadc.kill();
                 }
             });
-
-            if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
 
             Call.spawnEffect(event.build.x, event.build.y, 0f, UnitTypes.latum);
             UnitTypes.latum.spawn(event.build.team, event.build);

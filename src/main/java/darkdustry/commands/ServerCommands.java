@@ -32,7 +32,7 @@ public class ServerCommands {
 
         serverHandler.register("exit", "Exit the server application.", args -> {
             netServer.kickAll(KickReason.serverRestarting);
-            app.exit();
+            app.post(() -> System.exit(0));
 
             Log.info("Server exited.");
         });
@@ -69,8 +69,12 @@ public class ServerCommands {
 
             app.post(() -> {
                 Log.info("Loading map...");
-                instance.lastMode = mode; // должно пофиксить то что host <map> <mode> просто игнорирует mode
+
+                // Гениальный костыль от гугера, который, кстати сработал
+                // (C) Дарк, 2024 г.
+                instance.lastMode = mode;
                 instance.play(false, () -> world.loadMap(map));
+
                 Log.info("Map loaded.");
 
                 netServer.openServer();

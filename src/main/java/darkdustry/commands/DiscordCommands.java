@@ -37,9 +37,6 @@ public class DiscordCommands {
             Socket.request(new StatusRequest(server), context::reply, context::timeout);
         });
 
-        // TODO: Unconfirmed bug on other servers except hub:
-        //       makes server kick everyone but not exit for real
-        /*
         discordHandler.<MessageContext>register("exit", "<server>", "Exit the server application.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;
 
@@ -48,7 +45,6 @@ public class DiscordCommands {
 
             Socket.request(new ExitRequest(server), context::reply, context::timeout);
         });
-        */
 
         discordHandler.<MessageContext>register("artv", "<server> [map...]", "Force map change.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs)) return;

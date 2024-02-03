@@ -131,7 +131,7 @@ public class SocketEvents {
             if (!request.server.equals(config.mode.name())) return;
 
             netServer.kickAll(KickReason.serverRestarting);
-            app.exit();
+            app.post(() -> System.exit(0));
 
             Socket.respond(request, EmbedResponse.success("Server Exited"));
         });
