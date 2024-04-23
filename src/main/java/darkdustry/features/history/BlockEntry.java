@@ -1,6 +1,7 @@
 package darkdustry.features.history;
 
 import arc.util.Time;
+import darkdustry.database.Database;
 import mindustry.game.EventType.BlockBuildEndEvent;
 import mindustry.gen.Player;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
@@ -26,12 +27,13 @@ public class BlockEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
+        var data = Database.getPlayerDataOrCreate(uuid);
         var block = content.block(blockID);
 
         return breaking ?
-                Bundle.format("history.broke", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp)) :
+                Bundle.format("history.broke", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id) :
                 block.rotate ?
-                        Bundle.format("history.built.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp)) :
-                        Bundle.format("history.built", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp));
+                        Bundle.format("history.built.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), data.id) :
+                        Bundle.format("history.built", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id);
     }
 }

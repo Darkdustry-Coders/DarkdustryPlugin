@@ -101,7 +101,13 @@ public class Config {
         }},
 
         survival("Survival"),
-        tower("Tower Defense");
+        tower("Tower Defense"),
+
+        test("Test") {{
+            enableVnw = false;
+            enableStrict = false;
+            enableSurrender = false;
+        }};
 
         public final String displayName;
 

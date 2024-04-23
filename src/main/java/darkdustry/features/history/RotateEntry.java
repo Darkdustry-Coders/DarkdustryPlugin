@@ -1,6 +1,7 @@
 package darkdustry.features.history;
 
 import arc.util.Time;
+import darkdustry.database.Database;
 import mindustry.game.EventType.BuildRotateEvent;
 import mindustry.gen.Player;
 import useful.Bundle;
@@ -23,8 +24,9 @@ public class RotateEntry implements HistoryEntry {
 
     public String getMessage(Player player) {
         var info = netServer.admins.getInfo(uuid);
+        var data = Database.getPlayerDataOrCreate(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format("history.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp));
+        return Bundle.format("history.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), data.id);
     }
 }

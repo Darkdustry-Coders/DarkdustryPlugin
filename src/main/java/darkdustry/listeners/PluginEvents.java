@@ -65,6 +65,20 @@ public class PluginEvents {
             Bundle.send(event.player, "history.title", event.tile.x, event.tile.y, builder.toString());
         });
 
+        // Extremely bugged!
+
+        //Events.on(PickupEvent.class, event -> {
+        //    if (event.build != null && History.enabled()) {
+        //        History.put(event.build.tile, new PayloadEntry(event));
+        //    }
+        //});
+
+        //Events.on(PayloadDropEvent.class, event -> {
+        //    if (event.build != null && History.enabled()) {
+        //        History.put(event.build.tile, new PayloadEntry(event));
+        //    }
+        //});
+
         Events.on(BlockBuildEndEvent.class, event -> {
             if (event.unit == null || !event.unit.isPlayer()) return;
 
