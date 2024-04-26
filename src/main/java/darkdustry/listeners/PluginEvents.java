@@ -37,6 +37,9 @@ public class PluginEvents {
 
             if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
+
+            if (config.mode.disableAttackMode)
+                state.rules.attackMode = false;
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));

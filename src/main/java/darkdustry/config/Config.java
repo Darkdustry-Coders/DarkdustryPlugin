@@ -58,6 +58,7 @@ public class Config {
             isDefault = false;
             enableVnw = false;
             enableSurrender = true;
+            disableAttackMode = true;
         }},
 
         crawler("Crawler Arena") {{
@@ -68,6 +69,7 @@ public class Config {
         forts("Forts") {{
             enableVnw = false;
             enableSurrender = true;
+            disableAttackMode = true;
         }},
 
         hexed("Hexed PvP") {{
@@ -75,6 +77,7 @@ public class Config {
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
+            disableAttackMode = true;
         }},
 
         hub("Hub") {{
@@ -94,6 +97,7 @@ public class Config {
         pvp("PvP") {{
             enableVnw = false;
             enableSurrender = true;
+            disableAttackMode = true;
         }},
 
         sandbox("Sandbox") {{
@@ -104,6 +108,7 @@ public class Config {
         tower("Tower Defense"),
 
         test("Test") {{
+            disableAttackMode = true;
             enableVnw = false;
             enableStrict = false;
             enableSurrender = false;
@@ -119,6 +124,8 @@ public class Config {
         public boolean enableStrict = true;
         public boolean enableVotekick = true;
         public boolean enableSurrender = false;
+
+        public boolean disableAttackMode = false;
 
         Gamemode(String displayName) {
             this.displayName = displayName;
