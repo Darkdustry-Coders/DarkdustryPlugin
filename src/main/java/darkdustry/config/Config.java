@@ -1,6 +1,7 @@
 package darkdustry.config;
 
 import arc.util.Log;
+import mindustry.game.Team;
 import useful.ConfigLoader;
 
 import static darkdustry.PluginVars.*;
@@ -58,7 +59,7 @@ public class Config {
             isDefault = false;
             enableVnw = false;
             enableSurrender = true;
-            disableAttackMode = true;
+            enableSpectate = true;
         }},
 
         crawler("Crawler Arena") {{
@@ -69,15 +70,15 @@ public class Config {
         forts("Forts") {{
             enableVnw = false;
             enableSurrender = true;
-            disableAttackMode = true;
+            enableSpectate = true;
         }},
 
         hexed("Hexed PvP") {{
+            disableAttackMode = true;
             isDefault = false;
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
-            disableAttackMode = true;
         }},
 
         hub("Hub") {{
@@ -97,7 +98,7 @@ public class Config {
         pvp("PvP") {{
             enableVnw = false;
             enableSurrender = true;
-            disableAttackMode = true;
+            enableSpectate = true;
         }},
 
         sandbox("Sandbox") {{
@@ -108,10 +109,10 @@ public class Config {
         tower("Tower Defense"),
 
         test("Test") {{
-            disableAttackMode = true;
             enableVnw = false;
             enableStrict = false;
             enableSurrender = false;
+            enableSpectate = true;
         }};
 
         public final String displayName;
@@ -124,8 +125,11 @@ public class Config {
         public boolean enableStrict = true;
         public boolean enableVotekick = true;
         public boolean enableSurrender = false;
+        public boolean enableSpectate = false;
 
         public boolean disableAttackMode = false;
+
+        public Team spectatorTeam = Team.get(69);
 
         Gamemode(String displayName) {
             this.displayName = displayName;

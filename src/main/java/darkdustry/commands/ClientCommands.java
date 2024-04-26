@@ -2,11 +2,16 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.database.*;
+import darkdustry.features.Spectate;
 import darkdustry.features.menus.*;
 import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
+import mindustry.content.StatusEffects;
+import mindustry.content.UnitTypes;
+import mindustry.entities.Effect;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import useful.*;
 
@@ -169,5 +174,15 @@ public class ClientCommands {
         Commands.create("saves")
                 .enabled(config.mode.isDefault)
                 .register(PageIterator::saves);
+
+        Commands.create("spectate")
+                .enabled(config.mode.enableSpectate)
+                .register((args, player) -> {
+                    if (Spectate.isSpectator(player)) {
+                        Spectate.stopSpectating(player);
+                        return;
+                    }
+                    Spectate.spectate(player);
+                });
     }
 }
