@@ -15,6 +15,8 @@ import mindustry.game.Team;
 import mindustry.gen.*;
 import useful.*;
 
+import java.util.Arrays;
+
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.utils.Checks.*;
@@ -45,7 +47,28 @@ public class ClientCommands {
 
         Commands.create("settings")
                 .welcomeMessage(true)
-                .register((args, player) -> MenuHandler.showSettingsMenu(player));
+                .register((args, player) -> {
+                    if (args.length == 0) MenuHandler.showSettingsMenu(player);
+                    var setting = Arrays.stream(MenuHandler.Setting.values()).filter(x -> x.name().equals(args[0])).findAny();
+                    var data = Database.getPlayerData(player);
+                    if (setting.isPresent()) {
+                        setting.get().setter.get(data);
+                        Database.savePlayerData(data);
+                        Bundle.send(player, "commands.settings.toggled", args[0]);
+                    }
+                    else {
+                        Bundle.send(player, "commands.settings.not-found", args[0]);
+                    }
+                });
+
+        Commands.create("history")
+                .register((args, player) -> {
+                    var data = Database.getPlayerData(player);
+                    MenuHandler.Setting.history.setter.get(data);
+                    Database.savePlayerData(data);
+                    if (MenuHandler.Setting.history.getter.get(data)) Bundle.send(player, "commands.history.enabled");
+                    else Bundle.send(player, "commands.history.disabled");
+                });
 
         Commands.create("hub")
                 .enabled(!config.hubIp.isEmpty())
