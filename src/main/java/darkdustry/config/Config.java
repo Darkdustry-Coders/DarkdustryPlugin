@@ -49,6 +49,9 @@ public class Config {
     /** Url для подключения к базе данных. */
     public String mongoUrl = "url";
 
+    /** Путь до плагина. */
+    public String pluginSource = "path";
+
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
 

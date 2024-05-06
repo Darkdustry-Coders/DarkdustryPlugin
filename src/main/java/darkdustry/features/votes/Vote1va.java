@@ -16,7 +16,7 @@ public class Vote1va extends VoteSession {
     public Vote1va(Map map, Player player) {
         this.map = map;
         this.player = player;
-        Bundle.send("commands.1va.begin", player.coloredName(), map.name(), votes() + 1, votesRequired());
+        Bundle.send("commands.1va.start", player.coloredName(), map.name(), votes() + 1, votesRequired());
         super.vote(player, 1);
     }
 

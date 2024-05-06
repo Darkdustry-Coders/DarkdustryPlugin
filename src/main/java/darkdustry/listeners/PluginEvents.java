@@ -16,6 +16,8 @@ import mindustry.gen.*;
 import mindustry.world.blocks.payloads.BuildPayload;
 import useful.Bundle;
 
+import java.io.IOException;
+
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
@@ -177,6 +179,17 @@ public class PluginEvents {
             }
 
             Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
+
+            if (Groups.player.isEmpty() && Restart.restart) {
+                if (Restart.copyPlugin) {
+                    try {
+                        Restart.copyPlugin();
+                    } catch (IOException e) {
+                        Log.err("Failed to copy plugin", e);
+                    }
+                }
+                System.exit(0);
+            }
         });
 
         instance.gameOverListener = event -> {
@@ -224,6 +237,19 @@ public class PluginEvents {
             Call.updateGameOver(event.winner);
 
             instance.play(() -> world.loadMap(map, map.applyRules(instance.lastMode)));
+
+            if (Restart.restart) {
+                Timer.schedule(() -> {
+                    if (Restart.copyPlugin) {
+                        try {
+                            Restart.copyPlugin();
+                        } catch (IOException e) {
+                            Log.err("Failed to copy plugin", e);
+                        }
+                    }
+                    System.exit(0);
+                }, 5f);
+            }
         };
 
         // Таймер сборки мусора

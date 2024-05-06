@@ -8,10 +8,12 @@ import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import mindustry.core.GameState.State;
 import mindustry.game.Gamemode;
+import mindustry.gen.Groups;
 import mindustry.maps.Map;
 import mindustry.net.Packets.*;
 import useful.*;
 
+import java.io.IOException;
 import java.time.*;
 import java.util.*;
 
@@ -232,6 +234,24 @@ public class ServerCommands {
 
             Database.savePlayerData(data);
             Log.info("Successfully set rank of @ to @.", data.plainName(), rank.name());
+        });
+
+        serverHandler.register("restart", "[copy-plugin]", "Restart the server after the round ends", args -> {
+            Restart.copyPlugin = args[0].equals("y") || args[0].equals("yes") || args[0].equals("t") || args[0].equals("true");
+            if (Groups.player.isEmpty()) {
+                if (Restart.copyPlugin) {
+                    try {
+                        Restart.copyPlugin();
+                    } catch (IOException e) {
+                        Log.err("Failed to copy plugin", e);
+                    }
+                }
+                System.exit(0);
+            }
+
+            Log.info("Server will now be restarted after the round ends");
+            Bundle.send("restart");
+            Restart.restart = true;
         });
     }
 }
