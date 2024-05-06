@@ -2,6 +2,7 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.database.*;
+import darkdustry.features.OnevAll;
 import darkdustry.features.Spectate;
 import darkdustry.features.menus.*;
 import darkdustry.features.net.*;
@@ -214,6 +215,10 @@ public class ClientCommands {
         Commands.create("spectate")
                 .enabled(config.mode.enableSpectate)
                 .register((args, player) -> {
+                    if (OnevAll.enabled() && OnevAll.single == player) {
+                        Bundle.send(player, "commands.spectate.1va");
+                        return;
+                    }
                     if (Spectate.isSpectator(player)) {
                         Spectate.stopSpectating(player);
                         return;
