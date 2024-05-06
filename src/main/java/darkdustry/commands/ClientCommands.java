@@ -49,7 +49,10 @@ public class ClientCommands {
         Commands.create("settings")
                 .welcomeMessage(true)
                 .register((args, player) -> {
-                    if (args.length == 0) MenuHandler.showSettingsMenu(player);
+                    if (args.length == 0) {
+                        MenuHandler.showSettingsMenu(player);
+                        return;
+                    }
                     var setting = Arrays.stream(MenuHandler.Setting.values()).filter(x -> x.name().equals(args[0])).findAny();
                     var data = Database.getPlayerData(player);
                     if (setting.isPresent()) {
