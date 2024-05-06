@@ -40,6 +40,15 @@ public class PluginEvents {
 
             if (config.mode.disableAttackMode)
                 state.rules.attackMode = false;
+
+            if (config.mode.enable1va)
+                OnevAll.nextMap();
+
+            if (OnevAll.enabled()) {
+                Log.info("Started a 1va round, gladiator: " + player.plainName());
+                for (Player player : Groups.player)
+                    OnevAll.reassign(player);
+            }
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
@@ -142,6 +151,9 @@ public class PluginEvents {
             else if (data.discordLink)
                 Call.openURI(event.player.con, discordServerUrl);
 
+            if (OnevAll.enabled())
+                OnevAll.reassign(player);
+
             // На мобильных устройствах приветственное сообщение отображается по-другому
             Bundle.send(event.player, event.player.con.mobile ?
                     "welcome.message.mobile" :
@@ -160,10 +172,23 @@ public class PluginEvents {
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
 
+            if (OnevAll.enabled() && event.player == OnevAll.single) {
+                OnevAll.dipped();
+            }
+
             Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
         });
 
         instance.gameOverListener = event -> {
+            if (OnevAll.enabled()) {
+                if (event.winner == state.rules.defaultTeam) {
+                    OnevAll.victory();
+                }
+                else {
+                    OnevAll.defeat();
+                }
+            }
+
             Groups.player.each(player -> {
                 var data = Cache.get(player);
                 data.gamesPlayed++;

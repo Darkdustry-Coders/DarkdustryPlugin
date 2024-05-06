@@ -75,8 +75,13 @@ public class MenuHandler {
         // region menu
 
         statsMenu.transform(TARGET, DATA, (menu, target, data) -> {
+            Func2<Integer, Integer, String> ova = (wins, ovas) -> {
+                if (ovas > 0) return wins.toString() + " " + Bundle.format("stats.1va", target, ovas);
+                return wins.toString();
+            };
+
             menu.title("stats.title");
-            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.castleWins, data.fortsWins, data.hexedWins, data.msgoWins, data.pvpWins, Bundle.formatDuration(menu.player, Duration.ofMinutes(data.playTime)));
+            menu.content("stats.content", target.coloredName(), data.id, data.rank.name(menu.player), data.rank.description(menu.player), data.blocksPlaced, data.blocksBroken, data.gamesPlayed, data.wavesSurvived, data.attackWins, data.castleWins, ova.get(data.fortsWins, data.fortsOvas), data.hexedWins, data.msgoWins, data.pvpWins, Bundle.formatDuration(menu.player, Duration.ofMinutes(data.playTime)));
 
             menu.option("stats.requirements.show", Action.open(requirementsMenu)).row();
             menu.option("ui.button.close");

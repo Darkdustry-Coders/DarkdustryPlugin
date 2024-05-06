@@ -38,6 +38,7 @@ public class PlayerData {
     public int attackWins = 0;
     public int castleWins = 0;
     public int fortsWins = 0;
+    public int fortsOvas = 0;
     public int hexedWins = 0;
     public int msgoWins = 0;
     public int pvpWins = 0;

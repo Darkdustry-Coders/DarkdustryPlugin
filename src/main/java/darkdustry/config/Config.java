@@ -71,6 +71,7 @@ public class Config {
             enableVnw = false;
             enableSurrender = true;
             enableSpectate = true;
+            enable1va = true;
         }},
 
         hexed("Hexed PvP") {{
@@ -126,6 +127,7 @@ public class Config {
         public boolean enableVotekick = true;
         public boolean enableSurrender = false;
         public boolean enableSpectate = false;
+        public boolean enable1va = false;
 
         public boolean disableAttackMode = false;
 

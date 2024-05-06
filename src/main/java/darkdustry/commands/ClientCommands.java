@@ -128,6 +128,19 @@ public class ClientCommands {
                     });
                 });
 
+        Commands.create("1va")
+                .enabled(config.mode.enable1va)
+                .cooldown(60000L)
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    if (alreadyVoting(player, vote)) return;
+
+                    var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
+                    if (notFound(player, map)) return;
+
+                    vote = new Vote1va(map, player);
+                });
+
         Commands.create("rtv")
                 .enabled(config.mode.enableRtv)
                 .cooldown(60000L)
