@@ -117,6 +117,12 @@ public class Config {
             enableStrict = false;
             enableSurrender = false;
             enableSpectate = true;
+        }},
+
+        sandboxPVP("SandboxPvP") {{
+            enableVnw = false;
+            enableSurrender = false;
+            enableSpectate = true;
         }};
 
         public final String displayName;
