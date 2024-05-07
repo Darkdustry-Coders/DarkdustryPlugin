@@ -17,7 +17,7 @@ public class Restart {
     public static void copyPlugin() throws IOException {
         Files.copy(
                 Path.of(config.pluginSource),
-                Path.of(".").resolve("config/plugins/DarkdustryPlugin.jar"),
+                Path.of(".").resolve("config/mods/DarkdustryPlugin.jar"),
                 StandardCopyOption.REPLACE_EXISTING);
     }
 }
