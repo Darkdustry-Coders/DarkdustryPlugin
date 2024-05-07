@@ -2,9 +2,12 @@ package darkdustry.features;
 
 import arc.Events;
 import arc.util.Timer;
+import mindustry.content.UnitTypes;
+import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Player;
+import mindustry.world.Build;
 import useful.Bundle;
 
 import java.util.ArrayList;
@@ -50,6 +53,8 @@ public class Spectate {
     public static void spectate(Player player) {
         if (isSpectator(player)) return;
 
+        var decoy = UnitTypes.alpha.spawn(player.team(), 0, 0);
+        decoy.controller(player);
         players.put(player, player.team());
         player.team(config.mode.spectatorTeam);
         var unit = player.unit();
