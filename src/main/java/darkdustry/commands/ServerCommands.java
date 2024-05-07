@@ -237,7 +237,8 @@ public class ServerCommands {
         });
 
         serverHandler.register("restart", "[copy-plugin]", "Restart the server after the round ends", args -> {
-            Restart.copyPlugin = args[0].equals("y") || args[0].equals("yes") || args[0].equals("t") || args[0].equals("true");
+            if (args.length > 0)
+                Restart.copyPlugin = args[0].equals("y") || args[0].equals("yes") || args[0].equals("t") || args[0].equals("true");
             if (Groups.player.isEmpty()) {
                 if (Restart.copyPlugin) {
                     try {
