@@ -50,7 +50,7 @@ public class PluginEvents {
                 assert OnevAll.single != null;
                 Log.info("Started a 1va round, gladiator: " + OnevAll.single.plainName());
                 for (Player player : Groups.player)
-                    OnevAll.reassign(player);
+                    player.team(OnevAll.selectTeam(player));
             }
         });
 
@@ -154,9 +154,6 @@ public class PluginEvents {
             else if (data.discordLink)
                 Call.openURI(event.player.con, discordServerUrl);
 
-            if (OnevAll.enabled())
-                OnevAll.reassign(event.player);
-
             // На мобильных устройствах приветственное сообщение отображается по-другому
             Bundle.send(event.player, event.player.con.mobile ?
                     "welcome.message.mobile" :
@@ -192,6 +189,15 @@ public class PluginEvents {
                 System.exit(0);
             }
         });
+
+        var _nativeAssigner = netServer.assigner;
+        netServer.assigner = (player, players) -> {
+            if (OnevAll.enabled()) {
+                return OnevAll.selectTeam(player);
+            }
+
+            return _nativeAssigner.assign(player, players);
+        };
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {

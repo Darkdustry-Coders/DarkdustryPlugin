@@ -38,8 +38,8 @@ public class OnevAll {
         return state.rules.waveTeam;
     }
 
-    public static void reassign(Player player) {
-        player.team(player == single ? state.rules.defaultTeam : otherTeam());
+    public static Team selectTeam(Player player) {
+        return player == single ? state.rules.defaultTeam : otherTeam();
     }
 
     public static void dipped() {
