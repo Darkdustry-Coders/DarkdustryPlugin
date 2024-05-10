@@ -47,7 +47,8 @@ public class PluginEvents {
                 OnevAll.nextMap();
 
             if (OnevAll.enabled()) {
-                Log.info("Started a 1va round, gladiator: " + player.plainName());
+                assert OnevAll.single != null;
+                Log.info("Started a 1va round, gladiator: " + OnevAll.single.plainName());
                 for (Player player : Groups.player)
                     OnevAll.reassign(player);
             }
