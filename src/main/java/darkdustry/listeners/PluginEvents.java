@@ -155,7 +155,7 @@ public class PluginEvents {
                 Call.openURI(event.player.con, discordServerUrl);
 
             if (OnevAll.enabled())
-                OnevAll.reassign(player);
+                OnevAll.reassign(event.player);
 
             // На мобильных устройствах приветственное сообщение отображается по-другому
             Bundle.send(event.player, event.player.con.mobile ?
@@ -195,7 +195,8 @@ public class PluginEvents {
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {
-                if (event.winner == state.rules.defaultTeam) {
+                assert OnevAll.single != null;
+                if (event.winner == OnevAll.single.team()) {
                     OnevAll.victory();
                 }
                 else {
