@@ -181,7 +181,7 @@ public class PluginEvents {
 
             Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
 
-            if (Groups.player.isEmpty() && Restart.restart) {
+            if (Groups.player.size() <= 1 && Restart.restart) {
                 if (Restart.copyPlugin) {
                     try {
                         Restart.copyPlugin();
