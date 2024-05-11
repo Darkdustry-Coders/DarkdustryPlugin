@@ -43,6 +43,9 @@ public class PluginEvents {
             if (config.mode.disableAttackMode)
                 state.rules.attackMode = false;
 
+            if (config.mode.disableCrashDamage)
+                state.rules.unitCrashDamageMultiplier = 0.0f;
+
             if (config.mode.enable1va)
                 OnevAll.nextMap();
 

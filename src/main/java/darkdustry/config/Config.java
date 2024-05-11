@@ -110,7 +110,9 @@ public class Config {
         }},
 
         survival("Survival"),
-        tower("Tower Defense"),
+        tower("Tower Defense") {{
+            disableCrashDamage = true;
+        }},
 
         test("Test") {{
             enableVnw = false;
@@ -139,6 +141,7 @@ public class Config {
         public boolean enable1va = false;
 
         public boolean disableAttackMode = false;
+        public boolean disableCrashDamage = false;
 
         public Team spectatorTeam = Team.get(69);
 
