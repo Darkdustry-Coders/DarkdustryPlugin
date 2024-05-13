@@ -52,6 +52,12 @@ public class Config {
     /** Путь до плагина. */
     public String pluginSource = "path";
 
+    /** Max units that can exist on a map (except for players) */
+    public int maxUnitsTotal = -1;
+
+    /** Make unit cap be affected solely by the core amount */
+    public boolean straightforwardUnitCap = true;
+
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
 

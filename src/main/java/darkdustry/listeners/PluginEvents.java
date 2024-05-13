@@ -14,6 +14,7 @@ import mindustry.entities.Units;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.world.blocks.payloads.BuildPayload;
+import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
 
 import java.io.IOException;
@@ -202,6 +203,34 @@ public class PluginEvents {
             return _nativeAssigner.assign(player, players);
         };
 
+        Events.on(UnitSpawnEvent.class, event -> {
+            if (config.straightforwardUnitCap) {
+                int cap = state.rules.unitCap;
+                if (state.rules.unitCapVariable)
+                    cap *= Groups.build.count(x -> x instanceof CoreBlock.CoreBuild && x.team() == event.unit.team());
+                if (Groups.unit.count(u -> !u.spawnedByCore && u.team() == event.unit.team() &&
+                        u.type == event.unit.type) > cap) {
+                    event.unit.kill();
+                    return;
+                }
+            }
+
+            if (config.maxUnitsTotal < 0) return;
+            if (event.unit.spawnedByCore()) return;
+            if (Groups.unit.size() < config.maxUnitsTotal) return;
+            if (Groups.unit.count(u -> !u.spawnedByCore) < config.maxUnitsTotal) return;
+
+            event.unit.kill();
+        });
+
+        Events.on(UnitSpawnEvent.class, event -> {
+            Groups.player.each(p -> p.sendMessage("[blue]Unit spawned"));
+        });
+
+        Events.on(PayloadDropEvent.class, event -> {
+            Groups.player.each(p -> p.sendMessage("[orange]Payload dropped"));
+        });
+
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {
                 assert OnevAll.single != null;
@@ -262,6 +291,17 @@ public class PluginEvents {
                 }, 5f);
             }
         };
+
+        Timer.schedule(() -> {
+            if (config.maxUnitsTotal < 0) return;
+            if (Groups.unit.size() < config.maxUnitsTotal) return;
+            int overflow = Groups.unit.count(u -> !u.spawnedByCore) - config.maxUnitsTotal;
+            if (overflow < 1) return;
+
+            int i = Groups.unit.size();
+            while (overflow-- > 0) Groups.unit.index(--i).kill();
+
+        }, 10f, 10f);
 
         // Таймер сборки мусора
         Timer.schedule(() -> mainExecutor.submit(System::gc), 60f, 60f);
