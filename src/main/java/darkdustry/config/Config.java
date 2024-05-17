@@ -56,7 +56,7 @@ public class Config {
     public int maxUnitsTotal = -1;
 
     /** Make unit cap be affected solely by the core amount */
-    public boolean straightforwardUnitCap = true;
+    public boolean straightforwardUnitCap = false;
 
     /** Режим игры на сервере. */
     public Gamemode mode = hub;

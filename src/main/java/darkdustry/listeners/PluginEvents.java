@@ -12,6 +12,7 @@ import discord4j.rest.util.Color;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.world.blocks.payloads.BuildPayload;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -29,14 +30,24 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
 
     public static void load() {
+        //boolean[] unitCapDynamic = new boolean[] {false};
+
         Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", Color.SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
+            //unitCapDynamic[0] = state.rules.unitCapVariable;
+
             state.rules.showSpawns = true;
             state.rules.unitPayloadUpdate = true;
 
             state.rules.modeName = config.mode.displayName;
             state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
+
+            //if (config.straightforwardUnitCap) {
+            //    state.rules.unitCapVariable = false;
+
+            //    final int unitCap = state.rules.unitCap;
+            //}
 
             if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
@@ -57,6 +68,10 @@ public class PluginEvents {
                     player.team(OnevAll.selectTeam(player));
             }
         });
+
+        //if (config.straightforwardUnitCap) {
+        //    Events.on();
+        //}
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
@@ -96,8 +111,6 @@ public class PluginEvents {
         //    if (event.build != null && History.enabled()) {
         //        History.put(event.build.tile, new PayloadEntry(event));
         //    }
-        //});
-
         Events.on(BlockBuildEndEvent.class, event -> {
             if (event.unit == null || !event.unit.isPlayer()) return;
 
@@ -221,14 +234,6 @@ public class PluginEvents {
             if (Groups.unit.count(u -> !u.spawnedByCore) < config.maxUnitsTotal) return;
 
             event.unit.kill();
-        });
-
-        Events.on(UnitSpawnEvent.class, event -> {
-            Groups.player.each(p -> p.sendMessage("[blue]Unit spawned"));
-        });
-
-        Events.on(PayloadDropEvent.class, event -> {
-            Groups.player.each(p -> p.sendMessage("[orange]Payload dropped"));
         });
 
         instance.gameOverListener = event -> {
