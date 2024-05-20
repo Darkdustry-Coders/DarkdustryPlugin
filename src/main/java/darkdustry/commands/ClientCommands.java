@@ -139,7 +139,11 @@ public class ClientCommands {
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
 
-                    if (Groups.player.size() < 4) Bundle.send("commands.1va.insufficient-players");
+                    if (Groups.player.count(x -> config.mode.enableSpectate && x.team() != config.mode.spectatorTeam) < 4)
+                    {
+                        Bundle.send("commands.1va.insufficient-players");
+                        return;
+                    }
 
                     var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                     if (notFound(player, map)) return;
