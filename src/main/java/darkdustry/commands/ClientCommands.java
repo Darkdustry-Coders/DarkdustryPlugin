@@ -9,10 +9,6 @@ import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
-import mindustry.content.StatusEffects;
-import mindustry.content.UnitTypes;
-import mindustry.entities.Effect;
-import mindustry.game.Team;
 import mindustry.gen.*;
 import useful.*;
 

@@ -14,6 +14,7 @@ import mindustry.entities.Units;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.*;
+import mindustry.logic.LExecutor;
 import mindustry.world.blocks.payloads.BuildPayload;
 import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
@@ -136,6 +137,10 @@ public class PluginEvents {
                 return;
 
             Alerts.buildAlert(event);
+        });
+
+        Events.on(BlockDestroyEvent.class, event -> {
+            if (!(event.tile.build instanceof CoreBlock.CoreBuild)) return;
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {

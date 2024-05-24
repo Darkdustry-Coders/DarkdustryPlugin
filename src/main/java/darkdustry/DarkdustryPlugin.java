@@ -28,6 +28,9 @@ public class DarkdustryPlugin extends Plugin {
     @Override
     public void init() {
         Log.info("Loading Darkdustry plugin.");
+
+        ModCommandHandler.load(); // ModCommandHandler must be loader before Commands, so
+                                  // just in case we're loading it as soon as possible
         Time.mark();
 
         Console.load();
