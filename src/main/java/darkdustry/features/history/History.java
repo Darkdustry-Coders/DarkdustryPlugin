@@ -26,7 +26,7 @@ public class History {
             var queue = get(other.array());
             if (queue == null) return;
 
-            if (entry instanceof PreBlockEntry && !queue.isEmpty() && queue.last() instanceof PreBlockEntry) queue.removeLast();
+            if (entry instanceof PreBlockEntry && !queue.isEmpty() && queue.last() instanceof PreBlockEntry) return;
             if (entry instanceof BlockEntry && !queue.isEmpty() && queue.last() instanceof PreBlockEntry) queue.removeLast();
 
             queue.add(entry);
