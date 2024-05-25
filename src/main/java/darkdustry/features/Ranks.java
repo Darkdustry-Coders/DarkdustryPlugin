@@ -45,7 +45,7 @@ public class Ranks {
 
         mythical(legend) {{
             tag = "[#ff4faa]<[white]\uE80B[]>[] ";
-            requirements = new Requirements(500000, 10000000, 2500, 10000, 50);
+            requirements = new Requirements(50000, 750000, 1000, 7500, 50);
         }},
 
         tournamentWinner {{
