@@ -12,9 +12,7 @@ import discord4j.rest.util.Color;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
-import mindustry.game.Team;
 import mindustry.gen.*;
-import mindustry.logic.LExecutor;
 import mindustry.world.blocks.payloads.BuildPayload;
 import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
@@ -42,7 +40,8 @@ public class PluginEvents {
             state.rules.unitPayloadUpdate = true;
 
             state.rules.modeName = config.mode.displayName;
-            state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
+            if (config.mode != Gamemode.hub)
+                state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
 
             //if (config.straightforwardUnitCap) {
             //    state.rules.unitCapVariable = false;
@@ -123,6 +122,13 @@ public class PluginEvents {
                 data.blocksBroken++;
             else
                 data.blocksPlaced++;
+        });
+
+        Events.on(BlockBuildBeginEvent.class, event -> {
+            if (event.unit == null || !event.unit.isPlayer()) return;
+
+            if (History.enabled() && event.tile.build != null)
+                History.put(event.tile, new PreBlockEntry(event));
         });
 
         Events.on(BuildRotateEvent.class, event -> {
@@ -327,7 +333,7 @@ public class PluginEvents {
             var data = Cache.get(player);
             data.playTime++;
 
-            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived)) {
+            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived, data.fortsOvas)) {
                 data.rank = data.rank.next;
 
                 Ranks.name(player, data);

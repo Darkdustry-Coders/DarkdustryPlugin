@@ -20,27 +20,36 @@ public class Ranks {
 
         active(player) {{
             tag = "[#00ffff]<[white]\uE800[]>[] ";
-            requirements = new Requirements(320, 12500, 25, 50);
+            requirements = new Requirements(320, 12500, 25, 50, 0);
         }},
 
         hyperActive(active) {{
             tag = "[#00ff00]<[white]\uE813[]>[] ";
-            requirements = new Requirements(800, 25000, 50, 100);
+            requirements = new Requirements(800, 25000, 50, 100, 0);
         }},
 
         veteran(hyperActive) {{
             tag = "[#ffff00]<[white]\uE809[]>[] ";
-            requirements = new Requirements(2000, 50000, 100, 200);
+            requirements = new Requirements(2000, 50000, 100, 200, 0);
         }},
 
         master(veteran) {{
             tag = "[#ff8000]<[white]\uE810[]>[] ";
-            requirements = new Requirements(5000, 100000, 200, 400);
+            requirements = new Requirements(5000, 100000, 200, 400, 0);
         }},
 
         legend(master) {{
             tag = "[#ff0000]<[white]\uE871[]>[] ";
-            requirements = new Requirements(10000, 250000, 500, 1000);
+            requirements = new Requirements(10000, 250000, 500, 1000, 0);
+        }},
+
+        mythical(legend) {{
+            tag = "[#ff4faa]<[white]\uE80B[]>[] ";
+            requirements = new Requirements(500000, 10000000, 2500, 10000, 50);
+        }},
+
+        tournamentWinner {{
+            tag = "[#ffef88]<[white]\uF82C[]>[] ";
         }},
 
         contentMaker {{
@@ -72,8 +81,8 @@ public class Ranks {
             previous.next = this;
         }
 
-        public boolean checkNext(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
-            return next != null && next.requirements != null && next.requirements.check(playTime, blocksPlaced, gamesPlayed, wavesSurvived);
+        public boolean checkNext(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived, int ovas) {
+            return next != null && next.requirements != null && next.requirements.check(playTime, blocksPlaced, gamesPlayed, wavesSurvived, ovas);
         }
 
         public String name(Player player) {
@@ -89,9 +98,13 @@ public class Ranks {
         }
     }
 
-    public record Requirements(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
-        public boolean check(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived) {
-            return this.playTime <= playTime && this.blocksPlaced <= blocksPlaced && this.gamesPlayed <= gamesPlayed && this.wavesSurvived <= wavesSurvived;
+    public record Requirements(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived, int ovas) {
+        public boolean check(int playTime, int blocksPlaced, int gamesPlayed, int wavesSurvived, int ovas) {
+            return this.playTime <= playTime &&
+                    this.blocksPlaced <= blocksPlaced &&
+                    this.gamesPlayed <= gamesPlayed &&
+                    this.wavesSurvived <= wavesSurvived &&
+                    this.ovas <= ovas;
         }
     }
 }
