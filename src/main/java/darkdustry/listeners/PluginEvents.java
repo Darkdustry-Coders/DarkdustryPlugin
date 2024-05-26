@@ -31,12 +31,12 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
 
     public static void load() {
-        //boolean[] unitCapDynamic = new boolean[] {false};
+        if (config.allowSpecialSettings) SpecialSettings.load();
 
         Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", Color.SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
-            //unitCapDynamic[0] = state.rules.unitCapVariable;
+            if (config.allowSpecialSettings) SpecialSettings.update();
 
             state.rules.showSpawns = true;
             state.rules.unitPayloadUpdate = true;
@@ -44,12 +44,6 @@ public class PluginEvents {
             state.rules.modeName = config.mode.displayName;
             if (config.mode != Gamemode.hub)
                 state.rules.revealedBlocks.addAll(Blocks.slagCentrifuge, Blocks.heatReactor, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic, Blocks.thruster);
-
-            //if (config.straightforwardUnitCap) {
-            //    state.rules.unitCapVariable = false;
-
-            //    final int unitCap = state.rules.unitCap;
-            //}
 
             if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
@@ -70,10 +64,6 @@ public class PluginEvents {
                     player.team(OnevAll.selectTeam(player));
             }
         });
-
-        //if (config.straightforwardUnitCap) {
-        //    Events.on();
-        //}
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
 
@@ -228,26 +218,6 @@ public class PluginEvents {
 
             return _nativeAssigner.assign(player, players);
         };
-
-        Events.on(UnitSpawnEvent.class, event -> {
-            if (config.straightforwardUnitCap) {
-                int cap = state.rules.unitCap;
-                if (state.rules.unitCapVariable)
-                    cap *= Groups.build.count(x -> x instanceof CoreBlock.CoreBuild && x.team() == event.unit.team());
-                if (Groups.unit.count(u -> !u.spawnedByCore && u.team() == event.unit.team() &&
-                        u.type == event.unit.type) > cap) {
-                    event.unit.kill();
-                    return;
-                }
-            }
-
-            if (config.maxUnitsTotal < 0) return;
-            if (event.unit.spawnedByCore()) return;
-            if (Groups.unit.size() < config.maxUnitsTotal) return;
-            if (Groups.unit.count(u -> !u.spawnedByCore) < config.maxUnitsTotal) return;
-
-            event.unit.kill();
-        });
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {

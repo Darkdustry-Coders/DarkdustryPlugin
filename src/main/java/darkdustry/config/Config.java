@@ -55,8 +55,8 @@ public class Config {
     /** Max units that can exist on a map (except for players) */
     public int maxUnitsTotal = -1;
 
-    /** Make unit cap be affected solely by the core amount */
-    public boolean straightforwardUnitCap = false;
+    /** Allow maps to set special settings */
+    public boolean allowSpecialSettings = false;
 
     public int maxBackupCount = 2;
 
