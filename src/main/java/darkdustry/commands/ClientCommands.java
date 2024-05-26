@@ -195,6 +195,10 @@ public class ClientCommands {
                 .cooldown(180000L)
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
+                    if (!isSafePath(args[0])) {
+                        Bundle.format("commands.votesave.invalid-name", player);
+                        return;
+                    }
 
                     vote = new VoteSave(saveDirectory.child(args[0] + "." + saveExtension));
                     vote.vote(player, 1);
@@ -207,7 +211,10 @@ public class ClientCommands {
                     if (alreadyVoting(player, vote)) return;
 
                     var save = Find.save(args[0]);
-                    if (notFound(player, save)) return;
+                    if (notFound(player, save)) {
+                        Bundle.format("commands.voteload.not-found", player, args[0]);
+                        return;
+                    }
 
                     vote = new VoteLoad(save);
                     vote.vote(player, 1);

@@ -142,4 +142,19 @@ public class Utils {
     }
 
     // endregion
+    // region security
+
+    public static boolean isSafePath(String path) {
+        return isSafePath(path, false);
+    }
+    public static boolean isSafePath(String path, boolean allowExtensions) {
+        if (!allowExtensions && path.contains(".")) return false;
+        if (path.startsWith(".")) return false;
+
+        return path.chars().noneMatch(x -> x >= 'a' && x <= 'z' ||
+                x > 'A' && x <= 'Z' ||
+                x == '-' || x == '_' || x == '.');
+    }
+
+    // endregion
 }
