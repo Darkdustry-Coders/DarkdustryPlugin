@@ -58,6 +58,10 @@ public class Config {
     /** Make unit cap be affected solely by the core amount */
     public boolean straightforwardUnitCap = false;
 
+    public int maxBackupCount = 2;
+
+    public int backupDelaySec = 60 * 5;
+
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
 

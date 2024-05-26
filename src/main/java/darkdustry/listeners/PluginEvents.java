@@ -13,11 +13,13 @@ import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
+import mindustry.io.SaveIO;
 import mindustry.world.blocks.payloads.BuildPayload;
 import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import static arc.Core.*;
 import static darkdustry.PluginVars.*;
@@ -343,5 +345,22 @@ public class PluginEvents {
 
             Database.savePlayerData(data);
         }), 60f, 60f);
+
+        // Rollback backup creation timer
+        if (config.maxBackupCount > 0)
+            Timer.schedule(() -> {
+                Log.info("Creating a backup...");
+                var time = Time.millis();
+                if (config.maxBackupCount > 1) for (int i = config.maxBackupCount; i > 1; i--) {
+                    var to = saveDirectory.child("backup-" + i + ".msav");
+                    var from = saveDirectory.child("backup-" + (i - 1) + ".msav");
+                    if (from.exists()) from.moveTo(to);
+                }
+                var newSave = saveDirectory.child("backup-1.msav");
+                if (newSave.exists()) newSave.delete(); // We do not want infinite copies of backup saves.
+                SaveIO.save(newSave);
+                var passed = Bundle.formatDuration(Duration.ofMillis(Time.timeSinceMillis(time)));
+                Log.info("Finished in " + passed);
+            }, config.backupDelaySec, config.backupDelaySec);
     }
 }
