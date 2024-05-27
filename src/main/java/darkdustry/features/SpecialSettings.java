@@ -16,24 +16,9 @@ public class SpecialSettings {
     private static final int coreNucleusUnitInc = Blocks.coreNucleus.unitCapModifier;
 
     /** Load initial settings */
-    public static void load() {
-        Blocks.coreShard.unitCapModifier = coreShardUnitInc;
-        Blocks.coreAcropolis.unitCapModifier = coreAcropolisUnitInc;
-        Blocks.coreBastion.unitCapModifier = coreBastionUnitInc;
-        Blocks.coreCitadel.unitCapModifier = coreCitadelUnitInc;
-        Blocks.coreFoundation.unitCapModifier = coreFoundationUnitInc;
-        Blocks.coreNucleus.unitCapModifier = coreNucleusUnitInc;
-    }
+    public static void load() {}
 
-    /** Load settings from map */
-    public static void update() {
-        Blocks.coreShard.unitCapModifier = coreShardUnitInc;
-        Blocks.coreAcropolis.unitCapModifier = coreAcropolisUnitInc;
-        Blocks.coreBastion.unitCapModifier = coreBastionUnitInc;
-        Blocks.coreCitadel.unitCapModifier = coreCitadelUnitInc;
-        Blocks.coreFoundation.unitCapModifier = coreFoundationUnitInc;
-        Blocks.coreNucleus.unitCapModifier = coreNucleusUnitInc;
-
+    private static void upload() {
         var anyBuild = Vars.world.build(0, 0);
         if (anyBuild == null || anyBuild.block().id != Blocks.worldMessage.id) {
             return;
@@ -112,6 +97,18 @@ public class SpecialSettings {
                 }
             }
         }
+    }
+
+    /** Load settings from map */
+    public static void update() {
+        Blocks.coreShard.unitCapModifier = coreShardUnitInc;
+        Blocks.coreAcropolis.unitCapModifier = coreAcropolisUnitInc;
+        Blocks.coreBastion.unitCapModifier = coreBastionUnitInc;
+        Blocks.coreCitadel.unitCapModifier = coreCitadelUnitInc;
+        Blocks.coreFoundation.unitCapModifier = coreFoundationUnitInc;
+        Blocks.coreNucleus.unitCapModifier = coreNucleusUnitInc;
+
+        upload();
 
         for (var team : Team.all) {
             if (team.core() == null) continue;
