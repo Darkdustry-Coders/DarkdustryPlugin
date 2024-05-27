@@ -133,7 +133,7 @@ public class Config {
 
         sandboxPVP("SandboxPvP") {{
             enableVnw = false;
-            enableSurrender = false;
+            enableSurrender = true;
             enableSpectate = true;
         }};
 
