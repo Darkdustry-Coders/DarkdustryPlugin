@@ -103,6 +103,8 @@ public class PluginEvents {
         //    if (event.build != null && History.enabled()) {
         //        History.put(event.build.tile, new PayloadEntry(event));
         //    }
+        //});
+
         Events.on(BlockBuildEndEvent.class, event -> {
             if (event.unit == null || !event.unit.isPlayer()) return;
 

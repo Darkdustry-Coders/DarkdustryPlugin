@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.*;
+import darkdustry.database.Cache;
 import darkdustry.database.Database;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
@@ -16,7 +17,6 @@ import static darkdustry.utils.Checks.*;
 import static mindustry.Vars.*;
 
 public class DiscordCommands {
-
     public static void load() {
         discordHandler = new CommandHandler(discordConfig.prefix);
 
@@ -167,6 +167,33 @@ public class DiscordCommands {
                     .title("Rank Changed")
                     .addField("Player:", data.plainName(), false)
                     .addField("Rank:", rank.name(), false)).subscribe();
+        });
+
+        discordHandler.<MessageContext>register("link", "<code>", "Link your Mindustry account.", (args, context) -> {
+            var author = context.message().getAuthor();
+            if (author.isPresent()) {
+                var data = Database.getPlayerData(author.get().getId());
+                if (data != null) {
+                    context.error(embed -> embed
+                            .title("Account already linked")
+                            .description("This user is already connected to an account")).subscribe();
+                    return;
+                }
+                data = Database.getPlayerDataByCode(args[0]);
+                if (data != null && data.discordId.isEmpty()) {
+                    data.discordAttachCode = "";
+                    data.discordId = author.get().getId().toString();
+                    Database.savePlayerData(data);
+                    Socket.send(new DiscordLinkedEvent(data.uuid, author.get().getUsername(), author.get().getId().toString()));
+                    context.success(embed -> embed
+                            .title("Account linked successfully")).subscribe();
+                }
+                else {
+                    context.error(embed -> embed
+                            .title("Code not found")
+                            .description("This code doesn't correspond to any account")).subscribe();
+                }
+            }
         });
     }
 }

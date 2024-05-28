@@ -5,10 +5,12 @@ import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import darkdustry.database.Cache;
+import darkdustry.database.Database;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.*;
 import darkdustry.listeners.SocketEvents.ServerMessageEvent;
 import darkdustry.utils.Admins;
+import darkdustry.utils.IpTables;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.*;
@@ -141,6 +143,17 @@ public class NetHandlers {
         }
 
         if (con.kicked) return;
+
+        if (config.mode != Gamemode.hub) {
+            var data = Database.getPlayerDataOrCreate(uuid);
+            if (data.discordId.isEmpty()) {
+                var tables = IpTables.of(con.address);
+                if (tables != null && tables.isHotspot()) {
+                    Bundle.kick(con, "en", "kick.hotspot");
+                    return;
+                }
+            }
+        }
 
         var player = Player.create();
         player.con(con);

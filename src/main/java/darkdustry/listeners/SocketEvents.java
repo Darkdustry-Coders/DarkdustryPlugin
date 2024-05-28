@@ -91,6 +91,18 @@ public class SocketEvents {
             Ranks.name(player, data);
         });
 
+        Socket.on(DiscordLinkedEvent.class, event -> {
+            var player = Find.playerByUUID(event.uuid);
+            if (player == null) return;
+
+            var data = Cache.get(player);
+            data.discordId = event.id;
+            data.discordAttachCode = "";
+            Database.savePlayerData(data);
+
+            Bundle.send(player, "commands.discord-link.linked", event.username);
+        });
+
         Socket.on(ListRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
@@ -285,6 +297,9 @@ public class SocketEvents {
     }
 
     public record SetRankSyncEvent(String uuid, Rank rank) {
+    }
+
+    public record DiscordLinkedEvent(String uuid, String username, String id) {
     }
 
     @AllArgsConstructor

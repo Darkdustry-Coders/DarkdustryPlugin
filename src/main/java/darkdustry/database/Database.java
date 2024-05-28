@@ -8,8 +8,11 @@ import dev.morphia.*;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
+import discord4j.common.util.Snowflake;
 import mindustry.gen.Player;
+import org.checkerframework.checker.units.qual.C;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static darkdustry.config.Config.*;
@@ -39,6 +42,16 @@ public class Database {
 
     // region player data
 
+    public static @Nullable PlayerData getPlayerData(Snowflake discordId) {
+        var data = datastore.find(PlayerData.class)
+                .filter(Filters.eq("discordId", discordId.toString()))
+                .first();
+        if (data == null) return null;
+        var local = Cache.get(data.id);
+        if (local != null) return local;
+        return data;
+    }
+
     public static PlayerData getPlayerData(Player player) {
         return getPlayerData(player.uuid());
     }
@@ -62,6 +75,16 @@ public class Database {
 
             return savePlayerData(data);
         });
+    }
+
+    public static @Nullable PlayerData getPlayerDataByCode(String code) {
+        var data = datastore.find(PlayerData.class)
+                .filter(Filters.eq("discordAttachCode", code))
+                .first();
+        if (data == null) return null;
+        var local = Cache.get(data.id);
+        if (local != null) return local;
+        return data;
     }
 
     public static PlayerData savePlayerData(PlayerData data) {

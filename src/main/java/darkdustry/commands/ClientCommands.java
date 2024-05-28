@@ -13,6 +13,7 @@ import mindustry.gen.*;
 import useful.*;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.Config.*;
@@ -31,6 +32,26 @@ public class ClientCommands {
         Commands.create("discord")
                 .welcomeMessage(true)
                 .register((args, player) -> Call.openURI(player.con, discordServerUrl));
+
+        Commands.create("discord-link")
+                .welcomeMessage(true)
+                .register((args, player) -> {
+                    var entry = Database.getPlayerData(player);
+                    if (!entry.discordId.isEmpty()) {
+                        Bundle.send(player, "commands.discord-link.already-linked", entry.discordAttachCode);
+                        return;
+                    }
+                    if (entry.discordAttachCode.isEmpty()) {
+                        var random = new Random();
+                        for (int i = 0; i < 6; i++) {
+                            int chr = 'a';
+                            chr += random.nextInt(25);
+                            entry.discordAttachCode += (char) chr;
+                        }
+                        Database.savePlayerData(entry);
+                    }
+                    Bundle.send(player, "commands.discord-link.code", entry.discordAttachCode);
+                });
 
         Commands.create("sync")
                 .cooldown(15000L)

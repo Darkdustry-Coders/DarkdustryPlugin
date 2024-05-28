@@ -17,6 +17,8 @@ import lombok.*;
 public class PlayerData {
     public String uuid;
     public String name = "<unknown>";
+    /** Empty if none */
+    public String discordId = "";
 
     @Id
     public int id;
@@ -45,6 +47,9 @@ public class PlayerData {
     public int spvpWins = 0;
 
     public Rank rank = Rank.player;
+
+    /** Empty if none */
+    public String discordAttachCode = "";
 
     public PlayerData(String uuid) {
         this.uuid = uuid;
