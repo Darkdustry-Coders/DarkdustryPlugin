@@ -145,7 +145,8 @@ public class DiscordCommands {
                             - Hexed: @
                             - MS:GO: @
                             - PvP: @
-                            """, data.attackWins, data.castleWins, data.fortsWins, data.hexedWins, data.msgoWins, data.pvpWins), false)
+                            - SPvP: @
+                            """, data.attackWins, data.castleWins, data.fortsOvas != 0 ? "(1vas: " + data.fortsOvas + ")" : data.fortsWins, data.hexedWins, data.msgoWins, data.pvpWins, data.spvpWins), false)
                     .addField("Total playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false)
             ).subscribe();
         });
