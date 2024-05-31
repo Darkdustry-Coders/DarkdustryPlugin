@@ -52,6 +52,8 @@ public class DarkdustryPlugin extends Plugin {
         PluginEvents.load();
         SocketEvents.load();
 
+        PolymerAI.load();
+
         if (config.mode.isMainServer) {
             DiscordBot.connect();
             DiscordCommands.load();

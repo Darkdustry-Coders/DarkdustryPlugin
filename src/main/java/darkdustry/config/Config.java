@@ -58,6 +58,9 @@ public class Config {
     /** Allow maps to set special settings */
     public boolean allowSpecialSettings = false;
 
+    /** Use PolymerAI for monos and polys instead */
+    public boolean overrideMonoAi = false;
+
     public int maxBackupCount = 2;
 
     public int backupDelaySec = 60 * 5;

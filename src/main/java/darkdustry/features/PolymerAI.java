@@ -1,99 +1,161 @@
 package darkdustry.features;
 
-import arc.Events;
+import arc.func.Func;
+import arc.util.Log;
 import arc.util.Nullable;
-import arc.util.Timer;
-import mindustry.Vars;
 import mindustry.ai.UnitCommand;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
-import mindustry.content.UnitTypes;
-import mindustry.game.EventType;
-import mindustry.gen.Building;
+import mindustry.entities.units.AIController;
+import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
+import mindustry.type.Item;
 import mindustry.world.Tile;
-import mindustry.world.blocks.environment.Floor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import static darkdustry.config.Config.config;
+import static mindustry.Vars.indexer;
 
-public class PolymerAI {
-    private enum PolymerState {
-        doingNothing,
-        mining,
-        flyingBack,
-    }
-
-    private static Map<Unit, PolymerState> units = new HashMap<>();
-
+public class PolymerAI extends AIController {
     // We love AI. Especially the borked ones.
-    public static void init() {
-        Events.on(EventType.UnitDestroyEvent.class, e -> {
-            units.remove(e.unit);
-        });
-
-        Timer.schedule(() -> Groups.unit.each(PolymerAI::update), 0.1f, 0.1f);
-    }
-
-    private static void update(Unit unit) {
-        if (unit.type() == UnitTypes.mono) makeEmMine(unit);
-        if (unit.type() == UnitTypes.poly && unit.command().command == UnitCommand.mineCommand) makeEmMine(unit);
-    }
-
-    private static void makeEmMine(Unit unit) {
-        PolymerState state = units.computeIfAbsent(unit, k -> PolymerState.doingNothing);
-
-        switch (state) {
-            case doingNothing -> {
-                int tier = unit.type().mineTier;
-
-                Building core = unit.team().core();
-
-                Floor seek = Blocks.oreCopper.asFloor();
-                int count = core.items().get(Items.copper);
-
-                {
-                    int oc = core.items().get(Items.lead);
-                    if (count > oc) {
-                        count = oc;
-                        seek = Blocks.oreLead.asFloor();
-                    }
-                }
-
-                if (tier > 2) {
-                    int oc = core.items().get(Items.titanium);
-                    if (count > oc) {
-                        count = oc;
-                        seek = Blocks.oreTitanium.asFloor();
-                    }
-                }
-
-                Floor finalSeek = seek;
-                AtomicReference<Tile> aTile = new AtomicReference<>(null);
-                AtomicReference<Double> distance = new AtomicReference<>(Double.POSITIVE_INFINITY);
-
-                Vars.world.tiles.eachTile(t -> {
-                    double dist = Math.sqrt((t.x - unit.x) * (t.x - unit.x) + (t.y - unit.y) * (t.y - unit.y));
-                    if (distance.get() < dist) return;
-                    if (t.overlay() != finalSeek) return;
-                    if (t.block() != Blocks.air) return;
-
-                    distance.set(dist);
-
-                });
-
-                @Nullable var tile = aTile.get();
-
-                if (tile == null) return;
-
-                unit.mineTile(tile);
-                units.put(unit, PolymerState.mining);
+    public static void load() {
+        if (config.overrideMonoAi)
+            try {
+                var field = UnitCommand.mineCommand.getClass().getField("controller");
+                field.setAccessible(true);
+                field.set(UnitCommand.mineCommand, (Func<Unit, AIController>) unit -> new PolymerAI());
+                Log.info("Using PolymerAI");
+            } catch (Exception e) {
+                Log.warn("Failed to apply PolymerAI: ", e);
             }
-            case mining -> {}
-            case flyingBack -> {}
+    }
+
+    public boolean setup = false;
+    public @Nullable Item targetItem = null;
+    public @Nullable Tile ore = null;
+
+    void debug(String message) {
+        Groups.player.each(x -> x.sendMessage(message));
+    }
+
+    @Override
+    public void updateMovement() {
+        if (!setup) {
+            setup = true;
+
+            debug("e");
+        }
+        if (unit.stack.amount >= unit.type.itemCapacity) {
+            var core = unit.closestCore();
+            unit.mineTile = null;
+
+            if (unit.within(core, unit.type.range)) {
+                if (core.acceptStack(unit.stack.item, unit.stack.amount, unit) > 0) {
+                    Call.transferItemTo(unit, unit.stack.item, unit.stack.amount, unit.x, unit.y, core);
+                }
+                unit.clearItem();
+            }
+            else {
+                circle(core, unit.type.range / 1.8f);
+                return;
+            }
+        }
+        if (ore != null && !unit.validMine(ore)) {
+            ore = null;
+            unit.mineTile = null;
+        }
+        if (ore == null) {
+            var core = unit.closestCore();
+            targetItem = unit.type.mineItems.min(i -> indexer.hasOre(i) && unit.canMine(i), i -> core.items.get(i));
+
+            if (targetItem == null || core.acceptStack(targetItem, 1, unit) == 0){
+                unit.clearItem();
+                unit.mineTile = null;
+                return;
+            }
+
+            ore = indexer.findClosestOre(unit, targetItem);
+            unit.mineTile(ore);
+
+            if (ore != null)
+                debug("selected new ore at: " + ore.x + "x" + ore.y);
+            else
+                debug("selected no ore");
+        }
+        if (ore != null) {
+            if (ore.block() != Blocks.air) {
+                unit.clearItem();
+                unit.mineTile = null;
+                return;
+            }
+        }
+        if (unit.mineTile != null) {
+            if (unit.within(ore, unit.type.mineRange)) {
+                moveTo(ore, unit.type.mineRange);
+            }
         }
 
+
+        //if (!(unit.canMine()) || core == null) return;
+
+        //if (unit.mineTile != null && !unit.mineTile.within(unit, unit.type.mineRange)) {
+        //    unit.mineTile(null);
+        //}
+
+        //if (ore != null && !unit.validMine(ore)) {
+        //    ore = null;
+        //    unit.mineTile = null;
+        //}
+
+        //if (mining) {
+        //    if (timer.get(timerTarget2, 60 * 4) || targetItem == null) {
+        //        targetItem = unit.type.mineItems.min(i -> indexer.hasOre(i) && unit.canMine(i), i -> core.items.get(i));
+        //    }
+
+        //    // core full of the target item, do nothing
+        //    if (targetItem != null && core.acceptStack(targetItem, 1, unit) == 0){
+        //        unit.clearItem();
+        //        unit.mineTile = null;
+        //        return;
+        //    }
+
+        //    // if inventory is full, drop it off.
+        //    if (unit.stack.amount >= unit.type.itemCapacity || (targetItem != null && !unit.acceptsItem(targetItem))) {
+        //        mining = false;
+        //    } else {
+        //        if (timer.get(timerTarget3, 60) && targetItem != null) {
+        //            ore = indexer.findClosestOre(unit, targetItem);
+        //        }
+
+        //        if (ore != null){
+        //            moveTo(ore, unit.type.mineRange / 2f, 20f);
+
+        //            if (ore.block() == Blocks.air && unit.within(ore, unit.type.mineRange)){
+        //                unit.mineTile = ore;
+        //            }
+
+        //            if (ore.block() != Blocks.air){
+        //                mining = false;
+        //            }
+        //        }
+        //    }
+        //} else {
+        //    unit.mineTile = null;
+
+        //    if (unit.stack.amount == 0) {
+        //        mining = true;
+        //        return;
+        //    }
+
+        //    if (unit.within(core, unit.type.range)) {
+        //        if (core.acceptStack(unit.stack.item, unit.stack.amount, unit) > 0) {
+        //            Call.transferItemTo(unit, unit.stack.item, unit.stack.amount, unit.x, unit.y, core);
+        //        }
+
+        //        unit.clearItem();
+        //        mining = true;
+        //    }
+
+        //    circle(core, unit.type.range / 1.8f);
+        //}
     }
 }
