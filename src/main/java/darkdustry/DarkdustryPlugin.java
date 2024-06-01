@@ -49,6 +49,8 @@ public class DarkdustryPlugin extends Plugin {
         Database.connect();
         Socket.connect();
 
+        PolymerAI.load();
+
         PluginEvents.load();
         SocketEvents.load();
 
