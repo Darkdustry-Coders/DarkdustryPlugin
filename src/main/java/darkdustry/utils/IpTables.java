@@ -31,9 +31,12 @@ public class IpTables {
     }
 
     public String isp;
+    public boolean mobile;
+    public boolean proxy;
+    public boolean hosting;
 
     public boolean isHotspot() {
-        return hotspots.contains(isp);
+        return mobile || hotspots.contains(isp);
     }
 
     private static final ObjectMap<String, IpTables> cache = new ObjectMap<>();
@@ -43,7 +46,7 @@ public class IpTables {
         if (entry != null) return entry;
 
         try {
-            var connection = URI.create("http://ip-api.com/json/" + address).toURL().openConnection();
+            var connection = URI.create("http://ip-api.com/json/" + address + "?fields=16974336").toURL().openConnection();
             connection.setConnectTimeout(500);
             connection.setReadTimeout(500);
             connection.connect();
