@@ -149,7 +149,7 @@ public class NetHandlers {
             if (data.discordId.isEmpty()) {
                 var tables = IpTables.of(con.address);
                 if (tables != null && tables.isHotspot()) {
-                    Bundle.kick(con, "en", "kick.hotspot");
+                    Bundle.kick(con, locale, "kick.hotspot");
                     return;
                 }
             }
