@@ -26,7 +26,6 @@ import static darkdustry.utils.Utils.*;
 import static mindustry.Vars.*;
 
 public class NetHandlers {
-
     public static String chat(Player from, String message) {
         int sign = voteChoice(message);
         if (sign == 0 || vote == null) {
@@ -145,11 +144,11 @@ public class NetHandlers {
         if (con.kicked) return;
 
         if (config.mode != Gamemode.hub) {
-            var data = Database.getPlayerDataOrCreate(uuid);
-            if (data.discordId.isEmpty()) {
+            var data = Database.getPlayerData(uuid);
+            if (data == null || data.discordId.isEmpty()) {
                 var tables = IpTables.of(con.address);
                 if (tables != null && tables.isHotspot()) {
-                    Bundle.kick(con, locale, "kick.hotspot");
+                    Bundle.kick(con, locale, 0L, "kick.hotspot");
                     return;
                 }
             }
