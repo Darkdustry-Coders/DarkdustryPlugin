@@ -1,5 +1,7 @@
 package darkdustry.discord;
 
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.database.Database;
 import darkdustry.features.net.*;
@@ -10,6 +12,9 @@ import discord4j.common.retry.*;
 import discord4j.common.util.*;
 import discord4j.core.*;
 import discord4j.core.event.*;
+import discord4j.core.event.domain.guild.MemberChunkEvent;
+import discord4j.core.event.domain.guild.MemberLeaveEvent;
+import discord4j.core.event.domain.guild.MemberUpdateEvent;
 import discord4j.core.event.domain.interaction.*;
 import discord4j.core.event.domain.message.*;
 import discord4j.core.object.entity.*;
@@ -38,6 +43,8 @@ public class DiscordBot {
     public static GuildMessageChannel banChannel;
     public static GuildMessageChannel adminChannel;
     public static GuildMessageChannel votekickChannel;
+
+    public static ObjectMap<Snowflake, Seq<Snowflake>> admins;
 
     public static boolean connected;
 
@@ -138,6 +145,40 @@ public class DiscordBot {
                                 Socket.send(new DiscordMessageEvent(server, member.getDisplayName(), message.getContent()))))
                         .subscribe(TupleUtils.consumer((role, color) ->
                                 Socket.send(new DiscordMessageEvent(server, role.getName(), Integer.toHexString(color.getRGB()), member.getDisplayName(), message.getContent()))));
+            });
+
+            gateway.on(MemberChunkEvent.class).subscribe(event -> event.getMembers().forEach(member -> {
+                if (discordConfig.adminRoleIDs.contains(x -> member.getRoleIds().contains(Snowflake.of(x)))) {
+                    var list = new Seq<Snowflake>();
+                    discordConfig.adminRoleIDs.each(x -> {
+                        if (member.getRoleIds().contains(Snowflake.of(x))) {
+                            list.add(Snowflake.of(x));
+                        }
+                    });
+                    admins.put(member.getId(), list);
+                    Log.info("Added admin " + member.getId().asLong());
+                }
+            }));
+
+            gateway.on(MemberLeaveEvent.class).subscribe(event -> {
+                admins.remove(event.getUser().getId());
+            });
+
+            gateway.on(MemberUpdateEvent.class).subscribe(event -> {
+                if (discordConfig.adminRoleIDs.contains(x -> event.getCurrentRoleIds().contains(Snowflake.of(x)))) {
+                    var list = new Seq<Snowflake>();
+                    discordConfig.adminRoleIDs.each(x -> {
+                        if (event.getCurrentRoleIds().contains(Snowflake.of(x))) {
+                            list.add(Snowflake.of(x));
+                        }
+                    });
+                    if (!admins.containsKey(event.getMemberId()))
+                        Log.info("Added admin " + event.getMemberId().asLong());
+                    admins.put(event.getMemberId(), list);
+                }
+                else if (admins.containsKey(event.getMemberId())) {
+                    admins.remove(event.getMemberId());
+                }
             });
 
             gateway.on(ButtonInteractionEvent.class).subscribe(event -> {

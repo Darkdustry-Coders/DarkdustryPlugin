@@ -44,7 +44,9 @@ public class DiscordConfig {
     /** Verified user role */
     public long verifiedRoleID = 0L;
 
+    /** List of channels where you shouldn't run commands */
     public Seq<Long> blacklistedChannelIDs = Seq.with(0L);
 
+    /** Place where you actually need to run commands in */
     public long botsChannelID = 0L;
 }

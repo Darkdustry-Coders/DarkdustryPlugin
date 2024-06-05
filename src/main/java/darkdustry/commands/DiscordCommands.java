@@ -1,16 +1,22 @@
 package darkdustry.commands;
 
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.*;
 import darkdustry.database.Cache;
 import darkdustry.database.Database;
+import darkdustry.discord.DiscordBot;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import discord4j.common.util.Snowflake;
+import discord4j.core.object.entity.Role;
+import reactor.core.publisher.Mono;
 import useful.Bundle;
 
 import java.time.Duration;
+import java.util.Comparator;
 
 import static darkdustry.PluginVars.*;
 import static darkdustry.config.DiscordConfig.*;
@@ -197,6 +203,42 @@ public class DiscordCommands {
                             .description("This code doesn't correspond to any account")).subscribe();
                 }
             }
+        });
+
+        discordHandler.<MessageContext>register("admins", "List all admins", (args, context) -> {
+            var roles = discordConfig.adminRoleIDs
+                    .map(x -> DiscordBot.gateway.getRoleById(context.member().getGuildId(), Snowflake.of(x)));
+            Mono.zipDelayError(roles, Seq::with).map(x -> x.map(y -> (Role) y)).subscribe(
+                    x -> {
+                        x.sort(Comparator.comparingInt(Role::getRawPosition));
+                        var added = new Seq<Snowflake>();
+                        var list = new ObjectMap<Snowflake, Seq<Snowflake>>();
+
+                        x.each(role -> {
+                            var admins = new Seq<Snowflake>();
+                            DiscordBot.admins
+                                    .each(
+                                            (id, roles2) -> {
+                                                if (!added.contains(id) &&
+                                                        roles2.contains(role.getId()))
+                                                    admins.add(id);
+                                            }
+                                    );
+                            list.put(role.getId(), admins);
+                        });
+
+                        var actualList = new StringBuilder();
+
+                        list.each((role, admins) -> {
+                            actualList.append("<&").append(role.asLong()).append(">:\n");
+                            admins.each(admin -> {
+                                actualList.append("- <@").append(admin.asLong()).append(">\n");
+                            });
+                        });
+
+                        context.success("List of Mindustry admins", actualList.toString()).subscribe();
+                    }
+            );
         });
     }
 }
