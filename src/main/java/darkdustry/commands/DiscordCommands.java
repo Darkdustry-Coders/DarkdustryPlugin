@@ -184,9 +184,9 @@ public class DiscordCommands {
                 data = Database.getPlayerDataByCode(args[0]);
                 if (data != null && data.discordId.isEmpty()) {
                     data.discordAttachCode = "";
-                    data.discordId = author.get().getId().toString();
+                    data.discordId = author.get().getId().asBigInteger().toString();
                     Database.savePlayerData(data);
-                    Socket.send(new DiscordLinkedEvent(data.uuid, author.get().getUsername(), String.valueOf(author.get().getId().asLong())));
+                    Socket.send(new DiscordLinkedEvent(data.uuid, author.get().getUsername(), author.get().getId().asBigInteger().toString()));
                     context.success(embed -> embed
                             .title("Account linked successfully")).subscribe();
                     context.member().addRole(Snowflake.of(discordConfig.verifiedRoleID)).subscribe(v -> {}, e -> {});
