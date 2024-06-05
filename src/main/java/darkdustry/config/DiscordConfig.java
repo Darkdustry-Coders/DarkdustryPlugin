@@ -43,4 +43,8 @@ public class DiscordConfig {
 
     /** Verified user role */
     public long verifiedRoleID = 0L;
+
+    public Seq<Long> blacklistedChannelIDs = Seq.with(0L);
+
+    public long botsChannelID = 0L;
 }

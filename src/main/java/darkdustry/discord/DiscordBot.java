@@ -1,6 +1,7 @@
 package darkdustry.discord;
 
 import arc.util.*;
+import darkdustry.database.Database;
 import darkdustry.features.net.*;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
@@ -74,9 +75,38 @@ public class DiscordBot {
                 var member = event.getMember().orElse(null);
                 if (member == null || member.isBot()) return;
 
+                var data = Database.getPlayerData(member.getId());
+                if (data != null && member.getRoleIds().contains(Snowflake.of(discordConfig.verifiedRoleID))) {
+                    member.addRole(Snowflake.of(discordConfig.verifiedRoleID))
+                            .subscribe(
+                                    i -> {},
+                                    e -> Log.warn("Failed to add verified role to user " + member.getId().asBigInteger(), e));
+                }
+
                 message.getChannel()
                         .map(channel -> new MessageContext(message, member, channel))
                         .subscribe(context -> {
+                            if (!message.getContent().startsWith(discordConfig.prefix)) return;
+
+                            if (discordConfig.blacklistedChannelIDs.contains(context.channel().getId().asLong())) {
+                                context.channel().createMessage(
+                                        MessageCreateSpec
+                                                .builder()
+                                                .content("Please use commands in :point_right: <#" + discordConfig.botsChannelID + ">")
+                                                .messageReference(message.getId())
+                                                .allowedMentions(AllowedMentions.suppressAll())
+                                                .build()
+                                ).subscribe(reply -> {
+                                    Timer.schedule(() -> {
+                                        reply.delete("No longer needed").subscribe();
+                                        message.delete("Keep litter in place").subscribe(x -> {}, e -> {
+                                            Log.warn("Failed to delete litter message: ", e);
+                                        });
+                                    }, 5f);
+                                }, e -> {});
+                                return;
+                            }
+
                             var response = discordHandler.handleMessage(message.getContent(), context);
                             switch (response.type) {
                                 case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordHandler.prefix, response.runCommand, response.command.paramText).subscribe();

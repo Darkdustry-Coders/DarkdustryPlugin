@@ -43,12 +43,15 @@ public class Database {
     // region player data
 
     public static @Nullable PlayerData getPlayerData(Snowflake discordId) {
-        var data = datastore.find(PlayerData.class)
+        var data = Cache.get(discordId);
+        if (data != null) return data;
+        data = datastore.find(PlayerData.class)
                 .filter(Filters.eq("discordId", discordId.toString()))
                 .first();
         if (data == null) return null;
         var local = Cache.get(data.id);
-        if (local != null) return local;
+        if (local != null) data = local;
+        Cache.put(discordId, data);
         return data;
     }
 
