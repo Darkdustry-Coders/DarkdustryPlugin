@@ -40,4 +40,7 @@ public class DiscordConfig {
 
     /** ID каналов, привязанных к серверам. */
     public ObjectMap<String, Long> serverToChannel = ObjectMap.of("server", 0L);
+
+    /** Verified user role */
+    public long verifiedRoleID = 0L;
 }

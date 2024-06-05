@@ -7,6 +7,7 @@ import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
+import discord4j.common.util.Snowflake;
 import useful.Bundle;
 
 import java.time.Duration;
@@ -185,9 +186,10 @@ public class DiscordCommands {
                     data.discordAttachCode = "";
                     data.discordId = author.get().getId().toString();
                     Database.savePlayerData(data);
-                    Socket.send(new DiscordLinkedEvent(data.uuid, author.get().getUsername(), author.get().getId().toString()));
+                    Socket.send(new DiscordLinkedEvent(data.uuid, author.get().getUsername(), String.valueOf(author.get().getId().asLong())));
                     context.success(embed -> embed
                             .title("Account linked successfully")).subscribe();
+                    context.member().addRole(Snowflake.of(discordConfig.verifiedRoleID)).subscribe(v -> {}, e -> {});
                 }
                 else {
                     context.error(embed -> embed
