@@ -265,6 +265,10 @@ public class SocketEvents {
 
             Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.playerName));
         });
+
+        Socket.on(ReconfigureEvent.class, request -> {
+            Log.warn("Not yet implemented! (RECREG: " + request.option + ")");
+        });
     }
 
     public record DiscordMessageEvent(String server, String role, String color, String name, String message) {
