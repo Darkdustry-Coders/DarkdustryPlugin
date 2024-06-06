@@ -273,34 +273,18 @@ public class SocketEvents {
         }
     }
 
-    public record ServerMessageEvent(String server, String name, String message) {
-    }
-
-    public record ServerMessageEmbedEvent(String server, String title, Color color) {
-    }
-
-    public record BanEvent(String server, Ban ban) {
-    }
-
+    public record ServerMessageEvent(String server, String name, String message) {}
+    public record ServerMessageEmbedEvent(String server, String title, Color color) {}
+    public record BanEvent(String server, Ban ban) {}
     public record VoteKickEvent(String server, String target,
                                 String initiator, String reason,
-                                String votesFor, String votesAgainst) {
-    }
-
-    public record AdminRequestEvent(String server, PlayerData data) {
-    }
-
-    public record AdminRequestConfirmEvent(String server, String uuid) {
-    }
-
-    public record AdminRequestDenyEvent(String server, String uuid) {
-    }
-
-    public record SetRankSyncEvent(String uuid, Rank rank) {
-    }
-
-    public record DiscordLinkedEvent(String uuid, String username, String id) {
-    }
+                                String votesFor, String votesAgainst) {}
+    public record AdminRequestEvent(String server, PlayerData data) {}
+    public record AdminRequestConfirmEvent(String server, String uuid) {}
+    public record AdminRequestDenyEvent(String server, String uuid) {}
+    public record SetRankSyncEvent(String uuid, Rank rank) {}
+    public record DiscordLinkedEvent(String uuid, String username, String id) {}
+    public record ReconfigureEvent(String option) {}
 
     @AllArgsConstructor
     public static class ListRequest extends Request<ListResponse> {
