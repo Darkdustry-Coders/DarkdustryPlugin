@@ -244,7 +244,7 @@ public class PluginEvents {
                         case hexed -> data.hexedWins++;
                         case msgo -> data.msgoWins++;
                         case pvp -> data.pvpWins++;
-                        case sandboxPVP -> data.spvpWins++;
+                        case spvp -> data.spvpWins++;
                     }
             });
 
