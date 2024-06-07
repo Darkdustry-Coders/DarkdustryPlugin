@@ -120,6 +120,7 @@ public class Config {
 
         sandbox("Sandbox") {{
             enableStrict = false;
+            enableVnw = false;
         }},
 
         survival("Survival"),
