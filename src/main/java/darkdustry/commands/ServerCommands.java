@@ -2,6 +2,7 @@ package darkdustry.commands;
 
 import arc.util.*;
 import darkdustry.database.*;
+import darkdustry.database.models.ServerConfig;
 import darkdustry.features.*;
 import darkdustry.features.net.*;
 import darkdustry.listeners.SocketEvents.*;
@@ -236,7 +237,7 @@ public class ServerCommands {
             Log.info("Successfully set rank of @ to @.", data.plainName(), rank.name());
         });
 
-        serverHandler.register("restart", "[copy-plugin]", "Restart the server after the round ends", args -> {
+        serverHandler.register("restart", "[copy-plugin]", "Restart the server after the round ends.", args -> {
             if (args.length > 0)
                 Restart.copyPlugin = args[0].equals("y") || args[0].equals("yes") || args[0].equals("t") || args[0].equals("true");
             if (Groups.player.isEmpty()) {
@@ -253,6 +254,114 @@ public class ServerCommands {
             Log.info("Server will now be restarted after the round ends");
             Bundle.send("restart");
             Restart.restart = true;
+        });
+
+        serverHandler.register("gconfig", "[param] [value]", "Configure servers.", args -> {
+            var config = ServerConfig.get();
+
+            if (args.length < 1) {
+                Log.info("Server config");
+                Log.info("- graylist-enabled (bool): " + config.graylistEnabled);
+                Log.info("- graylist-mobile (bool): " + config.graylistMobile);
+                Log.info("- graylist-hosting (bool): " + config.graylistHosting);
+                Log.info("- graylist-proxy (bool): " + config.graylistProxy);
+                return;
+            }
+            var property = args[0];
+
+            if (args.length < 2) {
+                switch (property) {
+                    case "graylist-enabled" -> {
+                            Log.info("Value: " + config.graylistEnabled);
+                            Log.info("");
+                            Log.info("Enable enforcement of Discord integration " +
+                                    "for specific users.");
+
+                    }
+                    case "graylist-mobile" -> {
+                        Log.info("Value: " + config.graylistMobile);
+                        Log.info("");
+                        Log.info("Force all hotspot users to attach a Discord " +
+                                    "account.");
+                    }
+                    case "graylist-hosting" -> {
+                        Log.info("Value: " + config.graylistHosting);
+                        Log.info("");
+                        Log.info("Force all users connecting from hosting " +
+                                    "companies IPs to attach a Discord account.");
+                    }
+                    case "graylist-proxy" -> {
+                        Log.info("Value: " + config.graylistProxy);
+                        Log.info("");
+                        Log.info("Require users utilizing a proxy to attach a " +
+                                    "Discord account.");
+                    }
+                    default -> Log.warn("No such property was found.");
+                }
+                return;
+            }
+            var value = args[1];
+
+            class Values {
+                public static final String boolError = "Invalid property value. Possible values: y/t/yes/true / n/f/no/false";
+
+                /** returns '0' if false, '1' if true, '-1' if invalid */
+                public static byte bool(String val) {
+                    val = val.toLowerCase();
+
+                    if (val.equals("y") || val.equals("t") || val.equals("yes") || val.equals("true"))
+                        return 1;
+                    if (val.equals("n") || val.equals("f") || val.equals("no") || val.equals("false"))
+                        return 0;
+                    return -1;
+                }
+            }
+
+            switch (property) {
+                case "graylist-enabled" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        Log.warn(Values.boolError);
+                        return;
+                    }
+                    config.graylistEnabled = val == 1;
+                    Log.info("New value: " + config.graylistEnabled);
+                }
+                case "graylist-mobile" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        Log.warn(Values.boolError);
+                        return;
+                    }
+                    config.graylistMobile = val == 1;
+                    Log.info("New value: " + config.graylistMobile);
+                }
+                case "graylist-hosting" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        Log.warn(Values.boolError);
+                        return;
+                    }
+                    config.graylistHosting = val == 1;
+                    Log.info("New value: " + config.graylistHosting);
+                }
+                case "graylist-proxy" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        Log.warn(Values.boolError);
+                        return;
+                    }
+                    config.graylistProxy = val == 1;
+                    Log.info("New value: " + config.graylistProxy);
+                }
+                default -> {
+                    Log.warn("No such property was found.");
+                    return;
+                }
+            }
+
+            config.save();
+            Socket.send(new ReconfigureEvent(property));
         });
     }
 }

@@ -61,8 +61,10 @@ public class Config {
     /** Use PolymerAI for monos and polys instead */
     public boolean overrideMonoAi = false;
 
+    /** Amount of backups to keep. 0 or less to disable */
     public int maxBackupCount = 2;
 
+    /** Delay between backups */
     public int backupDelaySec = 60 * 5;
 
     /** Режим игры на сервере. */

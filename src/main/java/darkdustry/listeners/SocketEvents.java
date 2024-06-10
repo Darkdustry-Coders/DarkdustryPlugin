@@ -267,7 +267,8 @@ public class SocketEvents {
         });
 
         Socket.on(ReconfigureEvent.class, request -> {
-            Log.warn("Not yet implemented! (RECREG: " + request.option + ")");
+            Log.info("Reconfiguring the server...");
+            ServerConfig.invalidate();
         });
     }
 

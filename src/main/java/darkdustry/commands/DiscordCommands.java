@@ -3,8 +3,8 @@ package darkdustry.commands;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
-import darkdustry.database.Cache;
 import darkdustry.database.Database;
+import darkdustry.database.models.ServerConfig;
 import darkdustry.discord.DiscordBot;
 import darkdustry.discord.MessageContext;
 import darkdustry.features.net.Socket;
@@ -239,6 +239,117 @@ public class DiscordCommands {
                         context.success("List of Mindustry admins", actualList.toString()).subscribe();
                     }
             );
+        });
+
+        discordHandler.<MessageContext>register("config", "[prop] [value]", "Configure servers.", (args, context) -> {
+            if (noRole(context, discordConfig.adminRoleIDs)) return;
+
+            var config = ServerConfig.get();
+
+            if (args.length < 1) {
+                context.info(
+                        "Server settings",
+                        "graylist-enabled: " + config.graylistEnabled + "\n" +
+                                "graylist-mobile: " + config.graylistMobile + "\n" +
+                                "graylist-hosting: " + config.graylistHosting + "\n" +
+                                "graylist-proxy: " + config.graylistProxy + "\n"
+                ).subscribe();
+                return;
+            }
+            var property = args[0];
+
+            if (args.length < 2) {
+                switch (property) {
+                    case "graylist-enabled" -> context.info(
+                            property,
+                            "Value: " + config.graylistEnabled + "\n\n" +
+                            "Enable enforcement of Discord integration " +
+                                    "for specific users."
+                    ).subscribe();
+                    case "graylist-mobile" -> context.info(
+                            property,
+                            "Value: " + config.graylistMobile + "\n\n" +
+                                    "Force all hotspot users to attach a Discord " +
+                                    "account."
+                    ).subscribe();
+                    case "graylist-hosting" -> context.info(
+                            property,
+                            "Value: " + config.graylistHosting + "\n\n" +
+                                    "Force all users connecting from hosting " +
+                                    "companies IPs to attach a Discord account."
+                    ).subscribe();
+                    case "graylist-proxy" -> context.info(
+                            property,
+                            "Value: " + config.graylistProxy + "\n\n" +
+                                    "Require users utilizing a proxy to attach a " +
+                                    "Discord account."
+                    ).subscribe();
+                    default -> context.error(property, "No such property was found.").subscribe();
+                }
+                return;
+            }
+            var value = args[1];
+
+            class Values {
+                public static final String boolError = "Invalid property value.\n\nPossible values: y/t/yes/true / n/f/no/false";
+
+                /** returns '0' if false, '1' if true, '-1' if invalid */
+                public static byte bool(String val) {
+                    val = val.toLowerCase();
+
+                    if (val.equals("y") || val.equals("t") || val.equals("yes") || val.equals("true"))
+                        return 1;
+                    if (val.equals("n") || val.equals("f") || val.equals("no") || val.equals("false"))
+                        return 0;
+                    return -1;
+                }
+            }
+
+            switch (property) {
+                case "graylist-enabled" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        context.error(property, Values.boolError).subscribe();
+                        return;
+                    }
+                    config.graylistEnabled = val == 1;
+                    context.success(property, "New value: " + config.graylistEnabled).subscribe();
+                }
+                case "graylist-mobile" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        context.error(property, Values.boolError).subscribe();
+                        return;
+                    }
+                    config.graylistMobile = val == 1;
+                    context.success(property, "New value: " + config.graylistMobile).subscribe();
+                }
+                case "graylist-hosting" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        context.error(property, Values.boolError).subscribe();
+                        return;
+                    }
+                    config.graylistHosting = val == 1;
+                    context.success(property, "New value: " + config.graylistHosting).subscribe();
+                }
+                case "graylist-proxy" -> {
+                    var val = Values.bool(value);
+                    if (val == -1) {
+                        context.error(property, Values.boolError).subscribe();
+                        return;
+                    }
+                    config.graylistProxy = val == 1;
+                    context.success(property, "New value: " + config.graylistProxy).subscribe();
+                }
+                default -> {
+                    context.error(property, "No such property was found.").subscribe();
+                    return;
+                }
+            }
+
+            config.save();
+            Socket.send(new ReconfigureEvent(property));
         });
     }
 }

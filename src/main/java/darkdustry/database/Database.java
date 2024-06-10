@@ -10,7 +10,6 @@ import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
 import discord4j.common.util.Snowflake;
 import mindustry.gen.Player;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -30,6 +29,7 @@ public class Database {
             mapper.getEntityModel(Ban.class);
             mapper.getEntityModel(Counter.class);
             mapper.getEntityModel(PlayerData.class);
+            mapper.getEntityModel(ServerConfig.class);
 
             datastore.ensureCaps();
             datastore.ensureIndexes();
@@ -125,6 +125,24 @@ public class Database {
                 .filter(Filters.eq("_id", key))
                 .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value"))
         ).orElseGet(() -> datastore.save(new Counter(key))).value;
+    }
+
+    // endregion
+    // region config
+
+    public static ServerConfig fetchConfig() {
+        var config = datastore.find(ServerConfig.class)
+                .filter(Filters.eq("namespace", "global"))
+                .first();
+        if (config == null) {
+            config = new ServerConfig();
+            datastore.save(config);
+        }
+        return config;
+    }
+
+    public static void writeConfig(ServerConfig config) {
+        datastore.save(config);
     }
 
     // endregion

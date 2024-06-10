@@ -6,6 +6,7 @@ import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
 import darkdustry.database.Cache;
 import darkdustry.database.Database;
+import darkdustry.database.models.ServerConfig;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.*;
 import darkdustry.listeners.SocketEvents.ServerMessageEvent;
@@ -144,12 +145,20 @@ public class NetHandlers {
         if (con.kicked) return;
 
         if (config.mode != Gamemode.hub) {
-            var data = Database.getPlayerData(uuid);
-            if (data == null || data.discordId.isEmpty()) {
-                var tables = IpTables.of(con.address);
-                if (tables != null && tables.isHotspot()) {
-                    Bundle.kick(con, locale, 0L, "kick.hotspot");
-                    return;
+            var config = ServerConfig.get();
+
+            if (config.graylistEnabled) {
+                var data = Database.getPlayerData(uuid);
+                if (data == null || data.discordId.isEmpty()) {
+                    var tables = IpTables.of(con.address);
+                    if (tables != null && (
+                            tables.isHotspot() && config.graylistMobile
+                            || tables.proxy && config.graylistProxy
+                            || tables.hosting && config.graylistHosting
+                            )) {
+                        Bundle.kick(con, locale, 0L, "kick.hotspot");
+                        return;
+                    }
                 }
             }
         }

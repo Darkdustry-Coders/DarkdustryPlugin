@@ -7,6 +7,7 @@ import arc.util.*;
 import darkdustry.commands.*;
 import darkdustry.config.*;
 import darkdustry.database.*;
+import darkdustry.database.models.ServerConfig;
 import darkdustry.discord.*;
 import darkdustry.features.*;
 import darkdustry.features.menus.*;
@@ -53,6 +54,8 @@ public class DarkdustryPlugin extends Plugin {
 
         PluginEvents.load();
         SocketEvents.load();
+
+        ServerConfig.get();
 
         if (config.mode.isMainServer) {
             DiscordBot.connect();
