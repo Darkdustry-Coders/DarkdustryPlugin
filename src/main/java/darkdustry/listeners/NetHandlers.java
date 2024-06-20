@@ -33,25 +33,30 @@ public class NetHandlers {
             Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + message);
             Translator.translate(from, message);
 
-            Socket.send(new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(message)));
+            Socket.send(
+                    new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(message)));
             return null;
         }
 
-        if (!alreadyVoted(from, vote)) vote.vote(from, sign);
+        if (!alreadyVoted(from, vote))
+            vote.vote(from, sign);
         return null;
     }
 
     public static String invalidResponse(Player player, CommandResponse response) {
         return switch (response.type) {
-            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
-            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text, Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case fewArguments -> Bundle.format("commands.unknown.few-arguments", player, response.command.text,
+                    Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
+            case manyArguments -> Bundle.format("commands.unknown.many-arguments", player, response.command.text,
+                    Bundle.get("commands." + response.command.text + ".params", response.command.paramText, player));
             default -> {
                 var closest = availableCommands(player)
                         .map(command -> command.name)
                         .retainAll(command -> Strings.levenshtein(command, response.runCommand) < 3)
                         .min(command -> Strings.levenshtein(command, response.runCommand));
 
-                yield closest == null ? Bundle.format("commands.unknown", player) : Bundle.format("commands.unknown.closest", player, closest);
+                yield closest == null ? Bundle.format("commands.unknown", player)
+                        : Bundle.format("commands.unknown.closest", player, closest);
             }
         };
     }
@@ -80,7 +85,8 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
-        if (con.hasBegunConnecting || Seq.with(net.getConnections()).count(other -> other.uuid.equals(uuid) || other.usid.equals(usid)) > 1) {
+        if (con.hasBegunConnecting || Seq.with(net.getConnections())
+                .count(other -> other.uuid.equals(uuid) || other.usid.equals(usid)) > 1) {
             Bundle.kick(con, locale, 0L, "kick.already-connected");
             return;
         }
@@ -123,8 +129,11 @@ public class NetHandlers {
             return;
         }
 
-        if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1 && !packet.versionType.equals("bleeding-edge")) {
-            Bundle.kick(con, locale, 0L, packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", packet.version, mindustryVersion);
+        if (packet.version != mindustryVersion && packet.version != -1 && mindustryVersion != -1
+                && !packet.versionType.equals("bleeding-edge")) {
+            Bundle.kick(con, locale, 0L,
+                    packet.version > mindustryVersion ? "kick.server-outdated" : "kick.client-outdated", packet.version,
+                    mindustryVersion);
             return;
         }
 
@@ -142,20 +151,19 @@ public class NetHandlers {
             return;
         }
 
-        if (con.kicked) return;
+        if (con.kicked)
+            return;
 
         if (config.mode != Gamemode.hub) {
-            var config = ServerConfig.get();
-
-            if (config.graylistEnabled) {
+            if (ServerConfig.graylistEnabled()) {
                 var data = Database.getPlayerData(uuid);
                 if (data == null || data.discordId.isEmpty()) {
                     var tables = IpTables.of(con.address);
-                    if (tables != null && (
-                            tables.isHotspot() && config.graylistMobile
-                            || tables.proxy && config.graylistProxy
-                            || tables.hosting && config.graylistHosting
-                            )) {
+                    if (tables != null && (tables.isHotspot() && ServerConfig.graylistMobile()
+                            || tables.proxy && ServerConfig.graylistProxy()
+                            || tables.hosting && ServerConfig.graylistHosting()
+                            || ServerConfig.ispGraylisted(tables.isp)
+                            || ServerConfig.ipGraylisted(con.address))) {
                         Bundle.kick(con, locale, 0L, "kick.hotspot");
                         return;
                     }
@@ -173,7 +181,8 @@ public class NetHandlers {
         con.player = player;
 
         netServer.admins.updatePlayerJoined(uuid, ip, name);
-        if (!info.admin) info.adminUsid = usid;
+        if (!info.admin)
+            info.adminUsid = usid;
 
         player.team(netServer.assignTeam(player));
         netServer.sendWorldData(player);
@@ -185,7 +194,8 @@ public class NetHandlers {
         var admin = con.player;
         var target = packet.other;
 
-        if (notAdmin(admin) || target == null || (target.admin && target != admin)) return;
+        if (notAdmin(admin) || target == null || (target.admin && target != admin))
+            return;
 
         Events.fire(new AdminRequestEvent(admin, target, packet.action));
 
@@ -201,11 +211,11 @@ public class NetHandlers {
                         target.getInfo().timesJoined,
                         target.getInfo().timesKicked,
                         target.getInfo().ips.toArray(String.class),
-                        target.getInfo().names.toArray(String.class)
-                );
+                        target.getInfo().names.toArray(String.class));
 
                 Call.traceInfo(con, target, trace);
-                Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has requested trace info of @ &fi&lk[&lb@&fi&lk]&fb.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid());
+                Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has requested trace info of @ &fi&lk[&lb@&fi&lk]&fb.",
+                        admin.plainName(), admin.uuid(), target.plainName(), target.uuid());
             }
 
             case wave -> {

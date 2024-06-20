@@ -131,8 +131,11 @@ public class Database {
     // region config
 
     public static ServerConfig fetchConfig() {
+        return fetchConfig("global");
+    }
+    public static ServerConfig fetchConfig(String namespace) {
         var config = datastore.find(ServerConfig.class)
-                .filter(Filters.eq("namespace", "global"))
+                .filter(Filters.eq("namespace", namespace))
                 .first();
         if (config == null) {
             config = new ServerConfig();

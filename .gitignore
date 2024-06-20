@@ -11,3 +11,5 @@
 /.vscode/
 /out/
 /server/
+kls_database.db
+.factorypath
