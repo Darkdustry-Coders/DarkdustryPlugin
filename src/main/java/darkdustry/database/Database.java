@@ -139,7 +139,7 @@ public class Database {
                 .first();
         if (config == null) {
             config = new ServerConfig();
-            datastore.save(config);
+            config.namespace = namespace;
         }
         return config;
     }

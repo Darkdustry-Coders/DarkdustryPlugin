@@ -1,8 +1,6 @@
 import groovy.json.JsonSlurper
 
-plugins {
-    java
-}
+plugins { java }
 
 repositories {
     mavenCentral()
@@ -10,7 +8,8 @@ repositories {
 }
 
 dependencies {
-    val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
+    val json =
+            JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
@@ -57,6 +56,4 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-}
+tasks.withType<JavaCompile> { options.encoding = "UTF-8" }

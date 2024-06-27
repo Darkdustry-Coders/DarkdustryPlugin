@@ -50,7 +50,8 @@ public class DiscordBot {
 
     public static void connect() {
         try {
-            // d4j либо в rest, либо в websocket клиенте использует глобальные ресурсы, поэтому лучше их заменить
+            // d4j либо в rest, либо в websocket клиенте использует глобальные ресурсы,
+            // поэтому лучше их заменить
             HttpResources.set(LoopResources.create("d4j-http", 4, true));
 
             gateway = DiscordClientBuilder.create(discordConfig.token)
@@ -71,64 +72,84 @@ public class DiscordBot {
                     .blockOptional()
                     .orElseThrow();
 
-            banChannel = gateway.getChannelById(Snowflake.of(discordConfig.banChannelID)).ofType(GuildMessageChannel.class).block();
-            adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelID)).ofType(GuildMessageChannel.class).block();
-            votekickChannel = gateway.getChannelById(Snowflake.of(discordConfig.votekickChannelID)).ofType(GuildMessageChannel.class).block();
+            banChannel = gateway.getChannelById(Snowflake.of(discordConfig.banChannelID))
+                    .ofType(GuildMessageChannel.class).block();
+            adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelID))
+                    .ofType(GuildMessageChannel.class).block();
+            votekickChannel = gateway.getChannelById(Snowflake.of(discordConfig.votekickChannelID))
+                    .ofType(GuildMessageChannel.class).block();
 
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 var message = event.getMessage();
-                if (message.getContent().isEmpty()) return;
+                if (message.getContent().isEmpty())
+                    return;
 
                 var member = event.getMember().orElse(null);
-                if (member == null || member.isBot()) return;
+                if (member == null || member.isBot())
+                    return;
 
                 var data = Database.getPlayerData(member.getId());
                 if (data != null && member.getRoleIds().contains(Snowflake.of(discordConfig.verifiedRoleID))) {
                     member.addRole(Snowflake.of(discordConfig.verifiedRoleID))
                             .subscribe(
-                                    i -> {},
-                                    e -> Log.warn("Failed to add verified role to user " + member.getId().asBigInteger(), e));
+                                    i -> {
+                                    },
+                                    e -> Log.warn(
+                                            "Failed to add verified role to user " + member.getId().asBigInteger(), e));
                 }
 
                 message.getChannel()
                         .map(channel -> new MessageContext(message, member, channel))
                         .subscribe(context -> {
-                            if (!message.getContent().startsWith(discordConfig.prefix)) return;
+                            if (!message.getContent().startsWith(discordConfig.prefix))
+                                return;
 
                             if (discordConfig.blacklistedChannelIDs.contains(context.channel().getId().asLong())) {
                                 context.channel().createMessage(
                                         MessageCreateSpec
                                                 .builder()
-                                                .content("Please use commands in :point_right: <#" + discordConfig.botsChannelID + ">")
+                                                .content("Please use commands in :point_right: <#"
+                                                        + discordConfig.botsChannelID + ">")
                                                 .messageReference(message.getId())
                                                 .allowedMentions(AllowedMentions.suppressAll())
-                                                .build()
-                                ).subscribe(reply -> {
-                                    Timer.schedule(() -> {
-                                        reply.delete("No longer needed").subscribe();
-                                        message.delete("Keep litter in place").subscribe(x -> {}, e -> {
-                                            Log.warn("Failed to delete litter message: ", e);
+                                                .build())
+                                        .subscribe(reply -> {
+                                            Timer.schedule(() -> {
+                                                reply.delete("No longer needed").subscribe();
+                                                message.delete("Keep litter in place").subscribe(x -> {
+                                                }, e -> {
+                                                    Log.warn("Failed to delete litter message: ", e);
+                                                });
+                                            }, 5f);
+                                        }, e -> {
                                         });
-                                    }, 5f);
-                                }, e -> {});
                                 return;
                             }
 
                             var response = discordHandler.handleMessage(message.getContent(), context);
                             switch (response.type) {
-                                case fewArguments -> context.error("Too Few Arguments", "Usage: @**@** @", discordHandler.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case manyArguments -> context.error("Too Many Arguments", "Usage: @**@** @", discordHandler.prefix, response.runCommand, response.command.paramText).subscribe();
-                                case unknownCommand -> context.error("Unknown Command", "To see a list of all available commands, use @**help**", discordHandler.prefix).subscribe();
+                                case fewArguments ->
+                                    context.error("Too Few Arguments", "Usage: @**@** @", discordHandler.prefix,
+                                            response.runCommand, response.command.paramText).subscribe();
+                                case manyArguments ->
+                                    context.error("Too Many Arguments", "Usage: @**@** @", discordHandler.prefix,
+                                            response.runCommand, response.command.paramText).subscribe();
+                                case unknownCommand -> context.error("Unknown Command",
+                                        "To see a list of all available commands, use @**help**", discordHandler.prefix)
+                                        .subscribe();
 
-                                case valid -> Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
+                                case valid ->
+                                    Log.info("[Discord] @ used @", member.getDisplayName(), message.getContent());
                             }
                         });
 
                 // Prevent commands from being sent to the game
-                if (message.getContent().startsWith(discordConfig.prefix)) return;
+                if (message.getContent().startsWith(discordConfig.prefix))
+                    return;
 
                 var server = discordConfig.serverToChannel.findKey(message.getChannelId().asLong(), false);
-                if (server == null) return;
+                if (server == null)
+                    return;
 
                 var roles = event.getClient()
                         .getGuildRoles(member.getGuildId())
@@ -141,10 +162,12 @@ public class DiscordBot {
                         .zipWith(roles.map(Role::getColor)
                                 .filter(Predicate.not(Predicate.isEqual(Role.DEFAULT_COLOR)))
                                 .last(Color.WHITE))
-                        .switchIfEmpty(Mono.fromRunnable(() ->
-                                Socket.send(new DiscordMessageEvent(server, member.getDisplayName(), message.getContent()))))
-                        .subscribe(TupleUtils.consumer((role, color) ->
-                                Socket.send(new DiscordMessageEvent(server, role.getName(), Integer.toHexString(color.getRGB()), member.getDisplayName(), message.getContent()))));
+                        .switchIfEmpty(Mono.fromRunnable(() -> Socket
+                                .send(new DiscordMessageEvent(server, member.getDisplayName(), message.getContent()))))
+                        .subscribe(TupleUtils.consumer((role,
+                                color) -> Socket.send(new DiscordMessageEvent(server, role.getName(),
+                                        Integer.toHexString(color.getRGB()), member.getDisplayName(),
+                                        message.getContent()))));
             });
 
             gateway.on(MemberChunkEvent.class).subscribe(event -> event.getMembers().forEach(member -> {
@@ -175,15 +198,15 @@ public class DiscordBot {
                     if (!admins.containsKey(event.getMemberId()))
                         Log.info("Added admin " + event.getMemberId().asLong());
                     admins.put(event.getMemberId(), list);
-                }
-                else if (admins.containsKey(event.getMemberId())) {
+                } else if (admins.containsKey(event.getMemberId())) {
                     admins.remove(event.getMemberId());
                 }
             });
 
             gateway.on(ButtonInteractionEvent.class).subscribe(event -> {
                 var content = event.getCustomId().split("-", 3);
-                if (content.length < 3) return;
+                if (content.length < 3)
+                    return;
 
                 Socket.request(new ListRequest(content[0], content[1], Strings.parseInt(content[2])), response -> {
                     var embed = EmbedCreateSpec.builder();
@@ -195,16 +218,20 @@ public class DiscordBot {
                         default -> throw new IllegalStateException();
                     }
 
-                    event.edit().withEmbeds(embed.build()).withComponents(PageIterator.createPageButtons(content[0], content[1], response)).subscribe();
+                    event.edit().withEmbeds(embed.build())
+                            .withComponents(PageIterator.createPageButtons(content[0], content[1], response))
+                            .subscribe();
                 });
             });
 
             gateway.on(SelectMenuInteractionEvent.class).subscribe(event -> {
-                if (noRole(event, discordConfig.adminRoleIDs)) return;
+                if (noRole(event, discordConfig.adminRoleIDs))
+                    return;
 
                 if (event.getCustomId().equals("admin-request")) {
                     var content = event.getValues().getFirst().split("-", 3);
-                    if (content.length < 3) return;
+                    if (content.length < 3)
+                        return;
 
                     switch (content[0]) {
                         case "confirm" -> DiscordIntegration.confirm(event, content[1], content[2]);
@@ -215,9 +242,10 @@ public class DiscordBot {
 
             gateway.getSelf()
                     .flatMap(user -> gateway.getGuilds()
-                            .flatMap(guild -> guild.changeSelfNickname("[" + discordConfig.prefix + "] " + user.getUsername()))
-                            .then()
-                    ).subscribe();
+                            .flatMap(guild -> guild
+                                    .changeSelfNickname("[" + discordConfig.prefix + "] " + user.getUsername()))
+                            .then())
+                    .subscribe();
 
             connected = true;
 

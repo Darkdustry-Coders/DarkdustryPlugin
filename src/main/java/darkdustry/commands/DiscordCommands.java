@@ -286,172 +286,69 @@ public class DiscordCommands {
                     });
         });
 
-        discordHandler.<MessageContext>register("config", "[prop] [value]", "Configure servers.", (args, context) -> {
+        discordHandler.<MessageContext>register("config", "[prop] [value...]", "Configure servers.", (args, context) -> {
             if (noRole(context, discordConfig.adminRoleIDs))
                 return;
 
-            var config = ServerConfig.get();
+            var options = ServerConfig.options();
 
             if (args.length < 1) {
-                context.info(
-                        "Server settings",
-                        "graylist-enabled: " + config.graylistEnabled + "\n" +
-                                "graylist-mobile: " + config.graylistMobile + "\n" +
-                                "graylist-hosting: " + config.graylistHosting + "\n" +
-                                "graylist-proxy: " + config.graylistProxy + "\n" +
-                                "graylist-isps: " + config.graylistISPs + "\n" +
-                                "graylist-ips: " + config.graylistIPs + "\n")
-                        .subscribe();
+                var builder = new StringBuilder();
+                var first = new boolean[] {true};
+
+                options.each(x -> {
+                    if (!first[0]) {
+                        builder.append('\n');
+
+                    } else first[0] = false;
+                    builder.append(x.key()).append(": ").append(x.get());
+                });
+
+                context.info("Server settings", builder.toString()).subscribe();
                 return;
             }
-            var property = args[0];
-
-            if (property.contains("#")) {
-                var arr = property.split("#");
-                config = ServerConfig.get(arr[0]);
-                property = arr[1];
+            var property$ = args[0];
+            var namespace$ = "global";
+            if (property$.contains("#")) {
+                final var index = property$.indexOf("#");
+                namespace$ = property$.substring(0, index);
+                property$ = property$.substring(index + 1);
             }
+            final var property = property$;
+            final var namespace = namespace$;
 
             if (args.length < 2) {
-                switch (property) {
-                    case "graylist-enabled" -> context.info(
+                var option = options.find(x -> x.key().equalsIgnoreCase(property));
+                if (option == null) context.error(property, "No such property was found.").subscribe();
+                else {
+                    context.info(
                             property,
-                            "Value: " + config.graylistEnabled + "\n\n" +
-                                    "Enable enforcement of Discord integration " +
-                                    "for specific users.")
+                            "Value: " + option.get() + "\n\n" + option.description())
                             .subscribe();
-                    case "graylist-mobile" -> context.info(
-                            property,
-                            "Value: " + config.graylistMobile + "\n\n" +
-                                    "Force all hotspot users to attach a Discord " +
-                                    "account.")
-                            .subscribe();
-                    case "graylist-hosting" -> context.info(
-                            property,
-                            "Value: " + config.graylistHosting + "\n\n" +
-                                    "Force all users connecting from hosting " +
-                                    "companies IPs to attach a Discord account.")
-                            .subscribe();
-                    case "graylist-proxy" -> context.info(
-                            property,
-                            "Value: " + config.graylistProxy + "\n\n" +
-                                    "Require users utilizing a proxy to attach a " +
-                                    "Discord account.")
-                            .subscribe();
-                    case "graylist-isps" -> context.info(
-                            property,
-                            "Value: " + config.graylistProxy + "\n\n" +
-                                    "ISPs that will be graylisted on the server")
-                            .subscribe();
-                    case "graylist-ips" -> context.info(
-                            property,
-                            "Value: " + config.graylistProxy + "\n\n" +
-                                    "Graylisted IPs. Matches all IPs starting with " +
-                                    "a value.")
-                            .subscribe();
-                    default -> context.error(property, "No such property was found.").subscribe();
                 }
                 return;
             }
             var value = args[1];
 
-            class Values {
-                public static final String boolError = "Invalid property value.\n\nPossible values: y/t/yes/true / n/f/no/false";
+            for (var possibleOption : options) {
+                var opts = possibleOption.inPlace();
+                if (options.isEmpty()) opts = Seq.with(possibleOption);
+                else opts.add(possibleOption);
 
-                /** returns '0' if false, '1' if true, '-1' if invalid */
-                public static byte bool(String val) {
-                    val = val.toLowerCase();
-
-                    if (val.equals("y") || val.equals("t") || val.equals("yes") || val.equals("true"))
-                        return 1;
-                    if (val.equals("n") || val.equals("f") || val.equals("no") || val.equals("false"))
-                        return 0;
-                    return -1;
-                }
-
-                public static String isp(String val) {
-                    // Adding or removing multiple ISPs is allowed :)
-                    return val.replaceAll("[^\\w;]", "");
+                for (var actualOption : opts) {
+                    if (actualOption.key().equalsIgnoreCase(property)) {
+                        @Nullable var error = actualOption.set(value, namespace);
+                        if (error == null) {
+                            context.success(property, "New value: " + actualOption.get()).subscribe();
+                            // Just in case
+                            Timer.schedule(() -> Socket.send(new ReconfigureEvent(property)), 0.5f);
+                        }
+                        else {
+                            context.error(property, error).subscribe();
+                        }
+                    }
                 }
             }
-
-            switch (property) {
-                case "graylist-enabled" -> {
-                    var val = Values.bool(value);
-                    if (val == -1) {
-                        context.error(property, Values.boolError).subscribe();
-                        return;
-                    }
-                    config.graylistEnabled = val == 1;
-                    context.success(property, "New value: " + config.graylistEnabled).subscribe();
-                }
-                case "graylist-mobile" -> {
-                    var val = Values.bool(value);
-                    if (val == -1) {
-                        context.error(property, Values.boolError).subscribe();
-                        return;
-                    }
-                    config.graylistMobile = val == 1;
-                    context.success(property, "New value: " + config.graylistMobile).subscribe();
-                }
-                case "graylist-hosting" -> {
-                    var val = Values.bool(value);
-                    if (val == -1) {
-                        context.error(property, Values.boolError).subscribe();
-                        return;
-                    }
-                    config.graylistHosting = val == 1;
-                    context.success(property, "New value: " + config.graylistHosting).subscribe();
-                }
-                case "graylist-proxy" -> {
-                    var val = Values.bool(value);
-                    if (val == -1) {
-                        context.error(property, Values.boolError).subscribe();
-                        return;
-                    }
-                    config.graylistProxy = val == 1;
-                    context.success(property, "New value: " + config.graylistProxy).subscribe();
-                }
-                case "graylist-isps" -> {
-                    context.error(property, "Use `graylist-isps-add` and `graylist-isps-remove` instead").subscribe();
-                }
-                case "graylist-ips" -> {
-                    context.error(property, "Use `graylist-ips-add` and `graylist-ips-remove` instead").subscribe();
-                }
-                case "graylist-isps-add" -> {
-                    var val = Values.isp(value);
-                    var list = new Seq<>(config.graylistISPs.split(";"));
-                    new Seq<>(val.split(";")).each(e -> !list.contains(e), e -> list.add(e));
-                    config.graylistISPs = list.toString(";");
-                    context.success(property, "New value: " + config.graylistISPs).subscribe();
-                }
-                case "graylist-isps-remove" -> {
-                    var val = Values.isp(value);
-                    var list = new Seq<>(config.graylistISPs.split(";"));
-                    list.removeAll(new Seq<>(val.split(";")));
-                    config.graylistISPs = list.toString(";");
-                    context.success(property, "New value: " + config.graylistISPs).subscribe();
-                }
-                case "graylist-ips-add" -> {
-                    var list = new Seq<>(config.graylistIPs.split(";"));
-                    new Seq<>(value.split(";")).each(e -> !list.contains(e), e -> list.add(e));
-                    config.graylistIPs = list.toString(";");
-                    context.success(property, "New value: " + config.graylistIPs).subscribe();
-                }
-                case "graylist-ips-remove" -> {
-                    var list = new Seq<>(config.graylistIPs.split(";"));
-                    list.removeAll(new Seq<>(value.split(";")));
-                    config.graylistIPs = list.toString(";");
-                    context.success(property, "New value: " + config.graylistIPs).subscribe();
-                }
-                default -> {
-                    context.error(property, "No such property was found.").subscribe();
-                    return;
-                }
-            }
-
-            config.save();
-            Socket.send(new ReconfigureEvent(property));
         });
     }
 }
