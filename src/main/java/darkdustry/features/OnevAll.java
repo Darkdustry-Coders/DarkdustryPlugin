@@ -12,6 +12,8 @@ import useful.Bundle;
 
 import javax.annotation.Nullable;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static darkdustry.config.Config.config;
 import static mindustry.Vars.*;
 import static mindustry.server.ServerControl.instance;
@@ -29,9 +31,20 @@ public class OnevAll {
     public static void init() {
         if (!config.mode.enable1va) return;
 
+        // Boolean flags:
+        // 0 -> Destroying cores
+        boolean[] flags = new boolean[] { false };
+
+        Events.on(EventType.PlayEvent.class, event -> {
+            flags[0] = false;
+        });
+
         Events.on(EventType.BlockDestroyEvent.class, event -> {
+            if (flags[0]) return;
             if (!enabled()) return;
             if (otherTeam().core() != null && state.rules.defaultTeam.core() != null) return;
+
+            flags[0] = true;
 
             Groups.build.each(build -> {
                 if (!(build.block instanceof CoreBlock)) return;

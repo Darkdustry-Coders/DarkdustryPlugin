@@ -47,6 +47,7 @@ public class DarkdustryPlugin extends Plugin {
         MenuHandler.load();
         SchemeSize.load();
         Spectate.init();
+        OnevAll.init();
 
         Database.connect();
         Socket.connect();
