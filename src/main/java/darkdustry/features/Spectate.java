@@ -76,6 +76,7 @@ public class Spectate {
                     toRemove.add(player.key);
                 }
             }
+
             for (var player : toRemove) {
                 players.remove(player);
             }

@@ -214,10 +214,6 @@ public class PluginEvents {
 
         var _nativeAssigner = netServer.assigner;
         netServer.assigner = (player, players) -> {
-            if (Spectate.possiblySpectator(player)) {
-                return config.mode.spectatorTeam;
-            }
-
             if (OnevAll.enabled()) {
                 return OnevAll.selectTeam(player);
             }
