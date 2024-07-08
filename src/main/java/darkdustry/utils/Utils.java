@@ -5,9 +5,11 @@ import arc.func.Cons3;
 import arc.struct.Seq;
 import arc.util.Strings;
 import arc.util.Structs;
+import darkdustry.config.Config;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Player;
+import mindustry.gen.Teamc;
 import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -154,6 +156,13 @@ public class Utils {
         return path.chars().noneMatch(x -> x >= 'a' && x <= 'z' ||
                 x > 'A' && x <= 'Z' ||
                 x == '-' || x == '_' || x == '.');
+    }
+
+    // endregion
+    // region teams
+
+    public static boolean isSpecialTeam(Team team) {
+        return Config.config.mode.enableSpectate && team == Config.config.mode.spectatorTeam || team == Team.derelict;
     }
 
     // endregion

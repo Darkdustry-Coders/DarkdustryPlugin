@@ -1,8 +1,13 @@
 package darkdustry.features;
 
+import arc.Events;
 import darkdustry.database.Cache;
+import mindustry.content.Blocks;
+import mindustry.game.EventType;
 import mindustry.game.Team;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
 
 import javax.annotation.Nullable;
@@ -19,6 +24,21 @@ public class OnevAll {
 
     public static boolean enabled() {
         return config.mode.enable1va && single != null;
+    }
+
+    public static void init() {
+        if (!config.mode.enable1va) return;
+
+        Events.on(EventType.BlockDestroyEvent.class, event -> {
+            if (!enabled()) return;
+            if (otherTeam().core() != null && state.rules.defaultTeam.core() != null) return;
+
+            Groups.build.each(build -> {
+                if (!(build.block instanceof CoreBlock)) return;
+                if (build.team == otherTeam() || build.team == state.rules.defaultTeam) return;
+                build.tile().setNet(Blocks.air);
+            });
+        });
     }
 
     public static void nextMap() {

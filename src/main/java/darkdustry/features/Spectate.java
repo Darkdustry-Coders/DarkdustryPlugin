@@ -42,16 +42,14 @@ public class Spectate {
     }
 
     public static void init() {
+        if (!config.mode.enableSpectate) return;
+
         Events.on(EventType.PlayerLeave.class, event -> {
             players.remove(event.player);
             trackers.remove(event.player);
         });
 
         Events.on(EventType.PlayEvent.class, event -> {
-            for (var entry : players.entries()) {
-                Bundle.send(entry.key, "commands.spectate.return");
-            }
-            players.clear();
             trackers.clear();
         });
 
@@ -101,8 +99,12 @@ public class Spectate {
         }, 1f, 1f);
     }
 
+    public static boolean possiblySpectator(Player player) {
+        return config.mode.enableSpectate && players.containsKey(player);
+    }
+
     public static boolean isSpectator(Player player) {
-        return config.mode.enableSpectate && player.team() == config.mode.spectatorTeam && players.containsKey(player);
+        return possiblySpectator(player) && player.team() == config.mode.spectatorTeam;
     }
 
     public static void spectate(Player player) {
