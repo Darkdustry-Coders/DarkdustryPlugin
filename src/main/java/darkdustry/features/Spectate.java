@@ -1,40 +1,81 @@
 package darkdustry.features;
 
 import arc.Events;
+import arc.struct.*;
 import arc.util.Timer;
+import lombok.AllArgsConstructor;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.game.Team;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.gen.Posc;
 import useful.Bundle;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static darkdustry.config.Config.config;
 
 public class Spectate {
+    @AllArgsConstructor
+    private static class Tracker {
+        public float x;
+        public float y;
+        public int tick;
+
+        public int addTick() {
+            tick += 1;
+            return tick;
+        }
+
+        public void move(Posc posc) { x = posc.x(); y = posc.y(); }
+        public void pause() { tick = -1; }
+        public void reset() { tick = 0; }
+        public boolean paused() { return tick < 0; }
+    }
+
     private Spectate() {}
 
-    private final static HashMap<Player, Team> players = new HashMap<>();
+    private final static ObjectMap<Player, Tracker> trackers = new ObjectMap<>();
+    private final static ObjectMap<Player, Team> players = new ObjectMap<>();
+
+    private static Tracker tracker(Player player) {
+        return trackers.get(player, () -> new Tracker(player.x, player.y, 0));
+    }
 
     public static void init() {
-        Events.on(EventType.PlayerLeave.class, event -> players.remove(event.player));
-        Events.on(EventType.PlayEvent.class, event -> {
-            for (var entry : players.entrySet()) {
-                Bundle.send(entry.getKey(), "commands.spectate.return");
-            }
-            players.clear();
+        Events.on(EventType.PlayerLeave.class, event -> {
+            players.remove(event.player);
+            trackers.remove(event.player);
         });
 
-        List<Player> toRemove = new ArrayList<>();
+        Events.on(EventType.PlayEvent.class, event -> {
+            for (var entry : players.entries()) {
+                Bundle.send(entry.key, "commands.spectate.return");
+            }
+            players.clear();
+            trackers.clear();
+        });
+
+        Events.on(EventType.BlockBuildBeginEvent.class, event -> {
+            var player = event.unit.getPlayer();
+            if (player == null) return;
+            tracker(player).pause();
+        });
+
+        Events.on(EventType.BlockBuildEndEvent.class, event -> {
+            var player = event.unit.getPlayer();
+            if (player == null) return;
+            tracker(player).reset();
+        });
+
+        Events.on(EventType.PlayerChatEvent.class, event -> tracker(event.player).tick = 0);
+
+        Seq<Player> toRemove = new Seq<>();
 
         Timer.schedule(() -> {
-            for (var player : players.entrySet()) {
-                if (player.getKey().team() != config.mode.spectatorTeam) {
-                    Bundle.send(player.getKey(), "commands.spectate.return");
-                    toRemove.add(player.getKey());
+            for (var player : players.entries()) {
+                if (player.key.team() != config.mode.spectatorTeam) {
+                    Bundle.send(player.key, "commands.spectate.return");
+                    toRemove.add(player.key);
                 }
             }
             for (var player : toRemove) {
@@ -42,6 +83,22 @@ public class Spectate {
             }
             toRemove.clear();
         }, 0.5f, 0.5f);
+
+        Timer.schedule(() -> {
+            Groups.player.each(player -> {
+                var tracker = tracker(player);
+                if (tracker.paused()) return;
+
+                if (Math.abs(player.x - tracker.x) + Math.abs(player.y - tracker.y) > 1) {
+                    tracker.move(player);
+                    tracker.reset();
+                }
+
+                if (tracker.addTick() > 300 && !isSpectator(player)) {
+                    spectate(player);
+                }
+            });
+        }, 1f, 1f);
     }
 
     public static boolean isSpectator(Player player) {
@@ -53,10 +110,13 @@ public class Spectate {
 
         var decoy = UnitTypes.alpha.spawn(player.team(), 0, 0);
         decoy.controller(player);
+        decoy.spawnedByCore(true);
+
         players.put(player, player.team());
         player.team(config.mode.spectatorTeam);
-        var unit = player.unit();
-        if (unit != null) unit.kill();
+
+        player.clearUnit();
+
         Bundle.send(player, "commands.spectate.success");
     }
 

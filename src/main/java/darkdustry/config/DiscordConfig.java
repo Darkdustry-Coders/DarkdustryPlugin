@@ -49,7 +49,4 @@ public class DiscordConfig {
 
     /** Place where you actually need to run commands in */
     public long botsChannelID = 0L;
-
-    /** Autoassigned tags in forum channels */
-    public ObjectMap<Long, Seq<Long>> autoassignedTags = new ObjectMap<>();
 }
