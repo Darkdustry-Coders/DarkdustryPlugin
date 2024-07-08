@@ -12,8 +12,6 @@ import useful.Bundle;
 
 import javax.annotation.Nullable;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import static darkdustry.config.Config.config;
 import static mindustry.Vars.*;
 import static mindustry.server.ServerControl.instance;
