@@ -137,7 +137,7 @@ public class Checks {
     }
 
     public static boolean invalidSurrenderTeam(Player player) {
-        return check(player.team().data().noCores(), player, "commands.surrender.invalid-team");
+        return check(player.team().data().noCores() || isSpecialTeam(player.team()), player, "commands.surrender.invalid-team");
     }
 
     public static boolean otherSurrenderTeam(Player player, Team team) {

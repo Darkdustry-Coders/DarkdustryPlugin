@@ -8,10 +8,12 @@ import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
+import darkdustry.utils.Utils;
 import discord4j.rest.util.Color;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.game.EventType.*;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
 import mindustry.world.blocks.payloads.BuildPayload;
@@ -218,7 +220,22 @@ public class PluginEvents {
                 return OnevAll.selectTeam(player);
             }
 
-            return _nativeAssigner.assign(player, players);
+            Team team;
+            try {
+                team = _nativeAssigner.assign(player, players);
+            } catch (Exception ignored) {
+                team = Team.derelict;
+            }
+
+            if (!Utils.isSpecialTeam(team)) return team;
+
+            for (Team x : Team.all) {
+                if (!x.cores().isEmpty() && !Utils.isSpecialTeam(x)) {
+                    return x;
+                }
+            }
+
+            return Team.derelict;
         };
 
         instance.gameOverListener = event -> {
