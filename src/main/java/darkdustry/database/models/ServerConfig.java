@@ -184,7 +184,7 @@ public class ServerConfig {
 
         @Override
         public Seq<OptionIn> inPlace() {
-            return Seq.with(new OptionListAdd(key, property), new OptionListAdd(key, property));
+            return Seq.with(new OptionListAdd(key, property), new OptionListRemove(key, property));
         }
 
         @Override
@@ -229,8 +229,9 @@ public class ServerConfig {
                     var field = ServerConfig.class.getField(property);
                     var config = ServerConfig.get(namespace);
                     var values = new Seq<>(((String)field.get(config)).toLowerCase().split(";"));
-                    var add = new Seq<>(value.split(";"));
+                    var add = new Seq<>(value.toLowerCase().split(";"));
                     add.each(values::addUnique);
+                    field.set(config, String.join(";", add));
                     config.save();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -274,6 +275,7 @@ public class ServerConfig {
                     var values = new Seq<>(((String)field.get(config)).toLowerCase().split(";"));
                     var add = new Seq<>(value.split(";"));
                     values.removeAll(add);
+                    field.set(config, String.join(";", add));
                     config.save();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
