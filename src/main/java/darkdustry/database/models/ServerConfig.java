@@ -231,7 +231,7 @@ public class ServerConfig {
                     var values = new Seq<>(((String)field.get(config)).toLowerCase().split(";"));
                     var add = new Seq<>(value.toLowerCase().split(";"));
                     add.each(values::addUnique);
-                    field.set(config, String.join(";", add));
+                    field.set(config, String.join(";", values));
                     config.save();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -275,7 +275,7 @@ public class ServerConfig {
                     var values = new Seq<>(((String)field.get(config)).toLowerCase().split(";"));
                     var add = new Seq<>(value.split(";"));
                     values.removeAll(add);
-                    field.set(config, String.join(";", add));
+                    field.set(config, String.join(";", values));
                     config.save();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
