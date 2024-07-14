@@ -1,6 +1,7 @@
 package darkdustry.database.models;
 
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Nullable;
 import darkdustry.database.Database;
 import darkdustry.config.Config;
@@ -46,12 +47,16 @@ public class ServerConfig {
         isp = isp.replaceAll("\\W", "");
 
         for (String x : get().graylistISPs.split(";")) {
-            if (x.equalsIgnoreCase(isp))
+            if (x.equalsIgnoreCase(isp) && !x.isBlank()) {
+                Log.info("Java thinks bro uses ISP " + x + " (actual value: " + isp + ")");
                 return true;
+            }
         }
         for (String x : getLocal().graylistISPs.split(";")) {
-            if (x.equalsIgnoreCase(isp))
+            if (x.equalsIgnoreCase(isp) && !x.isBlank()) {
+                Log.info("Java thinks bro uses ISP " + x + " (actual value: " + isp + ")");
                 return true;
+            }
         }
 
         return false;
@@ -59,11 +64,11 @@ public class ServerConfig {
 
     public static boolean ipGraylisted(String ip) {
         for (String x : get().graylistIPs.split(";")) {
-            if (ip.toLowerCase().startsWith(x.toLowerCase()))
+            if (ip.toLowerCase().startsWith(x.toLowerCase()) && !x.isBlank())
                 return true;
         }
         for (String x : getLocal().graylistIPs.split(";")) {
-            if (ip.toLowerCase().startsWith(x.toLowerCase()))
+            if (ip.toLowerCase().startsWith(x.toLowerCase()) && !x.isBlank())
                 return true;
         }
 
@@ -189,7 +194,16 @@ public class ServerConfig {
 
         @Override
         public String get() {
-            return "";
+            try {
+                var field = ServerConfig.class.getField(property);
+                return String.join(
+                        ",",
+                        Seq.with(((String) field.get(ServerConfig.get())).split(";"))
+                                .add(((String) field.get(ServerConfig.getLocal())).split(";"))
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
@@ -219,7 +233,16 @@ public class ServerConfig {
 
             @Override
             public String get() {
-                return "";
+                try {
+                    var field = ServerConfig.class.getField(property);
+                    return String.join(
+                            ",",
+                            Seq.with(((String) field.get(ServerConfig.get())).split(";"))
+                                    .add(((String) field.get(ServerConfig.getLocal())).split(";"))
+                    );
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             @Override
@@ -263,7 +286,16 @@ public class ServerConfig {
 
             @Override
             public String get() {
-                return "";
+                try {
+                    var field = ServerConfig.class.getField(property);
+                    return String.join(
+                            ",",
+                            Seq.with(((String) field.get(ServerConfig.get())).split(";"))
+                                    .add(((String) field.get(ServerConfig.getLocal())).split(";"))
+                    );
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             @Override

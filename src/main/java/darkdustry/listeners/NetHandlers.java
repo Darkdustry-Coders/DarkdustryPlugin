@@ -61,6 +61,25 @@ public class NetHandlers {
         };
     }
 
+    private static boolean isGraylisted(NetConnection con, ConnectPacket packet) {
+        if (config.mode == Gamemode.hub && !ServerConfig.getLocal().graylistEnabled) return false;
+        if (!ServerConfig.graylistEnabled()) return false;
+
+        var data = Database.getPlayerData(packet.uuid);
+        if (data != null && !data.discordId.isEmpty()) return false;
+
+        var tables = IpTables.of(con.address);
+        if (tables == null) return false;
+
+        if (tables.isHotspot() && ServerConfig.graylistMobile()) return true;
+        if (tables.proxy && ServerConfig.graylistProxy()) return true;
+        if (tables.hosting && ServerConfig.graylistHosting()) return true;
+        if (ServerConfig.ispGraylisted(tables.isp)) return true;
+        if (ServerConfig.ipGraylisted(con.address)) return true;
+
+        return false;
+    }
+
     public static void connect(NetConnection con, Connect packet) {
         Events.fire(new ConnectionEvent(con));
 
@@ -154,21 +173,9 @@ public class NetHandlers {
         if (con.kicked)
             return;
 
-        if (config.mode != Gamemode.hub) {
-            if (ServerConfig.graylistEnabled()) {
-                var data = Database.getPlayerData(uuid);
-                if (data == null || data.discordId.isEmpty()) {
-                    var tables = IpTables.of(con.address);
-                    if (tables != null && (tables.isHotspot() && ServerConfig.graylistMobile()
-                            || tables.proxy && ServerConfig.graylistProxy()
-                            || tables.hosting && ServerConfig.graylistHosting()
-                            || ServerConfig.ispGraylisted(tables.isp)
-                            || ServerConfig.ipGraylisted(con.address))) {
-                        Bundle.kick(con, locale, 0L, "kick.hotspot");
-                        return;
-                    }
-                }
-            }
+        if (isGraylisted(con, packet)) {
+            Bundle.kick(con, locale, 0L, "kick.hotspot");
+            return;
         }
 
         var player = Player.create();
