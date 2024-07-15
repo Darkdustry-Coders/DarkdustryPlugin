@@ -46,7 +46,7 @@ public class Database {
         var data = Cache.get(discordId);
         if (data != null) return data;
         data = datastore.find(PlayerData.class)
-                .filter(Filters.eq("discordId", discordId.toString()))
+                .filter(Filters.eq("discordId", discordId.asLong()))
                 .first();
         if (data == null) return null;
         var local = Cache.get(data.id);

@@ -47,13 +47,13 @@ public class ServerConfig {
         isp = isp.replaceAll("\\W", "");
 
         for (String x : get().graylistISPs.split(";")) {
-            if (x.equalsIgnoreCase(isp) && !x.isBlank()) {
+            if (x.replaceAll("\\W", "").equalsIgnoreCase(isp) && !x.isBlank()) {
                 Log.info("Java thinks bro uses ISP " + x + " (actual value: " + isp + ")");
                 return true;
             }
         }
         for (String x : getLocal().graylistISPs.split(";")) {
-            if (x.equalsIgnoreCase(isp) && !x.isBlank()) {
+            if (x.replaceAll("\\W", "").equalsIgnoreCase(isp) && !x.isBlank()) {
                 Log.info("Java thinks bro uses ISP " + x + " (actual value: " + isp + ")");
                 return true;
             }
