@@ -4,6 +4,7 @@ import arc.Events;
 import arc.struct.*;
 import arc.util.Timer;
 import lombok.AllArgsConstructor;
+import mindustry.Vars;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -84,7 +85,11 @@ public class Spectate {
         }, 0.5f, 0.5f);
 
         Timer.schedule(() -> {
+            if (Vars.state.isPaused()) return;
+
             Groups.player.each(player -> {
+                if (player.team().data().players.count(x -> true) <= 1) return;
+
                 var tracker = tracker(player);
                 if (tracker.paused()) return;
 
