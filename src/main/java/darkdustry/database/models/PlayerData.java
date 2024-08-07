@@ -46,6 +46,9 @@ public class PlayerData {
     public int pvpWins = 0;
     public int spvpWins = 0;
 
+    public int pvpRank = 0;
+    public int fortsRank = 0;
+
     public Rank rank = Rank.player;
 
     /** Empty if none */
