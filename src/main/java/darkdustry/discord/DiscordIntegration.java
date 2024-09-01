@@ -44,7 +44,7 @@ public class DiscordIntegration {
     public static void sendMute(MuteEvent event) {
         if (!connected) return;
 
-        banChannel.createMessage(EmbedCreateSpec.builder()
+        muteChannel.createMessage(EmbedCreateSpec.builder()
                 .color(Color.BLUE)
                 .title("Mute")
                 .addField("Player:", event.mute().playerName + " [" + event.mute().playerID + "]", false)

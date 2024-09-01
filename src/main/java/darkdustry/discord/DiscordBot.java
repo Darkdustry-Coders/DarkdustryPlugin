@@ -43,6 +43,7 @@ public class DiscordBot {
     public static GuildMessageChannel banChannel;
     public static GuildMessageChannel adminChannel;
     public static GuildMessageChannel votekickChannel;
+    public static GuildMessageChannel muteChannel;
 
     public static ObjectMap<Snowflake, Seq<Snowflake>> admins;
 
@@ -77,6 +78,8 @@ public class DiscordBot {
             adminChannel = gateway.getChannelById(Snowflake.of(discordConfig.adminChannelID))
                     .ofType(GuildMessageChannel.class).block();
             votekickChannel = gateway.getChannelById(Snowflake.of(discordConfig.votekickChannelID))
+                    .ofType(GuildMessageChannel.class).block();
+            muteChannel = gateway.getChannelById(Snowflake.of(discordConfig.muteChannelID))
                     .ofType(GuildMessageChannel.class).block();
 
             gateway.on(MessageCreateEvent.class).subscribe(event -> {

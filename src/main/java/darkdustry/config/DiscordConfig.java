@@ -32,6 +32,9 @@ public class DiscordConfig {
     /** ID канала в Discord, куда отправляются успешные голосования за кик. */
     public long votekickChannelID = 0L;
 
+    /** ID of a channel where mutes are being sent */
+    public long muteChannelID = 0L;
+
     /** ID ролей администраторов в Discord. */
     public Seq<Long> adminRoleIDs = Seq.with(0L);
 
