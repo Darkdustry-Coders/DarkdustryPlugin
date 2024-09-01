@@ -363,5 +363,16 @@ public class DiscordCommands {
                     Socket.request(new MuteRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified",
                             context.member().getDisplayName()), context::reply, context::timeout);
                 });
+
+        discordHandler.<MessageContext>register("unmute", "<server> <player...>", "Unmute a player.", (args, context) -> {
+            if (noRole(context, discordConfig.adminRoleIDs))
+                return;
+
+            var server = args[0];
+            if (notFound(context, server))
+                return;
+
+            Socket.request(new UnmuteRequest(server, args[1]), context::reply, context::timeout);
+        });
     }
 }

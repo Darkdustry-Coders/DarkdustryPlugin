@@ -109,6 +109,11 @@ public class NetHandlers {
         con.mobile = packet.mobile;
         con.modclient = packet.version == -1;
 
+        if (name.contains("\uFFFD")) {
+            Bundle.kick(con, locale, 0L, "kick.custom-client");
+            return;
+        }
+
         if (con.hasBegunConnecting || Seq.with(net.getConnections())
                 .count(other -> other.uuid.equals(uuid) || other.usid.equals(usid)) > 1) {
             Bundle.kick(con, locale, 0L, "kick.already-connected");
