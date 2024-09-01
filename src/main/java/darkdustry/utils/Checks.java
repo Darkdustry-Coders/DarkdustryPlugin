@@ -156,6 +156,10 @@ public class Checks {
         return check(duration < min || duration > max, player, "commands.invalid-duration", min, max);
     }
 
+    public static boolean invalidDuration(Player player, Duration duration) {
+        return check(duration.isZero(), player, "commands.invalid-duration");
+    }
+
     public static boolean invalidCoordinates(Player player, int x, int y) {
         return check(x < 0 || x > world.width() || y < 0 || y > world.height(), player, "commands.invalid-coordinates");
     }
@@ -249,6 +253,10 @@ public class Checks {
 
     public static boolean notBanned(Request<EmbedResponse> request, Ban ban) {
         return check(ban == null, request, "Unban Failed", "This player wasn't banned from the server.");
+    }
+
+    public static boolean notMuted(Request<EmbedResponse> request, Mute mute) {
+        return check(mute == null, request, "Unmute Failed", "This player wasn't muted on this server.");
     }
 
     public static boolean notKicked(Request<EmbedResponse> request, PlayerInfo info) {

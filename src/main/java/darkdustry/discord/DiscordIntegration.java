@@ -41,6 +41,20 @@ public class DiscordIntegration {
                 .timestamp(Instant.now()).build()).subscribe();
     }
 
+    public static void sendMute(MuteEvent event) {
+        if (!connected) return;
+
+        banChannel.createMessage(EmbedCreateSpec.builder()
+                .color(Color.BLUE)
+                .title("Mute")
+                .addField("Player:", event.mute().playerName + " [" + event.mute().playerID + "]", false)
+                .addField("Admin:", event.mute().adminName, false)
+                .addField("Reason:", event.mute().reason, false)
+                .addField("Unmute Date:", LONG_DATE.format(event.mute().unmuteDate.toInstant()), false)
+                .footer(Gamemode.getDisplayName(event.server()), null)
+                .timestamp(Instant.now()).build()).subscribe();
+    }
+
     public static void sendVoteKick(VoteKickEvent event) {
         if (!connected) return;
 

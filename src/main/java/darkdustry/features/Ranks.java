@@ -53,6 +53,10 @@ public class Ranks {
         }},
 
         contentMaker {{
+            tag = "[#9999ff]<\uE827>[] ";
+        }},
+
+        developer {{
             tag = "[#86dca2]<[white]\uE80F[]>[] ";
         }},
 

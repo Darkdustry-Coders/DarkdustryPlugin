@@ -1,6 +1,9 @@
 package darkdustry.config;
 
+import arc.func.Cons;
+import arc.func.Prov;
 import arc.util.Log;
+import mindustry.Vars;
 import mindustry.game.Team;
 import useful.ConfigLoader;
 
@@ -93,7 +96,7 @@ public class Config {
         }},
 
         hexed("Hexed PvP") {{
-            disableAttackMode = true;
+            postSetup = () -> state.rules.attackMode = false;
             isDefault = false;
             enableRtv = false;
             enableVnw = false;
@@ -118,16 +121,18 @@ public class Config {
             enableVnw = false;
             enableSurrender = true;
             enableSpectate = true;
+            enable1va = true;
         }},
 
         sandbox("Sandbox") {{
+            postSetup = () -> state.rules.damageExplosions = false;
             enableStrict = false;
             enableVnw = false;
         }},
 
         survival("Survival"),
         tower("Tower Defense") {{
-            disableCrashDamage = true;
+            postSetup = () -> state.rules.unitCrashDamageMultiplier = 0.0f;
         }},
 
         test("Test") {{
@@ -156,8 +161,7 @@ public class Config {
         public boolean enableSpectate = false;
         public boolean enable1va = false;
 
-        public boolean disableAttackMode = false;
-        public boolean disableCrashDamage = false;
+        public Funcv postSetup = null;
 
         public Team spectatorTeam = Team.get(69);
 
@@ -168,5 +172,9 @@ public class Config {
         public static String getDisplayName(String name) {
             return Gamemode.valueOf(name).displayName;
         }
+    }
+
+    public interface Funcv {
+        void get();
     }
 }

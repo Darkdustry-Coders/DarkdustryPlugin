@@ -50,12 +50,6 @@ public class PluginEvents {
             if (state.rules.infiniteResources)
                 state.rules.revealedBlocks.addAll(Blocks.shieldProjector, Blocks.largeShieldProjector, Blocks.beamLink);
 
-            if (config.mode.disableAttackMode)
-                state.rules.attackMode = false;
-
-            if (config.mode.disableCrashDamage)
-                state.rules.unitCrashDamageMultiplier = 0.0f;
-
             if (config.mode.enable1va)
                 OnevAll.nextMap();
 
@@ -65,6 +59,9 @@ public class PluginEvents {
                 for (Player player : Groups.player)
                     player.team(OnevAll.selectTeam(player));
             }
+
+            if (config.mode.postSetup != null)
+                config.mode.postSetup.get();
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
@@ -185,6 +182,7 @@ public class PluginEvents {
         });
 
         Events.on(PlayerLeave.class, event -> {
+            Cache.mutes.remove(event.player.uuid());
             var data = Cache.remove(event.player);
             Database.savePlayerData(data);
 
@@ -240,6 +238,7 @@ public class PluginEvents {
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {
+                OnevAll.gameOverFlag = true;
                 assert OnevAll.single != null;
                 if (event.winner == OnevAll.single.team()) {
                     OnevAll.victory();

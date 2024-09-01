@@ -258,5 +258,34 @@ public class ClientCommands {
                     }
                     Spectate.spectate(player);
                 });
+
+        Commands.create("mute")
+                .admin(true)
+                .register((args, player) -> {
+                    if (notAdmin(player)) return;
+
+                    var target = Find.player(args[0]);
+                    if (notFound(player, target)) return;
+
+                    var duration = parseDuration(args[1]);
+                    if (invalidDuration(player, duration)) return;
+
+                    var reason = args[2];
+
+                    Admins.mute(target, player, duration.toMillis(), reason);
+                    Bundle.send(player, "commands.mute.success", target.coloredName());
+                });
+
+        Commands.create("unmute")
+                .admin(true)
+                .register((args, player) -> {
+                    if (notAdmin(player)) return;
+
+                    var target = Find.player(args[0]);
+                    if (notFound(player, target)) return;
+
+                    Admins.unmute(target);
+                    Bundle.send(player, "commands.unmute.success", target.coloredName());
+                });
     }
 }

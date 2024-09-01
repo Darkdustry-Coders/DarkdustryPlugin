@@ -30,6 +30,11 @@ public class NetHandlers {
     public static String chat(Player from, String message) {
         int sign = voteChoice(message);
         if (sign == 0 || vote == null) {
+            if (Admins.checkMuted(from)) {
+                Bundle.send(from, "commands.mute.message");
+                return null;
+            }
+
             Log.info("&fi@: @", "&lc" + from.plainName(), "&lw" + message);
             Translator.translate(from, message);
 

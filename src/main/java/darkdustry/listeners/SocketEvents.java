@@ -46,6 +46,7 @@ public class SocketEvents {
             });
 
             Socket.on(BanEvent.class, DiscordIntegration::sendBan);
+            Socket.on(MuteEvent.class, DiscordIntegration::sendMute);
             Socket.on(VoteKickEvent.class, DiscordIntegration::sendVoteKick);
             Socket.on(AdminRequestEvent.class, DiscordIntegration::sendAdminRequest);
 
@@ -63,6 +64,14 @@ public class SocketEvents {
                 Bundle.send("discord.chat.role", event.color, event.role, event.name, event.message);
             }
         });
+
+        Socket.on(MuteEvent.class, event -> Groups.player.each(
+                player -> player.uuid().equals(event.mute.uuid),
+                player -> Cache.mutes.put(player.uuid(), event.mute)));
+
+        Socket.on(UnmuteEvent.class, event -> Groups.player.each(
+                player -> player.uuid().equals(event.uuid),
+                player -> Cache.mutes.put(player.uuid(), null)));
 
         Socket.on(BanEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.ban.uuid) || player.ip().equals(event.ban.ip),
@@ -266,6 +275,34 @@ public class SocketEvents {
             Socket.respond(request, EmbedResponse.success("Player Unbanned").withField("Player:", ban.playerName));
         });
 
+        Socket.on(MuteRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info)) return;
+
+            var duration = parseDuration(request.duration);
+            if (invalidDuration(request, duration)) return;
+
+            Admins.mute(info, request.admin, duration.toMillis(), request.reason);
+            Socket.respond(request, EmbedResponse.success("Player Muted")
+                    .withField("Player:", info.plainLastName())
+                    .withField("Duration:", Bundle.formatDuration(duration))
+                    .withField("Reason:", request.reason));
+        });
+
+        Socket.on(UnmuteRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info)) return;
+
+            var ban = Database.removeMute(info.id);
+            if (notMuted(request, ban)) return;
+
+            Socket.respond(request, EmbedResponse.success("Player Unmuted").withField("Player:", ban.playerName));
+        });
+
         Socket.on(ReconfigureEvent.class, request -> {
             Log.info("Reconfiguring the server...");
             ServerConfig.invalidate();
@@ -281,6 +318,8 @@ public class SocketEvents {
     public record ServerMessageEvent(String server, String name, String message) {}
     public record ServerMessageEmbedEvent(String server, String title, Color color) {}
     public record BanEvent(String server, Ban ban) {}
+    public record MuteEvent(String server, Mute mute) {}
+    public record UnmuteEvent(String uuid) {}
     public record VoteKickEvent(String server, String target,
                                 String initiator, String reason,
                                 String votesFor, String votesAgainst) {}
@@ -346,6 +385,16 @@ public class SocketEvents {
     @AllArgsConstructor
     public static class BanRequest extends Request<EmbedResponse> {
         public final String server, player, duration, reason, admin;
+    }
+
+    @AllArgsConstructor
+    public static class MuteRequest extends Request<EmbedResponse> {
+        public final String server, player, duration, reason, admin;
+    }
+
+    @AllArgsConstructor
+    public static class UnmuteRequest extends Request<EmbedResponse> {
+        public final String server, player;
     }
 
     @AllArgsConstructor

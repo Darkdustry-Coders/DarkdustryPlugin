@@ -26,6 +26,7 @@ public class Database {
             datastore = Morphia.createDatastore(MongoClients.create(config.mongoUrl), "darkdustry");
             mapper = datastore.getMapper();
 
+            mapper.getEntityModel(Mute.class);
             mapper.getEntityModel(Ban.class);
             mapper.getEntityModel(Counter.class);
             mapper.getEntityModel(PlayerData.class);
@@ -115,6 +116,41 @@ public class Database {
 
     public static List<Ban> getBans() {
         return datastore.find(Ban.class).stream().toList();
+    }
+
+    // endregion
+    // region mute
+
+    public static Mute addMute(Mute mute) {
+        Cache.mutes.put(mute.uuid, mute);
+        return datastore.save(mute);
+    }
+
+    public static Mute removeMute(String uuid) {
+        Cache.mutes.put(uuid, null);
+        return datastore.find(Mute.class)
+                .filter(Filters.or(Filters.eq("uuid", uuid)))
+                .findAndDelete();
+    }
+
+    public static Mute getMute(String uuid) {
+        if (Cache.mutes.containsKey(uuid)) {
+            var cached = Cache.mutes.get(uuid);
+            if (cached != null && cached.expired()) {
+                Cache.mutes.put(uuid, null);
+                return null;
+            }
+            return cached;
+        }
+        var db = datastore.find(Mute.class)
+                .filter(Filters.or(Filters.eq("uuid", uuid)))
+                .first();
+        Cache.mutes.put(uuid, db);
+        return db;
+    }
+
+    public static List<Mute> getMutes() {
+        return datastore.find(Mute.class).stream().toList();
     }
 
     // endregion

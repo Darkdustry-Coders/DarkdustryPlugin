@@ -44,6 +44,7 @@ public class PlayerData {
     public int hexedWins = 0;
     public int msgoWins = 0;
     public int pvpWins = 0;
+    public int pvpOvas = 0;
     public int spvpWins = 0;
 
     public int pvpRank = 0;

@@ -192,8 +192,8 @@ public class DiscordCommands {
                                     - PvP: @
                                     - SPvP: @
                                     """, data.attackWins, data.castleWins,
-                                    data.fortsOvas != 0 ? data.fortsWins + "(1vas: " + data.fortsOvas + ")" : data.fortsWins,
-                                    data.hexedWins, data.msgoWins, data.pvpWins, data.spvpWins),
+                                    data.fortsOvas != 0 ? data.fortsWins + " (1vas: " + data.fortsOvas + ")" : data.fortsWins,
+                                    data.hexedWins, data.msgoWins, data.pvpOvas != 0 ? data.pvpWins + " (1vas: " + data.pvpOvas + ")" : data.pvpWins, data.spvpWins),
                             false)
                     .addField("Total playtime:", Bundle.formatDuration(Duration.ofMinutes(data.playTime)), false))
                     .subscribe();
@@ -350,5 +350,18 @@ public class DiscordCommands {
                 }
             }
         });
+
+        discordHandler.<MessageContext>register("mute", "<server> <player> <duration> [reason...]", "Mute a player.",
+                (args, context) -> {
+                    if (noRole(context, discordConfig.adminRoleIDs))
+                        return;
+
+                    var server = args[0];
+                    if (notFound(context, server))
+                        return;
+
+                    Socket.request(new MuteRequest(server, args[1], args[2], args.length > 3 ? args[3] : "Not Specified",
+                            context.member().getDisplayName()), context::reply, context::timeout);
+                });
     }
 }

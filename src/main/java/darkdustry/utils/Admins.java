@@ -4,6 +4,7 @@ import arc.struct.ObjectIntMap;
 import arc.util.*;
 import darkdustry.database.Database;
 import darkdustry.database.models.Ban;
+import darkdustry.database.models.Mute;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.*;
 import mindustry.gen.Player;
@@ -52,6 +53,23 @@ public class Admins {
         Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has kicked @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
     }
 
+    public static void mute(Player target, Player admin, long duration, String reason) {
+        mute(Mute.builder()
+                .uuid(target.uuid())
+                .playerName(target.plainName())
+                .adminName(admin.plainName())
+                .reason(reason)
+                .unmuteDate(new Date(Time.millis() + duration))
+                .build());
+
+        Log.info("&lc@ &fi&lk[&lb@&fi&lk]&fb has muted @ &fi&lk[&lb@&fi&lk]&fb for @.", admin.plainName(), admin.uuid(), target.plainName(), target.uuid(), reason);
+    }
+
+    public static void unmute(Player target) {
+        Database.removeMute(target.uuid());
+        Socket.send(new UnmuteEvent(target.uuid()));
+    }
+
     public static void ban(Player target, Player admin, long duration, String reason) {
         ban(Ban.builder()
                 .uuid(target.uuid())
@@ -84,6 +102,16 @@ public class Admins {
                 .build());
     }
 
+    public static void mute(PlayerInfo info, String admin, long duration, String reason) {
+        mute(Mute.builder()
+                .uuid(info.id)
+                .playerName(info.plainLastName())
+                .adminName(admin)
+                .reason(reason)
+                .unbanDate(new Date(Time.millis() + duration))
+                .build());
+    }
+
     // endregion
     // region actions
 
@@ -92,6 +120,13 @@ public class Admins {
         ban.generatePlayerID();
 
         Socket.send(new BanEvent(config.mode.name(), Database.addBan(ban)));
+    }
+
+    public static void mute(Mute mute) {
+        mute.generateID();
+        mute.generatePlayerID();
+
+        Socket.send(new MuteEvent(config.mode.name(), Database.addMute(mute)));
     }
 
     public static void voteKick(Player initiator, Player target, ObjectIntMap<Player> votes, String reason) {
@@ -134,6 +169,13 @@ public class Admins {
         if (ban == null || ban.expired()) return;
 
         kickReason(con, locale, ban.remaining(), ban.reason, "kick.ban", ban.adminName).kick();
+    }
+
+    public static boolean checkMuted(Player player) {
+        var mute = Database.getMute(player.uuid());
+        if (mute == null || mute.expired()) return false;
+
+        return true;
     }
 
     // endregion

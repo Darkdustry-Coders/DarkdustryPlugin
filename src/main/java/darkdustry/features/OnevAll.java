@@ -19,11 +19,12 @@ import static mindustry.server.ServerControl.instance;
 public class OnevAll {
     public static @Nullable Player single = null;
     public static @Nullable Player nextSingle = null;
+    public static boolean gameOverFlag = false;
 
     private static @Nullable Team team;
 
     public static boolean enabled() {
-        return config.mode.enable1va && single != null;
+        return config.mode.enable1va && single != null && !gameOverFlag;
     }
 
     public static void init() {
@@ -56,6 +57,7 @@ public class OnevAll {
         single = nextSingle;
         nextSingle = null;
         team = null;
+        gameOverFlag = false;
     }
 
     private static Team otherTeam() {
@@ -83,7 +85,10 @@ public class OnevAll {
     public static void victory() {
         assert single != null;
         Bundle.send("1va.victory", single.coloredName());
-        Cache.get(single).fortsOvas++;
+        switch (config.mode) {
+            case forts -> Cache.get(single).fortsOvas++;
+            case pvp -> Cache.get(single).pvpOvas++;
+        }
         single = null;
     }
 

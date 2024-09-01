@@ -1,5 +1,6 @@
 package darkdustry.database;
 
+import darkdustry.database.models.Mute;
 import darkdustry.database.models.PlayerData;
 import discord4j.common.util.Snowflake;
 import mindustry.gen.Player;
@@ -9,6 +10,7 @@ public class Cache {
 
     public static final ExtendedMap<String, PlayerData> cache = new ExtendedMap<>();
     public static final ExtendedMap<Snowflake, PlayerData> discordCache = new ExtendedMap<>();
+    public static final ExtendedMap<String, Mute> mutes = new ExtendedMap<>();
 
     public static void put(Player player, PlayerData data) {
         cache.put(player.uuid(), data);
