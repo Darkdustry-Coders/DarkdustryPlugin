@@ -108,7 +108,7 @@ public class Admins {
                 .playerName(info.plainLastName())
                 .adminName(admin)
                 .reason(reason)
-                .unbanDate(new Date(Time.millis() + duration))
+                .unmuteDate(new Date(Time.millis() + duration))
                 .build());
     }
 
