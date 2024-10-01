@@ -92,7 +92,7 @@ public class DiscordBot {
                     return;
 
                 var data = Database.getPlayerData(member.getId());
-                if (data != null && member.getRoleIds().contains(Snowflake.of(discordConfig.verifiedRoleID))) {
+                if (data != null && !member.getRoleIds().contains(Snowflake.of(discordConfig.verifiedRoleID))) {
                     member.addRole(Snowflake.of(discordConfig.verifiedRoleID))
                             .subscribe(
                                     i -> {
