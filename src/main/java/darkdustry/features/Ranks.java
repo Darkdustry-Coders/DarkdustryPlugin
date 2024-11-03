@@ -2,6 +2,7 @@ package darkdustry.features;
 
 import arc.struct.Seq;
 import darkdustry.database.models.PlayerData;
+import darkdustry.utils.Admins;
 import lombok.NoArgsConstructor;
 import mindustry.gen.Player;
 import useful.Bundle;
@@ -11,7 +12,7 @@ public class Ranks {
     public static final Seq<Rank> ranks = Seq.with(Rank.values());
 
     public static void name(Player player, PlayerData data) {
-        player.name = data.name = data.rank.tag + player.getInfo().lastName;
+        player.name = data.name = data.rank.tag + player.getInfo().lastName + (Admins.checkMuted(player) ? " [gray](muted)" : "");
     }
 
     @NoArgsConstructor

@@ -1,13 +1,16 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.struct.ObjectMap;
 import arc.util.*;
+import arc.util.Timer.Task;
 import darkdustry.database.*;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
+import darkdustry.utils.Admins;
 import darkdustry.utils.Utils;
 import discord4j.rest.util.Color;
 import mindustry.content.*;
@@ -31,6 +34,7 @@ import static mindustry.net.Administration.Config.*;
 import static mindustry.server.ServerControl.*;
 
 public class PluginEvents {
+    public static ObjectMap<Player, Task> updateNameTasks = new ObjectMap<>();
 
     public static void load() {
         if (config.allowSpecialSettings) SpecialSettings.load();
@@ -179,6 +183,11 @@ public class PluginEvents {
             Bundle.send(event.player, event.player.con.mobile ?
                     "welcome.message.mobile" :
                     "welcome.message", serverName.string(), discordServerUrl);
+
+            var mute = Database.getMute(event.player.uuid());
+            if (mute != null) {
+                updateNameTasks.put(event.player, Timer.schedule(() -> Ranks.name(event.player, data), (float) (mute.remaining()) / 1000 + 10));
+            }
         });
 
         Events.on(PlayerLeave.class, event -> {

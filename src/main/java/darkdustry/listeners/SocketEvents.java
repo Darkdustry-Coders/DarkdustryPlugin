@@ -67,11 +67,24 @@ public class SocketEvents {
 
         Socket.on(MuteEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.mute.uuid),
-                player -> Cache.mutes.put(player.uuid(), event.mute)));
+                player -> {
+                    Cache.mutes.put(player.uuid(), event.mute);
+                    val data = Database.getPlayerDataOrCreate(player.uuid());
+                    Ranks.name(player, data);
+
+                    var mute = Database.getMute(player.uuid());
+                    if (mute != null) {
+                        var previous = PluginEvents.updateNameTasks.put(player, Timer.schedule(() -> Ranks.name(player, data), (float) (mute.remaining()) / 1000 + 10));
+                        if (previous != null) previous.cancel();
+                    }
+                }));
 
         Socket.on(UnmuteEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.uuid),
-                player -> Cache.mutes.put(player.uuid(), null)));
+                player -> {
+                    Cache.mutes.remove(player.uuid());
+                    Ranks.name(player, Database.getPlayerDataOrCreate(player.uuid()));
+                }));
 
         Socket.on(BanEvent.class, event -> Groups.player.each(
                 player -> player.uuid().equals(event.ban.uuid) || player.ip().equals(event.ban.ip),

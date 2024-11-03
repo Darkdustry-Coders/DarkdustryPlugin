@@ -60,7 +60,6 @@ public class ClientCommands {
                     netServer.sendWorldData(player);
                 });
 
-        Commands.create("t").register((args, player) -> Translator.translate(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName()));
         Commands.create("players").register(PageIterator::players);
 
         Commands.create("settings")
@@ -286,6 +285,15 @@ public class ClientCommands {
 
                     Admins.unmute(target);
                     Bundle.send(player, "commands.unmute.success", target.coloredName());
+                });
+
+        Commands.create("t")
+                .register((args, player) -> {
+                    if (Admins.checkMuted(player)) {
+                        Bundle.send(player, "commands.mute.message");
+                        return;
+                    }
+                    Translator.translate(other -> other.team() == player.team(), player, args[0], "commands.t.chat", player.team().color, player.coloredName());
                 });
     }
 }
