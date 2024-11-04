@@ -37,20 +37,6 @@ public class OnevAll {
         Events.on(EventType.PlayEvent.class, event -> {
             flags[0] = false;
         });
-
-        Events.on(EventType.BlockDestroyEvent.class, event -> {
-            if (flags[0]) return;
-            if (!enabled()) return;
-            if (otherTeam().core() != null && state.rules.defaultTeam.core() != null) return;
-
-            flags[0] = true;
-
-            Groups.build.each(build -> {
-                if (!(build.block instanceof CoreBlock)) return;
-                if (build.team == otherTeam() || build.team == state.rules.defaultTeam) return;
-                build.tile().setNet(Blocks.air);
-            });
-        });
     }
 
     public static void nextMap() {
@@ -58,6 +44,15 @@ public class OnevAll {
         nextSingle = null;
         team = null;
         gameOverFlag = false;
+
+        if (!enabled()) return;
+
+        for (var team : Team.all) {
+            if (team == Team.derelict || team == state.rules.defaultTeam || team == otherTeam()) continue;
+            if (team.core() == null) continue;
+
+            Groups.build.each(x -> x.team == team, x -> x.team(team));
+        }
     }
 
     private static Team otherTeam() {
