@@ -39,12 +39,19 @@ import static mindustry.server.ServerControl.*;
 public class PluginEvents {
     public static ObjectMap<Player, Task> updateNameTasks = new ObjectMap<>();
 
+    private static Task noPlayersRestartTask = null;
+
     public static void load() {
         if (config.allowSpecialSettings) SpecialSettings.load();
 
         Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", Color.SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
+            if (noPlayersRestartTask != null) {
+                noPlayersRestartTask.cancel();
+                noPlayersRestartTask = null;
+            }
+
             if (config.allowSpecialSettings) SpecialSettings.update();
 
             state.rules.showSpawns = true;
@@ -164,6 +171,12 @@ public class PluginEvents {
         }));
 
         Events.on(PlayerJoin.class, event -> {
+            if (noPlayersRestartTask != null) {
+                Log.info("Cancelled map reload.");
+                noPlayersRestartTask.cancel();
+                noPlayersRestartTask = null;
+            }
+
             var data = Database.getPlayerDataOrCreate(event.player.uuid());
 
             Cache.put(event.player, data);
@@ -221,6 +234,11 @@ public class PluginEvents {
                     }
                 }
                 System.exit(0);
+            }
+
+            if (Groups.player.size() <= 1 && config.mode.restartOnNoPlayers) {
+                Log.info("Scheduling rtv in 60s...");
+                noPlayersRestartTask = Timer.schedule(() -> instance.play(() -> world.loadMap(maps.getNextMap(instance.lastMode, state.map))), 60);
             }
         });
 

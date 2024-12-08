@@ -110,12 +110,14 @@ public class Config {
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
+            restartOnNoPlayers = false;
         }},
 
         msgo("MS:GO") {{
             isDefault = false;
             enableRtv = false;
             enableVnw = false;
+            restartOnNoPlayers = false;
         }},
 
         pvp("PvP") {{
@@ -162,6 +164,7 @@ public class Config {
         public boolean enableSpectate = false;
         public boolean enable1va = false;
         public boolean rememberTeams = false;
+        public boolean restartOnNoPlayers = true;
 
         public Funcv postSetup = null;
 
