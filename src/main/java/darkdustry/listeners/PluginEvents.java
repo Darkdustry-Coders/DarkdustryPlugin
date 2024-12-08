@@ -1,18 +1,21 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.files.Fi;
 import arc.struct.IntIntMap;
 import arc.struct.IntMap;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
 import arc.util.Timer.Task;
+import darkdustry.config.MatchmakingConfig;
 import darkdustry.database.*;
 import darkdustry.features.*;
 import darkdustry.features.history.*;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Socket;
 import darkdustry.listeners.SocketEvents.ServerMessageEmbedEvent;
+import darkdustry.matchmaking.Matchmaking;
 import darkdustry.utils.Admins;
 import darkdustry.utils.Utils;
 import discord4j.rest.util.Color;
@@ -22,6 +25,7 @@ import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
+import mindustry.net.ValidateException;
 import mindustry.world.blocks.payloads.BuildPayload;
 import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
@@ -47,6 +51,8 @@ public class PluginEvents {
         Events.on(ServerLoadEvent.class, event -> Socket.send(new ServerMessageEmbedEvent(config.mode.name(), "Server Launched", Color.SUMMER_SKY)));
 
         Events.on(PlayEvent.class, event -> {
+            System.gc();
+
             if (noPlayersRestartTask != null) {
                 noPlayersRestartTask.cancel();
                 noPlayersRestartTask = null;
@@ -208,6 +214,7 @@ public class PluginEvents {
 
         Events.on(PlayerLeave.class, event -> {
             Cache.mutes.remove(event.player.uuid());
+            Admins.forget(player);
             var data = Cache.remove(event.player);
             Database.savePlayerData(data);
 
@@ -242,50 +249,61 @@ public class PluginEvents {
             }
         });
 
-        {
-            var _nativeAssigner = netServer.assigner;
-            netServer.assigner = (player, players) -> {
-                if (OnevAll.enabled()) {
-                    return OnevAll.selectTeam(player);
-                }
-
-                Team team;
-                try {
-                    team = _nativeAssigner.assign(player, players);
-                } catch (Exception ignored) {
-                    team = Team.derelict;
-                }
-
-                if (!Utils.isSpecialTeam(team)) return team;
-
-                for (Team x : Team.all) {
-                    if (!x.cores().isEmpty() && !Utils.isSpecialTeam(x)) {
-                        return x;
+        Timer.schedule(() -> { // avoiding other plugins overriding our assigners
+            {
+                var _nativeAssigner = netServer.assigner;
+                netServer.assigner = (player, players) -> {
+                    if (OnevAll.enabled()) {
+                        return OnevAll.selectTeam(player);
                     }
-                }
 
-                return Team.derelict;
-            };
-        }
-        if (config.mode.rememberTeams) {
-            var teams = new IntIntMap();
-            var _nativeAssigner = netServer.assigner;
+                    Team team;
+                    try {
+                        team = _nativeAssigner.assign(player, players);
+                    } catch (Exception ignored) {
+                        team = Team.derelict;
+                    }
 
-            Events.on(WorldLoadEvent.class, event -> teams.clear());
-            Events.on(PlayerLeave.class, event -> teams.put(Database.getPlayerData(event.player).id, event.player.team().id));
-            Timer.schedule(() -> Groups.player.each(p -> teams.put(Database.getPlayerData(p).id, p.team().id)), 2, 2);
+                    if (!Utils.isSpecialTeam(team)) return team;
 
-            netServer.assigner = (player, players) -> {
-                var id = Database.getPlayerData(player).id;
-                int activeTeams = Seq.with(Team.all).count(x -> !x.cores().isEmpty() && !x.data().players.isEmpty());
-                int team;
-                if ((team = teams.get(id, -1)) != -1 && !Team.all[team].cores().isEmpty() && activeTeams != 1)
+                    for (Team x : Team.all) {
+                        if (!x.cores().isEmpty() && !Utils.isSpecialTeam(x)) {
+                            return x;
+                        }
+                    }
+
+                    return Team.derelict;
+                };
+            }
+            if (config.mode.rememberTeams) {
+                var teams = new IntIntMap();
+                var _nativeAssigner = netServer.assigner;
+
+                Events.on(WorldLoadEvent.class, event -> teams.clear());
+                Events.on(PlayerLeave.class, event -> teams.put(Database.getPlayerData(event.player).id, event.player.team().id));
+                Timer.schedule(() -> Groups.player.each(p -> teams.put(Database.getPlayerData(p).id, p.team().id)), 2, 2);
+
+                netServer.assigner = (player, players) -> {
+                    var id = Database.getPlayerData(player).id;
+                    int activeTeams = Seq.with(Team.all).count(x -> !x.cores().isEmpty() && !x.data().players.isEmpty());
+                    int team;
+                    if ((team = teams.get(id, -1)) != -1 && !Team.all[team].cores().isEmpty() && activeTeams != 1)
+                        return Team.all[team];
+                    team = _nativeAssigner.assign(player, players).id;
+                    teams.put(id, team);
                     return Team.all[team];
-                team = _nativeAssigner.assign(player, players).id;
-                teams.put(id, team);
-                return Team.all[team];
-            };
-        }
+                };
+            }
+            if (!config.whitelist.isEmpty()) {
+                var _nativeAssigner = netServer.assigner;
+                netServer.assigner = (player, players) -> {
+                    var data = Database.getPlayerData(player);
+                    if (!config.whitelist.contains(data.id))
+                        return config.mode.spectatorTeam;
+                    return _nativeAssigner.assign(player, players);
+                };
+            }
+        }, 0.01f);
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {
@@ -350,6 +368,13 @@ public class PluginEvents {
             }
         };
 
+        if (MatchmakingConfig.load()) {
+            var dir = new Fi(MatchmakingConfig.config.serversPath);
+            if (!dir.exists()) dir.mkdirs();
+            else for (var x : dir.findAll()) x.deleteDirectory();
+            Matchmaking.setup();
+        }
+
         Timer.schedule(() -> {
             if (config.maxUnitsTotal < 0) return;
             if (Groups.unit.size() < config.maxUnitsTotal) return;
@@ -358,7 +383,6 @@ public class PluginEvents {
 
             int i = Groups.unit.size();
             while (overflow-- > 0) Groups.unit.index(--i).kill();
-
         }, 10f, 10f);
 
         // Таймер сборки мусора

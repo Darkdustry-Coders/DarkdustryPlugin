@@ -342,6 +342,7 @@ public class SocketEvents {
     public record SetRankSyncEvent(String uuid, Rank rank) {}
     public record DiscordLinkedEvent(String uuid, String username, String id) {}
     public record ReconfigureEvent(String option) {}
+    public record ServerOnlineEvent(int serverId) {}
 
     @AllArgsConstructor
     public static class ListRequest extends Request<ListResponse> {

@@ -1,6 +1,8 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.math.Mathf;
+import arc.math.Rand;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
@@ -167,7 +169,12 @@ public class NetHandlers {
         }
 
         var info = netServer.admins.getInfo(uuid);
-        if (!netServer.admins.isWhitelisted(uuid, usid)) {
+        var data = Database.getPlayerData(uuid);
+        if (!config.whitelistKickSpectator && (!netServer.admins.isWhitelisted(uuid, usid) || (
+                !config.whitelist.isEmpty() &&
+                        data == null ||
+                        !config.whitelist.contains(data.id)
+                ))) {
             info.adminUsid = usid;
             info.names.addUnique(info.lastName = name);
             info.ips.addUnique(info.lastIP = ip);
@@ -194,6 +201,19 @@ public class NetHandlers {
         player.locale(locale);
         player.admin(netServer.admins.isAdmin(uuid, usid));
         player.color.set(packet.color).a(1f);
+
+        Admins.updateRealName(player, name);
+
+        if (config.mode.maskUsernames) {
+            var username = new StringBuilder("[gray]");
+            for (int i = 0; i < 16; i++) {
+                if (Mathf.randomBoolean())
+                    username.append((char) Mathf.random('a', 'z'));
+                else
+                    username.append((char) Mathf.random('A', 'Z'));
+            }
+            player.name(username.toString());
+        }
 
         con.player = player;
 

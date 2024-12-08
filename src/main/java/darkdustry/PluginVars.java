@@ -62,6 +62,9 @@ public class PluginVars {
     /** Путь к файлу, в котором хранится конфигурация discord-бота. */
     public static final String discordConfigFile = "discord-config.json";
 
+    /** Path to a file where matchmaking configuration is located. */
+    public static final String matchmakingConfigFile = "matchmaking-config.json";
+
     /** Ссылка на наш Discord сервер. */
     public static final String discordServerUrl = "https://discord.gg/uPUZHp7xQn";
 

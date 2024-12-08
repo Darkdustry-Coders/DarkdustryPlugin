@@ -1,10 +1,10 @@
 package darkdustry.config;
 
-import arc.func.Cons;
-import arc.func.Prov;
+import arc.math.Mathf;
+import arc.struct.IntSeq;
 import arc.util.Log;
-import mindustry.Vars;
 import mindustry.game.Team;
+import mindustry.net.Administration;
 import useful.ConfigLoader;
 
 import static darkdustry.PluginVars.*;
@@ -35,6 +35,9 @@ public class Config {
         snapshotInterval.set(200);
         roundExtraTime.set(10);
         maxLogLength.set(1024 * 1024);
+
+        if (config.overridePort != -1)
+           Administration.Config.port.set(config.overridePort);
 
         strict.set(config.mode.enableStrict);
         enableVotekick.set(config.mode.enableVotekick);
@@ -69,6 +72,18 @@ public class Config {
 
     /** Delay between backups */
     public int backupDelaySec = 60 * 5;
+
+    /** Value to replace port with */
+    public int overridePort = -1;
+
+    /** IDs that are allowed to join the server */
+    public IntSeq whitelist = IntSeq.with();
+
+    /** Whether instead of blocking connection, player should be forced into spectator mode */
+    public boolean whitelistKickSpectator = false;
+
+    /** ID of this server */
+    public int serverId = -1;
 
     /** Режим игры на сервере. */
     public Gamemode mode = hub;
@@ -149,7 +164,45 @@ public class Config {
             enableVnw = false;
             enableSurrender = true;
             enableSpectate = true;
-        }};
+        }},
+
+        rankedpvplobby("Ranked PvP") {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+            restartOnNoPlayers = false;
+            rememberTeams = false;
+            maskUsernames = true;
+        }},
+
+        rankedpvparena("Internal Server") {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+            maskUsernames = true;
+        }},
+
+        rankedfortslobby("Ranked Forts") {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+            restartOnNoPlayers = false;
+            rememberTeams = false;
+            maskUsernames = true;
+        }},
+
+        rankedfortsarena("Internal Server") {{
+            isDefault = false;
+            enableRtv = false;
+            enableVnw = false;
+            enableVotekick = false;
+            maskUsernames = true;
+        }},
+
+        ;
 
         public final String displayName;
 
@@ -165,6 +218,7 @@ public class Config {
         public boolean enable1va = false;
         public boolean rememberTeams = false;
         public boolean restartOnNoPlayers = true;
+        public boolean maskUsernames = false;
 
         public Funcv postSetup = null;
 

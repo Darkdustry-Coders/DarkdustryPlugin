@@ -1,6 +1,7 @@
 package darkdustry.utils;
 
 import arc.struct.ObjectIntMap;
+import arc.struct.ObjectMap;
 import arc.util.*;
 import darkdustry.database.Database;
 import darkdustry.database.models.Ban;
@@ -19,6 +20,23 @@ import static darkdustry.config.Config.*;
 import static mindustry.Vars.*;
 
 public class Admins {
+    // region info
+
+    private static ObjectMap<Player, String> realNames = new ObjectMap<>();
+
+    public static void updateRealName(Player player, String name) {
+        realNames.put(player, name);
+    }
+
+    public static void forget(Player player) {
+        realNames.remove(player);
+    }
+
+    public static String realname(Player player) {
+        return realNames.get(player);
+    }
+
+    // endregion
 
     // region kick
 
