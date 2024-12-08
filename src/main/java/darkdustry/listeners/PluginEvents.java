@@ -1,7 +1,10 @@
 package darkdustry.listeners;
 
 import arc.Events;
+import arc.struct.IntIntMap;
+import arc.struct.IntMap;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.*;
 import arc.util.Timer.Task;
 import darkdustry.database.*;
@@ -221,29 +224,50 @@ public class PluginEvents {
             }
         });
 
-        var _nativeAssigner = netServer.assigner;
-        netServer.assigner = (player, players) -> {
-            if (OnevAll.enabled()) {
-                return OnevAll.selectTeam(player);
-            }
-
-            Team team;
-            try {
-                team = _nativeAssigner.assign(player, players);
-            } catch (Exception ignored) {
-                team = Team.derelict;
-            }
-
-            if (!Utils.isSpecialTeam(team)) return team;
-
-            for (Team x : Team.all) {
-                if (!x.cores().isEmpty() && !Utils.isSpecialTeam(x)) {
-                    return x;
+        {
+            var _nativeAssigner = netServer.assigner;
+            netServer.assigner = (player, players) -> {
+                if (OnevAll.enabled()) {
+                    return OnevAll.selectTeam(player);
                 }
-            }
 
-            return Team.derelict;
-        };
+                Team team;
+                try {
+                    team = _nativeAssigner.assign(player, players);
+                } catch (Exception ignored) {
+                    team = Team.derelict;
+                }
+
+                if (!Utils.isSpecialTeam(team)) return team;
+
+                for (Team x : Team.all) {
+                    if (!x.cores().isEmpty() && !Utils.isSpecialTeam(x)) {
+                        return x;
+                    }
+                }
+
+                return Team.derelict;
+            };
+        }
+        if (config.mode.rememberTeams) {
+            var teams = new IntIntMap();
+            var _nativeAssigner = netServer.assigner;
+
+            Events.on(WorldLoadEvent.class, event -> teams.clear());
+            Events.on(PlayerLeave.class, event -> teams.put(Database.getPlayerData(event.player).id, event.player.team().id));
+            Timer.schedule(() -> Groups.player.each(p -> teams.put(Database.getPlayerData(p).id, p.team().id)), 2, 2);
+
+            netServer.assigner = (player, players) -> {
+                var id = Database.getPlayerData(player).id;
+                int activeTeams = Seq.with(Team.all).count(x -> !x.cores().isEmpty() && !x.data().players.isEmpty());
+                int team;
+                if ((team = teams.get(id, -1)) != -1 && !Team.all[team].cores().isEmpty() && activeTeams != 1)
+                    return Team.all[team];
+                team = _nativeAssigner.assign(player, players).id;
+                teams.put(id, team);
+                return Team.all[team];
+            };
+        }
 
         instance.gameOverListener = event -> {
             if (OnevAll.enabled()) {

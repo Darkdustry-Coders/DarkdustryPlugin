@@ -45,14 +45,14 @@ public class OnevAll {
         team = null;
         gameOverFlag = false;
 
-        if (!enabled()) return;
+        // if (!enabled()) return;
 
-        for (var team : Team.all) {
-            if (team == Team.derelict || team == state.rules.defaultTeam || team == otherTeam()) continue;
-            if (team.core() == null) continue;
+        // for (var team : Team.all) {
+        //     if (team == Team.derelict || team == state.rules.defaultTeam || team == otherTeam()) continue;
+        //     if (team.core() == null) continue;
 
-            Groups.build.each(x -> x.team == team, x -> x.team(team));
-        }
+        //     Groups.build.each(x -> x.team == team, x -> x.team(team));
+        // }
     }
 
     private static Team otherTeam() {

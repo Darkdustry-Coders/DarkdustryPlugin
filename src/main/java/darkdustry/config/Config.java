@@ -93,6 +93,7 @@ public class Config {
             enableSurrender = true;
             enableSpectate = true;
             enable1va = true;
+            rememberTeams = true;
         }},
 
         hexed("Hexed PvP") {{
@@ -160,6 +161,7 @@ public class Config {
         public boolean enableSurrender = false;
         public boolean enableSpectate = false;
         public boolean enable1va = false;
+        public boolean rememberTeams = false;
 
         public Funcv postSetup = null;
 
