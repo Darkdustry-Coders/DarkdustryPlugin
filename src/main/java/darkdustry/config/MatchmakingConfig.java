@@ -11,7 +11,6 @@ public class MatchmakingConfig {
     public static boolean load() {
         if (!dataDirectory.child(matchmakingConfigFile).exists()) return false;
         config = ConfigLoader.load(MatchmakingConfig.class, matchmakingConfigFile);
-
         return true;
     }
 

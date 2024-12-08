@@ -1,6 +1,7 @@
-package darkdustry.config;
+package darkdustry.matchmaking;
 
 import arc.math.Mathf;
+import darkdustry.config.MatchmakingConfig;
 import mindustry.Vars;
 import mindustry.gen.Player;
 
@@ -24,6 +25,6 @@ public class ArenaFindFreeTask {
         for (var player : players) if (!player.con.isConnected()) return;
 
         tryPort = Mathf.random(MatchmakingConfig.config.portRangeStart, MatchmakingConfig.config.portRangeEnd);
-        Vars.net.pingHost("127.0.0.1", tryPort, ignored -> submit(), ignored -> attempt());
+        Vars.net.pingHost(MatchmakingConfig.config.serversHost, tryPort, ignored -> submit(), ignored -> attempt());
     }
 }

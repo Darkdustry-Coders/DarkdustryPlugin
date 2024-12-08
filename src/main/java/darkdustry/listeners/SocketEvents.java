@@ -10,6 +10,7 @@ import darkdustry.discord.DiscordIntegration;
 import darkdustry.features.Ranks;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.net.Socket;
+import darkdustry.matchmaking.Matchmaking;
 import darkdustry.utils.*;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
@@ -319,6 +320,10 @@ public class SocketEvents {
         Socket.on(ReconfigureEvent.class, request -> {
             Log.info("Reconfiguring the server...");
             ServerConfig.invalidate();
+        });
+
+        Socket.on(ServerOnlineEvent.class, request -> {
+            Matchmaking.online(request.serverId);
         });
     }
 

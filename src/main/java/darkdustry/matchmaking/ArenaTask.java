@@ -1,13 +1,13 @@
-package darkdustry.config;
+package darkdustry.matchmaking;
 
 import arc.files.Fi;
 import arc.struct.IntSeq;
 import arc.util.Log;
 import arc.util.Timer;
 import arc.util.serialization.Json;
-import darkdustry.database.Cache;
+import darkdustry.config.Config;
+import darkdustry.config.MatchmakingConfig;
 import darkdustry.database.Database;
-import darkdustry.matchmaking.Matchmaking;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 

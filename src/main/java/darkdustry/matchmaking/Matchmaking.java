@@ -2,13 +2,18 @@ package darkdustry.matchmaking;
 
 import arc.struct.IntMap;
 import arc.util.Timer;
-import darkdustry.config.ArenaTask;
-import darkdustry.config.ArenaFindFreeTask;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 public class Matchmaking {
     private static final IntMap<ArenaTask> arenasPending = new IntMap<>();
+
+    public static void online(int serverId) {
+        var server = arenasPending.get(serverId);
+        if (server == null) return;
+        server.online();
+        arenasPending.remove(serverId);
+    }
 
     public static void setup() {
         Timer.schedule(() -> {
