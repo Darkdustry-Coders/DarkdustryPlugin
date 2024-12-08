@@ -29,7 +29,7 @@ public class Admins {
     }
 
     public static void forget(Player player) {
-        realNames.remove(player);
+        if (player != null) realNames.remove(player);
     }
 
     public static String realname(Player player) {

@@ -172,8 +172,8 @@ public class NetHandlers {
         var data = Database.getPlayerData(uuid);
         if (!config.whitelistKickSpectator && (!netServer.admins.isWhitelisted(uuid, usid) || (
                 !config.whitelist.isEmpty() &&
-                        data == null ||
-                        !config.whitelist.contains(data.id)
+                        (data == null ||
+                        !config.whitelist.contains(data.id))
                 ))) {
             info.adminUsid = usid;
             info.names.addUnique(info.lastName = name);

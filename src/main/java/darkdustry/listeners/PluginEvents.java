@@ -192,7 +192,7 @@ public class PluginEvents {
             app.post(() -> data.effects.join.get(event.player));
 
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
-            Bundle.send("events.join", event.player.coloredName(), data.id);
+            Bundle.send("events.join", event.player.coloredName(), config.mode.maskUsernames ? "??" : "" + data.id);
 
             Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] joined", Color.MEDIUM_SEA_GREEN));
 
@@ -214,7 +214,7 @@ public class PluginEvents {
 
         Events.on(PlayerLeave.class, event -> {
             Cache.mutes.remove(event.player.uuid());
-            Admins.forget(player);
+            Admins.forget(event.player);
             var data = Cache.remove(event.player);
             Database.savePlayerData(data);
 
@@ -245,7 +245,10 @@ public class PluginEvents {
 
             if (Groups.player.size() <= 1 && config.mode.restartOnNoPlayers) {
                 Log.info("Scheduling rtv in 60s...");
-                noPlayersRestartTask = Timer.schedule(() -> instance.play(() -> world.loadMap(maps.getNextMap(instance.lastMode, state.map))), 60);
+                noPlayersRestartTask = Timer.schedule(() -> {
+                    instance.play(() -> world.loadMap(maps.getNextMap(instance.lastMode, state.map)));
+                    noPlayersRestartTask = null;
+                }, 60);
             }
         });
 
