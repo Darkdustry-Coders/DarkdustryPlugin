@@ -1,6 +1,8 @@
 package darkdustry.features;
 
+import arc.math.Mathf;
 import arc.struct.Seq;
+import darkdustry.database.Database;
 import darkdustry.database.models.PlayerData;
 import darkdustry.utils.Admins;
 import lombok.NoArgsConstructor;
@@ -10,15 +12,29 @@ import useful.Bundle;
 import static darkdustry.config.Config.config;
 
 public class Ranks {
-
     public static final Seq<Rank> ranks = Seq.with(Rank.values());
 
-    public static void name(Player player, PlayerData data) {
-        if (config.mode.maskUsernames) {
-
+    public static String nameOf(Player player) { return nameOf(player, Database.getPlayerDataOrCreate(player.uuid()), false); }
+    public static String nameOf(Player player, boolean realname) { return nameOf(player, Database.getPlayerDataOrCreate(player.uuid()), realname); }
+    public static String nameOf(Player player, PlayerData data) { return nameOf(player, data, false); }
+    public static String nameOf(Player player, PlayerData data, boolean realname) {
+        if (!config.mode.maskUsernames || realname) {
+            return data.rank.tag + player.getInfo().lastName + (Admins.checkMuted(player) ? " [gray](muted)" : "");
+        } else {
+            var username = new StringBuilder("[gray]");
+            for (int i = 0; i < 16; i++) {
+                if (Mathf.randomBoolean())
+                    username.append((char) Mathf.random('a', 'z'));
+                else
+                    username.append((char) Mathf.random('A', 'Z'));
+            }
+            return username.toString();
         }
-        else
-            player.name = data.name = data.rank.tag + player.getInfo().lastName + (Admins.checkMuted(player) ? " [gray](muted)" : "");
+    }
+
+    public static void name(Player player, PlayerData data) {
+        data.name = nameOf(player, data, true);
+        player.name = nameOf(player, data, false);
     }
 
     @NoArgsConstructor

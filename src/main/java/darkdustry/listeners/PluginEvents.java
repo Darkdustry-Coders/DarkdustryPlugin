@@ -44,6 +44,7 @@ public class PluginEvents {
     public static ObjectMap<Player, Task> updateNameTasks = new ObjectMap<>();
 
     private static Task noPlayersRestartTask = null;
+    private static boolean sentStartEvent = false;
 
     public static void load() {
         if (config.allowSpecialSettings) SpecialSettings.load();
@@ -82,6 +83,12 @@ public class PluginEvents {
 
             if (config.mode.postSetup != null)
                 config.mode.postSetup.get();
+
+            if (!sentStartEvent) {
+                sentStartEvent = true;
+                if (config.serverId != -1)
+                    Socket.send(new SocketEvents.ServerOnlineEvent(config.serverId));
+            }
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));

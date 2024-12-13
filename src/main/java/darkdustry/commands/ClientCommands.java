@@ -155,8 +155,8 @@ public class ClientCommands {
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
 
-                    if (Groups.player.count(x -> config.mode.enableSpectate && x.team() != config.mode.spectatorTeam) < 4)
-                    {
+                    if (Groups.player.count(x -> config.mode.enableSpectate && x.team() != config.mode.spectatorTeam) < 4 ||
+                        config.mode == Gamemode.test) {
                         Bundle.send("commands.1va.insufficient-players");
                         return;
                     }
@@ -230,6 +230,10 @@ public class ClientCommands {
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
 
+                    if (!isSafePath(args[0])) {
+                        Bundle.format("commands.votesave.invalid-name", player);
+                        return;
+                    }
                     var save = Find.save(args[0]);
                     if (notFound(player, save)) {
                         Bundle.format("commands.voteload.not-found", player, args[0]);
