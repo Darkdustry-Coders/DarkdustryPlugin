@@ -117,6 +117,7 @@ public class Config {
             enableRtv = false;
             enableVnw = false;
             enableVotekick = false;
+            restartOnNoPlayers = false;
         }},
 
         hub("Hub") {{
