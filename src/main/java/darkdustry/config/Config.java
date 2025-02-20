@@ -92,7 +92,6 @@ public class Config {
         attack("Attack"),
 
         castle("Castle Wars") {{
-            isDefault = false;
             enableVnw = false;
             enableSurrender = true;
             enableSpectate = true;
