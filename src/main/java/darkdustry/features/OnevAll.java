@@ -1,6 +1,7 @@
 package darkdustry.features;
 
 import arc.Events;
+import arc.util.Timer;
 import darkdustry.database.Cache;
 import mindustry.content.Blocks;
 import mindustry.game.EventType;
@@ -21,6 +22,7 @@ public class OnevAll {
     public static @Nullable Player nextSingle = null;
     public static boolean gameOverFlag = false;
 
+    private static Timer.Task extraChecks = null;
     private static @Nullable Team team;
 
     public static boolean enabled() {
@@ -44,6 +46,10 @@ public class OnevAll {
         nextSingle = null;
         team = null;
         gameOverFlag = false;
+        if (extraChecks != null) extraChecks.cancel();
+        if (enabled()) extraChecks = Timer.schedule(() -> {
+            if (single != null && single.team() != state.rules.defaultTeam) dipped();
+        }, 10f, 1f);
 
         // if (!enabled()) return;
 
@@ -73,6 +79,7 @@ public class OnevAll {
     public static void dipped() {
         assert single != null;
         Bundle.send("1va.dipped", single.coloredName());
+        if (extraChecks != null) extraChecks.cancel();
         single = null;
         instance.play(() -> maps.getNextMap(instance.lastMode, state.map));
     }
@@ -84,12 +91,14 @@ public class OnevAll {
             case forts -> Cache.get(single).fortsOvas++;
             case pvp -> Cache.get(single).pvpOvas++;
         }
+        if (extraChecks != null) extraChecks.cancel();
         single = null;
     }
 
     public static void defeat() {
         assert single != null;
         Bundle.send("1va.defeat", single.coloredName());
+        if (extraChecks != null) extraChecks.cancel();
         single = null;
     }
 }
