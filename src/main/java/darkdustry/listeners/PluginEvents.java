@@ -228,7 +228,7 @@ public class PluginEvents {
             data.effects.leave.get(event.player);
 
             Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
-            Bundle.send("events.leave", event.player.coloredName(), data.id);
+            Bundle.send("events.leave", event.player.coloredName(), "" + data.id);
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);

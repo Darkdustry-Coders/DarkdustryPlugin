@@ -45,8 +45,8 @@ public class PayloadEntry implements HistoryEntry {
             var info = netServer.admins.getInfo(uuid);
             var data = Database.getPlayerDataOrCreate(uuid);
             return pickup
-                    ? Bundle.format("history.payload.pickup.player", player, info.lastName, data.id, block.emoji(), block.name)
-                    : Bundle.format("history.payload.deploy.player", player, info.lastName, data.id, block.emoji(), block.name);
+                    ? Bundle.format("history.payload.pickup.player", player, info.lastName, "" + data.id, block.emoji(), block.name)
+                    : Bundle.format("history.payload.deploy.player", player, info.lastName, "" + data.id, block.emoji(), block.name);
         }
     }
 }

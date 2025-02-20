@@ -32,9 +32,9 @@ public class PreBlockEntry implements HistoryEntry {
         var block = content.block(blockID);
 
         return breaking ?
-                Bundle.format("history.breaking", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id) :
+                Bundle.format("history.breaking", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), "" + data.id) :
                 block.rotate ?
-                        Bundle.format("history.building.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), data.id) :
-                        Bundle.format("history.building", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id);
+                        Bundle.format("history.building.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), "" + data.id) :
+                        Bundle.format("history.building", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), "" + data.id);
     }
 }

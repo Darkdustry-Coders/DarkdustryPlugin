@@ -27,6 +27,6 @@ public class RotateEntry implements HistoryEntry {
         var data = Database.getPlayerDataOrCreate(uuid);
         var block = content.block(blockID);
 
-        return Bundle.format("history.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), data.id);
+        return Bundle.format("history.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), "" + data.id);
     }
 }

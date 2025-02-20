@@ -31,9 +31,9 @@ public class BlockEntry implements HistoryEntry {
         var block = content.block(blockID);
 
         return breaking ?
-                Bundle.format("history.broke", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id) :
+                Bundle.format("history.broke", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), "" + data.id) :
                 block.rotate ?
-                        Bundle.format("history.built.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), data.id) :
-                        Bundle.format("history.built", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), data.id);
+                        Bundle.format("history.built.rotate", player, info.lastName, block.emoji(), formatRotation(rotation), Bundle.formatRelative(player, timestamp), "" + data.id) :
+                        Bundle.format("history.built", player, info.lastName, block.emoji(), Bundle.formatRelative(player, timestamp), "" + data.id);
     }
 }
