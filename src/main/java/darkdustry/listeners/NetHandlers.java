@@ -2,7 +2,6 @@ package darkdustry.listeners;
 
 import arc.Events;
 import arc.math.Mathf;
-import arc.math.Rand;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandResponse;
 import arc.util.*;
@@ -41,7 +40,7 @@ public class NetHandlers {
             Translator.translate(from, message);
 
             Socket.send(
-                    new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(message)));
+                    new ServerMessageEvent(config.mode.name(), stripDiscord(from.plainName()), stripDiscord(Strings.stripColors(message))));
             return null;
         }
 

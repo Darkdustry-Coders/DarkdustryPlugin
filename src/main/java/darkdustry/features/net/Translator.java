@@ -35,7 +35,7 @@ public class Translator {
                 return;
             }
 
-            translate(text, "auto", data.language.code, translated -> result.get(player, translated.isEmpty() ? text : text + " [white]([lightgray]" + translated + "[])"));
+            translate(Strings.stripColors(text), "auto", data.language.code, translated -> result.get(player, translated.isEmpty() ? text : text + " [white]([lightgray]" + translated.replaceAll("\\[", "[[") + "[])"));
         });
     }
 }
