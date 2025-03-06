@@ -37,14 +37,14 @@ public class Config {
         maxLogLength.set(1024 * 1024);
 
         if (config.overridePort != -1)
-           Administration.Config.port.set(config.overridePort);
+            Administration.Config.port.set(config.overridePort);
 
         strict.set(config.mode.enableStrict);
         enableVotekick.set(config.mode.enableVotekick);
     }
 
     /** IP-адрес хаба. */
-    public String hubIp = "darkdustry.net";
+    public String hubIp = "mindurka.fun";
 
     /** Порт хаба. */
     public int hubPort = 6567;
