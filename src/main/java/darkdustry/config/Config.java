@@ -89,7 +89,9 @@ public class Config {
     public Gamemode mode = hub;
 
     public enum Gamemode {
-        attack("Attack"),
+        attack("Attack") {{
+            enableSpectate = true;
+        }},
 
         castle("Castle Wars") {{
             enableVnw = false;
@@ -148,8 +150,14 @@ public class Config {
             enableVnw = false;
         }},
 
-        survival("Survival"),
+        survival("Survival") {{
+            enableSpectate = true;
+        }},
+        zombies("Zombies") {{
+            enableSpectate = true;
+        }},
         tower("Tower Defense") {{
+            enableSpectate = true;
             postSetup = () -> state.rules.unitCrashDamageMultiplier = 0.0f;
         }},
 
