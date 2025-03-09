@@ -153,9 +153,7 @@ public class Config {
         survival("Survival") {{
             enableSpectate = true;
         }},
-        zombies("Zombies") {{
-            enableSpectate = true;
-        }},
+        zombies("Zombies"),
         tower("Tower Defense") {{
             enableSpectate = true;
             postSetup = () -> state.rules.unitCrashDamageMultiplier = 0.0f;
