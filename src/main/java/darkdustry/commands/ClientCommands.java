@@ -9,6 +9,7 @@ import darkdustry.features.net.*;
 import darkdustry.features.votes.*;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
+import mindustry.Vars;
 import mindustry.gen.*;
 import useful.*;
 
@@ -204,6 +205,10 @@ public class ClientCommands {
                 .cooldown(180000L)
                 .welcomeMessage(true)
                 .register((args, player) -> {
+                    if (state.tick < 50.0) {
+                        Bundle.send(player, "commands.surrender.early");
+                        return;
+                    }
                     if (alreadyVoting(player, vote) || invalidSurrenderTeam(player)) return;
 
                     vote = new VoteSurrender(player.team());
