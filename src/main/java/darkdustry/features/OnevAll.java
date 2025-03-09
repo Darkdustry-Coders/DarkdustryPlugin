@@ -49,6 +49,7 @@ public class OnevAll {
         if (extraChecks != null) extraChecks.cancel();
         if (enabled()) extraChecks = Timer.schedule(() -> {
             if (single != null && single.team() != state.rules.defaultTeam) dipped();
+            if (single != null && single.team().data().players.size != 1) dipped();
         }, 10f, 1f);
 
         // if (!enabled()) return;
