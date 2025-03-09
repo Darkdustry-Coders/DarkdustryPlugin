@@ -4,6 +4,8 @@ import arc.math.Mathf;
 import arc.struct.ObjectIntMap;
 import arc.util.Timer;
 import arc.util.Timer.Task;
+import darkdustry.config.Config;
+import darkdustry.features.Spectate;
 import mindustry.gen.*;
 
 import static darkdustry.PluginVars.*;
@@ -40,6 +42,7 @@ public abstract class VoteSession {
     }
 
     public int votesRequired() {
-        return Math.max(Math.min(2, Groups.player.size()), Mathf.ceil(Groups.player.size() * voteRatio));
+        var requiredPlayers = Groups.player.count(player -> !(Config.config.mode.enableSpectate && player.team() == Config.config.mode.spectatorTeam && !votes.containsKey(player)));
+        return Math.max(Math.min(2, requiredPlayers), Mathf.ceil(requiredPlayers * voteRatio));
     }
 }
