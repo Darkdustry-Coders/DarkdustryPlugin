@@ -1,6 +1,5 @@
 package darkdustry.config;
 
-import arc.math.Mathf;
 import arc.struct.IntSeq;
 import arc.util.Log;
 import mindustry.game.Team;
@@ -228,7 +227,7 @@ public class Config {
 
         public Funcv postSetup = null;
 
-        public Team spectatorTeam = Team.get(69);
+        public final Team spectatorTeam = Team.get(69);
 
         Gamemode(String displayName) {
             this.displayName = displayName;
