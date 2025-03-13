@@ -1,6 +1,9 @@
 import groovy.json.JsonSlurper
 
-plugins { java }
+plugins {
+    java
+    `maven-publish`
+}
 
 repositories {
     mavenCentral()
@@ -8,9 +11,11 @@ repositories {
 }
 
 dependencies {
-    val json =
-            JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
+    val json = JsonSlurper().parseText(file("src/main/resources/plugin.json").readText()) as Map<*, *>
     project.version = json["version"]!!
+
+    group = "darkdustry"
+    version = json["version"]!!
 
     val mindustryVersion = json["minGameVersion"]
     val usefulHash = "2f1d9eb899"
@@ -57,3 +62,11 @@ tasks.jar {
 }
 
 tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+}

@@ -115,7 +115,7 @@ public class Config {
         hexed("Hexed PvP") {{
             postSetup = () -> state.rules.attackMode = false;
             isDefault = false;
-            enableRtv = false;
+            enableRtv = true;
             enableVnw = false;
             enableVotekick = false;
             restartOnNoPlayers = false;
