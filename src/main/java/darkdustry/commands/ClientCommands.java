@@ -10,6 +10,7 @@ import darkdustry.features.votes.*;
 import darkdustry.listeners.SocketEvents.*;
 import darkdustry.utils.*;
 import mindustry.Vars;
+import mindustry.game.MapObjectives;
 import mindustry.gen.*;
 import useful.*;
 
@@ -164,6 +165,11 @@ public class ClientCommands {
 
                     var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
                     if (notFound(player, map)) return;
+                    if (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
+                            ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
+                        Bundle.send("commands.1va.invalid-map");
+                        return;
+                    }
 
                     vote = new Vote1va(map, player);
                 });
