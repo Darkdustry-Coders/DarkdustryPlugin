@@ -159,7 +159,7 @@ public class ClientCommands {
 
                     if (Groups.player.count(x -> config.mode.enableSpectate && x.team() != config.mode.spectatorTeam) < 4 ||
                         config.mode == Gamemode.test) {
-                        Bundle.send("commands.1va.insufficient-players");
+                        Bundle.send(player, "commands.1va.insufficient-players");
                         return;
                     }
 
@@ -170,7 +170,7 @@ public class ClientCommands {
                         if (notFound(player, map)) return;
                         if (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
                                 ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
-                            Bundle.send("commands.1va.invalid-map");
+                            Bundle.send(player, "commands.1va.invalid-map");
                             return;
                         }
                     } else {
@@ -179,7 +179,7 @@ public class ClientCommands {
                         while (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
                                 ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
                             if (++prevention >= 100) {
-                                Bundle.send("commands.1va.invalid-map");
+                                Bundle.send(player, "commands.1va.invalid-map");
                                 return;
                             }
                             map = maps.getShuffleMode().next(instance.lastMode, map);
