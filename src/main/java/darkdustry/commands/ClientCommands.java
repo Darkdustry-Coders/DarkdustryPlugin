@@ -163,12 +163,27 @@ public class ClientCommands {
                         return;
                     }
 
-                    var map = args.length > 0 ? Find.map(args[0]) : maps.getNextMap(instance.lastMode, state.map);
-                    if (notFound(player, map)) return;
-                    if (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
-                            ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
-                        Bundle.send("commands.1va.invalid-map");
-                        return;
+                    mindustry.maps.Map map;
+
+                    if (args.length > 0) {
+                        map = Find.map(args[0]);
+                        if (notFound(player, map)) return;
+                        if (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
+                                ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
+                            Bundle.send("commands.1va.invalid-map");
+                            return;
+                        }
+                    } else {
+                        var prevention = 0;
+                        map = maps.getNextMap(instance.lastMode, state.map);
+                        while (map.rules().objectives.all.contains(x -> (x instanceof MapObjectives.FlagObjective) &&
+                                ((MapObjectives.FlagObjective) x).flag.equals("no1va"))) {
+                            if (++prevention >= 100) {
+                                Bundle.send("commands.1va.invalid-map");
+                                return;
+                            }
+                            map = maps.getShuffleMode().next(instance.lastMode, map);
+                        }
                     }
 
                     vote = new Vote1va(map, player);
