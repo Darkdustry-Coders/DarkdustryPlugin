@@ -236,6 +236,11 @@ public class ClientCommands {
                     vote.vote(player, 1);
                 });
 
+        Commands.create("uwu")
+                .register((args, player) -> {
+                    player.sendMessage("[pink]uwu");
+                });
+
         Commands.create("votesave")
                 .enabled(config.mode.isDefault)
                 .cooldown(180000L)

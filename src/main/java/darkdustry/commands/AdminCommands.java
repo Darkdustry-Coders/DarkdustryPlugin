@@ -1,6 +1,7 @@
 package darkdustry.commands;
 
 import arc.util.Strings;
+import darkdustry.config.Config;
 import darkdustry.features.menus.MenuHandler;
 import darkdustry.features.net.Translator;
 import darkdustry.utils.Find;
@@ -63,21 +64,39 @@ public class AdminCommands {
                     Bundle.send(player, player.blockOn() == core ? "commands.core.success" : "commands.core.failed", core.emoji(), core.name, team.coloredName());
                 });
 
-        Commands.admin("team")
-                .enabled(config.mode.isDefault)
-                .register((args, player) -> {
-                    var team = Find.team(args[0]);
-                    if (notFound(player, team)) return;
+        if (config.mode == Config.Gamemode.sandbox) {
+            Commands.create("team")
+                    .enabled(config.mode.isDefault)
+                    .register((args, player) -> {
+                        var team = Find.team(args[0]);
+                        if (notFound(player, team)) return;
 
-                    var target = args.length > 1 ? Find.player(args[1]) : player;
-                    if (notFound(player, target)) return;
+                        var target = args.length > 1 ? Find.player(args[1]) : player;
+                        if (notFound(player, target)) return;
 
-                    target.team(team);
+                        target.team(team);
 
-                    Bundle.send(target, "commands.team.success", team.coloredName());
-                    if (target != player)
-                        Bundle.send(player, "commands.team.success.player", target.coloredName(), team.coloredName());
-                });
+                        Bundle.send(target, "commands.team.success", team.coloredName());
+                        if (target != player)
+                            Bundle.send(player, "commands.team.success.player", target.coloredName(), team.coloredName());
+                    });
+        } else {
+            Commands.admin("team")
+                    .enabled(config.mode.isDefault)
+                    .register((args, player) -> {
+                        var team = Find.team(args[0]);
+                        if (notFound(player, team)) return;
+
+                        var target = args.length > 1 ? Find.player(args[1]) : player;
+                        if (notFound(player, target)) return;
+
+                        target.team(team);
+
+                        Bundle.send(target, "commands.team.success", team.coloredName());
+                        if (target != player)
+                            Bundle.send(player, "commands.team.success.player", target.coloredName(), team.coloredName());
+                    });
+        }
 
         Commands.admin("unit")
                 .enabled(config.mode.isDefault)

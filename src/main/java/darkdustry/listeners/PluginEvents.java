@@ -87,6 +87,8 @@ public class PluginEvents {
                 if (config.serverId != -1)
                     Socket.send(new SocketEvents.ServerOnlineEvent(config.serverId));
             }
+
+            state.rules.infiniteResources = true;
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
@@ -136,10 +138,10 @@ public class PluginEvents {
                 History.put(event.tile, new BlockEntry(event));
 
             var data = Cache.get(event.unit.getPlayer());
-            if (event.breaking)
-                data.blocksBroken++;
-            else
-                data.blocksPlaced++;
+            //if (event.breaking)
+            //    data.blocksBroken++;
+            //else
+            //    data.blocksPlaced++;
         });
 
         Events.on(BlockBuildBeginEvent.class, event -> {
@@ -327,18 +329,7 @@ public class PluginEvents {
 
             Groups.player.each(player -> {
                 var data = Cache.get(player);
-                data.gamesPlayed++;
-
-                if (player.team() == event.winner)
-                    switch (config.mode) {
-                        case attack -> data.attackWins++;
-                        case castle -> data.castleWins++;
-                        case forts -> data.fortsWins++;
-                        case hexed -> data.hexedWins++;
-                        case msgo -> data.msgoWins++;
-                        case pvp -> data.pvpWins++;
-                        case spvp -> data.spvpWins++;
-                    }
+                //data.gamesPlayed++;
             });
 
             // На этих режимах игра сменяется автоматически
