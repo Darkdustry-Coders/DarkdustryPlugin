@@ -45,13 +45,17 @@ public class Database {
 
     public static @Nullable PlayerData getPlayerData(Snowflake discordId) {
         var data = Cache.get(discordId);
-        if (data != null) return data;
+        if (data != null)
+            return data;
+        Log.info("Searching for Discord User (id: " + Long.toString(discordId.asLong()) + ")");
         data = datastore.find(PlayerData.class)
-                .filter(Filters.eq("discordId", discordId.asLong()))
+                .filter(Filters.eq("discordId", Long.toString(discordId.asLong())))
                 .first();
-        if (data == null) return null;
+        if (data == null)
+            return null;
         var local = Cache.get(data.id);
-        if (local != null) data = local;
+        if (local != null)
+            data = local;
         Cache.put(discordId, data);
         return data;
     }
@@ -73,21 +77,24 @@ public class Database {
     }
 
     public static PlayerData getPlayerDataOrCreate(String uuid) {
-        return Optional.ofNullable(datastore.find(PlayerData.class).filter(Filters.eq("uuid", uuid)).first()).orElseGet(() -> {
-            var data = new PlayerData(uuid);
-            data.generateID();
+        return Optional.ofNullable(datastore.find(PlayerData.class).filter(Filters.eq("uuid", uuid)).first())
+                .orElseGet(() -> {
+                    var data = new PlayerData(uuid);
+                    data.generateID();
 
-            return savePlayerData(data);
-        });
+                    return savePlayerData(data);
+                });
     }
 
     public static @Nullable PlayerData getPlayerDataByCode(String code) {
         var data = datastore.find(PlayerData.class)
                 .filter(Filters.eq("discordAttachCode", code))
                 .first();
-        if (data == null) return null;
+        if (data == null)
+            return null;
         var local = Cache.get(data.id);
-        if (local != null) return local;
+        if (local != null)
+            return local;
         return data;
     }
 
@@ -159,8 +166,8 @@ public class Database {
     public static int generateNextID(String key) {
         return Optional.ofNullable(datastore.find(Counter.class)
                 .filter(Filters.eq("_id", key))
-                .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value"))
-        ).orElseGet(() -> datastore.save(new Counter(key))).value;
+                .modify(new ModifyOptions().returnDocument(ReturnDocument.AFTER), UpdateOperators.inc("value")))
+                .orElseGet(() -> datastore.save(new Counter(key))).value;
     }
 
     // endregion
@@ -169,6 +176,7 @@ public class Database {
     public static ServerConfig fetchConfig() {
         return fetchConfig("global");
     }
+
     public static ServerConfig fetchConfig(String namespace) {
         var config = datastore.find(ServerConfig.class)
                 .filter(Filters.eq("namespace", namespace))

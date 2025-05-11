@@ -398,7 +398,7 @@ public class PluginEvents {
 
         // Таймер эффектов движения
         Timer.schedule(() -> Groups.player.each(player -> {
-            if (player.unit().moving())
+            if (player.unit() != null && player.unit().moving())
                 Cache.get(player).effects.move.get(player);
         }), 0f, 0.1f);
 

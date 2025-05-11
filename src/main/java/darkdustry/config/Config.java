@@ -111,6 +111,14 @@ public class Config {
             rememberTeams = true;
         }},
 
+        forts_b("Forts (Beta)") {{
+            enableVnw = false;
+            enableSurrender = true;
+            enableSpectate = true;
+            enable1va = true;
+            rememberTeams = true;
+        }},
+
         hexed("Hexed PvP") {{
             postSetup = () -> state.rules.attackMode = false;
             isDefault = false;
