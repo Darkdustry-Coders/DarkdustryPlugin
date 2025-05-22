@@ -18,6 +18,9 @@ public class ModCommandHandler extends CommandHandler {
 
     @Override
     public CommandResponse handleMessage(String message, Object params) {
+        if (message.startsWith("/t ")) {
+            message = message.substring(3);
+        }
         if (message.contains(" ")) {
             message = message.substring(0, message.indexOf(" ")).toLowerCase() + message.substring(message.indexOf(" "));
         }
