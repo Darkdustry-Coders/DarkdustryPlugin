@@ -327,9 +327,10 @@ public class PluginEvents {
 
             Groups.player.each(player -> {
                 var data = Cache.get(player);
-                data.gamesPlayed++;
-
-                if (player.team() == event.winner)
+                if (!Spectate.isSpectator(player)) {
+                    data.gamesPlayed++;
+                }
+                if (player.team() == event.winner && !Spectate.isSpectator(player))
                     switch (config.mode) {
                         case attack -> data.attackWins++;
                         case castle -> data.castleWins++;
@@ -405,7 +406,9 @@ public class PluginEvents {
         // Таймер обновления времени игры и рангов
         Timer.schedule(() -> Groups.player.each(player -> {
             var data = Cache.get(player);
-            data.playTime++;
+            if (!Spectate.isSpectator(player)) {
+                data.playTime++;
+            }
 
             while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived, data.fortsOvas)) {
                 data.rank = data.rank.next;
