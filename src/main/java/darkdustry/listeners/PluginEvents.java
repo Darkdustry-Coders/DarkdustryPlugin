@@ -89,7 +89,9 @@ public class PluginEvents {
             }
         });
 
-        Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
+        Events.on(WaveEvent.class, event -> Groups.player.each(player -> {
+            if (!Spectate.isSpectator(player)) Cache.get(player).wavesSurvived++;
+        }));
 
         Events.on(WorldLoadEvent.class, event -> History.reset());
 

@@ -13,3 +13,5 @@
 /server/
 kls_database.db
 .factorypath
+config
+server-release.jar
