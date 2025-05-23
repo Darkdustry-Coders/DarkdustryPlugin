@@ -165,10 +165,6 @@ public class PluginEvents {
             Alerts.buildAlert(event);
         });
 
-        Events.on(BlockDestroyEvent.class, event -> {
-            if (!(event.tile.build instanceof CoreBlock.CoreBuild)) return;
-        });
-
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
             if (!Units.canCreate(event.build.team, UnitTypes.latum)) return;
 
