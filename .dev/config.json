@@ -1,0 +1,21 @@
+{
+  "hubIp": "localhost",
+  "hubPort": 6567,
+  "sockPort": 8306,
+  "mongoUrl": "mongodb://localhost",
+  "pluginSource": "path",
+  "maxUnitsTotal": -1,
+  "allowSpecialSettings": false,
+  "overrideMonoAi": false,
+  "maxBackupCount": 2,
+  "backupDelaySec": 300,
+  "overridePort": -1,
+  "whitelist":{
+    "items": [],
+    "size": 0,
+    "ordered": true
+  },
+  "whitelistKickSpectator": false,
+  "serverId": -1,
+  "mode": "survival"
+}

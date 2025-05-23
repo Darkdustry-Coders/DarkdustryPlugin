@@ -89,7 +89,9 @@ public class PluginEvents {
             }
         });
 
-        Events.on(WaveEvent.class, event -> Groups.player.each(player -> Cache.get(player).wavesSurvived++));
+        Events.on(WaveEvent.class, event -> Groups.player.each(player -> {
+            if (!Spectate.isSpectator(player)) Cache.get(player).wavesSurvived++;
+        }));
 
         Events.on(WorldLoadEvent.class, event -> History.reset());
 
@@ -161,10 +163,6 @@ public class PluginEvents {
                 return;
 
             Alerts.buildAlert(event);
-        });
-
-        Events.on(BlockDestroyEvent.class, event -> {
-            if (!(event.tile.build instanceof CoreBlock.CoreBuild)) return;
         });
 
         Events.on(GeneratorPressureExplodeEvent.class, event -> app.post(() -> {
@@ -327,9 +325,10 @@ public class PluginEvents {
 
             Groups.player.each(player -> {
                 var data = Cache.get(player);
-                data.gamesPlayed++;
-
-                if (player.team() == event.winner)
+                if (!Spectate.isSpectator(player)) {
+                    data.gamesPlayed++;
+                }
+                if (player.team() == event.winner && !Spectate.isSpectator(player))
                     switch (config.mode) {
                         case attack -> data.attackWins++;
                         case castle -> data.castleWins++;
@@ -405,7 +404,9 @@ public class PluginEvents {
         // Таймер обновления времени игры и рангов
         Timer.schedule(() -> Groups.player.each(player -> {
             var data = Cache.get(player);
-            data.playTime++;
+            if (!Spectate.isSpectator(player)) {
+                data.playTime++;
+            }
 
             while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived, data.fortsOvas)) {
                 data.rank = data.rank.next;

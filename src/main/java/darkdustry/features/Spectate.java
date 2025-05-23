@@ -55,15 +55,15 @@ public class Spectate {
         });
 
         Events.on(EventType.BlockBuildBeginEvent.class, event -> {
-            var player = event.unit.getPlayer();
-            if (player == null) return;
-            tracker(player).pause();
+            var unit = event.unit.getPlayer();
+            if (unit == null) return;
+            tracker(unit).pause();
         });
 
         Events.on(EventType.BlockBuildEndEvent.class, event -> {
-            var player = event.unit.getPlayer();
-            if (player == null) return;
-            tracker(player).reset();
+            var unit = event.unit.getPlayer();
+            if (unit == null) return;
+            tracker(unit).reset();
         });
 
         Events.on(EventType.PlayerChatEvent.class, event -> tracker(event.player).tick = 0);
