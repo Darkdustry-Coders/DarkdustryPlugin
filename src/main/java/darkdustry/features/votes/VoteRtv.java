@@ -1,8 +1,5 @@
 package darkdustry.features.votes;
 
-import arc.Events;
-import darkdustry.config.Config;
-import darkdustry.utils.HexedIntegration;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import useful.Bundle;
@@ -36,10 +33,7 @@ public class VoteRtv extends VoteSession {
         stop();
         Bundle.send("commands.rtv.success", map.name(), roundExtraTime.num());
 
-        if(Config.config.mode == Config.Gamemode.hexed)
-            Events.fire(new HexedIntegration.RtvSuccess(map.name()));
-        else
-            instance.play(() -> world.loadMap(map));
+        instance.play(() -> world.loadMap(map));
     }
 
     @Override
