@@ -44,7 +44,7 @@ public class PageIterator {
                 builder.append(Bundle.format("commands.players.player", player, other.coloredName(), other.admin ? "\uE82C" : "\uE872", Cache.get(other).id, other.locale)));
     }
 
-    private static <T> void client(String[] args, Player player, String name, Prov<Seq<T>> content, Cons3<StringBuilder, Integer, T> formatter) {
+    public static <T> void client(String[] args, Player player, String name, Prov<Seq<T>> content, Cons3<StringBuilder, Integer, T> formatter) {
         int page = args.length > 0 ? Strings.parseInt(args[0]) : 1, pages = Math.max(1, Mathf.ceil((float) content.get().size / maxPerPage));
         if (page > pages || page < 1) {
             Bundle.send(player, "commands.invalid-page", pages);
