@@ -195,9 +195,9 @@ public class PluginEvents {
             app.post(() -> data.effects.join.get(event.player));
 
             Log.info("@ has connected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
-            Bundle.send("events.join", event.player.coloredName(), config.mode.maskUsernames ? "??" : "" + data.id);
+            Bundle.send("events.join", event.player.coloredName());
 
-            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] joined", Color.MEDIUM_SEA_GREEN));
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " joined", Color.MEDIUM_SEA_GREEN));
 
             if (data.welcomeMessage)
                 MenuHandler.showWelcomeMenu(event.player);
@@ -224,7 +224,7 @@ public class PluginEvents {
             data.effects.leave.get(event.player);
 
             Log.info("@ has disconnected. [@ / @]", event.player.plainName(), event.player.uuid(), data.id);
-            Bundle.send("events.leave", event.player.coloredName(), "" + data.id);
+            Bundle.send("events.leave", event.player.coloredName());
 
             if (vote != null) vote.left(event.player);
             if (voteKick != null) voteKick.left(event.player);
@@ -233,7 +233,7 @@ public class PluginEvents {
                 OnevAll.dipped();
             }
 
-            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " [" + data.id + "] left", Color.CINNABAR));
+            Socket.send(new ServerMessageEmbedEvent(config.mode.name(), event.player.plainName() + " left", Color.CINNABAR));
 
             if (Groups.player.size() <= 1 && Restart.restart) {
                 if (Restart.copyPlugin) {
