@@ -179,6 +179,14 @@ public class PluginEvents {
             UnitTypes.latum.spawn(event.build.team, event.build);
         }));
 
+        Events.on(PlayerConnectionConfirmed.class, event -> {
+            if (noPlayersRestartTask != null) {
+                Log.info("Cancelled map reload.");
+                noPlayersRestartTask.cancel();
+                noPlayersRestartTask = null;
+            }
+        });
+
         Events.on(PlayerJoin.class, event -> {
             if (noPlayersRestartTask != null) {
                 Log.info("Cancelled map reload.");
