@@ -19,7 +19,7 @@ public class Ranks {
     public static String nameOf(Player player, PlayerData data) { return nameOf(player, data, false); }
     public static String nameOf(Player player, PlayerData data, boolean realname) {
         if (!config.mode.maskUsernames || realname) {
-            return data.rank.tag + player.getInfo().lastName + " [lightgray][" + data.id + "]" + (Admins.checkMuted(player) ? " [gray](muted)" : "");
+            return data.rank.tag + player.getInfo().lastName + " [lightgray][" + data.id + "]" + (Admins.checkMuted(player) ? " [gray](muted)[]" : "");
         } else {
             var username = new StringBuilder("[gray]");
             for (int i = 0; i < 16; i++) {

@@ -10,6 +10,7 @@ import darkdustry.discord.MessageContext;
 import darkdustry.features.Ranks.Rank;
 import darkdustry.features.net.Socket;
 import darkdustry.features.votes.VoteSession;
+import darkdustry.listeners.PluginEvents;
 import darkdustry.listeners.SocketEvents.EmbedResponse;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -170,6 +171,10 @@ public class Checks {
 
     public static boolean invalidArea(Player player, int radius, int maxArea) {
         return check(radius < 0 || PI * radius * radius > maxArea, player, "commands.invalid-area-circle", maxArea);
+    }
+
+    public static boolean alreadySkippedWave(Player player) {
+        return check(!PluginEvents.skippedWave, player, "commands.vnw.already-skipped-wave");
     }
 
     public static boolean alreadyVoting(Player player, VoteSession session) {

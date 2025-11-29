@@ -25,7 +25,6 @@ import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.io.SaveIO;
 import mindustry.world.blocks.payloads.BuildPayload;
-import mindustry.world.blocks.storage.CoreBlock;
 import useful.Bundle;
 
 import java.io.IOException;
@@ -39,6 +38,7 @@ import static mindustry.net.Administration.Config.*;
 import static mindustry.server.ServerControl.*;
 
 public class PluginEvents {
+    public static boolean skippedWave = false;
     public static ObjectMap<Player, Task> updateNameTasks = new ObjectMap<>();
 
     private static Task noPlayersRestartTask = null;
@@ -51,6 +51,8 @@ public class PluginEvents {
 
         Events.on(PlayEvent.class, event -> {
             System.gc();
+
+            skippedWave = false;
 
             if (noPlayersRestartTask != null) {
                 noPlayersRestartTask.cancel();
@@ -80,7 +82,7 @@ public class PluginEvents {
             }
 
             if (config.mode.postSetup != null)
-                config.mode.postSetup.get();
+                config.mode.postSetup.run();
 
             if (!sentStartEvent) {
                 sentStartEvent = true;
@@ -90,6 +92,7 @@ public class PluginEvents {
         });
 
         Events.on(WaveEvent.class, event -> Groups.player.each(player -> {
+            skippedWave = false;
             if (!Spectate.isSpectator(player)) Cache.get(player).wavesSurvived++;
         }));
 

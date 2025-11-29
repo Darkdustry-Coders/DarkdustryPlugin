@@ -17,17 +17,19 @@ dependencies {
     group = "darkdustry"
     version = json["version"]!!
 
-    val mindustryVersion = json["minGameVersion"]
+    // val mindustryVersion = json["minGameVersion"]
     val usefulHash = "2f1d9eb899"
 
-    compileOnly("com.github.anuken.arc:arc-core:v$mindustryVersion")
-    compileOnly("com.github.anuken.mindustry:core:v$mindustryVersion") {
-        exclude(group = "com.github.Anuken.Arc")
-    }
+    compileOnly("com.github.5GameMaker:MindustryHotfixV7:v146.9")
 
-    compileOnly("com.github.anuken.mindustry:server:v$mindustryVersion") {
-        exclude(group = "com.github.Anuken.Arc")
-    }
+    // compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion")
+    // compileOnly("com.github.Anuken.Mindustry:core:v$mindustryVersion") {
+    //     exclude(group = "com.github.Anuken.Arc")
+    // }
+
+    // compileOnly("com.github.Anuken.Mindustry:server:v$mindustryVersion") {
+    //     exclude(group = "com.github.Anuken.Arc")
+    // }
 
     implementation("com.github.osp54:Sock:ed404a96ff")
     implementation("dev.morphia.morphia:morphia-core:2.3.8")

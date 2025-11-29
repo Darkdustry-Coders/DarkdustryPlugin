@@ -160,7 +160,10 @@ public class Config {
         survival("Survival") {{
             enableSpectate = true;
         }},
-        zombies("Zombies"),
+        zombies("Zombies") {{
+            capVnw = true;
+            isDefault = false;
+        }},
         tower("Tower Defense") {{
             enableSpectate = true;
             postSetup = () -> state.rules.unitCrashDamageMultiplier = 0.0f;
@@ -179,41 +182,41 @@ public class Config {
             enableSpectate = true;
         }},
 
-        rankedpvplobby("Ranked PvP") {{
-            isDefault = false;
-            enableRtv = false;
-            enableVnw = false;
-            enableVotekick = false;
-            restartOnNoPlayers = false;
-            rememberTeams = false;
-            maskUsernames = true;
-        }},
+        // rankedpvplobby("Ranked PvP") {{
+        //     isDefault = false;
+        //     enableRtv = false;
+        //     enableVnw = false;
+        //     enableVotekick = false;
+        //     restartOnNoPlayers = false;
+        //     rememberTeams = false;
+        //     maskUsernames = true;
+        // }},
 
-        rankedpvparena("Internal Server") {{
-            isDefault = false;
-            enableRtv = false;
-            enableVnw = false;
-            enableVotekick = false;
-            maskUsernames = true;
-        }},
+        // rankedpvparena("Internal Server") {{
+        //     isDefault = false;
+        //     enableRtv = false;
+        //     enableVnw = false;
+        //     enableVotekick = false;
+        //     maskUsernames = true;
+        // }},
 
-        rankedfortslobby("Ranked Forts") {{
-            isDefault = false;
-            enableRtv = false;
-            enableVnw = false;
-            enableVotekick = false;
-            restartOnNoPlayers = false;
-            rememberTeams = false;
-            maskUsernames = true;
-        }},
+        // rankedfortslobby("Ranked Forts") {{
+        //     isDefault = false;
+        //     enableRtv = false;
+        //     enableVnw = false;
+        //     enableVotekick = false;
+        //     restartOnNoPlayers = false;
+        //     rememberTeams = false;
+        //     maskUsernames = true;
+        // }},
 
-        rankedfortsarena("Internal Server") {{
-            isDefault = false;
-            enableRtv = false;
-            enableVnw = false;
-            enableVotekick = false;
-            maskUsernames = true;
-        }},
+        // rankedfortsarena("Internal Server") {{
+        //     isDefault = false;
+        //     enableRtv = false;
+        //     enableVnw = false;
+        //     enableVotekick = false;
+        //     maskUsernames = true;
+        // }},
 
         ;
 
@@ -232,8 +235,9 @@ public class Config {
         public boolean rememberTeams = false;
         public boolean restartOnNoPlayers = true;
         public boolean maskUsernames = false;
+        public boolean capVnw = false;
 
-        public Funcv postSetup = null;
+        public Runnable postSetup = null;
 
         public final Team spectatorTeam = Team.get(69);
 
@@ -244,9 +248,5 @@ public class Config {
         public static String getDisplayName(String name) {
             return Gamemode.valueOf(name).displayName;
         }
-    }
-
-    public interface Funcv {
-        void get();
     }
 }

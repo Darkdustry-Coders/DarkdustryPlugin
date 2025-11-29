@@ -1,5 +1,6 @@
 package darkdustry.features.votes;
 
+import darkdustry.listeners.PluginEvents;
 import mindustry.gen.Player;
 import useful.Bundle;
 
@@ -32,6 +33,8 @@ public class VoteVnw extends VoteSession {
 
         for (int i = 0; i < waves; i++)
             logic.runWave();
+
+        darkdustry.listeners.PluginEvents.skippedWave = true;
     }
 
     @Override

@@ -213,6 +213,7 @@ public class ClientCommands {
                 .welcomeMessage(true)
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
+                    if (config.mode.capVnw && alreadySkippedWave(player)) return;
 
                     int amount = args.length > 0 ? Strings.parseInt(args[0]) : 1;
                     if (invalidAmount(player, amount, 1, maxVnwAmount)) return;
@@ -255,16 +256,13 @@ public class ClientCommands {
                 .cooldown(180000L)
                 .register((args, player) -> {
                     if (alreadyVoting(player, vote)) return;
-
                     if (!isSafePath(args[0])) {
                         Bundle.format("commands.votesave.invalid-name", player);
                         return;
                     }
+
                     var save = Find.save(args[0]);
-                    if (notFound(player, save)) {
-                        Bundle.format("commands.voteload.not-found", player, args[0]);
-                        return;
-                    }
+                    if (notFound(player, save)) return;
 
                     vote = new VoteLoad(save);
                     vote.vote(player, 1);
