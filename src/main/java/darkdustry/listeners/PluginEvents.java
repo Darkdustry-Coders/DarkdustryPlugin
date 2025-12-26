@@ -419,7 +419,7 @@ public class PluginEvents {
                 data.playTime++;
             }
 
-            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived, data.fortsOvas)) {
+            while (data.rank.checkNext(data.playTime, data.blocksPlaced, data.gamesPlayed, data.wavesSurvived, data.fortsOvas + data.pvpOvas)) {
                 data.rank = data.rank.next;
 
                 Ranks.name(player, data);
