@@ -143,6 +143,10 @@ public class Utils {
         return separator + roleIDs.toString(separator, role -> "<@&" + role + ">");
     }
 
+    public static String formatChannels(Seq<Long> channelIDs, String separator) {
+        return separator + channelIDs.toString(separator, channel -> "<@#" + channel + ">");
+    }
+
     // endregion
     // region security
 

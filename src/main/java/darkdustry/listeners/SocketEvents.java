@@ -20,6 +20,9 @@ import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import static arc.Core.*;
 import static darkdustry.config.Config.*;
 import static darkdustry.config.DiscordConfig.*;
@@ -325,6 +328,22 @@ public class SocketEvents {
         Socket.on(ServerOnlineEvent.class, request -> {
             Matchmaking.online(request.serverId);
         });
+
+        Socket.on(TraceRequest.class, request -> {
+            if (!request.server.equals(config.mode.name())) return;
+
+            var info = Find.playerInfo(request.player);
+            if (notFound(request, info)) return;
+
+            var tables = IpTables.of(info.lastIP);
+            String isp;
+            if (tables == null) isp = "<unknown>";
+            else isp = tables.isp;
+
+            Socket.respond(request, EmbedResponse.success("Trace of " + info.lastName)
+                    .withContent("Banned: " + info.banned + "\nAdmin: " + info.admin + "\nLast IP: " + info.lastIP + "\nISP: " + isp)
+                    .withField("IP History", Arrays.stream(info.ips.items).limit(info.ips.size).collect(Collectors.joining(", "))));
+        });
     }
 
     public record DiscordMessageEvent(String server, String role, String color, String name, String message) {
@@ -413,6 +432,11 @@ public class SocketEvents {
 
     @AllArgsConstructor
     public static class UnmuteRequest extends Request<EmbedResponse> {
+        public final String server, player;
+    }
+
+    @AllArgsConstructor
+    public static class TraceRequest extends Request<EmbedResponse> {
         public final String server, player;
     }
 

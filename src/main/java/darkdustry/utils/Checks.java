@@ -208,6 +208,11 @@ public class Checks {
                         .build()).withEphemeral(true).subscribe());
     }
 
+    public static boolean noChannel(MessageContext context, long channelID) {
+        return check(channelID != context.channel().getId().asLong(),
+                context, "Wrong Channel", "You must be in <#@> channel to use this feature", "" + channelID);
+    }
+
     public static boolean noRole(MessageContext context, Seq<Long> roleIDs) {
         return check(context.member()
                 .getRoleIds()

@@ -374,5 +374,18 @@ public class DiscordCommands {
 
             Socket.request(new UnmuteRequest(server, args[1]), context::reply, context::timeout);
         });
+
+        discordHandler.<MessageContext>register("trace", "<server> <player...>", "Trace a player.", (args, context) -> {
+            if (noRole(context, discordConfig.adminRoleIDs))
+                return;
+            if (noChannel(context, discordConfig.adminChannelID))
+                return;
+
+            var server = args[0];
+            if (notFound(context, server))
+                return;
+
+            Socket.request(new TraceRequest(server, args[1]), context::reply, context::timeout);
+        });
     }
 }
