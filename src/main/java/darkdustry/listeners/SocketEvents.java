@@ -12,6 +12,7 @@ import darkdustry.features.Ranks.Rank;
 import darkdustry.features.net.Socket;
 import darkdustry.matchmaking.Matchmaking;
 import darkdustry.utils.*;
+import discord4j.common.util.TimestampFormat;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.*;
@@ -20,6 +21,11 @@ import mindustry.io.MapIO;
 import mindustry.net.Packets.KickReason;
 import useful.Bundle;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.time.Duration;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -335,14 +341,45 @@ public class SocketEvents {
             var info = Find.playerInfo(request.player);
             if (notFound(request, info)) return;
 
-            var tables = IpTables.of(info.lastIP);
-            String isp;
-            if (tables == null) isp = "<unknown>";
-            else isp = tables.isp;
+            var data = Database.getPlayerData(info.id);
+            var ban = Database.getBan(info.id, info.lastIP);
+            var mute = Database.getMute(info.id);
 
-            Socket.respond(request, EmbedResponse.success("Trace of " + info.lastName)
-                    .withContent("Banned: " + info.banned + "\nAdmin: " + info.admin + "\nLast IP: " + info.lastIP + "\nISP: " + isp)
-                    .withField("IP History", Arrays.stream(info.ips.items).limit(info.ips.size).collect(Collectors.joining(", "))));
+            try {
+                var tables = IpTables.of(info.lastIP);
+                String isp;
+                if (tables == null) isp = "<unknown>";
+                else isp = tables.isp;
+
+                var response = EmbedResponse.success("Trace of " + info.lastName)
+                        .withContent("\nAdmin: " + info.admin +
+                                "\nPlay time: " + (data != null ? Bundle.formatDuration(Duration.ofMinutes(data.playTime)) : "<unknown>"))
+                        .withField("Last IP", info.lastIP)
+                        .withField("Last ISP", isp)
+                        .withField("IP History", Arrays.stream(info.ips.toArray(String.class)).map(x -> (CharSequence) x).collect(Collectors.joining(", ")))
+                        .withField("Name History", Arrays.stream(info.names.toArray(String.class)).map(x -> (CharSequence) x).collect(Collectors.joining("\n")));
+
+                if (ban != null) response.withField(
+                        "Banned",
+                        "Admin: " + ban.adminName
+                        + "\nReason: " + ban.reason
+                        + "\nExpires: " + TimestampFormat.LONG_DATE.format(ban.unbanDate.toInstant())
+                );
+
+                if (mute != null) response.withField(
+                        "Muted",
+                        "Admin: " + mute.adminName
+                        + "\nReason: " + mute.reason
+                        + "\nExpires: " + TimestampFormat.LONG_DATE.format(mute.unmuteDate.toInstant())
+                );
+
+                Socket.respond(request, response);
+            } catch (Exception e) {
+                var stream = new StringWriter();
+                e.printStackTrace(new PrintWriter(stream));
+
+                Socket.respond(request, EmbedResponse.error("An error has occured!").withContent(stream.toString()));
+            }
         });
     }
 
