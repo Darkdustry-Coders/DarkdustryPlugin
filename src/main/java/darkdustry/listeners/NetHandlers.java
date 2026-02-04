@@ -67,6 +67,24 @@ public class NetHandlers {
         };
     }
 
+    public static boolean isGraylisted(String ip, ServerConfig serverConfig) {
+        var globalConfig = ServerConfig.get();
+
+        if (config.mode == Gamemode.hub && !serverConfig.graylistEnabled) return false;
+        if (!globalConfig.graylistEnabled) return false;
+
+        var tables = IpTables.of(ip);
+        if (tables == null) return false;
+
+        if (tables.isHotspot() && (globalConfig.graylistMobile || serverConfig.graylistMobile)) return true;
+        if (tables.proxy && (globalConfig.graylistProxy || serverConfig.graylistProxy)) return true;
+        if (tables.hosting && (globalConfig.graylistHosting || serverConfig.graylistHosting)) return true;
+        if (ServerConfig.ispGraylisted(tables.isp, serverConfig)) return true;
+        if (ServerConfig.ipGraylisted(ip, serverConfig)) return true;
+
+        return false;
+    }
+
     private static boolean isGraylisted(NetConnection con, ConnectPacket packet) {
         if (config.mode == Gamemode.hub && !ServerConfig.getLocal().graylistEnabled) return false;
         if (!ServerConfig.graylistEnabled()) return false;
@@ -181,10 +199,10 @@ public class NetHandlers {
             return;
         }
 
-        if (AntiVpn.checkAddress(ip)) {
-            Bundle.kick(con, locale, 0L, "kick.vpn", discordServerUrl);
-            return;
-        }
+        // if (AntiVpn.checkAddress(ip)) {
+        //     Bundle.kick(con, locale, 0L, "kick.vpn", discordServerUrl);
+        //     return;
+        // }
 
         if (con.kicked)
             return;

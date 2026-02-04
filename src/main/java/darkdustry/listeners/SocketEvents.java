@@ -338,12 +338,16 @@ public class SocketEvents {
         Socket.on(TraceRequest.class, request -> {
             if (!request.server.equals(config.mode.name())) return;
 
+            var serverConfig = ServerConfig.getLocal();
+
             var info = Find.playerInfo(request.player);
             if (notFound(request, info)) return;
 
             var data = Database.getPlayerData(info.id);
             var ban = Database.getBan(info.id, info.lastIP);
             var mute = Database.getMute(info.id);
+            var subnetBanned = netServer.admins.isSubnetBanned(info.lastIP);
+            var graylisted = NetHandlers.isGraylisted(info.lastIP, serverConfig);
 
             try {
                 var tables = IpTables.of(info.lastIP);
@@ -372,6 +376,22 @@ public class SocketEvents {
                         + "\nReason: " + mute.reason
                         + "\nExpires: " + TimestampFormat.LONG_DATE.format(mute.unmuteDate.toInstant())
                 );
+
+                if (graylisted || subnetBanned) {
+                    StringBuilder builder = new StringBuilder();
+
+                    if (graylisted) builder.append("- Graylisted");
+                    if (subnetBanned) {
+                        if (!builder.isEmpty()) builder.append("\n");
+                        builder.append("- Subnet banned");
+                    }
+
+                    response.withField("Extra Enforcements", builder.toString());
+                }
+
+                if (data != null && data.discordId != null) {
+                    response.withField("Discord Link", "<@" + data.discordId + ">");
+                }
 
                 Socket.respond(request, response);
             } catch (Exception e) {

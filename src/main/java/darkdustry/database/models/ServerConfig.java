@@ -43,6 +43,23 @@ public class ServerConfig {
         return get().graylistProxy || getLocal().graylistProxy;
     }
 
+    public static boolean ispGraylisted(String isp, ServerConfig localConfig) {
+        isp = isp.replaceAll("\\W", "");
+
+        for (String x : get().graylistISPs.split(";")) {
+            if (x.replaceAll("\\W", "").equalsIgnoreCase(isp) && !x.isBlank()) {
+                return true;
+            }
+        }
+        for (String x : localConfig.graylistISPs.split(";")) {
+            if (x.replaceAll("\\W", "").equalsIgnoreCase(isp) && !x.isBlank()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean ispGraylisted(String isp) {
         isp = isp.replaceAll("\\W", "");
 
@@ -57,6 +74,19 @@ public class ServerConfig {
                 Log.info("Java thinks bro uses ISP " + x + " (actual value: " + isp + ")");
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public static boolean ipGraylisted(String ip, ServerConfig localConfig) {
+        for (String x : get().graylistIPs.split(";")) {
+            if (ip.toLowerCase().startsWith(x.toLowerCase()) && !x.isBlank())
+                return true;
+        }
+        for (String x : localConfig.graylistIPs.split(";")) {
+            if (ip.toLowerCase().startsWith(x.toLowerCase()) && !x.isBlank())
+                return true;
         }
 
         return false;
